@@ -69,6 +69,19 @@
         <maven.jetty.plugin.version>7.1.5.v20100705</maven.jetty.plugin.version>
     </properties>
 
+    <developers>
+        <developer>
+            <id>gpetracek</id>
+            <name>Gerhard Petracek</name>
+            <email>gpetracek@apache.org</email>
+            <organization>IRIAN.at, Austria</organization>
+            <organizationUrl>http://www.irian.at/</organizationUrl>
+            <roles>
+                <role>PPMC</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+    </developers>
 
     <!-- TODO move to a 'owb' profile -->
     <dependencyManagement>
