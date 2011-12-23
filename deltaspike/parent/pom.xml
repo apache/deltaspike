@@ -83,6 +83,17 @@
             <timezone>+1</timezone>
         </developer>
         <developer>
+            <id>jakobk</id>
+            <name>Jakob Korherr</name>
+            <email>jakobk@apache.org</email>
+            <organization>IRIAN.at, Austria</organization>
+            <organizationUrl>http://www.irian.at/</organizationUrl>
+            <roles>
+                <role>PPMC</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+        <developer>
             <id>mbenson</id>
             <name>Matt Benson</name>
             <email>mbenson@apache.org</email>
