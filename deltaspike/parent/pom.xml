@@ -90,6 +90,15 @@
             </roles>
             <timezone>-6</timezone>
         </developer>
+        <developer>
+            <id>marius</id>
+            <name>Marius Bogoevici</name>
+            <email>marius@apache.org</email>
+            <roles>
+                <role>PPMC</role>
+            </roles>
+            <timezone>-5</timezone>
+        </developer>
     </developers>
 
     <!-- TODO move to a 'owb' profile -->
