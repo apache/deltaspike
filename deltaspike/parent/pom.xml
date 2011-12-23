@@ -81,6 +81,15 @@
             </roles>
             <timezone>+1</timezone>
         </developer>
+        <developer>
+            <id>mbenson</id>
+            <name>Matt Benson</name>
+            <email>mbenson@apache.org</email>
+            <roles>
+                <role>PPMC</role>
+            </roles>
+            <timezone>-6</timezone>
+        </developer>
     </developers>
 
     <!-- TODO move to a 'owb' profile -->
