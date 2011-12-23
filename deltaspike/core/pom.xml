@@ -22,7 +22,7 @@
 
     <parent>
         <groupId>org.apache.deltaspike</groupId>
-        <artifactId>deltaspike</artifactId>
+        <artifactId>parent</artifactId>
         <version>0.1-SNAPSHOT</version>
         <relativePath>../parent/pom.xml</relativePath>
     </parent>

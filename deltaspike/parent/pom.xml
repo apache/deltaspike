@@ -24,6 +24,7 @@
         <groupId>org.apache.deltaspike</groupId>
         <artifactId>deltaspike</artifactId>
         <version>0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>parent</artifactId>
