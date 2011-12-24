@@ -94,6 +94,15 @@
             <timezone>+1</timezone>
         </developer>
         <developer>
+            <id>lightguardjp</id>
+            <name>Jason Porter</name>
+            <email>lightguardjp@apache.org</email>
+            <roles>
+                <role>PPMC</role>
+            </roles>
+            <timezone>-7</timezone>
+        </developer>
+        <developer>
             <id>mbenson</id>
             <name>Matt Benson</name>
             <email>mbenson@apache.org</email>
