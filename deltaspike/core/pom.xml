@@ -36,6 +36,7 @@
     <modules>
         <module>api</module>
         <module>impl</module>
+        <module>integration-test</module>
     </modules>
 
 </project>

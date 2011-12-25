@@ -7,3 +7,4 @@ target
 .settings
 .svn
 .idea
+atlassian-ide-plugin.xml
