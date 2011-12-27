@@ -120,6 +120,15 @@
             </roles>
             <timezone>-5</timezone>
         </developer>
+        <developer>
+            <id>struberg</id>
+            <name>Mark Struberg</name>
+            <email>struberg@apache.org</email>
+            <roles>
+                <role>PPMC</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
     </developers>
 
     <!-- TODO move to a 'owb' profile -->
