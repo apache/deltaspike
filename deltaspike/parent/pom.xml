@@ -178,26 +178,31 @@
                 <groupId>org.apache.openwebbeans</groupId>
                 <artifactId>openwebbeans-impl</artifactId>
                 <version>${owb.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.openwebbeans</groupId>
                 <artifactId>openwebbeans-spi</artifactId>
                 <version>${owb.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.openwebbeans</groupId>
                 <artifactId>openwebbeans-resource</artifactId>
                 <version>${owb.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.openwebbeans</groupId>
                 <artifactId>openwebbeans-web</artifactId>
                 <version>${owb.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.openwebbeans</groupId>
                 <artifactId>openwebbeans-jsf</artifactId>
                 <version>${owb.version}</version>
+                <scope>test</scope>
             </dependency>
 
             <!--
