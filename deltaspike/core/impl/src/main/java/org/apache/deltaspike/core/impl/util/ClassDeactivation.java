@@ -20,8 +20,13 @@ package org.apache.deltaspike.core.impl.util;
 
 import org.apache.deltaspike.core.api.activation.AbstractClassDeactivator;
 import org.apache.deltaspike.core.api.activation.ClassDeactivator;
+import org.apache.deltaspike.core.api.config.ConfigResolver;
+import org.apache.deltaspike.core.api.util.ClassUtils;
 
 import javax.enterprise.inject.Typed;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 /**
@@ -30,7 +35,7 @@ import java.util.logging.Logger;
 @Typed()
 public class ClassDeactivation
 {
-    private static final Logger LOGGER = Logger.getLogger(ClassDeactivation.class.getName());
+    private static final Logger LOG = Logger.getLogger(ClassDeactivation.class.getName());
 
     private ClassDeactivation()
     {
@@ -68,11 +73,7 @@ public class ClassDeactivation
 
     private static ClassDeactivator getClassDeactivator()
     {
-        ClassDeactivator classDeactivator = null;
-
-        //X TODO lookup of ClassDeactivator
-        //classDeactivator =
-        //    CodiUtils.lookupFromEnvironment(ClassDeactivator.class, new ClassDeactivatorAggregator(), null);
+        ClassDeactivator classDeactivator = getConfiguredClassDeactivator();
 
         // use default deactivator
         if (classDeactivator == null)
@@ -81,18 +82,42 @@ public class ClassDeactivation
         }
         else
         {
-            LOGGER.info("used class deactivator: " + classDeactivator.toString());
+            LOG.info("used class deactivator: " + classDeactivator.toString());
 
             // display deactivated classes here once
             // NOTE that isClassActivated() will be called many times for the same class
             for (Class<?> deactivatedClass : classDeactivator.getDeactivatedClasses())
             {
-                LOGGER.info("deactivate: " + deactivatedClass);
+                LOG.info("deactivate: " + deactivatedClass);
             }
         }
 
         ClassDeactivatorStorage.setClassDeactivator(classDeactivator);
         return classDeactivator;
+    }
+
+    private static ClassDeactivator getConfiguredClassDeactivator()
+    {
+        List<String> classDeactivatorClassNames = ConfigResolver.getAllPropertyValues(ClassDeactivator.class.getName());
+        Set<Class> deactivatedClasses = new HashSet<Class>();
+
+        ClassDeactivator currentClassDeactivator;
+        for(String classDeactivatorClassName : classDeactivatorClassNames)
+        {
+            currentClassDeactivator =
+                    ClassUtils.tryToInstantiateClassForName(classDeactivatorClassName, ClassDeactivator.class);
+
+            if(currentClassDeactivator != null)
+            {
+                deactivatedClasses.addAll(currentClassDeactivator.getDeactivatedClasses());
+            }
+            else
+            {
+                LOG.warning(classDeactivatorClassName + " can't be instantiated");
+            }
+        }
+
+        return new DefaultClassDeactivator(deactivatedClasses);
     }
 
     private static AbstractClassDeactivator createClassDeactivatorPlaceholder()

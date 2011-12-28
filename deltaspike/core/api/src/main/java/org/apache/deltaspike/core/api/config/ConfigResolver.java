@@ -30,9 +30,12 @@ import org.apache.deltaspike.core.api.util.ClassUtils;
 import org.apache.deltaspike.core.spi.config.ConfigSource;
 import org.apache.deltaspike.core.spi.config.ConfigSourceProvider;
 
+import javax.enterprise.inject.Typed;
+
 /**
  * Resolve the configuration via their well defined ordinals.
  */
+@Typed()
 public class ConfigResolver
 {
     /**
@@ -53,7 +56,7 @@ public class ConfigResolver
      * @param key the property key.
      * @return the configured property value from the {@link ConfigSource} with the highest ordinal.
      */
-    public String getPropertyValue(String key) 
+    public static String getPropertyValue(String key)
     {
         ConfigSource[] appConfigSources = getConfigSources();
         
@@ -79,7 +82,7 @@ public class ConfigResolver
      * @param key
      * @return List with all found property values, sorted in order of their ordinal.
      */
-    public List<String> getAllPropertyValues(String key)
+    public static List<String> getAllPropertyValues(String key)
     {
         ConfigSource[] appConfigSources = getConfigSources();
         List<String> allPropValues = new ArrayList<String>();
@@ -97,7 +100,7 @@ public class ConfigResolver
     }
     
     
-    private synchronized ConfigSource[] getConfigSources()
+    private static synchronized ConfigSource[] getConfigSources()
     {
         ClassLoader currentCl = ClassUtils.getClassLoader(null);
         
@@ -122,7 +125,7 @@ public class ConfigResolver
         return appConfigSources;
     }
 
-    private List<ConfigSource> resolveConfigSources()
+    private static List<ConfigSource> resolveConfigSources()
     {
         List<ConfigSource> appConfigSources = new ArrayList<ConfigSource>();
         
@@ -142,7 +145,7 @@ public class ConfigResolver
         return appConfigSources;
     }
 
-    private ConfigSource[] sortConfigSources(List<ConfigSource> configSources)
+    private static ConfigSource[] sortConfigSources(List<ConfigSource> configSources)
     {
         List<ConfigSource> sortedConfigSources = new ArrayList<ConfigSource>();
         for (ConfigSource cs : configSources)
@@ -163,6 +166,4 @@ public class ConfigResolver
         }
         return sortedConfigSources.toArray(new ConfigSource[configSources.size()]);
     }
-
-
 }
