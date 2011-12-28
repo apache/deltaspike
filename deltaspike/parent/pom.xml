@@ -424,7 +424,7 @@
 
     <profiles>
         <profile>
-            <!-- use this profile to compile and test DeltaSpike with OpenWebBeans -->
+            <!-- use this profile to compile and test DeltaSpike with Apache OpenWebBeans -->
             <id>OWB</id>
             <dependencies>
                 <!-- OWB specific dependencies-->
@@ -460,6 +460,69 @@
                     <scope>test</scope>
                 </dependency>
 
+            </dependencies>
+        </profile>
+
+        <profile>
+            <!-- use this profile to compile and test DeltaSpike with JBoss Weld -->
+            <id>Weld</id>
+
+            <dependencyManagement>
+                <dependencies><!-- org.jboss.weld -->
+                    <dependency>
+                        <groupId>org.jboss.weld</groupId>
+                        <artifactId>weld-core-bom</artifactId>
+                        <version>${weld.version}</version>
+                        <type>pom</type>
+                        <scope>import</scope>
+                    </dependency>
+                </dependencies>
+            </dependencyManagement>
+            <dependencies>
+                <dependency>
+                    <groupId>org.jboss.weld</groupId>
+                    <artifactId>weld-api</artifactId>
+                    <scope>provided</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.jboss.weld</groupId>
+                    <artifactId>weld-core</artifactId>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>javax.el</groupId>
+                    <artifactId>el-api</artifactId>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.jboss.spec.javax.ejb</groupId>
+                    <artifactId>jboss-ejb-api_3.1_spec</artifactId>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>javax.validation</groupId>
+                    <artifactId>validation-api</artifactId>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>javax.persistence</groupId>
+                    <artifactId>persistence-api</artifactId>
+                    <scope>test</scope>
+                </dependency>
+
+                <!-- Test dependencies -->
+                <dependency>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-simple</artifactId>
+                    <scope>test</scope>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.jboss.arquillian.container</groupId>
+                    <artifactId>arquillian-weld-ee-embedded-1.1</artifactId>
+                    <version>1.0.0.CR3</version>
+                    <scope>test</scope>
+                </dependency>
             </dependencies>
         </profile>
     </profiles>
