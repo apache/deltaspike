@@ -89,6 +89,12 @@ import java.util.logging.Logger;
  * ProjectStage myOwnPs = ProjectStage.valueOf("MyOwnProjectStage");
    if (myOwnPs.equals(MyOwnProjectStage.MyOwnProjectStage)) ...
  * </pre>
+ * 
+ * <p><b>Note:</b> Please note that DeltaSpike will only find {@link ProjectStageHolder}s
+ * which are accessible by this very class. If you deploy the deltaspike-core jar to a
+ * shared EAR classloader, it will e.g. <i>not</i> be able to register ProjectStages defined
+ * in a web applications WEB-INF/classes directory!
+ * </p>
  *
  */
 @Typed()
@@ -120,7 +126,7 @@ public abstract class ProjectStage implements Serializable
 
     /**
      * The static initializer block will register all custom ProjectStages
-     * by simply touching their classes due loding it with the
+     * by simply touching their classes due loading it with the.
      * {@link java.util.ServiceLoader}.
      */
     static
