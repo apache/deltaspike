@@ -150,7 +150,7 @@ public class ShrinkWrapArchiveUtil
                 }
 
                 if (entryName.endsWith(".class")) {
-                    String className = entryName.substring(0, entryName.length()-(".class".length())).replace('/', '.');
+                    String className = pathToClassName(entryName.substring(0, entryName.length()-(".class".length())));
                     javaArchive.addClass(className);
                 }
                 else {
@@ -202,11 +202,12 @@ public class ShrinkWrapArchiveUtil
             }
 
             if (entryName.endsWith(".class")) {
-                String className = entryName.substring(0, entryName.length()-(".class".length())).replace('/', '.');
+                String className = pathToClassName(entryName.substring(0, entryName.length()-(".class".length())));
+
                 javaArchive.addClass(className);
             }
             else {
-                javaArchive.addAsResource(entryName);
+                javaArchive.addAsResource(entryName.replace('\\', '/'));
             }
         }
 
@@ -237,7 +238,7 @@ public class ShrinkWrapArchiveUtil
 
     private static boolean excludeIfPackageExists(String jarEntryName, String[] excludeOnPackages) {
         if (excludeOnPackages != null) {
-            String packageName = jarEntryName.replace('/' ,'.');
+            String packageName = pathToClassName(jarEntryName);
 
             for (String excludeOnPackage : excludeOnPackages) {
                 if (packageName.startsWith(excludeOnPackage)) {
@@ -254,7 +255,7 @@ public class ShrinkWrapArchiveUtil
             return true;
         }
 
-        String packageName = jarEntryName.replace('/' ,'.');
+        String packageName = pathToClassName(jarEntryName);
 
         for (String includeOnPackage : includeOnPackages) {
             if (packageName.startsWith(includeOnPackage)) {
@@ -288,5 +289,10 @@ public class ShrinkWrapArchiveUtil
         }
         return url;
     }
+
+    private static String pathToClassName(String pathName) {
+        return pathName.replace('/', '.').replace('\\', '.');   // replace unix and windows separators
+    }
+
 
 }

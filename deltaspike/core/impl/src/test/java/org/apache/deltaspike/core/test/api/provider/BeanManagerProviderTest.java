@@ -52,7 +52,8 @@ public class BeanManagerProviderTest
     }
     
     @Test
-    public void testBeanManagerProvider() throws Exception {
+    public void testBeanManagerProvider() throws Exception
+    {
             BeanManagerProvider bmp = BeanManagerProvider.getInstance();
             Assert.assertNotNull(bmp);
 
