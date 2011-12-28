@@ -19,9 +19,17 @@
 package org.apache.deltaspike.core.api.projectstage;
 
 /**
- * This is a marker interface for custom project
+ * <p>This is a marker interface for custom project
  * stage holders. A project stage holder is a class which
- * contains 1 or many {@link ProjectStage}s.
+ * contains 1 or many {@link ProjectStage}s.</p>
+ *
+ * <p>Any custom ProjectStageHolder must get registered via the
+ * {@link java.util.ServiceLoader} mechanism. Simply create a file
+ * <pre>
+ *     META-INF/services/org.apache.deltaspike.core.api.projectstage.ProjectStageHolder
+ * </pre>
+ * and write the fully qualified class name of your ProjectStageHolder into it.
+ * </p>
  */
 public interface ProjectStageHolder 
 {

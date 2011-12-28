@@ -23,6 +23,12 @@ import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.api.projectstage.ProjectStageHolder;
 
 /**
+ * This is a test ProjectStage. It demonstrates how to add custom ProjectStages.
+ * This TestProjectStage must get registered via the {@link java.util.ServiceLoader}
+ * mechanism. Please see the file
+ * <pre>
+ *     META-INF/services/org.apache.deltaspike.core.api.projectstage.ProjectStageHolder
+ * </pre>
  */
 public class TestProjectStages implements ProjectStageHolder
 {
