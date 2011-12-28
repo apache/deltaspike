@@ -18,4 +18,4 @@
 #####################################################################################
 
 # DeltaSpike BeanManager provider
-org.apache.deltaspike.api.provider.BeanManagerProvider
+org.apache.deltaspike.core.api.provider.BeanManagerProvider
