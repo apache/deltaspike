@@ -60,8 +60,13 @@
     <!-- See http://checkstyle.sf.net/config_whitespace.html -->
     <module name="FileTabCharacter"/>
 
+    <!-- allow usage of CHECKSTYLE:OFF and CHECKSTYLE:ON -->
+    <module name="SuppressionCommentFilter"/>
+
 
     <module name="TreeWalker">
+
+        <module name="FileContentsHolder"/>
 
         <property name="cacheFile" value="${checkstyle.cache.file}"/>
 
@@ -79,9 +84,6 @@
           <property name="format" value="^_[a-z][a-zA-Z0-9]*$"/>
         </module>
 -->
-
-        <!-- allow usage of CHECKSTYLE:OFF and CHECKSTYLE:ON -->
-        <module name="SuppressionCommentFilter"/>
 
         <module name="ConstantName">
           <!-- Normal rules, except that:
