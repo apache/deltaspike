@@ -33,7 +33,7 @@ import java.util.logging.Logger;
  * Helper methods for {@link ClassDeactivator}
  */
 @Typed()
-public class ClassDeactivation
+public final class ClassDeactivation
 {
     private static final Logger LOG = Logger.getLogger(ClassDeactivation.class.getName());
 

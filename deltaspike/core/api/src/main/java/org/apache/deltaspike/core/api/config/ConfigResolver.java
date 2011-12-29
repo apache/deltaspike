@@ -36,8 +36,13 @@ import javax.enterprise.inject.Typed;
  * Resolve the configuration via their well defined ordinals.
  */
 @Typed()
-public class ConfigResolver
+public final class ConfigResolver
 {
+    private ConfigResolver()
+    {
+        // this is a utility class which doesn't get instantiated.
+    }
+
     /**
      * The content of this map will get lazily initiated and will hold the
      * sorted List of ConfigSources for each WebApp/EAR, etc (thus the

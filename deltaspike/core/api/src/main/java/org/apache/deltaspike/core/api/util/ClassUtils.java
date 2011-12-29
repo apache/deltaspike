@@ -150,7 +150,11 @@ public abstract class ClassUtils
         {
             return targetClass.newInstance();
         }
-        catch (Exception e)
+        catch (InstantiationException e)
+        {
+            //do nothing - it was just a try
+        }
+        catch (IllegalAccessException e)
         {
             //do nothing - it was just a try
         }

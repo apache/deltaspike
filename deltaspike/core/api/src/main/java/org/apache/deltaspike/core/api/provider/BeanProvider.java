@@ -19,6 +19,7 @@
 package org.apache.deltaspike.core.api.provider;
 
 import javax.enterprise.context.spi.CreationalContext;
+import javax.enterprise.inject.Typed;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import java.lang.annotation.Annotation;
@@ -31,7 +32,8 @@ import java.util.Set;
  *
  * @see BeanManagerProvider
  */
-public class BeanProvider
+@Typed()
+public final class BeanProvider
 {
     private BeanProvider()
     {
