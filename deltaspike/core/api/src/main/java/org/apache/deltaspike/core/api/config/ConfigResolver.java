@@ -129,14 +129,9 @@ public class ConfigResolver
     {
         List<ConfigSource> appConfigSources = new ArrayList<ConfigSource>();
         
-        ServiceLoader<ConfigSource> configSourceServiceLoader = ServiceLoader.load(ConfigSource.class);
-        for (ConfigSource cs : configSourceServiceLoader)
-        {
-            appConfigSources.add(cs);
-        }
-
         ServiceLoader<ConfigSourceProvider> configSourceProviderServiceLoader
                 = ServiceLoader.load(ConfigSourceProvider.class);
+
         for (ConfigSourceProvider csp : configSourceProviderServiceLoader)
         {
             appConfigSources.addAll(csp.getConfigSources());
