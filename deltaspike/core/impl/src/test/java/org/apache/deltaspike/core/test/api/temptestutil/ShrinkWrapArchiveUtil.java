@@ -107,10 +107,10 @@ public class ShrinkWrapArchiveUtil
             if (!f.exists())
             {
                 // try a fallback if the URL contains %20 -> spaces
-                if (jarUrlPath.contains("%20"))
+                if (urlString.contains("%20"))
                 {
-                    jarUrlPath = jarUrlPath.replaceAll("%20", " ");
-                    f = new File( (new URL(ensureCorrectUrlFormat(jarUrlPath))).getFile() );
+                    urlString = urlString.replaceAll("%20", " ");
+                    f = new File( (new URL(ensureCorrectUrlFormat(urlString))).getFile() );
                 }
 
             }
