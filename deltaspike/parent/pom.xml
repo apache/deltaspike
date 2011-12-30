@@ -134,6 +134,15 @@
             </roles>
             <timezone>+1</timezone>
         </developer>
+        <developer>
+            <id>matzew</id>
+            <name>Matthias Wessendorf</name>
+            <email>matzew@apache.org</email>
+            <roles>
+                <role>PPMC</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
     </developers>
 
 
