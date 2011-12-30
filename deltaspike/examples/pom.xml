@@ -31,7 +31,7 @@
     <artifactId>jse-examples-project</artifactId>
     <packaging>pom</packaging>
 
-    <name>DeltaSpike Examples</name>
+    <name>Apache DeltaSpike Examples</name>
 
     <modules>
         <!-- TODO include again - just excluded to discuss further details-->

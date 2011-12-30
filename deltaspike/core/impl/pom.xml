@@ -28,8 +28,10 @@
     </parent>
 
     <groupId>org.apache.deltaspike.core</groupId>
-    <artifactId>core-impl</artifactId>
+    <artifactId>deltaspike-core-impl</artifactId>
     <packaging>jar</packaging>
+
+    <name>Apache DeltaSpike Core-Implementation</name>
 
     <dependencies>
         <dependency>

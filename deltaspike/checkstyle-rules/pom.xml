@@ -31,7 +31,7 @@
     <artifactId>checkstyle-rules</artifactId>
     <packaging>jar</packaging>
 
-    <name>checkstyle-rules</name>
+    <name>Apache DeltaSpike CheckStyle-rules</name>
 
 </project>
 

@@ -28,8 +28,9 @@
     </parent>
 
     <groupId>org.apache.deltaspike.core</groupId>
-    <artifactId>core-api</artifactId>
+    <artifactId>deltaspike-core-api</artifactId>
     <packaging>jar</packaging>
 
+    <name>Apache DeltaSpike Core-API</name>
 </project>
 

@@ -35,7 +35,7 @@
      * the dependencyManagement and plugin configuration stuff.
     -->
     <groupId>org.apache.deltaspike</groupId>
-    <artifactId>deltaspike</artifactId>
+    <artifactId>deltaspike-project</artifactId>
     <version>0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 

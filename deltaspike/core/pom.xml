@@ -28,8 +28,10 @@
     </parent>
 
     <groupId>org.apache.deltaspike.core</groupId>
-    <artifactId>core</artifactId>
+    <artifactId>core-project</artifactId>
     <packaging>pom</packaging>
+
+    <name>Apache DeltaSpike Core</name>
 
     <modules>
         <module>api</module>

@@ -29,7 +29,7 @@
     <groupId>org.apache.deltaspike.examples</groupId>
     <artifactId>deltaspike-jse-owb-example</artifactId>
 
-    <name>DeltaSpike Java-SE/OpenWebBeans Examples</name>
+    <name>Apache DeltaSpike Java-SE/OpenWebBeans Examples</name>
 
     <packaging>jar</packaging>
 

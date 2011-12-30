@@ -31,7 +31,7 @@
 
     <packaging>pom</packaging>
 
-    <name>Parent</name>
+    <name>Apache DeltaSpike Parent</name>
     <description>Apache DeltaSpike Parent</description>
 
 
