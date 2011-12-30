@@ -18,12 +18,21 @@
  */
 package org.apache.deltaspike.core.api.provider;
 
+import org.apache.deltaspike.core.api.literal.AnyLiteral;
+
+import javax.enterprise.context.Dependent;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.Typed;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -115,6 +124,81 @@ public final class BeanProvider
         }
 
         return getContextualReference(type, beanManager, beans);
+    }
+
+    /**
+     * <p>Get a list of Contextual References by it's type independent of the qualifier.
+     * You can use this method to get all contextual references of a given type.
+     * A 'Contextual Reference' is a proxy which will automatically resolve
+     * the correct contextual instance when you access any method.</p>
+     *
+     * <p><b>Attention:</b> You shall not use this method to manually resolve a
+     * &#064;Dependent bean! The reason is that this contextual instances do usually
+     * live in the well defined lifecycle of their injection point (the bean they got
+     * injected into). But if we manually resolve a &#064;Dependent bean, then it does <b>not</b>
+     * belong to such a well defined lifecycle (because &#064;Dependent it is not
+     * &#064;NormalScoped) and thus will not automatically be
+     * destroyed at the end of the lifecycle. You need to manually destroy this contextual instance via
+     * {@link javax.enterprise.context.spi.Contextual#destroy(Object, javax.enterprise.context.spi.CreationalContext)}.
+     * Thus you also need to manually store the CreationalContext and the Bean you
+     * used to create the contextual instance which this method will not provide.</p>
+     *
+     * @param type the type of the bean in question
+     * @param optional if <code>true</code> it will return an empty list if no bean could be found or created.
+     *                 Otherwise it will throw an {@code IllegalStateException}
+     * @param includeDefaultScopedBeans specifies if dependent scoped beans should be included in the in the result
+     * @param <T> target type
+     * @return the resolved list of Contextual Reference or an empty-list if optional is true
+     */
+    public static <T> List<T> getContextualReferences(Class<T> type,
+                                                      boolean optional,
+                                                      boolean includeDefaultScopedBeans)
+    {
+        BeanManager beanManager = getBeanManager();
+        Set<Bean<?>> beans = beanManager.getBeans(type, new AnyLiteral());
+
+        if (beans == null || beans.isEmpty())
+        {
+            if (optional)
+            {
+                return Collections.emptyList();
+            }
+
+            throw new IllegalStateException("Could not find beans for Type=" + type);
+        }
+
+        if(!includeDefaultScopedBeans)
+        {
+            beans = filterDefaultScopedBeans(beans);
+        }
+        
+        List<T> result = new ArrayList<T>(beans.size());
+        
+        for(Bean<?> bean : beans)
+        {
+            result.add(getContextualReference(type, beanManager,
+                    new HashSet<Bean<?>>((Collection)Arrays.asList(new Object[]{bean}))));
+        }
+        return result;
+    }
+
+    private static Set<Bean<?>> filterDefaultScopedBeans(Set<Bean<?>> beans)
+    {
+        Set<Bean<?>> result = new HashSet<Bean<?>>(beans.size());
+
+        Iterator<Bean<?>> beanIterator = beans.iterator();
+
+        Bean<?> currentBean;
+        while (beanIterator.hasNext())
+        {
+            currentBean = beanIterator.next();
+
+            if(!Dependent.class.isAssignableFrom(currentBean.getScope()))
+            {
+                result.add(currentBean);
+            }
+        }
+        return result;
     }
 
     /**
