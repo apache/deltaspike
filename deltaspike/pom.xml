@@ -57,7 +57,15 @@
         <module>checkstyle-rules</module>
         <module>parent</module>
         <module>core</module>
-        <module>examples</module>
     </modules>
+
+    <profiles>
+        <profile>
+            <id>examples</id>
+            <modules>
+                <module>examples</module>
+            </modules>
+        </profile>
+    </profiles>
 
 </project>

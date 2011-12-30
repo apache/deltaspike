@@ -34,8 +34,7 @@
     <name>Apache DeltaSpike Examples</name>
 
     <modules>
-        <!-- TODO include again - just excluded to discuss further details-->
-        <!--module>jse-owb-examples</module-->
+        <module>jse-owb-examples</module>
     </modules>
 
 </project>
