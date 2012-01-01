@@ -46,7 +46,7 @@ public abstract class ClassUtils
      * <ol>
      * <li>ContextClassLoader of the current Thread</li>
      * <li>ClassLoader of the given Object 'o'</li>
-     * <li>ClassLoader of this very CodiUtils class</li>
+     * <li>ClassLoader of this very ClassUtils class</li>
      * </ol>
      *
      * @param o if not <code>null</code> it may get used to detect the classloader.

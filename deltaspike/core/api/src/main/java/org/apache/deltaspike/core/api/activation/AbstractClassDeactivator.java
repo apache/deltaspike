@@ -53,7 +53,7 @@ public abstract class AbstractClassDeactivator implements ClassDeactivator
     }
 
     /**
-     * An implementation has to add classes which shouldn't be used by CODI.
+     * An implementation has to add classes which shouldn't be used by DeltaSpike.
      * (use {@link #addDeactivatedClass(Class)} for adding classes)
      */
     protected abstract void deactivateClasses();

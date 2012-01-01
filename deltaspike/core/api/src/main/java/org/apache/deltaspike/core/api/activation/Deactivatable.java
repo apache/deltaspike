@@ -22,7 +22,7 @@ package org.apache.deltaspike.core.api.activation;
  * Interface to allow easier detection of deactivatable classes.
  * These classes are activated by default (e.g. via CDI config).
  * Since CDI, JSF,... currently don't allow to deactivate default implementations,
- * CODI has to introduce a proprietary mechanism.
+ * DeltaSpike has to introduce a proprietary mechanism.
  */
 public interface Deactivatable
 {
