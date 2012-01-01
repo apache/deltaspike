@@ -127,7 +127,9 @@ public final class BeanProvider
     }
 
     /**
-     * <p>Get a list of Contextual References by it's type independent of the qualifier.
+     * <p>Get a list of Contextual References by it's type independent of the qualifier
+     * (including dependent scoped beans).
+     *
      * You can use this method to get all contextual references of a given type.
      * A 'Contextual Reference' is a proxy which will automatically resolve
      * the correct contextual instance when you access any method.</p>
@@ -142,6 +144,23 @@ public final class BeanProvider
      * {@link javax.enterprise.context.spi.Contextual#destroy(Object, javax.enterprise.context.spi.CreationalContext)}.
      * Thus you also need to manually store the CreationalContext and the Bean you
      * used to create the contextual instance which this method will not provide.</p>
+     *
+     * @param type the type of the bean in question
+     * @param optional if <code>true</code> it will return an empty list if no bean could be found or created.
+     *                 Otherwise it will throw an {@code IllegalStateException}
+     * @param <T> target type
+     * @return the resolved list of Contextual Reference or an empty-list if optional is true
+     */
+    public static <T> List<T> getContextualReferences(Class<T> type,
+                                                      boolean optional)
+    {
+        return getContextualReferences(type, optional, true);
+    }
+
+    /**
+     * <p>Get a list of Contextual References by it's type independent of the qualifier.
+     *
+     * Further details are available at {@link #getContextualReferences(Class, boolean)}
      *
      * @param type the type of the bean in question
      * @param optional if <code>true</code> it will return an empty list if no bean could be found or created.

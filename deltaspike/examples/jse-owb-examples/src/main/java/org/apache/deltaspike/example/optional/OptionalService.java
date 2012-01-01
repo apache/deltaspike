@@ -16,24 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.example.echo;
-
-import javax.enterprise.context.Dependent;
-import javax.inject.Named;
+package org.apache.deltaspike.example.optional;
 
 /**
- * Default implementation
+ * Interface without implementation to show the lookup of optional implementations
  */
-@Dependent
-@Named("defaultEchoService")
-public class DefaultEchoService implements EchoService
+public interface OptionalService
 {
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String echo(String message)
-    {
-        return message;
-    }
 }

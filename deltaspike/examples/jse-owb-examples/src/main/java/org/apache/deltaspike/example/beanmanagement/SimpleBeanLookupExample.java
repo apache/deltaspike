@@ -20,7 +20,9 @@ package org.apache.deltaspike.example.beanmanagement;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.example.CdiContainer;
+import org.apache.deltaspike.example.echo.DefaultEchoService;
 import org.apache.deltaspike.example.echo.EchoService;
+import org.apache.deltaspike.example.optional.OptionalService;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -40,11 +42,11 @@ public class SimpleBeanLookupExample
     {
         CdiContainer.start();
 
-        List<EchoService> echoServiceList = BeanProvider.getContextualReferences(EchoService.class, false, true);
+        List<EchoService> echoServiceList = BeanProvider.getContextualReferences(EchoService.class, false);
 
         for(EchoService echoService : echoServiceList)
         {
-            LOG.info(echoService.echo("Hello CDI beans!"));
+            LOG.info(echoService.echo("Hello CDI bean!"));
         }
 
         LOG.info("---");
@@ -53,9 +55,30 @@ public class SimpleBeanLookupExample
 
         for(EchoService echoService : echoServiceList)
         {
-            LOG.info(echoService.echo("Hello non dependent CDI scoped beans!"));
+            LOG.info(echoService.echo("Hello non dependent CDI scoped bean!"));
         }
 
+        LOG.info("---");
+
+        EchoService defaultEchoService = BeanProvider.getContextualReference(DefaultEchoService.class, false);
+
+        LOG.info(defaultEchoService.echo("Hello explicitly resolved CDI bean!"));
+
+        defaultEchoService = BeanProvider.getContextualReference(EchoService.class, false, "defaultEchoService");
+
+        LOG.info(defaultEchoService.echo("Hello CDI bean resolved by name!"));
+
+        OptionalService optionalService = BeanProvider.getContextualReference(OptionalService.class, true);
+        
+        if(optionalService == null)
+        {
+            LOG.info("No (optional) implementation found for " + OptionalService.class.getName());
+        }
+        else 
+        {
+            LOG.severe("Unexpected implementation found: " + optionalService.getClass().getName());
+        }
+        
         CdiContainer.stop();
     }
 }
