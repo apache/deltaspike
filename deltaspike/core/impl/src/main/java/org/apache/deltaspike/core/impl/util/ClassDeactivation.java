@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.core.impl.util;
 
-import org.apache.deltaspike.core.api.activation.AbstractClassDeactivator;
 import org.apache.deltaspike.core.api.activation.ClassDeactivator;
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.util.ClassUtils;
@@ -53,7 +52,7 @@ public final class ClassDeactivation
 
         if (classDeactivator == null)
         {
-            classDeactivator = getClassDeactivator();
+            classDeactivator = resolveAndCacheClassDeactivator();
         }
 
         boolean classDeactivated = classDeactivator.getDeactivatedClasses().contains(targetClass);
@@ -71,25 +70,15 @@ public final class ClassDeactivation
         ClassDeactivatorStorage.setClassDeactivator(classDeactivator);
     }
 
-    private static ClassDeactivator getClassDeactivator()
+    private static ClassDeactivator resolveAndCacheClassDeactivator()
     {
         ClassDeactivator classDeactivator = getConfiguredClassDeactivator();
 
-        // use default deactivator
-        if (classDeactivator == null)
+        // display deactivated classes here once
+        // NOTE that isClassActivated() will be called many times for the same class
+        for (Class<?> deactivatedClass : classDeactivator.getDeactivatedClasses())
         {
-            classDeactivator = createClassDeactivatorPlaceholder();
-        }
-        else
-        {
-            LOG.info("used class deactivator: " + classDeactivator.toString());
-
-            // display deactivated classes here once
-            // NOTE that isClassActivated() will be called many times for the same class
-            for (Class<?> deactivatedClass : classDeactivator.getDeactivatedClasses())
-            {
-                LOG.info("deactivate: " + deactivatedClass);
-            }
+            LOG.info("deactivate: " + deactivatedClass);
         }
 
         ClassDeactivatorStorage.setClassDeactivator(classDeactivator);
@@ -104,6 +93,8 @@ public final class ClassDeactivation
         ClassDeactivator currentClassDeactivator;
         for(String classDeactivatorClassName : classDeactivatorClassNames)
         {
+            LOG.info(classDeactivatorClassName + " gets processed");
+
             currentClassDeactivator =
                     ClassUtils.tryToInstantiateClassForName(classDeactivatorClassName, ClassDeactivator.class);
 
@@ -118,18 +109,5 @@ public final class ClassDeactivation
         }
 
         return new DefaultClassDeactivator(deactivatedClasses);
-    }
-
-    private static AbstractClassDeactivator createClassDeactivatorPlaceholder()
-    {
-        return new AbstractClassDeactivator()
-        {
-            private static final long serialVersionUID = 3365575383802245760L;
-
-            protected void deactivateClasses()
-            {
-                //do nothing
-            }
-        };
     }
 }
