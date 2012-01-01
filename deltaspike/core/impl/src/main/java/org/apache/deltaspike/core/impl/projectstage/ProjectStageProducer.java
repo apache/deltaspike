@@ -134,6 +134,7 @@ public class ProjectStageProducer implements Serializable
         {
             //e.g. the JSF module can provide a config-source implementation which
             //returns a custom implementation which is aware of the JSF project-stage
+            //if a custom ProjectStageProducer is needed a custom config-source with a higher ordinal can be used
             ProjectStageProducer customConfiguredProducer =
                     ClassUtils.tryToInstantiateClassForName(customProjectStageProducerName, ProjectStageProducer.class);
 
