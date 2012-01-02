@@ -16,14 +16,11 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-package org.apache.deltaspike.core.test.api.provider;
-
-import javax.enterprise.context.ApplicationScoped;
+package org.apache.deltaspike.test.core.api.provider;
 
 /**
- * Impl #1
+ * Interface for multiple beans
  */
-@ApplicationScoped
-public class MBean01 implements MultiBean
+public interface MultiBean
 {
 }

@@ -17,4 +17,4 @@
 
 # Test file to register a test ProjectStageHolder which contains
 # a few additional ProjectStages
-org.apache.deltaspike.core.test.api.projectstage.TestProjectStages
+org.apache.deltaspike.test.core.api.projectstage.TestProjectStages

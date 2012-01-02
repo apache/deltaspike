@@ -16,7 +16,7 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-package org.apache.deltaspike.core.test.api.provider;
+package org.apache.deltaspike.test.core.api.provider;
 
 /**
  * Interface without implementation

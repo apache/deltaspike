@@ -16,11 +16,24 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-package org.apache.deltaspike.core.test.api.provider;
+package org.apache.deltaspike.test.core.api.provider;
 
-/**
- * Interface for multiple beans
- */
-public interface MultiBean
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Named;
+
+@Named("extraNameBean")
+@ApplicationScoped
+public class TestBean
 {
+    int i=4711;
+
+    public int getI()
+    {
+        return i;
+    }
+
+    public void setI(int i)
+    {
+        this.i = i;
+    }
 }

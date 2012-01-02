@@ -16,11 +16,11 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-package org.apache.deltaspike.core.test.api.provider;
+package org.apache.deltaspike.test.core.api.provider;
 
 
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
-import org.apache.deltaspike.core.test.api.temptestutil.ShrinkWrapArchiveUtil;
+import org.apache.deltaspike.test.core.api.temptestutil.ShrinkWrapArchiveUtil;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;

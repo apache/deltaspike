@@ -16,26 +16,36 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-package org.apache.deltaspike.core.test.api.projectstage;
+package org.apache.deltaspike.test.core.api.projectstage;
 
+
+import org.junit.Test;
+import org.junit.Assert;
 
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
-import org.apache.deltaspike.core.api.projectstage.ProjectStageHolder;
 
 /**
- * This is a test ProjectStage. It demonstrates how to add custom ProjectStages.
- * This TestProjectStage must get registered via the {@link java.util.ServiceLoader}
- * mechanism. Please see the file
- * <pre>
- *     META-INF/services/org.apache.deltaspike.core.api.projectstage.ProjectStageHolder
- * </pre>
+ * Test for {@link ProjectStage}
  */
-public class TestProjectStages implements ProjectStageHolder
-{
-    public static final class CustomProjectStage extends ProjectStage
-    {
-        private static final long serialVersionUID = 1029095387976167179L;
-    }
+public class ProjectStageTest {
 
-    public static final CustomProjectStage CustomProjectStage = new CustomProjectStage();
+    @Test
+    public void testProjectStages() throws Exception
+    {
+        ProjectStage ps = ProjectStage.Development;
+        Assert.assertNotNull(ps);
+
+        ProjectStage psOther = ProjectStage.valueOf("CustomProjectStage");
+        Assert.assertNotNull(psOther);
+
+        psOther = TestProjectStages.CustomProjectStage;
+        Assert.assertNotNull(psOther);
+
+        ProjectStage psProd = ProjectStage.valueOf("Production");
+        Assert.assertNotNull(psProd);
+
+        ProjectStage[] values = ProjectStage.values();
+        Assert.assertNotNull(values);
+        Assert.assertTrue(values.length == 7);
+    }
 }

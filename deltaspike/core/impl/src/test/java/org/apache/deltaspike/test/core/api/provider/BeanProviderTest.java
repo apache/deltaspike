@@ -16,11 +16,11 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-package org.apache.deltaspike.core.test.api.provider;
+package org.apache.deltaspike.test.core.api.provider;
 
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
-import org.apache.deltaspike.core.test.api.temptestutil.ShrinkWrapArchiveUtil;
+import org.apache.deltaspike.test.core.api.temptestutil.ShrinkWrapArchiveUtil;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -44,9 +44,9 @@ public class BeanProviderTest
         return ShrinkWrap.create(WebArchive.class)
                 .addAsLibraries(ShrinkWrapArchiveUtil.getArchives(null,
                                                   "META-INF/beans.xml",
-                                                  new String[]{"org.apache.deltaspike.core"},
+                                                  new String[]{"org.apache.deltaspike.core",
+                                                               "org.apache.deltaspike.test.core.api.provider"},
                                                   null))
-                .addClass(TestBean.class)
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 

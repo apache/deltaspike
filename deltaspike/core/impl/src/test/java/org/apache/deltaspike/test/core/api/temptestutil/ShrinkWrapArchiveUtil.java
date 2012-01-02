@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.test.api.temptestutil;
+package org.apache.deltaspike.test.core.api.temptestutil;
 
 
 import org.jboss.shrinkwrap.api.ShrinkWrap;
