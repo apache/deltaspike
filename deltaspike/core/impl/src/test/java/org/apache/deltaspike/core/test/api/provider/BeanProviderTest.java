@@ -62,12 +62,23 @@ public class BeanProviderTest
     }
 
     /**
-     * lookup by name
+     * lookup by name with expected type
      */
     @Test
     public void simpleBeanLookupByName()
     {
-        TestBean testBean = BeanProvider.getContextualReference(TestBean.class, false, "extraNameBean");
+        TestBean testBean = BeanProvider.getContextualReference("extraNameBean", false, TestBean.class);
+
+        Assert.assertNotNull(testBean);
+    }
+
+    /**
+     * lookup by name without type
+     */
+    @Test
+    public void simpleBeanLookupByNameWithoutType()
+    {
+        Object testBean = BeanProvider.getContextualReference("extraNameBean", false);
 
         Assert.assertNotNull(testBean);
     }

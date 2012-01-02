@@ -64,7 +64,7 @@ public class SimpleBeanLookupExample
 
         LOG.info(defaultEchoService.echo("Hello explicitly resolved CDI bean!"));
 
-        defaultEchoService = BeanProvider.getContextualReference(EchoService.class, false, "defaultEchoService");
+        defaultEchoService = BeanProvider.getContextualReference("defaultEchoService", false, EchoService.class);
 
         LOG.info(defaultEchoService.echo("Hello CDI bean resolved by name!"));
 

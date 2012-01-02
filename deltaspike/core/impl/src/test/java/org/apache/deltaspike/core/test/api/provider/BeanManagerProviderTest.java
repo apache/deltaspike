@@ -19,19 +19,18 @@
 package org.apache.deltaspike.core.test.api.provider;
 
 
-import javax.enterprise.inject.spi.BeanManager;
-
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
-import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.test.api.temptestutil.ShrinkWrapArchiveUtil;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.junit.Test;
 import org.junit.Assert;
+import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import javax.enterprise.inject.spi.BeanManager;
 
 @RunWith(Arquillian.class)
 public class BeanManagerProviderTest
@@ -44,9 +43,9 @@ public class BeanManagerProviderTest
     {
         return ShrinkWrap.create(WebArchive.class)
                 .addAsLibraries(ShrinkWrapArchiveUtil.getArchives(null,
-                                                  "META-INF/beans.xml",
-                                                  new String[]{"org.apache.deltaspike"},
-                                                  null))
+                        "META-INF/beans.xml",
+                        new String[]{"org.apache.deltaspike"},
+                        null))
                 .addClass(TestBean.class)
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
@@ -59,11 +58,5 @@ public class BeanManagerProviderTest
 
             BeanManager bm = bmp.getBeanManager();
             Assert.assertNotNull(bm);
-
-            TestBean tb1 = BeanProvider.getContextualReference(TestBean.class, false);
-            Assert.assertNotNull(tb1);
-
-            TestBean tb2 = BeanProvider.getContextualReference(TestBean.class, false, "extraNameBean");
-            Assert.assertNotNull(tb2);
     }
 }
