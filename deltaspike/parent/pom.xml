@@ -441,11 +441,9 @@
             <!-- use this profile to compile and test DeltaSpike with Apache OpenWebBeans -->
             <id>OWB</id>
 
-            <!-- allows to use it as default profile to ensure a correct build at analysis.apache.org -->
+            <!-- ensures a correct build at analysis.apache.org -->
             <activation>
-                <property>
-                    <name>!Weld</name>
-                </property>
+                <activeByDefault>true</activeByDefault>
             </activation>
 
             <dependencies>
