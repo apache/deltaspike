@@ -24,7 +24,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 
 /**
- * @author <a href="http://community.jboss.org/people/LightGuard">Jason Porter</a>
+ * Essentially empty test
  */
 public class EmptyTest
 {

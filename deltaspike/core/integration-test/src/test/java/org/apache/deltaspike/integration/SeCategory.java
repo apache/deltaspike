@@ -21,7 +21,6 @@ package org.apache.deltaspike.integration;
 
 /**
  * Category marker interface. Tests which are SE bare minimum.
- * @author <a href="http://community.jboss.org/people/LightGuard">Jason Porter</a>
  */
 public interface SeCategory
 {
