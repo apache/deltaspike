@@ -32,19 +32,24 @@
     <artifactId>integration-test</artifactId>
     <packaging>jar</packaging>
 
-    <dependencies>
+    <properties>
+        <jboss.as.version>7.1.0.CR1b</jboss.as.version>
+    </properties>
 
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
+    <dependencies>
 
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-library</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.jboss.arquillian.junit</groupId>
+            <artifactId>arquillian-junit-container</artifactId>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -66,6 +71,7 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${maven.surefire.plugin.version}</version>
                     <configuration>
+                        <skip>true</skip> <!-- Skip the tests normally -->
                         <!-- Groups need to be setup for each profile -->
                         <parallel>methods</parallel>
                         <includes>
@@ -73,8 +79,112 @@
                             <include>**/*.java</include>
                         </includes>
                     </configuration>
+
+                    <executions>
+                        <execution>
+                            <id>surefire-integration-tests</id>
+                            <phase>integration-test</phase>
+                            <goals>
+                                <goal>test</goal>
+                            </goals>
+                            <configuration>
+                                <skip>false</skip>
+                                <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                                <trimStackTrace>false</trimStackTrace>
+                                <printSummary>true</printSummary>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>
     </build>
+
+    <profiles>
+        <profile>
+            <id>jbossas-managed-7</id>
+            <dependencies>
+
+                <dependency>
+                    <groupId>org.jboss.as</groupId>
+                    <artifactId>jboss-as-arquillian-container-managed</artifactId>
+                    <version>${jboss.as.version}</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.jboss.arquillian.protocol</groupId>
+                    <artifactId>arquillian-protocol-servlet</artifactId>
+                    <scope>test</scope>
+                </dependency>
+
+                <!-- If needed
+                <dependency>
+                    <groupId>org.jboss.spec</groupId>
+                    <artifactId>jboss-javaee-6.0</artifactId>
+                    <version>2.0.0.Final</version>
+                    <type>pom</type>
+                    <scope>compile</scope>
+                </dependency>
+                -->
+
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${maven.surefire.plugin.version}</version>
+                        <configuration>
+                            <!-- Groups need to be setup for each profile -->
+                            <groups>
+                                org.apache.deltaspike.integration.FullProfileCategory,
+                                org.apache.deltaspike.integration.WebProfileCategory,
+                                org.apache.deltaspike.integration.SeCategory
+                            </groups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>glassfish-remote-3.1</id>
+            <dependencies>
+
+                <dependency>
+                    <groupId>org.jboss.arquillian.container</groupId>
+                    <artifactId>arquillian-glassfish-remote-3.1</artifactId>
+                    <version>1.0.0.CR2</version>
+                    <scope>test</scope>
+                </dependency>
+
+                <!-- If needed
+                <dependency>
+                    <groupId>org.jboss.spec</groupId>
+                    <artifactId>jboss-javaee-6.0</artifactId>
+                    <version>2.0.0.Final</version>
+                    <type>pom</type>
+                    <scope>compile</scope>
+                </dependency>
+                -->
+
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${maven.surefire.plugin.version}</version>
+                        <configuration>
+                            <!-- Groups need to be setup for each profile -->
+                            <groups>
+                                org.apache.deltaspike.integration.FullProfileCategory,
+                                org.apache.deltaspike.integration.WebProfileCategory,
+                                org.apache.deltaspike.integration.SeCategory
+                            </groups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
