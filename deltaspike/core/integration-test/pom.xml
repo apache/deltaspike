@@ -32,6 +32,8 @@
     <artifactId>integration-test</artifactId>
     <packaging>jar</packaging>
 
+    <name>Apache DeltaSpike Core Integration Test Suite</name>
+
     <properties>
         <jboss.as.version>7.1.0.CR1b</jboss.as.version>
     </properties>
