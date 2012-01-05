@@ -1,23 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 <!--
-    Licensed to the Apache Software Foundation (ASF) under one
-    or more contributor license agreements.  See the NOTICE file
-    distributed with this work for additional information
-    regarding copyright ownership.  The ASF licenses this file
-    to you under the Apache License, Version 2.0 (the
-    "License"); you may not use this file except in compliance
-    with the License.  You may obtain a copy of the License at
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements. See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership. The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License. You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied. See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
 
-    http://www.apache.org/licenses/LICENSE-2.0
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <!--
+        Licensed to the Apache Software Foundation (ASF) under one
+        or more contributor license agreements.  See the NOTICE file
+        distributed with this work for additional information
+        regarding copyright ownership.  The ASF licenses this file
+        to you under the Apache License, Version 2.0 (the
+        "License"); you may not use this file except in compliance
+        with the License.  You may obtain a copy of the License at
 
-    Unless required by applicable law or agreed to in writing,
-    software distributed under the License is distributed on an
-    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-    KIND, either express or implied.  See the License for the
-    specific language governing permissions and limitations
-    under the License.
--->
+        http://www.apache.org/licenses/LICENSE-2.0
+
+        Unless required by applicable law or agreed to in writing,
+        software distributed under the License is distributed on an
+        "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+        KIND, either express or implied.  See the License for the
+        specific language governing permissions and limitations
+        under the License.
+    -->
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -52,6 +72,18 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.deltaspike.core</groupId>
+            <artifactId>deltaspike-core-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.deltaspike.core</groupId>
+            <artifactId>deltaspike-core-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -73,9 +105,10 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${maven.surefire.plugin.version}</version>
                     <configuration>
-                        <skip>true</skip> <!-- Skip the tests normally -->
+                        <skip>true</skip>
+                        <!-- Skip the tests normally -->
                         <!-- Groups need to be setup for each profile -->
-                        <parallel>methods</parallel>
+                        <parallel>none</parallel>
                         <includes>
                             <!-- TODO: Leave the default or allow any class name for a test? -->
                             <include>**/*.java</include>
@@ -105,6 +138,7 @@
     <profiles>
         <profile>
             <id>jbossas-managed-7</id>
+            <!-- JBOSS_HOME must be set for this work correctly -->
             <dependencies>
 
                 <dependency>
@@ -137,6 +171,9 @@
                         <artifactId>maven-surefire-plugin</artifactId>
                         <version>${maven.surefire.plugin.version}</version>
                         <configuration>
+                            <systemProperties>
+                                <arquillian.launch>jbossas-managed-7</arquillian.launch>
+                            </systemProperties>
                             <!-- Groups need to be setup for each profile -->
                             <groups>
                                 org.apache.deltaspike.integration.FullProfileCategory,
@@ -177,6 +214,9 @@
                         <artifactId>maven-surefire-plugin</artifactId>
                         <version>${maven.surefire.plugin.version}</version>
                         <configuration>
+                            <systemProperties>
+                                <arquillian.launch>glassfish-remote-3.1</arquillian.launch>
+                            </systemProperties>
                             <!-- Groups need to be setup for each profile -->
                             <groups>
                                 org.apache.deltaspike.integration.FullProfileCategory,
