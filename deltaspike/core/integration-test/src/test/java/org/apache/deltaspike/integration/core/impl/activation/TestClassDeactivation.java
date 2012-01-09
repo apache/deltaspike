@@ -53,7 +53,7 @@ public class TestClassDeactivation
         return ShrinkWrap.create(WebArchive.class)
                 .addAsLibraries(ShrinkWrapArchiveUtil.getArchives(null,
                         "META-INF/beans.xml",
-                        new String[]{"org.apache.deltaspike.test.core.impl.activation"},
+                        new String[]{"org.apache.deltaspike.integration.core.impl.activation"},
                         null))
                 .addAsResource(new File(fileUrl.getFile()))
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
