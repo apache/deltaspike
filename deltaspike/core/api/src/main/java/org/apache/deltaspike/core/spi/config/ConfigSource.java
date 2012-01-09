@@ -88,7 +88,7 @@ public abstract class ConfigSource
         {
             if(configuredOrdinalString != null)
             {
-                configuredOrdinal = new Integer(configuredOrdinalString.trim());
+                configuredOrdinal = Integer.valueOf(configuredOrdinalString.trim());
             }
         }
         catch (NumberFormatException e)

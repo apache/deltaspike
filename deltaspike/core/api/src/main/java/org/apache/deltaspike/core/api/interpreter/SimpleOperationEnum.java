@@ -39,12 +39,13 @@ enum SimpleOperationEnum
 
     static String getOperations()
     {
-        String operations = "";
+        StringBuilder operations = new StringBuilder();
 
         for(SimpleOperationEnum operation : SimpleOperationEnum.values())
         {
-            operations += operation.getValue() + " ";
+            operations.append(operation);
+            operations.append(" ");
         }
-        return operations;
+        return operations.toString();
     }
 }
