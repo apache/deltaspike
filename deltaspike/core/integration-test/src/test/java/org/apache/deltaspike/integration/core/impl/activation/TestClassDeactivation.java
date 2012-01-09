@@ -19,6 +19,7 @@
 package org.apache.deltaspike.integration.core.impl.activation;
 
 import org.apache.deltaspike.core.impl.util.ClassDeactivation;
+import org.apache.deltaspike.integration.SeCategory;
 import org.apache.deltaspike.integration.testutil.ShrinkWrapArchiveUtil;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -27,6 +28,7 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
 import java.io.File;
@@ -36,6 +38,7 @@ import java.net.URL;
  * Test for {@link org.apache.deltaspike.core.api.activation.ClassDeactivator}
  */
 @RunWith(Arquillian.class)
+@Category(SeCategory.class)
 public class TestClassDeactivation
 {
     /**
