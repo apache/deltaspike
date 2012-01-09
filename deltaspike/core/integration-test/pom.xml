@@ -53,6 +53,7 @@
             <groupId>org.apache.deltaspike.core</groupId>
             <artifactId>deltaspike-core-impl</artifactId>
             <version>${project.version}</version>
+            <scope>compile</scope>
         </dependency>
 
     </dependencies>
