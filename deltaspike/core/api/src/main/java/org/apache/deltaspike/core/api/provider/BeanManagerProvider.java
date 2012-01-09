@@ -32,11 +32,14 @@ import org.apache.deltaspike.core.api.util.ClassUtils;
 
 
 /**
- * <p>This class provides access to the BeanManager
- * by registring the current BeanManager in an extension and
- * making it available via a singleton factory</p>
+ * <p>This class provides access to the {@link BeanManager}
+ * by registering the current {@link BeanManager} in an extension and
+ * making it available via a singleton factory for the current application.</p>
  * <p>This is really handy if you like to access CDI functionality
  * from places where no injection is available.</p>
+ * <p>If a simple but manual bean-lookup is needed, it's easier to use the {@link BeanProvider}.</p>
+ *
+ * <p>As soon as an application shuts down, the reference to the {@link BeanManager} will be removed.<p>
  *
  * <p>Usage:<p/>
  * <pre>
@@ -50,7 +53,10 @@ public class BeanManagerProvider implements Extension
     private volatile Map<ClassLoader, BeanManager> bms = new ConcurrentHashMap<ClassLoader, BeanManager>();
 
     /**
-     * Returns if the {@link BeanManagerProvider} has been initialized
+     * Returns if the {@link BeanManagerProvider} has been initialized.
+     * Usually it isn't needed to call this method in application code.
+     * It's e.g. useful for other frameworks to check if DeltaSpike and the CDI container in general have been started.
+     *
      * @return true if the bean-manager-provider is ready to be used
      */
     public static boolean isActive()
@@ -59,33 +65,37 @@ public class BeanManagerProvider implements Extension
     }
 
     /**
-     * Singleton accessor
+     * Allows to get the current provider instance which provides access to the current {@link BeanManager}
+     *
+     * @throws IllegalStateException if the {@link BeanManagerProvider} isn't ready to be used.
+     * That's the case if the environment isn't configured properly and therefore the {@link AfterBeanDiscovery}
+     * hasn't be called before this method gets called.
      * @return the singleton BeanManagerProvider
      */
     public static BeanManagerProvider getInstance()
     {
         if(bmp == null)
         {
-            //X TODO
-            // workaround for Mojarra (in combination with OWB and a custom WebBeansConfigurationListener and a custom
-            // StartupBroadcaster for bootstrapping CDI)
+            //X TODO Java-EE5 support needs to be discussed
+            // workaround for some Java-EE5 environments in combination with a special
+            // StartupBroadcaster for bootstrapping CDI
+
             // CodiStartupBroadcaster.broadcastStartup();
             // here bmp might not be null (depends on the broadcasters)
         }
         if(bmp == null)
         {
-            throw new IllegalStateException("no " + BeanManagerProvider.class.getName() + " in place! " +
+            throw new IllegalStateException("No " + BeanManagerProvider.class.getName() + " in place! " +
                 "Please ensure that you configured the CDI implementation of your choice properly. " +
-                "If your setup is correct, please clear all caches and compiled artifacts. " +
-                "If there is still a problem, try one of the controlled bootstrapping add-ons for the CDI " +
-                    "implementation you are using.");
+                "If your setup is correct, please clear all caches and compiled artifacts.");
         }
         return bmp;
     }
 
 
     /**
-     * The active {@link BeanManager} for the current {@link ClassLoader}
+     * The active {@link BeanManager} for the current application (/{@link ClassLoader})
+     *
      * @return the current bean-manager
      */
     public BeanManager getBeanManager()
@@ -108,13 +118,41 @@ public class BeanManagerProvider implements Extension
 
 
     /**
+     * It basically doesn't matter which of the system events we use,
+     * but basically we use the {@link AfterBeanDiscovery} event since it allows to use the
+     * {@link BeanManagerProvider} for all events which occur after the {@link AfterBeanDiscovery} event.
+     *
+     * @param afterBeanDiscovery event which we don't actually use ;)
+     * @param beanManager the BeanManager we store and make available.
+     */
+    public void setBeanManager(@Observes AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager)
+    {
+        BeanManagerProvider bmpFirst = setBeanManagerProvider(this);
+
+        ClassLoader cl = ClassUtils.getClassLoader(null);
+        bmpFirst.bms.put(cl, beanManager);
+
+        //X TODO Java-EE5 support needs to be discussed
+        //CodiStartupBroadcaster.broadcastStartup();
+    }
+
+    /**
+     * Cleanup on container shutdown
+     * @param beforeShutdown cdi shutdown event
+     */
+    public void cleanupStoredBeanManagerOnShutdown(@Observes BeforeShutdown beforeShutdown)
+    {
+        bms.remove(ClassUtils.getClassLoader(null));
+    }
+
+    /**
      * Get the BeanManager from the JNDI registry.
      *
-     * Workaround for jboss 6 (EXTCDI-74)
+     * Workaround for JBossAS 6 (see EXTCDI-74)
      * {@link #setBeanManager(javax.enterprise.inject.spi.AfterBeanDiscovery, javax.enterprise.inject.spi.BeanManager)}
-     * is called in context of a different classloader
+     * is called in context of a different {@link ClassLoader}
      *
-     * @return current {@link javax.enterprise.inject.spi.BeanManager} which is provided via jndi
+     * @return current {@link javax.enterprise.inject.spi.BeanManager} which is provided via JNDI
      */
     private BeanManager resolveBeanManagerViaJndi()
     {
@@ -130,33 +168,9 @@ public class BeanManagerProvider implements Extension
     }
 
     /**
-     * It basiscally doesn't matter which of the system events we use,
-     * but basically we
-     * @param afterBeanDiscovery event which we don't actually use ;)
-     * @param beanManager the BeanManager we store and make available.
-     */
-    public void setBeanManager(@Observes AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager)
-    {
-        BeanManagerProvider bmpFirst = setBeanManagerProvider(this);
-
-        ClassLoader cl = ClassUtils.getClassLoader(null);
-        bmpFirst.bms.put(cl, beanManager);
-
-        //X TODO os890: CodiStartupBroadcaster.broadcastStartup();
-    }
-
-    /**
-     * Cleanup on container shutdown
-     * @param beforeShutdown cdi shutdown event
-     */
-    public void cleanupStoredBeanManagerOnShutdown(@Observes BeforeShutdown beforeShutdown)
-    {
-        bms.remove(ClassUtils.getClassLoader(null));
-    }
-
-    /**
      * This function exists to prevent findbugs to complain about
      * setting a static member from a non-static function.
+     *
      * @param beanManagerProvider the bean-manager-provider which should be used if there isn't an existing provider
      * @return the first BeanManagerProvider
      */
