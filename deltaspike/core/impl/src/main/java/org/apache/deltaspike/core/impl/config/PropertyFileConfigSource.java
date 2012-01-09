@@ -75,7 +75,7 @@ class PropertyFileConfigSource extends ConfigSource
         {
             resourceBundle = loadResourceBundleFromClasspath();
 
-            if (resourceBundle.containsKey(key))
+            if (resourceBundle != null && resourceBundle.containsKey(key))
             {
                 configuredValue = resourceBundle.getString(key);
                 cache.put(key, configuredValue);
