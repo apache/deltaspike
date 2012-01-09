@@ -18,8 +18,6 @@
  */
 package org.apache.deltaspike.core.api.interpreter;
 
-import org.apache.deltaspike.core.api.exclude.Exclude;
-
 /**
  * Base implementation for simple (property) expressions
  *
@@ -56,8 +54,8 @@ public abstract class AbstractPropertyExpressionInterpreter implements Expressio
             else
             {
                 throw new IllegalStateException("expression: " + expression + " isn't supported by " +
-                        Exclude.class.getName() + " via " + getClass().getName() +
-                        " supported operations: " + SimpleOperationEnum.getOperations() + "separator: ';'");
+                        getClass().getName() + " supported operations: " + SimpleOperationEnum.getOperations() +
+                        "separator: ';'");
             }
 
             String[] keyValue = expression.split(operation.getValue());
