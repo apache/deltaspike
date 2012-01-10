@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.deltaspike.core.api.metadata;
 
 import javax.enterprise.inject.spi.AnnotatedCallable;
@@ -31,19 +32,24 @@ class AnnotatedParameterImpl<X> extends AnnotatedImpl implements AnnotatedParame
     private final int position;
     private final AnnotatedCallable<X> declaringCallable;
 
-    AnnotatedParameterImpl(AnnotatedCallable<X> declaringCallable, Class<?> type, int position,
-                           AnnotationStore annotations, Type genericType, Type typeOverride)
+    /**
+     * Constructor
+     */
+    public AnnotatedParameterImpl(AnnotatedCallable<X> declaringCallable, Class<?> type, int position,
+                                  AnnotationStore annotations, Type genericType, Type typeOverride)
     {
         super(type, annotations, genericType, typeOverride);
         this.declaringCallable = declaringCallable;
         this.position = position;
     }
 
+    @Override
     public AnnotatedCallable<X> getDeclaringCallable()
     {
         return declaringCallable;
     }
 
+    @Override
     public int getPosition()
     {
         return position;

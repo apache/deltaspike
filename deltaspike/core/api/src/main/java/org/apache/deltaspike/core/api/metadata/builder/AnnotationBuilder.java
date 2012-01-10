@@ -24,6 +24,7 @@ import org.apache.deltaspike.core.api.util.Reflections;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -31,7 +32,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- *
+ * A store of annotations to be used {@link AnnotatedTypeBuilder} and other places
+ * where a collection of annotations needs manipulation.
  */
 //X TODO: JavaDoc the methods
 public class AnnotationBuilder
@@ -39,12 +41,21 @@ public class AnnotationBuilder
     private final Map<Class<? extends Annotation>, Annotation> annotationMap;
     private final Set<Annotation> annotationSet;
 
+    /**
+     * Default constructor.
+     */
     public AnnotationBuilder()
     {
         this.annotationMap = new HashMap<Class<? extends Annotation>, Annotation>();
         this.annotationSet = new HashSet<Annotation>();
     }
 
+    /**
+     * Adds the annotation to the collections.
+     *
+     * @param annotation annotation to be added
+     * @return this
+     */
     public AnnotationBuilder add(Annotation annotation)
     {
         if (annotation == null)
@@ -56,6 +67,12 @@ public class AnnotationBuilder
         return this;
     }
 
+    /**
+     * Removes the given annotation from the collections.
+     *
+     * @param annotationType to be removed
+     * @return this
+     */
     public AnnotationBuilder remove(Class<? extends Annotation> annotationType)
     {
         if (annotationType == null)
@@ -76,12 +93,23 @@ public class AnnotationBuilder
         return this;
     }
 
+    /**
+     * Creates an {@link AnnotationStore} using the annotations from this instance.
+     *
+     * @return new AnnotationStore
+     */
     public AnnotationStore create()
     {
         return new AnnotationStore(annotationMap, annotationSet);
     }
 
-    public AnnotationBuilder addAll(Set<Annotation> annotations)
+    /**
+     * Adds all annotations from the given collection
+     *
+     * @param annotations collection of annotations to be added
+     * @return this
+     */
+    public AnnotationBuilder addAll(Collection<Annotation> annotations)
     {
         for (Annotation annotation : annotations)
         {
@@ -90,6 +118,12 @@ public class AnnotationBuilder
         return this;
     }
 
+    /**
+     * Adds all annotations from an {@link AnnotationStore}.
+     *
+     * @param annotations annotations to be added
+     * @return this
+     */
     public AnnotationBuilder addAll(AnnotationStore annotations)
     {
         for (Annotation annotation : annotations.getAnnotations())
@@ -99,6 +133,12 @@ public class AnnotationBuilder
         return this;
     }
 
+    /**
+     * Adds all annotations from the given {@link AnnotatedElement}.
+     *
+     * @param element element containing annotations to be added
+     * @return this
+     */
     public AnnotationBuilder addAll(AnnotatedElement element)
     {
         for (Annotation a : element.getAnnotations())
@@ -108,11 +148,17 @@ public class AnnotationBuilder
         return this;
     }
 
+    /**
+     * Getter.
+     */
     public <T extends Annotation> T getAnnotation(Class<T> anType)
     {
         return Reflections.<T>cast(annotationMap.get(anType));
     }
 
+    /**
+     * Simple check for an annotation.
+     */
     public boolean isAnnotationPresent(Class<?> annotationType)
     {
         return annotationMap.containsKey(annotationType);

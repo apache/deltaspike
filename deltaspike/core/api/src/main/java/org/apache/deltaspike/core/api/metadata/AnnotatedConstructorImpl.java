@@ -16,7 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.deltaspike.core.api.metadata;
+
+import org.apache.deltaspike.core.api.metadata.builder.AnnotatedTypeBuilder;
 
 import javax.enterprise.inject.spi.AnnotatedConstructor;
 import java.lang.reflect.Constructor;
@@ -24,13 +27,17 @@ import java.lang.reflect.Type;
 import java.util.Map;
 
 /**
- *
+ * Implementation of {@link AnnotatedConstructor} to be used in {@link AnnotatedTypeBuilder}
+ * and other CDI life cycle events.
  */
 class AnnotatedConstructorImpl<X> extends AnnotatedCallableImpl<X, Constructor<X>> implements AnnotatedConstructor<X>
 {
 
-    AnnotatedConstructorImpl(AnnotatedTypeImpl<X> type, Constructor<?> constructor, AnnotationStore annotations,
-                             Map<Integer, AnnotationStore> parameterAnnotations, Map<Integer, Type> typeOverrides)
+    /**
+     * Constructor
+     */
+    public AnnotatedConstructorImpl(AnnotatedTypeImpl<X> type, Constructor<?> constructor, AnnotationStore annotations,
+                                    Map<Integer, AnnotationStore> parameterAnnotations, Map<Integer, Type> typeOverrides)
     {
 
         super(type, (Constructor<X>) constructor, constructor.getDeclaringClass(), constructor.getParameterTypes(),

@@ -42,9 +42,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *
+ * Builder to aid in creation of a new {@link AnnotatedType} for use in CDI life cycle events.
+ * Using the builder is typically done by reading the annotations from a {@link Class} or an
+ * {@link AnnotatedType}. Once the starting class or type has been added all of annotations
+ * can be modified: constructor, parameter, class, method and fields.
  */
-//X TODO: Javadoc
 public class AnnotatedTypeBuilder<X>
 {
     private Class<X> javaClass;
@@ -516,7 +518,7 @@ public class AnnotatedTypeBuilder<X>
      *
      * @param annotationType the type of the annotation for which to call the
      *                       redefinition
-     * @param redefinition   the redefiniton callback
+     * @param redefinition   the redefinition callback
      * @throws IllegalArgumentException if the annotationType or redefinition is
      *                                  null
      */
@@ -568,7 +570,10 @@ public class AnnotatedTypeBuilder<X>
         return this;
     }
 
-    protected <A extends Annotation> void redefineAnnotationBuilder(Class<A> annotationType, AnnotationRedefiner<A> redefinition, AnnotatedElement annotated, Type baseType, AnnotationBuilder builder, String elementName)
+    protected <A extends Annotation> void redefineAnnotationBuilder(Class<A> annotationType,
+                                                                    AnnotationRedefiner<A> redefinition,
+                                                                    AnnotatedElement annotated, Type baseType,
+                                                                    AnnotationBuilder builder, String elementName)
     {
         if (builder.isAnnotationPresent(annotationType))
         {
@@ -955,6 +960,13 @@ public class AnnotatedTypeBuilder<X>
         return this;
     }
 
+    /**
+     * Override the declared type of a parameter.
+     *
+     * @param parameter the parameter to override the type on
+     * @param type      the new type of the parameter
+     * @throws IllegalArgumentException if parameter or type is null
+     */
     public AnnotatedTypeBuilder<X> overrideParameterType(AnnotatedParameter<? super X> parameter, Type type)
     {
         if (parameter.getDeclaringCallable().getJavaMember() instanceof Method)
@@ -974,11 +986,17 @@ public class AnnotatedTypeBuilder<X>
         }
     }
 
+    /**
+     * getter for the class
+     */
     public Class<X> getJavaClass()
     {
         return javaClass;
     }
 
+    /**
+     * setter for the class
+     */
     public AnnotatedTypeBuilder<X> setJavaClass(Class<X> javaClass)
     {
         this.javaClass = javaClass;
