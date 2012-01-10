@@ -19,21 +19,17 @@
 
 package org.apache.deltaspike.core.api.metadata;
 
-import org.apache.deltaspike.core.api.metadata.builder.AnnotatedTypeBuilder;
 import org.apache.deltaspike.core.api.metadata.builder.AnnotationBuilder;
 import org.apache.deltaspike.core.api.util.Reflections;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
 /**
  * Provides access to the context of an annotation redefinition.
  *
- * @see AnnotatedTypeBuilder
+ * @see org.apache.deltaspike.core.api.metadata.builder.AnnotatedTypeBuilder
  * @see AnnotationRedefiner
  */
 public class RedefinitionContext<A extends Annotation>
@@ -55,8 +51,8 @@ public class RedefinitionContext<A extends Annotation>
     /**
      * Access to the {@link AnnotatedElement} on which this annotation is
      * defined. If the annotation is defined on a Field, this may be cast to
-     * {@link Field}, if defined on a method, this may be cast to {@link Method},
-     * if defined on a constructor, this may be cast to {@link Constructor}, if
+     * {@link java.lang.reflect.Field}, if defined on a method, this may be cast to {@link java.lang.reflect.Method},
+     * if defined on a constructor, this may be cast to {@link java.lang.reflect.Constructor}, if
      * defined on a class, this may be cast to {@link Class}, or if
      * defined on a parameter, this may be cast to {@link Parameter}
      */
