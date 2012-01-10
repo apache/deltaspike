@@ -37,4 +37,8 @@
         </configuration>
     </container>
 
+    <!-- don't remove the qualifier - it's needed for the arquillian.launch property -->
+    <container qualifier="glassfish-remote-3.1">
+    </container>
+
 </arquillian>
