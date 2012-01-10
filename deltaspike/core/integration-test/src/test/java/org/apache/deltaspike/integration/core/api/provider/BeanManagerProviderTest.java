@@ -50,7 +50,7 @@ public class BeanManagerProviderTest
         return ShrinkWrap.create(WebArchive.class)
                          .addAsLibraries(ShrinkWrapArchiveUtil.getArchives(null,
                                  "META-INF/beans.xml",
-                                 new String[] {"org.apache.deltaspike"},
+                                 new String[] {"org.apache.deltaspike.core"},
                                  null))
                 .addClass(TestBean.class)
                         // Must add the categories to the archive
