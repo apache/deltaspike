@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.deltaspike.integration.testutil;
+package org.apache.deltaspike.integration.util;
 
 
 import org.jboss.shrinkwrap.api.ShrinkWrap;

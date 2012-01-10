@@ -21,6 +21,7 @@ package org.apache.deltaspike.test.core.impl.activation;
 import org.apache.deltaspike.core.impl.util.ClassDeactivation;
 import org.apache.deltaspike.test.core.api.provider.TestBean;
 import org.apache.deltaspike.test.core.api.temptestutil.ShrinkWrapArchiveUtil;
+import org.apache.deltaspike.test.util.FileUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -30,7 +31,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.io.File;
 import java.net.URL;
 
 /**
@@ -54,7 +54,7 @@ public class TestClassDeactivation
                         new String[]{"org.apache.deltaspike.test.core.impl.activation"},
                         null))
                 .addClass(TestBean.class)
-                .addAsResource(new File(fileUrl.getFile()))
+                .addAsResource(FileUtils.getFileForURL(fileUrl.toString()))
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 

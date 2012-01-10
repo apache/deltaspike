@@ -22,7 +22,8 @@ import org.apache.deltaspike.core.impl.util.ClassDeactivation;
 import org.apache.deltaspike.integration.FullProfileCategory;
 import org.apache.deltaspike.integration.SeCategory;
 import org.apache.deltaspike.integration.WebProfileCategory;
-import org.apache.deltaspike.integration.testutil.ShrinkWrapArchiveUtil;
+import org.apache.deltaspike.integration.util.FileUtils;
+import org.apache.deltaspike.integration.util.ShrinkWrapArchiveUtil;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -33,7 +34,6 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
-import java.io.File;
 import java.net.URL;
 
 /**
@@ -57,7 +57,7 @@ public class TestClassDeactivation
                         "META-INF/beans.xml",
                         new String[]{"org.apache.deltaspike.core"},
                         null))
-                .addAsResource(new File(fileUrl.getFile()))
+                .addAsResource(FileUtils.getFileForURL(fileUrl.toString()))
                 .addClasses(ActivatedClass.class, DeactivatedClass.class, TestClassDeactivator.class)
                         // Must add the categories to the archive
                 .addClasses(SeCategory.class, WebProfileCategory.class, FullProfileCategory.class)
