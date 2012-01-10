@@ -40,12 +40,13 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+//import java.util.Arrays;
 
 /**
  * Utilities for common reflection based actions. Some are basic Java Reflection based, others are CDI based.
@@ -392,7 +393,8 @@ public class Reflections
         }
         if (Thread.currentThread().getContextClassLoader() != null)
         {
-            throw new ClassNotFoundException("Could not load class " + name + " with the context class loader " + Thread.currentThread().getContextClassLoader().toString() + " or any of the additional ClassLoaders: " + Arrays.toString(loaders));
+            throw new ClassNotFoundException(String.format("Could not load class %s with the context class loader %s or any of the additional ClassLoaders: %s",
+                    name, Thread.currentThread().getContextClassLoader(), loaders));
         }
         else
         {
@@ -404,8 +406,12 @@ public class Reflections
     {
         StringBuilder message = new StringBuilder(String.format("Exception invoking method [%s] on object [%s], using arguments [", method.getName(), obj));
         if (args != null)
+        {
             for (int i = 0; i < args.length; i++)
+            {
                 message.append((i > 0 ? "," : "") + args[i]);
+            }
+        }
         message.append("]");
         return message.toString();
     }
@@ -413,7 +419,7 @@ public class Reflections
     /**
      * Set the accessibility flag on the {@link AccessibleObject} as described in
      * {@link AccessibleObject#setAccessible(boolean)} within the context of
-     * a {@link PrivilegedAction}.
+     * a {@link java.security.PrivilegedAction}.
      *
      * @param <A>    member the accessible object type
      * @param member the accessible object
@@ -1029,7 +1035,9 @@ public class Reflections
     public static boolean isBindings(Annotation binding)
     {
         boolean isBindingAnnotation = false;
-        if (binding.annotationType().isAnnotationPresent(Qualifier.class) && binding.annotationType().isAnnotationPresent(Retention.class) && binding.annotationType().getAnnotation(Retention.class).value().equals(RetentionPolicy.RUNTIME))
+        if (binding.annotationType().isAnnotationPresent(Qualifier.class)
+                && binding.annotationType().isAnnotationPresent(Retention.class)
+                && binding.annotationType().getAnnotation(Retention.class).value().equals(RetentionPolicy.RUNTIME))
         {
             isBindingAnnotation = true;
         }
