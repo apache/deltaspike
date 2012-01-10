@@ -189,9 +189,9 @@
                             </systemProperties>
                             <!-- Groups need to be setup for each profile -->
                             <groups>
-                                org.apache.deltaspike.integration.FullProfileCategory,
-                                org.apache.deltaspike.integration.WebProfileCategory,
-                                org.apache.deltaspike.integration.SeCategory
+                                org.apache.deltaspike.integration.category.FullProfileCategory,
+                                org.apache.deltaspike.integration.category.WebProfileCategory,
+                                org.apache.deltaspike.integration.category.SeCategory
                             </groups>
                         </configuration>
                     </plugin>
@@ -232,9 +232,9 @@
                             </systemProperties>
                             <!-- Groups need to be setup for each profile -->
                             <groups>
-                                org.apache.deltaspike.integration.FullProfileCategory,
-                                org.apache.deltaspike.integration.WebProfileCategory,
-                                org.apache.deltaspike.integration.SeCategory
+                                org.apache.deltaspike.integration.category.FullProfileCategory,
+                                org.apache.deltaspike.integration.category.WebProfileCategory,
+                                org.apache.deltaspike.integration.category.SeCategory
                             </groups>
                         </configuration>
                     </plugin>

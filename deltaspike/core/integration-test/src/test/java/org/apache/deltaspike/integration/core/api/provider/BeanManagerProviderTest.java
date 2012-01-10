@@ -21,9 +21,7 @@ package org.apache.deltaspike.integration.core.api.provider;
 
 
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
-import org.apache.deltaspike.integration.FullProfileCategory;
-import org.apache.deltaspike.integration.SeCategory;
-import org.apache.deltaspike.integration.WebProfileCategory;
+import org.apache.deltaspike.integration.category.SeCategory;
 import org.apache.deltaspike.integration.util.ShrinkWrapArchiveUtil;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -50,11 +48,11 @@ public class BeanManagerProviderTest
         return ShrinkWrap.create(WebArchive.class)
                          .addAsLibraries(ShrinkWrapArchiveUtil.getArchives(null,
                                  "META-INF/beans.xml",
-                                 new String[]{"org.apache.deltaspike.core"},
+                                 new String[]{"org.apache.deltaspike.core",
+                                         "org.apache.deltaspike.integration.category",
+                                         "org.apache.deltaspike.integration.util",
+                                         "org.apache.deltaspike.integration.core.api.provider"},
                                  null))
-                .addClass(TestBean.class)
-                        // Must add the categories to the archive
-                .addClasses(SeCategory.class, WebProfileCategory.class, FullProfileCategory.class)
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 

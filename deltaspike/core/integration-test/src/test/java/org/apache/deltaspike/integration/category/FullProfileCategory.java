@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.deltaspike.integration;
+package org.apache.deltaspike.integration.category;
 
 /**
  * Category marker interface. Tests which are Full profile minimum.
