@@ -35,6 +35,9 @@ import org.junit.runner.RunWith;
 
 import javax.enterprise.inject.spi.BeanManager;
 
+/**
+ * X TODO will be merged with the original test as soon as we have the final approach
+ */
 @RunWith(Arquillian.class)
 @Category(SeCategory.class)
 public class BeanManagerProviderTest

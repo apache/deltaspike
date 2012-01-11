@@ -35,6 +35,7 @@ import org.junit.runner.RunWith;
 import java.net.URL;
 
 /**
+ * X TODO will be merged with the original test as soon as we have the final approach
  * Test for {@link org.apache.deltaspike.core.api.activation.ClassDeactivator}
  */
 @RunWith(Arquillian.class)
