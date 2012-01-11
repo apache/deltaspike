@@ -113,4 +113,28 @@ public class ExcludeTest
 
         Assert.assertNull(devDbBean);
     }
+
+    /**
+     * bean excluded based on a custom expression syntax
+     */
+    @Test
+    public void excludedBasedOnCustomExpressionSyntax()
+    {
+        CustomExpressionBasedNoBean noBean =
+                BeanProvider.getContextualReference(CustomExpressionBasedNoBean.class, true);
+
+        Assert.assertNull(noBean);
+    }
+
+    /**
+     * bean included based on a custom expression syntax
+     */
+    @Test
+    public void includedBasedOnCustomExpressionSyntax()
+    {
+        CustomExpressionBasedBean bean =
+                BeanProvider.getContextualReference(CustomExpressionBasedBean.class, true);
+
+        Assert.assertNotNull(bean);
+    }
 }
