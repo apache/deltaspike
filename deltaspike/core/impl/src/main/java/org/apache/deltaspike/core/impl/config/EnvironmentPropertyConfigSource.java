@@ -31,7 +31,7 @@ class EnvironmentPropertyConfigSource extends ConfigSource
     @Override
     protected int getDefaultOrdinal()
     {
-        return 200;
+        return 300;
     }
 
     /**

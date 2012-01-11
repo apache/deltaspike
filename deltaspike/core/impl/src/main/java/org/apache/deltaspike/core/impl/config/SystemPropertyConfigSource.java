@@ -31,7 +31,7 @@ class SystemPropertyConfigSource extends ConfigSource
     @Override
     protected int getDefaultOrdinal()
     {
-        return 100;
+        return 400;
     }
 
     /**

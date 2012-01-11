@@ -37,7 +37,7 @@ class LocalJndiConfigSource extends ConfigSource
     @Override
     protected int getDefaultOrdinal()
     {
-        return 300;
+        return 200;
     }
 
     /**

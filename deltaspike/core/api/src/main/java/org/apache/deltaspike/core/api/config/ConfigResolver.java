@@ -19,6 +19,8 @@
 package org.apache.deltaspike.core.api.config;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
@@ -113,7 +115,7 @@ public final class ConfigResolver
         
         if (appConfigSources == null)
         {
-            appConfigSources = sortConfigSources(resolveConfigSources());
+            appConfigSources = sortDescending(resolveConfigSources());
             
             if (LOG.isLoggable(Level.FINE)) 
             {
@@ -145,25 +147,19 @@ public final class ConfigResolver
         return appConfigSources;
     }
 
-    private static ConfigSource[] sortConfigSources(List<ConfigSource> configSources)
+    private static ConfigSource[] sortDescending(List<ConfigSource> configSources)
     {
-        List<ConfigSource> sortedConfigSources = new ArrayList<ConfigSource>();
-        for (ConfigSource cs : configSources)
+        Collections.sort(configSources, new Comparator<ConfigSource>()
         {
-            int configOrder = cs.getOrdinal();
-
-            int i;
-            for (i = 0; i < sortedConfigSources.size(); i++)
+            /**
+             * {@inheritDoc}
+             */
+            @Override
+            public int compare(ConfigSource configSource1, ConfigSource configSource2)
             {
-                int listConfigOrder = sortedConfigSources.get(i).getOrdinal();
-                if (listConfigOrder > configOrder)
-                {
-                    // only go as far as we found a higher priority Properties file
-                    break;
-                }
+                return (configSource1.getOrdinal() > configSource2.getOrdinal()) ? -1 : 1 ;
             }
-            sortedConfigSources.add(i, cs);
-        }
-        return sortedConfigSources.toArray(new ConfigSource[configSources.size()]);
+        });
+        return configSources.toArray(new ConfigSource[configSources.size()]);
     }
 }

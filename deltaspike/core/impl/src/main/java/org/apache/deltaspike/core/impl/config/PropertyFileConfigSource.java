@@ -48,7 +48,7 @@ class PropertyFileConfigSource extends ConfigSource
     @Override
     protected int getDefaultOrdinal()
     {
-        return 400;
+        return 100;
     }
 
     /**
