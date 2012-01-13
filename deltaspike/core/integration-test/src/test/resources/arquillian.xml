@@ -29,9 +29,7 @@
 
     <container qualifier="jbossas-managed-7">
         <configuration>
-            <property name="javaVmArguments">-client -noverify -XX:+UseFastAccessorMethods -Xms64m -Xmx1024m
-                -XX:MaxPermSize=512m
-            </property>
+            <property name="javaVmArguments">-client -noverify -Xms64m -Xmx1024m -XX:MaxPermSize=512m</property>
             <property name="outputToConsole">false</property>
             <property name="allowConnectingToRunningServer">true</property>
         </configuration>
