@@ -35,9 +35,39 @@ public interface ConfigSource
      * Any ConfigSource might use it's own though or even return a hardcoded
      * in {@link #getOrdinal()}.
      */
-    static final String DELTASPIKE_ORDINAL = "deltaspike_ordinal";
+    static String DELTASPIKE_ORDINAL = "deltaspike_ordinal";
     
     /**
+     * Lookup order:
+     *
+     * <ol>
+     *     <li>System properties (ordinal 400)</li>
+     *     <li>Environment properties (ordinal 300)</li>
+     *     <li>JNDI values (ordinal 200)</li>
+     *     <li>Properties file values (/META-INF/apache-deltaspike.properties) (ordinal 100)</li>
+     * </ol>
+     * <p/>
+     * <p><b>Important Hints for custom implementations</b>:</p>
+     * <p>
+     * If a custom implementation should be invoked <b>before</b> the default implementations, use a value &gt; 400
+     * </p>
+     * <p>
+     * If a custom implementation should be invoked <b>after</b> the default implementations, use a value &lt; 100
+     * </p>
+     * <p>
+     *
+     *     <b>IMPORTANT: </b> Have a look at the abstract base-implementation DeltaSpike is using internally,
+     *     if a custom implementation should load the ordinal value from the config-source like the default
+     *     implementations provided by DeltaSpike do.
+     *
+     * </p>
+     * <p/>
+     * <p>Reordering of the default order of the config-sources:</p>
+     * <p>Example: If the properties file/s should be used <b>before</b> the other implementations,
+     * you have to configure an ordinal &gt; 400. That means, you have to add e.g. deltaspike_ordinal=401 to
+     * /META-INF/apache-deltaspike.properties . Hint: In case of property files every file is handled as independent
+     * config-source, but all of them have ordinal 400 by default (and can be reordered in a fine-grained manner.</p>
+     *
      * @return the 'importance' aka ordinal of the configured values. The higher, the more important.
      */
     int getOrdinal();
