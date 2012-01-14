@@ -18,31 +18,16 @@
  */
 package org.apache.deltaspike.core.impl.config;
 
-import org.apache.deltaspike.core.spi.config.ConfigSource;
 
 /**
- * {@link ConfigSource} which uses System#getProperty
+ * {@link org.apache.deltaspike.core.spi.config.ConfigSource}
+ * which uses System#getProperty
  */
-class SystemPropertyConfigSource implements ConfigSource
+class SystemPropertyConfigSource extends BaseConfigSource
 {
-    private int ordinal = 400;
-
     SystemPropertyConfigSource()
     {
-        String envOrdinal = getPropertyValue(ConfigSource.DELTASPIKE_ORDINAL);
-        if (envOrdinal != null && envOrdinal.length() > 0)
-        {
-            ordinal = Integer.parseInt(envOrdinal);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int getOrdinal()
-    {
-        return ordinal;
+        initOrdinal(400);
     }
 
     /**

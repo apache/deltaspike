@@ -18,18 +18,16 @@
  */
 package org.apache.deltaspike.core.impl.config;
 
-import org.apache.deltaspike.core.spi.config.ConfigSource;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Properties;
 
 /**
- * {@link ConfigSource} which uses
+ * {@link org.apache.deltaspike.core.spi.config.ConfigSource} which uses
  * <i>META-INF/apache-deltaspike.properties</i> for the lookup
  */
-class PropertyFileConfigSource implements ConfigSource
+class PropertyFileConfigSource extends BaseConfigSource
 {
     private Properties properties;
     private String fileName;
@@ -38,20 +36,7 @@ class PropertyFileConfigSource implements ConfigSource
     {
         fileName = propertyFileUrl.toExternalForm();
         properties = loadProperties(propertyFileUrl);
-
-        String ordinalVal = getPropertyValue(ConfigSource.DELTASPIKE_ORDINAL);
-        if (ordinalVal != null && ordinalVal.length() > 0)
-        {
-            ordinal = Integer.valueOf(ordinalVal);
-        }
-    }
-
-    private int ordinal = 100;
-    
-    @Override
-    public int getOrdinal()
-    {
-        return ordinal;
+        initOrdinal(100);
     }
 
     /**

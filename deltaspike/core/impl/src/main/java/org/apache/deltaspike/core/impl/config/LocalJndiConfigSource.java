@@ -19,33 +19,21 @@
 package org.apache.deltaspike.core.impl.config;
 
 import org.apache.deltaspike.core.impl.util.JndiUtils;
-import org.apache.deltaspike.core.spi.config.ConfigSource;
 
 import javax.enterprise.inject.Typed;
 
 /**
- * {@link ConfigSource} which uses JNDI for the lookup
+ * {@link org.apache.deltaspike.core.spi.config.ConfigSource}
+ * which uses JNDI for the lookup
  */
 @Typed()
-class LocalJndiConfigSource implements ConfigSource
+class LocalJndiConfigSource extends BaseConfigSource
 {
     private static final String BASE_NAME = "java:comp/env/deltaspike/";
 
-    private Integer ordinal = Integer.valueOf(100);
-
     public LocalJndiConfigSource()
     {
-        String ordinalVal = getPropertyValue(ConfigSource.DELTASPIKE_ORDINAL);
-        if (ordinalVal != null && ordinalVal.length() > 0)
-        {
-            ordinal = Integer.valueOf(ordinalVal);
-        }
-    }
-
-    @Override
-    public int getOrdinal()
-    {
-        return ordinal;
+        initOrdinal(300);
     }
 
     /**
