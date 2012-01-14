@@ -57,7 +57,7 @@ public class ExcludeIntegrationTest
     @Deployment
     public static WebArchive deploy()
     {
-        URL fileUrl = ExcludeIntegrationTest.class.getClassLoader()
+        URL deltaSpikeConfig = ExcludeIntegrationTest.class.getClassLoader()
                 .getResource("META-INF/apache-deltaspike.properties");
 
         URL testExtensionsFileUrl = ExcludeIntegrationTest.class.getClassLoader()
@@ -71,7 +71,8 @@ public class ExcludeIntegrationTest
                                 "org.apache.deltaspike.test.core.api.exclude"},
                         null))
                 .addClass(IntegrationTestProjectStageProducer.class)
-                .addAsResource(FileUtils.getFileForURL(fileUrl.toString()))
+                .addAsResource(FileUtils.getFileForURL(deltaSpikeConfig.toString()),
+                        "META-INF/apache-deltaspike.properties")
                 .addAsResource(FileUtils.getFileForURL(testExtensionsFileUrl.toString()),
                         "META-INF/services/javax.enterprise.inject.spi.Extension")
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");

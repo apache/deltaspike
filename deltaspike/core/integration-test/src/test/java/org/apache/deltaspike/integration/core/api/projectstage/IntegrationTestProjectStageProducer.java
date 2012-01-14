@@ -25,7 +25,7 @@ import javax.enterprise.inject.Typed;
 
 /**
  * Custom {@link ProjectStageProducer} which sets the project-stage to integration-test as soon as it gets used.
- * It's configured in apache-deltaspike.properties
+ * It's configured in apache-deltaspike.properties and e.g. used by ExcludeIntegrationTest
  */
 @Typed()
 public class IntegrationTestProjectStageProducer extends ProjectStageProducer

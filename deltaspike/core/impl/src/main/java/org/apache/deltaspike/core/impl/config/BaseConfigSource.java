@@ -32,6 +32,9 @@ public abstract class BaseConfigSource implements ConfigSource
 
     private int ordinal = 1000; // default
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getOrdinal()
     {
@@ -49,6 +52,7 @@ public abstract class BaseConfigSource implements ConfigSource
         this.ordinal = defaultOrdinal;
 
         String configuredOrdinalString = getPropertyValue(ConfigSource.DELTASPIKE_ORDINAL);
+
         try
         {
             if(configuredOrdinalString != null)
@@ -62,5 +66,4 @@ public abstract class BaseConfigSource implements ConfigSource
                     "The configured config-ordinal isn't a valid integer. Invalid value: " + configuredOrdinalString);
         }
     }
-
 }
