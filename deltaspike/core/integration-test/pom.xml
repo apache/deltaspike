@@ -107,6 +107,20 @@
                                 <printSummary>true</printSummary>
                             </configuration>
                         </execution>
+                        <execution>
+                            <id>run-core-tests</id>
+                            <phase>integration-test</phase>
+                            <goals>
+                                <goal>test</goal>
+                            </goals>
+                            <configuration>
+                                <testClassesDirectory>${project.build.directory}/coretests/</testClassesDirectory>
+                                <skip>false</skip>
+                                <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                                <trimStackTrace>false</trimStackTrace>
+                                <printSummary>true</printSummary>
+                            </configuration>
+                        </execution>
                     </executions>
                 </plugin>
             </plugins>
@@ -124,6 +138,7 @@
                             <goal>unpack</goal>
                         </goals>
                         <configuration>
+                            <includes>**/*Test.class</includes>
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>org.apache.deltaspike.core</groupId>
