@@ -20,8 +20,8 @@ package org.apache.deltaspike.integration.core.impl.activation;
 
 import org.apache.deltaspike.core.impl.util.ClassDeactivation;
 import org.apache.deltaspike.integration.category.SeCategory;
-import org.apache.deltaspike.integration.util.FileUtils;
-import org.apache.deltaspike.integration.util.ShrinkWrapArchiveUtil;
+import  org.apache.deltaspike.test.core.api.temptestutil.ShrinkWrapArchiveUtil;
+import org.apache.deltaspike.test.util.FileUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;

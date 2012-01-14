@@ -21,8 +21,8 @@ package org.apache.deltaspike.integration.core.api.provider;
 
 
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
+import  org.apache.deltaspike.test.core.api.temptestutil.ShrinkWrapArchiveUtil;
 import org.apache.deltaspike.integration.category.SeCategory;
-import org.apache.deltaspike.integration.util.ShrinkWrapArchiveUtil;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -32,6 +32,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+
 
 import javax.enterprise.inject.spi.BeanManager;
 

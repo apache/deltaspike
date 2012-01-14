@@ -24,8 +24,14 @@ import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.impl.projectstage.ProjectStageProducer;
 import org.apache.deltaspike.integration.category.SeCategory;
 import org.apache.deltaspike.integration.core.api.projectstage.IntegrationTestProjectStageProducer;
-import org.apache.deltaspike.integration.util.FileUtils;
-import org.apache.deltaspike.integration.util.ShrinkWrapArchiveUtil;
+import org.apache.deltaspike.test.core.api.exclude.AlwaysActiveBean;
+import org.apache.deltaspike.test.core.api.exclude.CustomExpressionBasedBean;
+import org.apache.deltaspike.test.core.api.exclude.CustomExpressionBasedNoBean;
+import org.apache.deltaspike.test.core.api.exclude.NoBean;
+import org.apache.deltaspike.test.core.api.exclude.ProdDbBean;
+import org.apache.deltaspike.test.core.api.exclude.StdBean;
+import  org.apache.deltaspike.test.core.api.temptestutil.ShrinkWrapArchiveUtil;
+import org.apache.deltaspike.test.util.FileUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -61,9 +67,8 @@ public class ExcludeIntegrationTest
                 .addAsLibraries(ShrinkWrapArchiveUtil.getArchives(null,
                         "META-INF/beans.xml",
                         new String[]{"org.apache.deltaspike.core",
-                                "org.apache.deltaspike.integration.category",
-                                "org.apache.deltaspike.integration.util",
-                                "org.apache.deltaspike.integration.core.api.exclude"},
+                                "org.apache.deltaspike.integration",
+                                "org.apache.deltaspike.test.core.api.exclude"},
                         null))
                 .addClass(IntegrationTestProjectStageProducer.class)
                 .addAsResource(FileUtils.getFileForURL(fileUrl.toString()))
@@ -87,7 +92,7 @@ public class ExcludeIntegrationTest
     @Test
     public void simpleCheckOfBeansInPackage()
     {
-        Bean testBean = BeanProvider.getContextualReference(Bean.class, true);
+        AlwaysActiveBean testBean = BeanProvider.getContextualReference(AlwaysActiveBean.class, true);
 
         Assert.assertNotNull(testBean);
     }

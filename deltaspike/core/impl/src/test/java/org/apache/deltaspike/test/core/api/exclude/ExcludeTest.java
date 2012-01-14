@@ -61,7 +61,7 @@ public class ExcludeTest
     @Test
     public void simpleCheckOfBeansInPackage()
     {
-        Bean testBean = BeanProvider.getContextualReference(Bean.class, true);
+        AlwaysActiveBean testBean = BeanProvider.getContextualReference(AlwaysActiveBean.class, true);
 
         Assert.assertNotNull(testBean);
     }

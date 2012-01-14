@@ -27,17 +27,25 @@ import javax.enterprise.inject.Typed;
  * {@link ConfigSource} which uses JNDI for the lookup
  */
 @Typed()
-class LocalJndiConfigSource extends ConfigSource
+class LocalJndiConfigSource implements ConfigSource
 {
     private static final String BASE_NAME = "java:comp/env/deltaspike/";
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected int getDefaultOrdinal()
+    private Integer ordinal = Integer.valueOf(100);
+
+    public LocalJndiConfigSource()
     {
-        return 200;
+        String ordinalVal = getPropertyValue(ConfigSource.DELTASPIKE_ORDINAL);
+        if (ordinalVal != null && ordinalVal.length() > 0)
+        {
+            ordinal = Integer.valueOf(ordinalVal);
+        }
+    }
+
+    @Override
+    public int getOrdinal()
+    {
+        return ordinal;
     }
 
     /**

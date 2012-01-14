@@ -18,37 +18,40 @@
  */
 package org.apache.deltaspike.core.impl.config;
 
-import org.apache.deltaspike.core.api.util.ClassUtils;
 import org.apache.deltaspike.core.spi.config.ConfigSource;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Locale;
-import java.util.Map;
-import java.util.MissingResourceException;
+import java.net.URL;
 import java.util.Properties;
-import java.util.ResourceBundle;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
 
 /**
  * {@link ConfigSource} which uses
- * apache-deltaspike.properties btw. /META-INF/apache-deltaspike.properties for the lookup
+ * <i>META-INF/apache-deltaspike.properties</i> for the lookup
  */
-class PropertyFileConfigSource extends ConfigSource
+class PropertyFileConfigSource implements ConfigSource
 {
-    private static Map<ClassLoader, Map<String, String>> propertyCache =
-            new ConcurrentHashMap<ClassLoader, Map<String, String>>();
+    private Properties properties;
+    private String fileName;
 
-    private static final String FILE_NAME = "apache-deltaspike";
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected int getDefaultOrdinal()
+    PropertyFileConfigSource(URL propertyFileUrl)
     {
-        return 100;
+        fileName = propertyFileUrl.toExternalForm();
+        properties = loadProperties(propertyFileUrl);
+
+        String ordinalVal = getPropertyValue(ConfigSource.DELTASPIKE_ORDINAL);
+        if (ordinalVal != null && ordinalVal.length() > 0)
+        {
+            ordinal = Integer.valueOf(ordinalVal);
+        }
+    }
+
+    private int ordinal = 100;
+    
+    @Override
+    public int getOrdinal()
+    {
+        return ordinal;
     }
 
     /**
@@ -60,50 +63,7 @@ class PropertyFileConfigSource extends ConfigSource
     @Override
     public String getPropertyValue(String key)
     {
-        Map<String, String> cache = getPropertyCache();
-
-        String configuredValue = cache.get(key);
-
-        if ("".equals(configuredValue))
-        {
-            return null;
-        }
-
-        ResourceBundle resourceBundle;
-
-        try
-        {
-            resourceBundle = loadResourceBundleFromClasspath();
-
-            if (resourceBundle != null && resourceBundle.containsKey(key))
-            {
-                configuredValue = resourceBundle.getString(key);
-                cache.put(key, configuredValue);
-            }
-
-            if (configuredValue == null)
-            {
-                Properties properties = loadPropertiesFromMetaInf();
-
-                if (properties != null)
-                {
-                    configuredValue = properties.getProperty(key);
-                    cache.put(key, configuredValue);
-                }
-            }
-
-            if (configuredValue == null)
-            {
-                cache.put(key, "");
-                return null;
-            }
-        }
-        catch (Exception e)
-        {
-            cache.put(key, "");
-            return null;
-        }
-        return configuredValue;
+        return (String) properties.get(key);
     }
 
     /**
@@ -112,69 +72,44 @@ class PropertyFileConfigSource extends ConfigSource
     @Override
     public String getConfigName()
     {
-        //X TODO should we split the impl. to have a better name?
-        return FILE_NAME + ".properties";
+        return fileName;
     }
 
-    private ResourceBundle loadResourceBundleFromClasspath()
+
+
+    private Properties loadProperties(URL url)
     {
+        Properties props = new Properties();
+
+        InputStream inputStream = null;
         try
         {
-            return ResourceBundle.getBundle(FILE_NAME, Locale.getDefault(), ClassUtils.getClassLoader(null));
+            inputStream = url.openStream();
+
+            if (inputStream != null)
+            {
+                props.load(inputStream);
+            }
         }
-        catch (MissingResourceException e)
+        catch (IOException e)
         {
-            //it was just a try
             return null;
         }
-    }
-
-    private Map<String, String> getPropertyCache()
-    {
-        ClassLoader classLoader = ClassUtils.getClassLoader(null);
-        Map<String, String> cache = propertyCache.get(classLoader);
-
-        if (cache == null)
+        finally
         {
-            cache = new ConcurrentHashMap<String, String>();
-            propertyCache.put(classLoader, cache);
-        }
-        return cache;
-    }
-
-    private Properties loadPropertiesFromMetaInf()
-    {
-        String resourceName = "META-INF/" + FILE_NAME + ".properties";
-        Properties properties = null;
-
-        ClassLoader classLoader = ClassUtils.getClassLoader(resourceName);
-        InputStream inputStream = classLoader.getResourceAsStream(resourceName);
-
-        if (inputStream != null)
-        {
-            properties = new Properties();
-
             try
             {
-                properties.load(inputStream);
-            }
-            catch (IOException e)
-            {
-                return null;
-            }
-            finally
-            {
-                try
+                if (inputStream != null)
                 {
                     inputStream.close();
                 }
-                catch (IOException e)
-                {
-                    LOG.log(Level.WARNING, "Failed to close " + resourceName, e);
-                }
+            }
+            catch (IOException e)
+            {
+                // no worries, means that the file is already closed
             }
         }
 
-        return properties;
+        return props;
     }
 }

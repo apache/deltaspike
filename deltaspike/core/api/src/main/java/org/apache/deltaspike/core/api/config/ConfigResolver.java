@@ -135,7 +135,7 @@ public final class ConfigResolver
     private static List<ConfigSource> resolveConfigSources()
     {
         List<ConfigSource> appConfigSources = new ArrayList<ConfigSource>();
-        
+
         ServiceLoader<ConfigSourceProvider> configSourceProviderServiceLoader
                 = ServiceLoader.load(ConfigSourceProvider.class);
 

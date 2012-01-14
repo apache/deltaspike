@@ -18,9 +18,12 @@
 */
 package org.apache.deltaspike.test.core.api.exclude;
 
+import javax.enterprise.context.Dependent;
+
 /**
  * Class which is always active
  */
-public class Bean
+@Dependent
+public class AlwaysActiveBean
 {
 }

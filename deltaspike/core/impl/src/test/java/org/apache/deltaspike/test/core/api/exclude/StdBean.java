@@ -24,7 +24,7 @@ import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 /**
  * Class which gets excluded in case of project-stage development
  */
-@Exclude(ifProjectStage = ProjectStage.Development.class)
+@Exclude(ifProjectStage = {ProjectStage.Development.class, ProjectStage.IntegrationTest.class})
 public class StdBean
 {
 }

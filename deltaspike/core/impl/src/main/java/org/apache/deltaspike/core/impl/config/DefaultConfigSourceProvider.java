@@ -18,10 +18,14 @@
  */
 package org.apache.deltaspike.core.impl.config;
 
+import org.apache.deltaspike.core.api.util.ClassUtils;
 import org.apache.deltaspike.core.spi.config.ConfigSource;
 import org.apache.deltaspike.core.spi.config.ConfigSourceProvider;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
 /**
@@ -35,6 +39,8 @@ import java.util.List;
  */
 public class DefaultConfigSourceProvider implements ConfigSourceProvider
 {
+    private static final String PROPERTY_FILE_NAME = "META-INF/apache-deltaspike.properties";
+
     private List<ConfigSource> configSources = new ArrayList<ConfigSource>();
 
     /**
@@ -45,7 +51,23 @@ public class DefaultConfigSourceProvider implements ConfigSourceProvider
         this.configSources.add(new SystemPropertyConfigSource());
         this.configSources.add(new EnvironmentPropertyConfigSource());
         this.configSources.add(new LocalJndiConfigSource());
-        this.configSources.add(new PropertyFileConfigSource());
+
+        ClassLoader cl = ClassUtils.getClassLoader(this);
+        try 
+        {
+            Enumeration<URL> propertyFileUrls = cl.getResources(PROPERTY_FILE_NAME);
+
+            while (propertyFileUrls.hasMoreElements())
+            {
+                URL propertyFileUrl = propertyFileUrls.nextElement();
+                this.configSources.add(new PropertyFileConfigSource(propertyFileUrl));
+            }
+        }
+        catch (IOException ioe) 
+        {
+            throw new RuntimeException("problem while loading DeltaSpike property files", ioe);
+        }
+        
     }
 
     /**
