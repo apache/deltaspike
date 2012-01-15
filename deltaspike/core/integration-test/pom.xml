@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.apache.deltaspike</groupId>
         <artifactId>parent-it</artifactId>
-        <version>0.1-SNAPSHOT</version>
+        <version>incubating-0.1-SNAPSHOT</version>
         <relativePath>../../parent/it/pom.xml</relativePath>
     </parent>
 
