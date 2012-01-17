@@ -22,7 +22,7 @@ package org.apache.deltaspike.integration.core.api.exclude;
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.impl.projectstage.ProjectStageProducer;
-import org.apache.deltaspike.integration.category.SeCategory;
+import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.integration.core.api.projectstage.IntegrationTestProjectStageProducer;
 import org.apache.deltaspike.test.core.api.exclude.AlwaysActiveBean;
 import org.apache.deltaspike.test.core.api.exclude.CustomExpressionBasedBean;

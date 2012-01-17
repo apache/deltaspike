@@ -139,6 +139,7 @@
                         </goals>
                         <configuration>
                             <includes>**/*Test.class</includes>
+                            <excludes>org.apache.deltaspike.test.core.api.projectstage.*</excludes>
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>org.apache.deltaspike.core</groupId>
