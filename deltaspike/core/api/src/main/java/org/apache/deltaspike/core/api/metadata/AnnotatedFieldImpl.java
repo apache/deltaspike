@@ -16,10 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.deltaspike.core.api.metadata;
-
-import org.apache.deltaspike.core.api.metadata.builder.AnnotatedTypeBuilder;
 
 import javax.enterprise.inject.spi.AnnotatedField;
 import javax.enterprise.inject.spi.AnnotatedType;
@@ -27,16 +24,12 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 
 /**
- * Implementation of {@link AnnotatedField} to be used in CDI life cycle events and {@link AnnotatedTypeBuilder}.
+ *
  */
 class AnnotatedFieldImpl<X> extends AnnotatedMemberImpl<X, Field> implements AnnotatedField<X>
 {
 
-    /**
-     * Constructor.
-     */
-    public AnnotatedFieldImpl(AnnotatedType<X> declaringType, Field field, AnnotationStore annotations,
-                              Type overridenType)
+    AnnotatedFieldImpl(AnnotatedType<X> declaringType, Field field, AnnotationStore annotations, Type overridenType)
     {
         super(declaringType, field, field.getType(), annotations, field.getGenericType(), overridenType);
     }

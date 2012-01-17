@@ -33,7 +33,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * An implementation of {@link AnnotatedType} to be used in CDI life cycle events and {@link AnnotatedTypeBuilder}.
+ *
  */
 public class AnnotatedTypeImpl<X> extends AnnotatedImpl implements AnnotatedType<X>
 {
@@ -106,25 +106,21 @@ public class AnnotatedTypeImpl<X> extends AnnotatedImpl implements AnnotatedType
         }
     }
 
-    @Override
     public Set<AnnotatedConstructor<X>> getConstructors()
     {
         return Collections.unmodifiableSet(constructors);
     }
 
-    @Override
     public Set<AnnotatedField<? super X>> getFields()
     {
         return Collections.unmodifiableSet(fields);
     }
 
-    @Override
     public Class<X> getJavaClass()
     {
         return javaClass;
     }
 
-    @Override
     public Set<AnnotatedMethod<? super X>> getMethods()
     {
         return Collections.unmodifiableSet(methods);

@@ -16,10 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.deltaspike.core.api.metadata;
-
-import org.apache.deltaspike.core.api.metadata.builder.AnnotatedTypeBuilder;
 
 import javax.enterprise.inject.spi.AnnotatedMember;
 import javax.enterprise.inject.spi.AnnotatedType;
@@ -28,7 +25,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 
 /**
- * An implementation of {@link AnnotatedMember} to be used in CDI life cycle events and {@link AnnotatedTypeBuilder}.
+ *
  */
 abstract class AnnotatedMemberImpl<X, M extends Member> extends AnnotatedImpl implements AnnotatedMember<X>
 {
@@ -43,19 +40,16 @@ abstract class AnnotatedMemberImpl<X, M extends Member> extends AnnotatedImpl im
         this.javaMember = member;
     }
 
-    @Override
     public AnnotatedType<X> getDeclaringType()
     {
         return declaringType;
     }
 
-    @Override
     public M getJavaMember()
     {
         return javaMember;
     }
 
-    @Override
     public boolean isStatic()
     {
         return Modifier.isStatic(javaMember.getModifiers());

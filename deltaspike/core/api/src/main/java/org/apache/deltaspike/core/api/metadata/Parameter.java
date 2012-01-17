@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.deltaspike.core.api.metadata;
 
 import org.apache.deltaspike.core.api.util.Reflections;
@@ -31,18 +30,12 @@ import java.lang.reflect.Type;
 
 /**
  * An implementation of Member for parameters
+ *
+ * @author pmuir
  */
 abstract public class Parameter<X> implements AnnotatedElement
 {
 
-    /**
-     * Creates a new {@link Parameter} using the member and position passed in.
-     *
-     * @param declaringMember {@link Method} or {@link Constructor}.
-     * @param position        position of the parameter
-     * @param <X>             Type of the parameter
-     * @return a new instance of Parameter
-     */
     public static <X> Parameter<X> create(Member declaringMember, int position)
     {
         if (declaringMember instanceof Method)
@@ -154,16 +147,8 @@ abstract public class Parameter<X> implements AnnotatedElement
         this.position = position;
     }
 
-    /**
-     * Returns the actual {@link Member} declaring the parameter.
-     *
-     * @return Instance of the declaring java member.
-     */
     public abstract Member getDeclaringMember();
 
-    /**
-     * Getter
-     */
     public int getPosition()
     {
         return position;
@@ -193,9 +178,7 @@ abstract public class Parameter<X> implements AnnotatedElement
 
     }
 
-    /**
-     * Returns the instance of the annotation on the member, or null if not found
-     */
+
     public <T extends Annotation> T getAnnotation(Class<T> annotationClass)
     {
         for (Annotation annotation : getAnnotations())
@@ -208,25 +191,16 @@ abstract public class Parameter<X> implements AnnotatedElement
         return null;
     }
 
-    /**
-     * Getter
-     */
     public Annotation[] getDeclaredAnnotations()
     {
         return getAnnotations();
     }
 
-    /**
-     * Simple test if an annotation is present.
-     */
     public boolean isAnnotationPresent(Class<? extends Annotation> annotationClass)
     {
         return getAnnotation(annotationClass) != null;
     }
 
-    /**
-     * Getter
-     */
     public abstract Type getBaseType();
 
 }

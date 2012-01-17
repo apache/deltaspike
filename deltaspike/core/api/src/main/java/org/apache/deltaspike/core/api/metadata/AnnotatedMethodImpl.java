@@ -16,10 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.deltaspike.core.api.metadata;
-
-import org.apache.deltaspike.core.api.metadata.builder.AnnotatedTypeBuilder;
 
 import javax.enterprise.inject.spi.AnnotatedMethod;
 import javax.enterprise.inject.spi.AnnotatedType;
@@ -28,15 +25,12 @@ import java.lang.reflect.Type;
 import java.util.Map;
 
 /**
- * Implementation of {@link AnnotatedMethod} to be used in CDI life cycle events and {@link AnnotatedTypeBuilder}.
+ * @author Stuart Douglas
  */
 class AnnotatedMethodImpl<X> extends AnnotatedCallableImpl<X, Method> implements AnnotatedMethod<X>
 {
-    /**
-     * Constructor.
-     */
-    public AnnotatedMethodImpl(AnnotatedType<X> type, Method method, AnnotationStore annotations,
-                               Map<Integer, AnnotationStore> parameterAnnotations, Map<Integer, Type> parameterTypeOverrides)
+    AnnotatedMethodImpl(AnnotatedType<X> type, Method method, AnnotationStore annotations,
+                        Map<Integer, AnnotationStore> parameterAnnotations, Map<Integer, Type> parameterTypeOverrides)
     {
         super(type, method, method.getReturnType(), method.getParameterTypes(), method.getGenericParameterTypes(),
                 annotations, parameterAnnotations, method.getGenericReturnType(), parameterTypeOverrides);

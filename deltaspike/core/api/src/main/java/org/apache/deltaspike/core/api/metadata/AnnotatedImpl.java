@@ -70,31 +70,26 @@ abstract class AnnotatedImpl implements Annotated
         }
     }
 
-    @Override
     public <T extends Annotation> T getAnnotation(Class<T> annotationType)
     {
         return annotations.getAnnotation(annotationType);
     }
 
-    @Override
     public Set<Annotation> getAnnotations()
     {
         return annotations.getAnnotations();
     }
 
-    @Override
     public boolean isAnnotationPresent(Class<? extends Annotation> annotationType)
     {
         return annotations.isAnnotationPresent(annotationType);
     }
 
-    @Override
     public Set<Type> getTypeClosure()
     {
         return new HashSet<Type>(typeClosure);
     }
 
-    @Override
     public Type getBaseType()
     {
         return type;

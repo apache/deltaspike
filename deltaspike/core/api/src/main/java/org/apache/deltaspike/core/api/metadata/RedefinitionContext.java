@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.deltaspike.core.api.metadata;
 
 import org.apache.deltaspike.core.api.metadata.builder.AnnotatedTypeBuilder;
@@ -33,6 +32,7 @@ import java.lang.reflect.Type;
 /**
  * Provides access to the context of an annotation redefinition.
  *
+ * @author Pete Muir
  * @see AnnotatedTypeBuilder
  * @see AnnotationRedefiner
  */
