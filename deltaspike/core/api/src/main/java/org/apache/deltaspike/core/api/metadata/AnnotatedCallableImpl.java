@@ -60,9 +60,7 @@ abstract class AnnotatedCallableImpl<X, Y extends Member> extends AnnotatedMembe
 
     }
 
-    private static <X, Y extends Member> List<AnnotatedParameter<X>> getAnnotatedParameters(AnnotatedCallableImpl<X, Y> callable, Class<?>[] parameterTypes, Type[] genericTypes,
-                                                                                            Map<Integer, AnnotationStore> parameterAnnotations,
-                                                                                            Map<Integer, Type> parameterTypeOverrides)
+    private static <X, Y extends Member> List<AnnotatedParameter<X>> getAnnotatedParameters(AnnotatedCallableImpl<X, Y> callable, Class<?>[] parameterTypes, Type[] genericTypes, Map<Integer, AnnotationStore> parameterAnnotations, Map<Integer, Type> parameterTypeOverrides)
     {
         List<AnnotatedParameter<X>> parameters = new ArrayList<AnnotatedParameter<X>>();
         int len = parameterTypes.length;

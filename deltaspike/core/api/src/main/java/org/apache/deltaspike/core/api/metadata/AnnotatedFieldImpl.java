@@ -19,13 +19,15 @@
 
 package org.apache.deltaspike.core.api.metadata;
 
+import org.apache.deltaspike.core.api.metadata.builder.AnnotatedTypeBuilder;
+
 import javax.enterprise.inject.spi.AnnotatedField;
 import javax.enterprise.inject.spi.AnnotatedType;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 
 /**
- * Implementation of {@link AnnotatedField} to be used in CDI life cycle events and {@link org.apache.deltaspike.core.api.metadata.builder.AnnotatedTypeBuilder}.
+ * Implementation of {@link AnnotatedField} to be used in CDI life cycle events and {@link AnnotatedTypeBuilder}.
  */
 class AnnotatedFieldImpl<X> extends AnnotatedMemberImpl<X, Field> implements AnnotatedField<X>
 {

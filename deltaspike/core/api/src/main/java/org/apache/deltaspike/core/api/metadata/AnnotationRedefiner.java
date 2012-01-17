@@ -19,14 +19,16 @@
 
 package org.apache.deltaspike.core.api.metadata;
 
+import org.apache.deltaspike.core.api.metadata.builder.AnnotatedTypeBuilder;
+
 import java.lang.annotation.Annotation;
 
 /**
  * An implementation {@link AnnotationRedefiner} can be applied to an
- * {@link org.apache.deltaspike.core.api.metadata.builder.AnnotatedTypeBuilder}, and receives callbacks for each annotation of
+ * {@link AnnotatedTypeBuilder}, and receives callbacks for each annotation of
  * the type is it applied for.
  *
- * @see org.apache.deltaspike.core.api.metadata.builder.AnnotatedTypeBuilder
+ * @see AnnotatedTypeBuilder
  */
 public interface AnnotationRedefiner<A extends Annotation>
 {

@@ -19,13 +19,15 @@
 
 package org.apache.deltaspike.core.api.metadata;
 
+import org.apache.deltaspike.core.api.metadata.builder.AnnotatedTypeBuilder;
+
 import javax.enterprise.inject.spi.AnnotatedConstructor;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Type;
 import java.util.Map;
 
 /**
- * Implementation of {@link AnnotatedConstructor} to be used in {@link org.apache.deltaspike.core.api.metadata.builder.AnnotatedTypeBuilder}
+ * Implementation of {@link AnnotatedConstructor} to be used in {@link AnnotatedTypeBuilder}
  * and other CDI life cycle events.
  */
 class AnnotatedConstructorImpl<X> extends AnnotatedCallableImpl<X, Constructor<X>> implements AnnotatedConstructor<X>
