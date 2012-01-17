@@ -21,10 +21,10 @@ package org.apache.deltaspike.test.api.metadata;
 
 import org.apache.deltaspike.core.api.literal.AlternativeLiteral;
 import org.apache.deltaspike.core.api.literal.ApplicationScopedLiteral;
-import org.apache.deltaspike.core.api.literal.NamedLiteral;
 import org.apache.deltaspike.core.api.metadata.AnnotationRedefiner;
 import org.apache.deltaspike.core.api.metadata.RedefinitionContext;
 import org.apache.deltaspike.core.api.metadata.builder.AnnotationBuilder;
+import org.apache.webbeans.annotation.NamedLiteral;
 
 import javax.inject.Named;
 
