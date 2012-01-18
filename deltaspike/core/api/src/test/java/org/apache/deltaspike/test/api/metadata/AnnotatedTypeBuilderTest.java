@@ -19,7 +19,10 @@
 
 package org.apache.deltaspike.test.api.metadata;
 
+import org.apache.deltaspike.core.api.literal.AlternativeLiteral;
 import org.apache.deltaspike.core.api.literal.AnyLiteral;
+import org.apache.deltaspike.core.api.literal.ApplicationScopedLiteral;
+import org.apache.deltaspike.core.api.literal.NamedLiteral;
 import org.apache.deltaspike.core.api.literal.TypedLiteral;
 import org.apache.deltaspike.core.api.metadata.builder.AnnotatedTypeBuilder;
 import org.junit.Test;
@@ -43,15 +46,24 @@ import static org.junit.Assert.assertTrue;
 
 public class AnnotatedTypeBuilderTest
 {
-
     @Test
     public void testTypeLevelAnnotationRedefinition()
     {
         AnnotatedTypeBuilder<Cat> builder = new AnnotatedTypeBuilder<Cat>();
         builder.readFromType(Cat.class);
-        builder.redefine(Named.class, new NamedAnnotationRedefiner());
 
-        final AnnotatedType<Cat> cat = builder.create();
+        AnnotatedType<Cat> cat = builder.create();
+
+        if ("cat".equals(cat.getAnnotation(Named.class).value()))
+        {
+            builder.addToClass(new AlternativeLiteral())
+                    .addToClass(new ApplicationScopedLiteral())
+                    .removeFromClass(Named.class)
+                    .addToClass(new NamedLiteral("tomcat"));
+
+            cat = builder.create();
+        }
+
         assertEquals(3, cat.getAnnotations().size());
         assertTrue(cat.isAnnotationPresent(Named.class));
         assertTrue(cat.isAnnotationPresent(Alternative.class));
@@ -103,4 +115,3 @@ public class AnnotatedTypeBuilderTest
         }
     }
 }
-
