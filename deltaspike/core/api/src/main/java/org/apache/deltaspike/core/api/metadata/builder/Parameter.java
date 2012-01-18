@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.deltaspike.core.api.metadata;
+package org.apache.deltaspike.core.api.metadata.builder;
 
 import org.apache.deltaspike.core.api.util.Reflections;
 
@@ -32,7 +32,7 @@ import java.lang.reflect.Type;
 /**
  * An implementation of Member for parameters
  */
-abstract public class Parameter<X> implements AnnotatedElement
+abstract class Parameter<X> implements AnnotatedElement
 {
 
     /**

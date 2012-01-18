@@ -31,10 +31,10 @@ import javax.inject.Named;
 /**
  *
  */
-public class NamedAnnotationRedefiner implements AnnotationRedefiner<Named>
+public class NamedAnnotationRedefiner implements AnnotationRedefiner
 {
     @Override
-    public void redefine(RedefinitionContext<Named> ctx)
+    public void redefine(RedefinitionContext ctx)
     {
         Named named = ctx.getAnnotatedElement().getAnnotation(Named.class);
         if ("cat".equals(named.value()))

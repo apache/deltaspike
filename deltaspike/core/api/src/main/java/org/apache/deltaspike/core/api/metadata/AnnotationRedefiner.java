@@ -19,8 +19,6 @@
 
 package org.apache.deltaspike.core.api.metadata;
 
-import java.lang.annotation.Annotation;
-
 /**
  * An implementation {@link AnnotationRedefiner} can be applied to an
  * {@link org.apache.deltaspike.core.api.metadata.builder.AnnotatedTypeBuilder}, and receives callbacks for each annotation of
@@ -28,7 +26,7 @@ import java.lang.annotation.Annotation;
  *
  * @see org.apache.deltaspike.core.api.metadata.builder.AnnotatedTypeBuilder
  */
-public interface AnnotationRedefiner<A extends Annotation>
+public interface AnnotationRedefiner
 {
     /**
      * Callback invoked for each annotation of the type the
@@ -36,6 +34,6 @@ public interface AnnotationRedefiner<A extends Annotation>
      *
      * @param ctx
      */
-    public void redefine(RedefinitionContext<A> ctx);
+    public void redefine(RedefinitionContext ctx);
 
 }

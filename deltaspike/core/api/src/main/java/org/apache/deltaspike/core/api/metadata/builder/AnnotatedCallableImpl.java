@@ -16,9 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.api.metadata;
-
-import org.apache.deltaspike.core.api.metadata.builder.AnnotationBuilder;
+package org.apache.deltaspike.core.api.metadata.builder;
 
 import javax.enterprise.inject.spi.AnnotatedCallable;
 import javax.enterprise.inject.spi.AnnotatedParameter;

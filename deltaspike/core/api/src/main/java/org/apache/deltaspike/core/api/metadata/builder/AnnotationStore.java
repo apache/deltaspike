@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.deltaspike.core.api.metadata;
+package org.apache.deltaspike.core.api.metadata.builder;
 
 import java.lang.annotation.Annotation;
 import java.util.Map;
@@ -31,34 +31,34 @@ import static java.util.Collections.unmodifiableSet;
  * A helper class used to hold annotations on a type or member.
  */
 //X TODO: JavaDoc
-public class AnnotationStore
+class AnnotationStore
 {
     private final Map<Class<? extends Annotation>, Annotation> annotationMap;
     private final Set<Annotation> annotationSet;
 
-    public AnnotationStore(Map<Class<? extends Annotation>, Annotation> annotationMap, Set<Annotation> annotationSet)
+    AnnotationStore(Map<Class<? extends Annotation>, Annotation> annotationMap, Set<Annotation> annotationSet)
     {
         this.annotationMap = annotationMap;
         this.annotationSet = unmodifiableSet(annotationSet);
     }
 
-    public AnnotationStore()
+    AnnotationStore()
     {
         this.annotationMap = emptyMap();
         this.annotationSet = emptySet();
     }
 
-    public <T extends Annotation> T getAnnotation(Class<T> annotationType)
+    <T extends Annotation> T getAnnotation(Class<T> annotationType)
     {
         return annotationType.cast(annotationMap.get(annotationType));
     }
 
-    public Set<Annotation> getAnnotations()
+    Set<Annotation> getAnnotations()
     {
         return annotationSet;
     }
 
-    public boolean isAnnotationPresent(Class<? extends Annotation> annotationType)
+    boolean isAnnotationPresent(Class<? extends Annotation> annotationType)
     {
         return annotationMap.containsKey(annotationType);
     }

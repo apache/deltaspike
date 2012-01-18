@@ -19,8 +19,6 @@
 
 package org.apache.deltaspike.core.api.util;
 
-import org.apache.deltaspike.core.api.metadata.ParameterizedTypeImpl;
-
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;

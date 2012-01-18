@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.deltaspike.core.api.metadata;
+package org.apache.deltaspike.core.api.metadata.builder;
 
 import javax.enterprise.inject.spi.AnnotatedConstructor;
 import javax.enterprise.inject.spi.AnnotatedField;
@@ -35,7 +35,7 @@ import java.util.Set;
 /**
  * An implementation of {@link AnnotatedType} to be used in CDI life cycle events and {@link org.apache.deltaspike.core.api.metadata.builder.AnnotatedTypeBuilder}.
  */
-public class AnnotatedTypeImpl<X> extends AnnotatedImpl implements AnnotatedType<X>
+class AnnotatedTypeImpl<X> extends AnnotatedImpl implements AnnotatedType<X>
 {
 
     private final Set<AnnotatedConstructor<X>> constructors;
@@ -50,7 +50,7 @@ public class AnnotatedTypeImpl<X> extends AnnotatedImpl implements AnnotatedType
      * <p/>
      * If annotation have been added to other methods as well we add them to
      */
-    public AnnotatedTypeImpl(Class<X> clazz, AnnotationStore typeAnnotations, Map<Field, AnnotationStore> fieldAnnotations, Map<Method, AnnotationStore> methodAnnotations,
+    AnnotatedTypeImpl(Class<X> clazz, AnnotationStore typeAnnotations, Map<Field, AnnotationStore> fieldAnnotations, Map<Method, AnnotationStore> methodAnnotations,
                              Map<Method, Map<Integer, AnnotationStore>> methodParameterAnnotations, Map<Constructor<?>, AnnotationStore> constructorAnnotations,
                              Map<Constructor<?>, Map<Integer, AnnotationStore>> constructorParameterAnnotations, Map<Field, Type> fieldTypes,
                              Map<Method, Map<Integer, Type>> methodParameterTypes, Map<Constructor<?>, Map<Integer, Type>> constructorParameterTypes)
@@ -135,5 +135,4 @@ public class AnnotatedTypeImpl<X> extends AnnotatedImpl implements AnnotatedType
     {
         return Collections.unmodifiableSet(methods);
     }
-
 }

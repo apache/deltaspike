@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.deltaspike.core.api.metadata;
+package org.apache.deltaspike.core.api.util;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -26,13 +26,13 @@ import java.util.Arrays;
 /**
  * A basic implementation of {@link ParameterizedType}.
  */
-public class ParameterizedTypeImpl implements ParameterizedType
+class ParameterizedTypeImpl implements ParameterizedType
 {
     private final Type[] actualTypeArguments;
     private final Type rawType;
     private final Type ownerType;
 
-    public ParameterizedTypeImpl(Type rawType, Type[] actualTypeArguments, Type ownerType)
+    ParameterizedTypeImpl(Type rawType, Type[] actualTypeArguments, Type ownerType)
     {
         this.actualTypeArguments = actualTypeArguments;
         this.rawType = rawType;

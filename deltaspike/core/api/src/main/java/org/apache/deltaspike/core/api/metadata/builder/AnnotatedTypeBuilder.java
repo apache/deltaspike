@@ -19,10 +19,7 @@
 
 package org.apache.deltaspike.core.api.metadata.builder;
 
-import org.apache.deltaspike.core.api.metadata.AnnotatedTypeImpl;
 import org.apache.deltaspike.core.api.metadata.AnnotationRedefiner;
-import org.apache.deltaspike.core.api.metadata.AnnotationStore;
-import org.apache.deltaspike.core.api.metadata.Parameter;
 import org.apache.deltaspike.core.api.metadata.RedefinitionContext;
 import org.apache.deltaspike.core.api.util.Reflections;
 
@@ -522,7 +519,7 @@ public class AnnotatedTypeBuilder<X>
      * @throws IllegalArgumentException if the annotationType or redefinition is
      *                                  null
      */
-    public <A extends Annotation> AnnotatedTypeBuilder<X> redefine(Class<A> annotationType, AnnotationRedefiner<A> redefinition)
+    public <A extends Annotation> AnnotatedTypeBuilder<X> redefine(Class<A> annotationType, AnnotationRedefiner redefinition)
     {
         if (annotationType == null)
         {
@@ -571,13 +568,13 @@ public class AnnotatedTypeBuilder<X>
     }
 
     protected <A extends Annotation> void redefineAnnotationBuilder(Class<A> annotationType,
-                                                                    AnnotationRedefiner<A> redefinition,
+                                                                    AnnotationRedefiner redefinition,
                                                                     AnnotatedElement annotated, Type baseType,
                                                                     AnnotationBuilder builder, String elementName)
     {
         if (builder.isAnnotationPresent(annotationType))
         {
-            redefinition.redefine(new RedefinitionContext<A>(annotated, baseType, builder, elementName));
+            redefinition.redefine(new RedefinitionContext(annotated, baseType, builder, elementName));
         }
     }
 

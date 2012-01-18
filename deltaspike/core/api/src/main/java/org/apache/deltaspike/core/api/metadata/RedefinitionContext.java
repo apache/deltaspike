@@ -22,7 +22,6 @@ package org.apache.deltaspike.core.api.metadata;
 import org.apache.deltaspike.core.api.metadata.builder.AnnotationBuilder;
 import org.apache.deltaspike.core.api.util.Reflections;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Type;
 
@@ -32,7 +31,7 @@ import java.lang.reflect.Type;
  * @see org.apache.deltaspike.core.api.metadata.builder.AnnotatedTypeBuilder
  * @see AnnotationRedefiner
  */
-public class RedefinitionContext<A extends Annotation>
+public class RedefinitionContext
 {
 
     private final AnnotatedElement annotatedElement;
@@ -54,7 +53,7 @@ public class RedefinitionContext<A extends Annotation>
      * {@link java.lang.reflect.Field}, if defined on a method, this may be cast to {@link java.lang.reflect.Method},
      * if defined on a constructor, this may be cast to {@link java.lang.reflect.Constructor}, if
      * defined on a class, this may be cast to {@link Class}, or if
-     * defined on a parameter, this may be cast to {@link Parameter}
+     * defined on a parameter, this may be cast to {@link org.apache.deltaspike.core.api.metadata.builder.Parameter}
      */
     public AnnotatedElement getAnnotatedElement()
     {

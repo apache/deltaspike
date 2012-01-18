@@ -19,7 +19,6 @@
 
 package org.apache.deltaspike.core.api.metadata.builder;
 
-import org.apache.deltaspike.core.api.metadata.AnnotationStore;
 import org.apache.deltaspike.core.api.util.Reflections;
 
 import java.lang.annotation.Annotation;
