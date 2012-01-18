@@ -163,6 +163,9 @@ public class AnnotationBuilder
         return annotationMap.containsKey(annotationType);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString()
     {
