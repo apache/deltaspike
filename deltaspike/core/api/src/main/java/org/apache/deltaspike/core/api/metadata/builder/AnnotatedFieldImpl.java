@@ -25,7 +25,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 
 /**
- * Implementation of {@link AnnotatedField} to be used in CDI life cycle events and {@link org.apache.deltaspike.core.api.metadata.builder.AnnotatedTypeBuilder}.
+ * Implementation of {@link AnnotatedField} to be used in CDI life cycle events and
+ * {@link org.apache.deltaspike.core.api.metadata.builder.AnnotatedTypeBuilder}.
  */
 class AnnotatedFieldImpl<X> extends AnnotatedMemberImpl<X, Field> implements AnnotatedField<X>
 {

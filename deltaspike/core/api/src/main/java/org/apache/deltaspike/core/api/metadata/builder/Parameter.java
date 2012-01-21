@@ -55,7 +55,8 @@ abstract class Parameter<X> implements AnnotatedElement
         }
         else
         {
-            throw new IllegalArgumentException("Can only process members of type Method and Constructor, cannot process " + declaringMember);
+            throw new IllegalArgumentException(
+                    "Can only process members of type Method and Constructor, cannot process " + declaringMember);
         }
     }
 
@@ -184,7 +185,8 @@ abstract class Parameter<X> implements AnnotatedElement
         if (obj instanceof Parameter<?>)
         {
             Parameter<?> that = (Parameter<?>) obj;
-            return this.getDeclaringMember().equals(that.getDeclaringMember()) && this.getPosition() == that.getPosition();
+            return this.getDeclaringMember().equals(that.getDeclaringMember()) &&
+                    this.getPosition() == that.getPosition();
         }
         else
         {

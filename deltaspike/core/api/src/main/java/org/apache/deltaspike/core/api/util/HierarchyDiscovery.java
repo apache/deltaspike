@@ -19,6 +19,7 @@
 
 package org.apache.deltaspike.core.api.util;
 
+import javax.enterprise.inject.Typed;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
@@ -32,6 +33,7 @@ import java.util.Set;
  */
 //X TODO: Look at merging this with ClassUtils perhaps
 //X TODO: JavaDoc
+@Typed()
 public class HierarchyDiscovery
 {
     private final Type type;
@@ -115,7 +117,10 @@ public class HierarchyDiscovery
         if (clazz.getTypeParameters().length > 0)
         {
             TypeVariable<?>[] actualTypeParameters = clazz.getTypeParameters();
-            ParameterizedType parameterizedType = new ParameterizedTypeImpl(clazz, actualTypeParameters, clazz.getDeclaringClass());
+
+            @SuppressWarnings("UnnecessaryLocalVariable")
+            ParameterizedType parameterizedType =
+                    new ParameterizedTypeImpl(clazz, actualTypeParameters, clazz.getDeclaringClass());
             return parameterizedType;
         }
         else

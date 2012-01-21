@@ -19,6 +19,7 @@
 
 package org.apache.deltaspike.core.api.util;
 
+import javax.enterprise.inject.Typed;
 import javax.enterprise.inject.spi.AnnotatedField;
 import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.BeanManager;
@@ -53,8 +54,13 @@ import java.util.Set;
  */
 //X TODO: Look at merging this with some of the other classes from CODI, or if they're really needed
 //X TODO: Also some methods need JavaDoc
+@Typed()
 public class Reflections
 {
+    private Reflections()
+    {
+    }
+
     /**
      * An empty array of type {@link Annotation}, useful converting lists to
      * arrays.
@@ -150,7 +156,8 @@ public class Reflections
     {
         for (AnnotatedField<? super X> annotatedField : annotatedType.getFields())
         {
-            if (annotatedField.getDeclaringType().getJavaClass().equals(field.getDeclaringClass()) && annotatedField.getJavaMember().getName().equals(field.getName()))
+            if (annotatedField.getDeclaringType().getJavaClass().equals(field.getDeclaringClass()) &&
+                    annotatedField.getJavaMember().getName().equals(field.getName()))
             {
                 return annotatedField;
             }
@@ -166,7 +173,8 @@ public class Reflections
      * @return The set of annotations with the specified meta annotation, or an
      *         empty set if none are found
      */
-    public static Set<Annotation> getAnnotationsWithMetaAnnotation(Set<Annotation> annotations, Class<? extends Annotation> metaAnnotationType)
+    public static Set<Annotation> getAnnotationsWithMetaAnnotation(Set<Annotation> annotations,
+                                                                   Class<? extends Annotation> metaAnnotationType)
     {
         Set<Annotation> set = new HashSet<Annotation>();
         for (Annotation annotation : annotations)
@@ -393,23 +401,27 @@ public class Reflections
         }
         if (Thread.currentThread().getContextClassLoader() != null)
         {
-            throw new ClassNotFoundException(String.format("Could not load class %s with the context class loader %s or any of the additional ClassLoaders: %s",
-                    name, Thread.currentThread().getContextClassLoader(), loaders));
+            throw new ClassNotFoundException(String.format(
+                "Could not load class %s with the context class loader %s or any of the additional ClassLoaders: %s",
+                name, Thread.currentThread().getContextClassLoader(), loaders));
         }
         else
         {
-            throw new ClassNotFoundException("Could not load class " + name + " using Class.forName or using any of the additional ClassLoaders: " + Arrays.toString(loaders));
+            throw new ClassNotFoundException("Could not load class " + name +
+                    " using Class.forName or using any of the additional ClassLoaders: " + Arrays.toString(loaders));
         }
     }
 
     private static String buildInvokeMethodErrorMessage(Method method, Object obj, Object... args)
     {
-        StringBuilder message = new StringBuilder(String.format("Exception invoking method [%s] on object [%s], using arguments [", method.getName(), obj));
+        StringBuilder message = new StringBuilder(String.format(
+                "Exception invoking method [%s] on object [%s], using arguments [", method.getName(), obj));
         if (args != null)
         {
             for (int i = 0; i < args.length; i++)
             {
-                message.append((i > 0 ? "," : "") + args[i]);
+                message.append(i > 0 ? "," : "")
+                       .append(args[i]);
             }
         }
         message.append("]");
@@ -536,7 +548,9 @@ public class Reflections
      *                                     method fails.
      * @see Method#invoke(Object, Object...)
      */
-    public static <T> T invokeMethod(boolean setAccessible, Method method, Class<T> expectedReturnType, Object instance, Object... args)
+    public static <T> T invokeMethod(boolean setAccessible,
+                                     Method method, Class<T> expectedReturnType,
+                                     Object instance, Object... args)
     {
         if (setAccessible && !method.isAccessible())
         {
@@ -567,7 +581,8 @@ public class Reflections
         }
         catch (ExceptionInInitializerError e)
         {
-            ExceptionInInitializerError e2 = new ExceptionInInitializerError(buildInvokeMethodErrorMessage(method, instance, args));
+            ExceptionInInitializerError e2 =
+                    new ExceptionInInitializerError(buildInvokeMethodErrorMessage(method, instance, args));
             e2.initCause(e.getCause());
             throw e2;
         }
@@ -640,7 +655,8 @@ public class Reflections
         }
         catch (ExceptionInInitializerError e)
         {
-            ExceptionInInitializerError e2 = new ExceptionInInitializerError(buildSetFieldValueErrorMessage(field, instance, value));
+            ExceptionInInitializerError e2 =
+                    new ExceptionInInitializerError(buildSetFieldValueErrorMessage(field, instance, value));
             e2.initCause(e.getCause());
             throw e2;
         }
@@ -704,7 +720,8 @@ public class Reflections
         }
         catch (ExceptionInInitializerError e)
         {
-            ExceptionInInitializerError e2 = new ExceptionInInitializerError(buildGetFieldValueErrorMessage(field, instance));
+            ExceptionInInitializerError e2 =
+                    new ExceptionInInitializerError(buildGetFieldValueErrorMessage(field, instance));
             e2.initCause(e.getCause());
             throw e2;
         }
@@ -1056,14 +1073,22 @@ public class Reflections
      *                             empty array if not a parameterized type
      * @return
      */
-    public static boolean isAssignableFrom(Class<?> rawType1, Type[] actualTypeArguments1, Class<?> rawType2, Type[] actualTypeArguments2)
+    public static boolean isAssignableFrom(Class<?> rawType1,
+                                           Type[] actualTypeArguments1,
+                                           Class<?> rawType2,
+                                           Type[] actualTypeArguments2)
     {
-        return Types.boxedClass(rawType1).isAssignableFrom(Types.boxedClass(rawType2)) && isAssignableFrom(actualTypeArguments1, actualTypeArguments2);
+        return Types.boxedClass(rawType1).isAssignableFrom(Types.boxedClass(rawType2)) &&
+                isAssignableFrom(actualTypeArguments1, actualTypeArguments2);
     }
 
-    public static boolean matches(Class<?> rawType1, Type[] actualTypeArguments1, Class<?> rawType2, Type[] actualTypeArguments2)
+    public static boolean matches(Class<?> rawType1,
+                                  Type[] actualTypeArguments1,
+                                  Class<?> rawType2,
+                                  Type[] actualTypeArguments2)
     {
-        return Types.boxedClass(rawType1).equals(Types.boxedClass(rawType2)) && isAssignableFrom(actualTypeArguments1, actualTypeArguments2);
+        return Types.boxedClass(rawType1).equals(Types.boxedClass(rawType2)) &&
+                isAssignableFrom(actualTypeArguments1, actualTypeArguments2);
     }
 
     public static boolean isAssignableFrom(Type[] actualTypeArguments1, Type[] actualTypeArguments2)
@@ -1135,7 +1160,9 @@ public class Reflections
             ParameterizedType parameterizedType1 = (ParameterizedType) type1;
             if (parameterizedType1.getRawType() instanceof Class<?>)
             {
-                if (isAssignableFrom((Class<?>) parameterizedType1.getRawType(), parameterizedType1.getActualTypeArguments(), type2))
+                if (isAssignableFrom((Class<?>) parameterizedType1.getRawType(),
+                                     parameterizedType1.getActualTypeArguments(),
+                                     type2))
                 {
                     return true;
                 }
@@ -1191,7 +1218,9 @@ public class Reflections
             ParameterizedType parameterizedType1 = (ParameterizedType) type1;
             if (parameterizedType1.getRawType() instanceof Class<?>)
             {
-                if (matches((Class<?>) parameterizedType1.getRawType(), parameterizedType1.getActualTypeArguments(), type2))
+                if (matches((Class<?>) parameterizedType1.getRawType(),
+                        parameterizedType1.getActualTypeArguments(),
+                        type2))
                 {
                     return true;
                 }
@@ -1258,7 +1287,11 @@ public class Reflections
             ParameterizedType parameterizedType = (ParameterizedType) type2;
             if (parameterizedType.getRawType() instanceof Class<?>)
             {
-                if (isAssignableFrom(rawType1, actualTypeArguments1, (Class<?>) parameterizedType.getRawType(), parameterizedType.getActualTypeArguments()))
+                if (isAssignableFrom(
+                        rawType1,
+                        actualTypeArguments1,
+                        (Class<?>) parameterizedType.getRawType(),
+                        parameterizedType.getActualTypeArguments()))
                 {
                     return true;
                 }
@@ -1290,7 +1323,11 @@ public class Reflections
             ParameterizedType parameterizedType = (ParameterizedType) type2;
             if (parameterizedType.getRawType() instanceof Class<?>)
             {
-                if (matches(rawType1, actualTypeArguments1, (Class<?>) parameterizedType.getRawType(), parameterizedType.getActualTypeArguments()))
+                if (matches(
+                        rawType1,
+                        actualTypeArguments1,
+                        (Class<?>) parameterizedType.getRawType(),
+                        parameterizedType.getActualTypeArguments()))
                 {
                     return true;
                 }
@@ -1381,11 +1418,6 @@ public class Reflections
     public static boolean isPrimitive(Type type)
     {
         Class<?> rawType = getRawType(type);
-        return rawType == null ? false : rawType.isPrimitive();
-    }
-
-
-    private Reflections()
-    {
+        return rawType != null && rawType.isPrimitive();
     }
 }

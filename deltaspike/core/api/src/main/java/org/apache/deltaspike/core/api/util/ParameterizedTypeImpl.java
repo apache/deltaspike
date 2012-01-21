@@ -19,6 +19,7 @@
 
 package org.apache.deltaspike.core.api.util;
 
+import javax.enterprise.inject.Typed;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Arrays;
@@ -26,6 +27,7 @@ import java.util.Arrays;
 /**
  * A basic implementation of {@link ParameterizedType}.
  */
+@Typed()
 class ParameterizedTypeImpl implements ParameterizedType
 {
     private final Type[] actualTypeArguments;
@@ -57,7 +59,8 @@ class ParameterizedTypeImpl implements ParameterizedType
     @Override
     public int hashCode()
     {
-        return Arrays.hashCode(actualTypeArguments) ^ (ownerType == null ? 0 : ownerType.hashCode()) ^ (rawType == null ? 0 : rawType.hashCode());
+        return Arrays.hashCode(actualTypeArguments) ^ (ownerType == null ? 0 :
+                ownerType.hashCode()) ^ (rawType == null ? 0 : rawType.hashCode());
     }
 
     @Override

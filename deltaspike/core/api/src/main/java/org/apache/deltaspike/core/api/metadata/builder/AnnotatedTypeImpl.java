@@ -33,7 +33,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * An implementation of {@link AnnotatedType} to be used in CDI life cycle events and {@link org.apache.deltaspike.core.api.metadata.builder.AnnotatedTypeBuilder}.
+ * An implementation of {@link AnnotatedType} to be used in CDI life cycle events and
+ * {@link org.apache.deltaspike.core.api.metadata.builder.AnnotatedTypeBuilder}.
  */
 class AnnotatedTypeImpl<X> extends AnnotatedImpl implements AnnotatedType<X>
 {
@@ -50,10 +51,16 @@ class AnnotatedTypeImpl<X> extends AnnotatedImpl implements AnnotatedType<X>
      * <p/>
      * If annotation have been added to other methods as well we add them to
      */
-    AnnotatedTypeImpl(Class<X> clazz, AnnotationStore typeAnnotations, Map<Field, AnnotationStore> fieldAnnotations, Map<Method, AnnotationStore> methodAnnotations,
-                             Map<Method, Map<Integer, AnnotationStore>> methodParameterAnnotations, Map<Constructor<?>, AnnotationStore> constructorAnnotations,
-                             Map<Constructor<?>, Map<Integer, AnnotationStore>> constructorParameterAnnotations, Map<Field, Type> fieldTypes,
-                             Map<Method, Map<Integer, Type>> methodParameterTypes, Map<Constructor<?>, Map<Integer, Type>> constructorParameterTypes)
+    AnnotatedTypeImpl(Class<X> clazz,
+                      AnnotationStore typeAnnotations,
+                      Map<Field, AnnotationStore> fieldAnnotations,
+                      Map<Method, AnnotationStore> methodAnnotations,
+                      Map<Method, Map<Integer, AnnotationStore>> methodParameterAnnotations,
+                      Map<Constructor<?>, AnnotationStore> constructorAnnotations,
+                      Map<Constructor<?>, Map<Integer, AnnotationStore>> constructorParameterAnnotations,
+                      Map<Field, Type> fieldTypes,
+                      Map<Method, Map<Integer, Type>> methodParameterTypes,
+                      Map<Constructor<?>, Map<Integer, Type>> constructorParameterTypes)
     {
         super(clazz, typeAnnotations, null, null);
         this.javaClass = clazz;
@@ -63,7 +70,8 @@ class AnnotatedTypeImpl<X> extends AnnotatedImpl implements AnnotatedType<X>
         Set<Field> fset = new HashSet<Field>();
         for (Constructor<?> c : clazz.getConstructors())
         {
-            AnnotatedConstructor<X> nc = new AnnotatedConstructorImpl<X>(this, c, constructorAnnotations.get(c), constructorParameterAnnotations.get(c),
+            AnnotatedConstructor<X> nc = new AnnotatedConstructorImpl<X>(
+                    this, c, constructorAnnotations.get(c), constructorParameterAnnotations.get(c),
                     constructorParameterTypes.get(c));
             constructors.add(nc);
             cset.add(c);
@@ -72,7 +80,8 @@ class AnnotatedTypeImpl<X> extends AnnotatedImpl implements AnnotatedType<X>
         {
             if (!cset.contains(c.getKey()))
             {
-                AnnotatedConstructor<X> nc = new AnnotatedConstructorImpl<X>(this, c.getKey(), c.getValue(), constructorParameterAnnotations.get(c.getKey()),
+                AnnotatedConstructor<X> nc = new AnnotatedConstructorImpl<X>(
+                        this, c.getKey(), c.getValue(), constructorParameterAnnotations.get(c.getKey()),
                         constructorParameterTypes.get(c.getKey()));
                 constructors.add(nc);
             }
@@ -82,7 +91,8 @@ class AnnotatedTypeImpl<X> extends AnnotatedImpl implements AnnotatedType<X>
         {
             if (!m.getDeclaringClass().equals(Object.class))
             {
-                AnnotatedMethodImpl<X> met = new AnnotatedMethodImpl<X>(this, m, methodAnnotations.get(m), methodParameterAnnotations.get(m), methodParameterTypes.get(m));
+                AnnotatedMethodImpl<X> met = new AnnotatedMethodImpl<X>(this, m, methodAnnotations.get(m),
+                        methodParameterAnnotations.get(m), methodParameterTypes.get(m));
                 methods.add(met);
                 mset.add(m);
             }
@@ -91,7 +101,10 @@ class AnnotatedTypeImpl<X> extends AnnotatedImpl implements AnnotatedType<X>
         {
             if (!c.getKey().getDeclaringClass().equals(Object.class) && !mset.contains(c.getKey()))
             {
-                AnnotatedMethodImpl<X> nc = new AnnotatedMethodImpl<X>(this, c.getKey(), c.getValue(), methodParameterAnnotations.get(c.getKey()),
+                AnnotatedMethodImpl<X> nc = new AnnotatedMethodImpl<X>(
+                        this, c.getKey(),
+                        c.getValue(),
+                        methodParameterAnnotations.get(c.getKey()),
                         methodParameterTypes.get(c.getKey()));
                 methods.add(nc);
             }

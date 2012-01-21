@@ -19,14 +19,18 @@
 
 package org.apache.deltaspike.core.api.util;
 
+import javax.enterprise.inject.Typed;
 import java.lang.reflect.Type;
 
 /**
  * Utilities for Types.
  */
+@Typed()
 public class Types
 {
-    private Types() {}
+    private Types()
+    {
+    }
 
     /**
      * Gets the boxed type of a class

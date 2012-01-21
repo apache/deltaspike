@@ -19,12 +19,14 @@
 
 package org.apache.deltaspike.core.api.util;
 
+import javax.enterprise.inject.Typed;
 import java.lang.reflect.AccessibleObject;
 import java.security.PrivilegedAction;
 
 /**
  * PrivilegedAction instance to enabling access to the specified {@link AccessibleObject}.
  */
+@Typed()
 public class SetAccessiblePrivilegedAction implements PrivilegedAction<Void>
 {
 

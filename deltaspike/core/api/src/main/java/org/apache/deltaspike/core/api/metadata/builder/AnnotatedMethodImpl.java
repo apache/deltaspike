@@ -26,18 +26,21 @@ import java.lang.reflect.Type;
 import java.util.Map;
 
 /**
- * Implementation of {@link AnnotatedMethod} to be used in CDI life cycle events and {@link org.apache.deltaspike.core.api.metadata.builder.AnnotatedTypeBuilder}.
+ * Implementation of {@link AnnotatedMethod} to be used in CDI life cycle events and
+ * {@link org.apache.deltaspike.core.api.metadata.builder.AnnotatedTypeBuilder}.
  */
 class AnnotatedMethodImpl<X> extends AnnotatedCallableImpl<X, Method> implements AnnotatedMethod<X>
 {
     /**
      * Constructor.
      */
-    public AnnotatedMethodImpl(AnnotatedType<X> type, Method method, AnnotationStore annotations,
-                               Map<Integer, AnnotationStore> parameterAnnotations, Map<Integer, Type> parameterTypeOverrides)
+    public AnnotatedMethodImpl(AnnotatedType<X> type,
+                               Method method,
+                               AnnotationStore annotations,
+                               Map<Integer, AnnotationStore> parameterAnnotations,
+                               Map<Integer, Type> parameterTypeOverrides)
     {
         super(type, method, method.getReturnType(), method.getParameterTypes(), method.getGenericParameterTypes(),
                 annotations, parameterAnnotations, method.getGenericReturnType(), parameterTypeOverrides);
     }
-
 }

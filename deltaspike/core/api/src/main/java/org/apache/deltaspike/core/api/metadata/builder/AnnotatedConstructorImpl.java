@@ -25,7 +25,8 @@ import java.lang.reflect.Type;
 import java.util.Map;
 
 /**
- * Implementation of {@link AnnotatedConstructor} to be used in {@link org.apache.deltaspike.core.api.metadata.builder.AnnotatedTypeBuilder}
+ * Implementation of {@link AnnotatedConstructor} to be used in
+ * {@link org.apache.deltaspike.core.api.metadata.builder.AnnotatedTypeBuilder}
  * and other CDI life cycle events.
  */
 class AnnotatedConstructorImpl<X> extends AnnotatedCallableImpl<X, Constructor<X>> implements AnnotatedConstructor<X>
@@ -35,7 +36,8 @@ class AnnotatedConstructorImpl<X> extends AnnotatedCallableImpl<X, Constructor<X
      * Constructor
      */
     public AnnotatedConstructorImpl(AnnotatedTypeImpl<X> type, Constructor<?> constructor, AnnotationStore annotations,
-                                    Map<Integer, AnnotationStore> parameterAnnotations, Map<Integer, Type> typeOverrides)
+                                    Map<Integer, AnnotationStore> parameterAnnotations,
+                                    Map<Integer, Type> typeOverrides)
     {
 
         super(type, (Constructor<X>) constructor, constructor.getDeclaringClass(), constructor.getParameterTypes(),

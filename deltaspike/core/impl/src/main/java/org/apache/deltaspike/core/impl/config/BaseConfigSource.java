@@ -28,7 +28,7 @@ import org.apache.deltaspike.core.spi.config.ConfigSource;
  */
 public abstract class BaseConfigSource implements ConfigSource
 {
-    protected Logger LOG = Logger.getLogger(getClass().getName());
+    protected Logger log = Logger.getLogger(getClass().getName());
 
     private int ordinal = 1000; // default
 
@@ -62,7 +62,7 @@ public abstract class BaseConfigSource implements ConfigSource
         }
         catch (NumberFormatException e)
         {
-            LOG.log(Level.WARNING,
+            log.log(Level.WARNING,
                     "The configured config-ordinal isn't a valid integer. Invalid value: " + configuredOrdinalString);
         }
     }
