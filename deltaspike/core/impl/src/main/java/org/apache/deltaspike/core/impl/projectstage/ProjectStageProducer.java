@@ -52,16 +52,9 @@ import java.util.logging.Logger;
 @ApplicationScoped
 public class ProjectStageProducer implements Serializable
 {
-    private static final long serialVersionUID = -2987762608635612074L;
-
     protected static final Logger LOG = Logger.getLogger(ProjectStageProducer.class.getName());
 
-    /**
-     * ProjectStageProducers must only be created by subclassing producers
-     */
-    protected ProjectStageProducer()
-    {
-    }
+    private static final long serialVersionUID = -2987762608635612074L;
 
     /**
      * The detected ProjectStage
@@ -74,6 +67,13 @@ public class ProjectStageProducer implements Serializable
     private static volatile ProjectStageProducer projectStageProducer;
 
     /**
+     * ProjectStageProducers must only be created by subclassing producers
+     */
+    protected ProjectStageProducer()
+    {
+    }
+
+    /**
      * We can only produce @Dependent scopes since an enum is final.
      * @return current ProjectStage
      */
@@ -82,7 +82,7 @@ public class ProjectStageProducer implements Serializable
     @Default
     public ProjectStage getProjectStage()
     {
-        if(projectStage == null)
+        if (projectStage == null)
         {
             //triggers initialization
             getInstance();
@@ -112,7 +112,7 @@ public class ProjectStageProducer implements Serializable
             lazyInit();
         }
 
-        if(projectStage == null)
+        if (projectStage == null)
         {
             projectStageProducer.initProjectStage();
         }
@@ -130,7 +130,7 @@ public class ProjectStageProducer implements Serializable
 
         String customProjectStageProducerName = ConfigResolver.getPropertyValue(ProjectStageProducer.class.getName());
 
-        if(customProjectStageProducerName != null)
+        if (customProjectStageProducerName != null)
         {
             //e.g. the JSF module can provide a config-source implementation which
             //returns a custom implementation which is aware of the JSF project-stage
@@ -138,7 +138,7 @@ public class ProjectStageProducer implements Serializable
             ProjectStageProducer customConfiguredProducer =
                     ClassUtils.tryToInstantiateClassForName(customProjectStageProducerName, ProjectStageProducer.class);
 
-            if(customConfiguredProducer != null)
+            if (customConfiguredProducer != null)
             {
                 projectStageProducer = customConfiguredProducer;
 
@@ -151,7 +151,7 @@ public class ProjectStageProducer implements Serializable
             }
         }
 
-        if(projectStageProducer == null)
+        if (projectStageProducer == null)
         {
             projectStageProducer = new ProjectStageProducer();
         }
@@ -190,11 +190,11 @@ public class ProjectStageProducer implements Serializable
         // switch into paranoia mode
         synchronized (ProjectStageProducer.class)
         {
-            if(projectStage == null)
+            if (projectStage == null)
             {
                 projectStage = resolveProjectStage();
 
-                if(projectStage == null)
+                if (projectStage == null)
                 {
                     projectStage = ProjectStage.Production;
                 }

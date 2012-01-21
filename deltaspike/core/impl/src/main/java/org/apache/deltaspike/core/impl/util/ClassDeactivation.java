@@ -91,14 +91,14 @@ public final class ClassDeactivation
         Set<Class> deactivatedClasses = new HashSet<Class>();
 
         ClassDeactivator currentClassDeactivator;
-        for(String classDeactivatorClassName : classDeactivatorClassNames)
+        for (String classDeactivatorClassName : classDeactivatorClassNames)
         {
             LOG.info(classDeactivatorClassName + " gets processed");
 
             currentClassDeactivator =
                     ClassUtils.tryToInstantiateClassForName(classDeactivatorClassName, ClassDeactivator.class);
 
-            if(currentClassDeactivator != null)
+            if (currentClassDeactivator != null)
             {
                 deactivatedClasses.addAll(currentClassDeactivator.getDeactivatedClasses());
             }

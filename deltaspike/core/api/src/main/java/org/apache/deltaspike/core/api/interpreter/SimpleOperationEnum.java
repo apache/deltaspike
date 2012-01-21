@@ -41,7 +41,7 @@ enum SimpleOperationEnum
     {
         StringBuilder operations = new StringBuilder();
 
-        for(SimpleOperationEnum operation : SimpleOperationEnum.values())
+        for (SimpleOperationEnum operation : SimpleOperationEnum.values())
         {
             operations.append(operation);
             operations.append(" ");

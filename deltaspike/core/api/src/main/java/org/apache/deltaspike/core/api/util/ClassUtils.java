@@ -59,6 +59,7 @@ public abstract class ClassUtils
             /**
              * {@inheritDoc}
              */
+            @Override
             public ClassLoader run()
             {
                 try
@@ -203,7 +204,7 @@ public abstract class ClassUtils
      * @throws InstantiationException if the instantiation failed
      */
     public static Object instantiateClassForName(String className)
-            throws ClassNotFoundException, IllegalAccessException, InstantiationException
+        throws ClassNotFoundException, IllegalAccessException, InstantiationException
     {
         return loadClassForName(className).newInstance();
     }

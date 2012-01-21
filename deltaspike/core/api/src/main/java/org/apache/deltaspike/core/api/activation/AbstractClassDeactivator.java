@@ -32,6 +32,7 @@ public abstract class AbstractClassDeactivator implements ClassDeactivator
     /**
      * {@inheritDoc}
      */
+    @Override
     public final Set<Class> getDeactivatedClasses()
     {
         if (this.deactivatedClasses == null)

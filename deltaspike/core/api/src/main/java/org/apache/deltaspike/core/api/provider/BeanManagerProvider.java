@@ -74,7 +74,7 @@ public class BeanManagerProvider implements Extension
      */
     public static BeanManagerProvider getInstance()
     {
-        if(bmp == null)
+        if (bmp == null)
         {
             //X TODO Java-EE5 support needs to be discussed
             // workaround for some Java-EE5 environments in combination with a special
@@ -83,7 +83,7 @@ public class BeanManagerProvider implements Extension
             // CodiStartupBroadcaster.broadcastStartup();
             // here bmp might not be null (depends on the broadcasters)
         }
-        if(bmp == null)
+        if (bmp == null)
         {
             throw new IllegalStateException("No " + BeanManagerProvider.class.getName() + " in place! " +
                 "Please ensure that you configured the CDI implementation of your choice properly. " +
@@ -108,7 +108,7 @@ public class BeanManagerProvider implements Extension
         {
             result = resolveBeanManagerViaJndi();
 
-            if(result != null)
+            if (result != null)
             {
                 bms.put(classLoader, result);
             }

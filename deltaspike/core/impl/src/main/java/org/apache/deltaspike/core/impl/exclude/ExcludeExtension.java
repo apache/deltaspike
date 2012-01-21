@@ -200,6 +200,7 @@ public class ExcludeExtension implements Extension, Deactivatable
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean isActivated()
     {
         return ClassDeactivation.isClassActivated(getClass());

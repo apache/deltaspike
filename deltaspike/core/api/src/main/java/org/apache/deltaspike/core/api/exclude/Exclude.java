@@ -73,7 +73,7 @@ import java.lang.annotation.Target;
  * public class ProductionBean {}
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE})
+@Target({ ElementType.TYPE })
 public @interface Exclude
 {
     /**
@@ -82,7 +82,7 @@ public @interface Exclude
      * If the current ProjectStage is in this list, the bean will get vetoed.
      * @return 1-n project-stages which are not allowed for the annotated artifact
      */
-    Class<? extends ProjectStage>[] ifProjectStage() default {};
+    Class<? extends ProjectStage>[] ifProjectStage() default { };
 
     /**
      * The {@link org.apache.deltaspike.core.api.projectstage.ProjectStage}s
@@ -90,7 +90,7 @@ public @interface Exclude
      * If the current ProjectStage is not in this list, the bean will get vetoed.
      * @return 1-n project-stages which are allowed for the annotated artifact
      */
-    Class<? extends ProjectStage>[] exceptIfProjectStage() default {};
+    Class<? extends ProjectStage>[] exceptIfProjectStage() default { };
 
     /**
      * Expression which signals if the annotated bean should be deactivated or not

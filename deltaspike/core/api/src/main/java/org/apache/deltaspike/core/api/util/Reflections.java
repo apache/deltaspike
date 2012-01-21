@@ -57,10 +57,6 @@ import java.util.Set;
 @Typed()
 public class Reflections
 {
-    private Reflections()
-    {
-    }
-
     /**
      * An empty array of type {@link Annotation}, useful converting lists to
      * arrays.
@@ -76,6 +72,10 @@ public class Reflections
     public static final Type[] EMPTY_TYPES = {};
 
     public static final Class<?>[] EMPTY_CLASSES = new Class<?>[0];
+
+    private Reflections()
+    {
+    }
 
     /**
      * <p>

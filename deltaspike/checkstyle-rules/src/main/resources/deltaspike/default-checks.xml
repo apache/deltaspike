@@ -185,6 +185,22 @@
           -->
         <module name="UpperEll"/>
 
+        <module name="WhitespaceAround">
+            <property name="tokens" value=""/>
+        </module>
+        <module name="StringLiteralEquality"/>
+        <module name="NoFinalizer"/>
+        <module name="MissingOverride"/>
+        <module name="HideUtilityClassConstructor"/>
+        <module name="InnerTypeLast"/>
+        <module name="EqualsAvoidNull"/>
+        <module name="ModifiedControlVariable"/>
+        <module name="DeclarationOrder"/>
+        <!--module name="MultipleStringLiterals"/-->
+        <module name="OneStatementPerLine"/>
+        <module name="Indentation"/>
+        <module name="ModifierOrder"/>
+        <module name="RedundantModifier"/>
     </module>
 
 </module>

@@ -35,7 +35,7 @@ public interface ConfigSource
      * Any ConfigSource might use it's own though or even return a hardcoded
      * in {@link #getOrdinal()}.
      */
-    static String DELTASPIKE_ORDINAL = "deltaspike_ordinal";
+    String DELTASPIKE_ORDINAL = "deltaspike_ordinal";
     
     /**
      * Lookup order:

@@ -32,7 +32,11 @@ import java.util.concurrent.ConcurrentHashMap;
 class ClassDeactivatorStorage
 {
     private static Map<ClassLoader, ClassDeactivator> classDeactivatorMap
-            = new ConcurrentHashMap<ClassLoader, ClassDeactivator>();
+        = new ConcurrentHashMap<ClassLoader, ClassDeactivator>();
+
+    private ClassDeactivatorStorage()
+    {
+    }
 
     static void setClassDeactivator(ClassDeactivator classDeactivator)
     {

@@ -43,6 +43,7 @@ public class NewLiteral extends AnnotationLiteral<New> implements New
     /**
      * {@inheritDoc}
      */
+    @Override
     public Class<?> value()
     {
         return value;

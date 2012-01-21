@@ -55,7 +55,7 @@ public abstract class BaseConfigSource implements ConfigSource
 
         try
         {
-            if(configuredOrdinalString != null)
+            if (configuredOrdinalString != null)
             {
                 ordinal = Integer.parseInt(configuredOrdinalString.trim());
             }

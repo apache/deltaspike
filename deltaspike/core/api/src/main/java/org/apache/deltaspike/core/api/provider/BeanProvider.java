@@ -99,7 +99,7 @@ public final class BeanProvider
      * <p><b>Attention:</b> please see the notes on manually resolving &#064;Dependent bean
      * in {@link #getContextualReference(Class, boolean, java.lang.annotation.Annotation...)}!</p>
      *
-     * @param name the EL name of the bean
+     * @param name     the EL name of the bean
      * @param optional if <code>true</code> it will return <code>null</code> if no bean could be found or created.
      *                 Otherwise it will throw an {@code IllegalStateException}
      * @return the resolved Contextual Reference
@@ -196,17 +196,17 @@ public final class BeanProvider
             throw new IllegalStateException("Could not find beans for Type=" + type);
         }
 
-        if(!includeDefaultScopedBeans)
+        if (!includeDefaultScopedBeans)
         {
             beans = filterDefaultScopedBeans(beans);
         }
-        
+
         List<T> result = new ArrayList<T>(beans.size());
-        
-        for(Bean<?> bean : beans)
+
+        for (Bean<?> bean : beans)
         {
             result.add(getContextualReference(type, beanManager,
-                    new HashSet<Bean<?>>((Collection)Arrays.asList(new Object[]{bean}))));
+                    new HashSet<Bean<?>>((Collection) Arrays.asList(new Object[]{bean}))));
         }
         return result;
     }
@@ -222,7 +222,7 @@ public final class BeanProvider
         {
             currentBean = beanIterator.next();
 
-            if(!Dependent.class.isAssignableFrom(currentBean.getScope()))
+            if (!Dependent.class.isAssignableFrom(currentBean.getScope()))
             {
                 result.add(currentBean);
             }
@@ -245,8 +245,8 @@ public final class BeanProvider
 
         CreationalContext<?> creationalContext = beanManager.createCreationalContext(bean);
 
-        @SuppressWarnings({"unchecked", "UnnecessaryLocalVariable"})
-        T result = (T)beanManager.getReference(bean, type, creationalContext);
+        @SuppressWarnings({ "unchecked", "UnnecessaryLocalVariable" })
+        T result = (T) beanManager.getReference(bean, type, creationalContext);
         return result;
     }
 

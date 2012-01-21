@@ -27,7 +27,7 @@ import javax.enterprise.util.AnnotationLiteral;
  */
 public class TypedLiteral extends AnnotationLiteral<Typed> implements Typed
 {
-    final private Class<?>[] value;
+    private final Class<?>[] value;
 
     public TypedLiteral()
     {

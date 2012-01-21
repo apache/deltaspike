@@ -40,10 +40,7 @@ import javax.enterprise.inject.Typed;
 @Typed()
 public final class ConfigResolver
 {
-    private ConfigResolver()
-    {
-        // this is a utility class which doesn't get instantiated.
-    }
+    private static final Logger LOG = Logger.getLogger(ConfigResolver.class.getName());
 
     /**
      * The content of this map will get lazily initiated and will hold the
@@ -51,11 +48,13 @@ public final class ConfigResolver
      * ClassLoader).
      */
     private static Map<ClassLoader, ConfigSource[]> configSources
-            = new ConcurrentHashMap<ClassLoader, ConfigSource[]>();
+        = new ConcurrentHashMap<ClassLoader, ConfigSource[]>();
 
+    private ConfigResolver()
+    {
+        // this is a utility class which doesn't get instantiated.
+    }
 
-    private static final Logger LOG = Logger.getLogger(ConfigResolver.class.getName());
-    
     /**
      * Resolve the property value by going through the list of configured {@link ConfigSource}s
      * and use the one with the highest priority.
@@ -137,7 +136,7 @@ public final class ConfigResolver
         List<ConfigSource> appConfigSources = new ArrayList<ConfigSource>();
 
         ServiceLoader<ConfigSourceProvider> configSourceProviderServiceLoader
-                = ServiceLoader.load(ConfigSourceProvider.class);
+            = ServiceLoader.load(ConfigSourceProvider.class);
 
         for (ConfigSourceProvider csp : configSourceProviderServiceLoader)
         {

@@ -34,6 +34,12 @@ import java.lang.reflect.Type;
  */
 abstract class Parameter<X> implements AnnotatedElement
 {
+    private final int position;
+
+    Parameter(int position)
+    {
+        this.position = position;
+    }
 
     /**
      * Creates a new {@link Parameter} using the member and position passed in.
@@ -60,9 +66,84 @@ abstract class Parameter<X> implements AnnotatedElement
         }
     }
 
+    /**
+     * Returns the actual {@link Member} declaring the parameter.
+     *
+     * @return Instance of the declaring java member.
+     */
+    public abstract Member getDeclaringMember();
+
+    /**
+     * Getter
+     */
+    public int getPosition()
+    {
+        return position;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int hash = 1;
+        hash = hash * 31 + getDeclaringMember().hashCode();
+        hash = hash * 31 + Integer.valueOf(position).hashCode();
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof Parameter<?>)
+        {
+            Parameter<?> that = (Parameter<?>) obj;
+            return this.getDeclaringMember().equals(that.getDeclaringMember()) &&
+                    this.getPosition() == that.getPosition();
+        }
+        else
+        {
+            return false;
+        }
+
+    }
+
+    /**
+     * Returns the instance of the annotation on the member, or null if not found
+     */
+    public <T extends Annotation> T getAnnotation(Class<T> annotationClass)
+    {
+        for (Annotation annotation : getAnnotations())
+        {
+            if (annotation.annotationType().equals(annotationClass))
+            {
+                return annotationClass.cast(annotation);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Getter
+     */
+    public Annotation[] getDeclaredAnnotations()
+    {
+        return getAnnotations();
+    }
+
+    /**
+     * Simple test if an annotation is present.
+     */
+    public boolean isAnnotationPresent(Class<? extends Annotation> annotationClass)
+    {
+        return getAnnotation(annotationClass) != null;
+    }
+
+    /**
+     * Getter
+     */
+    public abstract Type getBaseType();
+
     private static class MethodParameter<X> extends Parameter<X>
     {
-
         private final Method declaringMethod;
 
         private MethodParameter(Method declaringMethod, int position)
@@ -147,88 +228,4 @@ abstract class Parameter<X> implements AnnotatedElement
         }
 
     }
-
-    private final int position;
-
-    Parameter(int position)
-    {
-        this.position = position;
-    }
-
-    /**
-     * Returns the actual {@link Member} declaring the parameter.
-     *
-     * @return Instance of the declaring java member.
-     */
-    public abstract Member getDeclaringMember();
-
-    /**
-     * Getter
-     */
-    public int getPosition()
-    {
-        return position;
-    }
-
-    @Override
-    public int hashCode()
-    {
-        int hash = 1;
-        hash = hash * 31 + getDeclaringMember().hashCode();
-        hash = hash * 31 + Integer.valueOf(position).hashCode();
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj)
-    {
-        if (obj instanceof Parameter<?>)
-        {
-            Parameter<?> that = (Parameter<?>) obj;
-            return this.getDeclaringMember().equals(that.getDeclaringMember()) &&
-                    this.getPosition() == that.getPosition();
-        }
-        else
-        {
-            return false;
-        }
-
-    }
-
-    /**
-     * Returns the instance of the annotation on the member, or null if not found
-     */
-    public <T extends Annotation> T getAnnotation(Class<T> annotationClass)
-    {
-        for (Annotation annotation : getAnnotations())
-        {
-            if (annotation.annotationType().equals(annotationClass))
-            {
-                return annotationClass.cast(annotation);
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Getter
-     */
-    public Annotation[] getDeclaredAnnotations()
-    {
-        return getAnnotations();
-    }
-
-    /**
-     * Simple test if an annotation is present.
-     */
-    public boolean isAnnotationPresent(Class<? extends Annotation> annotationClass)
-    {
-        return getAnnotation(annotationClass) != null;
-    }
-
-    /**
-     * Getter
-     */
-    public abstract Type getBaseType();
-
 }

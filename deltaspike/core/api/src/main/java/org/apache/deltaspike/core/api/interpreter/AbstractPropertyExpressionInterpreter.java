@@ -31,23 +31,26 @@ package org.apache.deltaspike.core.api.interpreter;
  */
 public abstract class AbstractPropertyExpressionInterpreter implements ExpressionInterpreter<String, Boolean>
 {
+    private static final String ASTERISK = "*";
+
     /**
      * {@inheritDoc}
      */
+    @Override
     public final Boolean evaluate(String expressions)
     {
         boolean result = false;
         String[] foundExpressions = expressions.split(";");
 
         SimpleOperationEnum operation;
-        for(String expression : foundExpressions)
+        for (String expression : foundExpressions)
         {
             result = false;
-            if(expression.contains(SimpleOperationEnum.IS.getValue()))
+            if (expression.contains(SimpleOperationEnum.IS.getValue()))
             {
                 operation = SimpleOperationEnum.IS;
             }
-            else if(expression.contains(SimpleOperationEnum.NOT.getValue()))
+            else if (expression.contains(SimpleOperationEnum.NOT.getValue()))
             {
                 operation = SimpleOperationEnum.NOT;
             }
@@ -62,7 +65,7 @@ public abstract class AbstractPropertyExpressionInterpreter implements Expressio
 
             String configuredValue = getConfiguredValue(keyValue[0]);
 
-            if(configuredValue != null)
+            if (configuredValue != null)
             {
                 configuredValue = configuredValue.trim();
             }
@@ -71,22 +74,22 @@ public abstract class AbstractPropertyExpressionInterpreter implements Expressio
                 configuredValue = "";
             }
 
-            if(!"*".equals(keyValue[1]) && "".equals(configuredValue))
+            if (!ASTERISK.equals(keyValue[1]) && "".equals(configuredValue))
             {
                 continue;
             }
 
-            if("*".equals(keyValue[1]) && !"".equals(configuredValue))
+            if (ASTERISK.equals(keyValue[1]) && !"".equals(configuredValue))
             {
                 result = true;
                 continue;
             }
 
-            if(SimpleOperationEnum.IS.equals(operation) && !keyValue[1].equalsIgnoreCase(configuredValue))
+            if (SimpleOperationEnum.IS.equals(operation) && !keyValue[1].equalsIgnoreCase(configuredValue))
             {
                 return false;
             }
-            else if(SimpleOperationEnum.NOT.equals(operation) && keyValue[1].equalsIgnoreCase(configuredValue))
+            else if (SimpleOperationEnum.NOT.equals(operation) && keyValue[1].equalsIgnoreCase(configuredValue))
             {
                 return false;
             }
