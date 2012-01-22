@@ -18,20 +18,23 @@
  */
 package org.apache.deltaspike.test.core.impl.activation;
 
-import org.apache.deltaspike.core.api.activation.AbstractClassDeactivator;
+
+import org.apache.deltaspike.core.api.activation.ClassDeactivator;
+import org.apache.deltaspike.core.api.activation.Deactivatable;
 
 /**
  * Test {@link org.apache.deltaspike.core.api.activation.ClassDeactivator}
- * which is needed to test {@link org.apache.deltaspike.core.impl.util.ClassDeactivation}
+ * which is needed to test {@link org.apache.deltaspike.core.api.activation.ClassDeactivation}
  */
-public class TestClassDeactivator extends AbstractClassDeactivator
+public class TestClassDeactivator implements ClassDeactivator
 {
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    protected void deactivateClasses()
+    public Boolean isActivated(Class<? extends Deactivatable> deactivatableClazz)
     {
-        addDeactivatedClass(DeactivatedClass.class);
+        if (deactivatableClazz.equals(DeactivatedClass.class))
+        {
+            return Boolean.FALSE;
+        }
+        return null;
     }
 }

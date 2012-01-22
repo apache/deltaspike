@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.core.impl.exclude;
 
+import org.apache.deltaspike.core.api.activation.ClassDeactivation;
 import org.apache.deltaspike.core.api.activation.Deactivatable;
 import org.apache.deltaspike.core.api.exclude.Exclude;
 import org.apache.deltaspike.core.api.interpreter.ExpressionInterpreter;
@@ -25,7 +26,6 @@ import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.api.util.ClassUtils;
 import org.apache.deltaspike.core.impl.interpreter.PropertyExpressionInterpreter;
 import org.apache.deltaspike.core.impl.projectstage.ProjectStageProducer;
-import org.apache.deltaspike.core.impl.util.ClassDeactivation;
 
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AfterDeploymentValidation;
@@ -43,6 +43,8 @@ import java.util.logging.Logger;
 public class ExcludeExtension implements Extension, Deactivatable
 {
     private static final Logger LOG = Logger.getLogger(ExcludeExtension.class.getName());
+
+    private Boolean isActivated = null;
 
     /**
      * triggers initialization in any case
@@ -197,12 +199,12 @@ public class ExcludeExtension implements Extension, Deactivatable
                 processAnnotatedType.getAnnotatedType().getJavaClass());
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public boolean isActivated()
     {
-        return ClassDeactivation.isClassActivated(getClass());
+        if (isActivated == null)
+        {
+            isActivated = ClassDeactivation.isActivated(getClass());
+        }
+        return isActivated;
     }
 }

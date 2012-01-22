@@ -84,9 +84,13 @@ public final class ConfigResolver
     }
 
     /**
-     * Resolve all values for the given key, from all registered ConfigSources.
-     * @param key
-     * @return List with all found property values, sorted in order of their ordinal.
+     * Resolve all values for the given key, from all registered ConfigSources ordered by their
+     * ordinal value in ascending ways. If more {@link ConfigSource}s have the same ordinal, their
+     * order is undefined.
+     *
+     * @param key under which configuration is stored
+     * @return List with all found property values, sorted in ascending order of their ordinal.
+     * @see org.apache.deltaspike.core.spi.config.ConfigSource#getOrdinal()
      */
     public static List<String> getAllPropertyValues(String key)
     {

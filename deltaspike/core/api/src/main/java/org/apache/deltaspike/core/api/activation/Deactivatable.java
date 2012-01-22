@@ -19,20 +19,18 @@
 package org.apache.deltaspike.core.api.activation;
 
 /**
- * Interface to allow easier detection of deactivatable classes.
- * These classes are activated by default (e.g. via CDI config).
- * Since CDI, JSF,... currently don't allow to deactivate default implementations,
- * DeltaSpike has to introduce a proprietary mechanism.
+ * <p>Interface to allow easier detection of deactivatable classes.</p>
  *
- * This is e.g. used to disable CDI Extensions in DeltaSpike and might get
- * used for other Extension libraries as well.
+ * <p>These classes are activated by default and can be disabled on demand (e.g. via CDI config).
+ * Since CDI, JSF,... currently don't allow to deactivate default implementations,
+ * DeltaSpike has to introduce a proprietary mechanism.</p>
+ *
+ * <p>This is e.g. used to disable CDI Extensions in DeltaSpike and might get
+ * used for other Extension libraries as well.</p>
+ *
+ * <p><b>Note:</b> It is suggested that the implementations
+ * use the {@link ClassDeactivation} for implementing the lookup</p>
  */
 public interface Deactivatable
 {
-    /**
-     * Returns if the current instance is active or not.
-     *
-     * @return true if the current instance is active, false otherwise
-     */
-    boolean isActivated();
 }

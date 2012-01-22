@@ -19,26 +19,28 @@
 package org.apache.deltaspike.core.api.activation;
 
 import java.io.Serializable;
-import java.util.Set;
 
 /**
- * <p>A class-deactivator allows to specify deactivated classes which can't be deactivated via std. CDI mechanisms.</p>
+ * <p>A class-deactivator allows to specify deactivated classes which can't be deactivated via std. CDI mechanisms.
+ * This might be the case for CDI Extensions because CDI mechanisms are not available at startup time.</p>
  * 
  * <p>A class-deactivator will be resolved from the environment via the default resolvers or via a custom resolver which
  * allows to use any type of configuration-format. See {@link org.apache.deltaspike.core.api.config.ConfigResolver}
  * for more information about how to configure it. The configuration key is
  * <code>org.apache.deltaspike.core.api.activation.ClassDeactivator</code></p>
  * 
- * <p>Furthermore, {@link AbstractClassDeactivator} is a convenience class which
- * allows an easier implementation. All classes which implement {@link Deactivatable} in-/directly, can be deactivated
- * with this mechanism. For all other classes/beans, you can use the veto mechanism provided by CDI.</p>
+ * <p>All DlassDeactivators will get picked up in order of their ordinal and might explicitely activate or 
+ * deactivate {@link Deactivatable} classes. Returning a <code>null</code> value means that the ClassDeactivator
+ * doesn't care about the very Deactivatable class.</p>
+ * 
  */
 public interface ClassDeactivator extends Serializable
 {
     /**
      * Provides classes which should be deactivated.
      *
-     * @return classes which should be deactivated
+     * @return {@link Boolean#FALSE} if class should get activated, {@link Boolean#FALSE} if class must be available
+     *         and <code>null</code> to let it as is (defined by default or other 
      */
-    Set<Class> getDeactivatedClasses();
+    Boolean isActivated(Class<? extends Deactivatable> deactivatableClazz);
 }

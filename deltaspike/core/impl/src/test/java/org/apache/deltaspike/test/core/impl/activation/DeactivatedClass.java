@@ -18,9 +18,11 @@
  */
 package org.apache.deltaspike.test.core.impl.activation;
 
+import org.apache.deltaspike.core.api.activation.Deactivatable;
+
 /**
  * Class which is deactivated
  */
-public class DeactivatedClass
+public class DeactivatedClass implements Deactivatable
 {
 }

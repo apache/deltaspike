@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.core.impl.activation;
 
-import org.apache.deltaspike.core.impl.util.ClassDeactivation;
+import org.apache.deltaspike.core.api.activation.ClassDeactivation;
 import org.apache.deltaspike.test.core.api.provider.TestBean;
 import org.apache.deltaspike.test.core.api.temptestutil.ShrinkWrapArchiveUtil;
 import org.apache.deltaspike.test.util.FileUtils;
@@ -64,7 +64,7 @@ public class TestClassDeactivation
     @Test
     public void testActivatedClass()
     {
-        Assert.assertTrue(ClassDeactivation.isClassActivated(ActivatedClass.class));
+        Assert.assertTrue(ClassDeactivation.isActivated(ActivatedClass.class));
     }
 
     /**
@@ -73,6 +73,6 @@ public class TestClassDeactivation
     @Test
     public void testDeactivatedClass()
     {
-        Assert.assertFalse(ClassDeactivation.isClassActivated(DeactivatedClass.class));
+        Assert.assertFalse(ClassDeactivation.isActivated(DeactivatedClass.class));
     }
 }
