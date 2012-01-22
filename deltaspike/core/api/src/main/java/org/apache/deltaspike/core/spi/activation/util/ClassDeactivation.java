@@ -16,10 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.api.activation;
+package org.apache.deltaspike.core.spi.activation.util;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.util.ClassUtils;
+import org.apache.deltaspike.core.spi.activation.ClassDeactivator;
+import org.apache.deltaspike.core.spi.activation.Deactivatable;
 
 import javax.enterprise.inject.Typed;
 import java.util.ArrayList;

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.api.activation;
+package org.apache.deltaspike.core.spi.activation;
 
 /**
  * <p>Interface to allow easier detection of deactivatable classes.</p>
@@ -29,7 +29,7 @@ package org.apache.deltaspike.core.api.activation;
  * used for other Extension libraries as well.</p>
  *
  * <p><b>Note:</b> It is suggested that the implementations
- * use the {@link ClassDeactivation} for implementing the lookup</p>
+ * use the {@link org.apache.deltaspike.core.spi.activation.util.ClassDeactivation} for implementing the lookup</p>
  */
 public interface Deactivatable
 {

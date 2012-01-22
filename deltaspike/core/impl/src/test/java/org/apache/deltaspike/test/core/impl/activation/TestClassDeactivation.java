@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.core.impl.activation;
 
-import org.apache.deltaspike.core.api.activation.ClassDeactivation;
+import org.apache.deltaspike.core.spi.activation.util.ClassDeactivation;
 import org.apache.deltaspike.test.core.api.provider.TestBean;
 import org.apache.deltaspike.test.core.api.temptestutil.ShrinkWrapArchiveUtil;
 import org.apache.deltaspike.test.util.FileUtils;
@@ -34,7 +34,7 @@ import org.junit.runner.RunWith;
 import java.net.URL;
 
 /**
- * Test for {@link org.apache.deltaspike.core.api.activation.ClassDeactivator}
+ * Test for {@link org.apache.deltaspike.core.spi.activation.ClassDeactivator}
  */
 @RunWith(Arquillian.class)
 public class TestClassDeactivation

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.api.activation;
+package org.apache.deltaspike.core.spi.activation;
 
 import java.io.Serializable;
 
@@ -29,7 +29,7 @@ import java.io.Serializable;
  * <p>A class-deactivator will be resolved from the environment via the default resolvers or via a custom resolver which
  * allows to use any type of configuration-format. See {@link org.apache.deltaspike.core.api.config.ConfigResolver}
  * for more information about how to configure it. The configuration key is
- * <code>org.apache.deltaspike.core.api.activation.ClassDeactivator</code></p>
+ * <code>org.apache.deltaspike.core.spi.activation.ClassDeactivator</code></p>
  * 
  * <p>All DlassDeactivators will get picked up in order of their ordinal and might explicitely activate or 
  * deactivate {@link Deactivatable} classes. Returning a <code>null</code> value means that the ClassDeactivator

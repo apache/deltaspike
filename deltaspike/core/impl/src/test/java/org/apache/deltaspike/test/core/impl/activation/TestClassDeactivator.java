@@ -19,15 +19,17 @@
 package org.apache.deltaspike.test.core.impl.activation;
 
 
-import org.apache.deltaspike.core.api.activation.ClassDeactivator;
-import org.apache.deltaspike.core.api.activation.Deactivatable;
+import org.apache.deltaspike.core.spi.activation.ClassDeactivator;
+import org.apache.deltaspike.core.spi.activation.Deactivatable;
 
 /**
- * Test {@link org.apache.deltaspike.core.api.activation.ClassDeactivator}
- * which is needed to test {@link org.apache.deltaspike.core.api.activation.ClassDeactivation}
+ * Test {@link org.apache.deltaspike.core.spi.activation.ClassDeactivator}
+ * which is needed to test {@link org.apache.deltaspike.core.spi.activation.util.ClassDeactivation}
  */
 public class TestClassDeactivator implements ClassDeactivator
 {
+    private static final long serialVersionUID = -3403907272881821406L;
+
     @Override
     public Boolean isActivated(Class<? extends Deactivatable> deactivatableClazz)
     {
