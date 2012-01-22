@@ -109,7 +109,7 @@ public final class ClassDeactivation
                     deactivatedBy = classDeactivator.getClass();
                     LOG.fine("Deactivating class " + targetClass);
                 }
-                else if (isActivated && deactivatedBy != null)
+                else if (deactivatedBy != null)
                 {
                     LOG.fine("Reactivation of: " + targetClass.getName() + " by " +
                             classDeactivator.getClass().getName() +
