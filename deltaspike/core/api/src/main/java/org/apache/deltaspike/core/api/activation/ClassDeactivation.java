@@ -86,36 +86,37 @@ public final class ClassDeactivation
 
         List<ClassDeactivator> classDeactivators = getClassDeactivators();
 
-        Boolean isActivated = null;
-        Boolean isLocallyActivated;
-        Class<? extends ClassDeactivator> deactivationDetected = null;
+        Boolean isActivated = Boolean.TRUE;
+        Class<? extends ClassDeactivator> deactivatedBy = null;
 
-        LOG.info("start evaluation if " + targetClass.getName() + " is de-/activated");
+        LOG.fine("start evaluation if " + targetClass.getName() + " is de-/activated");
 
+        // we get the classActivators ordered by it's ordinal
+        // thus the last one which returns != null 'wins' ;)
         for (ClassDeactivator classDeactivator : classDeactivators)
         {
-            isLocallyActivated = classDeactivator.isActivated(targetClass);
+            Boolean isLocallyActivated = classDeactivator.isActivated(targetClass);
 
             if (isLocallyActivated != null)
             {
                 isActivated = isLocallyActivated;
-            }
 
-            /*
-             * Check and log the details across class-deactivators
-             */
-            if (Boolean.FALSE.equals(isActivated))
-            {
-                deactivationDetected = classDeactivator.getClass();
-                LOG.fine("Deactivating class " + targetClass);
-            }
-            else if (Boolean.TRUE.equals(isActivated) && deactivationDetected != null)
-            {
-                LOG.fine("Reactivation of: " + targetClass.getName() + " by " + classDeactivator.getClass().getName() +
-                        " - original deactivated by: " + deactivationDetected.getName() + ".");
-
-                LOG.fine("If that isn't the intended behaviour, you have to use a higher ordinal for " +
-                        deactivationDetected.getName());
+                /*
+                * Check and log the details across class-deactivators
+                */
+                if (!isActivated)
+                {
+                    deactivatedBy = classDeactivator.getClass();
+                    LOG.fine("Deactivating class " + targetClass);
+                }
+                else if (isActivated && deactivatedBy != null)
+                {
+                    LOG.fine("Reactivation of: " + targetClass.getName() + " by " +
+                            classDeactivator.getClass().getName() +
+                            " - original deactivated by: " + deactivatedBy.getName() + ".\n" +
+                            "If that isn't the intended behaviour, you have to use a higher ordinal for " +
+                            deactivatedBy.getName());
+                }
             }
         }
 
@@ -124,16 +125,8 @@ public final class ClassDeactivation
 
     private static void cacheResult(Class<? extends Deactivatable> targetClass, Boolean activated)
     {
-        if (Boolean.FALSE.equals(activated))
-        {
-            activationStatusCache.put(targetClass, false);
-            LOG.info("class: " + targetClass.getName() + " is deactivated.");
-        }
-        else //in case of true or null (classes are activated by default)
-        {
-            activationStatusCache.put(targetClass, true);
-            LOG.info("class: " + targetClass.getName() + " is activated.");
-        }
+        activationStatusCache.put(targetClass, activated);
+        LOG.info("class: " + targetClass.getName() + " activated=" + activated);
     }
 
     /**
