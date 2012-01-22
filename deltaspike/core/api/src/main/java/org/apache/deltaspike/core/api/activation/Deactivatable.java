@@ -23,6 +23,9 @@ package org.apache.deltaspike.core.api.activation;
  * These classes are activated by default (e.g. via CDI config).
  * Since CDI, JSF,... currently don't allow to deactivate default implementations,
  * DeltaSpike has to introduce a proprietary mechanism.
+ *
+ * This is e.g. used to disable CDI Extensions in DeltaSpike and might get
+ * used for other Extension libraries as well.
  */
 public interface Deactivatable
 {

@@ -22,12 +22,16 @@ import java.io.Serializable;
 import java.util.Set;
 
 /**
- * A class-deactivator allows to specify deactivated classes which can't be deactivated via std. CDI mechanisms.
- * A class-deactivator will be resolved from the environment via the default resolvers or via a custom resolver which
- * allows to use any type of configuration-format. An easy way to configure it permanently is e.g.
- * to use the service-loader approach. Furthermore, {@link AbstractClassDeactivator} is a convenience class which
+ * <p>A class-deactivator allows to specify deactivated classes which can't be deactivated via std. CDI mechanisms.</p>
+ * 
+ * <p>A class-deactivator will be resolved from the environment via the default resolvers or via a custom resolver which
+ * allows to use any type of configuration-format. See {@link org.apache.deltaspike.core.api.config.ConfigResolver}
+ * for more information about how to configure it. The configuration key is
+ * <code>org.apache.deltaspike.core.api.activation.ClassDeactivator</code></p>
+ * 
+ * <p>Furthermore, {@link AbstractClassDeactivator} is a convenience class which
  * allows an easier implementation. All classes which implement {@link Deactivatable} in-/directly, can be deactivated
- * with this mechanism. For all other classes/beans, you can use the veto mechanism provided by CDI.
+ * with this mechanism. For all other classes/beans, you can use the veto mechanism provided by CDI.</p>
  */
 public interface ClassDeactivator extends Serializable
 {
