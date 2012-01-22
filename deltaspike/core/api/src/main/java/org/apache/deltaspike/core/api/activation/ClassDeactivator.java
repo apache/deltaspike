@@ -21,6 +21,8 @@ package org.apache.deltaspike.core.api.activation;
 import java.io.Serializable;
 
 /**
+ * <p>An implementation has to be stateless.</p>
+ *
  * <p>A class-deactivator allows to specify deactivated classes which can't be deactivated via std. CDI mechanisms.
  * This might be the case for CDI Extensions because CDI mechanisms are not available at startup time.</p>
  * 

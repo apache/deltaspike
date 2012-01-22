@@ -45,6 +45,13 @@ public final class ClassDeactivation
     private static Map<ClassLoader, List<ClassDeactivator>> classDeactivatorMap
         = new ConcurrentHashMap<ClassLoader, List<ClassDeactivator>>();
 
+    /**
+     * Cache for the result. It won't contain many classes but it might be accessed frequently.
+     * Valid entries are only true or false. If an entry isn't available or null, it gets calculated.
+     */
+    private static Map<Class<? extends Deactivatable>, Boolean> activationStatusCache
+        = new ConcurrentHashMap<Class<? extends Deactivatable>, Boolean>();
+    
     private ClassDeactivation()
     {
         // private ct to prevent utility class from instantiation.
@@ -53,48 +60,100 @@ public final class ClassDeactivation
     /**
      * Evaluates if the given {@link Deactivatable} is active.
      *
-     * @param deactivatableClazz {@link Deactivatable} under test.
+     * @param targetClass {@link Deactivatable} under test.
      * @return <code>true</code> if it is active, <code>false</code> otherwise
      */
-    public static synchronized boolean isActivated(Class<? extends Deactivatable> deactivatableClazz)
+    public static boolean isActivated(Class<? extends Deactivatable> targetClass)
     {
+        Boolean activatedClassCacheEntry = activationStatusCache.get(targetClass);
+
+        if (activatedClassCacheEntry == null)
+        {
+            initDeactivatableCacheFor(targetClass);
+            activatedClassCacheEntry = activationStatusCache.get(targetClass);
+        }
+        return activatedClassCacheEntry;
+    }
+
+    private static synchronized void initDeactivatableCacheFor(Class<? extends Deactivatable> targetClass)
+    {
+        Boolean activatedClassCacheEntry = activationStatusCache.get(targetClass);
+
+        if (activatedClassCacheEntry != null) //double-check
+        {
+            return;
+        }
+
         List<ClassDeactivator> classDeactivators = getClassDeactivators();
 
-        Boolean isActivated = Boolean.TRUE; // by default a class is always activated.
+        Boolean isActivated = null;
+        Boolean isLocallyActivated;
+        Class<? extends ClassDeactivator> deactivationDetected = null;
+
+        LOG.info("start evaluation if " + targetClass.getName() + " is de-/activated");
 
         for (ClassDeactivator classDeactivator : classDeactivators)
         {
-            Boolean isLocallyActivated = classDeactivator.isActivated(deactivatableClazz);
+            isLocallyActivated = classDeactivator.isActivated(targetClass);
+
             if (isLocallyActivated != null)
             {
                 isActivated = isLocallyActivated;
             }
-        }
-        
-        if (!isActivated) 
-        {
-            LOG.info("Deactivating class " + deactivatableClazz);
+
+            /*
+             * Check and log the details across class-deactivators
+             */
+            if (Boolean.FALSE.equals(isActivated))
+            {
+                deactivationDetected = classDeactivator.getClass();
+                LOG.fine("Deactivating class " + targetClass);
+            }
+            else if (Boolean.TRUE.equals(isActivated) && deactivationDetected != null)
+            {
+                LOG.fine("Reactivation of: " + targetClass.getName() + " by " + classDeactivator.getClass().getName() +
+                        " - original deactivated by: " + deactivationDetected.getName() + ".");
+
+                LOG.fine("If that isn't the intended behaviour, you have to use a higher ordinal for " +
+                        deactivationDetected.getName());
+            }
         }
 
-        return isActivated;
+        cacheResult(targetClass, isActivated);
     }
 
+    private static void cacheResult(Class<? extends Deactivatable> targetClass, Boolean activated)
+    {
+        if (Boolean.FALSE.equals(activated))
+        {
+            activationStatusCache.put(targetClass, false);
+            LOG.info("class: " + targetClass.getName() + " is deactivated.");
+        }
+        else //in case of true or null (classes are activated by default)
+        {
+            activationStatusCache.put(targetClass, true);
+            LOG.info("class: " + targetClass.getName() + " is activated.");
+        }
+    }
 
     /**
      * @return the List of configured @{link ClassDeactivator}s for the current context ClassLoader.
      */
     private static List<ClassDeactivator> getClassDeactivators()
     {
-        List<ClassDeactivator> classDeactivators = classDeactivatorMap.get(ClassUtils.getClassLoader(null));
+        ClassLoader classLoader = ClassUtils.getClassLoader(null);
+        List<ClassDeactivator> classDeactivators = classDeactivatorMap.get(classLoader);
+
         if (classDeactivators == null)
         {
-            classDeactivators = getConfiguredClassDeactivator();
+            return initConfiguredClassDeactivators(classLoader);
         }
 
         return classDeactivators;
     }
 
-    private static List<ClassDeactivator> getConfiguredClassDeactivator()
+    //synchronized isn't needed - #initDeactivatableCacheFor is already synchronized
+    private static List<ClassDeactivator> initConfiguredClassDeactivators(ClassLoader classLoader)
     {
         List<String> classDeactivatorClassNames = ConfigResolver.getAllPropertyValues(ClassDeactivator.class.getName());
 
@@ -113,10 +172,11 @@ public final class ClassDeactivation
             catch (Exception e)
             {
                 LOG.warning(classDeactivatorClassName + " can't be instantiated");
-                throw new RuntimeException(e);
+                throw new IllegalStateException(e);
             }
         }
 
+        classDeactivatorMap.put(classLoader, classDeactivators);
         return classDeactivators;
     }
 }
