@@ -125,7 +125,7 @@ public class BeanManagerProvider implements Extension
      * @param afterBeanDiscovery event which we don't actually use ;)
      * @param beanManager the BeanManager we store and make available.
      */
-    public void setBeanManager(@Observes AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager)
+    protected void setBeanManager(@Observes AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager)
     {
         BeanManagerProvider bmpFirst = setBeanManagerProvider(this);
 
@@ -140,7 +140,7 @@ public class BeanManagerProvider implements Extension
      * Cleanup on container shutdown
      * @param beforeShutdown cdi shutdown event
      */
-    public void cleanupStoredBeanManagerOnShutdown(@Observes BeforeShutdown beforeShutdown)
+    protected void cleanupStoredBeanManagerOnShutdown(@Observes BeforeShutdown beforeShutdown)
     {
         bms.remove(ClassUtils.getClassLoader(null));
     }
