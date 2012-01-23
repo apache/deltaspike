@@ -28,10 +28,12 @@ import org.apache.deltaspike.core.api.metadata.builder.AnnotatedTypeBuilder;
 import org.junit.Test;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Alternative;
 import javax.enterprise.inject.Default;
 import javax.enterprise.inject.Typed;
 import javax.enterprise.inject.spi.AnnotatedConstructor;
+import javax.enterprise.inject.spi.AnnotatedMethod;
 import javax.enterprise.inject.spi.AnnotatedParameter;
 import javax.enterprise.inject.spi.AnnotatedType;
 import javax.inject.Named;
@@ -43,6 +45,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
 
 public class AnnotatedTypeBuilderTest
 {
@@ -54,29 +57,60 @@ public class AnnotatedTypeBuilderTest
 
         AnnotatedType<Cat> cat = builder.create();
 
-        if ("cat".equals(cat.getAnnotation(Named.class).value()))
-        {
-            builder.addToClass(new AlternativeLiteral())
-                    .addToClass(new ApplicationScopedLiteral())
-                    .removeFromClass(Named.class)
-                    .addToClass(new NamedLiteral("tomcat"));
+        assertNotNull(cat);
+        assertNotNull(cat.getAnnotation(Named.class));
+        assertEquals("cat", cat.getAnnotation(Named.class).value());
 
-            cat = builder.create();
-        }
+        builder.addToClass(new AlternativeLiteral())
+                .addToClass(new ApplicationScopedLiteral())
+                .removeFromClass(Named.class)
+                .addToClass(new NamedLiteral("tomcat"));
+
+        cat = builder.create();
+        assertNotNull(cat);
 
         assertEquals(3, cat.getAnnotations().size());
         assertTrue(cat.isAnnotationPresent(Named.class));
         assertTrue(cat.isAnnotationPresent(Alternative.class));
         assertTrue(cat.isAnnotationPresent(ApplicationScoped.class));
         assertEquals("tomcat", cat.getAnnotation(Named.class).value());
+        
+        AnnotatedMethod observerMethod = null;
+        for (AnnotatedMethod m : cat.getMethods())
+        {
+            if ("doSomeObservation".equals(m.getJavaMember().getName()))
+            {
+                observerMethod = m;
+                break;
+            }
+        }
+        assertNotNull(observerMethod);
+        observerMethod.isAnnotationPresent(Observes.class);
+        
+        {
+            // test reading from an AnnotatedType
+            AnnotatedTypeBuilder<Cat> builder2 = new AnnotatedTypeBuilder<Cat>();
+            builder2.readFromType(cat);
+            builder2.removeFromAll(Named.class);
 
-        builder = new AnnotatedTypeBuilder<Cat>();
-        builder.readFromType(cat);
-        builder.removeFromAll(Named.class);
+            final AnnotatedType<Cat> noNameCat = builder2.create();
+            assertFalse(noNameCat.isAnnotationPresent(Named.class));
+            assertEquals(2, noNameCat.getAnnotations().size());
+        }
 
-        final AnnotatedType<Cat> noNameCat = builder.create();
-        assertFalse(noNameCat.isAnnotationPresent(Named.class));
-        assertEquals(2, noNameCat.getAnnotations().size());
+        {
+
+            // test reading from an AnnotatedType in non-overwrite mode
+            AnnotatedTypeBuilder<Cat> builder3 = new AnnotatedTypeBuilder<Cat>();
+            builder3.readFromType(cat, true);
+            builder3.removeFromAll(Named.class);
+
+            builder3.readFromType(cat, false);
+
+            final AnnotatedType<Cat> namedCat = builder3.create();
+            assertTrue(namedCat.isAnnotationPresent(Named.class));
+            assertEquals(3, namedCat.getAnnotations().size());
+        }
     }
 
     @Test

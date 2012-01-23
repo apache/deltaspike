@@ -20,6 +20,8 @@
 package org.apache.deltaspike.test.api.metadata;
 
 import javax.annotation.PostConstruct;
+import javax.enterprise.event.Observes;
+import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -63,5 +65,12 @@ public class Cat
     public void setGender(String gender)
     {
         this.gender = gender;
+    }
+    
+    protected void doSomeObservation(@Observes Cat cat, BeanManager beanManager)
+    {
+        // whoah, someone fires cats around ^^
+        // at least it tests parameter scanning ;)
+        this.color = cat.color;
     }
 }
