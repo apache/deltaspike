@@ -18,13 +18,13 @@
  */
 package org.apache.deltaspike.core.impl.exclude;
 
-import org.apache.deltaspike.core.api.projectstage.ProjectStageProducer;
-import org.apache.deltaspike.core.spi.activation.util.ClassDeactivation;
+import org.apache.deltaspike.core.util.ProjectStageProducer;
+import org.apache.deltaspike.core.util.ClassDeactivation;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.api.exclude.Exclude;
 import org.apache.deltaspike.core.api.interpreter.ExpressionInterpreter;
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
-import org.apache.deltaspike.core.api.util.ClassUtils;
+import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.impl.interpreter.PropertyExpressionInterpreter;
 
 import javax.enterprise.event.Observes;

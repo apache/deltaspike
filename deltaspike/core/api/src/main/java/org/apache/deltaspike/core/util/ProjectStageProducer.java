@@ -16,10 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.api.projectstage;
+package org.apache.deltaspike.core.util;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
-import org.apache.deltaspike.core.api.util.ClassUtils;
+import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Dependent;
@@ -29,7 +29,7 @@ import java.io.Serializable;
 import java.util.logging.Logger;
 
 /**
- * <p>Produces {@link ProjectStage} configurations.</p>
+ * <p>Produces {@link org.apache.deltaspike.core.api.projectstage.ProjectStage} configurations.</p>
  *
  * <p>The producer will try to detect the currently active ProjectStage on startup
  * and use that for all generated fields.</p>

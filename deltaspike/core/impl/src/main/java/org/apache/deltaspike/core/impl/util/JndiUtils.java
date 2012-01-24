@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.core.impl.util;
 
-import org.apache.deltaspike.core.api.util.ClassUtils;
+import org.apache.deltaspike.core.util.ClassUtils;
 
 import javax.enterprise.inject.Typed;
 import javax.naming.InitialContext;

@@ -19,7 +19,7 @@
 
 package org.apache.deltaspike.core.api.metadata.builder;
 
-import org.apache.deltaspike.core.api.util.HierarchyDiscovery;
+import org.apache.deltaspike.core.util.HierarchyDiscovery;
 
 import javax.enterprise.inject.spi.Annotated;
 import java.lang.annotation.Annotation;

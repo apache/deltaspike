@@ -19,7 +19,7 @@
 package org.apache.deltaspike.test.core.api.projectstage;
 
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
-import org.apache.deltaspike.core.api.projectstage.ProjectStageProducer;
+import org.apache.deltaspike.core.util.ProjectStageProducer;
 import org.junit.Assert;
 import org.junit.Test;
 

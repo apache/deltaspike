@@ -19,12 +19,12 @@
 package org.apache.deltaspike.integration.core.api.projectstage;
 
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
-import org.apache.deltaspike.core.api.projectstage.ProjectStageProducer;
+import org.apache.deltaspike.core.util.ProjectStageProducer;
 
 import javax.enterprise.inject.Typed;
 
 /**
- * Custom {@link ProjectStageProducer} which sets the project-stage to integration-test as soon as it gets used.
+ * Custom {@link org.apache.deltaspike.core.util.ProjectStageProducer} which sets the project-stage to integration-test as soon as it gets used.
  * It's configured in apache-deltaspike.properties and e.g. used by ExcludeIntegrationTest
  */
 @Typed()

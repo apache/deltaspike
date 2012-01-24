@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.core.impl.activation;
 
-import org.apache.deltaspike.core.spi.activation.util.ClassDeactivation;
+import org.apache.deltaspike.core.util.ClassDeactivation;
 import org.apache.deltaspike.test.core.api.provider.TestBean;
 import org.apache.deltaspike.test.core.api.temptestutil.ShrinkWrapArchiveUtil;
 import org.apache.deltaspike.test.util.FileUtils;

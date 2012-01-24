@@ -24,7 +24,7 @@ import org.apache.deltaspike.core.spi.activation.Deactivatable;
 
 /**
  * Test {@link org.apache.deltaspike.core.spi.activation.ClassDeactivator}
- * which is needed to test {@link org.apache.deltaspike.core.spi.activation.util.ClassDeactivation}
+ * which is needed to test {@link org.apache.deltaspike.core.util.ClassDeactivation}
  */
 public class TestClassDeactivator implements ClassDeactivator
 {

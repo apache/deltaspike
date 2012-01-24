@@ -28,7 +28,7 @@ import javax.naming.NamingException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.deltaspike.core.api.util.ClassUtils;
+import org.apache.deltaspike.core.util.ClassUtils;
 
 
 /**

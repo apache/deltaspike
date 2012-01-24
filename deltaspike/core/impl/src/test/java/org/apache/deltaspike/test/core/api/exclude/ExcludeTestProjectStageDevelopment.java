@@ -19,7 +19,7 @@
 package org.apache.deltaspike.test.core.api.exclude;
 
 
-import org.apache.deltaspike.core.api.projectstage.ProjectStageProducer;
+import org.apache.deltaspike.core.util.ProjectStageProducer;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.test.core.api.temptestutil.ShrinkWrapArchiveUtil;
 import org.jboss.arquillian.container.test.api.Deployment;

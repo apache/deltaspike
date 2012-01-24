@@ -19,7 +19,7 @@
 
 package org.apache.deltaspike.core.api.metadata.builder;
 
-import org.apache.deltaspike.core.api.util.Reflections;
+import org.apache.deltaspike.core.util.Reflections;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;

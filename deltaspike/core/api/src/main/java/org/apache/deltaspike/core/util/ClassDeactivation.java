@@ -16,10 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.spi.activation.util;
+package org.apache.deltaspike.core.util;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
-import org.apache.deltaspike.core.api.util.ClassUtils;
 import org.apache.deltaspike.core.spi.activation.ClassDeactivator;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 
