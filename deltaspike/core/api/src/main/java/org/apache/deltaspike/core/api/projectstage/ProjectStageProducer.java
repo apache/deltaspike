@@ -16,10 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.impl.projectstage;
+package org.apache.deltaspike.core.api.projectstage;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
-import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.api.util.ClassUtils;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -90,13 +89,6 @@ public class ProjectStageProducer implements Serializable
         return projectStage;
     }
 
-    //just for testing
-    protected void reset()
-    {
-        projectStage = null;
-        projectStageProducer = null;
-    }
-
     /**
      * <p>This factory method should only get used if there is absolutly no way
      * to get the current {@link ProjectStage} via &#064;Inject.</p>
@@ -160,16 +152,6 @@ public class ProjectStageProducer implements Serializable
     }
 
     /**
-     * This function can be used to manually set the ProjectStage for the application.
-     * This is e.g. useful in unit tests.
-     * @param ps the ProjectStage to set
-     */
-    public static void setProjectStage(ProjectStage ps)
-    {
-        projectStage = ps;
-    }
-
-    /**
      * Resolves the project-stage configured for DeltaSpike
      * @return the resolved {@link ProjectStage} or <code>null</code> if none defined.
      */
@@ -202,5 +184,35 @@ public class ProjectStageProducer implements Serializable
                 LOG.info("Computed the following DeltaSpike ProjectStage: " + projectStage);
             }
         }
+    }
+
+    /*
+     * Methods which might be needed for unti tests
+     */
+
+    /**
+     * Can be used esp. for internal tests.
+     * Usage:
+     * <pre>
+     * new ProjectStageProducer() {
+     *     @Override
+     *     protected void reset() { super.reset(); }
+     * }.reset();
+     * </pre>
+     */
+    protected void reset()
+    {
+        projectStage = null;
+        projectStageProducer = null;
+    }
+
+    /**
+     * This function can be used to manually set the ProjectStage for the application.
+     * This is e.g. useful in unit tests.
+     * @param ps the ProjectStage to set
+     */
+    public static void setProjectStage(ProjectStage ps)
+    {
+        projectStage = ps;
     }
 }

@@ -19,7 +19,7 @@
 package org.apache.deltaspike.integration.core.api.projectstage;
 
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
-import org.apache.deltaspike.core.impl.projectstage.ProjectStageProducer;
+import org.apache.deltaspike.core.api.projectstage.ProjectStageProducer;
 
 import javax.enterprise.inject.Typed;
 
