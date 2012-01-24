@@ -41,8 +41,9 @@ public interface ClassDeactivator extends Serializable
     /**
      * Provides classes which should be deactivated.
      *
+     * @param targetClass class which should be checked
      * @return {@link Boolean#FALSE} if class should get activated, {@link Boolean#FALSE} if class must be available
      *         and <code>null</code> to let it as is (defined by default or other 
      */
-    Boolean isActivated(Class<? extends Deactivatable> deactivatableClazz);
+    Boolean isActivated(Class<? extends Deactivatable> targetClass);
 }

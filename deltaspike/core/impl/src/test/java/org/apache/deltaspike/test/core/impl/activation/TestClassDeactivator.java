@@ -31,9 +31,9 @@ public class TestClassDeactivator implements ClassDeactivator
     private static final long serialVersionUID = -3403907272881821406L;
 
     @Override
-    public Boolean isActivated(Class<? extends Deactivatable> deactivatableClazz)
+    public Boolean isActivated(Class<? extends Deactivatable> targetClass)
     {
-        if (deactivatableClazz.equals(DeactivatedClass.class))
+        if (targetClass.equals(DeactivatedClass.class))
         {
             return Boolean.FALSE;
         }
