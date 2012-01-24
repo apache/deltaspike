@@ -40,6 +40,8 @@ import java.util.Map;
  * Using the builder is typically done by reading the annotations from a {@link Class} or an
  * {@link AnnotatedType}. Once the starting class or type has been added all of annotations
  * can be modified: constructor, parameter, class, method and fields.
+ *
+ * The AnnotatedTypeBuilder is not thread safe and shall not be used concurrently!
  */
 public class AnnotatedTypeBuilder<X>
 {

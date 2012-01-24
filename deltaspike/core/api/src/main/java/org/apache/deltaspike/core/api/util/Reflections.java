@@ -371,6 +371,7 @@ public class Reflections
      * @param loaders additional classloaders to use to attempt to load the class
      * @return the class object
      * @throws ClassNotFoundException if the class cannot be found
+     * @deprecated move/merge with ClassUtils
      */
     public static Class<?> classForName(String name, ClassLoader... loaders) throws ClassNotFoundException
     {
