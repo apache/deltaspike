@@ -23,7 +23,7 @@ import javax.enterprise.util.AnnotationLiteral;
 import javax.inject.Singleton;
 
 /**
- * Literal for {@link javax.enterprise.context.ApplicationScoped}
+ * Literal for {@link javax.inject.Singleton}
  */
 public class SingletonLiteral extends AnnotationLiteral<Singleton> implements Singleton
 {
