@@ -90,7 +90,7 @@ public class ProjectStageProducer implements Serializable
     }
 
     /**
-     * <p>This factory method should only get used if there is absolutly no way
+     * <p>This factory method should only get used if there is absolutely no way
      * to get the current {@link ProjectStage} via &#064;Inject.</p>
      *
      * <p></p>
@@ -187,7 +187,7 @@ public class ProjectStageProducer implements Serializable
     }
 
     /*
-     * Methods which might be needed for unti tests
+     * Methods which might be needed for unit tests
      */
 
     /**

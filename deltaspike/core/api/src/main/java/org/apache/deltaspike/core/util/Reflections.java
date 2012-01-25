@@ -470,7 +470,7 @@ public class Reflections
      * <p/>
      * <p>
      * This method attempts to set the accessible flag of the method in a
-     * {@link PrivilegedAction} before invoking the method if the first argument
+     * {@link java.security.PrivilegedAction} before invoking the method if the first argument
      * is true.
      * </p>
      * <p/>
@@ -519,7 +519,7 @@ public class Reflections
      * <p/>
      * <p>
      * If instructed, this method attempts to set the accessible flag of the method in a
-     * {@link PrivilegedAction} before invoking the method.
+     * {@link java.security.PrivilegedAction} before invoking the method.
      * </p>
      *
      * @param setAccessible flag indicating whether method should first be set as
@@ -595,7 +595,7 @@ public class Reflections
      * </p>
      * <p/>
      * <p>This method provides the same functionality and throws the same exceptions as
-     * {@link Reflections#setFieldValue(boolean, Method, Class, Object, Object...)}, honoring
+     * {@link Reflections#setFieldValue(boolean, Field, Object, Object)}, honoring
      * the accessibility of the field.</p>
      */
     public static void setFieldValue(Field field, Object instance, Object value)
@@ -616,7 +616,7 @@ public class Reflections
      * <p/>
      * <p>
      * If instructed, this method attempts to set the accessible flag of the method in a
-     * {@link PrivilegedAction} before invoking the method.
+     * {@link java.security.PrivilegedAction} before invoking the method.
      * </p>
      *
      * @param field    the field on which to operate, or null if the field is static
