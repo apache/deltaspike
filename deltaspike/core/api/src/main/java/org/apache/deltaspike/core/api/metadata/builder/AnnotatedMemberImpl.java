@@ -42,18 +42,27 @@ abstract class AnnotatedMemberImpl<X, M extends Member> extends AnnotatedImpl im
         this.javaMember = member;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public AnnotatedType<X> getDeclaringType()
     {
         return declaringType;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public M getJavaMember()
     {
         return javaMember;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isStatic()
     {

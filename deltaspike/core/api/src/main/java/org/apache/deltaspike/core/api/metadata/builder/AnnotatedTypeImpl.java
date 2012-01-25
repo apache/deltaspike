@@ -125,24 +125,36 @@ class AnnotatedTypeImpl<X> extends AnnotatedImpl implements AnnotatedType<X>
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Set<AnnotatedConstructor<X>> getConstructors()
     {
         return Collections.unmodifiableSet(constructors);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Set<AnnotatedField<? super X>> getFields()
     {
         return Collections.unmodifiableSet(fields);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Class<X> getJavaClass()
     {
         return javaClass;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Set<AnnotatedMethod<? super X>> getMethods()
     {

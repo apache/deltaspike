@@ -34,7 +34,6 @@ import java.util.Set;
  * A store of annotations to be used {@link AnnotatedTypeBuilder} and other places
  * where a collection of annotations needs manipulation.
  */
-//X TODO: JavaDoc the methods
 public class AnnotationBuilder
 {
     private final Map<Class<? extends Annotation>, Annotation> annotationMap;

@@ -30,7 +30,6 @@ import static java.util.Collections.unmodifiableSet;
 /**
  * A helper class used to hold annotations on a type or member.
  */
-//X TODO: JavaDoc
 class AnnotationStore
 {
     private final Map<Class<? extends Annotation>, Annotation> annotationMap;

@@ -24,7 +24,7 @@ import javax.enterprise.inject.spi.AnnotatedParameter;
 import java.lang.reflect.Type;
 
 /**
- *
+ * Implementation of {@link AnnotatedParameter}.
  */
 class AnnotatedParameterImpl<X> extends AnnotatedImpl implements AnnotatedParameter<X>
 {
@@ -43,12 +43,18 @@ class AnnotatedParameterImpl<X> extends AnnotatedImpl implements AnnotatedParame
         this.position = position;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public AnnotatedCallable<X> getDeclaringCallable()
     {
         return declaringCallable;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getPosition()
     {

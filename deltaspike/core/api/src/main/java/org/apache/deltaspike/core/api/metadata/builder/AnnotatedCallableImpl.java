@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
+ * Implementation of {@link AnnotatedCallable}
  */
 abstract class AnnotatedCallableImpl<X, Y extends Member> extends AnnotatedMemberImpl<X, Y>
         implements AnnotatedCallable<X>
@@ -47,6 +47,9 @@ abstract class AnnotatedCallableImpl<X, Y extends Member> extends AnnotatedMembe
                 parameterTypeOverrides);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public List<AnnotatedParameter<X>> getParameters()
     {
         return Collections.unmodifiableList(parameters);
