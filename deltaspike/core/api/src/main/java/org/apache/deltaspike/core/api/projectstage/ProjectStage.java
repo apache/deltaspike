@@ -34,7 +34,7 @@ import java.util.logging.Logger;
  * <ul>
  *  <li>it also works for JSF-1.0, JSF-1.1 and JSF-1.2 applications</li>
  *  <li>it also works in pure backends and unit tests without any faces-api</li>
- *  <li>it is dynamic. Everyone can add own ProjectStages!</p>
+ *  <li>it is dynamic. Everyone can add their own ProjectStages!</p>
  * </ul>
  * </p>
  *
@@ -89,7 +89,7 @@ import java.util.logging.Logger;
  * ProjectStage myOwnPs = ProjectStage.valueOf("MyOwnProjectStage");
    if (myOwnPs.equals(MyOwnProjectStage.MyOwnProjectStage)) ...
  * </pre>
- * 
+ *
  * <p><b>Note:</b> Please note that DeltaSpike will only find {@link ProjectStageHolder}s
  * which are accessible by this very class. If you deploy the deltaspike-core jar to a
  * shared EAR classloader, it will e.g. <i>not</i> be able to register ProjectStages defined
