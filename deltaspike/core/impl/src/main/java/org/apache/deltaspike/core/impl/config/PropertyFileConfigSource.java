@@ -78,7 +78,7 @@ class PropertyFileConfigSource extends BaseConfigSource
         }
         catch (IOException e)
         {
-            return null; // TODO: Shouldn't this return an empty Properties? Otherwise we could cause NPE in the getPropertyValue method
+            throw new IllegalStateException(e);
         }
         finally
         {

@@ -50,6 +50,7 @@ abstract class AnnotatedCallableImpl<X, Y extends Member> extends AnnotatedMembe
     /**
      * {@inheritDoc}
      */
+    @Override
     public List<AnnotatedParameter<X>> getParameters()
     {
         return Collections.unmodifiableList(parameters);
