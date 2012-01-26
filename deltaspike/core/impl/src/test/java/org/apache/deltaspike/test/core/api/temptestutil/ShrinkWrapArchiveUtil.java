@@ -193,7 +193,7 @@ public class ShrinkWrapArchiveUtil
 
             // exclude rule
             if (excludeIfPackageExists(entryName, excludeIfPackageExists)) {
-                return null;
+                continue;
             }
 
             // include rule

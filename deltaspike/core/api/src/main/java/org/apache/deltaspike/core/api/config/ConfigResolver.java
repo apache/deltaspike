@@ -60,7 +60,8 @@ public final class ConfigResolver
      * and use the one with the highest priority.
      * 
      * @param key the property key.
-     * @return the configured property value from the {@link ConfigSource} with the highest ordinal.
+     * @return the configured property value from the {@link ConfigSource} with the highest ordinal or
+     * null if there is no configured value for it.
      */
     public static String getPropertyValue(String key)
     {

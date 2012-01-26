@@ -22,6 +22,8 @@ package org.apache.deltaspike.test.core.api.projectstage;
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.api.projectstage.ProjectStageHolder;
 
+import javax.enterprise.inject.Typed;
+
 /**
  * This is a test ProjectStage. It demonstrates how to add custom ProjectStages.
  * This TestProjectStage must get registered via the {@link java.util.ServiceLoader}
@@ -32,6 +34,7 @@ import org.apache.deltaspike.core.api.projectstage.ProjectStageHolder;
  */
 public class TestProjectStages implements ProjectStageHolder
 {
+    @Typed()
     public static final class CustomProjectStage extends ProjectStage
     {
         private static final long serialVersionUID = 1029095387976167179L;
