@@ -76,6 +76,21 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
 
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <!-- Ignore these groups because they don't work with embedded OWB -->
+                            <excludedGroups>
+                                org.apache.deltaspike.test.category.WebProfileCategory,
+                                org.apache.deltaspike.test.category.FullProfileCategory
+                            </excludedGroups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+
             <dependencies>
                 <!-- OWB specific dependencies-->
                 <dependency>
@@ -115,6 +130,21 @@
         <profile>
             <!-- use this profile to compile and test DeltaSpike with JBoss Weld -->
             <id>Weld</id>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <!-- Ignore these groups because they don't work with embedded Weld -->
+                            <excludedGroups>
+                                org.apache.deltaspike.test.category.WebProfileCategory,
+                                org.apache.deltaspike.test.category.FullProfileCategory
+                            </excludedGroups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
 
             <dependencyManagement>
                 <dependencies><!-- org.jboss.weld -->

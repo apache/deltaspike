@@ -50,6 +50,21 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
 
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <!-- Ignore these groups because they don't work with embedded OWB -->
+                            <excludedGroups>
+                                org.apache.deltaspike.test.category.WebProfileCategory,
+                                org.apache.deltaspike.test.category.FullProfileCategory
+                            </excludedGroups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+
             <dependencies>
                 <!-- OWB specific dependencies-->
                 <dependency>
@@ -89,6 +104,21 @@
         <profile>
             <!-- use this profile to compile and test DeltaSpike with JBoss Weld -->
             <id>Weld</id>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <!-- Ignore these groups because they don't work with embedded Weld -->
+                            <excludedGroups>
+                                org.apache.deltaspike.test.category.WebProfileCategory,
+                                org.apache.deltaspike.test.category.FullProfileCategory
+                            </excludedGroups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
 
             <dependencyManagement>
                 <dependencies><!-- org.jboss.weld -->
@@ -184,15 +214,10 @@
                         <artifactId>maven-surefire-plugin</artifactId>
                         <version>${maven.surefire.plugin.version}</version>
                         <configuration>
+                            <!-- We don't excluded any groups here because AS7 supports all of them -->
                             <systemProperties>
                                 <arquillian.launch>jbossas-managed-7</arquillian.launch>
                             </systemProperties>
-                            <!-- Groups need to be setup for each profile -->
-                            <groups>
-                                org.apache.deltaspike.test.category.FullProfileCategory,
-                                org.apache.deltaspike.test.category.WebProfileCategory,
-                                org.apache.deltaspike.test.category.SeCategory
-                            </groups>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -227,15 +252,10 @@
                         <artifactId>maven-surefire-plugin</artifactId>
                         <version>${maven.surefire.plugin.version}</version>
                         <configuration>
+                            <!-- We don't excluded any groups here because Glassfish supports all of them -->
                             <systemProperties>
                                 <arquillian.launch>glassfish-remote-3.1</arquillian.launch>
                             </systemProperties>
-                            <!-- Groups need to be setup for each profile -->
-                            <groups>
-                                org.apache.deltaspike.test.category.FullProfileCategory,
-                                org.apache.deltaspike.test.category.WebProfileCategory,
-                                org.apache.deltaspike.test.category.SeCategory
-                            </groups>
                         </configuration>
                     </plugin>
                 </plugins>
