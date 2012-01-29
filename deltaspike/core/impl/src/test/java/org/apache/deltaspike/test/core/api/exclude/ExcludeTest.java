@@ -19,7 +19,10 @@
 package org.apache.deltaspike.test.core.api.exclude;
 
 
+import javax.enterprise.inject.spi.Extension;
+
 import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.core.impl.exclude.ExcludeExtension;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
 import org.apache.deltaspike.test.core.api.temptestutil.ShrinkWrapArchiveUtil;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -52,7 +55,8 @@ public class ExcludeTest
                         new String[]{"org.apache.deltaspike.core",
                                 "org.apache.deltaspike.test.core.api.exclude"},
                         null))
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
+                .addAsServiceProvider(Extension.class, ExcludeExtension.class);
     }
 
     /**
