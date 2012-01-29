@@ -154,6 +154,30 @@
                 </executions>
             </plugin>
 
+            <!--
+                The core tests require arquillian.xml to run successfully. We cannot simply
+                include "src/test/resources" on the classpath for the test execution because
+                the other files in there clash with the ones packaged in core's test jar.
+            -->
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-arquillian-xml</id>
+                        <phase>process-test-classes</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <copy file="${basedir}/src/test/resources/arquillian.xml"
+                                    todir="${project.build.directory}/coretests/" />
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 
