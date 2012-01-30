@@ -162,6 +162,15 @@
             </roles>
             <timezone>+1</timezone>
         </developer>
+        <developer>
+            <id>lukaszlenart</id>
+            <name>Lukasz Lenart</name>
+            <email>lukaszlenart@apache.org</email>
+            <roles>
+                <role>Committer</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
     </developers>
 
 
