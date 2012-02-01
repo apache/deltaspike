@@ -171,6 +171,15 @@
             </roles>
             <timezone>+1</timezone>
         </developer>
+        <developer>
+            <id>chkal</id>
+            <name>Christian Kaltepoth</name>
+            <email>chkal@apache.org</email>
+            <roles>
+                <role>Committer</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
     </developers>
 
 
