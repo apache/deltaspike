@@ -707,7 +707,8 @@ public class Reflections
     {
         try
         {
-            return Reflections.cast(field.get(instance));
+            //<T> needed to bypass an issue with old jdk versions
+            return Reflections.<T>cast(field.get(instance));
         }
         catch (IllegalAccessException e)
         {
