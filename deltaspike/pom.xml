@@ -45,19 +45,32 @@
     </description>
     <url>http://incubator.apache.org/projects/deltaspike.html</url>
 
-<!--
     <scm>
-        <connection>scm:git:TODO</connection>
-        <developerConnection>scm:git:TODO</developerConnection>
-        <url>TODO</url>
+        <connection>scm:git:https://git-wip-us.apache.org/repos/asf/incubator-deltaspike.git</connection>
+        <developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/incubator-deltaspike.git</developerConnection>
+        <url>https://git-wip-us.apache.org/repos/asf/incubator-deltaspike.git</url>
     </scm>
--->
 
     <modules>
         <module>checkstyle-rules</module>
         <module>parent</module>
         <module>core</module>
     </modules>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <configuration>
+                        <pushChanges>false</pushChanges>
+                        <localCheckout>true</localCheckout>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 
     <profiles>
         <profile>
