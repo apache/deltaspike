@@ -122,7 +122,6 @@ public class JndiUtils
         }
         catch (NamingException e)
         {
-            //X TODO custom exception type needed - see UnhandledException
             throw new IllegalStateException("Could not get " + name + " from JNDI", e);
         }
     }
