@@ -94,9 +94,12 @@ public class BeanManagerProvider implements Extension
 
 
     /**
-     * The active {@link BeanManager} for the current application (/{@link ClassLoader})
-     *
-     * @return the current bean-manager
+     * The active {@link BeanManager} for the current application (/{@link ClassLoader}). This method will throw an
+     * {@link IllegalStateException} if the BeanManager cannot be found.
+     * 
+     * @return the current bean-manager, never <code>null</code>
+     * @throws IllegalStateException
+     *             if the BeanManager cannot be found
      */
     public BeanManager getBeanManager()
     {
@@ -108,14 +111,17 @@ public class BeanManagerProvider implements Extension
         {
             result = resolveBeanManagerViaJndi();
 
-            if (result != null)
+            if (result == null)
             {
-                bms.put(classLoader, result);
+                throw new IllegalStateException("Unable to find BeanManager. " +
+                        "Please ensure that you configured the CDI implementation of your choice properly.");
             }
+
+            bms.put(classLoader, result);
+
         }
         return result;
     }
-
 
     /**
      * It basically doesn't matter which of the system events we use,
