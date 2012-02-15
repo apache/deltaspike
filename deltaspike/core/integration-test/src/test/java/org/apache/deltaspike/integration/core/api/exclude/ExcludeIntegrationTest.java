@@ -22,7 +22,6 @@ package org.apache.deltaspike.integration.core.api.exclude;
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
-import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.integration.core.api.projectstage.IntegrationTestProjectStageProducer;
 import org.apache.deltaspike.test.core.api.exclude.AlwaysActiveBean;
 import org.apache.deltaspike.test.core.api.exclude.CustomExpressionBasedBean;
@@ -39,7 +38,6 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
 import java.net.URL;
@@ -48,7 +46,6 @@ import java.net.URL;
  * Integration tests for {@link org.apache.deltaspike.core.api.exclude.Exclude}
  */
 @RunWith(Arquillian.class)
-@Category(SeCategory.class)
 public class ExcludeIntegrationTest
 {
     /**

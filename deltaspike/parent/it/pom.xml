@@ -259,7 +259,6 @@
                         <artifactId>maven-surefire-plugin</artifactId>
                         <version>${maven.surefire.plugin.version}</version>
                         <configuration>
-                            <!-- We don't excluded any groups here because Glassfish supports all of them -->
                             <systemProperties>
                                 <arquillian.launch>glassfish-remote-3.1</arquillian.launch>
                             </systemProperties>
