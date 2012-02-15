@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 <!--
     Licensed to the Apache Software Foundation (ASF) under one
     or more contributor license agreements.  See the NOTICE file
@@ -18,24 +17,31 @@
     specific language governing permissions and limitations
     under the License.
 -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>org.apache.deltaspike</groupId>
-        <artifactId>parent</artifactId>
+        <artifactId>parent-code</artifactId>
         <version>0.2-incubating-SNAPSHOT</version>
-        <relativePath>../parent/pom.xml</relativePath>
+        <relativePath>../parent/code/pom.xml</relativePath>
     </parent>
 
-    <groupId>org.apache.deltaspike.examples</groupId>
-    <artifactId>jse-examples-project</artifactId>
+    <groupId>org.apache.deltaspike.modules</groupId>
+    <artifactId>modules-project</artifactId>
+    <version>0.2-incubating-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Apache DeltaSpike Examples</name>
+    <name>Apache DeltaSpike Modules</name>
 
     <modules>
-        <module>jse-owb-examples</module>
+        <module>security</module>
     </modules>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-jcdi_1.0_spec</artifactId>
+        </dependency>
+    </dependencies>
 </project>
-

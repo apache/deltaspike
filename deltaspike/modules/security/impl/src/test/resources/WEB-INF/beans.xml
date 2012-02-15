@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 <!--
     Licensed to the Apache Software Foundation (ASF) under one
     or more contributor license agreements.  See the NOTICE file
@@ -18,24 +17,17 @@
     specific language governing permissions and limitations
     under the License.
 -->
-    <modelVersion>4.0.0</modelVersion>
+<beans xmlns="http://java.sun.com/xml/ns/javaee"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/beans_1_0.xsd">
 
-    <parent>
-        <groupId>org.apache.deltaspike</groupId>
-        <artifactId>parent</artifactId>
-        <version>0.2-incubating-SNAPSHOT</version>
-        <relativePath>../parent/pom.xml</relativePath>
-    </parent>
+    <!-- TODO change it to the global alternative approach as soon as it is committed -->
+    <alternatives>
+        <class>org.apache.deltaspike.test.security.impl.customsecured.AlternativeSecurityStrategy</class>
+    </alternatives>
 
-    <groupId>org.apache.deltaspike.examples</groupId>
-    <artifactId>jse-examples-project</artifactId>
-    <packaging>pom</packaging>
-
-    <name>Apache DeltaSpike Examples</name>
-
-    <modules>
-        <module>jse-owb-examples</module>
-    </modules>
-
-</project>
-
+    <!-- workaround which works with arquillian+owb but not with arquillian+weld - TODO get rid of it at all -->
+    <interceptors>
+        <class>org.apache.deltaspike.security.impl.SecurityInterceptor</class>
+    </interceptors>
+</beans>
