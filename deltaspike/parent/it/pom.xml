@@ -213,10 +213,18 @@
                         <artifactId>maven-surefire-plugin</artifactId>
                         <version>${maven.surefire.plugin.version}</version>
                         <configuration>
-                            <!-- We don't excluded any groups here because AS7 supports all of them -->
                             <systemProperties>
                                 <arquillian.launch>jbossas-managed-7</arquillian.launch>
                             </systemProperties>
+                            <!-- we just use groups to mark that a test should be executed only
+                            with specific environments. even though a java-ee6 application server has to be able to run
+                            all tests in theory, we have to exclude some tests because there are e.g. packaging issues or
+                            there are currently issues with arquillian. if a test isn't restricted to an environment,
+                            no category is used for the test-class. -->
+                            <excludedGroups>
+                                org.apache.deltaspike.test.category.FullProfileCategory,
+                                org.apache.deltaspike.test.category.SeCategory
+                            </excludedGroups>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -255,6 +263,14 @@
                             <systemProperties>
                                 <arquillian.launch>glassfish-remote-3.1</arquillian.launch>
                             </systemProperties>
+                            <!-- we just use groups to mark that a test should be executed only
+                            with specific environments. even though a java-ee6 application server has to be able to run
+                            all tests in theory, we have to exclude some tests because there are e.g. packaging issues or
+                            there are currently issues with arquillian. if a test isn't restricted to an environment,
+                            no category is used for the test-class. -->
+                            <excludedGroups>
+                                org.apache.deltaspike.test.category.SeCategory
+                            </excludedGroups>
                         </configuration>
                     </plugin>
                 </plugins>
