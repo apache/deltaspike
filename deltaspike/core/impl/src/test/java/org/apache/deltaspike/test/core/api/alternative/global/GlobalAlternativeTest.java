@@ -20,6 +20,7 @@ package org.apache.deltaspike.test.core.api.alternative.global;
 
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.test.core.api.alternative.global.qualifier.AlternativeBaseBeanB;
 import org.apache.deltaspike.test.core.api.alternative.global.qualifier.BaseBeanA;
 import org.apache.deltaspike.test.core.api.alternative.global.qualifier.BaseInterface;
@@ -34,6 +35,7 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
@@ -43,6 +45,8 @@ import java.util.List;
  * Tests for @Alternative across BDAs
  */
 @RunWith(Arquillian.class)
+//X TODO remove the restriction to SeCategory after fixing the packaging issue
+@Category(SeCategory.class)
 public class GlobalAlternativeTest
 {
     @Inject
