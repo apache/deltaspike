@@ -23,10 +23,8 @@ package org.apache.deltaspike.core.spi.config;
  * A ConfigSource provides properties from a specific place, like
  * JNDI configuration, a properties file, etc</p>
  * 
- * <p>A ConfigSourceProvider which is not provided via
- * {@link ConfigSourceProvider} will get picked up via the 
- * {@link java.util.ServiceLoader} and therefor must get registered via
- * META-INF/services/org.apache.deltaspike.core.spi.config.ConfigSource</p>
+ * <p>The custom implementation can be 'registered' using a
+ * {@link ConfigSourceProvider} </p>
  */
 public interface ConfigSource
 {
