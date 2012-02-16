@@ -33,7 +33,7 @@ class LocalJndiConfigSource extends BaseConfigSource
 
     public LocalJndiConfigSource()
     {
-        initOrdinal(300);
+        initOrdinal(200);
     }
 
     /**
