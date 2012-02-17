@@ -56,6 +56,7 @@
         <module>parent</module>
         <module>test-utils</module>
         <module>core</module>
+        <module>containerctrl</module>
         <module>modules</module>
     </modules>
 
