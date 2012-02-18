@@ -39,6 +39,16 @@
     </properties>
 
 
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.deltaspike.test-utils</groupId>
+            <artifactId>test-utils</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+
     <profiles>
         <profile>
             <!-- use this profile to compile and test DeltaSpike with Apache OpenWebBeans -->
