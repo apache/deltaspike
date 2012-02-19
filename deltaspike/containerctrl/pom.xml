@@ -22,9 +22,9 @@
 
     <parent>
         <groupId>org.apache.deltaspike</groupId>
-        <artifactId>parent-code</artifactId>
+        <artifactId>parent</artifactId>
         <version>0.2-incubating-SNAPSHOT</version>
-        <relativePath>../parent/code/pom.xml</relativePath>
+        <relativePath>../parent/pom.xml</relativePath>
     </parent>
 
     <groupId>org.apache.deltaspike.containerctrl</groupId>
@@ -35,9 +35,10 @@
 
     <modules>
         <module>api</module>
-<!--
+        <module>tck</module>
         <module>impl-owb</module>
-        <module>impl-weld</modul>
--->
+        <!--
+                <module>impl-weld</modul>
+        -->
     </modules>
 </project>
