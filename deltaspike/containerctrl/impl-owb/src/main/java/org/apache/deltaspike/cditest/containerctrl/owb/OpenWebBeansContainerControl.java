@@ -48,7 +48,7 @@ public class OpenWebBeansContainerControl implements ContainerControl
     private MockServletContext servletContext = null;
     private MockHttpSession     session = null;
 
-    public void bootContainer() throws Exception 
+    public void bootContainer()
     {
         servletContext = new MockServletContext();
         session = new MockHttpSession();
@@ -56,7 +56,7 @@ public class OpenWebBeansContainerControl implements ContainerControl
         lifecycle.startApplication(servletContext);
     }
 
-    public void shutdownContainer() throws Exception 
+    public void shutdownContainer()
     {
         if (lifecycle != null) 
         {

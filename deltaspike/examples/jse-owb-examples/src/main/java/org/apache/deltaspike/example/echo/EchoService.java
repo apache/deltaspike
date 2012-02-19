@@ -25,6 +25,7 @@ public interface EchoService
 {
     /**
      * Returns the given text again - the format might change
+     *
      * @param message given message
      * @return message text
      */

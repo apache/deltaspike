@@ -81,14 +81,33 @@
         <dependency>
             <groupId>org.apache.deltaspike.modules</groupId>
             <artifactId>deltaspike-security-module-api</artifactId>
-            <version>0.2-incubating-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>org.apache.deltaspike.modules</groupId>
             <artifactId>deltaspike-security-module-impl</artifactId>
-            <version>0.2-incubating-SNAPSHOT</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- Dependencies for Java-SE -->
+        <dependency>
+            <groupId>org.apache.deltaspike.containerctrl</groupId>
+            <artifactId>deltaspike-containerctrl-api</artifactId>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- TODO Add profiles -->
+        <dependency>
+            <groupId>org.apache.deltaspike.containerctrl</groupId>
+            <artifactId>deltaspike-containerctrl-owb</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- TODO refactoring - this dependency shouldn't be needed -->
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-servlet_2.5_spec</artifactId>
             <scope>runtime</scope>
         </dependency>
     </dependencies>

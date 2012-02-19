@@ -316,6 +316,35 @@
                 <version>${project.version}</version>
                 <scope>provided</scope>
             </dependency>
+
+            <dependency>
+                <groupId>org.apache.deltaspike.modules</groupId>
+                <artifactId>deltaspike-security-module-impl</artifactId>
+                <version>${project.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+
+            <!-- Dependencies for Java-SE -->
+            <dependency>
+                <groupId>org.apache.deltaspike.containerctrl</groupId>
+                <artifactId>deltaspike-containerctrl-api</artifactId>
+                <version>${project.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.deltaspike.containerctrl</groupId>
+                <artifactId>deltaspike-containerctrl-owb</artifactId>
+                <version>${project.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.geronimo.specs</groupId>
+                <artifactId>geronimo-servlet_2.5_spec</artifactId>
+                <version>1.2</version>
+                <scope>provided</scope>
+            </dependency>
         </dependencies>
 
     </dependencyManagement>

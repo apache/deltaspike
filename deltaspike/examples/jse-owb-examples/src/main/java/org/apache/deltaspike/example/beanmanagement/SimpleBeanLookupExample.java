@@ -18,12 +18,14 @@
  */
 package org.apache.deltaspike.example.beanmanagement;
 
+import org.apache.deltaspike.containerctrl.api.ContainerControl;
+import org.apache.deltaspike.containerctrl.api.ContainerControlLoader;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
-import org.apache.deltaspike.example.CdiContainer;
 import org.apache.deltaspike.example.echo.DefaultEchoService;
 import org.apache.deltaspike.example.echo.EchoService;
 import org.apache.deltaspike.example.optional.OptionalService;
 
+import javax.enterprise.context.ApplicationScoped;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -34,17 +36,26 @@ public class SimpleBeanLookupExample
 {
     private static final Logger LOG = Logger.getLogger(SimpleBeanLookupExample.class.getName());
 
+    private SimpleBeanLookupExample()
+    {
+    }
+
     /**
      * Entry point
+     *
      * @param args currently not used
      */
     public static void main(String[] args)
     {
-        CdiContainer.start();
+
+        ContainerControl containerControl = ContainerControlLoader.getCdiContainer();
+        containerControl.bootContainer();
+        //containerControl.startContexts();
+        containerControl.startContext(ApplicationScoped.class);
 
         List<EchoService> echoServiceList = BeanProvider.getContextualReferences(EchoService.class, false);
 
-        for(EchoService echoService : echoServiceList)
+        for (EchoService echoService : echoServiceList)
         {
             LOG.info(echoService.echo("Hello CDI bean!"));
         }
@@ -53,7 +64,7 @@ public class SimpleBeanLookupExample
 
         echoServiceList = BeanProvider.getContextualReferences(EchoService.class, false, false);
 
-        for(EchoService echoService : echoServiceList)
+        for (EchoService echoService : echoServiceList)
         {
             LOG.info(echoService.echo("Hello non dependent CDI scoped bean!"));
         }
@@ -69,16 +80,18 @@ public class SimpleBeanLookupExample
         LOG.info(defaultEchoService.echo("Hello CDI bean resolved by name!"));
 
         OptionalService optionalService = BeanProvider.getContextualReference(OptionalService.class, true);
-        
-        if(optionalService == null)
+
+        if (optionalService == null)
         {
             LOG.info("No (optional) implementation found for " + OptionalService.class.getName());
         }
-        else 
+        else
         {
             LOG.severe("Unexpected implementation found: " + optionalService.getClass().getName());
         }
-        
-        CdiContainer.stop();
+
+        containerControl.stopContext(ApplicationScoped.class);
+        //containerControl.stopContexts();
+        containerControl.shutdownContainer();
     }
 }

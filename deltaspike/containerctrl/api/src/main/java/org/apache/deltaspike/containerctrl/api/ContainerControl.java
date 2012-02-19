@@ -38,15 +38,14 @@ public interface ContainerControl
     /**
      * Booting the CdiTestContainer will scan the whole classpath
      * for Beans and extensions available.
-     * @throws Exception the container might throw a DeploymentException or similar
-     *         on startup.
+     * The container might throw a DeploymentException or similar on startup.
      */
-    void bootContainer() throws Exception;
+    void bootContainer();
     
     /**
      * This will shutdown the underlying CDI container.
      */
-    void shutdownContainer() throws Exception;
+    void shutdownContainer();
     
     /**
      * This will start all container built-in Contexts
