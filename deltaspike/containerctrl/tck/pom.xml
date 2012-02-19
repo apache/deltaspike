@@ -30,7 +30,8 @@ under the License.
     <artifactId>containerctrl-tck</artifactId>
     <packaging>jar</packaging>
 
-    <name>CDI ContainerControl TCK</name>
+    <name>Apache DeltaSpike CDI ContainerControl TCK</name>
+
     <description>
         The TCK for testing ContainerControl implementations
     </description>
@@ -63,7 +64,7 @@ under the License.
 
         <dependency>
             <groupId>org.apache.deltaspike.containerctrl</groupId>
-            <artifactId>containerctrl-api</artifactId>
+            <artifactId>deltaspike-containerctrl-api</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

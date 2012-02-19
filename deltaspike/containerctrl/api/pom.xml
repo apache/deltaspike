@@ -27,10 +27,11 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>containerctrl-api</artifactId>
+    <artifactId>deltaspike-containerctrl-api</artifactId>
     <packaging>jar</packaging>
 
-    <name>CDI ContainerControl API</name>
+    <name>Apache DeltaSpike CDI ContainerControl API</name>
+
     <description>
         This project provides a way to genericly run CDI containers 
         from inside of unit tests or Java SE applications.
