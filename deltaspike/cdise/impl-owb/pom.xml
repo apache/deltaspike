@@ -22,12 +22,12 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.apache.deltaspike.cdise</groupId>
-        <artifactId>cdise-project</artifactId>
+        <artifactId>deltaspike-cdise-project</artifactId>
         <version>0.2-incubating-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>cdise-owb</artifactId>
+    <artifactId>deltaspike-cdise-owb</artifactId>
     <packaging>jar</packaging>
 
     <name>Apache DeltaSpike CDI OWB-ContainerControl</name>
@@ -35,12 +35,12 @@
     <dependencies>
         <dependency>
             <groupId>org.apache.deltaspike.cdise</groupId>
-            <artifactId>cdise-api</artifactId>
+            <artifactId>deltaspike-cdise-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.deltaspike.cdise</groupId>
-            <artifactId>cdise-tck</artifactId>
+            <artifactId>deltaspike-cdise-tck</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
@@ -98,7 +98,7 @@
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>org.apache.deltaspike.cdise</groupId>
-                                    <artifactId>cdise-tck</artifactId>
+                                    <artifactId>deltaspike-cdise-tck</artifactId>
                                     <version>${project.version}</version>
                                     <outputDirectory>${project.build.directory}/test-classes/</outputDirectory>
                                 </artifactItem>

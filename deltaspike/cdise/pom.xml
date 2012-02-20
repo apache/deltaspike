@@ -28,7 +28,7 @@
     </parent>
 
     <groupId>org.apache.deltaspike.cdise</groupId>
-    <artifactId>cdise-project</artifactId>
+    <artifactId>deltaspike-cdise-project</artifactId>
     <packaging>pom</packaging>
 
     <name>Apache DeltaSpike ContainerControl parent</name>

@@ -22,12 +22,12 @@ under the License.
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.apache.deltaspike.cdise</groupId>
-        <artifactId>cdise-project</artifactId>
+        <artifactId>deltaspike-cdise-project</artifactId>
         <version>0.2-incubating-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>cdise-tck</artifactId>
+    <artifactId>deltaspike-cdise-tck</artifactId>
     <packaging>jar</packaging>
 
     <name>Apache DeltaSpike CDI ContainerControl TCK</name>
@@ -64,7 +64,7 @@ under the License.
 
         <dependency>
             <groupId>org.apache.deltaspike.cdise</groupId>
-            <artifactId>cdise-api</artifactId>
+            <artifactId>deltaspike-cdise-api</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
