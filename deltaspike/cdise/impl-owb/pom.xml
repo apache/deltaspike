@@ -22,7 +22,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.apache.deltaspike.cdise</groupId>
-        <artifactId>deltaspike-cdise-project</artifactId>
+        <artifactId>cdise-project</artifactId>
         <version>0.2-incubating-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
