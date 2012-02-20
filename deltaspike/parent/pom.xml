@@ -326,15 +326,15 @@
 
             <!-- Dependencies for Java-SE -->
             <dependency>
-                <groupId>org.apache.deltaspike.containerctrl</groupId>
-                <artifactId>deltaspike-containerctrl-api</artifactId>
+                <groupId>org.apache.deltaspike.cdise</groupId>
+                <artifactId>deltaspike-cdise-api</artifactId>
                 <version>${project.version}</version>
                 <scope>provided</scope>
             </dependency>
 
             <dependency>
-                <groupId>org.apache.deltaspike.containerctrl</groupId>
-                <artifactId>deltaspike-containerctrl-owb</artifactId>
+                <groupId>org.apache.deltaspike.cdise</groupId>
+                <artifactId>deltaspike-cdise-owb</artifactId>
                 <version>${project.version}</version>
                 <scope>runtime</scope>
             </dependency>

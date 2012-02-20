@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.example.beanmanagement;
 
-import org.apache.deltaspike.containerctrl.api.ContainerControl;
-import org.apache.deltaspike.containerctrl.api.ContainerControlLoader;
+import org.apache.deltaspike.cdise.api.CdiContainer;
+import org.apache.deltaspike.cdise.api.CdiContainerLoader;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.example.echo.DefaultEchoService;
 import org.apache.deltaspike.example.echo.EchoService;
@@ -48,10 +48,10 @@ public class SimpleBeanLookupExample
     public static void main(String[] args)
     {
 
-        ContainerControl containerControl = ContainerControlLoader.getCdiContainer();
-        containerControl.bootContainer();
+        CdiContainer cdiContainer = CdiContainerLoader.getCdiContainer();
+        cdiContainer.bootContainer();
         //containerControl.startContexts();
-        containerControl.startContext(ApplicationScoped.class);
+        cdiContainer.startContext(ApplicationScoped.class);
 
         List<EchoService> echoServiceList = BeanProvider.getContextualReferences(EchoService.class, false);
 
@@ -90,8 +90,8 @@ public class SimpleBeanLookupExample
             LOG.severe("Unexpected implementation found: " + optionalService.getClass().getName());
         }
 
-        containerControl.stopContext(ApplicationScoped.class);
+        cdiContainer.stopContext(ApplicationScoped.class);
         //containerControl.stopContexts();
-        containerControl.shutdownContainer();
+        cdiContainer.shutdownContainer();
     }
 }

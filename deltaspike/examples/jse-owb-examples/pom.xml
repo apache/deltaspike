@@ -92,15 +92,15 @@
 
         <!-- Dependencies for Java-SE -->
         <dependency>
-            <groupId>org.apache.deltaspike.containerctrl</groupId>
-            <artifactId>deltaspike-containerctrl-api</artifactId>
+            <groupId>org.apache.deltaspike.cdise</groupId>
+            <artifactId>deltaspike-cdise-api</artifactId>
             <scope>compile</scope>
         </dependency>
 
         <!-- TODO Add profiles -->
         <dependency>
-            <groupId>org.apache.deltaspike.containerctrl</groupId>
-            <artifactId>deltaspike-containerctrl-owb</artifactId>
+            <groupId>org.apache.deltaspike.cdise</groupId>
+            <artifactId>deltaspike-cdise-owb</artifactId>
             <scope>runtime</scope>
         </dependency>
 
