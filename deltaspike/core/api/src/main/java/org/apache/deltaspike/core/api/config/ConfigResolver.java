@@ -19,6 +19,7 @@
 package org.apache.deltaspike.core.api.config;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -58,7 +59,7 @@ public final class ConfigResolver
     /**
      * Resolve the property value by going through the list of configured {@link ConfigSource}s
      * and use the one with the highest priority.
-     * 
+     *
      * @param key the property key.
      * @return the configured property value from the {@link ConfigSource} with the highest ordinal or
      * null if there is no configured value for it.
@@ -66,13 +67,13 @@ public final class ConfigResolver
     public static String getPropertyValue(String key)
     {
         ConfigSource[] appConfigSources = getConfigSources();
-        
+
         for (ConfigSource cs : appConfigSources)
         {
             String val = cs.getPropertyValue(key);
             if (val != null)
             {
-                LOG.log(Level.FINE, "found value {0} for key {1} in ConfigSource {2}.", 
+                LOG.log(Level.FINE, "found value {0} for key {1} in ConfigSource {2}.",
                         new Object[]{val, key, cs.getConfigName()});
                 return val;
             }
@@ -80,8 +81,8 @@ public final class ConfigResolver
             LOG.log(Level.FINER, "NO value found for key {0} in ConfigSource {1}.",
                     new Object[]{key, cs.getConfigName()});
         }
-        
-        return null; 
+
+        return null;
     }
 
     /**
@@ -95,9 +96,9 @@ public final class ConfigResolver
      */
     public static List<String> getAllPropertyValues(String key)
     {
-        ConfigSource[] appConfigSources = getConfigSources();
+        List<ConfigSource> appConfigSources = sortAscending(Arrays.asList(getConfigSources()));
         List<String> allPropValues = new ArrayList<String>();
-        
+
         for (ConfigSource cs : appConfigSources)
         {
             String val = cs.getPropertyValue(key);
@@ -106,30 +107,29 @@ public final class ConfigResolver
                 allPropValues.add(val);
             }
         }
-        
+
         return allPropValues;
     }
-    
-    
+
     private static synchronized ConfigSource[] getConfigSources()
     {
         ClassLoader currentCl = ClassUtils.getClassLoader(null);
-        
+
         ConfigSource[] appConfigSources = configSources.get(currentCl);
-        
+
         if (appConfigSources == null)
         {
             appConfigSources = sortDescending(resolveConfigSources());
-            
-            if (LOG.isLoggable(Level.FINE)) 
+
+            if (LOG.isLoggable(Level.FINE))
             {
                 for (ConfigSource cs : appConfigSources)
                 {
-                    LOG.log(Level.FINE, "Adding ordinal {0} ConfigSource {1}", 
+                    LOG.log(Level.FINE, "Adding ordinal {0} ConfigSource {1}",
                             new Object[]{cs.getOrdinal(), cs.getConfigName()});
                 }
             }
-            
+
             configSources.put(currentCl, appConfigSources);
         }
 
@@ -161,9 +161,25 @@ public final class ConfigResolver
             @Override
             public int compare(ConfigSource configSource1, ConfigSource configSource2)
             {
-                return (configSource1.getOrdinal() > configSource2.getOrdinal()) ? -1 : 1 ;
+                return (configSource1.getOrdinal() > configSource2.getOrdinal()) ? -1 : 1;
             }
         });
         return configSources.toArray(new ConfigSource[configSources.size()]);
+    }
+
+    private static List<ConfigSource> sortAscending(List<ConfigSource> configSources)
+    {
+        Collections.sort(configSources, new Comparator<ConfigSource>()
+        {
+            /**
+             * {@inheritDoc}
+             */
+            @Override
+            public int compare(ConfigSource configSource1, ConfigSource configSource2)
+            {
+                return (configSource1.getOrdinal() > configSource2.getOrdinal()) ? 1 : -1;
+            }
+        });
+        return configSources;
     }
 }
