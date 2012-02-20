@@ -68,6 +68,7 @@ public class ExcludeIntegrationTest
                         "META-INF/beans.xml",
                         new String[]{"org.apache.deltaspike.core",
                                 "org.apache.deltaspike.integration",
+                                "org.apache.deltaspike.test.category",
                                 "org.apache.deltaspike.test.core.api.exclude",
                                 "org.apache.deltaspike.test.core.impl.activation"},
                         null))
