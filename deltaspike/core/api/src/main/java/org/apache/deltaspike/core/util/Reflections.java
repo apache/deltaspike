@@ -55,7 +55,7 @@ import java.util.Set;
 //X TODO: Look at merging this with some of the other classes from CODI, or if they're really needed
 //X TODO: Also some methods need JavaDoc
 @Typed()
-public class Reflections
+public abstract class Reflections
 {
     /**
      * An empty array of type {@link Annotation}, useful converting lists to
@@ -75,6 +75,7 @@ public class Reflections
 
     private Reflections()
     {
+        // prevent instantiation
     }
 
     /**
@@ -743,12 +744,9 @@ public class Reflections
         {
             return (Class<T>) type;
         }
-        else if (type instanceof ParameterizedType)
+        else if (type instanceof ParameterizedType && ((ParameterizedType) type).getRawType() instanceof Class<?>)
         {
-            if (((ParameterizedType) type).getRawType() instanceof Class<?>)
-            {
-                return (Class<T>) ((ParameterizedType) type).getRawType();
-            }
+            return (Class<T>) ((ParameterizedType) type).getRawType();
         }
         return null;
     }
@@ -780,10 +778,6 @@ public class Reflections
                 {
                     map.put((Class<?>) ((ParameterizedType) type).getRawType(), type);
                 }
-            }
-            else if (type instanceof TypeVariable<?>)
-            {
-
             }
         }
         return map;

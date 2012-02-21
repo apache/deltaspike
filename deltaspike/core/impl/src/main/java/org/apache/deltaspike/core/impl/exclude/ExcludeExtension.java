@@ -500,7 +500,7 @@ public class ExcludeExtension implements Extension, Deactivatable
         {
             isOwbDetected = false;
 
-            RuntimeException runtimeException = new RuntimeException();
+            IllegalStateException runtimeException = new IllegalStateException();
 
             for (StackTraceElement element : runtimeException.getStackTrace())
             {

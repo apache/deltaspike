@@ -33,9 +33,6 @@ public abstract class AbstractPropertyExpressionInterpreter implements Expressio
 {
     private static final String ASTERISK = "*";
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public final Boolean evaluate(String expressions)
     {

@@ -24,6 +24,8 @@ import java.io.Serializable;
 @SessionScoped
 public class User implements Serializable
 {
+    private static final long serialVersionUID = -4171521313675763849L;
+
     private String name;
 
     public String getName()

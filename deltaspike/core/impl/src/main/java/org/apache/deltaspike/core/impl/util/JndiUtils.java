@@ -30,7 +30,7 @@ import java.util.logging.Logger;
  * This is the internal helper class for low level access to JNDI
  */
 @Typed()
-public class JndiUtils
+public abstract class JndiUtils
 {
     private static final Logger LOG = Logger.getLogger(JndiUtils.class.getName());
 

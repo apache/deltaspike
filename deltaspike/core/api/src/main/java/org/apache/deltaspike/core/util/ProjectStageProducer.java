@@ -202,6 +202,15 @@ public class ProjectStageProducer implements Serializable
      */
     protected void reset()
     {
+        resetCache();
+    }
+
+    /**
+     * This function exists to prevent findbugs to complain about
+     * setting a static member from a non-static function.
+     */
+    private static void resetCache()
+    {
         projectStage = null;
         projectStageProducer = null;
     }

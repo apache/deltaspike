@@ -37,18 +37,13 @@ import javax.servlet.ServletException;
  */
 public class MockServletContext implements ServletContext
 {
-
-    @SuppressWarnings("unchecked")
     private Hashtable attributes = new Hashtable();
-
-
 
     public Object getAttribute(String name)
     {
         return attributes.get(name);
     }
 
-    @SuppressWarnings("unchecked")
     public Enumeration getAttributeNames()
     {
         return attributes.keys();
@@ -69,7 +64,6 @@ public class MockServletContext implements ServletContext
         return null;
     }
 
-    @SuppressWarnings("unchecked")
     public Enumeration getInitParameterNames()
     {
         return new StringTokenizer(""); // 'standard' empty Enumeration
@@ -115,7 +109,6 @@ public class MockServletContext implements ServletContext
         return null;
     }
 
-    @SuppressWarnings("unchecked")
     public Set getResourcePaths(String path)
     {
         return null;
@@ -136,13 +129,11 @@ public class MockServletContext implements ServletContext
         return null;
     }
 
-    @SuppressWarnings("unchecked")
     public Enumeration getServletNames()
     {
         return null;
     }
 
-    @SuppressWarnings("unchecked")
     public Enumeration getServlets()
     {
         return null;
@@ -156,13 +147,11 @@ public class MockServletContext implements ServletContext
     public void log(Exception exception, String msg)
     {
         // TODO
-
     }
 
     public void log(String message, Throwable throwable)
     {
         // TODO
-
     }
 
     public void removeAttribute(String name)
@@ -175,5 +164,4 @@ public class MockServletContext implements ServletContext
     {
         attributes.put(name, object);
     }
-
 }

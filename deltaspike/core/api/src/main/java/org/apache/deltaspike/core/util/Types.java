@@ -26,10 +26,11 @@ import java.lang.reflect.Type;
  * Utilities for Types.
  */
 @Typed()
-public class Types
+public abstract class Types
 {
     private Types()
     {
+        // prevent instantiation
     }
 
     /**

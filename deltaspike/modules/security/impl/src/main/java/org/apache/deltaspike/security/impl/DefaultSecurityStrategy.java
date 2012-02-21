@@ -29,7 +29,6 @@ import org.apache.deltaspike.security.spi.EditableAccessDecisionVoterContext;
 import org.apache.deltaspike.security.spi.SecurityStrategy;
 
 import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.interceptor.InvocationContext;
 import java.lang.annotation.Annotation;
@@ -49,11 +48,6 @@ public class DefaultSecurityStrategy implements SecurityStrategy
 
     @Inject
     private AccessDecisionVoterContext voterContext;
-
-    //all implementations will be serializable
-    @Inject
-    @SuppressWarnings("NonSerializableFieldInSerializableClass")
-    private BeanManager beanManager;
 
     /**
      * {@inheritDoc}

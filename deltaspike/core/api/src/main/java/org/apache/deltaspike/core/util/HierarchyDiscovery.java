@@ -27,6 +27,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Utility class for resolving all bean types from a given type.
@@ -69,7 +71,9 @@ public class HierarchyDiscovery
         }
         catch (StackOverflowError e)
         {
-            System.out.println("type" + type);
+            Logger logger = Logger.getLogger(HierarchyDiscovery.class.getName());
+
+            logger.log(Level.WARNING, "type: " + type.toString(), e);
             Thread.dumpStack();
             throw e;
         }

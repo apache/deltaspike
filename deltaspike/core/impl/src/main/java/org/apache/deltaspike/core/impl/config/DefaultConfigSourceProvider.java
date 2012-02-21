@@ -65,7 +65,7 @@ public class DefaultConfigSourceProvider implements ConfigSourceProvider
         }
         catch (IOException ioe) 
         {
-            throw new RuntimeException("problem while loading DeltaSpike property files", ioe);
+            throw new IllegalStateException("problem while loading DeltaSpike property files", ioe);
         }
         
     }

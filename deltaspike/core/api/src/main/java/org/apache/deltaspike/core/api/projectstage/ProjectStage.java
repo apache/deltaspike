@@ -151,9 +151,21 @@ public abstract class ProjectStage implements Serializable
         String projectStageClassName = this.getClass().getSimpleName();
         psName = projectStageClassName;
 
+        init(projectStageClassName, this);
+    }
+
+    /**
+     * This function exists to prevent findbugs to complain about
+     * setting a static member from a non-static function.
+     *
+     * @param projectStageClassName name of the project-stage
+     * @param projectStage instance of the project-stage
+     */
+    private static void init(String projectStageClassName, ProjectStage projectStage)
+    {
         if (!projectStages.containsKey(projectStageClassName))
         {
-            projectStages.put(projectStageClassName, this);
+            projectStages.put(projectStageClassName, projectStage);
         }
         else
         {
@@ -180,7 +192,9 @@ public abstract class ProjectStage implements Serializable
      */
     public static ProjectStage[] values()
     {
-        return values;
+        ProjectStage[] result = new ProjectStage[values.length];
+        System.arraycopy(values, 0, result, 0, values.length);
+        return result;
     }
 
     /**

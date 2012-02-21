@@ -42,7 +42,7 @@ import org.apache.webbeans.spi.ContainerLifecycle;
  */
 public class OpenWebBeansContainerControl implements CdiContainer
 {
-    private static final Logger logger = Logger.getLogger(OpenWebBeansContainerControl.class.getName());
+    private static final Logger LOG = Logger.getLogger(OpenWebBeansContainerControl.class.getName());
 
     private ContainerLifecycle  lifecycle = null;
     private MockServletContext servletContext = null;
@@ -145,8 +145,7 @@ public class OpenWebBeansContainerControl implements CdiContainer
         }
         else
         {
-            logger.log(Level.WARNING,
-                       "destroy was called for an inactive context (" + Singleton.class.getName() + ")");
+            logDestroyOfInactiveContext(Singleton.class.getName());
         }
 
     }
@@ -163,8 +162,7 @@ public class OpenWebBeansContainerControl implements CdiContainer
         }
         else
         {
-            logger.log(Level.WARNING,
-                       "destroy was called for an inactive context (" + ApplicationScoped.class.getName() + ")");
+            logDestroyOfInactiveContext(ApplicationScoped.class.getName());
         }
     }
 
@@ -180,8 +178,7 @@ public class OpenWebBeansContainerControl implements CdiContainer
         }
         else
         {
-            logger.log(Level.WARNING,
-                       "destroy was called for an inactive context (" + ConversationScoped.class.getName() + ")");
+            logDestroyOfInactiveContext(ConversationScoped.class.getName());
         }
     }
 
@@ -217,8 +214,7 @@ public class OpenWebBeansContainerControl implements CdiContainer
         }
         else
         {
-            logger.log(Level.WARNING,
-                       "destroy was called for an inactive context (" + RequestScoped.class.getName() + ")");
+            logDestroyOfInactiveContext(RequestScoped.class.getName());
         }
     }
 
@@ -234,8 +230,7 @@ public class OpenWebBeansContainerControl implements CdiContainer
         }
         else
         {
-            logger.log(Level.WARNING,
-                       "destroy was called for an inactive context (" + SessionScoped.class.getName() + ")");
+            logDestroyOfInactiveContext(SessionScoped.class.getName());
         }
     }
     
@@ -244,4 +239,9 @@ public class OpenWebBeansContainerControl implements CdiContainer
         return lifecycle.getBeanManager();
     }
 
+    private void logDestroyOfInactiveContext(String contextName)
+    {
+        LOG.log(Level.WARNING,
+                "destroy was called for an inactive context (" + contextName + ")");
+    }
 }

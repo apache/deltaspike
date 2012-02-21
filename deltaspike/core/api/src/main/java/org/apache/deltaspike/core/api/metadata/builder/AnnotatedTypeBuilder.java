@@ -405,12 +405,10 @@ public class AnnotatedTypeBuilder<X>
                                                                   int position,
                                                                   Class<? extends Annotation> annotationType)
     {
-        if (constructorParameters.get(constructor) != null)
+        if (constructorParameters.get(constructor) != null &&
+            constructorParameters.get(constructor).get(position) != null)
         {
-            if (constructorParameters.get(constructor).get(position) != null)
-            {
-                constructorParameters.get(constructor).get(position).remove(annotationType);
-            }
+            constructorParameters.get(constructor).get(position).remove(annotationType);
         }
         return this;
     }
@@ -659,7 +657,8 @@ public class AnnotatedTypeBuilder<X>
                 annotationBuilder = new AnnotationBuilder();
                 fields.put(field, annotationBuilder);
             }
-            field.setAccessible(true);
+            Reflections.setAccessible(field);
+
             for (Annotation annotation : field.getAnnotations())
             {
                 if (overwrite || !annotationBuilder.isAnnotationPresent(annotation.annotationType()))
@@ -677,7 +676,8 @@ public class AnnotatedTypeBuilder<X>
                 annotationBuilder = new AnnotationBuilder();
                 methods.put(method, annotationBuilder);
             }
-            method.setAccessible(true);
+            Reflections.setAccessible(method);
+
             for (Annotation annotation : method.getAnnotations())
             {
                 if (overwrite || !annotationBuilder.isAnnotationPresent(annotation.annotationType()))
