@@ -53,6 +53,7 @@ public class ExcludeTest
                 .addAsLibraries(ShrinkWrapArchiveUtil.getArchives(null,
                         "META-INF/beans.xml",
                         new String[]{"org.apache.deltaspike.core",
+                                "org.apache.deltaspike.test.category",
                                 "org.apache.deltaspike.test.core.api.exclude"},
                         null))
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")

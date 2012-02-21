@@ -55,7 +55,8 @@ public class BdaAlternativeTest
                 .addAsLibraries(ShrinkWrapArchiveUtil.getArchives(null,
                         "META-INF/beans.xml",
                         new String[]{"org.apache.deltaspike.core",
-                                "org.apache.deltaspike.test.core.api.alternative"},
+                                     "org.apache.deltaspike.test.category",
+                                     "org.apache.deltaspike.test.core.api.alternative"},
                         new String[]{"META-INF.config"}))
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsManifestResource(EmptyAsset.INSTANCE, "GlobalAlternativeTest.INFO");
