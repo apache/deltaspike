@@ -57,6 +57,13 @@ public class DefaultConfigSourceProvider implements ConfigSourceProvider
         {
             Enumeration<URL> propertyFileUrls = cl.getResources(PROPERTY_FILE_NAME);
 
+            //fallback - see DELTASPIKE-98
+            if (!propertyFileUrls.hasMoreElements())
+            {
+                cl = getClass().getClassLoader();
+                propertyFileUrls = cl.getResources(PROPERTY_FILE_NAME);
+            }
+
             while (propertyFileUrls.hasMoreElements())
             {
                 URL propertyFileUrl = propertyFileUrls.nextElement();
@@ -67,7 +74,6 @@ public class DefaultConfigSourceProvider implements ConfigSourceProvider
         {
             throw new IllegalStateException("problem while loading DeltaSpike property files", ioe);
         }
-        
     }
 
     /**

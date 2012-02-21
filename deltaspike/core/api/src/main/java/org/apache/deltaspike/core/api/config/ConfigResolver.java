@@ -24,7 +24,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,6 +31,7 @@ import java.util.logging.Logger;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.spi.config.ConfigSource;
 import org.apache.deltaspike.core.spi.config.ConfigSourceProvider;
+import org.apache.deltaspike.core.util.ServiceUtils;
 
 import javax.enterprise.inject.Typed;
 
@@ -140,8 +140,8 @@ public final class ConfigResolver
     {
         List<ConfigSource> appConfigSources = new ArrayList<ConfigSource>();
 
-        ServiceLoader<ConfigSourceProvider> configSourceProviderServiceLoader
-            = ServiceLoader.load(ConfigSourceProvider.class);
+        List<ConfigSourceProvider> configSourceProviderServiceLoader =
+            ServiceUtils.loadServiceImplementations(ConfigSourceProvider.class);
 
         for (ConfigSourceProvider csp : configSourceProviderServiceLoader)
         {

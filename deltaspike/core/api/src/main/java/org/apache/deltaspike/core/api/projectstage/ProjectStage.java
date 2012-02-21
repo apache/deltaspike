@@ -19,11 +19,13 @@
 package org.apache.deltaspike.core.api.projectstage;
 
 
+import org.apache.deltaspike.core.util.ServiceUtils;
+
 import javax.enterprise.inject.Typed;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.ServiceLoader;
 import java.util.logging.Logger;
 
 /**
@@ -131,7 +133,9 @@ public abstract class ProjectStage implements Serializable
      */
     static
     {
-        ServiceLoader<ProjectStageHolder> projectStageHolders = ServiceLoader.load(ProjectStageHolder.class);
+        List<ProjectStageHolder> projectStageHolders =
+            ServiceUtils.loadServiceImplementations(ProjectStageHolder.class);
+
         for (ProjectStageHolder projectStageHolder : projectStageHolders)
         {
             LOG.fine("registering ProjectStages from ProjectStageHolder " + projectStageHolder.getClass().getName());
