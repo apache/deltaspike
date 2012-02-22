@@ -7,4 +7,5 @@ target
 .settings
 .svn
 .idea
+.checkstyle
 atlassian-ide-plugin.xml
