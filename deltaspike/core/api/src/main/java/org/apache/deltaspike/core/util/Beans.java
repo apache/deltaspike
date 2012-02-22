@@ -1,3 +1,21 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.apache.deltaspike.core.util;
 
 import java.lang.annotation.Annotation;
@@ -27,9 +45,11 @@ import static org.apache.deltaspike.core.util.Reflections.isSerializable;
  *
  * @author Pete Muir
  */
-public class Beans {
+public class Beans
+{
 
-    private Beans() {
+    private Beans()
+    {
     }
 
     /**
@@ -40,11 +60,15 @@ public class Beans {
      * @param annotations the annotations to check
      * @return any qualifiers present in <code>annotations</code>
      */
-    public static Set<Annotation> getQualifiers(BeanManager beanManager, Iterable<Annotation>... annotations) {
+    public static Set<Annotation> getQualifiers(BeanManager beanManager, Iterable<Annotation>... annotations)
+    {
         Set<Annotation> qualifiers = new HashSet<Annotation>();
-        for (Iterable<Annotation> annotationSet : annotations) {
-            for (Annotation annotation : annotationSet) {
-                if (beanManager.isQualifier(annotation.annotationType())) {
+        for (Iterable<Annotation> annotationSet : annotations)
+        {
+            for (Annotation annotation : annotationSet)
+            {
+                if (beanManager.isQualifier(annotation.annotationType()))
+                {
                     qualifiers.add(annotation);
                 }
             }
@@ -61,7 +85,8 @@ public class Beans {
      * @return any qualifiers present in <code>annotations</code>
      */
     @SuppressWarnings("unchecked")
-    public static Set<Annotation> getQualifiers(BeanManager beanManager, Iterable<Annotation> annotations) {
+    public static Set<Annotation> getQualifiers(BeanManager beanManager, Iterable<Annotation> annotations)
+    {
         return getQualifiers(beanManager, new Iterable[]{annotations});
     }
 
@@ -73,11 +98,15 @@ public class Beans {
      * @param annotations the annotations to check
      * @return any qualifiers present in <code>annotations</code>
      */
-    public static Set<Annotation> getQualifiers(BeanManager beanManager, Annotation[]... annotations) {
+    public static Set<Annotation> getQualifiers(BeanManager beanManager, Annotation[]... annotations)
+    {
         Set<Annotation> qualifiers = new HashSet<Annotation>();
-        for (Annotation[] annotationArray : annotations) {
-            for (Annotation annotation : annotationArray) {
-                if (beanManager.isQualifier(annotation.annotationType())) {
+        for (Annotation[] annotationArray : annotations)
+        {
+            for (Annotation annotation : annotationArray)
+            {
+                if (beanManager.isQualifier(annotation.annotationType()))
+                {
                     qualifiers.add(annotation);
                 }
             }
@@ -85,31 +114,57 @@ public class Beans {
         return qualifiers;
     }
 
-    public static void checkReturnValue(Object instance, Bean<?> bean, InjectionPoint injectionPoint, BeanManager beanManager) {
-        if (instance == null && !Dependent.class.equals(bean.getScope())) {
+    public static void checkReturnValue(Object instance, Bean<?> bean, InjectionPoint injectionPoint,
+                                        BeanManager beanManager)
+    {
+        if (instance == null && !Dependent.class.equals(bean.getScope()))
+        {
             throw new IllegalStateException("Cannot return null from a non-dependent producer method: " + bean);
-        } else if (instance != null) {
+        }
+        else if (instance != null)
+        {
             boolean passivating = beanManager.isPassivatingScope(bean.getScope());
             boolean instanceSerializable = isSerializable(instance.getClass());
-            if (passivating && !instanceSerializable) {
-                throw new IllegalStateException("Producers cannot declare passivating scope and return a non-serializable class: " + bean);
+            if (passivating && !instanceSerializable)
+            {
+                throw new IllegalStateException(
+                        "Producers cannot declare passivating scope and return a non-serializable class: " + bean);
             }
-            if (injectionPoint != null && injectionPoint.getBean() != null) {
-                if (!instanceSerializable && beanManager.isPassivatingScope(injectionPoint.getBean().getScope())) {
-                    if (injectionPoint.getMember() instanceof Field) {
-                        if (!injectionPoint.isTransient() && instance != null && !instanceSerializable) {
-                            throw new IllegalStateException("Producers cannot produce non-serializable instances for injection into non-transient fields of passivating beans. Producer " + bean + "at injection point " + injectionPoint);
+            if (injectionPoint != null && injectionPoint.getBean() != null)
+            {
+                if (!instanceSerializable && beanManager.isPassivatingScope(injectionPoint.getBean().getScope()))
+                {
+                    if (injectionPoint.getMember() instanceof Field)
+                    {
+                        if (!injectionPoint.isTransient() && instance != null && !instanceSerializable)
+                        {
+                            throw new IllegalStateException(
+                                    "Producers cannot produce non-serializable instances for injection into " +
+                                            "non-transient fields of passivating beans. Producer " +
+                                            bean + "at injection point " + injectionPoint);
                         }
-                    } else if (injectionPoint.getMember() instanceof Method) {
+                    }
+                    else if (injectionPoint.getMember() instanceof Method)
+                    {
                         Method method = (Method) injectionPoint.getMember();
-                        if (method.isAnnotationPresent(Inject.class)) {
-                            throw new IllegalStateException("Producers cannot produce non-serializable instances for injection into parameters of initializers of beans declaring passivating scope. Producer " + bean + "at injection point " + injectionPoint);
+                        if (method.isAnnotationPresent(Inject.class))
+                        {
+                            throw new IllegalStateException("Producers cannot produce non-serializable instances for " +
+                                    "injection into parameters of initializers of beans declaring passivating scope. " +
+                                    "Producer " + bean + "at injection point " + injectionPoint);
                         }
-                        if (method.isAnnotationPresent(Produces.class)) {
-                            throw new IllegalStateException("Producers cannot produce non-serializable instances for injection into parameters of producer methods declaring passivating scope. Producer " + bean + "at injection point " + injectionPoint);
+                        if (method.isAnnotationPresent(Produces.class))
+                        {
+                            throw new IllegalStateException("Producers cannot produce non-serializable instances for " +
+                                    "injection into parameters of producer methods declaring passivating scope. " +
+                                    "Producer " + bean + "at injection point " + injectionPoint);
                         }
-                    } else if (injectionPoint.getMember() instanceof Constructor<?>) {
-                        throw new IllegalStateException("Producers cannot produce non-serializable instances for injection into parameters of constructors of beans declaring passivating scope. Producer " + bean + "at injection point " + injectionPoint);
+                    }
+                    else if (injectionPoint.getMember() instanceof Constructor<?>)
+                    {
+                        throw new IllegalStateException("Producers cannot produce non-serializable instances for " +
+                                "injection into parameters of constructors of beans declaring passivating scope. " +
+                                "Producer " + bean + "at injection point " + injectionPoint);
                     }
                 }
             }
@@ -126,10 +181,15 @@ public class Beans {
      * @param beanManager   the bean manager to use to create the injection points
      * @return the injection points
      */
-    public static <X> List<InjectionPoint> createInjectionPoints(AnnotatedMethod<X> method, Bean<?> declaringBean, BeanManager beanManager) {
+    public static <X> List<InjectionPoint> createInjectionPoints(AnnotatedMethod<X> method, Bean<?> declaringBean,
+                                                                 BeanManager beanManager)
+    {
         List<InjectionPoint> injectionPoints = new ArrayList<InjectionPoint>();
-        for (AnnotatedParameter<X> parameter : method.getParameters()) {
-            InjectionPoint injectionPoint = new ImmutableInjectionPoint(parameter, beanManager, declaringBean, false, false);
+        for (AnnotatedParameter<X> parameter : method.getParameters())
+        {
+            InjectionPoint injectionPoint =
+                    new ImmutableInjectionPoint(parameter, beanManager, declaringBean, false, false);
+
             injectionPoints.add(injectionPoint);
         }
         return injectionPoints;

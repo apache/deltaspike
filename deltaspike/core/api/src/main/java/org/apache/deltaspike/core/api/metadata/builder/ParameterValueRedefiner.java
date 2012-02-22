@@ -1,3 +1,21 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.apache.deltaspike.core.api.metadata.builder;
 
 import javax.enterprise.context.spi.CreationalContext;
@@ -12,7 +30,17 @@ import javax.enterprise.inject.spi.InjectionPoint;
  * @author Pete Muir
  * @see InjectableMethod
  */
-public interface ParameterValueRedefiner {
+public interface ParameterValueRedefiner
+{
+    /**
+     * Callback allowing the default parameter value (that which would be
+     * injected according to the CDI type safe resolution rules) to be
+     * overridden.
+     *
+     * @param value the default value
+     * @return the overridden value
+     */
+    Object redefineParameterValue(ParameterValue value);
 
     /**
      * Provides the default parameter's value, along with metadata about the
@@ -22,13 +50,15 @@ public interface ParameterValueRedefiner {
      * @see ParameterValueRedefiner
      * @see InjectableMethod
      */
-    public static class ParameterValue {
+    public static class ParameterValue
+    {
 
         private final int position;
         private final InjectionPoint injectionPoint;
         private final BeanManager beanManager;
 
-        ParameterValue(int position, InjectionPoint injectionPoint, BeanManager beanManager) {
+        ParameterValue(int position, InjectionPoint injectionPoint, BeanManager beanManager)
+        {
             this.position = position;
             this.injectionPoint = injectionPoint;
             this.beanManager = beanManager;
@@ -39,7 +69,8 @@ public interface ParameterValueRedefiner {
          *
          * @return the position of the parameter
          */
-        public int getPosition() {
+        public int getPosition()
+        {
             return position;
         }
 
@@ -48,7 +79,8 @@ public interface ParameterValueRedefiner {
          *
          * @return the injection point
          */
-        public InjectionPoint getInjectionPoint() {
+        public InjectionPoint getInjectionPoint()
+        {
             return injectionPoint;
         }
 
@@ -60,20 +92,10 @@ public interface ParameterValueRedefiner {
          *                          injectable reference.
          * @return the default value
          */
-        public Object getDefaultValue(CreationalContext<?> creationalContext) {
+        public Object getDefaultValue(CreationalContext<?> creationalContext)
+        {
             return beanManager.getInjectableReference(injectionPoint, creationalContext);
         }
 
     }
-
-    /**
-     * Callback allowing the default parameter value (that which would be
-     * injected according to the CDI type safe resolution rules) to be
-     * overridden.
-     *
-     * @param value the default value
-     * @return the overridden value
-     */
-    public Object redefineParameterValue(ParameterValue value);
-
 }

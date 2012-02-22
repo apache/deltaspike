@@ -1,3 +1,21 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.apache.deltaspike.core.api.metadata.builder;
 
 import java.lang.annotation.Annotation;
@@ -26,14 +44,15 @@ import static java.util.Collections.unmodifiableSet;
  * @author Stuart Douglas
  * @author Pete Muir
  */
-public class ImmutableInjectionPoint implements InjectionPoint {
+public class ImmutableInjectionPoint implements InjectionPoint
+{
 
     private final Annotated annotated;
     private final Member member;
     private final Bean<?> declaringBean;
     private final Set<Annotation> qualifiers;
     private final Type type;
-    private final boolean _transient;
+    private final boolean isTransient;
     private final boolean delegate;
 
     /**
@@ -43,16 +62,18 @@ public class ImmutableInjectionPoint implements InjectionPoint {
      * @param field         the field for which to create the injection point
      * @param qualifiers    the qualifiers on the injection point
      * @param declaringBean the declaringBean declaring the injection point
-     * @param _transient    <code>true</code> if the injection point is transient
+     * @param isTransient    <code>true</code> if the injection point is transient
      * @param delegate      <code>true</code> if the injection point is a delegate
      *                      injection point on a decorator
      */
-    public ImmutableInjectionPoint(AnnotatedField<?> field, Set<Annotation> qualifiers, Bean<?> declaringBean, boolean _transient, boolean delegate) {
+    public ImmutableInjectionPoint(AnnotatedField<?> field, Set<Annotation> qualifiers, Bean<?> declaringBean,
+                                   boolean isTransient, boolean delegate)
+    {
         this.annotated = field;
         this.member = field.getJavaMember();
         this.qualifiers = new HashSet<Annotation>(qualifiers);
         this.type = field.getJavaMember().getGenericType();
-        this._transient = _transient;
+        this.isTransient = isTransient;
         this.delegate = delegate;
         this.declaringBean = declaringBean;
     }
@@ -64,16 +85,18 @@ public class ImmutableInjectionPoint implements InjectionPoint {
      *
      * @param field         the field for which to create the injection point
      * @param declaringBean the declaringBean declaring the injection point
-     * @param _transient    <code>true</code> if the injection point is transient
+     * @param isTransient    <code>true</code> if the injection point is transient
      * @param delegate      <code>true</code> if the injection point is a delegate
      *                      injection point on a decorator
      */
-    public ImmutableInjectionPoint(AnnotatedField<?> field, BeanManager beanManager, Bean<?> declaringBean, boolean _transient, boolean delegate) {
+    public ImmutableInjectionPoint(AnnotatedField<?> field, BeanManager beanManager, Bean<?> declaringBean,
+                                   boolean isTransient, boolean delegate)
+    {
         this.annotated = field;
         this.member = field.getJavaMember();
         this.qualifiers = Beans.getQualifiers(beanManager, field.getAnnotations());
         this.type = field.getJavaMember().getGenericType();
-        this._transient = _transient;
+        this.isTransient = isTransient;
         this.delegate = delegate;
         this.declaringBean = declaringBean;
     }
@@ -85,15 +108,17 @@ public class ImmutableInjectionPoint implements InjectionPoint {
      * @param parameter     the parameter for which to create the injection point
      * @param qualifiers    the qualifiers on the injection point
      * @param declaringBean the declaringBean declaring the injection point
-     * @param _transient    <code>true</code> if the injection point is transient
+     * @param isTransient    <code>true</code> if the injection point is transient
      * @param delegate      <code>true</code> if the injection point is a delegate
      *                      injection point on a decorator
      */
-    public ImmutableInjectionPoint(AnnotatedParameter<?> parameter, Set<Annotation> qualifiers, Bean<?> declaringBean, boolean _transient, boolean delegate) {
+    public ImmutableInjectionPoint(AnnotatedParameter<?> parameter, Set<Annotation> qualifiers, Bean<?> declaringBean,
+                                   boolean isTransient, boolean delegate)
+    {
         this.annotated = parameter;
         this.member = parameter.getDeclaringCallable().getJavaMember();
         this.qualifiers = new HashSet<Annotation>(qualifiers);
-        this._transient = _transient;
+        this.isTransient = isTransient;
         this.delegate = delegate;
         this.declaringBean = declaringBean;
         this.type = parameter.getBaseType();
@@ -106,46 +131,55 @@ public class ImmutableInjectionPoint implements InjectionPoint {
      *
      * @param parameter     the parameter for which to create the injection point
      * @param declaringBean the declaringBean declaring the injection point
-     * @param _transient    <code>true</code> if the injection point is transient
+     * @param isTransient    <code>true</code> if the injection point is transient
      * @param delegate      <code>true</code> if the injection point is a delegate
      *                      injection point on a decorator
      */
-    public ImmutableInjectionPoint(AnnotatedParameter<?> parameter, BeanManager beanManager, Bean<?> declaringBean, boolean _transient, boolean delegate) {
+    public ImmutableInjectionPoint(AnnotatedParameter<?> parameter, BeanManager beanManager, Bean<?> declaringBean,
+                                   boolean isTransient, boolean delegate)
+    {
         this.annotated = parameter;
         this.member = parameter.getDeclaringCallable().getJavaMember();
         this.qualifiers = Beans.getQualifiers(beanManager, parameter.getAnnotations());
-        this._transient = _transient;
+        this.isTransient = isTransient;
         this.delegate = delegate;
         this.declaringBean = declaringBean;
         this.type = parameter.getBaseType();
     }
 
-    public Annotated getAnnotated() {
+    public Annotated getAnnotated()
+    {
         return annotated;
     }
 
-    public Bean<?> getBean() {
+    public Bean<?> getBean()
+    {
         return declaringBean;
     }
 
-    public Member getMember() {
+    public Member getMember()
+    {
         return member;
     }
 
-    public Set<Annotation> getQualifiers() {
+    public Set<Annotation> getQualifiers()
+    {
         return unmodifiableSet(qualifiers);
     }
 
-    public Type getType() {
+    public Type getType()
+    {
         return type;
     }
 
-    public boolean isDelegate() {
+    public boolean isDelegate()
+    {
         return delegate;
     }
 
-    public boolean isTransient() {
-        return _transient;
+    public boolean isTransient()
+    {
+        return isTransient;
     }
 
 }
