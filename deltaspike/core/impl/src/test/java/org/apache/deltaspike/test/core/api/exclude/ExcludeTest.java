@@ -19,8 +19,6 @@
 package org.apache.deltaspike.test.core.api.exclude;
 
 
-import javax.enterprise.inject.spi.Extension;
-
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.impl.exclude.ExcludeExtension;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
@@ -33,6 +31,8 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import javax.enterprise.inject.spi.Extension;
 
 /**
  * Tests for {@link org.apache.deltaspike.core.api.exclude.Exclude}
@@ -56,7 +56,7 @@ public class ExcludeTest
                                 "org.apache.deltaspike.test.category",
                                 "org.apache.deltaspike.test.core.api.exclude"},
                         null))
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsServiceProvider(Extension.class, ExcludeExtension.class);
     }
 

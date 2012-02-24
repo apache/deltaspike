@@ -18,10 +18,6 @@
  */
 package org.apache.deltaspike.test.core.impl.util;
 
-import static org.junit.Assert.assertNotNull;
-
-import javax.enterprise.inject.spi.BeanManager;
-
 import org.apache.deltaspike.core.impl.util.JndiUtils;
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.apache.deltaspike.test.core.api.temptestutil.ShrinkWrapArchiveUtil;
@@ -33,6 +29,10 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+
+import javax.enterprise.inject.spi.BeanManager;
+
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(Arquillian.class)
 @Category(WebProfileCategory.class)
@@ -47,7 +47,7 @@ public class JndiUtilsTest
                         "META-INF/beans.xml",
                         new String[] { "org.apache.deltaspike" },
                         null))
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
     /**

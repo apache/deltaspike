@@ -58,7 +58,7 @@ public class BdaAlternativeTest
                                      "org.apache.deltaspike.test.category",
                                      "org.apache.deltaspike.test.core.api.alternative"},
                         new String[]{"META-INF.config"}))
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsManifestResource(EmptyAsset.INSTANCE, "GlobalAlternativeTest.INFO");
     }
 

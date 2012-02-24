@@ -77,7 +77,7 @@ public class ExcludeIntegrationTest
                         "META-INF/apache-deltaspike.properties")
                 .addAsResource(FileUtils.getFileForURL(testExtensionsFileUrl.toString()),
                         "META-INF/services/javax.enterprise.inject.spi.Extension")
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
     /**

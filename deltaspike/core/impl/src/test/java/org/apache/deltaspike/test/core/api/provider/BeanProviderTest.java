@@ -48,7 +48,7 @@ public class BeanProviderTest
                                        "org.apache.deltaspike.test.category",
                                        "org.apache.deltaspike.test.core.api.provider"},
                           null))
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
     /**
