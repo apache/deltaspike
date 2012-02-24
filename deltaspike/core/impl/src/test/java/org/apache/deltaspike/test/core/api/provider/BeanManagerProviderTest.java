@@ -46,8 +46,7 @@ public class BeanManagerProviderTest
                         "META-INF/beans.xml",
                         new String[]{"org.apache.deltaspike"},
                         null))
-                .addClass(TestBean.class)
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
     
     @Test
