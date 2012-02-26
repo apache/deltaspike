@@ -16,36 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.deltaspike.security.api;
 
-import javax.enterprise.util.Nonbinding;
-import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
 /**
- * Interceptor for securing beans.
- * It's also possible to use it as meta-annotation for type-safe view-configs.
+ * This annotation is used to delegate a method as the provider for a specific authorization check
+ *
+ * @author Shane Bryzak
  */
-@Target({ TYPE, METHOD, ANNOTATION_TYPE })
-@Retention(RUNTIME)
-@Documented
-
-//cdi annotations
-@SecurityBindingType
-public @interface Secured
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Secures 
 {
-    /**
-     * {@link AccessDecisionVoter}s which will be invoked before accessing the intercepted instance or in case of
-     * view-configs before a view gets used.
-     *
-     * @return the configured access-decision-voters which should be used for the voting process
-     */
-    @Nonbinding
-    Class<? extends AccessDecisionVoter>[] value();
 }

@@ -47,7 +47,6 @@ import static org.apache.deltaspike.core.util.Reflections.invokeMethod;
  * </p>
  *
  * @param <X> the declaring type
- * @author Pete Muir
  */
 public class InjectableMethod<X>
 {
