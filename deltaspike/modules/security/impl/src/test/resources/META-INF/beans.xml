@@ -20,12 +20,5 @@
 <beans xmlns="http://java.sun.com/xml/ns/javaee"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/beans_1_0.xsd">
-    <!-- TODO change it to the global alternative approach as soon as it is committed -->
-    <alternatives>
-        <class>org.apache.deltaspike.test.security.impl.customsecured.AlternativeSecurityStrategy</class>
-    </alternatives>
-
-    <interceptors>
-        <class>org.apache.deltaspike.security.impl.SecurityInterceptor</class>
-    </interceptors>
+    <!-- DON'T add content to this file - it's >only< needed as marker file for the test-scan -->
 </beans>
