@@ -58,11 +58,10 @@ public class InjectableMethod<X>
     /**
      * Instantiate a new {@link InjectableMethod}.
      *
-     * @param method      the method which will be injected upon a call to
-     *                    {@link #invoke(Object, CreationalContext)}
-     * @param bean        the bean which defines the injectable method
-     * @param beanManager the {@link BeanManager} to use to obtain the parameter
-     *                    values
+     * @param method        the method which will be injected upon a call to
+     *                      {@link #invoke(Object, CreationalContext)}
+     * @param declaringBean the bean which defines the injectable method
+     * @param beanManager   the {@link BeanManager} to use to obtain the parameter values
      */
     public InjectableMethod(AnnotatedMethod<X> method, Bean<?> declaringBean, BeanManager beanManager)
     {
@@ -185,11 +184,25 @@ public class InjectableMethod<X>
             }
         }
 
-        @SuppressWarnings("unchecked")
-        T result = (T) invokeMethod(true, method.getJavaMember(), receiver, parameterValues
-                .toArray(EMPTY_OBJECT_ARRAY));
-
-        return result;
+        try
+        {
+            @SuppressWarnings("unchecked")
+            T result = (T) invokeMethod(true, method.getJavaMember(), receiver, parameterValues
+                    .toArray(EMPTY_OBJECT_ARRAY));
+            return result;
+        }
+        catch (RuntimeException e)
+        {
+            //X TODO check if it is compatible with Weld
+            //workaround for OWB which wraps InvocationTargetException the original exception
+            //see Reflections#invokeMethod
+            if (RuntimeException.class.getName().equals(e.getClass().getName()) &&
+                    e.getCause() instanceof RuntimeException)
+            {
+                throw (RuntimeException)e.getCause();
+            }
+            throw e;
+        }
     }
 
 }

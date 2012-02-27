@@ -16,41 +16,31 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
-
 package org.apache.deltaspike.security.impl;
 
-import java.io.Serializable;
-import java.lang.reflect.Method;
+import org.apache.deltaspike.security.spi.SecurityStrategy;
 
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
-
-import org.apache.deltaspike.security.impl.SecurityExtension.Authorizer;
+import java.io.Serializable;
 
 /**
- * Provides authorization services for component invocations.
+ * Interceptor for {@link SecurityInterceptorBinding} - details see {@link SecurityStrategy}
  */
 @SecurityInterceptorBinding
 @Interceptor
-public class SecurityInterceptor implements Serializable 
+public class SecurityInterceptor implements Serializable
 {
-    private static final long serialVersionUID = -6567750187000766925L;
+    private static final long serialVersionUID = -7094673146532371976L;
 
-    @Inject private SecurityExtension extension;
+    @Inject
+    private SecurityStrategy securityStrategy;
 
     @AroundInvoke
-    public Object aroundInvoke(InvocationContext invocation) throws Exception 
+    public Object filterDeniedInvocations(InvocationContext invocationContext) throws Exception
     {
-        Method method = invocation.getMethod();
-
-        for (Authorizer authorizer : extension.lookupAuthorizerStack(method, invocation.getTarget().getClass())) 
-        {
-            authorizer.authorize(invocation);
-        }
-
-        return invocation.proceed();
+        return this.securityStrategy.execute(invocationContext);
     }
 }
