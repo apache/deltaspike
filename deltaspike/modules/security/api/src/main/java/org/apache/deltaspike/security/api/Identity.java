@@ -88,7 +88,7 @@ public interface Identity
      * another authentication service.
      * 
      */
-    String login();
+    AuthenticationResult login();
 
     /**
      * Logs out the currently authenticated user
