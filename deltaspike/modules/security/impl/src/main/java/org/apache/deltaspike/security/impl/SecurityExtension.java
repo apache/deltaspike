@@ -20,6 +20,8 @@
 package org.apache.deltaspike.security.impl;
 
 import org.apache.deltaspike.core.api.metadata.builder.AnnotatedTypeBuilder;
+import org.apache.deltaspike.core.spi.activation.Deactivatable;
+import org.apache.deltaspike.core.util.ClassDeactivation;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.security.api.Secures;
 import org.apache.deltaspike.security.api.SecurityDefinitionException;
@@ -30,6 +32,7 @@ import javax.enterprise.inject.spi.AfterBeanDiscovery;
 import javax.enterprise.inject.spi.AnnotatedMethod;
 import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.BeforeBeanDiscovery;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import javax.enterprise.inject.spi.ProcessSessionBean;
@@ -41,14 +44,16 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Extension for processing typesafe security annotations
  */
-public class SecurityExtension implements Extension
+public class SecurityExtension implements Extension, Deactivatable
 {
     private static final SecurityInterceptorBinding INTERCEPTOR_BINDING = new SecurityInterceptorBindingLiteral();
 
     //workaround for OWB
     private static final Map<ClassLoader, SecurityMetaDataStorage> SECURITY_METADATA_STORAGE_MAPPING
         = new ConcurrentHashMap<ClassLoader, SecurityMetaDataStorage>();
-    
+
+    private Boolean isActivated = null;
+
     //workaround for OWB
     public static SecurityMetaDataStorage getMetaDataStorage()
     {
@@ -65,6 +70,11 @@ public class SecurityExtension implements Extension
         return securityMetaDataStorage;
     }
 
+    protected void init(@Observes BeforeBeanDiscovery afterBeanDiscovery)
+    {
+        initActivation();
+    }
+
     /**
      * @param <X>
      * @param event
@@ -73,6 +83,11 @@ public class SecurityExtension implements Extension
     @SuppressWarnings("UnusedDeclaration")
     public <X> void processAnnotatedType(@Observes ProcessAnnotatedType<X> event, final BeanManager beanManager)
     {
+        if (!this.isActivated)
+        {
+            return;
+        }
+
         AnnotatedTypeBuilder<X> builder = null;
         AnnotatedType<X> type = event.getAnnotatedType();
         
@@ -135,6 +150,11 @@ public class SecurityExtension implements Extension
     @SuppressWarnings("UnusedDeclaration")
     public void validateBindings(@Observes AfterBeanDiscovery event, BeanManager beanManager)
     {
+        if (!this.isActivated)
+        {
+            return;
+        }
+
         SecurityMetaDataStorage metaDataStorage = getMetaDataStorage();
 
         for (final AnnotatedType<?> type : metaDataStorage.getSecuredTypes())
@@ -196,7 +216,7 @@ public class SecurityExtension implements Extension
     private void registerAuthorizer(AnnotatedMethod<?> m, BeanManager beanManager)
     {
         if (!m.getJavaMember().getReturnType().equals(Boolean.class) &&
-                !m.getJavaMember().getReturnType().equals(Boolean.TYPE)) 
+                !m.getJavaMember().getReturnType().equals(Boolean.TYPE))
         {
             throw new SecurityDefinitionException("Invalid authorizer method [" +
                     m.getJavaMember().getDeclaringClass().getName() + "." +
@@ -210,7 +230,7 @@ public class SecurityExtension implements Extension
         {
             if (SecurityUtils.isMetaAnnotatedWithSecurityBindingType(annotation))
             {
-                if (binding != null) 
+                if (binding != null)
                 {
                     throw new SecurityDefinitionException("Invalid authorizer method [" +
                             m.getJavaMember().getDeclaringClass().getName() + "." +
@@ -223,19 +243,32 @@ public class SecurityExtension implements Extension
         Authorizer authorizer = new Authorizer(binding, m, beanManager);
         getMetaDataStorage().addAuthorizer(authorizer);
     }
-    
+
     /**
      * Ensures that any implementations of the Authenticator interface are not stateless session beans.
-     *  
+     *
      * @param event
      */
     @SuppressWarnings("UnusedDeclaration")
     public void validateAuthenticatorImplementation(@Observes ProcessSessionBean<Authenticator> event)
     {
+        if (!this.isActivated)
+        {
+            return;
+        }
+
         if (SessionBeanType.STATELESS.equals(event.getSessionBeanType()))
         {
             event.addDefinitionError(new IllegalStateException("Authenticator " + 
                 event.getBean().getClass() + " cannot be a Stateless Session Bean"));
+        }
+    }
+
+    public void initActivation()
+    {
+        if (isActivated == null)
+        {
+            isActivated = ClassDeactivation.isActivated(getClass());
         }
     }
 }
