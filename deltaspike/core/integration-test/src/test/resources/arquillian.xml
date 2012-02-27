@@ -39,4 +39,14 @@
     <container qualifier="glassfish-remote-3.1">
     </container>
 
+    <container qualifier="wls-remote-12c">
+        <configuration>
+            <property name="adminUrl">t3://localhost:7001</property>
+            <property name="adminUserName">weblogic1</property>
+            <property name="adminPassword">weblogic1</property>
+            <property name="target">AdminServer</property>
+            <property name="wlsHome">${WLS_HOME}</property>
+        </configuration>
+    </container>
+
 </arquillian>

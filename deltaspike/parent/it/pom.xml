@@ -38,6 +38,14 @@
         <jboss.as.version>7.1.0.CR1b</jboss.as.version>
     </properties>
 
+    <repositories>
+        <repository>
+            <!-- required for org.jboss.arquillian.container:arquillian-wls-remote-12.1 -->
+            <id>JBoss</id>
+            <name>JBoss Repository</name>
+            <url>https://repository.jboss.org/nexus/content/groups/public/</url>
+        </repository>
+    </repositories>
 
     <dependencies>
         <dependency>
@@ -186,6 +194,47 @@
                     <scope>test</scope>
                 </dependency>
             </dependencies>
+        </profile>
+
+        <profile>
+            <id>wls-remote-12c</id>
+            <dependencies>
+
+                <dependency>
+                    <groupId>org.jboss.arquillian.container</groupId>
+                    <artifactId>arquillian-wls-remote-12.1</artifactId>
+                    <version>1.0.0.Alpha2</version>
+                    <scope>test</scope>
+                </dependency>
+
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${maven.surefire.plugin.version}</version>
+                        <configuration>
+                            <systemProperties>
+                                <arquillian.launch>wls-remote-12c</arquillian.launch>
+                            </systemProperties>
+                            <systemPropertyVariables>
+                                <WLS_HOME>${env.WLS_HOME}</WLS_HOME>
+                            </systemPropertyVariables>
+                            <!-- we just use groups to mark that a test should be executed only
+                     with specific environments. even though a java-ee6 application server has to be able to run
+                     all tests in theory, we have to exclude some tests because there are e.g. packaging issues or
+                     there are currently issues with arquillian. if a test isn't restricted to an environment,
+                     no category is used for the test-class. -->
+                            <excludedGroups>
+                                org.apache.deltaspike.test.category.FullProfileCategory,
+                                org.apache.deltaspike.test.category.SeCategory
+                            </excludedGroups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+
         </profile>
 
         <profile>
