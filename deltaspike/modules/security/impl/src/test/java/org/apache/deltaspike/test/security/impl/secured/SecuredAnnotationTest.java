@@ -37,7 +37,7 @@ import javax.enterprise.inject.spi.Extension;
 
 
 /**
- * Test for {@link org.apache.deltaspike.security.api.Secured}
+ * Test for {@link org.apache.deltaspike.security.api.annotation.Secured}
  */
 @RunWith(Arquillian.class)
 public class SecuredAnnotationTest

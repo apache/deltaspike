@@ -31,7 +31,10 @@ import org.apache.deltaspike.security.spi.Authenticator;
  */
 public interface Identity
 {
-    public enum AuthenticationResult {success, failed, exception};
+    public enum AuthenticationResult
+    {
+        success, failed, exception
+    }
     
     /**
      * Simple check that returns true if the user is logged in, without attempting to authenticate

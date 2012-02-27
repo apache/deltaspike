@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.security.impl.secured;
 
-import org.apache.deltaspike.security.api.Secured;
+import org.apache.deltaspike.security.api.annotation.Secured;
 
 import javax.enterprise.context.ApplicationScoped;
 

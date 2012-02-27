@@ -21,14 +21,12 @@ package org.apache.deltaspike.security.api;
 import java.io.Serializable;
 import java.util.Set;
 
-import org.apache.deltaspike.security.api.annotation.Secured;
-
 /**
  * Interface for implementing concrete voters.
  * A voter has to add an instance of
  * {@link SecurityViolation} to the given result-set,
  * if a restriction is detected.<p/>
- * A voter has to be used in combination with {@link Secured}.<p/>
+ * A voter has to be used in combination with {@link org.apache.deltaspike.security.api.annotation.Secured}.<p/>
  * A voter can use every scope which is active. It's recommended to use
  * {@link javax.enterprise.context.ApplicationScoped} for stateless voters and e.g.
  * {@link javax.enterprise.context.RequestScoped} otherwise.
