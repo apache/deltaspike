@@ -16,13 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.security.spi;
 
-import org.apache.deltaspike.core.spi.InterceptorStrategy;
+package org.apache.deltaspike.security.api.annotation;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Marker interface for a pluggable strategy for {@link org.apache.deltaspike.security.api.annotation.Secured}
+ * This annotation is used to delegate a method as the provider for a specific authorization check
  */
-public interface SecurityStrategy extends InterceptorStrategy
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Secures 
 {
 }

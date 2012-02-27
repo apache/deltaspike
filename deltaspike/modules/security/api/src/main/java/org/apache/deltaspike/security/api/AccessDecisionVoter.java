@@ -21,6 +21,8 @@ package org.apache.deltaspike.security.api;
 import java.io.Serializable;
 import java.util.Set;
 
+import org.apache.deltaspike.security.api.annotation.Secured;
+
 /**
  * Interface for implementing concrete voters.
  * A voter has to add an instance of

@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.security.impl;
 
-import org.apache.deltaspike.security.api.SecurityBindingType;
+import org.apache.deltaspike.security.api.annotation.SecurityBindingType;
 
 import javax.enterprise.inject.Stereotype;
 import javax.enterprise.inject.Typed;

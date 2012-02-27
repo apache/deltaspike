@@ -21,8 +21,8 @@ package org.apache.deltaspike.security.impl;
 import org.apache.deltaspike.core.api.metadata.builder.InjectableMethod;
 import org.apache.deltaspike.core.api.metadata.builder.ParameterValueRedefiner;
 import org.apache.deltaspike.security.api.AuthorizationException;
-import org.apache.deltaspike.security.api.SecurityBindingType;
 import org.apache.deltaspike.security.api.SecurityDefinitionException;
+import org.apache.deltaspike.security.api.annotation.SecurityBindingType;
 
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.Stereotype;

@@ -23,8 +23,8 @@ import org.apache.deltaspike.core.api.metadata.builder.AnnotatedTypeBuilder;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivation;
 import org.apache.deltaspike.core.util.ClassUtils;
-import org.apache.deltaspike.security.api.Secures;
 import org.apache.deltaspike.security.api.SecurityDefinitionException;
+import org.apache.deltaspike.security.api.annotation.Secures;
 import org.apache.deltaspike.security.spi.Authenticator;
 
 import javax.enterprise.event.Observes;

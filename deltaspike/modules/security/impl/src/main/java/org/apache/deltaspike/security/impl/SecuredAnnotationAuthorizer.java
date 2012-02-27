@@ -23,9 +23,9 @@ import org.apache.deltaspike.security.api.AccessDecisionState;
 import org.apache.deltaspike.security.api.AccessDecisionVoter;
 import org.apache.deltaspike.security.api.AccessDecisionVoterContext;
 import org.apache.deltaspike.security.api.AccessDeniedException;
-import org.apache.deltaspike.security.api.Secured;
-import org.apache.deltaspike.security.api.Secures;
 import org.apache.deltaspike.security.api.SecurityViolation;
+import org.apache.deltaspike.security.api.annotation.Secured;
+import org.apache.deltaspike.security.api.annotation.Secures;
 import org.apache.deltaspike.security.spi.EditableAccessDecisionVoterContext;
 
 import javax.enterprise.context.Dependent;

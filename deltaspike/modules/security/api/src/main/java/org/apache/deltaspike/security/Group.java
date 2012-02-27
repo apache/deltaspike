@@ -16,13 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.security.spi;
 
-import org.apache.deltaspike.core.spi.InterceptorStrategy;
+package org.apache.deltaspike.security;
 
-/**
- * Marker interface for a pluggable strategy for {@link org.apache.deltaspike.security.api.annotation.Secured}
- */
-public interface SecurityStrategy extends InterceptorStrategy
+public interface Group
 {
+
 }
