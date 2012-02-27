@@ -27,7 +27,6 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
@@ -46,6 +45,7 @@ public class SecuredAnnotationTest
     @Deployment
     public static WebArchive deploy()
     {
+        //X TODO remove this workaround
         boolean isOwbAvailable = ClassUtils.tryToLoadClassForName("org.apache.webbeans.spi.ContainerLifecycle") != null;
 
         String[] excludedFiles;
@@ -94,7 +94,7 @@ public class SecuredAnnotationTest
         }
     }
 
-    //@Test
+    @Test
     public void interceptorTestWithStereotype()
     {
         SecuredBean2 testBean = BeanProvider.getContextualReference(SecuredBean2.class, false);
@@ -112,7 +112,7 @@ public class SecuredAnnotationTest
         }
     }
 
-    //@Test
+    @Test
     public void simpleInterceptorTestOnMethods()
     {
         SecuredBean3 testBean = BeanProvider.getContextualReference(SecuredBean3.class, false);
