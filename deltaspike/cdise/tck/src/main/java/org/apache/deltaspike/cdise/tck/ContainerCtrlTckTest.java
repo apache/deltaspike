@@ -84,9 +84,6 @@ public class ContainerCtrlTckTest
         cc.stop();
     }
 
-    //X TODO reactivate after the update to owb 1.1.4
-    //@Test
-
     /**
      * Stops and starts: application-, session- and request-scope.
      * <p/>
@@ -96,6 +93,7 @@ public class ContainerCtrlTckTest
      * <p/>
      * If the deepest ref has the expected value, all levels in between were resetted correctly.
      */
+    @Test
     public void reStartContexts()
     {
         CdiContainer cdiContainer = CdiContainerLoader.getCdiContainer();
@@ -129,11 +127,16 @@ public class ContainerCtrlTckTest
         try
         {
             Assert.assertNotNull(carRepair.getCar());
-            Assert.fail();
+
+            //not supported by weld - AbstractSharedContext#isActive always return true
+            if (!cdiContainer.getClass().getName().contains(".weld."))
+            {
+                Assert.fail();
+            }
         }
         catch (ContextNotActiveException e)
         {
-            //exception expected
+            //do nothing - exception expected
         }
 
         cdiContainer.startContexts();

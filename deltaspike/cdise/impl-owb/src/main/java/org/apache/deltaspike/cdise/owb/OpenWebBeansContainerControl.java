@@ -18,9 +18,11 @@
  */
 package org.apache.deltaspike.cdise.owb;
 
-import java.lang.annotation.Annotation;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.deltaspike.cdise.api.CdiContainer;
+import org.apache.webbeans.config.WebBeansContext;
+import org.apache.webbeans.context.ContextFactory;
+import org.apache.webbeans.context.type.ContextTypes;
+import org.apache.webbeans.spi.ContainerLifecycle;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.ConversationScoped;
@@ -29,13 +31,11 @@ import javax.enterprise.context.SessionScoped;
 import javax.enterprise.context.spi.Context;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Singleton;
-
-import org.apache.deltaspike.cdise.api.CdiContainer;
-
-import org.apache.webbeans.config.WebBeansContext;
-import org.apache.webbeans.context.ContextFactory;
-import org.apache.webbeans.context.type.ContextTypes;
-import org.apache.webbeans.spi.ContainerLifecycle;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * OpenWebBeans specific implementation of {@link org.apache.deltaspike.cdise.api.CdiContainer}.
@@ -44,9 +44,17 @@ public class OpenWebBeansContainerControl implements CdiContainer
 {
     private static final Logger LOG = Logger.getLogger(OpenWebBeansContainerControl.class.getName());
 
-    private ContainerLifecycle  lifecycle = null;
-    private MockServletContext servletContext = null;
-    private MockHttpSession     session = null;
+    private ContainerLifecycle lifecycle;
+    private MockServletContext servletContext;
+    private MockHttpSession session;
+
+    private Boolean resetSuccessful;
+
+    @Override
+    public  BeanManager getBeanManager()
+    {
+        return lifecycle.getBeanManager();
+    }
 
     @Override
     public void start()
@@ -62,14 +70,17 @@ public class OpenWebBeansContainerControl implements CdiContainer
         shutdownContainer();
     }
 
+    @Override
     public void bootContainer()
     {
         servletContext = new MockServletContext();
         session = new MockHttpSession();
+
         lifecycle = WebBeansContext.getInstance().getService(ContainerLifecycle.class);
         lifecycle.startApplication(servletContext);
     }
 
+    @Override
     public void shutdownContainer()
     {
         if (lifecycle != null) 
@@ -78,34 +89,19 @@ public class OpenWebBeansContainerControl implements CdiContainer
         }
     }
 
+    @Override
     public void startContexts()
     {
-        WebBeansContext webBeansContext = WebBeansContext.getInstance();
-        ContextFactory contextFactory = webBeansContext.getContextFactory();
+        ContextFactory contextFactory = getContextFactory();
 
         contextFactory.initSingletonContext(servletContext);
         contextFactory.initApplicationContext(servletContext);
         contextFactory.initSessionContext(session);
-        contextFactory.initConversationContext(null);
         contextFactory.initRequestContext(null);
-    }
-
-    private void startApplicationScope()
-    {
-        WebBeansContext webBeansContext = WebBeansContext.getInstance();
-        ContextFactory contextFactory = webBeansContext.getContextFactory();
-
-        contextFactory.initApplicationContext(servletContext);
-    }
-
-    public void startConversationScope()
-    {
-        WebBeansContext webBeansContext = WebBeansContext.getInstance();
-        ContextFactory contextFactory = webBeansContext.getContextFactory();
-
         contextFactory.initConversationContext(null);
     }
 
+    @Override
     public void startContext(Class<? extends Annotation> scopeClass)
     {
         if (scopeClass.isAssignableFrom(ApplicationScoped.class))
@@ -126,74 +122,13 @@ public class OpenWebBeansContainerControl implements CdiContainer
         }
     }
 
-    private void startRequestScope()
-    {
-        WebBeansContext webBeansContext = WebBeansContext.getInstance();
-        ContextFactory contextFactory = webBeansContext.getContextFactory();
-
-        contextFactory.initRequestContext(null);
-    }
-
-    private void startSessionScope()
-    {
-        WebBeansContext webBeansContext = WebBeansContext.getInstance();
-        ContextFactory contextFactory = webBeansContext.getContextFactory();
-
-        contextFactory.initSessionContext(session);
-    }
-
     public void stopContexts()
     {
-        WebBeansContext webBeansContext = WebBeansContext.getInstance();
-        ContextFactory contextFactory = webBeansContext.getContextFactory();
-
         stopSessionScope();
         stopConversationScope();
         stopRequestScope();
         stopApplicationScope();
-
-        Context context = contextFactory.getStandardContext(ContextTypes.SINGLETON);
-        if (context != null && context.isActive())
-        {
-            contextFactory.destroySingletonContext(servletContext);
-        }
-        else
-        {
-            logDestroyOfInactiveContext(Singleton.class.getName());
-        }
-
-    }
-
-    public void stopApplicationScope()
-    {
-        WebBeansContext webBeansContext = WebBeansContext.getInstance();
-        ContextFactory contextFactory = webBeansContext.getContextFactory();
-
-        Context context = contextFactory.getStandardContext(ContextTypes.APPLICATION);
-        if (context != null && context.isActive())
-        {
-            contextFactory.destroyApplicationContext(servletContext);
-        }
-        else
-        {
-            logDestroyOfInactiveContext(ApplicationScoped.class.getName());
-        }
-    }
-
-    public void stopConversationScope()
-    {
-        WebBeansContext webBeansContext = WebBeansContext.getInstance();
-        ContextFactory contextFactory = webBeansContext.getContextFactory();
-
-        Context context = contextFactory.getStandardContext(ContextTypes.CONVERSATION);
-        if (context != null && context.isActive())
-        {
-            contextFactory.destroyConversationContext();
-        }
-        else
-        {
-            logDestroyOfInactiveContext(ConversationScoped.class.getName());
-        }
+        stopSingletonScope();
     }
 
     public void stopContext(Class<? extends Annotation> scopeClass)
@@ -216,15 +151,99 @@ public class OpenWebBeansContainerControl implements CdiContainer
         }
     }
 
-    public void stopRequestScope()
+    /*
+     * start scopes
+     */
+
+    private void startApplicationScope()
     {
-        WebBeansContext webBeansContext = WebBeansContext.getInstance();
-        ContextFactory contextFactory = webBeansContext.getContextFactory();
+        ContextFactory contextFactory = getContextFactory();
+
+        contextFactory.initApplicationContext(servletContext);
+    }
+
+    private void startSessionScope()
+    {
+        ContextFactory contextFactory = getContextFactory();
+
+        contextFactory.initSessionContext(session);
+    }
+
+    private void startRequestScope()
+    {
+        ContextFactory contextFactory = getContextFactory();
+
+        contextFactory.initRequestContext(null);
+    }
+
+    private void startConversationScope()
+    {
+        ContextFactory contextFactory = getContextFactory();
+
+        contextFactory.initConversationContext(null);
+    }
+
+    /*
+     * stop scopes
+     */
+
+    private void stopSingletonScope()
+    {
+        ContextFactory contextFactory = getContextFactory();
+
+        Context context = contextFactory.getStandardContext(ContextTypes.SINGLETON);
+        if (context != null && context.isActive())
+        {
+            contextFactory.destroySingletonContext(servletContext);
+            resetCache();
+        }
+        else
+        {
+            logDestroyOfInactiveContext(Singleton.class.getName());
+        }
+    }
+
+    private void stopApplicationScope()
+    {
+        ContextFactory contextFactory = getContextFactory();
+
+        Context context = contextFactory.getStandardContext(ContextTypes.APPLICATION);
+        if (context != null && context.isActive())
+        {
+            contextFactory.destroyApplicationContext(servletContext);
+            resetCache();
+        }
+        else
+        {
+            logDestroyOfInactiveContext(ApplicationScoped.class.getName());
+        }
+    }
+
+    private void stopSessionScope()
+    {
+        ContextFactory contextFactory = getContextFactory();
+
+        Context context = contextFactory.getStandardContext(ContextTypes.SESSION);
+        if (context != null && context.isActive())
+        {
+            contextFactory.destroySessionContext(session);
+            resetCache();
+        }
+        else
+        {
+            logDestroyOfInactiveContext(SessionScoped.class.getName());
+        }
+    }
+
+    private void stopRequestScope()
+    {
+        ContextFactory contextFactory = getContextFactory();
 
         Context context = contextFactory.getStandardContext(ContextTypes.REQUEST);
         if (context != null && context.isActive())
         {
             contextFactory.destroyRequestContext(null);
+            resetCache();
         }
         else
         {
@@ -232,25 +251,62 @@ public class OpenWebBeansContainerControl implements CdiContainer
         }
     }
 
-    public void stopSessionScope()
+    private void stopConversationScope()
     {
-        WebBeansContext webBeansContext = WebBeansContext.getInstance();
-        ContextFactory contextFactory = webBeansContext.getContextFactory();
+        ContextFactory contextFactory = getContextFactory();
 
-        Context context = contextFactory.getStandardContext(ContextTypes.SESSION);
+        Context context = contextFactory.getStandardContext(ContextTypes.CONVERSATION);
         if (context != null && context.isActive())
         {
-            contextFactory.destroySessionContext(session);
+            contextFactory.destroyConversationContext();
+            resetCache();
         }
         else
         {
-            logDestroyOfInactiveContext(SessionScoped.class.getName());
+            logDestroyOfInactiveContext(ConversationScoped.class.getName());
         }
     }
-    
-    public  BeanManager getBeanManager() 
+
+    //workaround for OWB-650
+    private void resetCache()
     {
-        return lifecycle.getBeanManager();
+        if (Boolean.FALSE.equals(this.resetSuccessful))
+        {
+            return;
+        }
+
+        BeanManager beanManager = getBeanManager();
+
+        try
+        {
+            Field cacheProxiesField = beanManager.getClass().getDeclaredField("cacheProxies");
+            cacheProxiesField.setAccessible(true);
+            Map cacheProxies = (Map)cacheProxiesField.get(beanManager);
+
+            if (cacheProxies != null)
+            {
+                cacheProxies.clear();
+                this.resetSuccessful = true;
+            }
+        }
+        catch (Exception e)
+        {
+            //do nothing - it's a different version of OWB which isn't tested but
+            //might not have a cache and is therefore compatible.
+            this.resetSuccessful = false;
+        }
+        catch (LinkageError e)
+        {
+            //do nothing - a new version of owb is used which introduced other required dependencies.
+            //OWB-650 should be fixed in this version already
+            this.resetSuccessful = false;
+        }
+    }
+
+    private ContextFactory getContextFactory()
+    {
+        WebBeansContext webBeansContext = WebBeansContext.getInstance();
+        return webBeansContext.getContextFactory();
     }
 
     private void logDestroyOfInactiveContext(String contextName)
