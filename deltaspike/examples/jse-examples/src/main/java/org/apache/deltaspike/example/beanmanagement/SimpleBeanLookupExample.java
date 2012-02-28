@@ -50,8 +50,11 @@ public class SimpleBeanLookupExample
 
         CdiContainer cdiContainer = CdiContainerLoader.getCdiContainer();
         cdiContainer.bootContainer();
-        //containerControl.startContexts();
         cdiContainer.startContext(ApplicationScoped.class);
+        //containerControl.startContexts();
+
+        //or:
+        //cdiContainer.start();
 
         List<EchoService> echoServiceList = BeanProvider.getContextualReferences(EchoService.class, false);
 
@@ -90,8 +93,12 @@ public class SimpleBeanLookupExample
             LOG.severe("Unexpected implementation found: " + optionalService.getClass().getName());
         }
 
-        cdiContainer.stopContext(ApplicationScoped.class);
+        cdiContainer.stop();
+
+        //or:
         //containerControl.stopContexts();
-        cdiContainer.shutdownContainer();
+        //cdiContainer.shutdownContainer();
+
+        //cdiContainer.stopContext(ApplicationScoped.class); //doesn't work with weld right now - see WELD-1072
     }
 }

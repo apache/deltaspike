@@ -27,25 +27,55 @@
     </parent>
 
     <groupId>org.apache.deltaspike.examples</groupId>
-    <artifactId>deltaspike-jse-owb-example</artifactId>
+    <artifactId>deltaspike-jse-example</artifactId>
 
-    <name>Apache DeltaSpike Java-SE/OpenWebBeans Examples</name>
+    <name>Apache DeltaSpike Java-SE Examples</name>
 
     <packaging>jar</packaging>
 
+    <profiles>
+        <profile>
+            <id>OWB</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.openwebbeans</groupId>
+                    <artifactId>openwebbeans-impl</artifactId>
+                    <scope>compile</scope>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.apache.openwebbeans</groupId>
+                    <artifactId>openwebbeans-spi</artifactId>
+                    <scope>compile</scope>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.apache.deltaspike.cdise</groupId>
+                    <artifactId>deltaspike-cdise-owb</artifactId>
+                    <scope>runtime</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>Weld</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.deltaspike.cdise</groupId>
+                    <artifactId>deltaspike-cdise-weld</artifactId>
+                    <scope>runtime</scope>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.jboss.weld.se</groupId>
+                    <artifactId>weld-se</artifactId>
+                    <version>${weld.version}</version>
+                    <scope>runtime</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+
     <dependencies>
-        <dependency>
-            <groupId>org.apache.openwebbeans</groupId>
-            <artifactId>openwebbeans-impl</artifactId>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.openwebbeans</groupId>
-            <artifactId>openwebbeans-spi</artifactId>
-            <scope>compile</scope>
-        </dependency>
-
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
             <artifactId>geronimo-jcdi_1.0_spec</artifactId>
@@ -64,17 +94,16 @@
             <scope>compile</scope>
         </dependency>
 
+        <!-- DeltaSpike modules -->
         <dependency>
             <groupId>org.apache.deltaspike.core</groupId>
             <artifactId>deltaspike-core-api</artifactId>
-            <version>0.2-incubating-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>org.apache.deltaspike.core</groupId>
             <artifactId>deltaspike-core-impl</artifactId>
-            <version>0.2-incubating-SNAPSHOT</version>
             <scope>runtime</scope>
         </dependency>
 
@@ -95,13 +124,6 @@
             <groupId>org.apache.deltaspike.cdise</groupId>
             <artifactId>deltaspike-cdise-api</artifactId>
             <scope>compile</scope>
-        </dependency>
-
-        <!-- TODO Add profiles -->
-        <dependency>
-            <groupId>org.apache.deltaspike.cdise</groupId>
-            <artifactId>deltaspike-cdise-owb</artifactId>
-            <scope>runtime</scope>
         </dependency>
 
         <!-- TODO refactoring - this dependency shouldn't be needed -->
