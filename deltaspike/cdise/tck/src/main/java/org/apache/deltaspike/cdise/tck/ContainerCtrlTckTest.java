@@ -19,17 +19,17 @@
 package org.apache.deltaspike.cdise.tck;
 
 
+import org.apache.deltaspike.cdise.api.CdiContainer;
+import org.apache.deltaspike.cdise.api.CdiContainerLoader;
+import org.apache.deltaspike.cdise.tck.beans.CarRepair;
+import org.junit.Assert;
+import org.junit.Test;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.ContextNotActiveException;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import java.util.Set;
-
-import org.apache.deltaspike.cdise.api.CdiContainer;
-import org.apache.deltaspike.cdise.api.CdiContainerLoader;
-
-import org.apache.deltaspike.cdise.tck.beans.CarRepair;
-import org.junit.Test;
-
-import org.junit.Assert;
 
 /**
  * TCK test for the {@link org.apache.deltaspike.cdise.api.CdiContainer}
@@ -37,7 +37,7 @@ import org.junit.Assert;
 public class ContainerCtrlTckTest
 {
     @Test
-    public void testContainerBoot() throws Exception
+    public void testContainerBoot()
     {
         CdiContainer cc = CdiContainerLoader.getCdiContainer();
         Assert.assertNotNull(cc);
@@ -62,7 +62,7 @@ public class ContainerCtrlTckTest
     }
 
     @Test
-    public void testSimpleContainerBoot() throws Exception
+    public void testSimpleContainerBoot()
     {
         CdiContainer cc = CdiContainerLoader.getCdiContainer();
         Assert.assertNotNull(cc);
@@ -82,5 +82,69 @@ public class ContainerCtrlTckTest
         Assert.assertNotNull(carRepair.getCar().getUsr());
 
         cc.stop();
+    }
+
+    //X TODO reactivate after the update to owb 1.1.4
+    //@Test
+
+    /**
+     * Stops and starts: application-, session- and request-scope.
+     * <p/>
+     * application-scoped instance has a ref to
+     * request-scoped instance which has a ref to
+     * session-scoped instance.
+     * <p/>
+     * If the deepest ref has the expected value, all levels in between were resetted correctly.
+     */
+    public void reStartContexts()
+    {
+        CdiContainer cdiContainer = CdiContainerLoader.getCdiContainer();
+        Assert.assertNotNull(cdiContainer);
+
+        cdiContainer.start();
+
+        BeanManager beanManager = cdiContainer.getBeanManager();
+        Assert.assertNotNull(beanManager);
+
+        Set<Bean<?>> beans = beanManager.getBeans(CarRepair.class);
+        Bean<?> bean = beanManager.resolve(beans);
+
+        CarRepair carRepair = (CarRepair)
+            beanManager.getReference(bean, CarRepair.class, beanManager.createCreationalContext(bean));
+
+        Assert.assertNotNull(carRepair);
+
+        Assert.assertNotNull(carRepair.getCar());
+        Assert.assertNotNull(carRepair.getCar().getUsr());
+
+        carRepair.getCar().getUsr().setName("tester");
+        Assert.assertEquals("tester", carRepair.getCar().getUsr().getName());
+
+        cdiContainer.stopContexts();
+        cdiContainer.stopContext(ApplicationScoped.class); //workaround for weld - see WELD-1072
+
+        carRepair = (CarRepair)
+            beanManager.getReference(bean, CarRepair.class, beanManager.createCreationalContext(bean));
+
+        try
+        {
+            Assert.assertNotNull(carRepair.getCar());
+            Assert.fail();
+        }
+        catch (ContextNotActiveException e)
+        {
+            //exception expected
+        }
+
+        cdiContainer.startContexts();
+
+        carRepair = (CarRepair)
+            beanManager.getReference(bean, CarRepair.class, beanManager.createCreationalContext(bean));
+
+        Assert.assertNotNull(carRepair.getCar());
+        Assert.assertNotNull(carRepair.getCar().getUsr());
+        Assert.assertNull(carRepair.getCar().getUsr().getName());
+
+        cdiContainer.stop();
     }
 }
