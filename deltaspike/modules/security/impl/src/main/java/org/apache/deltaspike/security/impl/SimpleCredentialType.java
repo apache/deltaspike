@@ -16,24 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.security.impl.secured;
+package org.apache.deltaspike.security.impl;
 
-import org.apache.deltaspike.security.api.annotation.Secured;
+import org.apache.deltaspike.security.api.CredentialType;
 
-import javax.enterprise.inject.Stereotype;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
-@Stereotype
-
-@Retention(value = RUNTIME)
-@Target({TYPE, METHOD} )
-
-@Secured(TestAccessDecisionVoter.class)
-public @interface SecuredBeanWithStereotype
+public class SimpleCredentialType implements CredentialType 
 {
+    private final String name;
+
+    public SimpleCredentialType(String name)
+    {
+        this.name = name;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
 }

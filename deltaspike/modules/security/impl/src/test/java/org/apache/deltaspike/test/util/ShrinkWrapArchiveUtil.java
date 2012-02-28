@@ -120,7 +120,8 @@ public class ShrinkWrapArchiveUtil
     private static JavaArchive addJarArchive(InputStream inputStream,
                                              String[] includeIfPackageExists,
                                              String[] excludeIfPackageExists)
-            throws IOException {
+        throws IOException 
+    {
         JavaArchive ret = null;
         JavaArchive javaArchive = ShrinkWrap.create(JavaArchive.class);
 

@@ -61,9 +61,8 @@ public interface Identity
      * This method is intended to be used primarily as an internal API call, however has been made 
      * public for convenience.
      *
-     * @return true if the user is logged in, false otherwise
      */
-    boolean quietLogin();
+    void quietLogin();
 
     /**
      * Returns the currently authenticated user
@@ -81,15 +80,14 @@ public interface Identity
      * org.jboss.seam.security.events.LoginFailedEvent - raised when authentication fails
      * org.jboss.seam.security.events.AlreadyLoggedInEvent - raised if the user is already authenticated
      *
-     * @return String returns RESPONSE_LOGIN_SUCCESS if user is authenticated, 
-     * RESPONSE_LOGIN_FAILED if authentication failed, or
-     * RESPONSE_LOGIN_EXCEPTION if an exception occurred during authentication. These response
-     * codes may be used to control user navigation.  For deferred authentication methods, such as Open ID
-     * the login() method will return an immediate result of RESPONSE_LOGIN_FAILED (and subsequently fire
+     * @return AuthenticationResult returns success if user is authenticated, 
+     * failed if authentication failed, or
+     * exception if an exception occurred during authentication. These response
+     * values may be used to control user navigation.  For deferred authentication methods, such as Open ID
+     * the login() method will return an immediate result of failed (and subsequently fire
      * a LoginFailedEvent) however in these conditions it is the responsibility of the Authenticator
      * implementation to take over the authentication process, for example by redirecting the user to
-     * another authentication service.
-     * 
+     * a third party authentication service such as an OpenID provider.
      */
     AuthenticationResult login();
 
