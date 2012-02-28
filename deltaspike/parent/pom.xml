@@ -340,6 +340,13 @@
             </dependency>
 
             <dependency>
+                <groupId>org.apache.deltaspike.cdise</groupId>
+                <artifactId>deltaspike-cdise-weld</artifactId>
+                <version>${project.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+
+            <dependency>
                 <groupId>org.apache.geronimo.specs</groupId>
                 <artifactId>geronimo-servlet_2.5_spec</artifactId>
                 <version>1.2</version>
