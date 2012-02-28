@@ -32,7 +32,7 @@ import java.util.Map;
 /**
  * {@inheritDoc}
  */
-@RequestScoped //TODO we might need a scope for it
+@RequestScoped //TODO we might need a different scope for it
 public class DefaultAccessDecisionVoterContext implements EditableAccessDecisionVoterContext
 {
     private AccessDecisionState state = AccessDecisionState.INITIAL;
