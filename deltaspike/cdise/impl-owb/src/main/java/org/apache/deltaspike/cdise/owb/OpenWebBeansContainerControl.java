@@ -48,6 +48,20 @@ public class OpenWebBeansContainerControl implements CdiContainer
     private MockServletContext servletContext = null;
     private MockHttpSession     session = null;
 
+    @Override
+    public void start()
+    {
+        bootContainer();
+        startContexts();
+    }
+
+    @Override
+    public void stop()
+    {
+        stopContexts();
+        shutdownContainer();
+    }
+
     public void bootContainer()
     {
         servletContext = new MockServletContext();

@@ -36,7 +36,6 @@ import org.junit.Assert;
  */
 public class ContainerCtrlTckTest
 {
-
     @Test
     public void testContainerBoot() throws Exception
     {
@@ -60,5 +59,28 @@ public class ContainerCtrlTckTest
 
         cc.stopContexts();
         cc.shutdownContainer();
+    }
+
+    @Test
+    public void testSimpleContainerBoot() throws Exception
+    {
+        CdiContainer cc = CdiContainerLoader.getCdiContainer();
+        Assert.assertNotNull(cc);
+
+        cc.start();
+
+        BeanManager bm = cc.getBeanManager();
+        Assert.assertNotNull(bm);
+
+        Set<Bean<?>> beans = bm.getBeans(CarRepair.class);
+        Bean<?> bean = bm.resolve(beans);
+
+        CarRepair carRepair = (CarRepair) bm.getReference(bean, CarRepair.class, bm.createCreationalContext(bean));
+        Assert.assertNotNull(carRepair);
+
+        Assert.assertNotNull(carRepair.getCar());
+        Assert.assertNotNull(carRepair.getCar().getUsr());
+
+        cc.stop();
     }
 }

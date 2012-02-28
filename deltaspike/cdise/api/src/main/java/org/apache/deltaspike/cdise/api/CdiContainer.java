@@ -36,6 +36,16 @@ import javax.enterprise.inject.spi.BeanManager;
 public interface CdiContainer
 {
     /**
+     * Helper which calls #bootContainer and #startContexts
+     */
+    void start();
+
+    /**
+     * Helper which calls #stopContexts and #shutdownContainer
+     */
+    void stop();
+
+    /**
      * Booting the CdiTestContainer will scan the whole classpath
      * for Beans and extensions available.
      * The container might throw a DeploymentException or similar on startup.

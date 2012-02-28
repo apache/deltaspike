@@ -37,8 +37,6 @@
         <module>api</module>
         <module>tck</module>
         <module>impl-owb</module>
-        <!--
-                <module>impl-weld</modul>
-        -->
+        <module>impl-weld</module>
     </modules>
 </project>
