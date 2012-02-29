@@ -59,6 +59,17 @@
 
     <profiles>
         <profile>
+            <id>BackwardCompatibility</id>
+            <repositories>
+                <repository>
+                    <id>JBoss-Archive</id>
+                    <name>JBoss Archive</name>
+                    <url>https://repository.jboss.org/nexus/content/groups/public</url>
+                </repository>
+            </repositories>
+        </profile>
+
+        <profile>
             <!-- use this profile to compile and test DeltaSpike with Apache OpenWebBeans -->
             <id>OWB</id>
 

@@ -42,6 +42,18 @@
         </repository>
     </repositories>
 
+    <profiles>
+        <profile>
+            <id>BackwardCompatibility</id>
+            <repositories>
+                <repository>
+                    <id>JBoss-Archive</id>
+                    <name>JBoss Archive</name>
+                    <url>https://repository.jboss.org/nexus/content/groups/public</url>
+                </repository>
+            </repositories>
+        </profile>
+    </profiles>
 
     <issueManagement>
         <system>jira</system>
