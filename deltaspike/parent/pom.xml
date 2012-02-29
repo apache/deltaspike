@@ -44,7 +44,7 @@
 
     <profiles>
         <profile>
-            <id>BackwardCompatibility</id>
+            <id>JBossArchive</id>
             <repositories>
                 <repository>
                     <id>JBoss-Archive</id>
