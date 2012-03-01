@@ -23,7 +23,6 @@ import java.util.Set;
 import org.apache.deltaspike.security.Group;
 import org.apache.deltaspike.security.api.annotation.LoggedIn;
 import org.apache.deltaspike.security.api.annotation.Secures;
-import org.apache.deltaspike.security.spi.Authenticator;
 
 /**
  * Represents the identity of the current user, and provides an API for authentication and authorization. 
@@ -134,13 +133,4 @@ public interface Identity
      * @return
      */
     Set<Group> getGroups();
-
-    Class<? extends Authenticator> getAuthenticatorClass();
-
-    void setAuthenticatorClass(Class<? extends Authenticator> authenticatorClass);
-
-    String getAuthenticatorName();
-
-    void setAuthenticatorName(String authenticatorName);
-
 }

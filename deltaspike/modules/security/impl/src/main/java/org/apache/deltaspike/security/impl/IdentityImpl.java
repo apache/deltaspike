@@ -28,6 +28,7 @@ import javax.inject.Inject;
 
 import org.apache.deltaspike.security.Group;
 import org.apache.deltaspike.security.api.AuthenticationException;
+import org.apache.deltaspike.security.api.AuthenticatorSelector;
 import org.apache.deltaspike.security.api.Credentials;
 import org.apache.deltaspike.security.api.Identity;
 import org.apache.deltaspike.security.api.Role;
@@ -35,10 +36,13 @@ import org.apache.deltaspike.security.api.User;
 import org.apache.deltaspike.security.api.events.AlreadyLoggedInEvent;
 import org.apache.deltaspike.security.api.events.LoggedInEvent;
 import org.apache.deltaspike.security.api.events.LoginFailedEvent;
+import org.apache.deltaspike.security.api.events.PostAuthenticateEvent;
 import org.apache.deltaspike.security.api.events.PostLoggedOutEvent;
+import org.apache.deltaspike.security.api.events.PreAuthenticateEvent;
 import org.apache.deltaspike.security.api.events.PreLoggedOutEvent;
 import org.apache.deltaspike.security.api.events.QuietLoginEvent;
 import org.apache.deltaspike.security.spi.Authenticator;
+import org.apache.deltaspike.security.spi.Authenticator.AuthenticationStatus;
 
 /**
  * Default Identity implementation
@@ -54,15 +58,21 @@ public class IdentityImpl implements Identity
     @Inject 
     private Instance<RequestSecurityState> requestSecurityState;
     
+    @Inject
+    private Instance<AuthenticatorSelector> authenticatorSelector;
+    
+    private Authenticator activeAuthenticator;
+    
     private User user;
-    
-    private Class<? extends Authenticator> authenticatorClass;
-    
-    private String authenticatorName;    
     
     private Set<Role> userRoles = new HashSet<Role>();
 
     private Set<Group> userGroups = new HashSet<Group>();    
+    
+    /**
+     * Flag indicating whether we are currently authenticating
+     */
+    private boolean authenticating;
 
     public boolean isLoggedIn() 
     {
@@ -155,8 +165,126 @@ public class IdentityImpl implements Identity
     
     protected boolean authenticate() throws AuthenticationException 
     {
-        // TODO discuss authentication API
-        return false;
+        if (authenticating) 
+        {
+            authenticating = false;
+            throw new IllegalStateException("Authentication already in progress.");
+        }
+
+        try 
+        {
+            authenticating = true;
+
+            user = null;
+
+            beanManager.fireEvent(new PreAuthenticateEvent());
+
+            activeAuthenticator = authenticatorSelector.get().getSelectedAuthenticator();
+
+            if (activeAuthenticator == null) 
+            {
+                authenticating = false;
+                throw new AuthenticationException("An Authenticator could not be located");
+            }
+
+            activeAuthenticator.authenticate();
+
+            if (activeAuthenticator.getStatus() == null) 
+            {
+                throw new AuthenticationException("Authenticator must return a valid authentication status");
+            }
+
+            switch (activeAuthenticator.getStatus()) 
+            {
+                case SUCCESS:
+                    postAuthenticate();
+                    return true;
+                case FAILURE:
+                default:
+                    authenticating = false;
+                    return false;
+            }
+        } 
+        catch (Exception ex) 
+        {
+            authenticating = false;
+            if (ex instanceof AuthenticationException) 
+            {
+                throw (AuthenticationException) ex;
+            } 
+            else 
+            {
+                throw new AuthenticationException("Authentication failed.", ex);
+            }
+        }
+    }    
+    
+    protected void postAuthenticate() 
+    {
+        if (activeAuthenticator == null) 
+        {
+            throw new IllegalStateException("activeAuthenticator is null");
+        }
+
+        try 
+        {
+            activeAuthenticator.postAuthenticate();
+
+            if (!activeAuthenticator.getStatus().equals(AuthenticationStatus.SUCCESS))
+            {
+                return;
+            }
+
+            user = activeAuthenticator.getUser();
+
+            if (user == null) 
+            {
+                throw new AuthenticationException(
+                        "Authenticator must provide a non-null User after successful authentication");
+            }
+
+            if (isLoggedIn()) 
+            {
+                // TODO rewrite this once we decide how user privilege state is managed
+                
+                /**if (!preAuthenticationRoles.isEmpty()) 
+                {
+                    for (String group : preAuthenticationRoles.keySet()) 
+                    {
+                        Map<String, List<String>> groupTypeRoles = preAuthenticationRoles.get(group);
+                        for (String groupType : groupTypeRoles.keySet()) 
+                        {
+                            for (String roleType : groupTypeRoles.get(groupType)) 
+                            {
+                                addRole(roleType, group, groupType);
+                            }
+                        }
+                    }
+                    preAuthenticationRoles.clear();
+                }
+
+                if (!preAuthenticationGroups.isEmpty()) 
+                {
+                    for (String group : preAuthenticationGroups.keySet()) 
+                    {
+                        for (String groupType : preAuthenticationGroups.get(group)) 
+                        {
+                            activeGroups.add(new SimpleGroup(group, groupType));
+                        }
+                    }
+                    preAuthenticationGroups.clear();
+                }*/
+            }
+
+            beanManager.fireEvent(new PostAuthenticateEvent());
+        } 
+        finally 
+        {
+            // Set credential to null whether authentication is successful or not
+            activeAuthenticator = null;
+            credentials.setCredential(null);
+            authenticating = false;
+        }
     }    
 
     @Override
@@ -213,25 +341,5 @@ public class IdentityImpl implements Identity
     public Set<Group> getGroups() 
     {
         return Collections.unmodifiableSet(userGroups);
-    }
-
-    public Class<? extends Authenticator> getAuthenticatorClass() 
-    {
-        return authenticatorClass;
-    }
-
-    public void setAuthenticatorClass(Class<? extends Authenticator> authenticatorClass) 
-    {
-        this.authenticatorClass = authenticatorClass;
-    }
-
-    public String getAuthenticatorName() 
-    {
-        return authenticatorName;
-    }
-
-    public void setAuthenticatorName(String authenticatorName) 
-    {
-        this.authenticatorName = authenticatorName;
     }
 }

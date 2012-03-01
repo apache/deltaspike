@@ -69,8 +69,8 @@ public class SecuredAnnotationTest
                 .addAsLibraries(ShrinkWrapArchiveUtil.getArchives(null,
                         "META-INF/beans.xml",
                         new String[]{"org.apache.deltaspike.core",
-                                "org.apache.deltaspike.security",
-                                "org.apache.deltaspike.test.security.impl.secured"},
+                            "org.apache.deltaspike.security",
+                            "org.apache.deltaspike.test.security.impl.secured"},
                         excludedFiles))
                 .addAsServiceProvider(Extension.class, ExcludeExtension.class)
                 .addAsWebInfResource(beansXml, "beans.xml");

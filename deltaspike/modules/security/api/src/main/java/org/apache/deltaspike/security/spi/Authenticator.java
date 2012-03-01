@@ -19,7 +19,36 @@
 
 package org.apache.deltaspike.security.spi;
 
+import java.util.Set;
+
+import javax.management.relation.Role;
+
+import org.apache.deltaspike.security.Group;
+import org.apache.deltaspike.security.api.User;
+
+/**
+ * An Authenticator implementation is responsible for managing the user authentication process. 
+ */
 public interface Authenticator
 {
+    public enum AuthenticationStatus 
+    {
+        SUCCESS, 
+        FAILURE, 
+        DEFERRED
+    }
 
+    void authenticate();
+
+    void postAuthenticate();
+
+    AuthenticationStatus getStatus();
+
+    User getUser();
+
+    // TODO we'll likely remove the following two methods - still under discussion
+    
+    Set<Role>  getRoleMemberships();
+
+    Set<Group>  getGroupMemberships(); 
 }

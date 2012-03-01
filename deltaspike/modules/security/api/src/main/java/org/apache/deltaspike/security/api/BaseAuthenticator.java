@@ -16,24 +16,42 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.security.impl.secured;
+package org.apache.deltaspike.security.api;
 
-import org.apache.deltaspike.security.api.annotation.Secured;
+import org.apache.deltaspike.security.spi.Authenticator;
 
-import javax.enterprise.inject.Stereotype;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
-@Stereotype
-
-@Retention(value = RUNTIME)
-@Target({TYPE, METHOD } )
-
-@Secured(TestAccessDecisionVoter.class)
-public @interface SecuredBeanWithStereotype
+/**
+ * Abstract base class that Authenticator implementations can extend for convenience. 
+ *
+ */
+public abstract class BaseAuthenticator implements Authenticator
 {
+    private AuthenticationStatus status;
+    
+    private User user;
+
+    public AuthenticationStatus getStatus() 
+    {
+        return status;
+    }
+
+    public void setStatus(AuthenticationStatus status) 
+    {
+        this.status = status;
+    }
+
+    public User getUser() 
+    {
+        return user;
+    }
+
+    public void setUser(User user) 
+    {
+        this.user = user;
+    }
+
+    public void postAuthenticate() 
+    {
+        // No-op, override if any post-authentication processing is required.
+    }
 }
