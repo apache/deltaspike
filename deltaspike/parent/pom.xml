@@ -53,6 +53,16 @@
                 </repository>
             </repositories>
         </profile>
+        <profile>
+            <id>JBossSnapshots</id>
+            <repositories>
+                <repository>
+                    <id>JBoss-Snapshots</id>
+                    <name>JBoss Snapshots</name>
+                    <url>http://snapshots.jboss.org/maven2/</url>
+                </repository>
+            </repositories>
+        </profile>
     </profiles>
 
     <issueManagement>

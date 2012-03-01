@@ -70,6 +70,17 @@
         </profile>
 
         <profile>
+            <id>JBossSnapshots</id>
+            <repositories>
+                <repository>
+                    <id>JBoss-Snapshots</id>
+                    <name>JBoss Snapshots</name>
+                    <url>http://snapshots.jboss.org/maven2/</url>
+                </repository>
+            </repositories>
+        </profile>
+
+        <profile>
             <!-- use this profile to compile and test DeltaSpike with Apache OpenWebBeans -->
             <id>OWB</id>
 
