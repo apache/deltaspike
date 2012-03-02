@@ -46,7 +46,7 @@ public class ExcludeTestProjectStageDevelopment
         System.setProperty("org.apache.deltaspike.ProjectStage", "Development");
         ProjectStageProducer.setProjectStage(null);
 
-        return ShrinkWrap.create(WebArchive.class)
+        return ShrinkWrap.create(WebArchive.class, "excludeProjectStageDevelopment.war")
                 .addAsLibraries(ShrinkWrapArchiveUtil.getArchives(null,
                         "META-INF/beans.xml",
                         new String[]{"org.apache.deltaspike.core",

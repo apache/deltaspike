@@ -49,7 +49,7 @@ public class ExcludeTest
         System.setProperty("org.apache.deltaspike.ProjectStage", "Production");
         ProjectStageProducer.setProjectStage(null);
 
-        return ShrinkWrap.create(WebArchive.class)
+        return ShrinkWrap.create(WebArchive.class, "exclude.war")
                 .addAsLibraries(ShrinkWrapArchiveUtil.getArchives(null,
                         "META-INF/beans.xml",
                         new String[]{"org.apache.deltaspike.core",

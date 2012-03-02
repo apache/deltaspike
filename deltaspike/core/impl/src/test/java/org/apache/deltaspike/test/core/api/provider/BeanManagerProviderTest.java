@@ -41,7 +41,7 @@ public class BeanManagerProviderTest
     @Deployment
     public static WebArchive deploy()
     {
-        return ShrinkWrap.create(WebArchive.class)
+        return ShrinkWrap.create(WebArchive.class, "beanManagerProvider.war")
                 .addAsLibraries(ShrinkWrapArchiveUtil.getArchives(null,
                         "META-INF/beans.xml",
                         new String[]{"org.apache.deltaspike"},

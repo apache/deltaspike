@@ -63,7 +63,7 @@ public class ExcludeIntegrationTest
         URL testExtensionsFileUrl = ExcludeIntegrationTest.class.getClassLoader()
                 .getResource("META-INF/services/test.javax.enterprise.inject.spi.Extension");
 
-        return ShrinkWrap.create(WebArchive.class)
+        return ShrinkWrap.create(WebArchive.class, "excludeIntegration.war")
                 .addAsLibraries(ShrinkWrapArchiveUtil.getArchives(null,
                         "META-INF/beans.xml",
                         new String[]{"org.apache.deltaspike.core",

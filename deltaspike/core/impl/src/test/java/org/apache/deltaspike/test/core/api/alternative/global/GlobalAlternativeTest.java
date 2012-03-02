@@ -66,7 +66,7 @@ public class GlobalAlternativeTest
     @Deployment
     public static WebArchive deploy()
     {
-        return ShrinkWrap.create(WebArchive.class)
+        return ShrinkWrap.create(WebArchive.class, "globalAlternative.war")
                 .addAsLibraries(ShrinkWrapArchiveUtil.getArchives(null,
                         "META-INF/beans.xml",
                         new String[]{"org.apache.deltaspike.core",

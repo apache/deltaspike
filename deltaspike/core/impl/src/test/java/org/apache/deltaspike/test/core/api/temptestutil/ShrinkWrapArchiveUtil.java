@@ -66,13 +66,13 @@ public class ShrinkWrapArchiveUtil
 
         try {
             Enumeration<URL> foundFiles = classLoader.getResources(markerFile);
-    
+
             List<JavaArchive> archives = new ArrayList<JavaArchive>();
-    
+
             while (foundFiles.hasMoreElements()) {
                 URL foundFile = foundFiles.nextElement();
                 LOG.fine("Evaluating Java ClassPath URL " + foundFile.toExternalForm());
-    
+
                 JavaArchive archive = createArchive(foundFile, markerFile, includeIfPackageExists, excludeIfPackageExists);
                 if (archive != null) {
                     LOG.info("Adding Java ClassPath URL as JavaArchive " + foundFile.toExternalForm());
