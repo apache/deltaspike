@@ -35,7 +35,7 @@
     <description>Apache DeltaSpike Parent for Managed container projects</description>
 
     <properties>
-        <jboss.as.version>7.1.0.CR1b</jboss.as.version>
+        <jboss.as.version>7.1.0.Final</jboss.as.version>
     </properties>
 
     <repositories>
