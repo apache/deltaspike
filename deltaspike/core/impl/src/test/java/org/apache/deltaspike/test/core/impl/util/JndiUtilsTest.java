@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.test.core.impl.util;
 
+import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.impl.util.JndiUtils;
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.apache.deltaspike.test.core.api.temptestutil.ShrinkWrapArchiveUtil;
@@ -42,6 +43,14 @@ public class JndiUtilsTest
     @Deployment
     public static WebArchive deploy()
     {
+        new BeanManagerProvider() {
+            @Override
+            public void setTestMode()
+            {
+                super.setTestMode();
+            }
+        }.setTestMode();
+
         return ShrinkWrap.create(WebArchive.class, "jndiUtils.war")
                 .addAsLibraries(ShrinkWrapArchiveUtil.getArchives(null,
                         "META-INF/beans.xml",

@@ -38,9 +38,9 @@ import org.apache.deltaspike.core.util.ClassUtils;
  * <p>This is really handy if you like to access CDI functionality
  * from places where no injection is available.</p>
  * <p>If a simple but manual bean-lookup is needed, it's easier to use the {@link BeanProvider}.</p>
- *
+ * <p/>
  * <p>As soon as an application shuts down, the reference to the {@link BeanManager} will be removed.<p>
- *
+ * <p/>
  * <p>Usage:<p/>
  * <pre>
  * BeanManager bm = BeanManagerProvider.getInstance().getBeanManager();
@@ -48,9 +48,11 @@ import org.apache.deltaspike.core.util.ClassUtils;
  */
 public class BeanManagerProvider implements Extension
 {
+    private static Boolean testMode;
+
     private static BeanManagerProvider bmp = null;
 
-    private volatile Map<ClassLoader, BeanManager> bms = new ConcurrentHashMap<ClassLoader, BeanManager>();
+    private volatile Map<ClassLoader, BeanManagerHolder> bms = new ConcurrentHashMap<ClassLoader, BeanManagerHolder>();
 
     /**
      * Returns if the {@link BeanManagerProvider} has been initialized.
@@ -86,8 +88,8 @@ public class BeanManagerProvider implements Extension
         if (bmp == null)
         {
             throw new IllegalStateException("No " + BeanManagerProvider.class.getName() + " in place! " +
-                "Please ensure that you configured the CDI implementation of your choice properly. " +
-                "If your setup is correct, please clear all caches and compiled artifacts.");
+                    "Please ensure that you configured the CDI implementation of your choice properly. " +
+                    "If your setup is correct, please clear all caches and compiled artifacts.");
         }
         return bmp;
     }
@@ -96,30 +98,53 @@ public class BeanManagerProvider implements Extension
     /**
      * The active {@link BeanManager} for the current application (/{@link ClassLoader}). This method will throw an
      * {@link IllegalStateException} if the BeanManager cannot be found.
-     * 
+     *
      * @return the current bean-manager, never <code>null</code>
-     * @throws IllegalStateException
-     *             if the BeanManager cannot be found
+     * @throws IllegalStateException if the BeanManager cannot be found
      */
     public BeanManager getBeanManager()
     {
         ClassLoader classLoader = ClassUtils.getClassLoader(null);
 
-        BeanManager result = bms.get(classLoader);
+        BeanManagerHolder resultHolder = bms.get(classLoader);
+        BeanManager result;
 
-        if (result == null)
+        if (resultHolder == null)
         {
             result = resolveBeanManagerViaJndi();
 
-            if (result == null)
+            if (result != null)
             {
-                throw new IllegalStateException("Unable to find BeanManager. " +
-                        "Please ensure that you configured the CDI implementation of your choice properly.");
+                bms.put(classLoader, new RootBeanManagerHolder(result));
             }
-
-            bms.put(classLoader, result);
-
         }
+        else
+        {
+            result = resultHolder.getBeanManager();
+
+            if (!(resultHolder instanceof RootBeanManagerHolder))
+            {
+                BeanManager jndiBeanManager = resolveBeanManagerViaJndi();
+
+                if (jndiBeanManager != null && /*same instance check:*/jndiBeanManager != result)
+                {
+                    setRootBeanManager(jndiBeanManager);
+
+                    result = jndiBeanManager;
+                }
+                else
+                {
+                    setRootBeanManager(result);
+                }
+            }
+        }
+
+        if (result == null)
+        {
+            throw new IllegalStateException("Unable to find BeanManager. " +
+                    "Please ensure that you configured the CDI implementation of your choice properly.");
+        }
+
         return result;
     }
 
@@ -129,14 +154,47 @@ public class BeanManagerProvider implements Extension
      * {@link BeanManagerProvider} for all events which occur after the {@link AfterBeanDiscovery} event.
      *
      * @param afterBeanDiscovery event which we don't actually use ;)
-     * @param beanManager the BeanManager we store and make available.
+     * @param beanManager        the BeanManager we store and make available.
      */
     protected void setBeanManager(@Observes AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager)
+    {
+        setBeanManager(new BeanManagerHolder(beanManager));
+    }
+
+    public void setRootBeanManager(BeanManager beanManager)
+    {
+        setBeanManager(new RootBeanManagerHolder(beanManager));
+    }
+
+    private void setBeanManager(BeanManagerHolder beanManagerHolder)
     {
         BeanManagerProvider bmpFirst = setBeanManagerProvider(this);
 
         ClassLoader cl = ClassUtils.getClassLoader(null);
-        bmpFirst.bms.put(cl, beanManager);
+
+        if (beanManagerHolder instanceof RootBeanManagerHolder ||
+                //the lat bm wins - as before, but don't replace a root-bmh with a normal bmh
+                (!(bmpFirst.bms.get(cl) instanceof RootBeanManagerHolder)))
+        {
+            bmpFirst.bms.put(cl, beanManagerHolder);
+        }
+
+        //override in any case in test-mode
+        /*
+         * use:
+         * new BeanManagerProvider() {
+         * @Override
+         * public void setTestMode() {
+         *     super.setTestMode();
+         *   }
+         * }.setTestMode();
+         *
+         * to activate it
+         */
+        if (Boolean.TRUE.equals(testMode))
+        {
+            bmpFirst.bms.put(cl, beanManagerHolder);
+        }
 
         //X TODO Java-EE5 support needs to be discussed
         //CodiStartupBroadcaster.broadcastStartup();
@@ -144,16 +202,17 @@ public class BeanManagerProvider implements Extension
 
     /**
      * Cleanup on container shutdown
+     *
      * @param beforeShutdown cdi shutdown event
      */
-    protected void cleanupStoredBeanManagerOnShutdown(@Observes BeforeShutdown beforeShutdown)
+    public void cleanupStoredBeanManagerOnShutdown(@Observes BeforeShutdown beforeShutdown)
     {
         bms.remove(ClassUtils.getClassLoader(null));
     }
 
     /**
      * Get the BeanManager from the JNDI registry.
-     *
+     * <p/>
      * Workaround for JBossAS 6 (see EXTCDI-74)
      * {@link #setBeanManager(javax.enterprise.inject.spi.AfterBeanDiscovery, javax.enterprise.inject.spi.BeanManager)}
      * is called in context of a different {@link ClassLoader}
@@ -188,5 +247,15 @@ public class BeanManagerProvider implements Extension
         }
 
         return bmp;
+    }
+
+    protected void setTestMode()
+    {
+        activateTestMode();
+    }
+
+    private static void activateTestMode()
+    {
+        testMode = true;
     }
 }

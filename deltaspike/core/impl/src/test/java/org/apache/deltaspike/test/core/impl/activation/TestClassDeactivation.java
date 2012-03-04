@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.test.core.impl.activation;
 
+import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.util.ClassDeactivation;
 import org.apache.deltaspike.test.core.api.provider.TestBean;
 import org.apache.deltaspike.test.core.api.temptestutil.ShrinkWrapArchiveUtil;
@@ -45,6 +46,14 @@ public class TestClassDeactivation
     @Deployment
     public static WebArchive deploy()
     {
+        new BeanManagerProvider() {
+            @Override
+            public void setTestMode()
+            {
+                super.setTestMode();
+            }
+        }.setTestMode();
+
         URL fileUrl = TestClassDeactivation.class.getClassLoader()
                 .getResource("META-INF/apache-deltaspike.properties");
 

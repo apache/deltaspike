@@ -19,6 +19,7 @@
 package org.apache.deltaspike.test.core.api.alternative.local;
 
 
+import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.test.core.api.temptestutil.ShrinkWrapArchiveUtil;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -51,6 +52,14 @@ public class BdaAlternativeTest
     @Deployment
     public static WebArchive deploy()
     {
+        new BeanManagerProvider() {
+            @Override
+            public void setTestMode()
+            {
+                super.setTestMode();
+            }
+        }.setTestMode();
+
         return ShrinkWrap.create(WebArchive.class, "bdaAlternative.war")
                 .addAsLibraries(ShrinkWrapArchiveUtil.getArchives(null,
                         "META-INF/beans.xml",

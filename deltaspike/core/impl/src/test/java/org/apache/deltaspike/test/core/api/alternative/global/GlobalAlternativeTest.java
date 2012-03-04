@@ -19,6 +19,7 @@
 package org.apache.deltaspike.test.core.api.alternative.global;
 
 
+import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.test.core.api.alternative.global.qualifier.AlternativeBaseBeanB;
@@ -66,6 +67,14 @@ public class GlobalAlternativeTest
     @Deployment
     public static WebArchive deploy()
     {
+        new BeanManagerProvider() {
+            @Override
+            public void setTestMode()
+            {
+                super.setTestMode();
+            }
+        }.setTestMode();
+
         return ShrinkWrap.create(WebArchive.class, "globalAlternative.war")
                 .addAsLibraries(ShrinkWrapArchiveUtil.getArchives(null,
                         "META-INF/beans.xml",

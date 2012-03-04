@@ -19,6 +19,7 @@
 package org.apache.deltaspike.test.core.api.exclude;
 
 
+import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.impl.exclude.ExcludeExtension;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
@@ -46,6 +47,14 @@ public class ExcludeTest
     @Deployment
     public static WebArchive deploy()
     {
+        new BeanManagerProvider() {
+            @Override
+            public void setTestMode()
+            {
+                super.setTestMode();
+            }
+        }.setTestMode();
+
         System.setProperty("org.apache.deltaspike.ProjectStage", "Production");
         ProjectStageProducer.setProjectStage(null);
 

@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.test.security.impl.secured;
 
+import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.impl.exclude.ExcludeExtension;
 import org.apache.deltaspike.core.util.ClassUtils;
@@ -45,6 +46,14 @@ public class SecuredAnnotationTest
     @Deployment
     public static WebArchive deploy()
     {
+        new BeanManagerProvider() {
+            @Override
+            public void setTestMode()
+            {
+                super.setTestMode();
+            }
+        }.setTestMode();
+
         //X TODO remove this workaround
         boolean isOwbAvailable = ClassUtils.tryToLoadClassForName("org.apache.webbeans.spi.ContainerLifecycle") != null;
 
