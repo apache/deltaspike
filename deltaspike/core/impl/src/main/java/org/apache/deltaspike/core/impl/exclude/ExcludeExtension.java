@@ -102,6 +102,9 @@ public class ExcludeExtension implements Extension, Deactivatable
 
         //TODO needs further discussions for a different feature CodiStartupBroadcaster.broadcastStartup();
 
+        //also forces deterministic project-stage initialization
+        ProjectStage projectStage = ProjectStageProducer.getInstance().getProjectStage();
+
         if (!processAnnotatedType.getAnnotatedType().getJavaClass().isAnnotationPresent(Exclude.class))
         {
             return;
@@ -114,12 +117,12 @@ public class ExcludeExtension implements Extension, Deactivatable
             return; //veto called already
         }
 
-        if (!evalExcludeInProjectStage(processAnnotatedType, exclude))
+        if (!evalExcludeInProjectStage(processAnnotatedType, exclude, projectStage))
         {
             return; //veto called already
         }
 
-        if (!evalExcludeNotInProjectStage(processAnnotatedType, exclude))
+        if (!evalExcludeNotInProjectStage(processAnnotatedType, exclude, projectStage))
         {
             return; //veto called already
         }
@@ -388,7 +391,8 @@ public class ExcludeExtension implements Extension, Deactivatable
         return true;
     }
 
-    private boolean evalExcludeInProjectStage(ProcessAnnotatedType<Object> processAnnotatedType, Exclude exclude)
+    private boolean evalExcludeInProjectStage(ProcessAnnotatedType<Object> processAnnotatedType, Exclude exclude,
+        ProjectStage currentlyConfiguredProjectStage)
     {
         Class<? extends ProjectStage>[] activatedIn = exclude.ifProjectStage();
 
@@ -397,7 +401,7 @@ public class ExcludeExtension implements Extension, Deactivatable
             return true;
         }
 
-        if (isInProjectStage(activatedIn))
+        if (isInProjectStage(activatedIn, currentlyConfiguredProjectStage))
         {
             veto(processAnnotatedType, "IfProjectState");
             return false;
@@ -405,7 +409,8 @@ public class ExcludeExtension implements Extension, Deactivatable
         return true;
     }
 
-    private boolean evalExcludeNotInProjectStage(ProcessAnnotatedType<Object> processAnnotatedType, Exclude exclude)
+    private boolean evalExcludeNotInProjectStage(ProcessAnnotatedType<Object> processAnnotatedType, Exclude exclude,
+        ProjectStage currentlyConfiguredProjectStage)
     {
         Class<? extends ProjectStage>[] notIn = exclude.exceptIfProjectStage();
 
@@ -414,7 +419,7 @@ public class ExcludeExtension implements Extension, Deactivatable
             return true;
         }
 
-        if (!isInProjectStage(notIn))
+        if (!isInProjectStage(notIn, currentlyConfiguredProjectStage))
         {
             veto(processAnnotatedType, "ExceptIfProjectState");
             return false;
@@ -435,14 +440,14 @@ public class ExcludeExtension implements Extension, Deactivatable
         }
     }
 
-    private boolean isInProjectStage(Class<? extends ProjectStage>[] activatedIn)
+    private boolean isInProjectStage(Class<? extends ProjectStage>[] activatedIn,
+        ProjectStage currentlyConfiguredProjectStage)
     {
         if (activatedIn != null && activatedIn.length > 0)
         {
-            ProjectStage ps = ProjectStageProducer.getInstance().getProjectStage();
             for (Class<? extends ProjectStage> activated : activatedIn)
             {
-                if (ps.getClass().equals(activated))
+                if (currentlyConfiguredProjectStage.getClass().equals(activated))
                 {
                     return true;
                 }

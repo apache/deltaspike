@@ -193,7 +193,7 @@ public class BeanManagerProvider implements Extension
          */
         if (Boolean.TRUE.equals(testMode))
         {
-            bmpFirst.bms.put(cl, beanManagerHolder);
+            bmpFirst.bms.put(cl, new TestBeanManagerHolder(beanManagerHolder.getBeanManager()));
         }
 
         //X TODO Java-EE5 support needs to be discussed
@@ -219,7 +219,7 @@ public class BeanManagerProvider implements Extension
      *
      * @return current {@link javax.enterprise.inject.spi.BeanManager} which is provided via JNDI
      */
-    private BeanManager resolveBeanManagerViaJndi()
+    BeanManager resolveBeanManagerViaJndi()
     {
         try
         {

@@ -20,6 +20,8 @@ package org.apache.deltaspike.core.util;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
+import org.apache.deltaspike.core.api.projectstage.TestStage;
+import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Dependent;
@@ -179,6 +181,18 @@ public class ProjectStageProducer implements Serializable
                 if (projectStage == null)
                 {
                     projectStage = ProjectStage.Production;
+                }
+
+                if (TestStage.class.isAssignableFrom(projectStage.getClass()))
+                {
+                    new BeanManagerProvider()
+                    {
+                        @Override
+                        public void setTestMode()
+                        {
+                            super.setTestMode();
+                        }
+                    } .setTestMode();
                 }
 
                 LOG.info("Computed the following DeltaSpike ProjectStage: " + projectStage);

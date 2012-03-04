@@ -216,7 +216,7 @@ public abstract class ProjectStage implements Serializable
      * Project-stage for unit-tests
      */
     @Typed()
-    public static final class UnitTest extends ProjectStage
+    public static final class UnitTest extends ProjectStage implements TestStage
     {
         private static final long serialVersionUID = -7910349894182034559L;
     }
@@ -244,7 +244,7 @@ public abstract class ProjectStage implements Serializable
      * Project-stage for system-tests
      */
     @Typed()
-    public static final class SystemTest extends ProjectStage
+    public static final class SystemTest extends ProjectStage implements TestStage
     {
         private static final long serialVersionUID = -7444003351466372539L;
     }
@@ -258,7 +258,7 @@ public abstract class ProjectStage implements Serializable
      * Project-stage for integration-tests
      */
     @Typed()
-    public static final class IntegrationTest extends ProjectStage
+    public static final class IntegrationTest extends ProjectStage implements TestStage
     {
         private static final long serialVersionUID = 2034474361615347127L;
     }
