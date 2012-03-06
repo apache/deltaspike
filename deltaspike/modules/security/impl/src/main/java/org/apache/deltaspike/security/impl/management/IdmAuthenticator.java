@@ -18,11 +18,6 @@
  */
 package org.apache.deltaspike.security.impl.management;
 
-import java.util.Set;
-
-import javax.management.relation.Role;
-
-import org.apache.deltaspike.security.api.Group;
 import org.apache.deltaspike.security.api.User;
 import org.apache.deltaspike.security.spi.Authenticator;
 
@@ -57,20 +52,6 @@ public class IdmAuthenticator implements Authenticator
 
     @Override
     public User getUser()
-    {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public Set<Role> getRoleMemberships()
-    {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public Set<Group> getGroupMemberships()
     {
         // TODO Auto-generated method stub
         return null;

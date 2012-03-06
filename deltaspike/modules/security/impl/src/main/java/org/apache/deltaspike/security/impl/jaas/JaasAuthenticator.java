@@ -19,13 +19,11 @@
 package org.apache.deltaspike.security.impl.jaas;
 
 import java.io.IOException;
-import java.util.Set;
 
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.management.relation.Role;
 import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
@@ -37,7 +35,6 @@ import javax.security.auth.login.LoginException;
 
 import org.apache.deltaspike.security.api.BaseAuthenticator;
 import org.apache.deltaspike.security.api.Credentials;
-import org.apache.deltaspike.security.api.Group;
 import org.apache.deltaspike.security.api.Identity;
 import org.apache.deltaspike.security.impl.PasswordCredential;
 import org.apache.deltaspike.security.spi.Authenticator;
@@ -142,19 +139,5 @@ public class JaasAuthenticator extends BaseAuthenticator implements Authenticato
 
     public void postAuthenticate() 
     {
-    }
-
-    @Override
-    public Set<Role> getRoleMemberships()
-    {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public Set<Group> getGroupMemberships()
-    {
-        // TODO Auto-generated method stub
-        return null;
     }
 }
