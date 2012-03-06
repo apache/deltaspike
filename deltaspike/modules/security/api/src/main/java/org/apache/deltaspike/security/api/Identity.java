@@ -20,7 +20,6 @@ package org.apache.deltaspike.security.api;
 
 import java.util.Set;
 
-import org.apache.deltaspike.security.Group;
 import org.apache.deltaspike.security.api.annotation.LoggedIn;
 import org.apache.deltaspike.security.api.annotation.Secures;
 

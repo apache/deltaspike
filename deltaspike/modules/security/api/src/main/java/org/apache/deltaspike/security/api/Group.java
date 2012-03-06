@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.deltaspike.security;
+package org.apache.deltaspike.security.api;
 
 public interface Group
 {

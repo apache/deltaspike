@@ -19,11 +19,6 @@
 
 package org.apache.deltaspike.security.spi;
 
-import java.util.Set;
-
-import javax.management.relation.Role;
-
-import org.apache.deltaspike.security.Group;
 import org.apache.deltaspike.security.api.User;
 
 /**
@@ -45,10 +40,4 @@ public interface Authenticator
     AuthenticationStatus getStatus();
 
     User getUser();
-
-    // TODO we'll likely remove the following two methods - still under discussion
-    
-    Set<Role>  getRoleMemberships();
-
-    Set<Group>  getGroupMemberships(); 
 }

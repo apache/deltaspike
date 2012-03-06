@@ -35,9 +35,9 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
 
-import org.apache.deltaspike.security.Group;
 import org.apache.deltaspike.security.api.BaseAuthenticator;
 import org.apache.deltaspike.security.api.Credentials;
+import org.apache.deltaspike.security.api.Group;
 import org.apache.deltaspike.security.api.Identity;
 import org.apache.deltaspike.security.impl.PasswordCredential;
 import org.apache.deltaspike.security.spi.Authenticator;

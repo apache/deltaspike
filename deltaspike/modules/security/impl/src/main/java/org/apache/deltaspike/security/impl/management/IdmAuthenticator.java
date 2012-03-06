@@ -22,7 +22,7 @@ import java.util.Set;
 
 import javax.management.relation.Role;
 
-import org.apache.deltaspike.security.Group;
+import org.apache.deltaspike.security.api.Group;
 import org.apache.deltaspike.security.api.User;
 import org.apache.deltaspike.security.spi.Authenticator;
 

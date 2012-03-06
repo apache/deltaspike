@@ -26,10 +26,10 @@ import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 
-import org.apache.deltaspike.security.Group;
 import org.apache.deltaspike.security.api.AuthenticationException;
 import org.apache.deltaspike.security.api.AuthenticatorSelector;
 import org.apache.deltaspike.security.api.Credentials;
+import org.apache.deltaspike.security.api.Group;
 import org.apache.deltaspike.security.api.Identity;
 import org.apache.deltaspike.security.api.Role;
 import org.apache.deltaspike.security.api.User;
