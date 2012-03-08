@@ -84,6 +84,7 @@
         <!-- testing stuff -->
         <junit.version>4.10</junit.version>
         <arquillian.version>1.0.0.CR7</arquillian.version>
+        <tomee.version>1.0.0-beta-3-SNAPSHOT</tomee.version>
 
         <!-- JSF-2.0 implementations-->
         <myfaces2.version>2.0.5</myfaces2.version>
@@ -373,6 +374,14 @@
                 <artifactId>geronimo-servlet_2.5_spec</artifactId>
                 <version>1.2</version>
                 <scope>provided</scope>
+            </dependency>
+
+            <!-- TomEE dependencies -->
+            <dependency>
+                <groupId>org.apache.openejb</groupId>
+                <artifactId>arquillian-tomee-remote</artifactId>
+                <version>${tomee.version}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
 

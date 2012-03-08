@@ -49,4 +49,15 @@
         </configuration>
     </container>
 
+    <container qualifier="tomee">
+        <configuration>
+            <!-- tomee gets copied to this directory during the build -->
+            <property name="dir">target/tomee</property>
+
+            <!-- value '-1' to allow arquillian-tomee-remote to use dynamic settings -->
+            <property name="httpPort">-1</property>
+            <property name="ajpPort">-1</property>
+            <property name="stopPort">-1</property>
+        </configuration>
+    </container>
 </arquillian>
