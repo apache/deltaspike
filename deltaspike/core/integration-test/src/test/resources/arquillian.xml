@@ -35,6 +35,15 @@
         </configuration>
     </container>
 
+    <container qualifier="jbossas-build-managed-7">
+        <configuration>
+            <property name="jbossHome">${arquillian.jboss_home}</property>
+            <property name="javaVmArguments">-client -noverify -Xms64m -Xmx1024m -XX:MaxPermSize=512m</property>
+            <property name="outputToConsole">false</property>
+            <property name="allowConnectingToRunningServer">true</property>
+        </configuration>
+    </container>
+
     <!-- don't remove the qualifier - it's needed for the arquillian.launch property -->
     <container qualifier="glassfish-remote-3.1">
     </container>
