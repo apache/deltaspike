@@ -1,0 +1,115 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.deltaspike.core.impl.config.injectable;
+
+import org.apache.deltaspike.core.api.config.ConfigProperty;
+import org.apache.deltaspike.core.api.config.ConfigResolver;
+import org.apache.deltaspike.core.spi.activation.Deactivatable;
+import org.apache.deltaspike.core.util.ClassDeactivation;
+
+import javax.enterprise.event.Observes;
+import javax.enterprise.inject.spi.AfterBeanDiscovery;
+import javax.enterprise.inject.spi.Extension;
+import javax.enterprise.inject.spi.InjectionPoint;
+import javax.enterprise.inject.spi.InjectionTarget;
+import javax.enterprise.inject.spi.ProcessInjectionTarget;
+import java.lang.annotation.Annotation;
+import java.util.HashSet;
+import java.util.Set;
+
+/**
+ * Adds support for {@link org.apache.deltaspike.core.api.config.ConfigProperty}
+ */
+public class ConfigPropertyExtension implements Extension, Deactivatable
+{
+    private Boolean isActivated = null;
+
+    private Set<InjectionTargetEntry> injectionTargets = new HashSet<InjectionTargetEntry>();
+
+    protected void recordConfigPropertyAwareInjectionPoint(@Observes ProcessInjectionTarget event)
+    {
+        initActivation();
+
+        if (!this.isActivated)
+        {
+            return;
+        }
+
+        InjectionTarget<?> injectionTarget = event.getInjectionTarget();
+
+        ConfigProperty configProperty;
+        Annotation qualifier;
+        for (InjectionPoint injectionPoint : injectionTarget.getInjectionPoints())
+        {
+            qualifier = null;
+            configProperty = injectionPoint.getAnnotated().getAnnotation(ConfigProperty.class);
+
+            if (configProperty == null)
+            {
+                for (Annotation annotation : injectionPoint.getAnnotated().getAnnotations())
+                {
+                    configProperty = annotation.annotationType().getAnnotation(ConfigProperty.class);
+
+                    qualifier = annotation;
+
+                    if (configProperty != null)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            if (configProperty != null)
+            {
+                //TODO add support for collections,...
+                if (configProperty.eager() && ConfigResolver.getPropertyValue(configProperty.name()) == null)
+                {
+                    throw new IllegalStateException("no configured value found for property: " + configProperty.name());
+                }
+
+                this.injectionTargets.add(
+                        new InjectionTargetEntry(injectionPoint.getType(), configProperty, qualifier));
+            }
+        }
+    }
+
+    protected void addDependentBeans(@Observes AfterBeanDiscovery event)
+    {
+        initActivation();
+
+        if (!this.isActivated)
+        {
+            return;
+        }
+
+        for (InjectionTargetEntry injectionTargetEntry : this.injectionTargets)
+        {
+            event.addBean(new ConfigPropertyBean<Object>(injectionTargetEntry.getType(), injectionTargetEntry
+                    .getConfigProperty(), injectionTargetEntry.getCustomQualifier()));
+        }
+    }
+
+    protected void initActivation()
+    {
+        if (this.isActivated == null)
+        {
+            this.isActivated = ClassDeactivation.isActivated(getClass());
+        }
+    }
+}
