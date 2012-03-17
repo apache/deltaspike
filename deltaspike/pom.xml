@@ -56,7 +56,7 @@
         <module>parent</module>
         <module>test-utils</module>
         <module>core</module>
-        <module>cdise</module>
+        <module>cdictrl</module>
         <module>modules</module>
     </modules>
 
