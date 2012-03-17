@@ -20,6 +20,7 @@ package org.apache.deltaspike.example.beanmanagement;
 
 import org.apache.deltaspike.cdise.api.CdiContainer;
 import org.apache.deltaspike.cdise.api.CdiContainerLoader;
+import org.apache.deltaspike.cdise.api.ContextControl;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.example.echo.DefaultEchoService;
 import org.apache.deltaspike.example.echo.EchoService;
@@ -49,8 +50,10 @@ public class SimpleBeanLookupExample
     {
 
         CdiContainer cdiContainer = CdiContainerLoader.getCdiContainer();
-        cdiContainer.bootContainer();
-        cdiContainer.startContext(ApplicationScoped.class);
+        cdiContainer.boot();
+
+        ContextControl contextControl = cdiContainer.getContextControl();
+        contextControl.startContext(ApplicationScoped.class);
         //containerControl.startContexts();
 
         //or:
@@ -93,7 +96,8 @@ public class SimpleBeanLookupExample
             LOG.severe("Unexpected implementation found: " + optionalService.getClass().getName());
         }
 
-        cdiContainer.stop();
+        contextControl.stopContext(ApplicationScoped.class);
+        cdiContainer.shutdown();
 
         //or:
         //containerControl.stopContexts();

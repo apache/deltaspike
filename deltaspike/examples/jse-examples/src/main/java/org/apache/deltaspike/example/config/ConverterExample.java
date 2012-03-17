@@ -20,6 +20,7 @@ package org.apache.deltaspike.example.config;
 
 import org.apache.deltaspike.cdise.api.CdiContainer;
 import org.apache.deltaspike.cdise.api.CdiContainerLoader;
+import org.apache.deltaspike.cdise.api.ContextControl;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -35,10 +36,11 @@ public class ConverterExample
 
     public static void main(String[] args)
     {
-
         CdiContainer cdiContainer = CdiContainerLoader.getCdiContainer();
-        cdiContainer.bootContainer();
-        cdiContainer.startContext(ApplicationScoped.class);
+        cdiContainer.boot();
+
+        ContextControl contextControl = cdiContainer.getContextControl();
+        contextControl.startContext(ApplicationScoped.class);
 
         SettingsBean settingsBean = BeanProvider.getContextualReference(SettingsBean.class, false);
 
@@ -46,6 +48,7 @@ public class ConverterExample
         LOG.info("configured long-value #2: " + settingsBean.getProperty2());
         LOG.info("configured inverse-value #2: " + settingsBean.getInverseProperty());
 
-        cdiContainer.stop();
+        contextControl.stopContext(ApplicationScoped.class);
+        cdiContainer.shutdown();
     }
 }

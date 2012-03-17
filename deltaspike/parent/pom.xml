@@ -349,22 +349,22 @@
 
             <!-- Dependencies for Java-SE -->
             <dependency>
-                <groupId>org.apache.deltaspike.cdise</groupId>
-                <artifactId>deltaspike-cdise-api</artifactId>
+                <groupId>org.apache.deltaspike.cdictrl</groupId>
+                <artifactId>deltaspike-cdictrl-api</artifactId>
                 <version>${project.version}</version>
                 <scope>provided</scope>
             </dependency>
 
             <dependency>
-                <groupId>org.apache.deltaspike.cdise</groupId>
-                <artifactId>deltaspike-cdise-owb</artifactId>
+                <groupId>org.apache.deltaspike.cdictrl</groupId>
+                <artifactId>deltaspike-cdictrl-owb</artifactId>
                 <version>${project.version}</version>
                 <scope>runtime</scope>
             </dependency>
 
             <dependency>
-                <groupId>org.apache.deltaspike.cdise</groupId>
-                <artifactId>deltaspike-cdise-weld</artifactId>
+                <groupId>org.apache.deltaspike.cdictrl</groupId>
+                <artifactId>deltaspike-cdictrl-weld</artifactId>
                 <version>${project.version}</version>
                 <scope>runtime</scope>
             </dependency>

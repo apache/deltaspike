@@ -50,8 +50,8 @@
                 </dependency>
 
                 <dependency>
-                    <groupId>org.apache.deltaspike.cdise</groupId>
-                    <artifactId>deltaspike-cdise-owb</artifactId>
+                    <groupId>org.apache.deltaspike.cdictrl</groupId>
+                    <artifactId>deltaspike-cdictrl-owb</artifactId>
                     <scope>runtime</scope>
                 </dependency>
             </dependencies>
@@ -60,8 +60,8 @@
             <id>Weld</id>
             <dependencies>
                 <dependency>
-                    <groupId>org.apache.deltaspike.cdise</groupId>
-                    <artifactId>deltaspike-cdise-weld</artifactId>
+                    <groupId>org.apache.deltaspike.cdictrl</groupId>
+                    <artifactId>deltaspike-cdictrl-weld</artifactId>
                     <scope>runtime</scope>
                 </dependency>
 
@@ -121,8 +121,8 @@
 
         <!-- Dependencies for Java-SE -->
         <dependency>
-            <groupId>org.apache.deltaspike.cdise</groupId>
-            <artifactId>deltaspike-cdise-api</artifactId>
+            <groupId>org.apache.deltaspike.cdictrl</groupId>
+            <artifactId>deltaspike-cdictrl-api</artifactId>
             <scope>compile</scope>
         </dependency>
 
