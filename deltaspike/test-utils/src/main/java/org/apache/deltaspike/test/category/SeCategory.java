@@ -20,7 +20,10 @@
 package org.apache.deltaspike.test.category;
 
 /**
- * Category marker interface. Tests which are SE bare minimum.
+ * Category marker interface for tests which only run outside of a java-ee server
+ * e.g. due to a restriction of our test-setup with packaging resources with the same name from different sources
+ * like multiple parallel versions of apache-deltaspike.properties which is caused by the autom. unpack to the
+ * integration-test module.
  */
 public interface SeCategory
 {
