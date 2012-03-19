@@ -173,4 +173,31 @@ public class BeanProviderTest
 
         Assert.assertEquals(1, result.size());
     }
+
+    /*
+     * create a manual instance, inject dependencies, set values of the dependencies and check the referenced cdi bean
+     */
+    @Test
+    public void injectBeansInNonManagedInstance() throws Exception
+    {
+        ManualBean manualBean = new ManualBean();
+
+        Assert.assertNull(manualBean.getTestBean());
+
+        BeanProvider.injectFields(manualBean);
+
+        Assert.assertNotNull(manualBean.getTestBean());
+
+        Assert.assertEquals(4711, manualBean.getTestBean().getI());
+
+        int newValue = 14;
+
+        manualBean.getTestBean().setI(newValue);
+
+        Assert.assertEquals(newValue, manualBean.getTestBean().getI());
+
+        TestBean testBean = BeanProvider.getContextualReference(TestBean.class);
+
+        Assert.assertEquals(newValue, testBean.getI());
+    }
 }

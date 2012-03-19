@@ -18,22 +18,17 @@
 */
 package org.apache.deltaspike.test.core.api.provider;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Named;
+import javax.enterprise.inject.Typed;
+import javax.inject.Inject;
 
-@Named("extraNameBean")
-@ApplicationScoped
-public class TestBean
+@Typed()
+class ManualBean
 {
-    private int i = 4711;
+    @Inject
+    private TestBean testBean;
 
-    public int getI()
+    TestBean getTestBean()
     {
-        return i;
-    }
-
-    public void setI(int i)
-    {
-        this.i = i;
+        return testBean;
     }
 }

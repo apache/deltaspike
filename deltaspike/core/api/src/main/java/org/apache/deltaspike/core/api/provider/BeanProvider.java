@@ -23,8 +23,10 @@ import org.apache.deltaspike.core.api.literal.AnyLiteral;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.Typed;
+import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.InjectionTarget;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -70,7 +72,7 @@ public final class BeanProvider
      * @param qualifiers additional qualifiers which further distinct the resolved bean
      * @param <T> target type
      * @return the resolved Contextual Reference
-     * @throws {@code IllegalStateException} if the bean could not be found.
+     * @throws IllegalStateException if the bean could not be found.
      * @see #getContextualReference(Class, boolean, Annotation...)
      */
     public static <T> T getContextualReference(Class<T> type, Annotation... qualifiers)
@@ -118,7 +120,7 @@ public final class BeanProvider
      *
      * @param name     the EL name of the bean
      * @return the resolved Contextual Reference
-     * @throws {@code IllegalStateException} if the bean could not be found.
+     * @throws IllegalStateException if the bean could not be found.
      * @see #getContextualReference(String, boolean)
      */
     public static Object getContextualReference(String name)
@@ -238,10 +240,39 @@ public final class BeanProvider
 
         for (Bean<?> bean : beans)
         {
+            //noinspection unchecked
             result.add(getContextualReference(type, beanManager,
-                    new HashSet<Bean<?>>((Collection) Arrays.asList(new Object[]{bean}))));
+                new HashSet<Bean<?>>((Collection) Arrays.asList(bean))));
         }
         return result;
+    }
+
+    /**
+     * Allows to perform dependency injection for instances which aren't managed by CDI
+     * <p/>
+     * Attention:<br/>
+     * The resulting instance isn't managed by CDI, only fields annotated with @Inject get initialized.
+     *
+     * @param instance current instance
+     * @param <T> current type
+     * @return instance with injected fields (if possible - or null if the given instance is null)
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T injectFields(T instance)
+    {
+        if (instance == null)
+        {
+            return null;
+        }
+
+        BeanManager beanManager = getBeanManager();
+
+        CreationalContext creationalContext = beanManager.createCreationalContext(null);
+
+        AnnotatedType annotatedType = beanManager.createAnnotatedType(instance.getClass());
+        InjectionTarget injectionTarget = beanManager.createInjectionTarget(annotatedType);
+        injectionTarget.inject(instance, creationalContext);
+        return instance;
     }
 
     private static Set<Bean<?>> filterDefaultScopedBeans(Set<Bean<?>> beans)
@@ -285,6 +316,7 @@ public final class BeanProvider
 
     /**
      * Internal method to resolve the BeanManager via the {@link BeanManagerProvider}
+     * @return current bean-manager
      */
     private static BeanManager getBeanManager()
     {
