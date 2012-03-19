@@ -66,10 +66,9 @@ public class ConfigPropertyExtension implements Extension, Deactivatable
                 {
                     configProperty = annotation.annotationType().getAnnotation(ConfigProperty.class);
 
-                    qualifier = annotation;
-
                     if (configProperty != null)
                     {
+                        qualifier = annotation;
                         break;
                     }
                 }
@@ -89,6 +88,7 @@ public class ConfigPropertyExtension implements Extension, Deactivatable
         }
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     protected void addDependentBeans(@Observes AfterBeanDiscovery event)
     {
         initActivation();

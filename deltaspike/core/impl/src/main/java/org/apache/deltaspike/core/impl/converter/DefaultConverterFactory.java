@@ -19,6 +19,7 @@
 package org.apache.deltaspike.core.impl.converter;
 
 import org.apache.deltaspike.core.api.converter.Converter;
+import org.apache.deltaspike.core.api.converter.MetaDataAwareConverter;
 import org.apache.deltaspike.core.api.literal.AnyLiteral;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.spi.converter.ConverterFactory;
@@ -28,6 +29,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -51,9 +53,31 @@ public class DefaultConverterFactory implements ConverterFactory
         addCustomConverters();
     }
 
+    @Override
+    public <S, T> Converter<S, T> create(
+        Class<S> sourceType, Class<T> targetType, Class<? extends Annotation> metaDataType)
+    {
+        //TODO throw an exception if there isn't the correct converter
+        Converter<S, T> result;
+
+        //try to find meta-data-aware converter
+        result = this.converterMapping.get(new ConverterKey(sourceType, targetType, metaDataType));
+
+        //for a simple custom configuration-annotation a custom converter isn't required
+        //in this case the custom annotation is just used to keep the (string-based) property in a central place
+
+        if (result != null)
+        {
+            return result;
+        }
+
+        return this.converterMapping.get(new ConverterKey(sourceType, targetType, null));
+    }
+
     private void addDefaultConverters()
     {
         registerConverter(new StringToIntegerConverter());
+        registerConverter(new StringToLongConverter());
     }
 
     private void addCustomConverters()
@@ -137,6 +161,7 @@ public class DefaultConverterFactory implements ConverterFactory
     {
         Class sourceType = null;
         Class targetType = null;
+        Class metaDataType = null;
 
         ParameterizedType parameterizedType;
         for (Type currentType : converter.getClass().getGenericInterfaces())
@@ -149,18 +174,16 @@ public class DefaultConverterFactory implements ConverterFactory
                 {
                     sourceType = (Class<?>) parameterizedType.getActualTypeArguments()[0];
                     targetType = (Class<?>) parameterizedType.getActualTypeArguments()[1];
+
+                    if (MetaDataAwareConverter.class.isAssignableFrom((Class<?>) parameterizedType.getRawType()))
+                    {
+                        metaDataType = (Class<?>) parameterizedType.getActualTypeArguments()[2];
+                    }
                     break;
                 }
             }
         }
 
-        this.converterMapping.put(new ConverterKey(sourceType, targetType), converter);
-    }
-
-    @Override
-    public <S, T> Converter<S, T> create(Class<S> sourceType, Class<T> targetType)
-    {
-        //TODO throw an exception if there isn't the correct converter
-        return this.converterMapping.get(new ConverterKey(sourceType, targetType));
+        this.converterMapping.put(new ConverterKey(sourceType, targetType, metaDataType), converter);
     }
 }

@@ -19,17 +19,20 @@
 package org.apache.deltaspike.core.impl.converter;
 
 import javax.enterprise.inject.Typed;
+import java.lang.annotation.Annotation;
 
 @Typed()
 class ConverterKey
 {
     private final Class sourceType;
     private final Class targetType;
+    private final Class<? extends Annotation> metaDataType;
 
-    ConverterKey(Class sourceType, Class targetType)
+    ConverterKey(Class sourceType, Class targetType, Class<? extends Annotation> metaDataType)
     {
         this.sourceType = sourceType;
         this.targetType = targetType;
+        this.metaDataType = metaDataType;
     }
 
     @Override
@@ -46,6 +49,10 @@ class ConverterKey
 
         ConverterKey that = (ConverterKey) o;
 
+        if (metaDataType != null ? !metaDataType.equals(that.metaDataType) : that.metaDataType != null)
+        {
+            return false;
+        }
         if (!sourceType.equals(that.sourceType))
         {
             return false;
@@ -63,6 +70,7 @@ class ConverterKey
     {
         int result = sourceType.hashCode();
         result = 31 * result + targetType.hashCode();
+        result = 31 * result + (metaDataType != null ? metaDataType.hashCode() : 0);
         return result;
     }
 }

@@ -139,7 +139,8 @@ public class ConfigPropertyBean<T> implements Bean<T>, Serializable
         if (Converter.class.equals(configProperty.converter()))
         {
             //TODO add exception handling, if we throw an exception for an unknown converter
-            converter = converterFactory.create(String.class, (Class<?>) this.beanType);
+            converter = converterFactory.create(String.class, (Class<?>) this.beanType,
+                this.customQualifier != null ? customQualifier.annotationType() : null);
         }
         else
         {

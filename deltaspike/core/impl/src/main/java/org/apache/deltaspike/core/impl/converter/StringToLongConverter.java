@@ -16,14 +16,32 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.spi.converter;
+package org.apache.deltaspike.core.impl.converter;
 
 import org.apache.deltaspike.core.api.converter.Converter;
+import org.apache.deltaspike.core.api.converter.ConverterException;
 
-import java.lang.annotation.Annotation;
+import javax.enterprise.inject.Typed;
 
-public interface ConverterFactory
+@Typed()
+class StringToLongConverter implements Converter<String, Long>
 {
-    //TODO discuss metaDataType
-    <S, T> Converter<S, T> create(Class<S> sourceType, Class<T> targetType, Class<? extends Annotation> metaDataType);
+    @Override
+    public Long convert(String source)
+    {
+        if (source == null || "".equals(source))
+        {
+            return 0L;
+        }
+
+        try
+        {
+            return Long.parseLong(source);
+        }
+        catch (NumberFormatException e)
+        {
+            throw new ConverterException(String.class, Integer.class, e);
+        }
+    }
 }
+

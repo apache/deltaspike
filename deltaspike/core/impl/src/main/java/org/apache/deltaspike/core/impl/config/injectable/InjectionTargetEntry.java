@@ -69,6 +69,11 @@ class InjectionTargetEntry
         {
             return false;
         }
+        if (optionalCustomQualifier != null ? !optionalCustomQualifier
+                .equals(that.optionalCustomQualifier) : that.optionalCustomQualifier != null)
+        {
+            return false;
+        }
         if (!type.equals(that.type))
         {
             return false;
@@ -82,6 +87,7 @@ class InjectionTargetEntry
     {
         int result = type.hashCode();
         result = 31 * result + configProperty.hashCode();
+        result = 31 * result + (optionalCustomQualifier != null ? optionalCustomQualifier.hashCode() : 0);
         return result;
     }
 }
