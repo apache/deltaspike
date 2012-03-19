@@ -32,6 +32,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 @RunWith(Arquillian.class)
 public class BeanProviderTest
@@ -88,9 +89,52 @@ public class BeanProviderTest
     @Test
     public void simpleBeanLookupByNameWithoutType()
     {
-        Object testBean = BeanProvider.getContextualReference("extraNameBean", false);
+        {
+            // test with the convenient operator (optional=false implied)
+            Object testBean = BeanProvider.getContextualReference("extraNameBean");
+            Assert.assertNotNull(testBean);
+            Assert.assertTrue(testBean instanceof TestBean);
+            TestBean tb = (TestBean) testBean;
+            Assert.assertEquals(4711, tb.getI());
+        }
 
-        Assert.assertNotNull(testBean);
+        {
+            // test with the 'optional' flag set to false
+            Object testBean = BeanProvider.getContextualReference("extraNameBean", false);
+            Assert.assertNotNull(testBean);
+            Assert.assertTrue(testBean instanceof TestBean);
+            TestBean tb = (TestBean) testBean;
+            Assert.assertEquals(4711, tb.getI());
+        }
+
+        {
+            // test by name lookup with the 'optional' flag set to false
+            try
+            {
+                Object testBean = BeanProvider.getContextualReference("thisBeanDoesNotExist");
+                Assert.fail("BeanProvider#getContextualReference should have blown up with a non-existing bean!");
+            }
+            catch(IllegalStateException ise)
+            {
+                // all is well, this is exactly what should happen!
+            }
+        }
+
+        {
+            // test by type lookup with the 'optional' flag set to false
+            try
+            {
+                // guess we can safely assume that there is no producer for a ConcurrentHashMap in the system...
+                ConcurrentHashMap chm = BeanProvider.getContextualReference(ConcurrentHashMap.class);
+                Assert.fail("BeanProvider#getContextualReference should have blown up with a non-existing bean!");
+            }
+            catch(IllegalStateException ise)
+            {
+                // all is well, this is exactly what should happen!
+            }
+        }
+
+
     }
 
     /*
