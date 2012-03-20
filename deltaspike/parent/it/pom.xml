@@ -430,7 +430,7 @@
 
         <profile>
             <!-- arquillian-tomee-remote isn't a real remote connector for a running server-instance -->
-            <id>tomee-managed</id>
+            <id>tomee-build-managed</id>
 
             <dependencies>
                 <dependency>
