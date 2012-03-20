@@ -27,6 +27,7 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
 import org.junit.Test;
@@ -55,12 +56,16 @@ public class ExcludeTestProjectStageDevelopment
         System.setProperty("org.apache.deltaspike.ProjectStage", "Development");
         ProjectStageProducer.setProjectStage(null);
 
+        JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "excludeTestProjectStageDevelopmentTest.jar")
+                .addPackage("org.apache.deltaspike.test.core.api.exclude")
+                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+
         return ShrinkWrap.create(WebArchive.class, "excludeProjectStageDevelopment.war")
                 .addAsLibraries(ShrinkWrapArchiveUtil.getArchives(null,
                         "META-INF/beans.xml",
-                        new String[]{"org.apache.deltaspike.core",
-                                "org.apache.deltaspike.test.core.api.exclude"},
+                        new String[]{"org.apache.deltaspike.core"},
                         null))
+                .addAsLibraries(testJar)
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 

@@ -27,6 +27,7 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
 import org.junit.Test;
@@ -57,12 +58,17 @@ public class TestClassDeactivation
         URL fileUrl = TestClassDeactivation.class.getClassLoader()
                 .getResource("META-INF/apache-deltaspike.properties");
 
+        JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "testClassDeactivationTest.jar")
+                .addPackage("org.apache.deltaspike.test.core.api.provider")
+                .addPackage("org.apache.deltaspike.test.core.impl.activation")
+                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+
         return ShrinkWrap.create(WebArchive.class, "classDeactivation.war")
                 .addAsLibraries(ShrinkWrapArchiveUtil.getArchives(null,
                         "META-INF/beans.xml",
-                        new String[]{"org.apache.deltaspike.test.core.impl.activation"},
+                        new String[]{"org.apache.deltaspike.core"},
                         null))
-                .addClass(TestBean.class)
+                .addAsLibraries(testJar)
                 .addAsResource(FileUtils.getFileForURL(fileUrl.toString()))
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }

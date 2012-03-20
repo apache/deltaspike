@@ -26,6 +26,7 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -39,7 +40,6 @@ import static org.junit.Assert.assertNotNull;
 @Category(WebProfileCategory.class)
 public class JndiUtilsTest
 {
-
     @Deployment
     public static WebArchive deploy()
     {
@@ -51,11 +51,16 @@ public class JndiUtilsTest
             }
         }.setTestMode();
 
+        JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "jndiTest.jar")
+                .addPackage("org.apache.deltaspike.test.category")
+                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+
         return ShrinkWrap.create(WebArchive.class, "jndiUtils.war")
                 .addAsLibraries(ShrinkWrapArchiveUtil.getArchives(null,
                         "META-INF/beans.xml",
                         new String[] { "org.apache.deltaspike" },
                         null))
+                .addAsLibraries(testJar)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
@@ -68,5 +73,4 @@ public class JndiUtilsTest
         BeanManager beanManager = JndiUtils.lookup("java:comp/BeanManager", BeanManager.class);
         assertNotNull("JNDI lookup failed", beanManager);
     }
-
 }

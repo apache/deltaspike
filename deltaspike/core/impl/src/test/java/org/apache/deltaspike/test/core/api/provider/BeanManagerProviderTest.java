@@ -52,7 +52,7 @@ public class BeanManagerProviderTest
         return ShrinkWrap.create(WebArchive.class, "beanManagerProvider.war")
                 .addAsLibraries(ShrinkWrapArchiveUtil.getArchives(null,
                         "META-INF/beans.xml",
-                        new String[]{"org.apache.deltaspike"},
+                        new String[]{"org.apache.deltaspike.core"},
                         null))
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }

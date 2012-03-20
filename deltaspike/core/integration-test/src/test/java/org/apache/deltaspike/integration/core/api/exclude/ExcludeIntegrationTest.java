@@ -37,6 +37,7 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
 import org.junit.Test;
@@ -72,15 +73,19 @@ public class ExcludeIntegrationTest
         URL testExtensionsFileUrl = ExcludeIntegrationTest.class.getClassLoader()
                 .getResource("META-INF/services/test.javax.enterprise.inject.spi.Extension");
 
+        JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "excludeIntegrationTest.jar")
+                .addPackage("org.apache.deltaspike.test.core.api.exclude")
+                .addPackage("org.apache.deltaspike.test.core.impl.activation")
+                .addPackage("org.apache.deltaspike.test.category")
+                .addPackage("org.apache.deltaspike.integration.core.api.exclude")
+                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+
         return ShrinkWrap.create(WebArchive.class, "excludeIntegration.war")
                 .addAsLibraries(ShrinkWrapArchiveUtil.getArchives(null,
                         "META-INF/beans.xml",
-                        new String[]{"org.apache.deltaspike.core",
-                                "org.apache.deltaspike.integration",
-                                "org.apache.deltaspike.test.category",
-                                "org.apache.deltaspike.test.core.api.exclude",
-                                "org.apache.deltaspike.test.core.impl.activation"},
+                        new String[]{"org.apache.deltaspike.core"},
                         null))
+                .addAsLibraries(testJar)
                 .addClass(IntegrationTestProjectStageProducer.class)
                 .addAsResource(FileUtils.getFileForURL(deltaSpikeConfig.toString()),
                         "META-INF/apache-deltaspike.properties")

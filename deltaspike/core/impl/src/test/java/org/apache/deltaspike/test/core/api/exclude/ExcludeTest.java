@@ -24,16 +24,19 @@ import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.impl.exclude.ExcludeExtension;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
 import org.apache.deltaspike.test.core.api.temptestutil.ShrinkWrapArchiveUtil;
+import org.apache.deltaspike.test.util.FileUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.enterprise.inject.spi.Extension;
+import java.net.URL;
 
 /**
  * Tests for {@link org.apache.deltaspike.core.api.exclude.Exclude}
@@ -58,13 +61,22 @@ public class ExcludeTest
         System.setProperty("org.apache.deltaspike.ProjectStage", "Production");
         ProjectStageProducer.setProjectStage(null);
 
+        URL fileUrl = ExcludeTest.class.getClassLoader()
+                .getResource("META-INF/apache-deltaspike.properties");
+
+        JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "excludeTest.jar")
+                .addPackage("org.apache.deltaspike.test.category")
+                .addPackage("org.apache.deltaspike.test.core.api.exclude")
+                .addPackage("org.apache.deltaspike.test.core.impl.activation")
+                .addAsManifestResource(FileUtils.getFileForURL(fileUrl.toString()))
+                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+
         return ShrinkWrap.create(WebArchive.class, "exclude.war")
                 .addAsLibraries(ShrinkWrapArchiveUtil.getArchives(null,
                         "META-INF/beans.xml",
-                        new String[]{"org.apache.deltaspike.core",
-                                "org.apache.deltaspike.test.category",
-                                "org.apache.deltaspike.test.core.api.exclude"},
+                        new String[]{"org.apache.deltaspike.core"},
                         null))
+                .addAsLibraries(testJar)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsServiceProvider(Extension.class, ExcludeExtension.class);
     }

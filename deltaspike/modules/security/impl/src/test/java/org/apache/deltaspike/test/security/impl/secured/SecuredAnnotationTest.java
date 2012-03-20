@@ -28,7 +28,9 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
+import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
 import org.junit.Test;
@@ -73,14 +75,18 @@ public class SecuredAnnotationTest
         {
             excludedFiles = new String[]{"META-INF.apache-deltaspike.properties", "META-INF.beans.xml"};
         }
-        
+
+        JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "securedAnnotationTest.jar")
+                .addPackage("org.apache.deltaspike.test.security.impl.secured")
+                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+
         return ShrinkWrap.create(WebArchive.class)
                 .addAsLibraries(ShrinkWrapArchiveUtil.getArchives(null,
                         "META-INF/beans.xml",
                         new String[]{"org.apache.deltaspike.core",
-                            "org.apache.deltaspike.security",
-                            "org.apache.deltaspike.test.security.impl.secured"},
+                                "org.apache.deltaspike.security"},
                         excludedFiles))
+                .addAsLibraries(testJar)
                 .addAsServiceProvider(Extension.class, ExcludeExtension.class)
                 .addAsWebInfResource(beansXml, "beans.xml");
     }
