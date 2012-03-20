@@ -28,11 +28,12 @@ import org.apache.deltaspike.test.core.api.alternative.global.qualifier.BaseInte
 import org.apache.deltaspike.test.core.api.alternative.global.qualifier.QualifierA;
 import org.apache.deltaspike.test.core.api.alternative.global.qualifier.QualifierB;
 import org.apache.deltaspike.test.core.api.alternative.global.qualifier.QualifierValue1;
-import org.apache.deltaspike.test.core.api.temptestutil.ShrinkWrapArchiveUtil;
+import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
 import org.junit.Test;
@@ -75,14 +76,16 @@ public class GlobalAlternativeTest
             }
         }.setTestMode();
 
+        JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "excludeIntegrationTest.jar")
+                .addPackage("org.apache.deltaspike.test.core.api.alternative.global")
+                .addPackage("org.apache.deltaspike.test.core.api.alternative.global.qualifier")
+                .addPackage("org.apache.deltaspike.test.category")
+                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+
         return ShrinkWrap.create(WebArchive.class, "globalAlternative.war")
-                .addAsLibraries(ShrinkWrapArchiveUtil.getArchives(null,
-                        "META-INF/beans.xml",
-                        new String[]{"org.apache.deltaspike.core",
-                                "org.apache.deltaspike.test.core.api.alternative"},
-                        new String[]{"META-INF.config"}))
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
-                .addAsManifestResource(EmptyAsset.INSTANCE, "GlobalAlternativeTest.INFO");
+                .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive(new String[]{"META-INF.config"}))
+                .addAsLibraries(testJar)
+                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
     /**

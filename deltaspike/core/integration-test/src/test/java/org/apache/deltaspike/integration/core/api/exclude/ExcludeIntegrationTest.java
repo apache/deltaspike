@@ -31,7 +31,7 @@ import org.apache.deltaspike.test.core.api.exclude.CustomExpressionBasedNoBean;
 import org.apache.deltaspike.test.core.api.exclude.NoBean;
 import org.apache.deltaspike.test.core.api.exclude.ProdDbBean;
 import org.apache.deltaspike.test.core.api.exclude.StdBean;
-import  org.apache.deltaspike.test.core.api.temptestutil.ShrinkWrapArchiveUtil;
+import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.apache.deltaspike.test.util.FileUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -81,10 +81,7 @@ public class ExcludeIntegrationTest
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
         return ShrinkWrap.create(WebArchive.class, "excludeIntegration.war")
-                .addAsLibraries(ShrinkWrapArchiveUtil.getArchives(null,
-                        "META-INF/beans.xml",
-                        new String[]{"org.apache.deltaspike.core"},
-                        null))
+                .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
                 .addAsLibraries(testJar)
                 .addClass(IntegrationTestProjectStageProducer.class)
                 .addAsResource(FileUtils.getFileForURL(deltaSpikeConfig.toString()),

@@ -23,7 +23,7 @@ import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.impl.exclude.ExcludeExtension;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.security.api.AccessDeniedException;
-import org.apache.deltaspike.test.util.ShrinkWrapArchiveUtil;
+import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -81,11 +81,7 @@ public class SecuredAnnotationTest
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
         return ShrinkWrap.create(WebArchive.class)
-                .addAsLibraries(ShrinkWrapArchiveUtil.getArchives(null,
-                        "META-INF/beans.xml",
-                        new String[]{"org.apache.deltaspike.core",
-                                "org.apache.deltaspike.security"},
-                        excludedFiles))
+                .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndSecurityArchive(excludedFiles))
                 .addAsLibraries(testJar)
                 .addAsServiceProvider(Extension.class, ExcludeExtension.class)
                 .addAsWebInfResource(beansXml, "beans.xml");

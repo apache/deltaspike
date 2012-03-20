@@ -20,8 +20,7 @@ package org.apache.deltaspike.test.core.impl.activation;
 
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.util.ClassDeactivation;
-import org.apache.deltaspike.test.core.api.provider.TestBean;
-import org.apache.deltaspike.test.core.api.temptestutil.ShrinkWrapArchiveUtil;
+import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.apache.deltaspike.test.util.FileUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -64,10 +63,7 @@ public class TestClassDeactivation
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
         return ShrinkWrap.create(WebArchive.class, "classDeactivation.war")
-                .addAsLibraries(ShrinkWrapArchiveUtil.getArchives(null,
-                        "META-INF/beans.xml",
-                        new String[]{"org.apache.deltaspike.core"},
-                        null))
+                .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
                 .addAsLibraries(testJar)
                 .addAsResource(FileUtils.getFileForURL(fileUrl.toString()))
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");

@@ -20,7 +20,7 @@ package org.apache.deltaspike.test.core.api.provider;
 
 
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
-import org.apache.deltaspike.test.core.api.temptestutil.ShrinkWrapArchiveUtil;
+import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -50,10 +50,7 @@ public class BeanManagerProviderTest
         }.setTestMode();
 
         return ShrinkWrap.create(WebArchive.class, "beanManagerProvider.war")
-                .addAsLibraries(ShrinkWrapArchiveUtil.getArchives(null,
-                        "META-INF/beans.xml",
-                        new String[]{"org.apache.deltaspike.core"},
-                        null))
+                .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
     
