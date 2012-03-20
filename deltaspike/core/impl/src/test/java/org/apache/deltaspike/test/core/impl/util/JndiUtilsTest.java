@@ -58,7 +58,7 @@ public class JndiUtilsTest
         return ShrinkWrap.create(WebArchive.class, "jndiUtils.war")
                 .addAsLibraries(ShrinkWrapArchiveUtil.getArchives(null,
                         "META-INF/beans.xml",
-                        new String[] { "org.apache.deltaspike" },
+                        new String[] { "org.apache.deltaspike.core" },
                         null))
                 .addAsLibraries(testJar)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");

@@ -26,6 +26,7 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
 import org.junit.Test;
@@ -60,13 +61,17 @@ public class BdaAlternativeTest
             }
         }.setTestMode();
 
+        JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "securedAnnotationTest.jar")
+                .addPackage("org.apache.deltaspike.test.category")
+                .addPackage("org.apache.deltaspike.test.core.api.alternative.local")
+                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+
         return ShrinkWrap.create(WebArchive.class, "bdaAlternative.war")
                 .addAsLibraries(ShrinkWrapArchiveUtil.getArchives(null,
                         "META-INF/beans.xml",
-                        new String[]{"org.apache.deltaspike.core",
-                                     "org.apache.deltaspike.test.category",
-                                     "org.apache.deltaspike.test.core.api.alternative"},
+                        new String[]{"org.apache.deltaspike.core"},
                         new String[]{"META-INF.config"}))
+                .addAsLibraries(testJar)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsManifestResource(EmptyAsset.INSTANCE, "GlobalAlternativeTest.INFO");
     }
