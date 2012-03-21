@@ -38,17 +38,17 @@ import javax.inject.Inject;
 
 import org.apache.deltaspike.core.api.metadata.builder.ImmutableInjectionPoint;
 
-import static org.apache.deltaspike.core.util.Reflections.isSerializable;
+import static org.apache.deltaspike.core.util.ReflectionUtils.isSerializable;
 
 /**
  * A set of utility methods for working with beans.
  *
  * @author Pete Muir
  */
-public class Beans
+public class BeanUtils
 {
 
-    private Beans()
+    private BeanUtils()
     {
     }
 

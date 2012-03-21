@@ -19,7 +19,7 @@
 
 package org.apache.deltaspike.core.api.metadata.builder;
 
-import org.apache.deltaspike.core.util.Reflections;
+import org.apache.deltaspike.core.util.ReflectionUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
@@ -151,7 +151,7 @@ public class AnnotationBuilder
      */
     public <T extends Annotation> T getAnnotation(Class<T> anType)
     {
-        return Reflections.<T>cast(annotationMap.get(anType));
+        return ReflectionUtils.<T>cast(annotationMap.get(anType));
     }
 
     /**

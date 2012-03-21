@@ -19,7 +19,7 @@
 
 package org.apache.deltaspike.core.api.metadata.builder;
 
-import org.apache.deltaspike.core.util.Reflections;
+import org.apache.deltaspike.core.util.ReflectionUtils;
 
 import javax.enterprise.inject.spi.Annotated;
 import javax.enterprise.inject.spi.AnnotatedConstructor;
@@ -649,7 +649,7 @@ public class AnnotatedTypeBuilder<X>
             }
         }
 
-        for (Field field : Reflections.getAllDeclaredFields(type))
+        for (Field field : ReflectionUtils.getAllDeclaredFields(type))
         {
             AnnotationBuilder annotationBuilder = fields.get(field);
             if (annotationBuilder == null)
@@ -657,7 +657,7 @@ public class AnnotatedTypeBuilder<X>
                 annotationBuilder = new AnnotationBuilder();
                 fields.put(field, annotationBuilder);
             }
-            Reflections.setAccessible(field);
+            ReflectionUtils.setAccessible(field);
 
             for (Annotation annotation : field.getAnnotations())
             {
@@ -668,7 +668,7 @@ public class AnnotatedTypeBuilder<X>
             }
         }
 
-        for (Method method : Reflections.getAllDeclaredMethods(type))
+        for (Method method : ReflectionUtils.getAllDeclaredMethods(type))
         {
             AnnotationBuilder annotationBuilder = methods.get(method);
             if (annotationBuilder == null)
@@ -676,7 +676,7 @@ public class AnnotatedTypeBuilder<X>
                 annotationBuilder = new AnnotationBuilder();
                 methods.put(method, annotationBuilder);
             }
-            Reflections.setAccessible(method);
+            ReflectionUtils.setAccessible(method);
 
             for (Annotation annotation : method.getAnnotations())
             {

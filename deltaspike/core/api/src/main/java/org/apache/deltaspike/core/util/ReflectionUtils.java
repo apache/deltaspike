@@ -55,7 +55,7 @@ import java.util.Set;
 //X TODO: Look at merging this with some of the other classes from CODI, or if they're really needed
 //X TODO: Also some methods need JavaDoc
 @Typed()
-public abstract class Reflections
+public abstract class ReflectionUtils
 {
     /**
      * An empty array of type {@link Annotation}, useful converting lists to
@@ -73,7 +73,7 @@ public abstract class Reflections
 
     public static final Class<?>[] EMPTY_CLASSES = new Class<?>[0];
 
-    private Reflections()
+    private ReflectionUtils()
     {
         // prevent instantiation
     }
@@ -359,7 +359,7 @@ public abstract class Reflections
      * <p/>
      * <p>
      * If the Thread Context Class Loader is available, it will be used,
-     * otherwise the classloader used to load {@link Reflections} will be used
+     * otherwise the classloader used to load {@link ReflectionUtils} will be used
      * </p>
      * <p/>
      * <p>
@@ -452,10 +452,10 @@ public abstract class Reflections
      * </p>
      * <p/>
      * <p>This method provides the same functionality and throws the same exceptions as
-     * {@link Reflections#invokeMethod(boolean, Method, Class, Object, Object...)}, with the
+     * {@link ReflectionUtils#invokeMethod(boolean, Method, Class, Object, Object...)}, with the
      * expected return type set to {@link Object} and no change to the method's accessibility.</p>
      *
-     * @see Reflections#invokeMethod(boolean, Method, Class, Object, Object...)
+     * @see ReflectionUtils#invokeMethod(boolean, Method, Class, Object, Object...)
      * @see Method#invoke(Object, Object...)
      */
     public static Object invokeMethod(Method method, Object instance, Object... args)
@@ -476,10 +476,10 @@ public abstract class Reflections
      * </p>
      * <p/>
      * <p>This method provides the same functionality and throws the same exceptions as
-     * {@link Reflections#invokeMethod(boolean, Method, Class, Object, Object...)}, with the
+     * {@link ReflectionUtils#invokeMethod(boolean, Method, Class, Object, Object...)}, with the
      * expected return type set to {@link Object}.</p>
      *
-     * @see Reflections#invokeMethod(boolean, Method, Class, Object, Object...)
+     * @see ReflectionUtils#invokeMethod(boolean, Method, Class, Object, Object...)
      * @see Method#invoke(Object, Object...)
      */
     public static Object invokeMethod(boolean setAccessible, Method method, Object instance, Object... args)
@@ -494,11 +494,11 @@ public abstract class Reflections
      * </p>
      * <p/>
      * <p>This method provides the same functionality and throws the same exceptions as
-     * {@link Reflections#invokeMethod(boolean, Method, Class, Object, Object...)}, with the
+     * {@link ReflectionUtils#invokeMethod(boolean, Method, Class, Object, Object...)}, with the
      * expected return type set to {@link Object} and honoring the accessibility of
      * the method.</p>
      *
-     * @see Reflections#invokeMethod(boolean, Method, Class, Object, Object...)
+     * @see ReflectionUtils#invokeMethod(boolean, Method, Class, Object, Object...)
      * @see Method#invoke(Object, Object...)
      */
     public static <T> T invokeMethod(Method method, Class<T> expectedReturnType, Object instance, Object... args)
@@ -596,7 +596,7 @@ public abstract class Reflections
      * </p>
      * <p/>
      * <p>This method provides the same functionality and throws the same exceptions as
-     * {@link Reflections#setFieldValue(boolean, Field, Object, Object)}, honoring
+     * {@link ReflectionUtils#setFieldValue(boolean, Field, Object, Object)}, honoring
      * the accessibility of the field.</p>
      */
     public static void setFieldValue(Field field, Object instance, Object value)
@@ -709,7 +709,7 @@ public abstract class Reflections
         try
         {
             //<T> needed to bypass an issue with old jdk versions
-            return Reflections.<T>cast(field.get(instance));
+            return ReflectionUtils.<T>cast(field.get(instance));
         }
         catch (IllegalAccessException e)
         {

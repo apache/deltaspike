@@ -30,9 +30,9 @@ import javax.enterprise.inject.spi.InjectionPoint;
 
 import org.apache.deltaspike.core.api.metadata.builder.ParameterValueRedefiner.ParameterValue;
 
-import static org.apache.deltaspike.core.util.Beans.createInjectionPoints;
-import static org.apache.deltaspike.core.util.Reflections.EMPTY_OBJECT_ARRAY;
-import static org.apache.deltaspike.core.util.Reflections.invokeMethod;
+import static org.apache.deltaspike.core.util.BeanUtils.createInjectionPoints;
+import static org.apache.deltaspike.core.util.ReflectionUtils.EMPTY_OBJECT_ARRAY;
+import static org.apache.deltaspike.core.util.ReflectionUtils.invokeMethod;
 
 /**
  * <p>
@@ -195,7 +195,7 @@ public class InjectableMethod<X>
         {
             //X TODO check if it is compatible with Weld
             //workaround for OWB which wraps InvocationTargetException the original exception
-            //see Reflections#invokeMethod
+            //see ReflectionUtils#invokeMethod
             if (RuntimeException.class.getName().equals(e.getClass().getName()) &&
                     e.getCause() instanceof RuntimeException)
             {

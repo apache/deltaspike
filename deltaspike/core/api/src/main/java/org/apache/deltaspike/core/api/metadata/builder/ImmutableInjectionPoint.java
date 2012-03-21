@@ -31,7 +31,7 @@ import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InjectionPoint;
 
-import org.apache.deltaspike.core.util.Beans;
+import org.apache.deltaspike.core.util.BeanUtils;
 
 import static java.util.Collections.unmodifiableSet;
 
@@ -94,7 +94,7 @@ public class ImmutableInjectionPoint implements InjectionPoint
     {
         this.annotated = field;
         this.member = field.getJavaMember();
-        this.qualifiers = Beans.getQualifiers(beanManager, field.getAnnotations());
+        this.qualifiers = BeanUtils.getQualifiers(beanManager, field.getAnnotations());
         this.type = field.getJavaMember().getGenericType();
         this.isTransient = isTransient;
         this.delegate = delegate;
@@ -140,7 +140,7 @@ public class ImmutableInjectionPoint implements InjectionPoint
     {
         this.annotated = parameter;
         this.member = parameter.getDeclaringCallable().getJavaMember();
-        this.qualifiers = Beans.getQualifiers(beanManager, parameter.getAnnotations());
+        this.qualifiers = BeanUtils.getQualifiers(beanManager, parameter.getAnnotations());
         this.isTransient = isTransient;
         this.delegate = delegate;
         this.declaringBean = declaringBean;
