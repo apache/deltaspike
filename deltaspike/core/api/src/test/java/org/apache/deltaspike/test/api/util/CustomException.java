@@ -16,27 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.impl.activation;
+package org.apache.deltaspike.test.api.util;
 
-
-import org.apache.deltaspike.core.spi.activation.ClassDeactivator;
-import org.apache.deltaspike.core.spi.activation.Deactivatable;
-
-/**
- * Test {@link org.apache.deltaspike.core.spi.activation.ClassDeactivator}
- * which is needed to test {@link org.apache.deltaspike.core.util.ClassDeactivationUtils}
- */
-public class TestClassDeactivator implements ClassDeactivator
+class CustomException extends Exception
 {
-    private static final long serialVersionUID = -3403907272881821406L;
+    private static final long serialVersionUID = 6197126259870336328L;
 
-    @Override
-    public Boolean isActivated(Class<? extends Deactivatable> targetClass)
+    CustomException(String message)
     {
-        if (targetClass.equals(DeactivatedClass.class))
-        {
-            return Boolean.FALSE;
-        }
-        return null;
+        super(message);
+    }
+
+    CustomException(String message, Throwable cause)
+    {
+        super(message, cause);
     }
 }

@@ -33,9 +33,9 @@ import java.util.logging.Logger;
  * Helper methods for {@link ClassDeactivator}
  */
 @Typed()
-public abstract class ClassDeactivation
+public abstract class ClassDeactivationUtils
 {
-    private static final Logger LOG = Logger.getLogger(ClassDeactivation.class.getName());
+    private static final Logger LOG = Logger.getLogger(ClassDeactivationUtils.class.getName());
 
     /**
      * This Map holds the ClassLoader as first level to make it possible to have different configurations per 
@@ -53,7 +53,7 @@ public abstract class ClassDeactivation
     private static Map<Class<? extends Deactivatable>, Boolean> activationStatusCache
         = new ConcurrentHashMap<Class<? extends Deactivatable>, Boolean>();
     
-    private ClassDeactivation()
+    private ClassDeactivationUtils()
     {
         // prevent instantiation
     }

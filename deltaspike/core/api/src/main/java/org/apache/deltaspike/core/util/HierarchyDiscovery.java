@@ -35,6 +35,7 @@ import java.util.logging.Logger;
  */
 //X TODO: Look at merging this with ClassUtils perhaps
 //X TODO: JavaDoc
+//X TODO review
 @Typed()
 public class HierarchyDiscovery
 {

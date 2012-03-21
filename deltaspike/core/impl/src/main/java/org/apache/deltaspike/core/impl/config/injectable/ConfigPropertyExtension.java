@@ -21,7 +21,7 @@ package org.apache.deltaspike.core.impl.config.injectable;
 import org.apache.deltaspike.core.api.config.ConfigProperty;
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
-import org.apache.deltaspike.core.util.ClassDeactivation;
+import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AfterBeanDiscovery;
@@ -109,7 +109,7 @@ public class ConfigPropertyExtension implements Extension, Deactivatable
     {
         if (this.isActivated == null)
         {
-            this.isActivated = ClassDeactivation.isActivated(getClass());
+            this.isActivated = ClassDeactivationUtils.isActivated(getClass());
         }
     }
 }

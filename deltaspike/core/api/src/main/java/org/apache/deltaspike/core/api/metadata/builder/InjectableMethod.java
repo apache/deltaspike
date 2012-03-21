@@ -31,7 +31,6 @@ import javax.enterprise.inject.spi.InjectionPoint;
 import org.apache.deltaspike.core.api.metadata.builder.ParameterValueRedefiner.ParameterValue;
 
 import static org.apache.deltaspike.core.util.BeanUtils.createInjectionPoints;
-import static org.apache.deltaspike.core.util.ReflectionUtils.EMPTY_OBJECT_ARRAY;
 import static org.apache.deltaspike.core.util.ReflectionUtils.invokeMethod;
 
 /**
@@ -50,7 +49,6 @@ import static org.apache.deltaspike.core.util.ReflectionUtils.invokeMethod;
  */
 public class InjectableMethod<X>
 {
-
     private final AnnotatedMethod<X> method;
     private final List<InjectionPoint> parameters;
     private final BeanManager beanManager;
@@ -186,9 +184,9 @@ public class InjectableMethod<X>
 
         try
         {
-            @SuppressWarnings("unchecked")
-            T result = (T) invokeMethod(true, method.getJavaMember(), receiver, parameterValues
-                    .toArray(EMPTY_OBJECT_ARRAY));
+            @SuppressWarnings({ "unchecked", "UnnecessaryLocalVariable" })
+            T result =
+                    (T) invokeMethod(receiver, method.getJavaMember(), Object.class, true, parameterValues.toArray());
             return result;
         }
         catch (RuntimeException e)
@@ -204,5 +202,4 @@ public class InjectableMethod<X>
             throw e;
         }
     }
-
 }

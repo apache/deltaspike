@@ -19,7 +19,7 @@
 package org.apache.deltaspike.test.core.impl.activation;
 
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
-import org.apache.deltaspike.core.util.ClassDeactivation;
+import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.apache.deltaspike.test.util.FileUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -75,7 +75,7 @@ public class TestClassDeactivation
     @Test
     public void testActivatedClass()
     {
-        Assert.assertTrue(ClassDeactivation.isActivated(ActivatedClass.class));
+        Assert.assertTrue(ClassDeactivationUtils.isActivated(ActivatedClass.class));
     }
 
     /**
@@ -84,6 +84,6 @@ public class TestClassDeactivation
     @Test
     public void testDeactivatedClass()
     {
-        Assert.assertFalse(ClassDeactivation.isActivated(DeactivatedClass.class));
+        Assert.assertFalse(ClassDeactivationUtils.isActivated(DeactivatedClass.class));
     }
 }

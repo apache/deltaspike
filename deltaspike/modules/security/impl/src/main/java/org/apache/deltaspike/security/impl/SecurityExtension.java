@@ -21,7 +21,7 @@ package org.apache.deltaspike.security.impl;
 
 import org.apache.deltaspike.core.api.metadata.builder.AnnotatedTypeBuilder;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
-import org.apache.deltaspike.core.util.ClassDeactivation;
+import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.security.api.SecurityDefinitionException;
 import org.apache.deltaspike.security.api.annotation.Secures;
@@ -268,7 +268,7 @@ public class SecurityExtension implements Extension, Deactivatable
     {
         if (isActivated == null)
         {
-            isActivated = ClassDeactivation.isActivated(getClass());
+            isActivated = ClassDeactivationUtils.isActivated(getClass());
         }
     }
 }

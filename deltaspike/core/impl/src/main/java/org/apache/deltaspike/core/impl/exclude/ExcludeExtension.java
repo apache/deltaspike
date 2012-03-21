@@ -25,7 +25,7 @@ import org.apache.deltaspike.core.api.exclude.Exclude;
 import org.apache.deltaspike.core.api.interpreter.ExpressionInterpreter;
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.impl.interpreter.PropertyExpressionInterpreter;
-import org.apache.deltaspike.core.util.ClassDeactivation;
+import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
 
@@ -494,8 +494,8 @@ public class ExcludeExtension implements Extension, Deactivatable
     {
         if (isActivated == null)
         {
-            isActivated = ClassDeactivation.isActivated(getClass());
-            isGlobalAlternativeActivated = ClassDeactivation.isActivated(GlobalAlternative.class);
+            isActivated = ClassDeactivationUtils.isActivated(getClass());
+            isGlobalAlternativeActivated = ClassDeactivationUtils.isActivated(GlobalAlternative.class);
         }
     }
 
