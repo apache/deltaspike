@@ -26,10 +26,10 @@ import javax.inject.Inject;
 
 import org.apache.deltaspike.core.api.literal.NamedLiteral;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.core.util.StringUtils;
 import org.apache.deltaspike.security.api.AuthenticatorSelector;
 import org.apache.deltaspike.security.impl.jaas.JaasAuthenticator;
 import org.apache.deltaspike.security.impl.management.IdmAuthenticator;
-import org.apache.deltaspike.security.impl.util.Strings;
 import org.apache.deltaspike.security.spi.Authenticator;
 
 /**
@@ -66,7 +66,7 @@ public class AuthenticatorSelectorImpl implements AuthenticatorSelector
             return authenticators.select(authenticatorClass).get();
         }
 
-        if (!Strings.isEmpty(authenticatorName)) 
+        if (!StringUtils.isEmpty(authenticatorName))
         {
             Instance<Authenticator> selected = authenticators.select(new NamedLiteral(authenticatorName));
             if (selected.isAmbiguous()) 
