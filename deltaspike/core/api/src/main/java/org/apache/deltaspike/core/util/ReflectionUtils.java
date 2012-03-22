@@ -376,8 +376,10 @@ public abstract class ReflectionUtils
      * @param clazz The class to examine
      * @return The type arguments
      */
-    public static Type[] getTypeArguments(Class<?> clazz)
+    public static Type[] getActualTypeArguments(Class<?> clazz)
     {
+        //X TODO discuss direct usage: return clazz.getTypeParameters();
+
         Type type = new HierarchyDiscovery(clazz).getResolvedType();
         if (type instanceof ParameterizedType)
         {
@@ -395,8 +397,10 @@ public abstract class ReflectionUtils
      * @param type The type to examine
      * @return The type arguments
      */
-    public static Type[] getTypeArguments(Type type)
+    public static Type[] getActualTypeArguments(Type type)
     {
+        //X TODO discuss delegation to getActualTypeArguments(Class) if type is an instance of Class
+
         Type resolvedType = new HierarchyDiscovery(type).getResolvedType();
         if (resolvedType instanceof ParameterizedType)
         {
