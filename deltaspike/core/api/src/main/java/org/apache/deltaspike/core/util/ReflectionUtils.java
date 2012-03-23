@@ -44,14 +44,6 @@ import java.util.Set;
 @Typed()
 public abstract class ReflectionUtils
 {
-    /**
-     * An empty array of type {@link Object}, useful for converting lists to
-     * arrays.
-     */
-    public static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
-
-    public static final Type[] EMPTY_TYPES = {};
-
     private ReflectionUtils()
     {
         // prevent instantiation
@@ -378,17 +370,12 @@ public abstract class ReflectionUtils
      */
     public static Type[] getActualTypeArguments(Class<?> clazz)
     {
-        //X TODO discuss direct usage: return clazz.getTypeParameters();
+        if (clazz == null)
+        {
+            throw new IllegalArgumentException("null isn't supported");
+        }
 
-        Type type = new HierarchyDiscovery(clazz).getResolvedType();
-        if (type instanceof ParameterizedType)
-        {
-            return ((ParameterizedType) type).getActualTypeArguments();
-        }
-        else
-        {
-            return EMPTY_TYPES;
-        }
+        return clazz.getTypeParameters();
     }
 
     /**
@@ -399,17 +386,12 @@ public abstract class ReflectionUtils
      */
     public static Type[] getActualTypeArguments(Type type)
     {
-        //X TODO discuss delegation to getActualTypeArguments(Class) if type is an instance of Class
+        if (type instanceof Class)
+        {
+            return getActualTypeArguments((Class)type);
+        }
 
-        Type resolvedType = new HierarchyDiscovery(type).getResolvedType();
-        if (resolvedType instanceof ParameterizedType)
-        {
-            return ((ParameterizedType) resolvedType).getActualTypeArguments();
-        }
-        else
-        {
-            return EMPTY_TYPES;
-        }
+        throw new IllegalArgumentException((type != null ? type.getClass().getName() : "null") + " isn't supported");
     }
 
     /**
