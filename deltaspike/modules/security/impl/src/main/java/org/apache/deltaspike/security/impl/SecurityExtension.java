@@ -33,6 +33,7 @@ import javax.enterprise.inject.spi.AnnotatedMethod;
 import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.BeforeBeanDiscovery;
+import javax.enterprise.inject.spi.BeforeShutdown;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import javax.enterprise.inject.spi.ProcessSessionBean;
@@ -68,6 +69,12 @@ public class SecurityExtension implements Extension, Deactivatable
         }
 
         return securityMetaDataStorage;
+    }
+
+    protected static void removeMetaDataStorage()
+    {
+        ClassLoader classLoader = ClassUtils.getClassLoader(null);
+        SECURITY_METADATA_STORAGE_MAPPING.remove(classLoader);
     }
 
     protected void init(@Observes BeforeBeanDiscovery afterBeanDiscovery)
@@ -203,6 +210,11 @@ public class SecurityExtension implements Extension, Deactivatable
 
         // Clear securedTypes, we don't require it any more
         metaDataStorage.resetSecuredTypes();
+    }
+
+    protected void cleanup(@Observes BeforeShutdown beforeShutdown)
+    {
+        removeMetaDataStorage();
     }
 
     /**
