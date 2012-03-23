@@ -16,25 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.security.api;
+package org.apache.deltaspike.security.api.authentication;
 
-import javax.enterprise.inject.Typed;
-import java.io.Serializable;
-
-@Typed()
-public class User implements Serializable
+public class UnexpectedCredentialException extends AuthenticationException
 {
-    private static final long serialVersionUID = -2234530384311026364L;
+    private static final long serialVersionUID = 4827200587997989123L;
 
-    private final String id;
-
-    public User(String id)
+    public UnexpectedCredentialException(String message)
     {
-        this.id = id;
+        super(message);
     }
 
-    public String getId()
+    public UnexpectedCredentialException(String message, Throwable cause)
     {
-        return id;
+        super(message, cause);
     }
 }

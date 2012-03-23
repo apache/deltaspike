@@ -16,25 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.security.api;
 
-import javax.enterprise.inject.Typed;
-import java.io.Serializable;
 
-@Typed()
-public class User implements Serializable
+package org.apache.deltaspike.security.impl.authorization;
+
+import javax.interceptor.InterceptorBinding;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/**
+ * Interceptor binding type for SecurityInterceptor.  Users should not apply
+ * this binding themselves, it is applied by the security portable extension.
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@InterceptorBinding
+@Target({ElementType.TYPE, ElementType.METHOD })
+@interface SecurityInterceptorBinding 
 {
-    private static final long serialVersionUID = -2234530384311026364L;
 
-    private final String id;
-
-    public User(String id)
-    {
-        this.id = id;
-    }
-
-    public String getId()
-    {
-        return id;
-    }
 }

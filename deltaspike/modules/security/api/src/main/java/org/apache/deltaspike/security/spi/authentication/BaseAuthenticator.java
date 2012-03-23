@@ -16,25 +16,28 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.security.api;
+package org.apache.deltaspike.security.spi.authentication;
 
-import javax.enterprise.inject.Typed;
-import java.io.Serializable;
-
-@Typed()
-public class User implements Serializable
+/**
+ * Abstract base class that Authenticator implementations can extend for convenience. 
+ *
+ */
+public abstract class BaseAuthenticator implements Authenticator
 {
-    private static final long serialVersionUID = -2234530384311026364L;
-
-    private final String id;
-
-    public User(String id)
+    private AuthenticationStatus status;
+    
+    public AuthenticationStatus getStatus()
     {
-        this.id = id;
+        return status;
     }
 
-    public String getId()
+    protected void setStatus(AuthenticationStatus status)
     {
-        return id;
+        this.status = status;
+    }
+
+    public void postAuthenticate()
+    {
+        // No-op, override if any post-authentication processing is required.
     }
 }

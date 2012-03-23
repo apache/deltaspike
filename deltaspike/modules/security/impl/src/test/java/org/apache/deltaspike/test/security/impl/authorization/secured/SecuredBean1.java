@@ -16,25 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.security.api;
+package org.apache.deltaspike.test.security.impl.authorization.secured;
 
-import javax.enterprise.inject.Typed;
-import java.io.Serializable;
+import org.apache.deltaspike.security.api.authorization.annotation.Secured;
 
-@Typed()
-public class User implements Serializable
+import javax.enterprise.context.ApplicationScoped;
+
+@ApplicationScoped
+@Secured(TestAccessDecisionVoter.class)
+public class SecuredBean1
 {
-    private static final long serialVersionUID = -2234530384311026364L;
-
-    private final String id;
-
-    public User(String id)
+    public String getBlockedResult()
     {
-        this.id = id;
+        return "blocked result";
     }
 
-    public String getId()
+    public String getResult()
     {
-        return id;
+        return "result";
     }
 }

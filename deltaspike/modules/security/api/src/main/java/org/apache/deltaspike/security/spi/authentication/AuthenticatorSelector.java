@@ -16,25 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.security.api;
+package org.apache.deltaspike.security.spi.authentication;
 
-import javax.enterprise.inject.Typed;
-import java.io.Serializable;
-
-@Typed()
-public class User implements Serializable
+/**
+ * Selects which Authenticator implementation is used to manage the authentication process 
+ */
+public interface AuthenticatorSelector
 {
-    private static final long serialVersionUID = -2234530384311026364L;
+    Class<? extends Authenticator> getAuthenticatorClass();
 
-    private final String id;
+    void setAuthenticatorClass(Class<? extends Authenticator> authenticatorClass);
 
-    public User(String id)
-    {
-        this.id = id;
-    }
+    String getAuthenticatorName();
 
-    public String getId()
-    {
-        return id;
-    }
+    void setAuthenticatorName(String authenticatorName);
+    
+    Authenticator getSelectedAuthenticator();
 }

@@ -16,25 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.security.api;
+package org.apache.deltaspike.security.api.credential;
 
-import javax.enterprise.inject.Typed;
-import java.io.Serializable;
-
-@Typed()
-public class User implements Serializable
+/**
+ * Represents the credentials the current user will use to authenticate
+ * Only valid during the authentication process
+ */
+public interface LoginCredential
 {
-    private static final long serialVersionUID = -2234530384311026364L;
+    String getUserId();
 
-    private final String id;
+    void setUserId(String userId);
+    
+    Credential getCredential();
 
-    public User(String id)
-    {
-        this.id = id;
-    }
+    void setCredential(Credential credential);
 
-    public String getId()
-    {
-        return id;
-    }
+    void invalidate();
 }

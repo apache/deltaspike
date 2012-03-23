@@ -16,25 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.security.api;
+package org.apache.deltaspike.security.api.authentication.events;
 
-import javax.enterprise.inject.Typed;
-import java.io.Serializable;
+import org.apache.deltaspike.security.api.User;
 
-@Typed()
-public class User implements Serializable
+/**
+ * This event is raised just before the user un-authenticates
+ */
+public class PreLoggedOutEvent 
 {
-    private static final long serialVersionUID = -2234530384311026364L;
+    private User user;
 
-    private final String id;
-
-    public User(String id)
+    public PreLoggedOutEvent(User user)
     {
-        this.id = id;
+        this.user = user;
     }
 
-    public String getId()
+    public User getUser()
     {
-        return id;
+        return user;
     }
 }

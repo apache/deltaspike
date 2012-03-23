@@ -17,4 +17,4 @@
 # under the License.
 #####################################################################################
 
-org.apache.deltaspike.security.impl.SecurityExtension
+org.apache.deltaspike.security.impl.authorization.SecurityExtension

@@ -16,25 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.security.api;
 
-import javax.enterprise.inject.Typed;
-import java.io.Serializable;
+package org.apache.deltaspike.security.api.authorization;
 
-@Typed()
-public class User implements Serializable
+/**
+ * Thrown when an authenticated user has insufficient privileges to perform an operation.
+ *
+ */
+public class AuthorizationException extends org.apache.deltaspike.security.api.SecurityException
 {
-    private static final long serialVersionUID = -2234530384311026364L;
+    private static final long serialVersionUID = -981091398588455903L;
 
-    private final String id;
-
-    public User(String id)
+    public AuthorizationException(String message) 
     {
-        this.id = id;
+        super(message);
     }
-
-    public String getId()
+    
+    public AuthorizationException(String message, Throwable cause) 
     {
-        return id;
+        super(message, cause);
     }
 }

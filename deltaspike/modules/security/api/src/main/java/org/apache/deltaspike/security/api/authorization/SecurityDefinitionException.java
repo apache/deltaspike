@@ -16,25 +16,31 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.security.api;
 
-import javax.enterprise.inject.Typed;
-import java.io.Serializable;
+package org.apache.deltaspike.security.api.authorization;
 
-@Typed()
-public class User implements Serializable
+/**
+ * This exception is thrown when a security-related configuration error is detected,
+ * such as a missing or ambiguous security binding type
+ *
+ * @author Shane Bryzak
+ */
+public class SecurityDefinitionException extends org.apache.deltaspike.security.api.SecurityException
 {
-    private static final long serialVersionUID = -2234530384311026364L;
+    private static final long serialVersionUID = -5683365417825375411L;
 
-    private final String id;
-
-    public User(String id)
+    public SecurityDefinitionException(String message) 
     {
-        this.id = id;
+        super(message);
     }
 
-    public String getId()
+    public SecurityDefinitionException(Throwable cause) 
     {
-        return id;
+        super(cause);
+    }
+
+    public SecurityDefinitionException(String message, Throwable cause) 
+    {
+        super(message, cause);
     }
 }

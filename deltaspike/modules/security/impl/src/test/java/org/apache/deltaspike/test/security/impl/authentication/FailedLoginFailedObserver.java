@@ -16,25 +16,25 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.security.api;
+package org.apache.deltaspike.test.security.impl.authentication;
 
-import javax.enterprise.inject.Typed;
-import java.io.Serializable;
+import org.apache.deltaspike.security.api.authentication.events.LoginFailedEvent;
 
-@Typed()
-public class User implements Serializable
+import javax.enterprise.context.RequestScoped;
+import javax.enterprise.event.Observes;
+
+@RequestScoped
+public class FailedLoginFailedObserver
 {
-    private static final long serialVersionUID = -2234530384311026364L;
+    private Exception observedException;
 
-    private final String id;
-
-    public User(String id)
+    protected void onFailedLogin(@Observes LoginFailedEvent loginFailedEvent)
     {
-        this.id = id;
+        this.observedException = loginFailedEvent.getLoginException();
     }
 
-    public String getId()
+    Exception getObservedException()
     {
-        return id;
+        return observedException;
     }
 }

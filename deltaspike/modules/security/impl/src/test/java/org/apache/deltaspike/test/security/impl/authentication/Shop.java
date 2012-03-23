@@ -16,25 +16,28 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.security.api;
+package org.apache.deltaspike.test.security.impl.authentication;
 
-import javax.enterprise.inject.Typed;
-import java.io.Serializable;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 
-@Typed()
-public class User implements Serializable
+/**
+ *
+ */
+@ApplicationScoped
+public class Shop
 {
-    private static final long serialVersionUID = -2234530384311026364L;
+    @Inject
+    private InquiryStorage inquiryStorage;
 
-    private final String id;
-
-    public User(String id)
+    public String sendInquiry(Inquiry inquiry)
     {
-        this.id = id;
-    }
+        if (this.inquiryStorage.addInquiry(inquiry))
+        {
+            return inquiry.getInquiryId();
+            //TODO e.g. send notification in case of inquiries of premium users,...
+        }
 
-    public String getId()
-    {
-        return id;
+        return null;
     }
 }

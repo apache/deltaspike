@@ -16,25 +16,43 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.security.api;
+package org.apache.deltaspike.test.security.impl.authentication;
 
-import javax.enterprise.inject.Typed;
-import java.io.Serializable;
+import java.util.UUID;
 
-@Typed()
-public class User implements Serializable
+class NewProductInquiry implements Inquiry
 {
-    private static final long serialVersionUID = -2234530384311026364L;
+    private String question;
 
-    private final String id;
-
-    public User(String id)
+    private String id;
+    
+    NewProductInquiry(String question)
     {
-        this.id = id;
+        this.question = question;
+        this.id = UUID.randomUUID().toString();
     }
 
-    public String getId()
+    @Override
+    public String getInquiryId()
     {
-        return id;
+        return this.id;
+    }
+
+    @Override
+    public String toString()
+    {
+        return this.question;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return this.id.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        return obj instanceof NewProductInquiry && this.id.equals(((NewProductInquiry) obj).id);
     }
 }

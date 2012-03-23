@@ -16,25 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.security.api;
+package org.apache.deltaspike.test.security.impl.authorization.secured;
 
-import javax.enterprise.inject.Typed;
-import java.io.Serializable;
+import org.apache.deltaspike.security.api.authorization.annotation.Secured;
 
-@Typed()
-public class User implements Serializable
+import javax.enterprise.inject.Stereotype;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
+@Stereotype
+
+@Retention(value = RUNTIME)
+@Target({TYPE, METHOD } )
+
+@Secured(TestAccessDecisionVoter.class)
+public @interface SecuredBeanWithStereotype
 {
-    private static final long serialVersionUID = -2234530384311026364L;
-
-    private final String id;
-
-    public User(String id)
-    {
-        this.id = id;
-    }
-
-    public String getId()
-    {
-        return id;
-    }
 }

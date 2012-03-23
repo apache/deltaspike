@@ -16,25 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.security.api;
+package org.apache.deltaspike.security.api.authorization;
 
-import javax.enterprise.inject.Typed;
 import java.io.Serializable;
 
-@Typed()
-public class User implements Serializable
+/**
+ * Provides the concrete reason for the restriction.
+ */
+public interface SecurityViolation extends Serializable
 {
-    private static final long serialVersionUID = -2234530384311026364L;
-
-    private final String id;
-
-    public User(String id)
-    {
-        this.id = id;
-    }
-
-    public String getId()
-    {
-        return id;
-    }
+    /**
+     * Provides a description of the violation.
+     *
+     * @return description of the violation
+     */
+    String getReason();
 }

@@ -55,7 +55,9 @@ public class ArchiveUtils
         @SuppressWarnings("UnnecessaryLocalVariable")
         Asset beansXml = new StringAsset(
             "<beans>" +
-                "<interceptors><class>org.apache.deltaspike.security.impl.SecurityInterceptor</class></interceptors>" +
+                "<interceptors>" +
+                    "<class>org.apache.deltaspike.security.impl.authorization.SecurityInterceptor</class>" +
+                "</interceptors>" +
             "</beans>"
         );
 

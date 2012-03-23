@@ -30,10 +30,16 @@ public abstract class ExceptionUtils
         // prevent instantiation
     }
 
+    public static void throwAsRuntimeException(Throwable throwable)
+    {
+        //Attention: helper which allows to use a trick to throw a cached checked exception without a wrapping exception
+        new ExceptionHelper<RuntimeException>().throwException(throwable);
+    }
+
     public static void changeAndThrowException(Throwable throwable, String customMessage)
     {
         Throwable newThrowable = createNewException(throwable, customMessage);
-        //helper which allows to
+        //Attention: helper which allows to use a trick to throw a cached checked exception without a wrapping exception
         new ExceptionHelper<RuntimeException>().throwException(newThrowable);
     }
 

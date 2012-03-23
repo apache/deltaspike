@@ -16,25 +16,25 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.security.api;
+package org.apache.deltaspike.test.security.impl.authentication;
 
-import javax.enterprise.inject.Typed;
-import java.io.Serializable;
+import org.apache.deltaspike.core.api.exclude.Exclude;
 
-@Typed()
-public class User implements Serializable
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+@Exclude
+class InMemoryUserStorage
 {
-    private static final long serialVersionUID = -2234530384311026364L;
-
-    private final String id;
-
-    public User(String id)
+    private static Map<String, String> simpleUserPasswordMapping = new ConcurrentHashMap<String, String>();
+    
+    static void setPassword(String userName, String password)
     {
-        this.id = id;
+        simpleUserPasswordMapping.put(userName, password);
     }
-
-    public String getId()
+    
+    static String getPassword(String userName)
     {
-        return id;
+        return simpleUserPasswordMapping.get(userName);
     }
 }

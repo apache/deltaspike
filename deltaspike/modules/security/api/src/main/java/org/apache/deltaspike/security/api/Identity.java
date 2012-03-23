@@ -18,20 +18,17 @@
  */
 package org.apache.deltaspike.security.api;
 
-import java.util.Set;
-
-import org.apache.deltaspike.security.api.annotation.LoggedIn;
-import org.apache.deltaspike.security.api.annotation.Secures;
+import java.io.Serializable;
 
 /**
  * Represents the identity of the current user, and provides an API for authentication and authorization. 
  *
  */
-public interface Identity
+public interface Identity extends Serializable
 {
     public enum AuthenticationResult
     {
-        success, failed, exception
+        SUCCESS, FAILED
     }
     
     /**
@@ -39,34 +36,8 @@ public interface Identity
      *
      * @return true if the user is logged in
      */
-    @Secures
-    @LoggedIn
     boolean isLoggedIn();
 
-    /**
-     * Returns true if the currently authenticated user has provided their correct credentials
-     * within the verification window configured by the application.
-     *
-     * @return true if the current user is verified
-     */
-    boolean isVerified();
-
-    /**
-     * Will attempt to authenticate quietly if the user's credentials are set and they haven't
-     * authenticated already.  A quiet authentication doesn't throw any exceptions or create any
-     * system messages if authentication fails.
-     * 
-     * This method is intended to be used primarily as an internal API call, however has been made 
-     * public for convenience.
-     *
-     */
-    void quietLogin();
-
-    /**
-     * Returns the currently authenticated user
-     *
-     * @return
-     */
     User getUser();
 
     /**
@@ -78,11 +49,11 @@ public interface Identity
      * org.jboss.seam.security.events.LoginFailedEvent - raised when authentication fails
      * org.jboss.seam.security.events.AlreadyLoggedInEvent - raised if the user is already authenticated
      *
-     * @return AuthenticationResult returns success if user is authenticated, 
-     * failed if authentication failed, or
-     * exception if an exception occurred during authentication. These response
+     * @return AuthenticationResult returns SUCCESS if user is authenticated,
+     * FAILED if authentication FAILED, or
+     * EXCEPTION if an EXCEPTION occurred during authentication. These response
      * values may be used to control user navigation.  For deferred authentication methods, such as Open ID
-     * the login() method will return an immediate result of failed (and subsequently fire
+     * the login() method will return an immediate result of FAILED (and subsequently fire
      * a LoginFailedEvent) however in these conditions it is the responsibility of the Authenticator
      * implementation to take over the authentication process, for example by redirecting the user to
      * a third party authentication service such as an OpenID provider.
@@ -93,43 +64,4 @@ public interface Identity
      * Logs out the currently authenticated user
      */
     void logout();
-
-    /**
-     * Checks if the authenticated user is a member of the specified role.
-     *
-     * @param role String The name of the role to check
-     * @return boolean True if the user is a member of the specified role
-     */
-    boolean hasRole(String role, String group, String groupType);
-
-    /**
-     * Checks if the authenticated user is a member of the specified group
-     *
-     * @param name      The name of the group
-     * @param groupType The type of the group, e.g. "office", "department", "global role", etc
-     * @return true if the user is a member of the group
-     */
-    boolean inGroup(String name, String groupType);
-
-    /**
-     * Checks if the currently authenticated user has the necessary permission for
-     * a specific resource.
-     *
-     * @return true if the user has the required permission, otherwise false
-     */
-    boolean hasPermission(Object resource, String permission);
-
-    /**
-     * Returns an immutable set containing all the current user's granted roles
-     *
-     * @return
-     */
-    Set<Role> getRoles();
-
-    /**
-     * Returns an immutable set containing all the current user's group memberships
-     *
-     * @return
-     */
-    Set<Group> getGroups();
 }

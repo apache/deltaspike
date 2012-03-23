@@ -16,25 +16,31 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.security.api;
+package org.apache.deltaspike.security.impl.authorization;
 
-import javax.enterprise.inject.Typed;
+import org.apache.deltaspike.security.spi.authorization.SecurityStrategy;
+
+import javax.inject.Inject;
+import javax.interceptor.AroundInvoke;
+import javax.interceptor.Interceptor;
+import javax.interceptor.InvocationContext;
 import java.io.Serializable;
 
-@Typed()
-public class User implements Serializable
+/**
+ * Interceptor for {@link SecurityInterceptorBinding} - details see {@link SecurityStrategy}
+ */
+@SecurityInterceptorBinding
+@Interceptor
+public class SecurityInterceptor implements Serializable
 {
-    private static final long serialVersionUID = -2234530384311026364L;
+    private static final long serialVersionUID = -7094673146532371976L;
 
-    private final String id;
+    @Inject
+    private SecurityStrategy securityStrategy;
 
-    public User(String id)
+    @AroundInvoke
+    public Object filterDeniedInvocations(InvocationContext invocationContext) throws Exception
     {
-        this.id = id;
-    }
-
-    public String getId()
-    {
-        return id;
+        return this.securityStrategy.execute(invocationContext);
     }
 }

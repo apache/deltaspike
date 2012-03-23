@@ -16,25 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.security.api;
+package org.apache.deltaspike.security.api.authentication;
 
-import javax.enterprise.inject.Typed;
-import java.io.Serializable;
-
-@Typed()
-public class User implements Serializable
+/**
+ * Thrown if there is an error during the authentication process
+ */
+public class AuthenticationException extends org.apache.deltaspike.security.api.SecurityException
 {
-    private static final long serialVersionUID = -2234530384311026364L;
+    private static final long serialVersionUID = -7486433031372506270L;
 
-    private final String id;
-
-    public User(String id)
+    public AuthenticationException(String message) 
     {
-        this.id = id;
+        super(message);
     }
 
-    public String getId()
+    public AuthenticationException(String message, Throwable cause) 
     {
-        return id;
+        super(message, cause);
     }
 }
