@@ -18,6 +18,9 @@
  */
 package org.apache.deltaspike.test.util;
 
+import org.apache.deltaspike.core.util.ClassUtils;
+import org.jboss.shrinkwrap.api.asset.Asset;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 
 /**
@@ -25,10 +28,37 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
  */
 public class ArchiveUtils
 {
-    public static JavaArchive[] getDeltaSpikeCoreAndSecurityArchive(String[] excludedPackagesOrFiles)
+    public static JavaArchive[] getDeltaSpikeCoreAndSecurityArchive()
     {
+        //X TODO remove this workaround
+        boolean isOwbAvailable = ClassUtils.tryToLoadClassForName("org.apache.webbeans.spi.ContainerLifecycle") != null;
+
+        String[] excludedFiles;
+
+        if (isOwbAvailable)
+        {
+            excludedFiles = new String[]{"META-INF.apache-deltaspike.properties"};
+        }
+        else
+        {
+            excludedFiles = new String[]{"META-INF.apache-deltaspike.properties", "META-INF.beans.xml"};
+        }
+
+
         return ShrinkWrapArchiveUtil.getArchives(null,
                 "META-INF/beans.xml",
-                new String[]{"org.apache.deltaspike.core", "org.apache.deltaspike.security"}, excludedPackagesOrFiles);
+                new String[]{"org.apache.deltaspike.core", "org.apache.deltaspike.security"}, excludedFiles);
+    }
+
+    public static Asset getBeansXml()
+    {
+        @SuppressWarnings("UnnecessaryLocalVariable")
+        Asset beansXml = new StringAsset(
+            "<beans>" +
+                "<interceptors><class>org.apache.deltaspike.security.impl.SecurityInterceptor</class></interceptors>" +
+            "</beans>"
+        );
+
+        return beansXml;
     }
 }

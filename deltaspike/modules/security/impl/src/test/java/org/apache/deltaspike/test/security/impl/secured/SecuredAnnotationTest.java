@@ -21,15 +21,12 @@ package org.apache.deltaspike.test.security.impl.secured;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.impl.exclude.ExcludeExtension;
-import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.security.api.AccessDeniedException;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
@@ -56,35 +53,15 @@ public class SecuredAnnotationTest
             }
         }.setTestMode();
 
-        //X TODO remove this workaround
-        boolean isOwbAvailable = ClassUtils.tryToLoadClassForName("org.apache.webbeans.spi.ContainerLifecycle") != null;
-
-        String[] excludedFiles;
-
-        Asset beansXml = new StringAsset(
-            "<beans>" +
-                "<interceptors><class>org.apache.deltaspike.security.impl.SecurityInterceptor</class></interceptors>" +
-            "</beans>"
-        );
-
-        if (isOwbAvailable)
-        {
-            excludedFiles = new String[]{"META-INF.apache-deltaspike.properties"};
-        }
-        else
-        {
-            excludedFiles = new String[]{"META-INF.apache-deltaspike.properties", "META-INF.beans.xml"};
-        }
-
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "securedAnnotationTest.jar")
                 .addPackage("org.apache.deltaspike.test.security.impl.secured")
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
         return ShrinkWrap.create(WebArchive.class)
-                .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndSecurityArchive(excludedFiles))
+                .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndSecurityArchive())
                 .addAsLibraries(testJar)
                 .addAsServiceProvider(Extension.class, ExcludeExtension.class)
-                .addAsWebInfResource(beansXml, "beans.xml");
+                .addAsWebInfResource(ArchiveUtils.getBeansXml(), "beans.xml");
     }
 
     @Test
