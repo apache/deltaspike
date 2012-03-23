@@ -22,7 +22,7 @@ import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 
 @SessionScoped
-public class User implements Serializable
+public class TestUser implements Serializable
 {
     private static final long serialVersionUID = -4171521313675763849L;
 

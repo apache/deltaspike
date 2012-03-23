@@ -26,15 +26,15 @@ import javax.inject.Inject;
 public class Car
 {
     @Inject
-    private User usr;
+    private TestUser user;
 
-    public User getUsr()
+    public TestUser getUser()
     {
-        return usr;
+        return user;
     }
 
-    public void setUsr(User usr)
+    public void setUser(TestUser user)
     {
-        this.usr = usr;
+        this.user = user;
     }
 }

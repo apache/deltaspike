@@ -55,7 +55,7 @@ public class ContainerCtrlTckTest
         Assert.assertNotNull(carRepair);
 
         Assert.assertNotNull(carRepair.getCar());
-        Assert.assertNotNull(carRepair.getCar().getUsr());
+        Assert.assertNotNull(carRepair.getCar().getUser());
 
         cc.shutdown();
     }
@@ -79,7 +79,7 @@ public class ContainerCtrlTckTest
         Assert.assertNotNull(carRepair);
 
         Assert.assertNotNull(carRepair.getCar());
-        Assert.assertNotNull(carRepair.getCar().getUsr());
+        Assert.assertNotNull(carRepair.getCar().getUser());
 
         cc.shutdown();
     }
@@ -116,17 +116,17 @@ public class ContainerCtrlTckTest
         Car car = carRepair.getCar();
 
         Assert.assertNotNull(car);
-        Assert.assertNotNull(car.getUsr());
+        Assert.assertNotNull(car.getUser());
 
 
-        carRepair.getCar().getUsr().setName("tester");
-        Assert.assertEquals("tester", car.getUsr().getName());
+        carRepair.getCar().getUser().setName("tester");
+        Assert.assertEquals("tester", car.getUser().getName());
 
         cdiContainer.getContextControl().stopContexts();
 
         try
         {
-            Assert.assertNotNull(car.getUsr());
+            Assert.assertNotNull(car.getUser());
 
             // accessing the car should have triggered a ContextNotActiveException
             Assert.fail();
@@ -142,8 +142,8 @@ public class ContainerCtrlTckTest
             beanManager.getReference(bean, CarRepair.class, beanManager.createCreationalContext(bean));
 
         Assert.assertNotNull(carRepair.getCar());
-        Assert.assertNotNull(carRepair.getCar().getUsr());
-        Assert.assertNull(carRepair.getCar().getUsr().getName());
+        Assert.assertNotNull(carRepair.getCar().getUser());
+        Assert.assertNull(carRepair.getCar().getUser().getName());
 
         cdiContainer.shutdown();
     }
