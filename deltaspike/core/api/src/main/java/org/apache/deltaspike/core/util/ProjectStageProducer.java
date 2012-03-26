@@ -122,33 +122,7 @@ public class ProjectStageProducer implements Serializable
             return;
         }
 
-        String customProjectStageProducerName = ConfigResolver.getPropertyValue(ProjectStageProducer.class.getName());
-
-        if (customProjectStageProducerName != null)
-        {
-            //e.g. the JSF module can provide a config-source implementation which
-            //returns a custom implementation which is aware of the JSF project-stage
-            //if a custom ProjectStageProducer is needed a custom config-source with a higher ordinal can be used
-            ProjectStageProducer customConfiguredProducer =
-                    ClassUtils.tryToInstantiateClassForName(customProjectStageProducerName, ProjectStageProducer.class);
-
-            if (customConfiguredProducer != null)
-            {
-                projectStageProducer = customConfiguredProducer;
-
-                LOG.fine("Using custom project-stage-producer: " + customConfiguredProducer.getClass().getName());
-            }
-            else
-            {
-                LOG.warning("Custom project-stage-producer couldn't be instantiated - class-name: " +
-                        customProjectStageProducerName);
-            }
-        }
-
-        if (projectStageProducer == null)
-        {
-            projectStageProducer = new ProjectStageProducer();
-        }
+        projectStageProducer = new ProjectStageProducer();
 
         projectStageProducer.initProjectStage();
     }
