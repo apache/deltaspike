@@ -23,7 +23,6 @@ import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
-import org.apache.deltaspike.integration.core.api.projectstage.IntegrationTestProjectStageProducer;
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.apache.deltaspike.test.core.api.exclude.AlwaysActiveBean;
 import org.apache.deltaspike.test.core.api.exclude.CustomExpressionBasedBean;
@@ -83,7 +82,6 @@ public class ExcludeIntegrationTest
         return ShrinkWrap.create(WebArchive.class, "excludeIntegration.war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
                 .addAsLibraries(testJar)
-                .addClass(IntegrationTestProjectStageProducer.class)
                 .addAsResource(FileUtils.getFileForURL(deltaSpikeConfig.toString()),
                         "META-INF/apache-deltaspike.properties")
                 .addAsResource(FileUtils.getFileForURL(testExtensionsFileUrl.toString()),
