@@ -42,18 +42,57 @@ public class OpenWebBeansContextControl implements ContextControl
 
     private static final Logger LOG = Logger.getLogger(OpenWebBeansContextControl.class.getName());
 
-    private MockHttpSession session = new MockHttpSession();;
-    private MockServletContext servletContext  = new MockServletContext();
+    private Boolean servletApiAvailable = null;
+    
+    private Object session = null;
+    private Object servletContext = null;
+    
+    protected boolean isServletApiAvailable()
+    {
+        if (servletApiAvailable == null)
+        {
+            try
+            {
+                Class servletClass = Class.forName("javax.servlet.http.HttpSession");
+                servletApiAvailable = servletClass != null;
+                LOG.fine("Servlet API available: " + servletApiAvailable);
+            }
+            catch (ClassNotFoundException e)
+            {
+                servletApiAvailable = Boolean.FALSE;
+            }
+        }
+        return servletApiAvailable;
+    }
 
+    protected Object getMockSession()
+    {
+        if (isServletApiAvailable() && session == null)
+        {
+            session = new MockHttpSession();
+        }
+
+        return session;
+    }
+    
+    protected Object getMockServletContext()
+    {
+        if (isServletApiAvailable() && servletContext == null)
+        {
+            servletContext  = new MockServletContext();
+        }
+
+        return servletContext;
+    }
 
     @Override
     public void startContexts()
     {
         ContextFactory contextFactory = getContextFactory();
 
-        contextFactory.initSingletonContext(servletContext);
-        contextFactory.initApplicationContext(servletContext);
-        contextFactory.initSessionContext(session);
+        contextFactory.initSingletonContext(getMockServletContext());
+        contextFactory.initApplicationContext(getMockServletContext());
+        contextFactory.initSessionContext(getMockSession());
         contextFactory.initRequestContext(null);
         contextFactory.initConversationContext(null);
     }
@@ -120,14 +159,14 @@ public class OpenWebBeansContextControl implements ContextControl
     {
         ContextFactory contextFactory = getContextFactory();
 
-        contextFactory.initApplicationContext(servletContext);
+        contextFactory.initApplicationContext(getMockServletContext());
     }
 
     private void startSessionScope()
     {
         ContextFactory contextFactory = getContextFactory();
 
-        contextFactory.initSessionContext(session);
+        contextFactory.initSessionContext(getMockSession());
     }
 
     private void startRequestScope()
@@ -155,7 +194,7 @@ public class OpenWebBeansContextControl implements ContextControl
         Context context = contextFactory.getStandardContext(ContextTypes.SINGLETON);
         if (context != null)
         {
-            contextFactory.destroySingletonContext(servletContext);
+            contextFactory.destroySingletonContext(getMockServletContext());
         }
     }
 
@@ -166,7 +205,7 @@ public class OpenWebBeansContextControl implements ContextControl
         Context context = contextFactory.getStandardContext(ContextTypes.APPLICATION);
         if (context != null)
         {
-            contextFactory.destroyApplicationContext(servletContext);
+            contextFactory.destroyApplicationContext(getMockServletContext());
         }
     }
 
@@ -177,7 +216,7 @@ public class OpenWebBeansContextControl implements ContextControl
         Context context = contextFactory.getStandardContext(ContextTypes.SESSION);
         if (context != null)
         {
-            contextFactory.destroySessionContext(session);
+            contextFactory.destroySessionContext(getMockSession());
         }
     }
 
