@@ -20,12 +20,14 @@ package org.apache.deltaspike.security.impl.authorization;
 
 import org.apache.deltaspike.core.api.metadata.builder.InjectableMethod;
 import org.apache.deltaspike.core.api.metadata.builder.ParameterValueRedefiner;
-import org.apache.deltaspike.security.api.authorization.AuthorizationException;
+import org.apache.deltaspike.security.api.authorization.AccessDeniedException;
 import org.apache.deltaspike.security.api.authorization.SecurityDefinitionException;
+import org.apache.deltaspike.security.api.authorization.SecurityViolation;
 import org.apache.deltaspike.security.api.authorization.annotation.SecurityBindingType;
 
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.Stereotype;
+import javax.enterprise.inject.Typed;
 import javax.enterprise.inject.spi.AnnotatedMethod;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
@@ -35,36 +37,38 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+@Typed()
 class Authorizer
 {
     private BeanManager beanManager;
 
-    private Annotation binding;
-    private Map<Method, Object> memberValues = new HashMap<Method, Object>();
+    private Annotation bindingAnnotation;
+    private Map<Method, Object> bindingSecurityBindingMembers = new HashMap<Method, Object>();
 
-    private AnnotatedMethod<?> implementationMethod;
-    private Bean<?> targetBean;
+    private AnnotatedMethod<?> boundAuthorizerMethod;
+    private Bean<?> boundAuthorizerBean;
 
-    private InjectableMethod<?> injectableMethod;
+    private InjectableMethod<?> boundAuthorizerMethodProxy;
 
-    Authorizer(Annotation binding, AnnotatedMethod<?> implementationMethod, BeanManager beanManager)
+    Authorizer(Annotation bindingAnnotation, AnnotatedMethod<?> boundAuthorizerMethod, BeanManager beanManager)
     {
-        this.binding = binding;
-        this.implementationMethod = implementationMethod;
+        this.bindingAnnotation = bindingAnnotation;
+        this.boundAuthorizerMethod = boundAuthorizerMethod;
         this.beanManager = beanManager;
 
         try
         {
-            for (Method method : binding.annotationType().getDeclaredMethods())
+            for (Method method : bindingAnnotation.annotationType().getDeclaredMethods())
             {
                 if (method.isAnnotationPresent(Nonbinding.class))
                 {
                     continue;
                 }
-                memberValues.put(method, method.invoke(binding));
+                bindingSecurityBindingMembers.put(method, method.invoke(bindingAnnotation));
             }
         }
         catch (InvocationTargetException ex)
@@ -77,19 +81,19 @@ class Authorizer
         }
     }
 
-    public void authorize(final InvocationContext ic)
+    void authorize(final InvocationContext ic)
     {
-        if (targetBean == null)
+        if (boundAuthorizerBean == null)
         {
             lazyInitTargetBean();
         }
 
-        final CreationalContext<?> creationalContext = beanManager.createCreationalContext(targetBean);
+        final CreationalContext<?> creationalContext = beanManager.createCreationalContext(boundAuthorizerBean);
 
-        Object reference = beanManager.getReference(targetBean,
-            implementationMethod.getJavaMember().getDeclaringClass(), creationalContext);
+        Object reference = beanManager.getReference(boundAuthorizerBean,
+            boundAuthorizerMethod.getJavaMember().getDeclaringClass(), creationalContext);
 
-        Object result = injectableMethod.invoke(reference, creationalContext, new ParameterValueRedefiner() {
+        Object result = boundAuthorizerMethodProxy.invoke(reference, creationalContext, new ParameterValueRedefiner() {
 
             @Override
             public Object redefineParameterValue(ParameterValue value)
@@ -107,21 +111,33 @@ class Authorizer
 
         if (result.equals(Boolean.FALSE))
         {
-            throw new AuthorizationException("Authorization check failed");
+            Set<SecurityViolation> violations = new HashSet<SecurityViolation>();
+            violations.add(new SecurityViolation()
+            {
+                private static final long serialVersionUID = 2358753444038521129L;
+
+                @Override
+                public String getReason()
+                {
+                    return "Authorization check failed";
+                }
+            });
+
+            throw new AccessDeniedException(violations);
         }
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private synchronized void lazyInitTargetBean()
     {
-        if (targetBean == null)
+        if (boundAuthorizerBean == null)
         {
-            Method method = implementationMethod.getJavaMember();
+            Method method = boundAuthorizerMethod.getJavaMember();
 
             Set<Bean<?>> beans = beanManager.getBeans(method.getDeclaringClass());
             if (beans.size() == 1)
             {
-                targetBean = beans.iterator().next();
+                boundAuthorizerBean = beans.iterator().next();
             }
             else if (beans.isEmpty())
             {
@@ -136,11 +152,11 @@ class Authorizer
                         method.getName() + "]");
             }
 
-            injectableMethod = new InjectableMethod(implementationMethod, targetBean, beanManager);
+            boundAuthorizerMethodProxy = new InjectableMethod(boundAuthorizerMethod, boundAuthorizerBean, beanManager);
         }
     }
 
-    public boolean matchesBinding(Annotation annotation)
+    boolean matchesBinding(Annotation annotation)
     {
         if (!annotation.annotationType().isAnnotationPresent(SecurityBindingType.class) &&
                 annotation.annotationType().isAnnotationPresent(Stereotype.class))
@@ -148,7 +164,7 @@ class Authorizer
             annotation = SecurityUtils.resolveSecurityBindingType(annotation);
         }
 
-        if (!annotation.annotationType().equals(binding.annotationType()))
+        if (!annotation.annotationType().equals(bindingAnnotation.annotationType()))
         {
             return false;
         }
@@ -160,7 +176,7 @@ class Authorizer
                 continue;
             }
 
-            if (!memberValues.containsKey(method))
+            if (!bindingSecurityBindingMembers.containsKey(method))
             {
                 return false;
             }
@@ -168,7 +184,7 @@ class Authorizer
             try
             {
                 Object value = method.invoke(annotation);
-                if (!memberValues.get(method).equals(value))
+                if (!bindingSecurityBindingMembers.get(method).equals(value))
                 {
                     return false;
                 }
@@ -186,21 +202,8 @@ class Authorizer
         return true;
     }
 
-    public Method getImplementationMethod()
+    Method getBoundAuthorizerMethod()
     {
-        return implementationMethod.getJavaMember();
-    }
-
-    @Override
-    public boolean equals(Object value)
-    {
-        return false;
-    }
-
-    //not used
-    @Override
-    public int hashCode()
-    {
-        return 0;
+        return boundAuthorizerMethod.getJavaMember();
     }
 }

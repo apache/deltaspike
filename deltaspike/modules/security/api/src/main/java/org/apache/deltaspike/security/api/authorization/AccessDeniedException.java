@@ -24,7 +24,7 @@ import java.util.Set;
  * Exception occurs in case of a security-violation.
  * It's aware of the reason for the violation as well as the error-view which should be used to display the restriction.
  */
-public class AccessDeniedException extends org.apache.deltaspike.security.api.SecurityException
+public class AccessDeniedException extends SecurityException
 {
     private static final long serialVersionUID = -4066763895951237969L;
 

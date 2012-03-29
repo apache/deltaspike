@@ -28,6 +28,7 @@ import java.lang.reflect.Method;
  * {@inheritDoc}
  */
 @Dependent
+@SuppressWarnings("UnusedDeclaration")
 public class DefaultSecurityStrategy implements SecurityStrategy
 {
     private static final long serialVersionUID = 7992336651801599079L;

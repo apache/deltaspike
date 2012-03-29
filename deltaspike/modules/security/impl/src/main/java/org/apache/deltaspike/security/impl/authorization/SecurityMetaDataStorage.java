@@ -28,9 +28,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-/**
- *
- */
 class SecurityMetaDataStorage
 {
     /**
@@ -133,9 +130,9 @@ class SecurityMetaDataStorage
                         {
                             StringBuilder sb = new StringBuilder();
                             sb.append("Matching authorizer methods found: [");
-                            sb.append(authorizer.getImplementationMethod().getDeclaringClass().getName());
+                            sb.append(authorizer.getBoundAuthorizerMethod().getDeclaringClass().getName());
                             sb.append(".");
-                            sb.append(authorizer.getImplementationMethod().getName());
+                            sb.append(authorizer.getBoundAuthorizerMethod().getName());
                             sb.append("]");
 
                             for (Authorizer a : authorizerStack)
@@ -143,9 +140,9 @@ class SecurityMetaDataStorage
                                 if (a.matchesBinding(binding))
                                 {
                                     sb.append(", [");
-                                    sb.append(a.getImplementationMethod().getDeclaringClass().getName());
+                                    sb.append(a.getBoundAuthorizerMethod().getDeclaringClass().getName());
                                     sb.append(".");
-                                    sb.append(a.getImplementationMethod().getName());
+                                    sb.append(a.getBoundAuthorizerMethod().getName());
                                     sb.append("]");
                                 }
                             }

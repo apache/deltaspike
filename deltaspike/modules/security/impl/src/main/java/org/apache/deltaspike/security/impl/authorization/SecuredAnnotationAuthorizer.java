@@ -42,12 +42,14 @@ import java.util.Set;
  * Authorizer implementation for the {@link @Secured} annotation
  */
 @Dependent
+@SuppressWarnings("UnusedDeclaration")
 public class SecuredAnnotationAuthorizer
 {
     @Inject
     private AccessDecisionVoterContext voterContext;
 
     @Secures @Secured({ })
+    @SuppressWarnings("UnusedDeclaration")
     public boolean doSecuredCheck(InvocationContext invocationContext) throws Exception
     {
         Secured secured = null;

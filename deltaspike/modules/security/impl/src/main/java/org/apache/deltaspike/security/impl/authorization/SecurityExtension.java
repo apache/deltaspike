@@ -221,38 +221,38 @@ public class SecurityExtension implements Extension, Deactivatable
      * Registers the specified authorizer method (i.e. a method annotated with
      * the @Secures annotation)
      *
-     * @param m
+     * @param annotatedMethod
      * @param beanManager
      * @throws SecurityDefinitionException
      */
-    private void registerAuthorizer(AnnotatedMethod<?> m, BeanManager beanManager)
+    private void registerAuthorizer(AnnotatedMethod<?> annotatedMethod, BeanManager beanManager)
     {
-        if (!m.getJavaMember().getReturnType().equals(Boolean.class) &&
-                !m.getJavaMember().getReturnType().equals(Boolean.TYPE))
+        if (!annotatedMethod.getJavaMember().getReturnType().equals(Boolean.class) &&
+                !annotatedMethod.getJavaMember().getReturnType().equals(Boolean.TYPE))
         {
             throw new SecurityDefinitionException("Invalid authorizer method [" +
-                    m.getJavaMember().getDeclaringClass().getName() + "." +
-                    m.getJavaMember().getName() + "] - does not return a boolean.");
+                    annotatedMethod.getJavaMember().getDeclaringClass().getName() + "." +
+                    annotatedMethod.getJavaMember().getName() + "] - does not return a boolean.");
         }
 
         // Locate the binding type
         Annotation binding = null;
 
-        for (Annotation annotation : m.getAnnotations())
+        for (Annotation annotation : annotatedMethod.getAnnotations())
         {
             if (SecurityUtils.isMetaAnnotatedWithSecurityBindingType(annotation))
             {
                 if (binding != null)
                 {
                     throw new SecurityDefinitionException("Invalid authorizer method [" +
-                            m.getJavaMember().getDeclaringClass().getName() + "." +
-                            m.getJavaMember().getName() + "] - declares multiple security binding types");
+                            annotatedMethod.getJavaMember().getDeclaringClass().getName() + "." +
+                            annotatedMethod.getJavaMember().getName() + "] - declares multiple security binding types");
                 }
                 binding = annotation;
             }
         }
 
-        Authorizer authorizer = new Authorizer(binding, m, beanManager);
+        Authorizer authorizer = new Authorizer(binding, annotatedMethod, beanManager);
         getMetaDataStorage().addAuthorizer(authorizer);
     }
 
