@@ -49,7 +49,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.deltaspike.test-utils</groupId>
+            <groupId>org.apache.deltaspike.test</groupId>
             <artifactId>test-utils</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>

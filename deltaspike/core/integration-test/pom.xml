@@ -28,8 +28,8 @@
     </parent>
 
     <description>Integration Test Suite</description>
-    <groupId>org.apache.deltaspike.core</groupId>
-    <artifactId>integration-test</artifactId>
+    <groupId>org.apache.deltaspike.test</groupId>
+    <artifactId>core-integration-test</artifactId>
     <packaging>jar</packaging>
 
     <name>Apache DeltaSpike Core Integration Test Suite</name>
@@ -175,8 +175,6 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
-
 </project>
