@@ -18,12 +18,13 @@
  */
 package org.apache.deltaspike.security.impl.authorization;
 
-import org.apache.deltaspike.core.api.metadata.builder.InjectableMethod;
-import org.apache.deltaspike.core.api.metadata.builder.ParameterValueRedefiner;
-import org.apache.deltaspike.security.api.authorization.AccessDeniedException;
-import org.apache.deltaspike.security.api.authorization.SecurityDefinitionException;
-import org.apache.deltaspike.security.api.authorization.SecurityViolation;
-import org.apache.deltaspike.security.api.authorization.annotation.SecurityBindingType;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.Stereotype;
@@ -33,14 +34,19 @@ import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.util.Nonbinding;
 import javax.interceptor.InvocationContext;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
+import org.apache.deltaspike.core.api.metadata.builder.InjectableMethod;
+import org.apache.deltaspike.security.api.authorization.AccessDeniedException;
+import org.apache.deltaspike.security.api.authorization.SecurityDefinitionException;
+import org.apache.deltaspike.security.api.authorization.SecurityViolation;
+import org.apache.deltaspike.security.api.authorization.annotation.SecurityBindingType;
+
+/**
+ * Responsible for authorizing method invocations.
+ * 
+ * @author Shane Bryzak
+ * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
+ */
 @Typed()
 class Authorizer
 {
@@ -93,21 +99,8 @@ class Authorizer
         Object reference = beanManager.getReference(boundAuthorizerBean,
             boundAuthorizerMethod.getJavaMember().getDeclaringClass(), creationalContext);
 
-        Object result = boundAuthorizerMethodProxy.invoke(reference, creationalContext, new ParameterValueRedefiner() {
-
-            @Override
-            public Object redefineParameterValue(ParameterValue value)
-            {
-                if (value.getInjectionPoint().getAnnotated().getBaseType().equals(InvocationContext.class))
-                {
-                    return ic;
-                }
-                else
-                {
-                    return value.getDefaultValue(creationalContext);
-                }
-            }
-        });
+        Object result = boundAuthorizerMethodProxy.invoke(reference, creationalContext, 
+                    new SecurityParameterValueRedefiner(creationalContext, ic));
 
         if (result.equals(Boolean.FALSE))
         {
