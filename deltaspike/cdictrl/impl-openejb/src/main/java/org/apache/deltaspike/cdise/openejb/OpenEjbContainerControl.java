@@ -26,6 +26,8 @@ import javax.inject.Inject;
 import javax.naming.NamingException;
 import java.util.Set;
 
+import org.apache.webbeans.config.WebBeansContext;
+
 import org.apache.deltaspike.cdise.api.CdiContainer;
 import org.apache.deltaspike.cdise.api.ContextControl;
 
@@ -66,6 +68,12 @@ public class OpenEjbContainerControl implements CdiContainer
             catch (NamingException e)
             {
                 throw new RuntimeException("Could not perform OpenEJB injection", e);
+            }
+
+            if (beanManager == null)
+            {
+                // this happens if the OpenEJB injection didnt work
+                beanManager = WebBeansContext.getInstance().getBeanManagerImpl();
             }
         }
     }
