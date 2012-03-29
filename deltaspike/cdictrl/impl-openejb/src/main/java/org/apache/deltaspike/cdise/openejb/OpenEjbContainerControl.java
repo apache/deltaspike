@@ -32,9 +32,9 @@ import org.apache.deltaspike.cdise.api.ContextControl;
 /**
  * OpenWebBeans specific implementation of {@link org.apache.deltaspike.cdise.api.CdiContainer}.
  */
+@SuppressWarnings("UnusedDeclaration")
 public class OpenEjbContainerControl implements CdiContainer
 {
-
     private ContextControl ctxCtrl = null;
     private Bean<ContextControl> ctxCtrlBean = null;
     private CreationalContext<ContextControl> ctxCtrlCreationalContext = null;
@@ -99,6 +99,4 @@ public class OpenEjbContainerControl implements CdiContainer
         }
         return ctxCtrl;
     }
-
-
 }

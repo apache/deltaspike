@@ -42,7 +42,7 @@ public interface CdiContainer
     void boot();
     
     /**
-     * This will shutdown the underlying CDI container.
+     * This will shutdown the underlying CDI container and stop all contexts.
      */
     void shutdown();
     

@@ -39,7 +39,6 @@ import org.apache.webbeans.context.type.ContextTypes;
 @Dependent
 public class OpenWebBeansContextControl implements ContextControl
 {
-
     private static final Logger LOG = Logger.getLogger(OpenWebBeansContextControl.class.getName());
 
     private Boolean servletApiAvailable = null;
@@ -97,7 +96,6 @@ public class OpenWebBeansContextControl implements ContextControl
         contextFactory.initConversationContext(null);
     }
 
-
     public void stopContexts()
     {
         stopSessionScope();
@@ -106,8 +104,6 @@ public class OpenWebBeansContextControl implements ContextControl
         stopApplicationScope();
         stopSingletonScope();
     }
-
-
 
     @Override
     public void startContext(Class<? extends Annotation> scopeClass)
@@ -129,7 +125,6 @@ public class OpenWebBeansContextControl implements ContextControl
             startConversationScope();
         }
     }
-
 
     public void stopContext(Class<? extends Annotation> scopeClass)
     {
@@ -247,5 +242,4 @@ public class OpenWebBeansContextControl implements ContextControl
         WebBeansContext webBeansContext = WebBeansContext.getInstance();
         return webBeansContext.getContextFactory();
     }
-
 }

@@ -31,9 +31,9 @@ import java.util.Set;
 /**
  * OpenWebBeans specific implementation of {@link org.apache.deltaspike.cdise.api.CdiContainer}.
  */
+@SuppressWarnings("UnusedDeclaration")
 public class OpenWebBeansContainerControl implements CdiContainer
 {
-
     private ContainerLifecycle lifecycle;
 
     private ContextControl ctxCtrl = null;
@@ -41,7 +41,7 @@ public class OpenWebBeansContainerControl implements CdiContainer
     private CreationalContext<ContextControl> ctxCtrlCreationalContext = null;
 
     @Override
-    public  BeanManager getBeanManager()
+    public BeanManager getBeanManager()
     {
         return lifecycle.getBeanManager();
     }
@@ -49,7 +49,6 @@ public class OpenWebBeansContainerControl implements CdiContainer
     @Override
     public synchronized void boot()
     {
-
         lifecycle = WebBeansContext.getInstance().getService(ContainerLifecycle.class);
         lifecycle.startApplication(null);
     }
@@ -60,7 +59,6 @@ public class OpenWebBeansContainerControl implements CdiContainer
         if (ctxCtrl != null)
         {
             ctxCtrlBean.destroy(ctxCtrl, ctxCtrlCreationalContext);
-
         }
 
         if (lifecycle != null) 
@@ -82,6 +80,4 @@ public class OpenWebBeansContainerControl implements CdiContainer
         }
         return ctxCtrl;
     }
-
-
 }

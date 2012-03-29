@@ -37,6 +37,7 @@ import org.apache.deltaspike.cdise.api.ContextControl;
  * Weld specific impl of the {@link org.apache.deltaspike.cdise.api.ContextControl}
  */
 @Dependent
+@SuppressWarnings("UnusedDeclaration")
 public class WeldContextControl implements ContextControl
 {
     private ContextController contextController;
