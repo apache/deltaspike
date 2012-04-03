@@ -35,8 +35,6 @@ import org.apache.deltaspike.security.api.authorization.annotation.SecurityParam
 
 /**
  * Responsible for supplying requested method invocation values to the security binding method.
- * 
- * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
 public class SecurityParameterValueRedefiner implements ParameterValueRedefiner
 {

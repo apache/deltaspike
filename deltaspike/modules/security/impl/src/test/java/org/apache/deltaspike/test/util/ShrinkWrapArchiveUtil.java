@@ -37,7 +37,6 @@ import java.util.zip.ZipEntry;
  * Lots of neat little helpers to more easily create JavaArchives from marker files on the classpath.
  * This should finally get moved to ShrinkWrap core!
  *
- * @author <a href="mailto:struberg@yahoo.de">Mark Struberg</a>
  * @deprecated This class should get moved to ShrinkWrap itself!
  */
 public class ShrinkWrapArchiveUtil

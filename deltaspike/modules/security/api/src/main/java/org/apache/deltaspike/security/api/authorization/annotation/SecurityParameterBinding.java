@@ -28,8 +28,6 @@ import java.lang.annotation.Target;
 /**
  * Applied to an {@link Annotation} to declare it as a security parameter binding; to use business method invocation
  * values as {@link Secures} method arguments.
- * 
- * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
 @Documented
 @Target({ ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })

@@ -27,7 +27,6 @@ import javax.enterprise.inject.spi.InjectionPoint;
  * {@link InjectableMethod} via the
  * {@link #redefineParameterValue(ParameterValue)} callback.
  *
- * @author Pete Muir
  * @see InjectableMethod
  */
 public interface ParameterValueRedefiner
@@ -46,7 +45,6 @@ public interface ParameterValueRedefiner
      * Provides the default parameter's value, along with metadata about the
      * parameter to a parameter redefinition.
      *
-     * @author Pete Muir
      * @see ParameterValueRedefiner
      * @see InjectableMethod
      */

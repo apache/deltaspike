@@ -23,8 +23,6 @@ package org.apache.deltaspike.security.api;
  * Any exception that is raised by the security module extends from this runtime
  * exception class, making it easy for other modules and extensions to catch all
  * security-related exceptions in a single catch block, if need be.
- *
- * @author Dan Allen
  */
 public abstract class SecurityException extends RuntimeException 
 {

@@ -22,8 +22,6 @@ package org.apache.deltaspike.security.api.authorization;
 /**
  * This exception is thrown when a security-related configuration error is detected,
  * such as a missing or ambiguous security binding type
- *
- * @author Shane Bryzak
  */
 public class SecurityDefinitionException extends org.apache.deltaspike.security.api.SecurityException
 {

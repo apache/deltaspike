@@ -43,9 +43,6 @@ import org.apache.deltaspike.security.api.authorization.annotation.SecurityBindi
 
 /**
  * Responsible for authorizing method invocations.
- * 
- * @author Shane Bryzak
- * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
 @Typed()
 class Authorizer

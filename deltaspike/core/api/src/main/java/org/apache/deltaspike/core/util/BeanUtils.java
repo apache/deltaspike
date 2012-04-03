@@ -34,8 +34,6 @@ import java.util.Set;
 
 /**
  * A set of utility methods for working with beans.
- *
- * @author Pete Muir
  */
 @Typed()
 public abstract class BeanUtils

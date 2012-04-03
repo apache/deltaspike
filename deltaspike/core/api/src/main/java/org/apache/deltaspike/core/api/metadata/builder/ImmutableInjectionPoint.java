@@ -40,9 +40,6 @@ import static java.util.Collections.unmodifiableSet;
  * A base class for implementing {@link InjectionPoint}. The attributes are
  * immutable, and collections are defensively copied on instantiation.
  * </p>
- *
- * @author Stuart Douglas
- * @author Pete Muir
  */
 public class ImmutableInjectionPoint implements InjectionPoint
 {
