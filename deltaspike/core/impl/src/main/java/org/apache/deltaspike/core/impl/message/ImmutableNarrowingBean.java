@@ -25,7 +25,7 @@ import java.util.Set;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 
-import org.apache.deltaspike.core.util.Reflections;
+import org.apache.deltaspike.core.util.ReflectionUtils;
 
 /**
  * <p>
@@ -116,13 +116,13 @@ class ImmutableNarrowingBean<T> extends AbstractImmutableBean<T>
 
     public T create(CreationalContext<T> creationalContext)
     {
-        return Reflections.<T> cast(delegate.create(Reflections
+        return ReflectionUtils.<T> cast(delegate.create(ReflectionUtils
                 .<CreationalContext<Object>> cast(creationalContext)));
     }
 
     public void destroy(T instance, CreationalContext<T> creationalContext)
     {
-        delegate.destroy(instance,
-                Reflections.<CreationalContext<Object>> cast(creationalContext));
+        delegate.destroy(instance, ReflectionUtils
+                .<CreationalContext<Object>> cast(creationalContext));
     }
 }

@@ -19,7 +19,7 @@
 package org.apache.deltaspike.core.impl.message;
 
 import static org.apache.deltaspike.core.impl.message.MessageFactory.getBundle;
-import static org.apache.deltaspike.core.util.Reflections.getRawType;
+import static org.apache.deltaspike.core.util.ReflectionUtils.getRawType;
 
 import java.io.Serializable;
 

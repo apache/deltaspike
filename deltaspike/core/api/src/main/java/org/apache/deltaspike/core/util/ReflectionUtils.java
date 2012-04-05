@@ -262,7 +262,7 @@ public abstract class ReflectionUtils
      * @return the raw type, or null if the raw type cannot be determined.
      */
     @SuppressWarnings("unchecked")
-    private static <T> Class<T> getRawType(Type type)
+    public static <T> Class<T> getRawType(Type type)
     {
         if (type instanceof Class<?>)
         {
