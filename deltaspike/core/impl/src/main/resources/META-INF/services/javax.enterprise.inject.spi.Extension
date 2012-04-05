@@ -19,3 +19,4 @@
 
 org.apache.deltaspike.core.impl.exclude.ExcludeExtension
 org.apache.deltaspike.core.impl.config.injectable.ConfigPropertyExtension
+org.apache.deltaspike.core.impl.message.MessageBundleExtension
