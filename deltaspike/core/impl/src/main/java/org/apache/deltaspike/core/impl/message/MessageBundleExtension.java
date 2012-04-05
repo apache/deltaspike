@@ -96,7 +96,7 @@ public class MessageBundleExtension implements Extension, Deactivatable
             AnnotatedType<T> type, BeanManager beanManager)
     {
         return new NarrowingBeanBuilder<T>(delegate, beanManager)
-                .types(type.getBaseType(), Object.class)
+                .readFromType(type).types(type.getBaseType(), Object.class)
                 .addQualifier(new MessageBundleLiteral()).create();
     }
 
