@@ -93,6 +93,8 @@ class ImmutableBeanWrapper<T> extends AbstractImmutableBean<T>
      * @param stereotypes the bean's stereotypes
      * @param types       the types of the bean
      * @param alternative whether the bean is an alternative
+     * @param nullable    true if the bean is nullable
+     * @param toString    the string which should be returned by #{@link #toString()}
      */
     public ImmutableBeanWrapper(Bean<T> bean,
                                 String name,

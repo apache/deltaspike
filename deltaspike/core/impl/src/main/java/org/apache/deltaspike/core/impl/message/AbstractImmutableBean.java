@@ -73,6 +73,7 @@ abstract class AbstractImmutableBean<T> implements Bean<T>
      * @param alternative     True if the bean is an alternative
      * @param nullable        True if the bean is nullable
      * @param injectionPoints the bean's injection points, if null an empty set is used
+     * @param toString        the string which should be returned by #{@link #toString()}
      * @throws IllegalArgumentException if the beanClass is null
      */
     public AbstractImmutableBean(Class<?> beanClass,
@@ -129,6 +130,7 @@ abstract class AbstractImmutableBean<T> implements Bean<T>
 
         if (types == null)
         {
+            //noinspection unchecked
             this.types = ArraysUtils.<Type>asSet(Object.class, beanClass);
 
             //X TODO re-visit after the logging discussion
