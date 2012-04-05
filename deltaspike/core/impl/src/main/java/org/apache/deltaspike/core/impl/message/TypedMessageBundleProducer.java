@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.core.impl.message;
 
-import static org.apache.deltaspike.core.impl.message.MessageFactory.getBundle;
+import static org.apache.deltaspike.core.impl.message.ProxyUtils.createMessageBundleProxy;
 import static org.apache.deltaspike.core.util.ReflectionUtils.getRawType;
 
 import java.io.Serializable;
@@ -36,9 +36,9 @@ class TypedMessageBundleProducer implements Serializable
 
     @Produces
     @TypedMessageBundle
+    @SuppressWarnings("UnusedDeclaration")
     Object produceTypedMessageBundle(InjectionPoint injectionPoint)
     {
-        return getBundle(getRawType(injectionPoint.getType()));
+        return createMessageBundleProxy(getRawType(injectionPoint.getType()));
     }
-
 }

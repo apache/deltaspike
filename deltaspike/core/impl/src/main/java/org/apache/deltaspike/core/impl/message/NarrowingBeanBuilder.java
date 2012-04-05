@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.core.impl.message;
 
-import static org.apache.deltaspike.core.impl.message.Arrays2.asSet;
+import static org.apache.deltaspike.core.impl.util.ArraysUtils.asSet;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
@@ -36,17 +36,12 @@ import javax.inject.Named;
 import org.apache.deltaspike.core.api.literal.AnyLiteral;
 import org.apache.deltaspike.core.api.literal.DefaultLiteral;
 
-/**
- * Builder for {@link ImmutableNarrowingBean} and
- * {@link ImmutablePassivationCapableNarrowingBean}.
- * 
- * @see ImmutableNarrowingBean
- * @see ImmutablePassivationCapableNarrowingBean
- */
+//X TODO update javadoc
 class NarrowingBeanBuilder<T>
 {
-    private final Bean<Object> delegate;
+    private final Bean<T> delegate;
     private final BeanManager beanManager;
+
     private Set<Type> types;
     private Set<Annotation> qualifiers;
     private String name;
@@ -60,29 +55,14 @@ class NarrowingBeanBuilder<T>
 
     /**
      * Instantiate a new {@link NarrowingBeanBuilder}.
-     * 
-     * @param delegate
-     *            the delegate bean
+     *
+     * @param delegate    the delegate bean
+     * @param beanManager current bean-manager
      */
-    public NarrowingBeanBuilder(Bean<Object> delegate, BeanManager beanManager)
+    NarrowingBeanBuilder(Bean<Object> delegate, BeanManager beanManager)
     {
-        this.delegate = delegate;
+        this.delegate = (Bean<T>)delegate;
         this.beanManager = beanManager;
-    }
-
-    /**
-     * Create a new {@link NarrowingBeanBuilder}, allowing Java to infer the
-     * type <code>T</code>.
-     * 
-     * @param <T>
-     *            the type of the bean
-     * @param delegate
-     *            the delegate bean
-     */
-    public static <T> NarrowingBeanBuilder<T> of(Bean<Object> delegate,
-            BeanManager beanManager)
-    {
-        return new NarrowingBeanBuilder<T>(delegate, beanManager);
     }
 
     /**
@@ -90,9 +70,8 @@ class NarrowingBeanBuilder<T>
      * Read the {@link AnnotatedType}, creating a narrowing bean from the class
      * and its annotations.
      * </p>
-     * 
-     * @param type
-     *            the type to read
+     *
+     * @param type the type to read
      */
     public NarrowingBeanBuilder<T> readFromType(AnnotatedType<T> type)
     {
@@ -101,6 +80,7 @@ class NarrowingBeanBuilder<T>
         this.stereotypes = new HashSet<Class<? extends Annotation>>();
         String name = null;
         Class<? extends Annotation> scope = Dependent.class;
+
         for (Annotation annotation : type.getAnnotations())
         {
             if (beanManager.isQualifier(annotation.annotationType()))
@@ -133,7 +113,7 @@ class NarrowingBeanBuilder<T>
 
     /**
      * Type closure currently defined for bean creation.
-     * 
+     *
      * @return the type closure currently defined
      */
     public Set<Type> getTypes()
@@ -143,9 +123,8 @@ class NarrowingBeanBuilder<T>
 
     /**
      * Define the type closure used for bean creation.
-     * 
-     * @param types
-     *            the type closure to use
+     *
+     * @param types the type closure to use
      */
     public NarrowingBeanBuilder<T> types(Set<Type> types)
     {
@@ -155,9 +134,8 @@ class NarrowingBeanBuilder<T>
 
     /**
      * Define the type closure used for bean creation.
-     * 
-     * @param types
-     *            the type closure to use
+     *
+     * @param types the type closure to use
      */
     public NarrowingBeanBuilder<T> types(Type... types)
     {
@@ -167,9 +145,8 @@ class NarrowingBeanBuilder<T>
 
     /**
      * Add to the type closure used for bean creation.
-     * 
-     * @param type
-     *            additional type to use
+     *
+     * @param type additional type to use
      */
     public NarrowingBeanBuilder<T> addType(Type type)
     {
@@ -179,9 +156,8 @@ class NarrowingBeanBuilder<T>
 
     /**
      * Add to the type closure used for bean creation.
-     * 
-     * @param types
-     *            the additional types to use
+     *
+     * @param types the additional types to use
      */
     public NarrowingBeanBuilder<T> addTypes(Type... types)
     {
@@ -191,9 +167,8 @@ class NarrowingBeanBuilder<T>
 
     /**
      * Add to the type closure used for bean creation.
-     * 
-     * @param types
-     *            the additional types to use
+     *
+     * @param types the additional types to use
      */
     public NarrowingBeanBuilder<T> addTypes(Collection<Type> types)
     {
@@ -203,7 +178,7 @@ class NarrowingBeanBuilder<T>
 
     /**
      * Qualifiers currently defined for bean creation.
-     * 
+     *
      * @return the qualifiers current defined
      */
     public Set<Annotation> getQualifiers()
@@ -213,9 +188,8 @@ class NarrowingBeanBuilder<T>
 
     /**
      * Define the qualifiers used for bean creation.
-     * 
-     * @param qualifiers
-     *            the qualifiers to use
+     *
+     * @param qualifiers the qualifiers to use
      */
     public NarrowingBeanBuilder<T> qualifiers(Set<Annotation> qualifiers)
     {
@@ -225,9 +199,8 @@ class NarrowingBeanBuilder<T>
 
     /**
      * Define the qualifiers used for bean creation.
-     * 
-     * @param qualifiers
-     *            the qualifiers to use
+     *
+     * @param qualifiers the qualifiers to use
      */
     public NarrowingBeanBuilder<T> qualifiers(Annotation... qualifiers)
     {
@@ -237,9 +210,8 @@ class NarrowingBeanBuilder<T>
 
     /**
      * Add to the qualifiers used for bean creation.
-     * 
-     * @param qualifiers
-     *            the additional qualifier to use
+     *
+     * @param qualifier the additional qualifier to use
      */
     public NarrowingBeanBuilder<T> addQualifier(Annotation qualifier)
     {
@@ -249,9 +221,8 @@ class NarrowingBeanBuilder<T>
 
     /**
      * Add to the qualifiers used for bean creation.
-     * 
-     * @param qualifiers
-     *            the additional qualifiers to use
+     *
+     * @param qualifiers the additional qualifiers to use
      */
     public NarrowingBeanBuilder<T> addQualifiers(Annotation... qualifiers)
     {
@@ -261,9 +232,8 @@ class NarrowingBeanBuilder<T>
 
     /**
      * Add to the qualifiers used for bean creation.
-     * 
-     * @param qualifiers
-     *            the additional qualifiers to use
+     *
+     * @param qualifiers the additional qualifiers to use
      */
     public NarrowingBeanBuilder<T> addQualifiers(
             Collection<Annotation> qualifiers)
@@ -274,7 +244,7 @@ class NarrowingBeanBuilder<T>
 
     /**
      * The name of the bean currently defined for bean creation.
-     * 
+     *
      * @return the name of the bean or <code>null</code> if the bean has no name
      */
     public String getName()
@@ -284,10 +254,9 @@ class NarrowingBeanBuilder<T>
 
     /**
      * Define the name of the bean used for bean creation.
-     * 
-     * @param name
-     *            the name of the bean to use or <code>null</code> if the bean
-     *            should have no name
+     *
+     * @param name the name of the bean to use or <code>null</code> if the bean
+     *             should have no name
      */
     public NarrowingBeanBuilder<T> name(String name)
     {
@@ -297,7 +266,7 @@ class NarrowingBeanBuilder<T>
 
     /**
      * Scope currently defined for bean creation.
-     * 
+     *
      * @return the scope currently defined
      */
     public Class<? extends Annotation> getScope()
@@ -307,9 +276,8 @@ class NarrowingBeanBuilder<T>
 
     /**
      * Define the scope used for bean creation.
-     * 
-     * @param scope
-     *            the scope to use
+     *
+     * @param scope the scope to use
      */
     public NarrowingBeanBuilder<T> scope(Class<? extends Annotation> scope)
     {
@@ -319,7 +287,7 @@ class NarrowingBeanBuilder<T>
 
     /**
      * Whether the created bean will be an alternative.
-     * 
+     *
      * @return <code>true</code> if the created bean will be an alternative,
      *         otherwise <code>false</code>
      */
@@ -330,10 +298,9 @@ class NarrowingBeanBuilder<T>
 
     /**
      * Define that the created bean will (or will not) be an alternative.
-     * 
-     * @param alternative
-     *            <code>true</code> if the created bean should be an
-     *            alternative, otherwise <code>false</code>
+     *
+     * @param alternative <code>true</code> if the created bean should be an
+     *                    alternative, otherwise <code>false</code>
      */
     public NarrowingBeanBuilder<T> alternative(boolean alternative)
     {
@@ -343,7 +310,7 @@ class NarrowingBeanBuilder<T>
 
     /**
      * Stereotypes currently defined for bean creation.
-     * 
+     *
      * @return the stereotypes currently defined
      */
     public Set<Class<? extends Annotation>> getStereotypes()
@@ -353,9 +320,8 @@ class NarrowingBeanBuilder<T>
 
     /**
      * Define the stereotypes used for bean creation.
-     * 
-     * @param stereotypes
-     *            the stereotypes to use
+     *
+     * @param stereotypes the stereotypes to use
      */
     public NarrowingBeanBuilder<T> stereotypes(
             Set<Class<? extends Annotation>> stereotypes)
@@ -368,10 +334,10 @@ class NarrowingBeanBuilder<T>
      * <p>
      * Use the bean builder's current state to define the bean.
      * </p>
-     * 
+     *
      * @return the bean
      */
-    public ImmutableNarrowingBean<T> create()
+    public ImmutableBeanWrapper<T> create()
     {
         // Commented out due to it not being required for initial Message
         // implementation
@@ -380,7 +346,7 @@ class NarrowingBeanBuilder<T>
         // name, qualifiers, scope, stereotypes, types, alternative,
         // nullable, toString, id);
         // } else {
-        return new ImmutableNarrowingBean<T>(delegate, name, qualifiers, scope,
+        return new ImmutableBeanWrapper<T>(delegate, name, qualifiers, scope,
                 stereotypes, types, alternative, nullable, toString);
     }
 
@@ -388,7 +354,7 @@ class NarrowingBeanBuilder<T>
 
     /**
      * The string used when {@link #toString()} is called on the bean.
-     * 
+     *
      * @return the string currently defined
      */
     public String getToString()
@@ -398,9 +364,8 @@ class NarrowingBeanBuilder<T>
 
     /**
      * Define the string used when {@link #toString()} is called on the bean.
-     * 
-     * @param toString
-     *            the string to use
+     *
+     * @param toString the string to use
      */
     public NarrowingBeanBuilder<T> toString(String toString)
     {
@@ -410,7 +375,7 @@ class NarrowingBeanBuilder<T>
 
     /**
      * Whether the created bean will be nullable.
-     * 
+     *
      * @return <code>true</code> if the created bean will be nullable, otherwise
      *         <code>false</code>
      */
@@ -421,10 +386,9 @@ class NarrowingBeanBuilder<T>
 
     /**
      * Define that the created bean will (or will not) be nullable.
-     * 
-     * @param nullable
-     *            <code>true</code> if the created bean should be nullable,
-     *            otherwise <code>false</code>
+     *
+     * @param nullable <code>true</code> if the created bean should be nullable,
+     *                 otherwise <code>false</code>
      */
     public NarrowingBeanBuilder<T> nullable(boolean nullable)
     {
@@ -434,7 +398,7 @@ class NarrowingBeanBuilder<T>
 
     /**
      * Whether the created bean will be passivation capable.
-     * 
+     *
      * @return <code>true</code> if the created bean will be passivation
      *         capable, otherwise <code>false</code>
      */
@@ -445,10 +409,9 @@ class NarrowingBeanBuilder<T>
 
     /**
      * Define that the created bean will (or will not) be passivation capable.
-     * 
-     * @param nullable
-     *            <code>true</code> if the created bean should be passivation
-     *            capable, otherwise <code>false</code>
+     *
+     * @param passivationCapable <code>true</code> if the created bean should be passivation
+     *                           capable, otherwise <code>false</code>
      */
     public NarrowingBeanBuilder<T> passivationCapable(boolean passivationCapable)
     {
@@ -458,7 +421,7 @@ class NarrowingBeanBuilder<T>
 
     /**
      * The id currently defined for bean creation.
-     * 
+     *
      * @return the id currently defined.
      */
     public String getId()
@@ -468,9 +431,8 @@ class NarrowingBeanBuilder<T>
 
     /**
      * Define the id used for bean creation.
-     * 
-     * @param id
-     *            the id to use
+     *
+     * @param id the id to use
      */
     public NarrowingBeanBuilder<T> id(String id)
     {

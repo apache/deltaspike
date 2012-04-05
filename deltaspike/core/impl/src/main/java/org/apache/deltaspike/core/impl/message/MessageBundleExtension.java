@@ -28,6 +28,7 @@ import javax.enterprise.inject.spi.AnnotatedMethod;
 import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.BeforeBeanDiscovery;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import javax.enterprise.inject.spi.ProcessProducerMethod;
@@ -35,20 +36,29 @@ import javax.enterprise.inject.spi.ProcessProducerMethod;
 import org.apache.deltaspike.core.api.literal.MessageBundleLiteral;
 import org.apache.deltaspike.core.api.message.MessageBundle;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
+import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 
 public class MessageBundleExtension implements Extension, Deactivatable
 {
-    private final Collection<AnnotatedType<?>> messageBundleTypes;
+    private final Collection<AnnotatedType<?>> messageBundleTypes = new HashSet<AnnotatedType<?>>();
     private Bean<Object> bundleProducerBean;
 
-    public MessageBundleExtension()
+    private Boolean isActivated = null;
+
+    @SuppressWarnings("UnusedDeclaration")
+    protected void init(@Observes BeforeBeanDiscovery afterBeanDiscovery)
     {
-        this.messageBundleTypes = new HashSet<AnnotatedType<?>>();
+        initActivation();
     }
 
-    void detectInterfaces(@Observes ProcessAnnotatedType<?> event,
-            BeanManager beanManager)
+    @SuppressWarnings("UnusedDeclaration")
+    protected void detectInterfaces(@Observes ProcessAnnotatedType<?> event)
     {
+        if (!this.isActivated)
+        {
+            return;
+        }
+
         AnnotatedType<?> type = event.getAnnotatedType();
         if (type.isAnnotationPresent(MessageBundle.class))
         {
@@ -59,22 +69,33 @@ public class MessageBundleExtension implements Extension, Deactivatable
     // according to the Java EE 6 javadoc (the authority according to the powers
     // that be),
     // this is the correct order of type parameters
-    void detectProducers(
-            @Observes ProcessProducerMethod<Object, TypedMessageBundleProducer> event)
+    @SuppressWarnings("UnusedDeclaration")
+    protected void detectProducers(@Observes ProcessProducerMethod<Object, TypedMessageBundleProducer> event)
     {
+        if (!this.isActivated)
+        {
+            return;
+        }
+
         captureProducers(event.getAnnotatedProducerMethod(), event.getBean());
     }
 
     // according to JSR-299 spec, this is the correct order of type parameters
+    //X TODO re-visit it
     @Deprecated
-    void detectProducersInverted(
-            @Observes ProcessProducerMethod<TypedMessageBundleProducer, Object> event)
+    @SuppressWarnings("UnusedDeclaration")
+    protected void detectProducersInverted(@Observes ProcessProducerMethod<TypedMessageBundleProducer, Object> event)
     {
+        if (!this.isActivated)
+        {
+            return;
+        }
+
         captureProducers(event.getAnnotatedProducerMethod(), event.getBean());
     }
 
     @SuppressWarnings("unchecked")
-    void captureProducers(AnnotatedMethod<?> method, Bean<?> bean)
+    protected void captureProducers(AnnotatedMethod<?> method, Bean<?> bean)
     {
         if (method.isAnnotationPresent(TypedMessageBundle.class))
         {
@@ -82,8 +103,8 @@ public class MessageBundleExtension implements Extension, Deactivatable
         }
     }
 
-    void installBeans(@Observes AfterBeanDiscovery event,
-            BeanManager beanManager)
+    @SuppressWarnings("UnusedDeclaration")
+    protected void installBeans(@Observes AfterBeanDiscovery event, BeanManager beanManager)
     {
         for (AnnotatedType<?> type : messageBundleTypes)
         {
@@ -93,16 +114,24 @@ public class MessageBundleExtension implements Extension, Deactivatable
     }
 
     private static <T> Bean<T> createMessageBundleBean(Bean<Object> delegate,
-            AnnotatedType<T> type, BeanManager beanManager)
+                                                       AnnotatedType<T> type, BeanManager beanManager)
     {
         return new NarrowingBeanBuilder<T>(delegate, beanManager)
                 .readFromType(type).types(type.getBaseType(), Object.class)
                 .addQualifier(new MessageBundleLiteral()).create();
     }
 
-    void cleanup(@Observes AfterDeploymentValidation event)
+    @SuppressWarnings("UnusedDeclaration")
+    protected void cleanup(@Observes AfterDeploymentValidation event)
     {
         this.messageBundleTypes.clear();
     }
 
+    protected void initActivation()
+    {
+        if (isActivated == null)
+        {
+            isActivated = ClassDeactivationUtils.isActivated(getClass());
+        }
+    }
 }

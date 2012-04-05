@@ -30,7 +30,6 @@ import java.lang.annotation.Target;
 @Documented
 public @interface Message
 {
-
     /**
      * The default format string of this message.
      *
@@ -50,7 +49,6 @@ public @interface Message
      */
     enum Format
     {
-
         /**
          * A {@link java.util.Formatter}-type format string.
          */
@@ -59,10 +57,5 @@ public @interface Message
          * A {@link java.text.MessageFormat}-type format string.
          */
         MESSAGE_FORMAT,
-        /**
-         * An expression language type format string.
-         */
-        EXP_LANG
     }
-
 }

@@ -40,39 +40,39 @@ import org.junit.runner.RunWith;
 @RunWith(Arquillian.class)
 public class MessageTest
 {
-	/**
-	 * X TODO creating a WebArchive is only a workaround because JavaArchive
-	 * cannot contain other archives.
-	 */
+    /**
+     * X TODO creating a WebArchive is only a workaround because JavaArchive
+     * cannot contain other archives.
+     */
     @Deployment
     public static WebArchive deploy()
     {
         new BeanManagerProvider()
         {
-			@Override
-			public void setTestMode()
-			{
-				super.setTestMode();
-			}
-		}.setTestMode();
+            @Override
+            public void setTestMode()
+            {
+                super.setTestMode();
+            }
+        }.setTestMode();
 
-		JavaArchive testJar = ShrinkWrap
-				.create(JavaArchive.class, "messageTest.jar")
-				.addPackage("org.apache.deltaspike.test.core.api.message")
-				.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+        JavaArchive testJar = ShrinkWrap
+                .create(JavaArchive.class, "messageTest.jar")
+                .addPackage("org.apache.deltaspike.test.core.api.message")
+                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
-		return ShrinkWrap
-				.create(WebArchive.class, "messageTest.war")
-				.addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
-				.addAsLibraries(testJar)
-				.addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
-				.addAsServiceProvider(Extension.class,
-						MessageBundleExtension.class);
-	}
+        return ShrinkWrap
+                .create(WebArchive.class, "messageTest.war")
+                .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
+                .addAsLibraries(testJar)
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+                .addAsServiceProvider(Extension.class,
+                        MessageBundleExtension.class);
+    }
 
     @Test
     public void testMessageBundleInjection(Jay jay)
-	{
+    {
         assertEquals("Spotted 8 jays", jay.getMessage());
     }
 }

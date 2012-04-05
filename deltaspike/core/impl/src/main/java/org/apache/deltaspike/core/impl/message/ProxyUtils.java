@@ -16,14 +16,32 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.api.message;
+package org.apache.deltaspike.core.impl.message;
 
-import org.apache.deltaspike.core.api.message.Message;
-import org.apache.deltaspike.core.api.message.MessageBundle;
+import org.apache.deltaspike.core.util.ClassUtils;
 
-@MessageBundle
-public interface BirdMessages
+import javax.enterprise.inject.Typed;
+import java.lang.reflect.Proxy;
+
+/**
+ * A factory class to produce message bundle implementations.
+ */
+@Typed()
+abstract class ProxyUtils
 {
-    @Message("Spotted %s jays")
-    String numberOfJaysSpotted(int number);
+    private ProxyUtils()
+    {
+        // prevent instantiation
+    }
+
+    /**
+     * @param type the bundle type class
+     * @param <T>  the bundle type
+     * @return the bundle
+     */
+    static <T> T createMessageBundleProxy(Class<T> type)
+    {
+        return type.cast(Proxy.newProxyInstance(
+            ClassUtils.getClassLoader(null), new Class<?>[]{type}, new MessageBundleInvocationHandler()));
+    }
 }

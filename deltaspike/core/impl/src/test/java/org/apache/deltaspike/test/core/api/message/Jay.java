@@ -22,14 +22,15 @@ import javax.inject.Inject;
 
 import org.apache.deltaspike.core.api.message.MessageBundle;
 
-public class Jay {
+public class Jay
+{
+    @Inject
+    @MessageBundle
+    private BirdMessages messages;
 
-	@Inject
-	@MessageBundle
-	BirdMessages messages;
-
-	String getMessage() {
-		return messages.numberOfJaysSpotted(8);
-	}
+    String getMessage()
+    {
+        return messages.numberOfJaysSpotted(8);
+    }
 
 }
