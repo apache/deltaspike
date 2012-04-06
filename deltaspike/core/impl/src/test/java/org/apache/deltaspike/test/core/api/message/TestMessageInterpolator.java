@@ -18,16 +18,16 @@
  */
 package org.apache.deltaspike.test.core.api.message;
 
-import javax.inject.Inject;
+import org.apache.deltaspike.core.api.message.MessageInterpolator;
 
-public class Jay
+import javax.enterprise.context.ApplicationScoped;
+
+@ApplicationScoped
+public class TestMessageInterpolator implements MessageInterpolator
 {
-    @Inject
-    private TestMessages messages;
-
-    String getMessage()
+    @Override
+    public String interpolate(String messageText, Object[] arguments)
     {
-        return messages.numberOfJaysSpotted(8);
+        return String.format(messageText, arguments);
     }
-
 }

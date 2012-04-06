@@ -18,9 +18,9 @@
  */
 package org.apache.deltaspike.core.impl.config;
 
-import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.spi.config.ConfigSource;
 import org.apache.deltaspike.core.spi.config.ConfigSourceProvider;
+import org.apache.deltaspike.core.util.PropertyFileUtils;
 
 import java.io.IOException;
 import java.net.URL;
@@ -52,17 +52,9 @@ public class DefaultConfigSourceProvider implements ConfigSourceProvider
         this.configSources.add(new EnvironmentPropertyConfigSource());
         this.configSources.add(new LocalJndiConfigSource());
 
-        ClassLoader cl = ClassUtils.getClassLoader(this);
-        try 
+        try
         {
-            Enumeration<URL> propertyFileUrls = cl.getResources(PROPERTY_FILE_NAME);
-
-            //fallback - see DELTASPIKE-98
-            if (!propertyFileUrls.hasMoreElements())
-            {
-                cl = getClass().getClassLoader();
-                propertyFileUrls = cl.getResources(PROPERTY_FILE_NAME);
-            }
+            Enumeration<URL> propertyFileUrls = PropertyFileUtils.resolvePropertyFiles(PROPERTY_FILE_NAME);
 
             while (propertyFileUrls.hasMoreElements())
             {

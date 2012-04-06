@@ -16,14 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.api.message;
+package org.apache.deltaspike.core.api.message;
 
-import org.apache.deltaspike.core.api.message.Message;
-import org.apache.deltaspike.core.api.message.MessageBundle;
 
-@MessageBundle
-public interface BirdMessages
+import java.io.Serializable;
+import java.util.Locale;
+
+/**
+ * Implementations have to provide the current locale
+ */
+public interface LocaleResolver extends Serializable
 {
-    @Message("Spotted %s jays")
-    String numberOfJaysSpotted(int number);
+    /**
+     * @return the current locale
+     */
+    Locale getLocale();
 }

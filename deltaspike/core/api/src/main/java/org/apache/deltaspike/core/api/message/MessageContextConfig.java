@@ -16,18 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.api.message;
+package org.apache.deltaspike.core.api.message;
 
-import javax.inject.Inject;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-public class Jay
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
+@Target({ TYPE })
+@Retention(RUNTIME)
+@Documented
+public @interface MessageContextConfig
 {
-    @Inject
-    private TestMessages messages;
+    Class<? extends MessageResolver> messageResolver() default MessageResolver.class;
 
-    String getMessage()
-    {
-        return messages.numberOfJaysSpotted(8);
-    }
+    Class<? extends MessageInterpolator> messageInterpolator() default MessageInterpolator.class;
 
+    Class<? extends LocaleResolver> localeResolver() default LocaleResolver.class;
 }

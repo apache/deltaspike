@@ -18,10 +18,6 @@
  */
 package org.apache.deltaspike.test.core.api.message;
 
-import static org.junit.Assert.assertEquals;
-
-import javax.enterprise.inject.spi.Extension;
-
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.impl.message.MessageBundleExtension;
 import org.apache.deltaspike.test.util.ArchiveUtils;
@@ -34,12 +30,20 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import javax.enterprise.inject.spi.Extension;
+import javax.inject.Inject;
+
+import static org.junit.Assert.assertEquals;
+
 /**
  * Tests for {@link org.apache.deltaspike.core.api.message.Message}
  */
 @RunWith(Arquillian.class)
 public class MessageTest
 {
+    @Inject
+    private TestMessages messages;
+
     /**
      * X TODO creating a WebArchive is only a workaround because JavaArchive
      * cannot contain other archives.
@@ -74,5 +78,17 @@ public class MessageTest
     public void testMessageBundleInjection(Jay jay)
     {
         assertEquals("Spotted 8 jays", jay.getMessage());
+    }
+
+    @Test
+    public void testInternationalizedMessage()
+    {
+        assertEquals("Welcome to DeltaSpike", this.messages.welcomeToDeltaSpike());
+    }
+
+    @Test
+    public void testInternationalizedParametrizedMessage()
+    {
+        assertEquals("Welcome to Apache DeltaSpike", this.messages.welcomeTo("Apache DeltaSpike"));
     }
 }

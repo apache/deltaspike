@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.core.impl.config;
 
-import java.io.IOException;
-import java.io.InputStream;
+import org.apache.deltaspike.core.util.PropertyFileUtils;
+
 import java.net.URL;
 import java.util.Properties;
 
@@ -35,7 +35,7 @@ class PropertyFileConfigSource extends BaseConfigSource
     PropertyFileConfigSource(URL propertyFileUrl)
     {
         fileName = propertyFileUrl.toExternalForm();
-        properties = loadProperties(propertyFileUrl);
+        properties = PropertyFileUtils.loadProperties(propertyFileUrl);
         initOrdinal(100);
     }
 
@@ -58,43 +58,5 @@ class PropertyFileConfigSource extends BaseConfigSource
     public String getConfigName()
     {
         return fileName;
-    }
-
-
-
-    private Properties loadProperties(URL url)
-    {
-        Properties props = new Properties();
-
-        InputStream inputStream = null;
-        try
-        {
-            inputStream = url.openStream();
-
-            if (inputStream != null)
-            {
-                props.load(inputStream);
-            }
-        }
-        catch (IOException e)
-        {
-            throw new IllegalStateException(e);
-        }
-        finally
-        {
-            try
-            {
-                if (inputStream != null)
-                {
-                    inputStream.close();
-                }
-            }
-            catch (IOException e)
-            {
-                // no worries, means that the file is already closed
-            }
-        }
-
-        return props;
     }
 }

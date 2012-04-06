@@ -18,11 +18,18 @@
  */
 package org.apache.deltaspike.core.impl.message;
 
+import org.apache.deltaspike.core.api.literal.MessageContextConfigLiteral;
+import org.apache.deltaspike.core.api.message.LocaleResolver;
 import org.apache.deltaspike.core.api.message.Message;
+import org.apache.deltaspike.core.api.message.MessageContextConfig;
+import org.apache.deltaspike.core.api.message.MessageInterpolator;
+import org.apache.deltaspike.core.api.message.MessageResolver;
+import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.core.util.ClassUtils;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.text.MessageFormat;
+import java.util.Locale;
 
 class MessageBundleInvocationHandler implements InvocationHandler
 {
@@ -34,28 +41,62 @@ class MessageBundleInvocationHandler implements InvocationHandler
     public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable
     {
         final Message message = method.getAnnotation(Message.class);
+
         if (message == null)
         {
             // nothing to do...
             return null;
         }
 
-        String result;
-        switch (message.format())
+        //X TODO discuss use-cases for a deeper lookup and qualifier support
+        MessageContextConfig messageContextConfig =
+            method.getDeclaringClass().getAnnotation(MessageContextConfig.class);
+
+        if (messageContextConfig == null)
         {
-            case PRINTF:
-            {
-                result = String.format(message.value(), args);
-                break;
-            }
-            case MESSAGE_FORMAT:
-            {
-                result = MessageFormat.format(message.value(), args);
-                break;
-            }
-            default:
-                throw new IllegalStateException();
+            messageContextConfig = new MessageContextConfigLiteral();
         }
+
+        String messageTemplate;
+
+        if (!MessageResolver.class.equals(messageContextConfig.messageResolver()))
+        {
+            Class<? extends MessageResolver> messageResolverClass =
+                    ClassUtils.tryToLoadClassForName(messageContextConfig.messageResolver().getName());
+
+            MessageResolver messageResolver = BeanProvider.getContextualReference(messageResolverClass);
+
+            messageTemplate = messageResolver.getMessage(message.value());
+        }
+        else 
+        {
+            Class<? extends LocaleResolver> localeResolverClass =
+                    ClassUtils.tryToLoadClassForName(messageContextConfig.localeResolver().getName());
+
+            Locale resolvedLocale = Locale.getDefault();
+
+            if (!LocaleResolver.class.equals(localeResolverClass))
+            {
+                LocaleResolver localeResolver = BeanProvider.getContextualReference(localeResolverClass);
+
+                resolvedLocale = localeResolver.getLocale();
+            }
+
+            String messageBundleName = method.getDeclaringClass().getName();
+            messageTemplate = new DefaultMessageResolver(messageBundleName, resolvedLocale).getMessage(message.value());
+        }
+
+        Class<? extends MessageInterpolator> messageInterpolatorClass =
+                ClassUtils.tryToLoadClassForName(messageContextConfig.messageInterpolator().getName());
+
+        String result = messageTemplate;
+
+        if (!MessageInterpolator.class.equals(messageInterpolatorClass))
+        {
+            MessageInterpolator messageInterpolator = BeanProvider.getContextualReference(messageInterpolatorClass);
+            result = messageInterpolator.interpolate(messageTemplate, args);
+        }
+
         return result;
     }
 }

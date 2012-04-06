@@ -33,7 +33,6 @@ import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import javax.enterprise.inject.spi.ProcessProducerMethod;
 
-import org.apache.deltaspike.core.api.literal.MessageBundleLiteral;
 import org.apache.deltaspike.core.api.message.MessageBundle;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
@@ -104,21 +103,23 @@ public class MessageBundleExtension implements Extension, Deactivatable
     }
 
     @SuppressWarnings("UnusedDeclaration")
-    protected void installBeans(@Observes AfterBeanDiscovery event, BeanManager beanManager)
+    protected void installMessageBundleProducerBeans(@Observes AfterBeanDiscovery event, BeanManager beanManager)
     {
         for (AnnotatedType<?> type : messageBundleTypes)
         {
-            event.addBean(createMessageBundleBean(bundleProducerBean, type,
-                    beanManager));
+            event.addBean(createMessageBundleBean(bundleProducerBean, type, beanManager));
         }
     }
 
     private static <T> Bean<T> createMessageBundleBean(Bean<Object> delegate,
-                                                       AnnotatedType<T> type, BeanManager beanManager)
+                                                       AnnotatedType<T> annotatedType,
+                                                       BeanManager beanManager)
     {
         return new NarrowingBeanBuilder<T>(delegate, beanManager)
-                .readFromType(type).types(type.getBaseType(), Object.class)
-                .addQualifier(new MessageBundleLiteral()).create();
+                .readFromType(annotatedType)
+                //X TODO re-visit type.getBaseType() in combination with #addQualifier
+                .types(annotatedType.getJavaClass(), Object.class)
+                .create();
     }
 
     @SuppressWarnings("UnusedDeclaration")

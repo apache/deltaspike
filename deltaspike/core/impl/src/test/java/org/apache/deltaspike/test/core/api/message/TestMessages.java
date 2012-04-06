@@ -18,16 +18,24 @@
  */
 package org.apache.deltaspike.test.core.api.message;
 
-import javax.inject.Inject;
+import org.apache.deltaspike.core.api.message.Message;
+import org.apache.deltaspike.core.api.message.MessageBundle;
+import org.apache.deltaspike.core.api.message.MessageContextConfig;
 
-public class Jay
+@MessageBundle
+@MessageContextConfig(messageInterpolator = TestMessageInterpolator.class)
+public interface TestMessages
 {
-    @Inject
-    private TestMessages messages;
+    @Message("Spotted %s jays")
+    String numberOfJaysSpotted(int number);
 
-    String getMessage()
-    {
-        return messages.numberOfJaysSpotted(8);
-    }
+    @Message("{welcome_to_deltaspike}")
+    String welcomeToDeltaSpike();
 
+    @Message("{welcome_to}")
+    String welcomeTo(String name);
+
+    //X TODO
+    //@Message("{welcome_to}")
+    //String welcomeTo(MessageContext messageContext, String name);
 }

@@ -16,18 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.api.message;
+package org.apache.deltaspike.core.api.message;
 
-import javax.inject.Inject;
+import java.io.Serializable;
 
-public class Jay
+/**
+ * Implementations have to resolve the text stored for a given key in the message-source they are aware of
+ */
+public interface MessageResolver extends Serializable
 {
-    @Inject
-    private TestMessages messages;
+    String MISSING_RESOURCE_MARKER = "???";
 
-    String getMessage()
-    {
-        return messages.numberOfJaysSpotted(8);
-    }
-
+    /**
+     * @param messageDescriptor the message key (or in-lined text) of the current message
+     * @return the final but not interpolated message text
+     */
+    String getMessage(String messageDescriptor);
 }

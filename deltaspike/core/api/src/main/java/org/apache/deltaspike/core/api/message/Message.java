@@ -18,12 +18,12 @@
  */
 package org.apache.deltaspike.core.api.message;
 
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Target(METHOD)
 @Retention(RUNTIME)
@@ -36,26 +36,4 @@ public @interface Message
      * @return the format string
      */
     String value();
-
-    /**
-     * The format type of this method (defaults to {@link Format#PRINTF}).
-     *
-     * @return the format type
-     */
-    Format format() default Format.PRINTF;
-
-    /**
-     * The possible format types.
-     */
-    enum Format
-    {
-        /**
-         * A {@link java.util.Formatter}-type format string.
-         */
-        PRINTF,
-        /**
-         * A {@link java.text.MessageFormat}-type format string.
-         */
-        MESSAGE_FORMAT,
-    }
 }

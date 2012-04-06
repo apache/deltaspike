@@ -18,16 +18,12 @@
  */
 package org.apache.deltaspike.test.core.api.message;
 
-import javax.inject.Inject;
+import org.apache.deltaspike.core.api.message.Message;
+import org.apache.deltaspike.core.api.message.MessageBundle;
 
-public class Jay
+@MessageBundle
+public interface SimpleMessage
 {
-    @Inject
-    private TestMessages messages;
-
-    String getMessage()
-    {
-        return messages.numberOfJaysSpotted(8);
-    }
-
+    @Message("Welcome to DeltaSpike")
+    String welcomeToDeltaSpike();
 }
