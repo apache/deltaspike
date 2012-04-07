@@ -46,7 +46,7 @@ import org.junit.runner.RunWith;
 import java.net.URL;
 
 /**
- * Integration tests for {@link org.apache.deltaspike.core.api.exclude.Exclude}
+ * Integration tests for {@link org.apache.deltaspike.core.api.exclude.annotation.Exclude}
  */
 @RunWith(Arquillian.class)
 @Category(WebProfileCategory.class)

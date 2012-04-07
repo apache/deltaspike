@@ -18,9 +18,12 @@
  */
 package org.apache.deltaspike.test.core.api.message;
 
-import org.apache.deltaspike.core.api.message.Message;
-import org.apache.deltaspike.core.api.message.MessageBundle;
-import org.apache.deltaspike.core.api.message.MessageContextConfig;
+import org.apache.deltaspike.core.api.message.annotation.Message;
+import org.apache.deltaspike.core.api.message.annotation.Message;
+import org.apache.deltaspike.core.api.message.annotation.MessageBundle;
+import org.apache.deltaspike.core.api.message.annotation.MessageBundle;
+import org.apache.deltaspike.core.api.message.annotation.MessageContextConfig;
+import org.apache.deltaspike.core.api.message.annotation.MessageContextConfig;
 
 @MessageBundle
 @MessageContextConfig(messageInterpolator = TestMessageInterpolator.class)

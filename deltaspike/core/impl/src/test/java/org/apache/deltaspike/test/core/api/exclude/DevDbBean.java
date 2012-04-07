@@ -18,7 +18,7 @@
 */
 package org.apache.deltaspike.test.core.api.exclude;
 
-import org.apache.deltaspike.core.api.exclude.Exclude;
+import org.apache.deltaspike.core.api.exclude.annotation.Exclude;
 
 /**
  * Class which gets excluded if the configured value for 'db' is 'prodDB'

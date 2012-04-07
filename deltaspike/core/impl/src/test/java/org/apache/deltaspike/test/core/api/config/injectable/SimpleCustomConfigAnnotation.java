@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.core.api.config.injectable;
 
-import org.apache.deltaspike.core.api.config.ConfigProperty;
+import org.apache.deltaspike.core.api.config.annotation.ConfigProperty;
 
 import javax.inject.Qualifier;
 import java.lang.annotation.Documented;

@@ -19,9 +19,9 @@
 package org.apache.deltaspike.core.impl.exclude;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
+import org.apache.deltaspike.core.api.exclude.annotation.Exclude;
 import org.apache.deltaspike.core.api.metadata.builder.AnnotatedTypeBuilder;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
-import org.apache.deltaspike.core.api.exclude.Exclude;
 import org.apache.deltaspike.core.api.interpreter.ExpressionInterpreter;
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.impl.interpreter.PropertyExpressionInterpreter;
@@ -48,9 +48,9 @@ import java.util.logging.Logger;
 
 /**
  * <p>This class implements the logic for handling
- * {@link org.apache.deltaspike.core.api.exclude.Exclude} annotations.</p>
+ * {@link org.apache.deltaspike.core.api.exclude.annotation.Exclude} annotations.</p>
  * <p/>
- * <p>Further details see {@link org.apache.deltaspike.core.api.exclude.Exclude}</p>
+ * <p>Further details see {@link org.apache.deltaspike.core.api.exclude.annotation.Exclude}</p>
  */
 public class ExcludeExtension implements Extension, Deactivatable
 {

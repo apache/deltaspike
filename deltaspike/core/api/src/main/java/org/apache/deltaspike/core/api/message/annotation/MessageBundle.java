@@ -16,34 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.api.config;
+package org.apache.deltaspike.core.api.message.annotation;
 
-import org.apache.deltaspike.core.api.converter.Converter;
-
-import javax.enterprise.util.Nonbinding;
-import javax.inject.Qualifier;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.CONSTRUCTOR;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
+import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-@Target({ PARAMETER, FIELD, METHOD, CONSTRUCTOR, ANNOTATION_TYPE })
+@Target({ TYPE, METHOD, PARAMETER, FIELD })
 @Retention(RUNTIME)
 @Documented
-
-@Qualifier
-public @interface ConfigProperty
+public @interface MessageBundle
 {
-    String name();
-
-    @Nonbinding
-    Class<? extends Converter> converter() default Converter.class;
-
-    boolean eager() default true;
 }

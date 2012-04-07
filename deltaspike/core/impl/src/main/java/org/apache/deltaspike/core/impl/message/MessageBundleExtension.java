@@ -33,7 +33,7 @@ import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import javax.enterprise.inject.spi.ProcessProducerMethod;
 
-import org.apache.deltaspike.core.api.message.MessageBundle;
+import org.apache.deltaspike.core.api.message.annotation.MessageBundle;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 

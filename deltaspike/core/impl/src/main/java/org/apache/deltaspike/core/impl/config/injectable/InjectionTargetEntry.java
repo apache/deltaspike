@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.core.impl.config.injectable;
 
-import org.apache.deltaspike.core.api.config.ConfigProperty;
+import org.apache.deltaspike.core.api.config.annotation.ConfigProperty;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;

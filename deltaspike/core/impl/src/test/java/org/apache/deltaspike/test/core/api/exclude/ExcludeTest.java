@@ -39,7 +39,7 @@ import javax.enterprise.inject.spi.Extension;
 import java.net.URL;
 
 /**
- * Tests for {@link org.apache.deltaspike.core.api.exclude.Exclude}
+ * Tests for {@link org.apache.deltaspike.core.api.exclude.annotation.Exclude}
  */
 @RunWith(Arquillian.class)
 public class ExcludeTest

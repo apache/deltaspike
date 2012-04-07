@@ -20,8 +20,8 @@ package org.apache.deltaspike.core.impl.message;
 
 import org.apache.deltaspike.core.api.literal.MessageContextConfigLiteral;
 import org.apache.deltaspike.core.api.message.LocaleResolver;
-import org.apache.deltaspike.core.api.message.Message;
-import org.apache.deltaspike.core.api.message.MessageContextConfig;
+import org.apache.deltaspike.core.api.message.annotation.Message;
+import org.apache.deltaspike.core.api.message.annotation.MessageContextConfig;
 import org.apache.deltaspike.core.api.message.MessageInterpolator;
 import org.apache.deltaspike.core.api.message.MessageResolver;
 import org.apache.deltaspike.core.api.provider.BeanProvider;

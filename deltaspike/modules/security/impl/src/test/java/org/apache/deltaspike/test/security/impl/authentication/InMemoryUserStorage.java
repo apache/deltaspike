@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.security.impl.authentication;
 
-import org.apache.deltaspike.core.api.exclude.Exclude;
+import org.apache.deltaspike.core.api.exclude.annotation.Exclude;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

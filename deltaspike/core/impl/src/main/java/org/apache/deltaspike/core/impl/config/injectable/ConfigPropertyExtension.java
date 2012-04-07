@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.core.impl.config.injectable;
 
-import org.apache.deltaspike.core.api.config.ConfigProperty;
+import org.apache.deltaspike.core.api.config.annotation.ConfigProperty;
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
@@ -34,7 +34,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Adds support for {@link org.apache.deltaspike.core.api.config.ConfigProperty}
+ * Adds support for {@link org.apache.deltaspike.core.api.config.annotation.ConfigProperty}
  */
 public class ConfigPropertyExtension implements Extension, Deactivatable
 {

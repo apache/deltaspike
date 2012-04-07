@@ -16,32 +16,27 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.example.config;
+package org.apache.deltaspike.core.api.message.annotation;
 
-import org.apache.deltaspike.core.api.config.annotation.ConfigProperty;
+import org.apache.deltaspike.core.api.message.LocaleResolver;
+import org.apache.deltaspike.core.api.message.MessageInterpolator;
+import org.apache.deltaspike.core.api.message.MessageResolver;
 
-import javax.enterprise.util.Nonbinding;
-import javax.inject.Qualifier;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
-import static java.lang.annotation.ElementType.CONSTRUCTOR;
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-@Target({ PARAMETER, FIELD, METHOD, CONSTRUCTOR, ANNOTATION_TYPE })
+@Target({ TYPE })
 @Retention(RUNTIME)
 @Documented
-
-@ConfigProperty(name = "property2", converter = CustomInverseStringToLongConverter.class)
-
-@Qualifier
-public @interface Property2WithInverseSupport
+public @interface MessageContextConfig
 {
-    @Nonbinding
-    boolean inverseConvert() default false;
+    Class<? extends MessageResolver> messageResolver() default MessageResolver.class;
+
+    Class<? extends MessageInterpolator> messageInterpolator() default MessageInterpolator.class;
+
+    Class<? extends LocaleResolver> localeResolver() default LocaleResolver.class;
 }

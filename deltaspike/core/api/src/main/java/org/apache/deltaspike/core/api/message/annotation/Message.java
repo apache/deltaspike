@@ -16,23 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.api.message;
+package org.apache.deltaspike.core.api.message.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-@Target({ TYPE })
+@Target(METHOD)
 @Retention(RUNTIME)
 @Documented
-public @interface MessageContextConfig
+public @interface Message
 {
-    Class<? extends MessageResolver> messageResolver() default MessageResolver.class;
-
-    Class<? extends MessageInterpolator> messageInterpolator() default MessageInterpolator.class;
-
-    Class<? extends LocaleResolver> localeResolver() default LocaleResolver.class;
+    /**
+     * The default format string of this message.
+     *
+     * @return the format string
+     */
+    String value();
 }

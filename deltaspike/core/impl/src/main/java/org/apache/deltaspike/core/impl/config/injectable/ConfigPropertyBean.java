@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.core.impl.config.injectable;
 
-import org.apache.deltaspike.core.api.config.ConfigProperty;
+import org.apache.deltaspike.core.api.config.annotation.ConfigProperty;
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.converter.Converter;
 import org.apache.deltaspike.core.api.converter.MetaDataAwareConverter;
