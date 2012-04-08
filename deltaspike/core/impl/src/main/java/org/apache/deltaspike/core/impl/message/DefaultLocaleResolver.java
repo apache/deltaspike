@@ -16,20 +16,26 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.api.message;
+package org.apache.deltaspike.core.impl.message;
 
-import org.apache.deltaspike.core.api.message.MessageInterpolator;
 
-import javax.enterprise.context.ApplicationScoped;
+import org.apache.deltaspike.core.api.message.LocaleResolver;
 
-@ApplicationScoped
-public class TestMessageInterpolator implements MessageInterpolator
+import javax.enterprise.inject.Typed;
+import java.io.Serializable;
+import java.util.Locale;
+
+/**
+ * {@inheritDoc}
+ */
+@Typed()
+class DefaultLocaleResolver implements LocaleResolver, Serializable
 {
-    private static final long serialVersionUID = 5636914399691923602L;
+    private static final long serialVersionUID = 2075618472090834156L;
 
     @Override
-    public String interpolate(String messageText, Object[] arguments)
+    public Locale getLocale()
     {
-        return String.format(messageText, arguments);
+        return Locale.getDefault();
     }
 }

@@ -16,19 +16,46 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.api.message;
+package org.apache.deltaspike.core.impl.message;
 
-import org.apache.deltaspike.core.api.message.Message;
 import org.apache.deltaspike.core.api.message.MessageContext;
-import org.apache.deltaspike.core.api.message.annotation.MessageTemplate;
-import org.apache.deltaspike.core.api.message.annotation.MessageBundle;
 
-@MessageBundle
-public interface SimpleMessage
+import javax.enterprise.inject.Typed;
+import java.util.Locale;
+
+/**
+ * {@link MessageContext} which doesn't support changes
+ */
+@Typed()
+class UnmodifiableMessageContext implements MessageContext
 {
-    @MessageTemplate("Welcome to DeltaSpike")
-    String welcomeToDeltaSpike();
+    private static final long serialVersionUID = -4730350864157813259L;
+    private MessageContext messageContext;
 
-    @MessageTemplate("Welcome to %s")
-    Message welcomeTo(MessageContext messageContext, String name);
+    UnmodifiableMessageContext(MessageContext messageContext)
+    {
+        this.messageContext = messageContext;
+    }
+
+    @Override
+    public MessageContext.Config config()
+    {
+        return new UnmodifiableMessageContextConfig(messageContext.config());
+    }
+
+    /*
+     * generated
+     */
+
+    @Override
+    public MessageBuilder message()
+    {
+        return messageContext.message();
+    }
+
+    @Override
+    public Locale getLocale()
+    {
+        return messageContext.getLocale();
+    }
 }

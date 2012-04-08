@@ -18,6 +18,8 @@
  */
 package org.apache.deltaspike.test.core.api.message;
 
+import org.apache.deltaspike.core.api.message.LocaleResolver;
+import org.apache.deltaspike.core.api.message.MessageContext;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.impl.message.MessageBundleExtension;
 import org.apache.deltaspike.test.util.ArchiveUtils;
@@ -36,13 +38,16 @@ import javax.inject.Inject;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Tests for {@link org.apache.deltaspike.core.api.message.annotation.MessageTemplate}
+ * Tests for {@link MessageContext}
  */
 @RunWith(Arquillian.class)
-public class SimpleMessageTest
+public class MessageContextTest
 {
     @Inject
     private SimpleMessage simpleMessage;
+
+    @Inject
+    private MessageContext messageContext;
 
     /**
      * X TODO creating a WebArchive is only a workaround because JavaArchive
@@ -61,12 +66,12 @@ public class SimpleMessageTest
         }.setTestMode();
 
         JavaArchive testJar = ShrinkWrap
-                .create(JavaArchive.class, "simpleMessageTest.jar")
+                .create(JavaArchive.class, "messageContextTest.jar")
                 .addPackage("org.apache.deltaspike.test.core.api.message")
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
         return ShrinkWrap
-                .create(WebArchive.class, "simpleMessageTest.war")
+                .create(WebArchive.class, "messageContextTest.war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
                 .addAsLibraries(testJar)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
@@ -77,6 +82,50 @@ public class SimpleMessageTest
     @Test
     public void testSimpleMessage()
     {
-        assertEquals("Welcome to DeltaSpike", this.simpleMessage.welcomeToDeltaSpike());
+        assertEquals("Welcome to DeltaSpike",
+                this.simpleMessage.welcomeTo(this.messageContext, "DeltaSpike").toString());
+    }
+
+    @Test
+    public void resolveTextTest()
+    {
+        LocaleResolver localeResolver = new TestLocalResolver();
+
+        String messageText = this.messageContext.config()
+                .use()
+                    .localeResolver(localeResolver)
+                    .messageResolver(new TestMessageResolver(localeResolver))
+                .create().message().text("{hello}").toText();
+
+        assertEquals("test message", messageText);
+    }
+
+    @Test
+    public void resolveGermanMessageTextTest()
+    {
+        LocaleResolver localeResolver = new TestGermanLocaleResolver();
+        String messageText = this.messageContext.config()
+                .use()
+                    .localeResolver(localeResolver)
+                    .messageResolver(new TestMessageResolver(localeResolver))
+                .create().message().text("{hello}").toText();
+
+        assertEquals("Test Nachricht", messageText);
+    }
+
+    @Test
+    public void createInvalidMessageTest()
+    {
+        String messageText = this.messageContext.message().text("{xyz123}").toText();
+
+        assertEquals("???xyz123???", messageText);
+    }
+
+    @Test
+    public void createInvalidMessageWithArgumentsTest()
+    {
+        String messageText = this.messageContext.message().text("{xyz123}").argument("123").argument("456").argument("789").toText();
+
+        assertEquals("???xyz123??? (123,456,789)", messageText);
     }
 }

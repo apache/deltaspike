@@ -16,24 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.api.message.annotation;
+package org.apache.deltaspike.test.core.api.message;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+import org.apache.deltaspike.core.api.message.LocaleResolver;
 
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import javax.enterprise.inject.Typed;
+import java.util.Locale;
 
-@Target(METHOD)
-@Retention(RUNTIME)
-@Documented
-public @interface Message
+@Typed()
+class TestGermanLocaleResolver implements LocaleResolver
 {
-    /**
-     * The default format string of this message.
-     *
-     * @return the format string
-     */
-    String value();
+    private static final long serialVersionUID = 1927000487639667775L;
+
+    @Override
+    public Locale getLocale()
+    {
+        return Locale.GERMAN;
+    }
 }

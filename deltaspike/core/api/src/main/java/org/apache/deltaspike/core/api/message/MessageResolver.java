@@ -28,8 +28,8 @@ public interface MessageResolver extends Serializable
     String MISSING_RESOURCE_MARKER = "???";
 
     /**
-     * @param messageDescriptor the message key (or in-lined text) of the current message
+     * @param messageTemplate the message key (or in-lined text) of the current message
      * @return the final but not interpolated message text
      */
-    String getMessage(String messageDescriptor);
+    String getMessage(String messageTemplate);
 }

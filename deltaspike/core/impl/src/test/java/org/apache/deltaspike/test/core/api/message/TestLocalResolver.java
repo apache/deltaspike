@@ -18,18 +18,19 @@
  */
 package org.apache.deltaspike.test.core.api.message;
 
-import org.apache.deltaspike.core.api.message.MessageInterpolator;
+import org.apache.deltaspike.core.api.message.LocaleResolver;
 
 import javax.enterprise.context.ApplicationScoped;
+import java.util.Locale;
 
 @ApplicationScoped
-public class TestMessageInterpolator implements MessageInterpolator
+public class TestLocalResolver implements LocaleResolver
 {
-    private static final long serialVersionUID = 5636914399691923602L;
+    private static final long serialVersionUID = 6947516315363672494L;
 
     @Override
-    public String interpolate(String messageText, Object[] arguments)
+    public Locale getLocale()
     {
-        return String.format(messageText, arguments);
+        return Locale.ENGLISH;
     }
 }

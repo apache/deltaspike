@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.core.impl.message;
 
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -33,7 +34,10 @@ import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import javax.enterprise.inject.spi.ProcessProducerMethod;
 
+import org.apache.deltaspike.core.api.message.Message;
+import org.apache.deltaspike.core.api.message.MessageContext;
 import org.apache.deltaspike.core.api.message.annotation.MessageBundle;
+import org.apache.deltaspike.core.api.message.annotation.MessageTemplate;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 
@@ -59,10 +63,56 @@ public class MessageBundleExtension implements Extension, Deactivatable
         }
 
         AnnotatedType<?> type = event.getAnnotatedType();
+
         if (type.isAnnotationPresent(MessageBundle.class))
         {
+            validateMessageBundle(type.getJavaClass());
+
             messageBundleTypes.add(type);
         }
+    }
+
+    private void validateMessageBundle(Class<?> currentClass)
+    {
+        for (Method currentMethod : currentClass.getDeclaredMethods())
+        {
+            if (!currentMethod.isAnnotationPresent(MessageTemplate.class))
+            {
+                continue;
+            }
+            
+            if (String.class.isAssignableFrom(currentMethod.getReturnType()))
+            {
+                continue;
+            }
+
+            if (Message.class.isAssignableFrom(currentMethod.getReturnType()))
+            {
+                validateMessageContextAwareMethod(currentMethod);
+            }
+            else
+            {
+                throw new IllegalStateException(
+                        currentMethod.getReturnType().getName() + " isn't supported. Details: " +
+                        currentMethod.getDeclaringClass().getName() + "#" + currentMethod.getName() +
+                        " only " + String.class.getName() + " or " + Message.class.getName());
+            }
+        }
+    }
+
+    private void validateMessageContextAwareMethod(Method currentMethod)
+    {
+        for (Class currentParameterType : currentMethod.getParameterTypes())
+        {
+            if (MessageContext.class.isAssignableFrom(currentParameterType))
+            {
+                return;
+            }
+        }
+
+        throw new IllegalStateException("No " + MessageContext.class.getName() + " parameter found at: " +
+                currentMethod.getDeclaringClass().getName() + "#" + currentMethod.getName() +
+                ". That is required for return-type " + Message.class.getName());
     }
 
     // according to the Java EE 6 javadoc (the authority according to the powers

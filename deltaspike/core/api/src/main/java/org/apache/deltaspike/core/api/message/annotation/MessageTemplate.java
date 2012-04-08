@@ -16,20 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.api.message;
+package org.apache.deltaspike.core.api.message.annotation;
 
-import org.apache.deltaspike.core.api.message.MessageInterpolator;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-import javax.enterprise.context.ApplicationScoped;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-@ApplicationScoped
-public class TestMessageInterpolator implements MessageInterpolator
+@Target(METHOD)
+@Retention(RUNTIME)
+@Documented
+public @interface MessageTemplate
 {
-    private static final long serialVersionUID = 5636914399691923602L;
-
-    @Override
-    public String interpolate(String messageText, Object[] arguments)
-    {
-        return String.format(messageText, arguments);
-    }
+    /**
+     * The default format string of this message.
+     *
+     * @return the format string
+     */
+    String value();
 }

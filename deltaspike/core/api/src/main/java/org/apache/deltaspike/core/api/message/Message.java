@@ -16,20 +16,26 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.api.message;
+package org.apache.deltaspike.core.api.message;
 
-import org.apache.deltaspike.core.api.message.MessageInterpolator;
-
-import javax.enterprise.context.ApplicationScoped;
-
-@ApplicationScoped
-public class TestMessageInterpolator implements MessageInterpolator
+/**
+ * Basic interface for all message-types
+ */
+public interface Message
 {
-    private static final long serialVersionUID = 5636914399691923602L;
+    /**
+     * @return the message key (or inline-text) of the current message
+     */
+    String getMessageTemplate();
 
-    @Override
-    public String interpolate(String messageText, Object[] arguments)
-    {
-        return String.format(messageText, arguments);
-    }
+    /**
+     * @return all named and numbered arguments
+     */
+    Object[] getArguments();
+
+    /**
+     * @param arguments 1-n new arguments for the current message
+     * @return the current instance
+     */
+    Message addArgument(Object... arguments);
 }

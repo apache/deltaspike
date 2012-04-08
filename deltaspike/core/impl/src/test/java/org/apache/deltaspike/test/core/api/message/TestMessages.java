@@ -18,24 +18,24 @@
  */
 package org.apache.deltaspike.test.core.api.message;
 
-import org.apache.deltaspike.core.api.message.annotation.Message;
-import org.apache.deltaspike.core.api.message.annotation.Message;
+import org.apache.deltaspike.core.api.message.annotation.MessageTemplate;
 import org.apache.deltaspike.core.api.message.annotation.MessageBundle;
-import org.apache.deltaspike.core.api.message.annotation.MessageBundle;
-import org.apache.deltaspike.core.api.message.annotation.MessageContextConfig;
 import org.apache.deltaspike.core.api.message.annotation.MessageContextConfig;
 
 @MessageBundle
-@MessageContextConfig(messageInterpolator = TestMessageInterpolator.class)
+@MessageContextConfig(
+        messageInterpolator = TestMessageInterpolator.class,
+        localeResolver = TestLocalResolver.class
+)
 public interface TestMessages
 {
-    @Message("Spotted %s jays")
+    @MessageTemplate("Spotted %s jays")
     String numberOfJaysSpotted(int number);
 
-    @Message("{welcome_to_deltaspike}")
+    @MessageTemplate("{welcome_to_deltaspike}")
     String welcomeToDeltaSpike();
 
-    @Message("{welcome_to}")
+    @MessageTemplate("{welcome_to}")
     String welcomeTo(String name);
 
     //X TODO
