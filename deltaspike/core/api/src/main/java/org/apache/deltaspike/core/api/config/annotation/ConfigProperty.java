@@ -45,5 +45,6 @@ public @interface ConfigProperty
     @Nonbinding
     Class<? extends Converter> converter() default Converter.class;
 
+    @Nonbinding
     boolean eager() default true;
 }
