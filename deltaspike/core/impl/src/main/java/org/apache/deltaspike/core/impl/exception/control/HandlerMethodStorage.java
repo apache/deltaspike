@@ -17,7 +17,9 @@
  * under the License.
  */
 
-package org.apache.deltaspike.core.api.exception.control;
+package org.apache.deltaspike.core.impl.exception.control;
+
+import org.apache.deltaspike.core.api.exception.control.HandlerMethod;
 
 import javax.enterprise.inject.spi.BeanManager;
 import java.lang.annotation.Annotation;
@@ -26,7 +28,8 @@ import java.util.Collection;
 import java.util.Set;
 
 /**
- * Injectable storage to support programmatic registration and lookup of {@link HandlerMethod} instances.
+ * Injectable storage to support programmatic registration and lookup of
+ * {@link org.apache.deltaspike.core.api.exception.control.HandlerMethod} instances.
  */
 public interface HandlerMethodStorage
 {

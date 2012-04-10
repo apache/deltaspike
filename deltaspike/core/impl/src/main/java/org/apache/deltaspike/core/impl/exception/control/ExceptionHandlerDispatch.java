@@ -23,7 +23,7 @@ import org.apache.deltaspike.core.api.exception.control.CaughtException;
 import org.apache.deltaspike.core.api.exception.control.ExceptionStack;
 import org.apache.deltaspike.core.api.exception.control.ExceptionToCatch;
 import org.apache.deltaspike.core.api.exception.control.HandlerMethod;
-import org.apache.deltaspike.core.api.exception.control.HandlerMethodStorage;
+import org.apache.deltaspike.core.impl.exception.control.extension.CatchExtension;
 
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.event.Observes;
@@ -55,12 +55,12 @@ public class ExceptionHandlerDispatch implements java.io.Serializable
      *
      * @param eventException exception to be invoked
      * @param bm             active bean manager
-     * @param handlerMethodStorage      catch handlerMethodStorage instance to obtain handlers
      * @throws Throwable If a handler requests the exception to be re-thrown.
      */
+    // CHECKSTYLE:OFF
     @SuppressWarnings({"unchecked", "MethodWithMultipleLoops", "ThrowableResultOfMethodCallIgnored"})
-    public void executeHandlers(@Observes @Any ExceptionToCatch eventException, final BeanManager bm,
-                                HandlerMethodStorage handlerMethodStorage) throws Throwable
+    // CHECKSTYLE:ON
+    public void executeHandlers(@Observes @Any ExceptionToCatch eventException, final BeanManager bm) throws Throwable
     {
         log.entering(ExceptionHandlerDispatch.class.getName(), "executeHandlers", eventException.getException());
 
@@ -68,6 +68,8 @@ public class ExceptionHandlerDispatch implements java.io.Serializable
         this.exceptionToCatch = eventException;
 
         Throwable throwException = null;
+
+        final HandlerMethodStorage handlerMethodStorage = CatchExtension.createStorage();
 
         try
         {
@@ -79,7 +81,7 @@ public class ExceptionHandlerDispatch implements java.io.Serializable
 
             bm.fireEvent(stack); // Allow for modifying the exception stack
 
-            inbound_cause:
+        inbound_cause:
             while (stack.getCurrent() != null)
             {
                 this.exceptionStack = stack;
@@ -126,13 +128,16 @@ public class ExceptionHandlerDispatch implements java.io.Serializable
                                 break;
                             case THROW:
                                 throwException = breadthFirstEvent.getThrowNewException();
+                                break;
+                            default:
+                                throw new IllegalStateException("Unexpected enum type " + breadthFirstEvent.getFlow());
                         }
                     }
                 }
 
                 final Collection<HandlerMethod<? extends Throwable>> handlersForException =
                         handlerMethodStorage.getHandlersForException(stack.getCurrent().getClass(),
-                        bm, eventException.getQualifiers(), false);
+                                bm, eventException.getQualifiers(), false);
 
                 final List<HandlerMethod<? extends Throwable>> depthFirstHandlerMethods =
                         new ArrayList<HandlerMethod<? extends Throwable>>(handlersForException);
@@ -178,6 +183,9 @@ public class ExceptionHandlerDispatch implements java.io.Serializable
                                 break;
                             case THROW:
                                 throwException = depthFirstEvent.getThrowNewException();
+                                break;
+                            default:
+                                throw new IllegalStateException("Unexpected enum type " + depthFirstEvent.getFlow());
                         }
                     }
                 }
@@ -194,7 +202,8 @@ public class ExceptionHandlerDispatch implements java.io.Serializable
             {
                 throw throwException;
             }
-        } finally
+        }
+        finally
         {
             if (ctx != null)
             {

@@ -63,6 +63,59 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
     private BeanManager beanManager;
 
     /**
+     * Sole Constructor.
+     *
+     * @param method found handler
+     * @param bm     active BeanManager
+     * @throws IllegalArgumentException if method is null, has no params or first param is not annotated with
+     *                                  {@link Handles} or {@link BeforeHandles}
+     */
+    public HandlerMethodImpl(final AnnotatedMethod<?> method, final BeanManager bm)
+    {
+        if (!HandlerMethodImpl.isHandler(method))
+        {
+            throw new IllegalArgumentException(MessageFormat.format("{0} is not a valid handler", method));
+        }
+
+        this.beanManager = bm;
+
+        final Set<Annotation> tmpQualifiers = new HashSet<Annotation>();
+
+        this.handler = method;
+        this.javaMethod = method.getJavaMember();
+
+        this.handlerParameter = findHandlerParameter(method);
+
+        if (!this.handlerParameter.isAnnotationPresent(Handles.class)
+                && !this.handlerParameter.isAnnotationPresent(BeforeHandles.class))
+        {
+            throw new IllegalArgumentException("Method is not annotated with @Handles or @BeforeHandles");
+        }
+
+        this.before = this.handlerParameter.getAnnotation(BeforeHandles.class) != null;
+        this.ordinal = this.handlerParameter.getAnnotation(Handles.class).ordinal();
+        tmpQualifiers.addAll(BeanUtils.getQualifiers(bm, this.handlerParameter.getAnnotations()));
+
+        if (tmpQualifiers.isEmpty())
+        {
+            tmpQualifiers.add(new AnyLiteral());
+        }
+
+        this.qualifiers = tmpQualifiers;
+        this.beanClass = method.getJavaMember().getDeclaringClass();
+        this.exceptionType = ((ParameterizedType) this.handlerParameter.getBaseType()).getActualTypeArguments()[0];
+        this.injectionPoints = new HashSet<InjectionPoint>(method.getParameters().size() - 1);
+
+        for (AnnotatedParameter<?> param : method.getParameters())
+        {
+            if (!param.equals(this.handlerParameter))
+            {
+                this.injectionPoints.add(new ImmutableInjectionPoint(param, bm, this.getBean(bm), false, false));
+            }
+        }
+    }
+
+    /**
      * Determines if the given method is a handler by looking for the {@link Handles} annotation on a parameter.
      *
      * @param method method to search
@@ -107,69 +160,11 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
         return returnParam;
     }
 
-    /**
-     * Sole Constructor.
-     *
-     * @param method found handler
-     * @param bm     active BeanManager
-     * @throws IllegalArgumentException if method is null, has no params or first param is not annotated with
-     *                                  {@link Handles} or {@link BeforeHandles}
-     */
-    public HandlerMethodImpl(final AnnotatedMethod<?> method, final BeanManager bm)
-    {
-        if (!HandlerMethodImpl.isHandler(method))
-        {
-            throw new IllegalArgumentException(MessageFormat.format("{0} is not a valid handler", method));
-        }
-
-        this.beanManager = bm;
-
-        final Set<Annotation> tmpQualifiers = new HashSet<Annotation>();
-
-        this.handler = method;
-        this.javaMethod = method.getJavaMember();
-
-        this.handlerParameter = findHandlerParameter(method);
-
-        if (!this.handlerParameter.isAnnotationPresent(Handles.class) && !this.handlerParameter.isAnnotationPresent(BeforeHandles.class))
-        {
-            throw new IllegalArgumentException("Method is not annotated with @Handles or @BeforeHandles");
-        }
-
-        this.before = this.handlerParameter.getAnnotation(BeforeHandles.class) != null;
-        this.ordinal = this.handlerParameter.getAnnotation(Handles.class).ordinal();
-        tmpQualifiers.addAll(BeanUtils.getQualifiers(bm, this.handlerParameter.getAnnotations()));
-
-        if (tmpQualifiers.isEmpty())
-        {
-            tmpQualifiers.add(new AnyLiteral());
-        }
-
-        this.qualifiers = tmpQualifiers;
-        this.beanClass = method.getJavaMember().getDeclaringClass();
-        this.exceptionType = ((ParameterizedType) this.handlerParameter.getBaseType()).getActualTypeArguments()[0];
-        this.injectionPoints = new HashSet<InjectionPoint>(method.getParameters().size() - 1);
-
-        for (AnnotatedParameter<?> param : method.getParameters())
-        {
-            if (!param.equals(this.handlerParameter))
-            {
-                this.injectionPoints.add(new ImmutableInjectionPoint(param, bm, this.getBean(bm), false, false));
-            }
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public Class<?> getBeanClass()
     {
         return this.beanClass;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public synchronized Bean<?> getBean(BeanManager bm)
     {
         if (this.bean == null)
@@ -182,6 +177,7 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
     /**
      * {@inheritDoc}
      */
+    @Override
     public Set<Annotation> getQualifiers()
     {
         return Collections.unmodifiableSet(this.qualifiers);
@@ -190,6 +186,7 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
     /**
      * {@inheritDoc}
      */
+    @Override
     public Type getExceptionType()
     {
         return this.exceptionType;
@@ -198,6 +195,7 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
     /**
      * {@inheritDoc}
      */
+    @Override
     public void notify(final CaughtException<T> event)
     {
         CreationalContext<?> ctx = null;
@@ -207,7 +205,8 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
             Object handlerInstance = beanManager.getReference(this.getBean(beanManager), this.beanClass, ctx);
             InjectableMethod<?> im = createInjectableMethod(this.handler, this.getBean(beanManager), beanManager);
             im.invoke(handlerInstance, ctx, new OutboundParameterValueRedefiner(event, beanManager, this));
-        } finally
+        }
+        finally
         {
             if (ctx != null)
             {
@@ -216,11 +215,15 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
         }
     }
 
-    private <X> InjectableMethod<X> createInjectableMethod(AnnotatedMethod<X> handlerMethod, Bean<?> bean, BeanManager manager)
+    private <X> InjectableMethod<X> createInjectableMethod(AnnotatedMethod<X> handlerMethod,
+                                                           Bean<?> bean, BeanManager manager)
     {
         return new InjectableMethod<X>(handlerMethod, bean, manager);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isBefore()
     {
@@ -230,14 +233,12 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
     /**
      * {@inheritDoc}
      */
+    @Override
     public int getOrdinal()
     {
         return this.ordinal;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public Method getJavaMethod()
     {
         return this.javaMethod;

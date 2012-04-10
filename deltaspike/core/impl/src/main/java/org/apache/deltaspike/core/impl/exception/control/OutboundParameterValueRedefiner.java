@@ -32,10 +32,10 @@ import javax.enterprise.inject.spi.BeanManager;
  */
 public class OutboundParameterValueRedefiner implements ParameterValueRedefiner
 {
-    final private CaughtException<?> event;
-    final private BeanManager bm;
-    final private Bean<?> declaringBean;
-    final private HandlerMethodImpl<?> handlerMethod;
+    private final CaughtException<?> event;
+    private final BeanManager bm;
+    private final Bean<?> declaringBean;
+    private final HandlerMethodImpl<?> handlerMethod;
 
     /**
      * Sole constructor.
@@ -56,6 +56,7 @@ public class OutboundParameterValueRedefiner implements ParameterValueRedefiner
     /**
      * {@inheritDoc}
      */
+    @Override
     public Object redefineParameterValue(ParameterValue value)
     {
         CreationalContext<?> ctx = this.bm.createCreationalContext(this.declaringBean);
@@ -67,7 +68,8 @@ public class OutboundParameterValueRedefiner implements ParameterValueRedefiner
                 return event;
             }
             return value.getDefaultValue(ctx);
-        } finally
+        }
+        finally
         {
             if (ctx != null)
             {

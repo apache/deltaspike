@@ -28,16 +28,17 @@ import java.util.Comparator;
 import java.util.Set;
 
 /**
- * Comparator to sort exception handlers according qualifier ({@link org.apache.deltaspike.core.api.exception.control.BeforeHandles} first), ordinal
+ * Comparator to sort exception handlers according qualifier
+ * ({@link org.apache.deltaspike.core.api.exception.control.BeforeHandles} first), ordinal
  * (highest to lowest) and finally hierarchy (least to most specific).
  */
-@SuppressWarnings({"MethodWithMoreThanThreeNegations"})
+@SuppressWarnings({ "MethodWithMoreThanThreeNegations" })
 public final class ExceptionHandlerComparator implements Comparator<HandlerMethod<?>>
 {
-
     /**
      * {@inheritDoc}
      */
+    @Override
     public int compare(HandlerMethod<?> lhs, HandlerMethod<?> rhs)
     {
         if (lhs.equals(rhs))
