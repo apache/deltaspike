@@ -17,28 +17,24 @@
  * under the License.
  */
 
-package org.apache.deltaspike.core.api.exception.control;
+package org.apache.deltaspike.test.core.impl.exception.control.flow;
 
+import org.apache.deltaspike.core.api.exception.control.BeforeHandles;
+import org.apache.deltaspike.core.api.exception.control.CaughtException;
+import org.apache.deltaspike.core.api.exception.control.ExceptionHandler;
+import org.apache.deltaspike.core.api.exception.control.Handles;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-/**
- * Marker annotation for a method to be considered an Exception Handler, handles the exception in the BEFORE
- * traversal of the exception chain. Handlers are typically in the form of
- * <code>public void ... (@BeforeHandles ... CaughtException<...> ...)</code> methods.
- * If a method has a return type, it is ignored.
- */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.PARAMETER)
-@Documented
-public @interface BeforeHandles
+@ExceptionHandler
+public class RethrowHandler
 {
-    /**
-     * Precedence relative to callbacks for the same type
-     */
-    int ordinal() default 0;
+    public void rethrow(@Handles CaughtException<NullPointerException> event)
+    {
+        event.throwOriginal();
+    }
+
+    public void rethrowInbound(
+            @BeforeHandles CaughtException<IllegalArgumentException> event)
+    {
+        event.throwOriginal();
+    }
 }

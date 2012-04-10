@@ -90,7 +90,22 @@ public class HandlerMethodStorageImpl implements HandlerMethodStorage
             {
                 for (HandlerMethod<?> handler : this.allHandlers.get(hierarchyType))
                 {
-                    if (handler.isBefore())
+                    if (handler.isBefore() && isBefore)
+                    {
+                        if (handler.getQualifiers().contains(new AnyLiteral()))
+                        {
+                            returningHandlers.add(handler);
+                        }
+                        else
+                        {
+                            if (!handlerQualifiers.isEmpty() && this.containsAny(handler.getQualifiers(),
+                                    handlerQualifiers))
+                            {
+                                returningHandlers.add(handler);
+                            }
+                        }
+                    }
+                    else if (!handler.isBefore() && !isBefore)
                     {
                         if (handler.getQualifiers().contains(new AnyLiteral()))
                         {

@@ -142,7 +142,12 @@ public class CaughtException<T extends Throwable>
 
     public boolean isMarkedHandled()
     {
-        return this.isMarkedHandled();
+        return this.markedHandled;
+    }
+
+    public boolean isBeforeTraversal()
+    {
+        return beforeTraversal;
     }
 
     /**

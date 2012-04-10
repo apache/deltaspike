@@ -57,9 +57,7 @@ public class ExceptionHandlerDispatch implements java.io.Serializable
      * @param bm             active bean manager
      * @throws Throwable If a handler requests the exception to be re-thrown.
      */
-    // CHECKSTYLE:OFF
     @SuppressWarnings({"unchecked", "MethodWithMultipleLoops", "ThrowableResultOfMethodCallIgnored"})
-    // CHECKSTYLE:ON
     public void executeHandlers(@Observes @Any ExceptionToCatch eventException, final BeanManager bm) throws Throwable
     {
         log.entering(ExceptionHandlerDispatch.class.getName(), "executeHandlers", eventException.getException());
@@ -81,7 +79,7 @@ public class ExceptionHandlerDispatch implements java.io.Serializable
 
             bm.fireEvent(stack); // Allow for modifying the exception stack
 
-        inbound_cause:
+            inbound_cause:
             while (stack.getCurrent() != null)
             {
                 this.exceptionStack = stack;

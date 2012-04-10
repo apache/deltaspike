@@ -93,7 +93,16 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
         }
 
         this.before = this.handlerParameter.getAnnotation(BeforeHandles.class) != null;
-        this.ordinal = this.handlerParameter.getAnnotation(Handles.class).ordinal();
+
+        if (this.before)
+        {
+            this.ordinal = this.handlerParameter.getAnnotation(BeforeHandles.class).ordinal();
+        }
+        else
+        {
+            this.ordinal = this.handlerParameter.getAnnotation(Handles.class).ordinal();
+        }
+
         tmpQualifiers.addAll(BeanUtils.getQualifiers(bm, this.handlerParameter.getAnnotations()));
 
         if (tmpQualifiers.isEmpty())

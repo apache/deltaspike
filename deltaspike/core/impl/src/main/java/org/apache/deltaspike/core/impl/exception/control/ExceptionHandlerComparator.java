@@ -32,7 +32,7 @@ import java.util.Set;
  * ({@link org.apache.deltaspike.core.api.exception.control.BeforeHandles} first), ordinal
  * (highest to lowest) and finally hierarchy (least to most specific).
  */
-@SuppressWarnings({ "MethodWithMoreThanThreeNegations" })
+@SuppressWarnings({"MethodWithMoreThanThreeNegations"})
 public final class ExceptionHandlerComparator implements Comparator<HandlerMethod<?>>
 {
     /**
@@ -92,7 +92,7 @@ public final class ExceptionHandlerComparator implements Comparator<HandlerMetho
 
     private int comparePrecedence(final int lhs, final int rhs, final boolean isBefore)
     {
-        if (isBefore)
+        if (!isBefore)
         {
             return (lhs - rhs);
         }

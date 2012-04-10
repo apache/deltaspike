@@ -17,28 +17,13 @@
  * under the License.
  */
 
-package org.apache.deltaspike.core.api.exception.control;
+package org.apache.deltaspike.test.core.impl.exception.control.event.literal;
 
+import org.apache.deltaspike.test.core.impl.exception.control.event.EventQualifier;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import javax.enterprise.util.AnnotationLiteral;
 
-/**
- * Marker annotation for a method to be considered an Exception Handler, handles the exception in the BEFORE
- * traversal of the exception chain. Handlers are typically in the form of
- * <code>public void ... (@BeforeHandles ... CaughtException<...> ...)</code> methods.
- * If a method has a return type, it is ignored.
- */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.PARAMETER)
-@Documented
-public @interface BeforeHandles
+public class EventQualifierLiteral extends AnnotationLiteral<EventQualifier> implements EventQualifier
 {
-    /**
-     * Precedence relative to callbacks for the same type
-     */
-    int ordinal() default 0;
+    private static final long serialVersionUID = -7287578336564561662L;
 }
