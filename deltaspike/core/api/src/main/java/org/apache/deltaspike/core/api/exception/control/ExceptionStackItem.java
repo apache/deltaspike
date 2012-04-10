@@ -32,8 +32,8 @@ public final class ExceptionStackItem implements Serializable
 {
     private static final long serialVersionUID = 5162936095781886477L;
 
-    final private Throwable throwable;
-    final private StackTraceElement[] stackTraceElements;
+    private final Throwable throwable;
+    private final StackTraceElement[] stackTraceElements;
 
     public ExceptionStackItem(final Throwable cause)
     {

@@ -27,23 +27,12 @@ import javax.enterprise.inject.Typed;
  *
  * @param <T> Exception type this event represents
  */
+// CHECKSTYLE:OFF
 @SuppressWarnings({"unchecked", "CdiManagedBeanInconsistencyInspection"})
+// CHECKSTYLE:ON
 @Typed()
 public class CaughtException<T extends Throwable>
 {
-    /**
-     * Flow control enum.  Used in the dispatcher to determine how to markHandled.
-     */
-    protected enum ExceptionHandlingFlow
-    {
-        HANDLED,
-        HANDLED_AND_CONTINUE,
-        SKIP_CAUSE,
-        ABORT,
-        THROW_ORIGINAL,
-        THROW
-    }
-
     private final ExceptionStack exceptionStack;
     private final T exception;
     private boolean unmute;
@@ -56,20 +45,20 @@ public class CaughtException<T extends Throwable>
     /**
      * Initial state constructor.
      *
-     * @param exceptionStack  Information about the current exception and cause chain.
+     * @param stack           Information about the current exception and cause chain.
      * @param beforeTraversal flag indicating the direction of the cause chain traversal
      * @param handled         flag indicating the exception has already been handled by a previous handler
-     * @throws IllegalArgumentException if exceptionStack is null
+     * @throws IllegalArgumentException if stack is null
      */
-    public CaughtException(final ExceptionStack exceptionStack, final boolean beforeTraversal, final boolean handled)
+    public CaughtException(final ExceptionStack stack, final boolean beforeTraversal, final boolean handled)
     {
-        if (exceptionStack == null)
+        if (stack == null)
         {
-            throw new IllegalArgumentException("null is not valid for exceptionStack");
+            throw new IllegalArgumentException("null is not valid for stack");
         }
 
-        this.exception = (T) exceptionStack.getCurrent();
-        this.exceptionStack = exceptionStack;
+        this.exception = (T) stack.getCurrent();
+        this.exceptionStack = stack;
         this.beforeTraversal = beforeTraversal;
         this.markedHandled = handled;
         this.flow = ExceptionHandlingFlow.HANDLED_AND_CONTINUE;
@@ -130,7 +119,10 @@ public class CaughtException<T extends Throwable>
         this.unmute = true;
     }
 
-    protected boolean isUnmute()
+    /**
+     * Internal only
+     */
+    public boolean isUnmute()
     {
         return this.unmute;
     }
@@ -140,7 +132,10 @@ public class CaughtException<T extends Throwable>
     }
     */
 
-    protected ExceptionHandlingFlow getFlow()
+    /**
+     * Internal only
+     */
+    public ExceptionHandlingFlow getFlow()
     {
         return this.flow;
     }
@@ -161,7 +156,12 @@ public class CaughtException<T extends Throwable>
         this.flow = ExceptionHandlingFlow.THROW;
     }
 
-    protected Throwable getThrowNewException()
+    /**
+     * Internal only.
+     *
+     * @return
+     */
+    public Throwable getThrowNewException()
     {
         return this.throwNewException;
     }

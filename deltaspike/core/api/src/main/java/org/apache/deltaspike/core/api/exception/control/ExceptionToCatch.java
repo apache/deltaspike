@@ -70,7 +70,12 @@ public class ExceptionToCatch implements Serializable
         return this.exception;
     }
 
-    protected void setHandled(boolean handled)
+    /**
+     * Internal only.
+     *
+     * @param handled new value
+     */
+    public void setHandled(boolean handled)
     {
         this.handled = handled;
     }

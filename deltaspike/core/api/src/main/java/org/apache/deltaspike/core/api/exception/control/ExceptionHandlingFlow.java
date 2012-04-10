@@ -19,24 +19,15 @@
 
 package org.apache.deltaspike.core.api.exception.control;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
 /**
- * Marker annotation for a method to be considered an Exception Handler. Handlers are typically in the form of
- * <code>public void ... (@Handles ... CaughtException<...> ...)</code> methods. If a method has a return type, it is
- * ignored.
+ * Flow control enum.  Used in the dispatcher to determine how to markHandled.
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.PARAMETER)
-@Documented
-public @interface Handles
+public enum ExceptionHandlingFlow
 {
-    /**
-     * Precedence relative to handlers for the same type
-     */
-    int ordinal() default 0; //TODO discuss Precedence
+    HANDLED,
+    HANDLED_AND_CONTINUE,
+    SKIP_CAUSE,
+    ABORT,
+    THROW_ORIGINAL,
+    THROW
 }

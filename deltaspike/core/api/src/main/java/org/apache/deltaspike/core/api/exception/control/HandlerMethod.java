@@ -43,6 +43,11 @@ public interface HandlerMethod<T extends Throwable>
     Type getExceptionType();
 
     /**
+     * Flag indicating this handler should be invoked during the before traversal.
+     */
+    boolean isBefore();
+
+    /**
      * Calls the handler method, passing the given event object.
      *
      * @param event event to pass to the handler.
@@ -56,7 +61,8 @@ public interface HandlerMethod<T extends Throwable>
     int getOrdinal();
 
     /**
-     * Basic {@link Object#equals(Object)} but must use all of the get methods from this interface to maintain compatibility.
+     * Basic {@link Object#equals(Object)} but must use all of the get methods from this interface to
+     * maintain compatibility.
      *
      * @param o Object being compared to this.
      * @return true or false based on standard equality.

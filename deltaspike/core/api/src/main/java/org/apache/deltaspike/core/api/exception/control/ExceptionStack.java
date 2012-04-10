@@ -30,6 +30,7 @@ import java.util.Deque;
 /**
  * Information about the current exception and exception cause container.  This object is not immutable.
  */
+@SuppressWarnings("CdiManagedBeanInconsistencyInspection")
 @Typed()
 public class ExceptionStack implements Serializable
 {
@@ -58,6 +59,7 @@ public class ExceptionStack implements Serializable
         Throwable e = exception;
         this.exceptionStackItems = new ArrayDeque<ExceptionStackItem>();
 
+        // CHECKSTYLE:OFF
         do
         {
             this.exceptionStackItems.addFirst(new ExceptionStackItem(e));
@@ -73,9 +75,10 @@ public class ExceptionStack implements Serializable
             }
         }
         while ((e = e.getCause()) != null);
+        // CHECKSTYLE:ON
 
         this.initialStackSize = this.exceptionStackItems.size();
-        this.causes = this.createThrowableCollectionFrom(exceptionStackItems);
+        this.causes = this.createThrowableCollection(exceptionStackItems);
         // TODO: Later this.origExceptionStackItems = new ArrayDeque<ExceptionStackItem>(exceptionStackItems);
         this.init();
 
@@ -89,7 +92,8 @@ public class ExceptionStack implements Serializable
         {
             this.current = this.exceptionStackItems.removeFirst().getThrowable();
             this.remaining = Collections.unmodifiableCollection(this.exceptionStackItems);
-        } else
+        }
+        else
         {
             this.remaining = Collections.emptyList();
             this.current = null;
@@ -99,7 +103,7 @@ public class ExceptionStack implements Serializable
         this.next = (this.last) ? null : this.exceptionStackItems.peekFirst().getThrowable();
     }
 
-    private Collection<ExceptionStackItem> createExceptionStackCollectionFrom(Collection<Throwable> throwables)
+    private Collection<ExceptionStackItem> createExceptionStackFrom(Collection<Throwable> throwables)
     {
         final Deque<ExceptionStackItem> returningCollection = new ArrayDeque<ExceptionStackItem>(throwables.size());
 
@@ -111,9 +115,10 @@ public class ExceptionStack implements Serializable
         return returningCollection;
     }
 
-    private Collection<Throwable> createThrowableCollectionFrom(final Collection<ExceptionStackItem> exceptionStackItems)
+    private Collection<Throwable> createThrowableCollection(final Collection<ExceptionStackItem> exceptionStackItems)
     {
-        final Deque<Throwable> returningCollection = new ArrayDeque<Throwable>(exceptionStackItems.size() + 1); // allow current
+        // allow current
+        final Deque<Throwable> returningCollection = new ArrayDeque<Throwable>(exceptionStackItems.size() + 1);
 
         for (ExceptionStackItem item : exceptionStackItems)
         {
@@ -145,7 +150,7 @@ public class ExceptionStack implements Serializable
 
     public Collection<Throwable> getRemaining()
     {
-        return Collections.unmodifiableCollection(this.createThrowableCollectionFrom(this.remaining));
+        return Collections.unmodifiableCollection(this.createThrowableCollection(this.remaining));
     }
 
     /**
@@ -168,9 +173,22 @@ public class ExceptionStack implements Serializable
         return this.current;
     }
 
-    void setCauseElements(Collection<Throwable> elements)
+    /**
+     * Internal only.
+     *
+     * @param elements new stack.
+     */
+    public void setCauseElements(Collection<Throwable> elements)
     {
-        this.exceptionStackItems = new ArrayDeque<ExceptionStackItem>(this.createExceptionStackCollectionFrom(elements));
+        this.exceptionStackItems = new ArrayDeque<ExceptionStackItem>(this.createExceptionStackFrom(elements));
+        this.init();
+    }
+
+    /**
+     * Internal only.
+     */
+    public void skipCause()
+    {
         this.init();
     }
 

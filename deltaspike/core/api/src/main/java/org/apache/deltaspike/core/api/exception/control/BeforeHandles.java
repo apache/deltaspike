@@ -19,7 +19,12 @@
 
 package org.apache.deltaspike.core.api.exception.control;
 
-import java.lang.annotation.*;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Marker annotation for a method to be considered an Exception Handler, handles the exception in the BEFORE
@@ -35,5 +40,5 @@ public @interface BeforeHandles
     /**
      * Precedence relative to callbacks for the same type
      */
-    public abstract int ordinal() default 0;
+    int ordinal() default 0;
 }
