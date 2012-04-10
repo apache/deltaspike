@@ -21,7 +21,6 @@ package org.apache.deltaspike.test.core.impl.exception.control.flow;
 
 import org.apache.deltaspike.core.api.exception.control.ExceptionToCatch;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
-import org.apache.deltaspike.test.core.impl.exception.control.handler.CalledExceptionHandler;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -56,7 +55,6 @@ public class BreadthFirstAbortControlTest
         return ShrinkWrap
                 .create(WebArchive.class, "breadthFirstAbortControl.war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
-                .addClasses(CalledExceptionHandler.class)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addClasses(AbortingBreadthFirstHandler.class);
     }
