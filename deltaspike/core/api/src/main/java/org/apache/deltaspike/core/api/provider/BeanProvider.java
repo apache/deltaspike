@@ -181,6 +181,25 @@ public final class BeanProvider
     }
 
     /**
+     * <p>Get the Contextual Reference for the given bean
+     *
+     * @param type the type of the bean in question
+     * @param bean bean-definition for the contextual-reference
+     * @param <T> target type
+     * @return the resolved Contextual Reference
+     */
+    public static <T> T getContextualReference(Class<T> type, Bean<T> bean)
+    {
+        return getContextualReference(type, getBeanManager(), bean);
+    }
+
+    private static <T> T getContextualReference(Class<T> type, BeanManager beanManager, Bean<?> bean)
+    {
+        //noinspection unchecked
+        return getContextualReference(type, beanManager, new HashSet<Bean<?>>((Collection) Arrays.asList(bean)));
+    }
+
+    /**
      * <p>Get a list of Contextual References by it's type independent of the qualifier
      * (including dependent scoped beans).
      *
@@ -219,13 +238,50 @@ public final class BeanProvider
                                                       boolean includeDefaultScopedBeans)
     {
         BeanManager beanManager = getBeanManager();
+
+        Set<Bean<T>> beans = getBeanDefinitions(type, optional, includeDefaultScopedBeans, beanManager);
+
+        List<T> result = new ArrayList<T>(beans.size());
+
+        for (Bean<?> bean : beans)
+        {
+            //noinspection unchecked
+            result.add(getContextualReference(type, beanManager, bean));
+        }
+        return result;
+    }
+
+    /**
+     * <p>Get a set of {@link Bean} definitions by it's type independent of the qualifier.
+     *
+     * @param type the type of the bean in question
+     * @param optional if <code>true</code> it will return an empty set if no bean could be found or created.
+     *                 Otherwise it will throw an {@code IllegalStateException}
+     * @param includeDefaultScopedBeans specifies if dependent scoped beans should be included in the in the result
+     * @param <T> target type
+     * @return the resolved set of {@link Bean} definitions or an empty-set if optional is true
+     */
+    public static <T> Set<Bean<T>> getBeanDefinitions(Class<T> type,
+                                                      boolean optional,
+                                                      boolean includeDefaultScopedBeans)
+    {
+        BeanManager beanManager = getBeanManager();
+        
+        return getBeanDefinitions(type, optional, includeDefaultScopedBeans, beanManager);
+    }
+    
+    private static <T> Set<Bean<T>> getBeanDefinitions(Class<T> type,
+                                                       boolean optional,
+                                                       boolean includeDefaultScopedBeans,
+                                                       BeanManager beanManager)
+    {
         Set<Bean<?>> beans = beanManager.getBeans(type, new AnyLiteral());
 
         if (beans == null || beans.isEmpty())
         {
             if (optional)
             {
-                return Collections.emptyList();
+                return Collections.emptySet();
             }
 
             throw new IllegalStateException("Could not find beans for Type=" + type);
@@ -235,18 +291,18 @@ public final class BeanProvider
         {
             beans = filterDefaultScopedBeans(beans);
         }
-
-        List<T> result = new ArrayList<T>(beans.size());
-
+        
+        Set<Bean<T>> result = new HashSet<Bean<T>>();
+        
         for (Bean<?> bean : beans)
         {
             //noinspection unchecked
-            result.add(getContextualReference(type, beanManager,
-                new HashSet<Bean<?>>((Collection) Arrays.asList(bean))));
+            result.add((Bean<T>) bean);
         }
+        
         return result;
     }
-
+    
     /**
      * Allows to perform dependency injection for instances which aren't managed by CDI
      * <p/>
