@@ -25,6 +25,7 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -97,8 +98,28 @@ public class ShrinkWrapArchiveUtil
         String jarUrlPath = isJarUrl(urlString);
         if (jarUrlPath != null)
         {
-            return addJarArchive((new URL(ensureCorrectUrlFormat(jarUrlPath))).openStream(),
-                    includeIfPackageExists, excludeIfPackageExists);
+            final JavaArchive foundJar = ShrinkWrap.createFromZipFile(JavaArchive.class, new File(URI.create(jarUrlPath)));
+
+            if (excludeIfPackageExists != null)
+            {
+                for (String excludePackage : excludeIfPackageExists)
+                {
+                    if (foundJar.contains(excludePackage.replaceAll("\\.", "\\/"))) {
+                        return null;
+                    }
+                }
+            }
+            if (includeIfPackageExists != null)
+            {
+                for (String includePackage : includeIfPackageExists)
+                {
+                    if (foundJar.contains(includePackage.replaceAll("\\.", "\\/")))
+                    {
+                        return foundJar;
+                    }
+                }
+            }
+            return null; // couldn't find any jar
         }
         else
         {
