@@ -31,6 +31,7 @@ import java.util.Set;
  * Injectable storage to support programmatic registration and lookup of
  * {@link org.apache.deltaspike.core.api.exception.control.HandlerMethod} instances.
  */
+//X TODO move it to the spi package - otherwise there is no need for an interface
 public interface HandlerMethodStorage
 {
     /**

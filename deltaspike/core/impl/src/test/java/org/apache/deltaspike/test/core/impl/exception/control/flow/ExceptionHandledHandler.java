@@ -24,27 +24,45 @@ import org.apache.deltaspike.core.api.exception.control.CaughtException;
 import org.apache.deltaspike.core.api.exception.control.ExceptionHandler;
 import org.apache.deltaspike.core.api.exception.control.Handles;
 
+import javax.enterprise.context.ApplicationScoped;
+
+@ApplicationScoped
 @ExceptionHandler
 public class ExceptionHandledHandler
 {
-    public static boolean EX_ASC_CALLED = false;
-    public static boolean IAE_ASC_CALLED = false;
-    public static boolean NPE_DESC_CALLED = false;
+    private boolean exAscCalled = false;
+    private boolean iaeAscCalled = false;
+    private boolean npeDescCalled = false;
 
     public void exHandler(@Handles CaughtException<Exception> event)
     {
-        EX_ASC_CALLED = true;
+        exAscCalled = true;
     }
 
     public void npeHandler(@Handles CaughtException<IllegalArgumentException> event)
     {
-        IAE_ASC_CALLED = true;
+        iaeAscCalled = true;
         event.handled();
     }
 
     public void npeDescHandler(@BeforeHandles CaughtException<NullPointerException> event)
     {
-        NPE_DESC_CALLED = true;
+        npeDescCalled = true;
         event.handled();
+    }
+
+    public boolean isExAscCalled()
+    {
+        return exAscCalled;
+    }
+
+    public boolean isIaeAscCalled()
+    {
+        return iaeAscCalled;
+    }
+
+    public boolean isNpeDescCalled()
+    {
+        return npeDescCalled;
     }
 }

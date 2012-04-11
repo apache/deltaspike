@@ -40,6 +40,9 @@ import static org.junit.Assert.assertTrue;
 @RunWith(Arquillian.class)
 public class BreadthFirstAbortControlTest
 {
+    @Inject
+    private AbortingBreadthFirstHandler abortingBreadthFirstHandler;
+
     @Deployment(name = "BreadthFirstAbortControlTest")
     public static Archive<?> createTestArchive()
     {
@@ -66,7 +69,7 @@ public class BreadthFirstAbortControlTest
     public void assertNoOtherHandlersCalledAfterAbort()
     {
         bm.fireEvent(new ExceptionToCatch(new NullPointerException()));
-        assertTrue(AbortingBreadthFirstHandler.abortCalled);
-        assertFalse(AbortingBreadthFirstHandler.proceedCalled);
+        assertTrue(this.abortingBreadthFirstHandler.isAbortCalled());
+        assertFalse(this.abortingBreadthFirstHandler.isProceedCalled());
     }
 }

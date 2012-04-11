@@ -40,6 +40,12 @@ import static org.junit.Assert.assertTrue;
 @RunWith(Arquillian.class)
 public class DepthAbortControlTest
 {
+    @Inject
+    private BeanManager bm;
+
+    @Inject
+    private AbortingDepthHandler abortingDepthHandler;
+
     @Deployment(name = "DepthAbortControlTest")
     public static Archive<?> createTestArchive()
     {
@@ -56,17 +62,14 @@ public class DepthAbortControlTest
                 .create(WebArchive.class, "depthAbortControl.war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
-                .addClasses(AbortingDepthHandler.class);
+                .addClass(AbortingDepthHandler.class);
     }
-
-    @Inject
-    private BeanManager bm;
 
     @Test
     public void assertNoOtherHandlersCalledAfterAbort()
     {
         bm.fireEvent(new ExceptionToCatch(new NullPointerException()));
-        assertTrue(AbortingDepthHandler.abortCalled);
-        assertFalse(AbortingDepthHandler.proceedCalled);
+        assertTrue(this.abortingDepthHandler.isAbortCalled());
+        assertFalse(this.abortingDepthHandler.isProceedCalled());
     }
 }

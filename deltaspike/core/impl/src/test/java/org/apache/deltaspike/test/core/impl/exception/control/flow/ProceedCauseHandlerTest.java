@@ -39,6 +39,9 @@ import static junit.framework.Assert.assertEquals;
 @RunWith(Arquillian.class)
 public class ProceedCauseHandlerTest
 {
+    @Inject
+    private ProceedCauseHandler proceedCauseHandler;
+
     @Deployment(name = "ProceedCauseHandlerTest")
     public static Archive<?> createTestArchive()
     {
@@ -65,10 +68,10 @@ public class ProceedCauseHandlerTest
     public void assertCorrectNumberOfHandlerCallsForProceedCause()
     {
         bm.fireEvent(new ExceptionToCatch(new Exception(new IllegalArgumentException(new NullPointerException()))));
-        assertEquals(0, ProceedCauseHandler.BREADTH_FIRST_NPE_LOWER_PRECEDENCE_CALLED);
-        assertEquals(1, ProceedCauseHandler.BREADTH_FIRST_NPE_CALLED);
+        assertEquals(0, this.proceedCauseHandler.getBreadthFirstNpeLowerPrecedenceCalled());
+        assertEquals(1, this.proceedCauseHandler.getBreadthFirstNpeCalled());
 
-        assertEquals(0, ProceedCauseHandler.DEPTH_FIRST_NPE_HIGHER_PRECEDENCE_CALLED);
-        assertEquals(0, ProceedCauseHandler.DEPTH_FIRST_NPE_CALLED);
+        assertEquals(0, this.proceedCauseHandler.getDepthFirstNpeHigherPrecedenceCalled());
+        assertEquals(0, this.proceedCauseHandler.getDepthFirstNpeCalled());
     }
 }

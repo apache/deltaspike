@@ -23,8 +23,9 @@ import org.apache.deltaspike.core.api.exception.control.CaughtException;
 import org.apache.deltaspike.core.api.exception.control.ExceptionStack;
 import org.apache.deltaspike.core.api.exception.control.ExceptionToCatch;
 import org.apache.deltaspike.core.api.exception.control.HandlerMethod;
-import org.apache.deltaspike.core.impl.exception.control.extension.CatchExtension;
+import org.apache.deltaspike.core.api.provider.BeanProvider;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Any;
@@ -41,101 +42,99 @@ import java.util.logging.Logger;
  * Observer of {@link ExceptionToCatch} events and handler dispatcher. All handlers are invoked from this class.  This
  * class is immutable.
  */
-public class ExceptionHandlerDispatch implements java.io.Serializable
+@ApplicationScoped
+@SuppressWarnings("UnusedDeclaration")
+public class ExceptionHandlerDispatch
 {
-    private static final long serialVersionUID = -144788905363939591L;
-
-    private ExceptionToCatch exceptionToCatch;
-    private ExceptionStack exceptionStack;
-
-    private final Logger log = Logger.getLogger(this.getClass().toString());
+    private static final Logger LOG = Logger.getLogger(ExceptionHandlerDispatch.class.getName());
 
     /**
      * Observes the event, finds the correct exception handler(s) and invokes them.
      *
-     * @param eventException exception to be invoked
-     * @param bm             active bean manager
+     * @param exceptionEvent exception to be invoked
+     * @param beanManager             active bean manager
      * @throws Throwable If a handler requests the exception to be re-thrown.
      */
-    @SuppressWarnings({"unchecked", "MethodWithMultipleLoops", "ThrowableResultOfMethodCallIgnored"})
-    public void executeHandlers(@Observes @Any ExceptionToCatch eventException, final BeanManager bm) throws Throwable
+    @SuppressWarnings({ "unchecked", "MethodWithMultipleLoops", "ThrowableResultOfMethodCallIgnored" })
+    public void executeHandlers(@Observes @Any ExceptionToCatch exceptionEvent,
+                                final BeanManager beanManager) throws Throwable
     {
-        log.entering(ExceptionHandlerDispatch.class.getName(), "executeHandlers", eventException.getException());
+        LOG.entering(ExceptionHandlerDispatch.class.getName(), "executeHandlers", exceptionEvent.getException());
 
-        CreationalContext<Object> ctx = null;
-        this.exceptionToCatch = eventException;
+        CreationalContext<Object> creationalContext = null;
 
         Throwable throwException = null;
 
-        final HandlerMethodStorage handlerMethodStorage = CatchExtension.createStorage();
+        final HandlerMethodStorage handlerMethodStorage =
+            BeanProvider.getContextualReference(HandlerMethodStorage.class);
 
         try
         {
-            ctx = bm.createCreationalContext(null);
+            creationalContext = beanManager.createCreationalContext(null);
 
             final Set<HandlerMethod<?>> processedHandlers = new HashSet<HandlerMethod<?>>();
 
-            final ExceptionStack stack = new ExceptionStack(eventException.getException());
+            final ExceptionStack stack = new ExceptionStack(exceptionEvent.getException());
 
-            bm.fireEvent(stack); // Allow for modifying the exception stack
+            beanManager.fireEvent(stack); // Allow for modifying the exception stack
 
-            inbound_cause:
+        inbound_cause: //indentation needed by the current checkstyle rules
             while (stack.getCurrent() != null)
             {
-                this.exceptionStack = stack;
-
                 final List<HandlerMethod<?>> breadthFirstHandlerMethods = new ArrayList<HandlerMethod<?>>(
                         handlerMethodStorage.getHandlersForException(stack.getCurrent().getClass(),
-                                bm, eventException.getQualifiers(), true));
+                                beanManager, exceptionEvent.getQualifiers(), true));
 
                 for (HandlerMethod<?> handler : breadthFirstHandlerMethods)
                 {
                     if (!processedHandlers.contains(handler))
                     {
-                        log.fine(String.format("Notifying handler %s", handler));
+                        LOG.fine(String.format("Notifying handler %s", handler));
 
                         @SuppressWarnings("rawtypes")
                         final CaughtException breadthFirstEvent = new CaughtException(stack, true,
-                                eventException.isHandled());
+                                exceptionEvent.isHandled());
+
                         handler.notify(breadthFirstEvent);
 
-                        log.fine(String.format("Handler %s returned status %s", handler,
-                                breadthFirstEvent.getFlow().name()));
+                        LOG.fine(String.format("Handler %s returned status %s", handler,
+                                breadthFirstEvent.getCurrentExceptionHandlingFlow().name()));
 
                         if (!breadthFirstEvent.isUnmute())
                         {
                             processedHandlers.add(handler);
                         }
 
-                        switch (breadthFirstEvent.getFlow())
+                        switch (breadthFirstEvent.getCurrentExceptionHandlingFlow())
                         {
                             case HANDLED:
-                                eventException.setHandled(true);
+                                exceptionEvent.setHandled(true);
                                 return;
                             case HANDLED_AND_CONTINUE:
-                                eventException.setHandled(true);
+                                exceptionEvent.setHandled(true);
                                 break;
                             case ABORT:
                                 return;
                             case SKIP_CAUSE:
-                                eventException.setHandled(true);
+                                exceptionEvent.setHandled(true);
                                 stack.skipCause();
                                 continue inbound_cause;
                             case THROW_ORIGINAL:
-                                throwException = eventException.getException();
+                                throwException = exceptionEvent.getException();
                                 break;
                             case THROW:
                                 throwException = breadthFirstEvent.getThrowNewException();
                                 break;
                             default:
-                                throw new IllegalStateException("Unexpected enum type " + breadthFirstEvent.getFlow());
+                                throw new IllegalStateException(
+                                    "Unexpected enum type " + breadthFirstEvent.getCurrentExceptionHandlingFlow());
                         }
                     }
                 }
 
                 final Collection<HandlerMethod<? extends Throwable>> handlersForException =
                         handlerMethodStorage.getHandlersForException(stack.getCurrent().getClass(),
-                                bm, eventException.getQualifiers(), false);
+                                beanManager, exceptionEvent.getQualifiers(), false);
 
                 final List<HandlerMethod<? extends Throwable>> depthFirstHandlerMethods =
                         new ArrayList<HandlerMethod<? extends Throwable>>(handlersForException);
@@ -147,53 +146,54 @@ public class ExceptionHandlerDispatch implements java.io.Serializable
                 {
                     if (!processedHandlers.contains(handler))
                     {
-                        log.fine(String.format("Notifying handler %s", handler));
+                        LOG.fine(String.format("Notifying handler %s", handler));
 
                         @SuppressWarnings("rawtypes")
                         final CaughtException depthFirstEvent = new CaughtException(stack, false,
-                                eventException.isHandled());
+                                exceptionEvent.isHandled());
                         handler.notify(depthFirstEvent);
 
-                        log.fine(String.format("Handler %s returned status %s", handler,
-                                depthFirstEvent.getFlow().name()));
+                        LOG.fine(String.format("Handler %s returned status %s", handler,
+                                depthFirstEvent.getCurrentExceptionHandlingFlow().name()));
 
                         if (!depthFirstEvent.isUnmute())
                         {
                             processedHandlers.add(handler);
                         }
 
-                        switch (depthFirstEvent.getFlow())
+                        switch (depthFirstEvent.getCurrentExceptionHandlingFlow())
                         {
                             case HANDLED:
-                                eventException.setHandled(true);
+                                exceptionEvent.setHandled(true);
                                 return;
                             case HANDLED_AND_CONTINUE:
-                                eventException.setHandled(true);
+                                exceptionEvent.setHandled(true);
                                 break;
                             case ABORT:
                                 return;
                             case SKIP_CAUSE:
-                                eventException.setHandled(true);
+                                exceptionEvent.setHandled(true);
                                 stack.skipCause();
                                 continue inbound_cause;
                             case THROW_ORIGINAL:
-                                throwException = eventException.getException();
+                                throwException = exceptionEvent.getException();
                                 break;
                             case THROW:
                                 throwException = depthFirstEvent.getThrowNewException();
                                 break;
                             default:
-                                throw new IllegalStateException("Unexpected enum type " + depthFirstEvent.getFlow());
+                                throw new IllegalStateException(
+                                    "Unexpected enum type " + depthFirstEvent.getCurrentExceptionHandlingFlow());
                         }
                     }
                 }
-                this.exceptionStack.skipCause();
+                stack.skipCause();
             }
 
-            if (!eventException.isHandled() && throwException == null)
+            if (!exceptionEvent.isHandled() && throwException == null)
             {
-                log.warning(String.format("No handlers found for exception %s", eventException.getException()));
-                throw eventException.getException();
+                LOG.warning(String.format("No handlers found for exception %s", exceptionEvent.getException()));
+                throw exceptionEvent.getException();
             }
 
             if (throwException != null)
@@ -203,28 +203,11 @@ public class ExceptionHandlerDispatch implements java.io.Serializable
         }
         finally
         {
-            if (ctx != null)
+            if (creationalContext != null)
             {
-                ctx.release();
+                creationalContext.release();
             }
+            LOG.exiting(ExceptionHandlerDispatch.class.getName(), "executeHandlers", exceptionEvent.getException());
         }
-
-        log.exiting(ExceptionHandlerDispatch.class.getName(), "executeHandlers", exceptionToCatch.getException());
     }
-
-    /* TODO: Later
-    @Produces
-    @ConversationScoped
-    @Named("handledException")
-    public ExceptionStack getExceptionStack() {
-        return this.exceptionStack == null ? new ExceptionStack() : this.exceptionStack;
-    }
-
-    @Produces
-    @ConversationScoped
-    @Named("caughtException")
-    public ExceptionToCatch getExceptionToCatch() {
-        return this.exceptionToCatch == null ? new ExceptionToCatch() : this.exceptionToCatch;
-    }
-    */
 }

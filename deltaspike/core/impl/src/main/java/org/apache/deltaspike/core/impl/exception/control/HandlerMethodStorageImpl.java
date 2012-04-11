@@ -21,10 +21,9 @@ package org.apache.deltaspike.core.impl.exception.control;
 
 import org.apache.deltaspike.core.api.exception.control.HandlerMethod;
 import org.apache.deltaspike.core.api.literal.AnyLiteral;
-import org.apache.deltaspike.core.impl.exception.control.extension.CatchExtension;
 import org.apache.deltaspike.core.util.HierarchyDiscovery;
 
-import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.Typed;
 import javax.enterprise.inject.spi.BeanManager;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
@@ -41,21 +40,16 @@ import java.util.logging.Logger;
  * Basic implementation for {@link HandlerMethodStorage}.
  */
 @SuppressWarnings("CdiManagedBeanInconsistencyInspection")
-public class HandlerMethodStorageImpl implements HandlerMethodStorage
+@Typed()
+class HandlerMethodStorageImpl implements HandlerMethodStorage
 {
     private final Map<? super Type, Collection<HandlerMethod<? extends Throwable>>> allHandlers;
 
     private Logger log = Logger.getLogger(HandlerMethodStorageImpl.class.toString());
 
-    public HandlerMethodStorageImpl(Map<? super Type, Collection<HandlerMethod<? extends Throwable>>> allHandlers)
+    HandlerMethodStorageImpl(Map<? super Type, Collection<HandlerMethod<? extends Throwable>>> allHandlers)
     {
         this.allHandlers = allHandlers;
-    }
-
-    @Produces
-    public static HandlerMethodStorage create()
-    {
-        return CatchExtension.createStorage();
     }
 
     @Override
@@ -90,7 +84,7 @@ public class HandlerMethodStorageImpl implements HandlerMethodStorage
             {
                 for (HandlerMethod<?> handler : this.allHandlers.get(hierarchyType))
                 {
-                    if (handler.isBefore() && isBefore)
+                    if (handler.isBeforeHandler() && isBefore)
                     {
                         if (handler.getQualifiers().contains(new AnyLiteral()))
                         {
@@ -105,7 +99,7 @@ public class HandlerMethodStorageImpl implements HandlerMethodStorage
                             }
                         }
                     }
-                    else if (!handler.isBefore() && !isBefore)
+                    else if (!handler.isBeforeHandler() && !isBefore)
                     {
                         if (handler.getQualifiers().contains(new AnyLiteral()))
                         {

@@ -24,38 +24,60 @@ import org.apache.deltaspike.core.api.exception.control.CaughtException;
 import org.apache.deltaspike.core.api.exception.control.ExceptionHandler;
 import org.apache.deltaspike.core.api.exception.control.Handles;
 
+import javax.enterprise.context.ApplicationScoped;
+
+@ApplicationScoped
 @ExceptionHandler
 public class ProceedCauseHandler
 {
-    public static int BREADTH_FIRST_NPE_CALLED = 0;
-    public static int BREADTH_FIRST_NPE_LOWER_PRECEDENCE_CALLED = 0;
+    private int breadthFirstNpeCalled = 0;
+    private int breadthFirstNpeLowerPrecedenceCalled = 0;
 
-    public static int DEPTH_FIRST_NPE_CALLED = 0;
-    public static int DEPTH_FIRST_NPE_HIGHER_PRECEDENCE_CALLED = 0;
+    private int depthFirstNpeCalled = 0;
+    private int depthFirstNpeHigherPrecedenceCalled = 0;
 
-    public void npeInboundHandler(
-            @BeforeHandles CaughtException<NullPointerException> event)
+    public void npeInboundHandler(@BeforeHandles CaughtException<NullPointerException> event)
     {
-        BREADTH_FIRST_NPE_CALLED++;
+        breadthFirstNpeCalled++;
         event.skipCause();
     }
 
     public void npeLowerPrecedenceInboundHandler(
             @BeforeHandles(ordinal = -50) CaughtException<NullPointerException> event)
     {
-        BREADTH_FIRST_NPE_LOWER_PRECEDENCE_CALLED++;
+        breadthFirstNpeLowerPrecedenceCalled++;
         event.handledAndContinue();
     }
 
     public void npeOutboundHandler(@Handles CaughtException<NullPointerException> event)
     {
-        DEPTH_FIRST_NPE_CALLED++;
+        depthFirstNpeCalled++;
         event.skipCause();
     }
 
     public void npeHigherPrecedenceOutboundHandler(@Handles(ordinal = -10) CaughtException<NullPointerException> event)
     {
-        DEPTH_FIRST_NPE_HIGHER_PRECEDENCE_CALLED++;
+        depthFirstNpeHigherPrecedenceCalled++;
         event.handledAndContinue();
+    }
+
+    public int getBreadthFirstNpeCalled()
+    {
+        return breadthFirstNpeCalled;
+    }
+
+    public int getBreadthFirstNpeLowerPrecedenceCalled()
+    {
+        return breadthFirstNpeLowerPrecedenceCalled;
+    }
+
+    public int getDepthFirstNpeCalled()
+    {
+        return depthFirstNpeCalled;
+    }
+
+    public int getDepthFirstNpeHigherPrecedenceCalled()
+    {
+        return depthFirstNpeHigherPrecedenceCalled;
     }
 }

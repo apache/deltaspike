@@ -26,6 +26,7 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,6 +39,9 @@ import static junit.framework.Assert.assertEquals;
 @RunWith(Arquillian.class)
 public class UnMuteHandlerTest
 {
+    @Inject
+    private UnMuteHandler unMuteHandler;
+
     @Deployment(name = "UnMuteHandlerTest")
     public static Archive<?> createTestArchive()
     {
@@ -53,6 +57,7 @@ public class UnMuteHandlerTest
         return ShrinkWrap
                 .create(WebArchive.class, "unMuteHandler.war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addClasses(UnMuteHandler.class);
     }
 
@@ -64,7 +69,7 @@ public class UnMuteHandlerTest
     {
         bm.fireEvent(new ExceptionToCatch(new Exception(new NullPointerException())));
 
-        assertEquals(2, UnMuteHandler.DEPTH_FIRST_NUMBER_CALLED);
-        assertEquals(2, UnMuteHandler.BREADTH_FIRST_NUMBER_CALLED);
+        assertEquals(2, this.unMuteHandler.getDepthFirstNumberCalled());
+        assertEquals(2, this.unMuteHandler.getBreadthFirstNumberCalled());
     }
 }

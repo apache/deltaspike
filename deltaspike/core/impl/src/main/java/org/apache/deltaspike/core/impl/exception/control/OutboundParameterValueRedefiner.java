@@ -21,19 +21,18 @@ package org.apache.deltaspike.core.impl.exception.control;
 
 import org.apache.deltaspike.core.api.exception.control.CaughtException;
 import org.apache.deltaspike.core.api.metadata.builder.ParameterValueRedefiner;
+import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
 
 /**
  * Redefiner allowing to inject a non contextual instance of {@link CaughtException} into the first parameter. This
  * class is immutable.
  */
-public class OutboundParameterValueRedefiner implements ParameterValueRedefiner
+class OutboundParameterValueRedefiner implements ParameterValueRedefiner
 {
     private final CaughtException<?> event;
-    private final BeanManager bm;
     private final Bean<?> declaringBean;
     private final HandlerMethodImpl<?> handlerMethod;
 
@@ -41,16 +40,13 @@ public class OutboundParameterValueRedefiner implements ParameterValueRedefiner
      * Sole constructor.
      *
      * @param event   instance of CaughtException to inject.
-     * @param manager active BeanManager
-     * @param handler Handler method this redefiner is for
+     * @param handlerMethod Handler method this redefiner is for
      */
-    public OutboundParameterValueRedefiner(final CaughtException<?> event, final BeanManager manager,
-                                           final HandlerMethodImpl<?> handler)
+    OutboundParameterValueRedefiner(final CaughtException<?> event, final HandlerMethodImpl<?> handlerMethod)
     {
         this.event = event;
-        this.bm = manager;
-        this.declaringBean = handler.getBean(manager);
-        this.handlerMethod = handler;
+        this.declaringBean = handlerMethod.getBean();
+        this.handlerMethod = handlerMethod;
     }
 
     /**
@@ -59,7 +55,8 @@ public class OutboundParameterValueRedefiner implements ParameterValueRedefiner
     @Override
     public Object redefineParameterValue(ParameterValue value)
     {
-        CreationalContext<?> ctx = this.bm.createCreationalContext(this.declaringBean);
+        CreationalContext<?> ctx = BeanManagerProvider.getInstance().getBeanManager()
+            .createCreationalContext(this.declaringBean);
 
         try
         {

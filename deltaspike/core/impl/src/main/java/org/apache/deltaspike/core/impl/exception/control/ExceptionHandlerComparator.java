@@ -32,7 +32,7 @@ import java.util.Set;
  * ({@link org.apache.deltaspike.core.api.exception.control.BeforeHandles} first), ordinal
  * (highest to lowest) and finally hierarchy (least to most specific).
  */
-@SuppressWarnings({"MethodWithMoreThanThreeNegations"})
+@SuppressWarnings({ "MethodWithMoreThanThreeNegations" })
 public final class ExceptionHandlerComparator implements Comparator<HandlerMethod<?>>
 {
     /**
@@ -51,7 +51,7 @@ public final class ExceptionHandlerComparator implements Comparator<HandlerMetho
         if (lhs.getExceptionType().equals(rhs.getExceptionType()))
         {
             final int returnValue = this.comparePrecedence(lhs.getOrdinal(), rhs.getOrdinal(),
-                    lhs.isBefore());
+                    lhs.isBeforeHandler());
             // Compare number of qualifiers if they exist so handlers that handle the same type
             // are both are returned and not thrown out (order doesn't really matter)
             if (returnValue == 0 && !lhs.getQualifiers().isEmpty())

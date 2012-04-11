@@ -40,6 +40,9 @@ import static org.junit.Assert.assertTrue;
 @RunWith(Arquillian.class)
 public class HandledExceptionHandlerTest
 {
+    @Inject
+    private ExceptionHandledHandler exceptionHandledHandler;
+
     @Deployment(name = "HandledExceptionHandlerTest")
     public static Archive<?> createTestArchive()
     {
@@ -68,8 +71,8 @@ public class HandledExceptionHandlerTest
         final ExceptionToCatch catchEntry = new ExceptionToCatch(new Exception(
                 new NullPointerException()));
         bm.fireEvent(catchEntry);
-        assertTrue(ExceptionHandledHandler.NPE_DESC_CALLED);
-        assertFalse(ExceptionHandledHandler.EX_ASC_CALLED);
+        assertTrue(this.exceptionHandledHandler.isNpeDescCalled());
+        assertFalse(this.exceptionHandledHandler.isExAscCalled());
         assertTrue(catchEntry.isHandled());
     }
 
@@ -78,8 +81,8 @@ public class HandledExceptionHandlerTest
     {
         final ExceptionToCatch event = new ExceptionToCatch(new Exception(new IllegalArgumentException()));
         bm.fireEvent(event);
-        assertTrue(ExceptionHandledHandler.IAE_ASC_CALLED);
-        assertFalse(ExceptionHandledHandler.EX_ASC_CALLED);
+        assertTrue(this.exceptionHandledHandler.isIaeAscCalled());
+        assertFalse(this.exceptionHandledHandler.isExAscCalled());
         assertTrue(event.isHandled());
     }
 }

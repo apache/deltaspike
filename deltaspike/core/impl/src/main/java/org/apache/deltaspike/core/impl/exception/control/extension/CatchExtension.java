@@ -22,8 +22,6 @@ package org.apache.deltaspike.core.impl.exception.control.extension;
 import org.apache.deltaspike.core.api.exception.control.ExceptionHandler;
 import org.apache.deltaspike.core.api.exception.control.HandlerMethod;
 import org.apache.deltaspike.core.impl.exception.control.HandlerMethodImpl;
-import org.apache.deltaspike.core.impl.exception.control.HandlerMethodStorage;
-import org.apache.deltaspike.core.impl.exception.control.HandlerMethodStorageImpl;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 
@@ -31,15 +29,11 @@ import javax.enterprise.event.Observes;
 import javax.enterprise.inject.InjectionException;
 import javax.enterprise.inject.spi.AfterDeploymentValidation;
 import javax.enterprise.inject.spi.AnnotatedMethod;
-import javax.enterprise.inject.spi.AnnotatedParameter;
-import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.Decorator;
+import javax.enterprise.inject.spi.BeforeBeanDiscovery;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.InjectionPoint;
-import javax.enterprise.inject.spi.Interceptor;
-import javax.enterprise.inject.spi.ProcessBean;
-import java.lang.reflect.ParameterizedType;
+import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Collection;
@@ -56,60 +50,60 @@ import java.util.logging.Logger;
 @SuppressWarnings({ "unchecked", "CdiManagedBeanInconsistencyInspection" })
 public class CatchExtension implements Extension, Deactivatable
 {
-    private static Map<? super Type, Collection<HandlerMethod<? extends Throwable>>> allHandlers;
+    private static final Logger LOG = Logger.getLogger(CatchExtension.class.getName());
 
-    private Logger log = Logger.getLogger(CatchExtension.class.toString());
+    //this map is application scoped by the def. of the cdi spec.
+    //if it needs to be static a classloader key is needed + a cleanup in a BeforeShutdown observer
+    private Map<? super Type, Collection<HandlerMethod<? extends Throwable>>> allHandlers
+        = new HashMap<Type, Collection<HandlerMethod<? extends Throwable>>>();
 
-    public CatchExtension()
+    private Boolean isActivated = null;
+
+    @SuppressWarnings("UnusedDeclaration")
+    protected void init(@Observes BeforeBeanDiscovery afterBeanDiscovery)
     {
-        CatchExtension.allHandlers = new HashMap<Type, Collection<HandlerMethod<? extends Throwable>>>();
+        initActivation();
     }
 
     /**
      * Listener to ProcessBean event to locate handlers.
      *
-     * @param pmb Event from CDI SPI
-     * @param bm  Activated Bean Manager
+     * @param processAnnotatedType current annotated type-event
+     * @param beanManager  Activated Bean Manager
      * @throws TypeNotPresentException if any of the actual type arguments refers to a non-existent type declaration
-     *                                 when trying to obtain the actual type arguments from a {@link ParameterizedType}
+     *                                 when trying to obtain the actual type arguments from a
+     *                                 {@link java.lang.reflect.ParameterizedType}
      * @throws java.lang.reflect.MalformedParameterizedTypeException
      *                                 if any of the actual type parameters refer to a parameterized type that cannot
      *                                 be instantiated for any reason when trying to obtain the actual type arguments
-     *                                 from a {@link ParameterizedType}
+     *                                 from a {@link java.lang.reflect.ParameterizedType}
      */
-    public <T> void findHandlers(@Observes final ProcessBean<?> pmb, final BeanManager bm)
+    @SuppressWarnings("UnusedDeclaration")
+    public <T> void findHandlers(@Observes final ProcessAnnotatedType processAnnotatedType,
+                                 final BeanManager beanManager)
     {
-        if (!ClassDeactivationUtils.isActivated(CatchExtension.class))
+        if (!this.isActivated)
         {
             return;
         }
 
-        if (!(pmb.getAnnotated() instanceof AnnotatedType) || pmb.getBean() instanceof Interceptor ||
-                pmb.getBean() instanceof Decorator)
+        if (processAnnotatedType.getAnnotatedType().getJavaClass().isAnnotationPresent(ExceptionHandler.class))
         {
-            return;
-        }
-
-        final AnnotatedType<T> type = (AnnotatedType<T>) pmb.getAnnotated();
-
-        if (type.getJavaClass().isAnnotationPresent(ExceptionHandler.class))
-        {
-            final Set<AnnotatedMethod<? super T>> methods = type.getMethods();
+            final Set<AnnotatedMethod<? super T>> methods = processAnnotatedType.getAnnotatedType().getMethods();
 
             for (AnnotatedMethod<? super T> method : methods)
             {
                 if (HandlerMethodImpl.isHandler(method))
                 {
-                    final AnnotatedParameter<?> param = HandlerMethodImpl.findHandlerParameter(method);
                     if (method.getJavaMember().getExceptionTypes().length != 0)
                     {
-                        pmb.addDefinitionError(new IllegalArgumentException(
-                                String.format("Handler method %s must not throw exceptions", method.getJavaMember())));
+                        //TODO discuss unified handling of definition errors
+                        throw new IllegalStateException(
+                            String.format("Handler method %s must not throw exceptions", method.getJavaMember()));
                     }
-                    final Class<? extends Throwable> exceptionType = (Class<? extends Throwable>) ((ParameterizedType)
-                            param.getBaseType()).getActualTypeArguments()[0];
 
-                    registerHandlerMethod(new HandlerMethodImpl(method, bm));
+                    //beanManager won't be stored in the instance -> no issue with wls12c
+                    registerHandlerMethod(new HandlerMethodImpl(method, beanManager));
                 }
             }
         }
@@ -118,12 +112,15 @@ public class CatchExtension implements Extension, Deactivatable
     /**
      * Verifies all injection points for every handler are valid.
      *
-     * @param adv Lifecycle event
-     * @param bm  BeanManager instance
+     * @param afterDeploymentValidation Lifecycle event
+     * @param beanManager  BeanManager instance
      */
-    public void verifyInjectionPoints(@Observes final AfterDeploymentValidation adv, final BeanManager bm)
+    @SuppressWarnings("UnusedDeclaration")
+    public void verifyInjectionPoints(/*@Observes X TODO fails with OWB -> reactivate as soon as we have a workaround*/
+                                      final AfterDeploymentValidation afterDeploymentValidation,
+                                      final BeanManager beanManager)
     {
-        if (!ClassDeactivationUtils.isActivated(CatchExtension.class))
+        if (!this.isActivated)
         {
             return;
         }
@@ -136,33 +133,42 @@ public class CatchExtension implements Extension, Deactivatable
                 {
                     try
                     {
-                        bm.validate(ip);
+                        beanManager.validate(ip);
                     }
                     catch (InjectionException e)
                     {
-                        adv.addDeploymentProblem(e);
+                        afterDeploymentValidation.addDeploymentProblem(e);
                     }
                 }
             }
         }
     }
 
-    public static HandlerMethodStorage createStorage()
+    public Map<? super Type, Collection<HandlerMethod<? extends Throwable>>> getAllExceptionHandlers()
     {
-        return new HandlerMethodStorageImpl(Collections.unmodifiableMap(CatchExtension.allHandlers));
+        return Collections.unmodifiableMap(allHandlers);
     }
 
     private <T extends Throwable> void registerHandlerMethod(HandlerMethod<T> handlerMethod)
     {
-        log.fine(String.format("Adding handler %s to known handlers", handlerMethod));
-        if (CatchExtension.allHandlers.containsKey(handlerMethod.getExceptionType()))
+        LOG.fine(String.format("Adding handler %s to known handlers", handlerMethod));
+
+        if (allHandlers.containsKey(handlerMethod.getExceptionType()))
         {
-            CatchExtension.allHandlers.get(handlerMethod.getExceptionType()).add(handlerMethod);
+            allHandlers.get(handlerMethod.getExceptionType()).add(handlerMethod);
         }
         else
         {
-            CatchExtension.allHandlers.put(handlerMethod.getExceptionType(),
-                    new HashSet<HandlerMethod<? extends Throwable>>(Arrays.asList(handlerMethod)));
+            allHandlers.put(handlerMethod.getExceptionType(),
+                new HashSet<HandlerMethod<? extends Throwable>>(Arrays.asList(handlerMethod)));
+        }
+    }
+
+    public void initActivation()
+    {
+        if (isActivated == null)
+        {
+            isActivated = ClassDeactivationUtils.isActivated(getClass());
         }
     }
 }

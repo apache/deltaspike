@@ -27,13 +27,11 @@ import javax.enterprise.inject.Typed;
  *
  * @param <T> Exception type this event represents
  */
-// CHECKSTYLE:OFF
-@SuppressWarnings({"unchecked", "CdiManagedBeanInconsistencyInspection"})
-// CHECKSTYLE:ON
+@SuppressWarnings({ "unchecked", "CdiManagedBeanInconsistencyInspection" })
 @Typed()
+//X TODO discuss an interface to avoid internal methods in the api
 public class CaughtException<T extends Throwable>
 {
-    private final ExceptionStack exceptionStack;
     private final T exception;
     private boolean unmute;
     private ExceptionHandlingFlow flow;
@@ -58,7 +56,6 @@ public class CaughtException<T extends Throwable>
         }
 
         this.exception = (T) stack.getCurrent();
-        this.exceptionStack = stack;
         this.beforeTraversal = beforeTraversal;
         this.markedHandled = handled;
         this.flow = ExceptionHandlingFlow.HANDLED_AND_CONTINUE;
@@ -135,7 +132,7 @@ public class CaughtException<T extends Throwable>
     /**
      * Internal only
      */
-    public ExceptionHandlingFlow getFlow()
+    public ExceptionHandlingFlow getCurrentExceptionHandlingFlow()
     {
         return this.flow;
     }

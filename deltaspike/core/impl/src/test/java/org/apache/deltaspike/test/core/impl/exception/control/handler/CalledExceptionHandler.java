@@ -24,28 +24,30 @@ import org.apache.deltaspike.core.api.exception.control.CaughtException;
 import org.apache.deltaspike.core.api.exception.control.ExceptionHandler;
 import org.apache.deltaspike.core.api.exception.control.Handles;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.spi.BeanManager;
 import java.sql.SQLException;
 
+@ApplicationScoped
 @ExceptionHandler
 public class CalledExceptionHandler
 {
-    public static boolean OUTBOUND_HANDLER_CALLED = false;
-    public static int OUTBOUND_HANDLER_TIMES_CALLED = 0;
-    public static boolean PROTECTED_HANDLER_CALLED = false;
-    public static int INBOUND_HANDLER_TIMES_CALLED = 0;
-    public static boolean BEANMANAGER_INJECTED = false;
-    public static boolean LOCATION_DIFFER_BEANMANAGER_INJECTED = false;
+    private boolean outboundHandlerCalled = false;
+    private int outboundHandlerTimesCalled = 0;
+    private boolean protectedHandlerCalled = false;
+    private int inboundHandlerTimesCalled = 0;
+    private boolean beanmanagerInjected = false;
+    private boolean locationDifferBeanmanagerInjected = false;
 
     public void basicHandler(@Handles CaughtException<Exception> event)
     {
-        OUTBOUND_HANDLER_CALLED = true;
-        OUTBOUND_HANDLER_TIMES_CALLED++;
+        outboundHandlerCalled = true;
+        outboundHandlerTimesCalled++;
     }
 
     public void basicInboundHandler(@BeforeHandles CaughtException<Exception> event)
     {
-        INBOUND_HANDLER_TIMES_CALLED++;
+        inboundHandlerTimesCalled++;
         event.handledAndContinue();
     }
 
@@ -53,13 +55,13 @@ public class CalledExceptionHandler
     {
         if (bm != null)
         {
-            BEANMANAGER_INJECTED = true;
+            beanmanagerInjected = true;
         }
     }
 
     void protectedHandler(@Handles CaughtException<IllegalStateException> event)
     {
-        PROTECTED_HANDLER_CALLED = true;
+        protectedHandlerCalled = true;
 
         if (!event.isMarkedHandled())
         {
@@ -72,7 +74,47 @@ public class CalledExceptionHandler
     {
         if (bm != null)
         {
-            LOCATION_DIFFER_BEANMANAGER_INJECTED = true;
+            locationDifferBeanmanagerInjected = true;
         }
+    }
+
+    public boolean isOutboundHandlerCalled()
+    {
+        return outboundHandlerCalled;
+    }
+
+    public int getOutboundHandlerTimesCalled()
+    {
+        return outboundHandlerTimesCalled;
+    }
+
+    public boolean isProtectedHandlerCalled()
+    {
+        return protectedHandlerCalled;
+    }
+
+    public void setOutboundHandlerTimesCalled(int outboundHandlerTimesCalled)
+    {
+        this.outboundHandlerTimesCalled = outboundHandlerTimesCalled;
+    }
+
+    public void setInboundHandlerTimesCalled(int inboundHandlerTimesCalled)
+    {
+        this.inboundHandlerTimesCalled = inboundHandlerTimesCalled;
+    }
+
+    public int getInboundHandlerTimesCalled()
+    {
+        return inboundHandlerTimesCalled;
+    }
+
+    public boolean isBeanmanagerInjected()
+    {
+        return beanmanagerInjected;
+    }
+
+    public boolean isLocationDifferBeanmanagerInjected()
+    {
+        return locationDifferBeanmanagerInjected;
     }
 }

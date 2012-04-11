@@ -34,6 +34,8 @@ import java.util.Deque;
 @Typed()
 public class ExceptionStack implements Serializable
 {
+    private static final long serialVersionUID = -6069790756478700680L;
+
     private boolean root;
     private boolean last;
     private int initialStackSize;
@@ -59,7 +61,6 @@ public class ExceptionStack implements Serializable
         Throwable e = exception;
         this.exceptionStackItems = new ArrayDeque<ExceptionStackItem>();
 
-        // CHECKSTYLE:OFF
         do
         {
             this.exceptionStackItems.addFirst(new ExceptionStackItem(e));
@@ -73,9 +74,9 @@ public class ExceptionStack implements Serializable
                     this.exceptionStackItems.addFirst(new ExceptionStackItem(sqlException));
                 }
             }
+            e = e.getCause();
         }
-        while ((e = e.getCause()) != null);
-        // CHECKSTYLE:ON
+        while (e != null);
 
         this.initialStackSize = this.exceptionStackItems.size();
         this.causes = this.createThrowableCollection(exceptionStackItems);

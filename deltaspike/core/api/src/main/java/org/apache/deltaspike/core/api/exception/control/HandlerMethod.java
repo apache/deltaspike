@@ -45,14 +45,13 @@ public interface HandlerMethod<T extends Throwable>
     /**
      * Flag indicating this handler should be invoked during the before traversal.
      */
-    boolean isBefore();
+    boolean isBeforeHandler();
 
     /**
      * Calls the handler method, passing the given event object.
      *
      * @param event event to pass to the handler.
      */
-    //fields will be injected via BeanProvider#injectFields
     void notify(CaughtException<T> event);
 
     /**
@@ -67,6 +66,7 @@ public interface HandlerMethod<T extends Throwable>
      * @param o Object being compared to this.
      * @return true or false based on standard equality.
      */
+    @Override
     boolean equals(Object o);
 
     @Override

@@ -26,9 +26,12 @@ import org.apache.deltaspike.core.api.exception.control.Handles;
 import org.apache.deltaspike.core.api.literal.AnyLiteral;
 import org.apache.deltaspike.core.api.metadata.builder.ImmutableInjectionPoint;
 import org.apache.deltaspike.core.api.metadata.builder.InjectableMethod;
+import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
+import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.BeanUtils;
 
 import javax.enterprise.context.spi.CreationalContext;
+import javax.enterprise.inject.Typed;
 import javax.enterprise.inject.spi.AnnotatedMethod;
 import javax.enterprise.inject.spi.AnnotatedParameter;
 import javax.enterprise.inject.spi.Bean;
@@ -38,7 +41,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -48,9 +50,10 @@ import java.util.Set;
  *
  * @param <T> Type of the exception this handler handles.
  */
+@Typed()
 public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
 {
-    private final Class<?> beanClass;
+    private final Class beanClass;
     private Bean<?> bean;
     private final Set<Annotation> qualifiers;
     private final Type exceptionType;
@@ -59,7 +62,7 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
     private final int ordinal;
     private final Method javaMethod;
     private final AnnotatedParameter<?> handlerParameter;
-    private final Set<InjectionPoint> injectionPoints;
+    private Set<InjectionPoint> injectionPoints;
     private BeanManager beanManager;
 
     /**
@@ -72,12 +75,7 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
      */
     public HandlerMethodImpl(final AnnotatedMethod<?> method, final BeanManager bm)
     {
-        if (!HandlerMethodImpl.isHandler(method))
-        {
-            throw new IllegalArgumentException(MessageFormat.format("{0} is not a valid handler", method));
-        }
-
-        this.beanManager = bm;
+        //validation is done by the extension
 
         final Set<Annotation> tmpQualifiers = new HashSet<Annotation>();
 
@@ -113,15 +111,6 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
         this.qualifiers = tmpQualifiers;
         this.beanClass = method.getJavaMember().getDeclaringClass();
         this.exceptionType = ((ParameterizedType) this.handlerParameter.getBaseType()).getActualTypeArguments()[0];
-        this.injectionPoints = new HashSet<InjectionPoint>(method.getParameters().size() - 1);
-
-        for (AnnotatedParameter<?> param : method.getParameters())
-        {
-            if (!param.equals(this.handlerParameter))
-            {
-                this.injectionPoints.add(new ImmutableInjectionPoint(param, bm, this.getBean(bm), false, false));
-            }
-        }
     }
 
     /**
@@ -169,18 +158,31 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
         return returnParam;
     }
 
-    public Class<?> getBeanClass()
-    {
-        return this.beanClass;
-    }
-
-    public synchronized Bean<?> getBean(BeanManager bm)
+    public Bean<?> getBean()
     {
         if (this.bean == null)
         {
-            this.bean = bm.resolve(bm.getBeans(this.beanClass));
+            initBean();
         }
         return this.bean;
+    }
+
+    private synchronized void initBean()
+    {
+        if (this.bean != null)
+        {
+            return;
+        }
+
+        @SuppressWarnings("unchecked")
+        Set<Bean<?>> beans = BeanProvider.getBeanDefinitions(this.beanClass, false, true);
+
+        if (beans.size() > 1)
+        {
+            //TODO improve exception
+            throw new IllegalStateException(beans.size() + " types found - base type: " + this.beanClass.getName());
+        }
+        this.bean = beans.iterator().next();
     }
 
     /**
@@ -210,10 +212,11 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
         CreationalContext<?> ctx = null;
         try
         {
-            ctx = beanManager.createCreationalContext(null);
-            Object handlerInstance = beanManager.getReference(this.getBean(beanManager), this.beanClass, ctx);
-            InjectableMethod<?> im = createInjectableMethod(this.handler, this.getBean(beanManager), beanManager);
-            im.invoke(handlerInstance, ctx, new OutboundParameterValueRedefiner(event, beanManager, this));
+            ctx = getBeanManager().createCreationalContext(null);
+            @SuppressWarnings("unchecked")
+            Object handlerInstance = BeanProvider.getContextualReference(this.beanClass);
+            InjectableMethod<?> im = createInjectableMethod(this.handler, this.getBean());
+            im.invoke(handlerInstance, ctx, new OutboundParameterValueRedefiner(event, this));
         }
         finally
         {
@@ -224,17 +227,16 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
         }
     }
 
-    private <X> InjectableMethod<X> createInjectableMethod(AnnotatedMethod<X> handlerMethod,
-                                                           Bean<?> bean, BeanManager manager)
+    private <X> InjectableMethod<X> createInjectableMethod(AnnotatedMethod<X> handlerMethod, Bean<?> bean)
     {
-        return new InjectableMethod<X>(handlerMethod, bean, manager);
+        return new InjectableMethod<X>(handlerMethod, bean, getBeanManager());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean isBefore()
+    public boolean isBeforeHandler()
     {
         return this.before;
     }
@@ -248,11 +250,6 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
         return this.ordinal;
     }
 
-    public Method getJavaMethod()
-    {
-        return this.javaMethod;
-    }
-
     public AnnotatedParameter<?> getHandlerParameter()
     {
         return this.handlerParameter;
@@ -260,7 +257,30 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
 
     public Set<InjectionPoint> getInjectionPoints()
     {
+        if (this.injectionPoints == null)
+        {
+            this.injectionPoints = new HashSet<InjectionPoint>(handler.getParameters().size() - 1);
+
+            for (AnnotatedParameter<?> param : handler.getParameters())
+            {
+                if (!param.equals(this.handlerParameter))
+                {
+                    this.injectionPoints.add(
+                        new ImmutableInjectionPoint(param, getBeanManager(), getBean(), false, false));
+                }
+            }
+
+        }
         return new HashSet<InjectionPoint>(this.injectionPoints);
+    }
+
+    private BeanManager getBeanManager()
+    {
+        if (this.beanManager == null)
+        {
+            this.beanManager = BeanManagerProvider.getInstance().getBeanManager();
+        }
+        return this.beanManager;
     }
 
     @Override
@@ -281,6 +301,7 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
         {
             return false;
         }
+        //noinspection SimplifiableIfStatement
         if (!exceptionType.equals(that.getExceptionType()))
         {
             return false;

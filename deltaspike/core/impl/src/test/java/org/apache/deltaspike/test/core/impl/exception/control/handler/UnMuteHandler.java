@@ -24,21 +24,34 @@ import org.apache.deltaspike.core.api.exception.control.CaughtException;
 import org.apache.deltaspike.core.api.exception.control.ExceptionHandler;
 import org.apache.deltaspike.core.api.exception.control.Handles;
 
+import javax.enterprise.context.ApplicationScoped;
+
+@ApplicationScoped
 @ExceptionHandler
 public class UnMuteHandler
 {
-    public static int DEPTH_FIRST_NUMBER_CALLED = 0;
-    public static int BREADTH_FIRST_NUMBER_CALLED = 0;
+    private int depthFirstNumberCalled = 0;
+    private int breadthFirstNumberCalled = 0;
 
     public void unMuteHandlerAsc(@Handles CaughtException<Exception> event)
     {
-        DEPTH_FIRST_NUMBER_CALLED++;
+        depthFirstNumberCalled++;
         event.unmute();
     }
 
     public void unMuteHandlerDesc(@BeforeHandles CaughtException<Exception> event)
     {
-        BREADTH_FIRST_NUMBER_CALLED++;
+        breadthFirstNumberCalled++;
         event.unmute();
+    }
+
+    public int getDepthFirstNumberCalled()
+    {
+        return depthFirstNumberCalled;
+    }
+
+    public int getBreadthFirstNumberCalled()
+    {
+        return breadthFirstNumberCalled;
     }
 }

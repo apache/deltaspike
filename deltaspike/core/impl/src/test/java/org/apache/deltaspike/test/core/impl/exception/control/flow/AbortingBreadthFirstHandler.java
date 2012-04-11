@@ -24,12 +24,15 @@ import org.apache.deltaspike.core.api.exception.control.CaughtException;
 import org.apache.deltaspike.core.api.exception.control.ExceptionHandler;
 import org.apache.deltaspike.core.api.exception.control.Handles;
 
+import javax.enterprise.context.ApplicationScoped;
+
 @SuppressWarnings({"AssignmentToStaticFieldFromInstanceMethod"})
+@ApplicationScoped
 @ExceptionHandler
 public class AbortingBreadthFirstHandler
 {
-    public static boolean abortCalled = false;
-    public static boolean proceedCalled = false;
+    private boolean abortCalled = false;
+    private boolean proceedCalled = false;
 
     public void abortHandler(@BeforeHandles CaughtException<Exception> event)
     {
@@ -41,5 +44,15 @@ public class AbortingBreadthFirstHandler
     {
         proceedCalled = true;
         event.handledAndContinue();
+    }
+
+    public boolean isAbortCalled()
+    {
+        return abortCalled;
+    }
+
+    public boolean isProceedCalled()
+    {
+        return proceedCalled;
     }
 }
