@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.core.impl.exception.control;
 
+import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.impl.exception.control.extension.CatchExtension;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -29,8 +30,10 @@ public class HandlerMethodStorageProducer
 {
     @Produces
     @ApplicationScoped
-    protected HandlerMethodStorage createHandlerMethodStorage(CatchExtension catchExtension)
+    protected HandlerMethodStorage createHandlerMethodStorage()
     {
+        //X TODO change it back to parameter injection after fixing the test-setup for ExcludeIntegrationTest
+        CatchExtension catchExtension = BeanProvider.getContextualReference(CatchExtension.class);
         return new HandlerMethodStorageImpl(catchExtension.getAllExceptionHandlers());
     }
 }
