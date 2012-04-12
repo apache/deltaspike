@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.deltaspike.core.api.exception.control;
+package org.apache.deltaspike.core.api.exception.control.event;
 
 import javax.enterprise.inject.Typed;
 import java.io.Serializable;
@@ -32,7 +32,7 @@ import java.util.Set;
  */
 @SuppressWarnings("CdiManagedBeanInconsistencyInspection")
 @Typed()
-public class ExceptionToCatch implements Serializable
+public class ExceptionToCatchEvent implements Serializable
 {
     private static final long serialVersionUID = 2646115104528108266L;
 
@@ -47,7 +47,7 @@ public class ExceptionToCatch implements Serializable
      * @param exception  Exception to handle
      * @param qualifiers qualifiers to use to narrow the handlers called
      */
-    public ExceptionToCatch(Throwable exception, Annotation... qualifiers)
+    public ExceptionToCatchEvent(Throwable exception, Annotation... qualifiers)
     {
         this.exception = exception;
         this.qualifiers = new HashSet<Annotation>();
@@ -59,7 +59,7 @@ public class ExceptionToCatch implements Serializable
      *
      * @param exception Exception to handle.
      */
-    public ExceptionToCatch(Throwable exception)
+    public ExceptionToCatchEvent(Throwable exception)
     {
         this.exception = exception;
         this.qualifiers = Collections.emptySet();

@@ -19,7 +19,7 @@
 
 package org.apache.deltaspike.test.core.impl.exception.control.handler;
 
-import org.apache.deltaspike.core.api.exception.control.ExceptionToCatch;
+import org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -67,7 +67,7 @@ public class UnMuteHandlerTest
     @Test
     public void assertCorrectNumberOfCallsForUnMute()
     {
-        bm.fireEvent(new ExceptionToCatch(new Exception(new NullPointerException())));
+        bm.fireEvent(new ExceptionToCatchEvent(new Exception(new NullPointerException())));
 
         assertEquals(2, this.unMuteHandler.getDepthFirstNumberCalled());
         assertEquals(2, this.unMuteHandler.getBreadthFirstNumberCalled());

@@ -19,7 +19,7 @@
 
 package org.apache.deltaspike.test.core.impl.exception.control.handler;
 
-import org.apache.deltaspike.core.api.exception.control.ExceptionToCatch;
+import org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -69,7 +69,7 @@ public class CallingHandlersTest
     @Test
     public void assertOutboundHanldersAreCalled()
     {
-        bm.fireEvent(new ExceptionToCatch(new IllegalArgumentException()));
+        bm.fireEvent(new ExceptionToCatchEvent(new IllegalArgumentException()));
 
         assertTrue(this.calledExceptionHandler.isOutboundHandlerCalled());
     }
@@ -78,7 +78,7 @@ public class CallingHandlersTest
     public void assertOutboundHanldersAreCalledOnce()
     {
         this.calledExceptionHandler.setOutboundHandlerTimesCalled(0);
-        bm.fireEvent(new ExceptionToCatch(new IllegalArgumentException()));
+        bm.fireEvent(new ExceptionToCatchEvent(new IllegalArgumentException()));
         assertEquals(1, this.calledExceptionHandler.getOutboundHandlerTimesCalled());
     }
 
@@ -86,28 +86,28 @@ public class CallingHandlersTest
     public void assertInboundHanldersAreCalledOnce()
     {
         this.calledExceptionHandler.setInboundHandlerTimesCalled(0);
-        bm.fireEvent(new ExceptionToCatch(new IllegalArgumentException()));
+        bm.fireEvent(new ExceptionToCatchEvent(new IllegalArgumentException()));
         assertEquals(1, this.calledExceptionHandler.getInboundHandlerTimesCalled());
     }
 
     @Test
     public void assertAdditionalParamsAreInjected()
     {
-        bm.fireEvent(new ExceptionToCatch(new RuntimeException(new IllegalArgumentException())));
+        bm.fireEvent(new ExceptionToCatchEvent(new RuntimeException(new IllegalArgumentException())));
         assertTrue(this.calledExceptionHandler.isBeanmanagerInjected());
     }
 
     //@Test //TODO discuss this test
     public void assertAdditionalParamsAreInjectedWithDifferentHandlerLocation()
     {
-        bm.fireEvent(new ExceptionToCatch(new SQLException()));
+        bm.fireEvent(new ExceptionToCatchEvent(new SQLException()));
         assertTrue(this.calledExceptionHandler.isLocationDifferBeanmanagerInjected());
     }
 
     @Test
     public void assertProtectedHandlersAreCalled()
     {
-        bm.fireEvent(new ExceptionToCatch(new IllegalStateException()));
+        bm.fireEvent(new ExceptionToCatchEvent(new IllegalStateException()));
         assertTrue(this.calledExceptionHandler.isProtectedHandlerCalled());
     }
 }

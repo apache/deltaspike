@@ -19,7 +19,7 @@
 
 package org.apache.deltaspike.core.spi.exception.control;
 
-import org.apache.deltaspike.core.api.exception.control.ExceptionEvent;
+import org.apache.deltaspike.core.api.exception.control.event.ExceptionEvent;
 import org.apache.deltaspike.core.api.exception.control.ExceptionHandlingFlow;
 
 /**

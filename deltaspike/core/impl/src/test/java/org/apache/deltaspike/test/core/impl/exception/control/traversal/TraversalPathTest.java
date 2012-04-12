@@ -19,7 +19,7 @@
 
 package org.apache.deltaspike.test.core.impl.exception.control.traversal;
 
-import org.apache.deltaspike.core.api.exception.control.ExceptionToCatch;
+import org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -71,7 +71,7 @@ public class TraversalPathTest
         Exceptions.Exception1 exception = new Exceptions.Exception1(new
                 Exceptions.Exception2(new Exceptions.Exception3()));
 
-        manager.fireEvent(new ExceptionToCatch(exception));
+        manager.fireEvent(new ExceptionToCatchEvent(exception));
 
         /*
             handleException3SuperclassBF

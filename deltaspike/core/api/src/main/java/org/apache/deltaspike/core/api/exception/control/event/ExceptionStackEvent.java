@@ -17,7 +17,9 @@
  * under the License.
  */
 
-package org.apache.deltaspike.core.api.exception.control;
+package org.apache.deltaspike.core.api.exception.control.event;
+
+import org.apache.deltaspike.core.api.exception.control.ExceptionStackItem;
 
 import javax.enterprise.inject.Typed;
 import java.io.Serializable;
@@ -32,7 +34,7 @@ import java.util.Deque;
  */
 @SuppressWarnings("CdiManagedBeanInconsistencyInspection")
 @Typed()
-public class ExceptionStack implements Serializable
+public class ExceptionStackEvent implements Serializable
 {
     private static final long serialVersionUID = -6069790756478700680L;
 
@@ -51,7 +53,7 @@ public class ExceptionStack implements Serializable
      *
      * @param exception Caught exception
      */
-    public ExceptionStack(final Throwable exception)
+    public ExceptionStackEvent(final Throwable exception)
     {
         if (exception == null)
         {

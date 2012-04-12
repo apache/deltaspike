@@ -19,7 +19,7 @@
 
 package org.apache.deltaspike.test.core.impl.exception.control.flow;
 
-import org.apache.deltaspike.core.api.exception.control.ExceptionToCatch;
+import org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -67,7 +67,7 @@ public class ProceedCauseHandlerTest
     @Test
     public void assertCorrectNumberOfHandlerCallsForProceedCause()
     {
-        bm.fireEvent(new ExceptionToCatch(new Exception(new IllegalArgumentException(new NullPointerException()))));
+        bm.fireEvent(new ExceptionToCatchEvent(new Exception(new IllegalArgumentException(new NullPointerException()))));
         assertEquals(0, this.proceedCauseHandler.getBreadthFirstNpeLowerPrecedenceCalled());
         assertEquals(1, this.proceedCauseHandler.getBreadthFirstNpeCalled());
 
