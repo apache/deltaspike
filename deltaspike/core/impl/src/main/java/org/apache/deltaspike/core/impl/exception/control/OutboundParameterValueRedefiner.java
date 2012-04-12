@@ -27,8 +27,8 @@ import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 
 /**
- * Redefiner allowing to inject a non contextual instance of {@link ExceptionEventImpl} into the first parameter. This
- * class is immutable.
+ * Redefiner allowing to inject a non contextual instance of {@link DefaultExceptionEvent} into the first parameter.
+ * This class is immutable.
  */
 class OutboundParameterValueRedefiner implements ParameterValueRedefiner
 {
@@ -39,7 +39,7 @@ class OutboundParameterValueRedefiner implements ParameterValueRedefiner
     /**
      * Sole constructor.
      *
-     * @param event         instance of ExceptionEventImpl to inject.
+     * @param event         instance of DefaultExceptionEvent to inject.
      * @param handlerMethod Handler method this redefiner is for
      */
     OutboundParameterValueRedefiner(final ExceptionEvent<?> event, final HandlerMethodImpl<?> handlerMethod)

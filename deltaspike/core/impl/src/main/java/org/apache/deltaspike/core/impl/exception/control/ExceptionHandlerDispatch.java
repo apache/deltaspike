@@ -54,7 +54,7 @@ public class ExceptionHandlerDispatch
      * @param beanManager    active bean manager
      * @throws Throwable If a handler requests the exception to be re-thrown.
      */
-    @SuppressWarnings({"unchecked", "MethodWithMultipleLoops", "ThrowableResultOfMethodCallIgnored"})
+    @SuppressWarnings({ "unchecked", "MethodWithMultipleLoops", "ThrowableResultOfMethodCallIgnored" })
     public void executeHandlers(@Observes @Any ExceptionToCatch exceptionEvent,
                                 final BeanManager beanManager) throws Throwable
     {
@@ -77,35 +77,35 @@ public class ExceptionHandlerDispatch
 
             beanManager.fireEvent(stack); // Allow for modifying the exception stack
 
-            inbound_cause:
+        inbound_cause:
             //indentation needed by the current checkstyle rules
             while (stack.getCurrent() != null)
             {
-                final List<HandlerMethod<?>> breadthFirstHandlerMethods = new ArrayList<HandlerMethod<?>>(
+                final List<HandlerMethod<?>> callbackExceptionEvent = new ArrayList<HandlerMethod<?>>(
                         handlerMethodStorage.getHandlersForException(stack.getCurrent().getClass(),
                                 beanManager, exceptionEvent.getQualifiers(), true));
 
-                for (HandlerMethod<?> handler : breadthFirstHandlerMethods)
+                for (HandlerMethod<?> handler : callbackExceptionEvent)
                 {
                     if (!processedHandlers.contains(handler))
                     {
                         LOG.fine(String.format("Notifying handler %s", handler));
 
                         @SuppressWarnings("rawtypes")
-                        final ExceptionEventImpl breadthFirstEvent = new ExceptionEventImpl(stack, true,
+                        final DefaultExceptionEvent callbackEvent = new DefaultExceptionEvent(stack, true,
                                 exceptionEvent.isHandled());
 
-                        handler.notify(breadthFirstEvent);
+                        handler.notify(callbackEvent);
 
                         LOG.fine(String.format("Handler %s returned status %s", handler,
-                                breadthFirstEvent.getCurrentExceptionHandlingFlow().name()));
+                                callbackEvent.getCurrentExceptionHandlingFlow().name()));
 
-                        if (!breadthFirstEvent.isUnmute())
+                        if (!callbackEvent.isUnmute())
                         {
                             processedHandlers.add(handler);
                         }
 
-                        switch (breadthFirstEvent.getCurrentExceptionHandlingFlow())
+                        switch (callbackEvent.getCurrentExceptionHandlingFlow())
                         {
                             case HANDLED:
                                 exceptionEvent.setHandled(true);
@@ -123,11 +123,11 @@ public class ExceptionHandlerDispatch
                                 throwException = exceptionEvent.getException();
                                 break;
                             case THROW:
-                                throwException = breadthFirstEvent.getThrowNewException();
+                                throwException = callbackEvent.getThrowNewException();
                                 break;
                             default:
                                 throw new IllegalStateException(
-                                        "Unexpected enum type " + breadthFirstEvent.getCurrentExceptionHandlingFlow());
+                                        "Unexpected enum type " + callbackEvent.getCurrentExceptionHandlingFlow());
                         }
                     }
                 }
@@ -136,20 +136,20 @@ public class ExceptionHandlerDispatch
                         handlerMethodStorage.getHandlersForException(stack.getCurrent().getClass(),
                                 beanManager, exceptionEvent.getQualifiers(), false);
 
-                final List<HandlerMethod<? extends Throwable>> depthFirstHandlerMethods =
+                final List<HandlerMethod<? extends Throwable>> handlerMethods =
                         new ArrayList<HandlerMethod<? extends Throwable>>(handlersForException);
 
                 // Reverse these so category handlers are last
-                Collections.reverse(depthFirstHandlerMethods);
+                Collections.reverse(handlerMethods);
 
-                for (HandlerMethod<?> handler : depthFirstHandlerMethods)
+                for (HandlerMethod<?> handler : handlerMethods)
                 {
                     if (!processedHandlers.contains(handler))
                     {
                         LOG.fine(String.format("Notifying handler %s", handler));
 
                         @SuppressWarnings("rawtypes")
-                        final ExceptionEventImpl depthFirstEvent = new ExceptionEventImpl(stack, false,
+                        final DefaultExceptionEvent depthFirstEvent = new DefaultExceptionEvent(stack, false,
                                 exceptionEvent.isHandled());
                         handler.notify(depthFirstEvent);
 

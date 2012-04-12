@@ -31,10 +31,9 @@ import javax.enterprise.inject.Typed;
  *
  * @param <T> Exception type this event represents
  */
-@SuppressWarnings({"unchecked", "CdiManagedBeanInconsistencyInspection"})
+@SuppressWarnings({ "unchecked", "CdiManagedBeanInconsistencyInspection" })
 @Typed()
-//X TODO discuss an interface to avoid internal methods in the api
-public class ExceptionEventImpl<T extends Throwable> implements IntrospectiveExceptionEvent<T>
+public class DefaultExceptionEvent<T extends Throwable> implements IntrospectiveExceptionEvent<T>
 {
     private final T exception;
     private boolean unmute;
@@ -52,7 +51,7 @@ public class ExceptionEventImpl<T extends Throwable> implements IntrospectiveExc
      * @param handled         flag indicating the exception has already been handled by a previous handler
      * @throws IllegalArgumentException if stack is null
      */
-    public ExceptionEventImpl(final ExceptionStack stack, final boolean beforeTraversal, final boolean handled)
+    public DefaultExceptionEvent(final ExceptionStack stack, final boolean beforeTraversal, final boolean handled)
     {
         if (stack == null)
         {
