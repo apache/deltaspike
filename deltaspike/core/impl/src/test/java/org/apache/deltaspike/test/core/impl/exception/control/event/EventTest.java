@@ -20,11 +20,12 @@
 package org.apache.deltaspike.test.core.impl.exception.control.event;
 
 import org.apache.deltaspike.core.api.exception.control.BeforeHandles;
-import org.apache.deltaspike.core.api.exception.control.CaughtException;
+import org.apache.deltaspike.core.api.exception.control.ExceptionEvent;
 import org.apache.deltaspike.core.api.exception.control.ExceptionHandler;
 import org.apache.deltaspike.core.api.exception.control.ExceptionToCatch;
 import org.apache.deltaspike.core.api.exception.control.Handles;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
+import org.apache.deltaspike.core.spi.exception.control.IntrospectiveExceptionEvent;
 import org.apache.deltaspike.test.core.impl.exception.control.event.literal.EventQualifierLiteral;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -84,19 +85,19 @@ public class EventTest
         this.bm.fireEvent(new ExceptionToCatch(new NullPointerException(), new EventQualifierLiteral()));
     }
 
-    public void verifyDescEvent(@BeforeHandles CaughtException<NullPointerException> event)
+    public void verifyDescEvent(@BeforeHandles IntrospectiveExceptionEvent<NullPointerException> event)
     {
         this.qualiferCalledCount++;
         assertTrue(event.isBeforeTraversal());
     }
 
-    public void verifyAscEvent(@Handles CaughtException<NullPointerException> event)
+    public void verifyAscEvent(@Handles IntrospectiveExceptionEvent<NullPointerException> event)
     {
         this.qualiferCalledCount++;
         assertFalse(event.isBeforeTraversal());
     }
 
-    public void verifyQualifierEvent(@Handles @EventQualifier CaughtException<NullPointerException> event)
+    public void verifyQualifierEvent(@Handles @EventQualifier ExceptionEvent<NullPointerException> event)
     {
         this.qualiferCalledCount++;
         assertThat(this.qualiferCalledCount, is(1));

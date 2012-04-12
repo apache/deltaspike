@@ -20,7 +20,7 @@
 package org.apache.deltaspike.test.core.impl.exception.control.flow;
 
 import org.apache.deltaspike.core.api.exception.control.BeforeHandles;
-import org.apache.deltaspike.core.api.exception.control.CaughtException;
+import org.apache.deltaspike.core.api.exception.control.ExceptionEvent;
 import org.apache.deltaspike.core.api.exception.control.ExceptionHandler;
 import org.apache.deltaspike.core.api.exception.control.Handles;
 
@@ -34,18 +34,18 @@ public class ExceptionHandledHandler
     private boolean iaeAscCalled = false;
     private boolean npeDescCalled = false;
 
-    public void exHandler(@Handles CaughtException<Exception> event)
+    public void exHandler(@Handles ExceptionEvent<Exception> event)
     {
         exAscCalled = true;
     }
 
-    public void npeHandler(@Handles CaughtException<IllegalArgumentException> event)
+    public void npeHandler(@Handles ExceptionEvent<IllegalArgumentException> event)
     {
         iaeAscCalled = true;
         event.handled();
     }
 
-    public void npeDescHandler(@BeforeHandles CaughtException<NullPointerException> event)
+    public void npeDescHandler(@BeforeHandles ExceptionEvent<NullPointerException> event)
     {
         npeDescCalled = true;
         event.handled();

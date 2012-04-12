@@ -19,7 +19,7 @@
 
 package org.apache.deltaspike.test.core.impl.exception.control.handler;
 
-import org.apache.deltaspike.core.api.exception.control.CaughtException;
+import org.apache.deltaspike.core.api.exception.control.ExceptionEvent;
 import org.apache.deltaspike.core.api.exception.control.ExceptionHandler;
 import org.apache.deltaspike.core.api.exception.control.Handles;
 
@@ -29,7 +29,7 @@ import org.apache.deltaspike.core.api.exception.control.Handles;
 @ExceptionHandler
 public class BadInjectionPointHandler
 {
-    void handleException(int firstParam, @Handles CaughtException<Exception> event)
+    void handleException(int firstParam, @Handles ExceptionEvent<Exception> event)
     {
     }
 }

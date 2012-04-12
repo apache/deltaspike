@@ -52,7 +52,7 @@ public interface HandlerMethod<T extends Throwable>
      *
      * @param event event to pass to the handler.
      */
-    void notify(CaughtException<T> event);
+    void notify(ExceptionEvent<T> event);
 
     /**
      * Obtains the precedence of the handler.

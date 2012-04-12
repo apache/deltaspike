@@ -20,7 +20,7 @@
 package org.apache.deltaspike.test.core.impl.exception.control.flow;
 
 import org.apache.deltaspike.core.api.exception.control.BeforeHandles;
-import org.apache.deltaspike.core.api.exception.control.CaughtException;
+import org.apache.deltaspike.core.api.exception.control.ExceptionEvent;
 import org.apache.deltaspike.core.api.exception.control.ExceptionHandler;
 import org.apache.deltaspike.core.api.exception.control.Handles;
 
@@ -36,26 +36,26 @@ public class ProceedCauseHandler
     private int depthFirstNpeCalled = 0;
     private int depthFirstNpeHigherPrecedenceCalled = 0;
 
-    public void npeInboundHandler(@BeforeHandles CaughtException<NullPointerException> event)
+    public void npeInboundHandler(@BeforeHandles ExceptionEvent<NullPointerException> event)
     {
         breadthFirstNpeCalled++;
         event.skipCause();
     }
 
     public void npeLowerPrecedenceInboundHandler(
-            @BeforeHandles(ordinal = -50) CaughtException<NullPointerException> event)
+            @BeforeHandles(ordinal = -50) ExceptionEvent<NullPointerException> event)
     {
         breadthFirstNpeLowerPrecedenceCalled++;
         event.handledAndContinue();
     }
 
-    public void npeOutboundHandler(@Handles CaughtException<NullPointerException> event)
+    public void npeOutboundHandler(@Handles ExceptionEvent<NullPointerException> event)
     {
         depthFirstNpeCalled++;
         event.skipCause();
     }
 
-    public void npeHigherPrecedenceOutboundHandler(@Handles(ordinal = -10) CaughtException<NullPointerException> event)
+    public void npeHigherPrecedenceOutboundHandler(@Handles(ordinal = -10) ExceptionEvent<NullPointerException> event)
     {
         depthFirstNpeHigherPrecedenceCalled++;
         event.handledAndContinue();

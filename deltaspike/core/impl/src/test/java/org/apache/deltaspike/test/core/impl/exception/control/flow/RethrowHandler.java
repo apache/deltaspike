@@ -20,20 +20,20 @@
 package org.apache.deltaspike.test.core.impl.exception.control.flow;
 
 import org.apache.deltaspike.core.api.exception.control.BeforeHandles;
-import org.apache.deltaspike.core.api.exception.control.CaughtException;
+import org.apache.deltaspike.core.api.exception.control.ExceptionEvent;
 import org.apache.deltaspike.core.api.exception.control.ExceptionHandler;
 import org.apache.deltaspike.core.api.exception.control.Handles;
 
 @ExceptionHandler
 public class RethrowHandler
 {
-    public void rethrow(@Handles CaughtException<NullPointerException> event)
+    public void rethrow(@Handles ExceptionEvent<NullPointerException> event)
     {
         event.throwOriginal();
     }
 
     public void rethrowInbound(
-            @BeforeHandles CaughtException<IllegalArgumentException> event)
+            @BeforeHandles ExceptionEvent<IllegalArgumentException> event)
     {
         event.throwOriginal();
     }

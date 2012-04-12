@@ -17,19 +17,30 @@
  * under the License.
  */
 
-package org.apache.deltaspike.test.core.impl.exception.control.handler;
+package org.apache.deltaspike.core.spi.exception.control;
 
 import org.apache.deltaspike.core.api.exception.control.ExceptionEvent;
-import org.apache.deltaspike.core.api.exception.control.ExceptionHandler;
-import org.apache.deltaspike.core.api.exception.control.Handles;
+import org.apache.deltaspike.core.api.exception.control.ExceptionHandlingFlow;
 
 /**
- * ExceptionHandler which is not valid.
+ * Internal view into the ExceptionEvent. Methods on this interface are used by the ExceptionHandlerDispatcher.
  */
-@ExceptionHandler
-public class HandlerWhichThrowsExceptions
+public interface IntrospectiveExceptionEvent<T extends Throwable> extends ExceptionEvent<T>
 {
-    public void throwsAnException(@Handles ExceptionEvent<Throwable> evt) throws Exception
-    {
-    }
+    /**
+     * Check to see if this event has been unmutted and therefore called again.
+     */
+    boolean isUnmute();
+
+    /**
+     * The next expected step in the exception handling flow (i.e. abort, rethrow, etc)
+     */
+    ExceptionHandlingFlow getCurrentExceptionHandlingFlow();
+
+    boolean isBeforeTraversal();
+
+    /**
+     * Returns the exception that should be thrown if the next step in the flow is THROW.
+     */
+    Throwable getThrowNewException();
 }

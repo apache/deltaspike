@@ -20,7 +20,7 @@
 package org.apache.deltaspike.test.core.impl.exception.control.handler;
 
 import org.apache.deltaspike.core.api.exception.control.BeforeHandles;
-import org.apache.deltaspike.core.api.exception.control.CaughtException;
+import org.apache.deltaspike.core.api.exception.control.ExceptionEvent;
 import org.apache.deltaspike.core.api.exception.control.ExceptionHandler;
 import org.apache.deltaspike.core.api.exception.control.Handles;
 
@@ -33,13 +33,13 @@ public class UnMuteHandler
     private int depthFirstNumberCalled = 0;
     private int breadthFirstNumberCalled = 0;
 
-    public void unMuteHandlerAsc(@Handles CaughtException<Exception> event)
+    public void unMuteHandlerAsc(@Handles ExceptionEvent<Exception> event)
     {
         depthFirstNumberCalled++;
         event.unmute();
     }
 
-    public void unMuteHandlerDesc(@BeforeHandles CaughtException<Exception> event)
+    public void unMuteHandlerDesc(@BeforeHandles ExceptionEvent<Exception> event)
     {
         breadthFirstNumberCalled++;
         event.unmute();

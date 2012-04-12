@@ -19,7 +19,7 @@
 
 package org.apache.deltaspike.test.core.impl.exception.control.flow;
 
-import org.apache.deltaspike.core.api.exception.control.CaughtException;
+import org.apache.deltaspike.core.api.exception.control.ExceptionEvent;
 import org.apache.deltaspike.core.api.exception.control.ExceptionHandler;
 import org.apache.deltaspike.core.api.exception.control.Handles;
 
@@ -37,13 +37,13 @@ public class AbortingDepthHandler
     {
     }
 
-    public void abortHandler(@Handles CaughtException<Exception> event)
+    public void abortHandler(@Handles ExceptionEvent<Exception> event)
     {
         abortCalled = true;
         event.abort();
     }
 
-    public void proceedHandler(@Handles CaughtException<Throwable> event)
+    public void proceedHandler(@Handles ExceptionEvent<Throwable> event)
     {
         proceedCalled = true;
         event.handledAndContinue();

@@ -20,7 +20,7 @@
 package org.apache.deltaspike.test.core.impl.exception.control.traversal;
 
 import org.apache.deltaspike.core.api.exception.control.BeforeHandles;
-import org.apache.deltaspike.core.api.exception.control.CaughtException;
+import org.apache.deltaspike.core.api.exception.control.ExceptionEvent;
 import org.apache.deltaspike.core.api.exception.control.ExceptionHandler;
 import org.apache.deltaspike.core.api.exception.control.Handles;
 
@@ -32,42 +32,42 @@ public class ExceptionHandlerMethods
 {
     private static final List<Integer> executionOrder = new ArrayList<Integer>();
 
-    public void handleException1BF(@BeforeHandles CaughtException<Exceptions.Exception1> event)
+    public void handleException1BF(@BeforeHandles ExceptionEvent<Exceptions.Exception1> event)
     {
         executionOrder.add(7);
     }
 
-    public void handleException2BF(@BeforeHandles CaughtException<Exceptions.Exception2> event)
+    public void handleException2BF(@BeforeHandles ExceptionEvent<Exceptions.Exception2> event)
     {
         executionOrder.add(5);
     }
 
-    public void handleException3DF(@Handles CaughtException<Exceptions.Exception3> event)
+    public void handleException3DF(@Handles ExceptionEvent<Exceptions.Exception3> event)
     {
         executionOrder.add(3);
     }
 
-    public void handleException3BF(@BeforeHandles CaughtException<Exceptions.Exception3> event)
+    public void handleException3BF(@BeforeHandles ExceptionEvent<Exceptions.Exception3> event)
     {
         executionOrder.add(2);
     }
 
-    public void handleException3SuperclassBF(@BeforeHandles CaughtException<Exceptions.Exception3Super> event)
+    public void handleException3SuperclassBF(@BeforeHandles ExceptionEvent<Exceptions.Exception3Super> event)
     {
         executionOrder.add(1);
     }
 
-    public void handleException3SuperclassDF(@Handles CaughtException<Exceptions.Exception3Super> event)
+    public void handleException3SuperclassDF(@Handles ExceptionEvent<Exceptions.Exception3Super> event)
     {
         executionOrder.add(4);
     }
 
-    public void handleException2DF(@Handles CaughtException<Exceptions.Exception2> event)
+    public void handleException2DF(@Handles ExceptionEvent<Exceptions.Exception2> event)
     {
         executionOrder.add(6);
     }
 
-    public void handleException1DF(@Handles CaughtException<Exceptions.Exception1> event)
+    public void handleException1DF(@Handles ExceptionEvent<Exceptions.Exception1> event)
     {
         executionOrder.add(8);
     }

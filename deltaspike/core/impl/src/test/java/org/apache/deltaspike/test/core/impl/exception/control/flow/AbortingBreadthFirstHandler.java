@@ -20,7 +20,7 @@
 package org.apache.deltaspike.test.core.impl.exception.control.flow;
 
 import org.apache.deltaspike.core.api.exception.control.BeforeHandles;
-import org.apache.deltaspike.core.api.exception.control.CaughtException;
+import org.apache.deltaspike.core.api.exception.control.ExceptionEvent;
 import org.apache.deltaspike.core.api.exception.control.ExceptionHandler;
 import org.apache.deltaspike.core.api.exception.control.Handles;
 
@@ -34,13 +34,13 @@ public class AbortingBreadthFirstHandler
     private boolean abortCalled = false;
     private boolean proceedCalled = false;
 
-    public void abortHandler(@BeforeHandles CaughtException<Exception> event)
+    public void abortHandler(@BeforeHandles ExceptionEvent<Exception> event)
     {
         abortCalled = true;
         event.abort();
     }
 
-    public void proceedHandler(@Handles CaughtException<NullPointerException> event)
+    public void proceedHandler(@Handles ExceptionEvent<NullPointerException> event)
     {
         proceedCalled = true;
         event.handledAndContinue();

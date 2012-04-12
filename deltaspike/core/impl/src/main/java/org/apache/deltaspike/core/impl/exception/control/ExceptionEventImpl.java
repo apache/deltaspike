@@ -17,7 +17,11 @@
  * under the License.
  */
 
-package org.apache.deltaspike.core.api.exception.control;
+package org.apache.deltaspike.core.impl.exception.control;
+
+import org.apache.deltaspike.core.api.exception.control.ExceptionHandlingFlow;
+import org.apache.deltaspike.core.api.exception.control.ExceptionStack;
+import org.apache.deltaspike.core.spi.exception.control.IntrospectiveExceptionEvent;
 
 import javax.enterprise.inject.Typed;
 
@@ -27,10 +31,10 @@ import javax.enterprise.inject.Typed;
  *
  * @param <T> Exception type this event represents
  */
-@SuppressWarnings({ "unchecked", "CdiManagedBeanInconsistencyInspection" })
+@SuppressWarnings({"unchecked", "CdiManagedBeanInconsistencyInspection"})
 @Typed()
 //X TODO discuss an interface to avoid internal methods in the api
-public class CaughtException<T extends Throwable>
+public class ExceptionEventImpl<T extends Throwable> implements IntrospectiveExceptionEvent<T>
 {
     private final T exception;
     private boolean unmute;
@@ -48,7 +52,7 @@ public class CaughtException<T extends Throwable>
      * @param handled         flag indicating the exception has already been handled by a previous handler
      * @throws IllegalArgumentException if stack is null
      */
-    public CaughtException(final ExceptionStack stack, final boolean beforeTraversal, final boolean handled)
+    public ExceptionEventImpl(final ExceptionStack stack, final boolean beforeTraversal, final boolean handled)
     {
         if (stack == null)
         {
@@ -61,64 +65,49 @@ public class CaughtException<T extends Throwable>
         this.flow = ExceptionHandlingFlow.HANDLED_AND_CONTINUE;
     }
 
+    @Override
     public T getException()
     {
         return this.exception;
     }
 
-    /**
-     * Instructs the dispatcher to abort further processing of handlers.
-     */
+    @Override
     public void abort()
     {
         this.flow = ExceptionHandlingFlow.ABORT;
     }
 
-    /**
-     * Instructs the dispatcher to throw the original exception after handler processing.
-     */
+    @Override
     public void throwOriginal()
     {
         this.flow = ExceptionHandlingFlow.THROW_ORIGINAL;
     }
 
-    /**
-     * Instructs the dispatcher to terminate additional handler processing and mark the event as handled.
-     */
+    @Override
     public void handled()
     {
         this.flow = ExceptionHandlingFlow.HANDLED;
     }
 
-    /**
-     * Default instruction to dispatcher, continues handler processing.
-     */
+    @Override
     public void handledAndContinue()
     {
         this.flow = ExceptionHandlingFlow.HANDLED_AND_CONTINUE;
     }
 
-    /**
-     * Similar to {@link org.apache.deltaspike.core.api.exception.control.CaughtException#handledAndContinue()},
-     * but instructs the dispatcher to markHandled to the next element
-     * in the cause chain without processing additional handlers for this cause chain element.
-     */
+    @Override
     public void skipCause()
     {
         this.flow = ExceptionHandlingFlow.SKIP_CAUSE;
     }
 
-    /**
-     * Instructs the dispatcher to allow this handler to be invoked again.
-     */
+    @Override
     public void unmute()
     {
         this.unmute = true;
     }
 
-    /**
-     * Internal only
-     */
+    @Override
     public boolean isUnmute()
     {
         return this.unmute;
@@ -129,40 +118,32 @@ public class CaughtException<T extends Throwable>
     }
     */
 
-    /**
-     * Internal only
-     */
+    @Override
     public ExceptionHandlingFlow getCurrentExceptionHandlingFlow()
     {
         return this.flow;
     }
 
+    @Override
     public boolean isMarkedHandled()
     {
         return this.markedHandled;
     }
 
+    @Override
     public boolean isBeforeTraversal()
     {
         return beforeTraversal;
     }
 
-    /**
-     * Rethrow the exception, but use the given exception instead of the original.
-     *
-     * @param t Exception to be thrown in place of the original.
-     */
+    @Override
     public void rethrow(Throwable t)
     {
         this.throwNewException = t;
         this.flow = ExceptionHandlingFlow.THROW;
     }
 
-    /**
-     * Internal only.
-     *
-     * @return
-     */
+    @Override
     public Throwable getThrowNewException()
     {
         return this.throwNewException;

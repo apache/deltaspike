@@ -20,7 +20,7 @@
 package org.apache.deltaspike.test.core.impl.exception.control.handler;
 
 import org.apache.deltaspike.core.api.exception.control.BeforeHandles;
-import org.apache.deltaspike.core.api.exception.control.CaughtException;
+import org.apache.deltaspike.core.api.exception.control.ExceptionEvent;
 import org.apache.deltaspike.core.api.exception.control.ExceptionHandler;
 import org.apache.deltaspike.core.api.exception.control.Handles;
 import org.apache.deltaspike.test.core.impl.exception.control.extension.Account;
@@ -33,67 +33,67 @@ import java.sql.SQLException;
 @ExceptionHandler
 public class ExtensionExceptionHandler
 {
-    public void catchDescException(@BeforeHandles CaughtException<Exception> event)
+    public void catchDescException(@BeforeHandles ExceptionEvent<Exception> event)
     {
         // Nothing to do currently
     }
 
-    public void catchFrameworkDescException(@BeforeHandles(ordinal = -50) CaughtException<Exception> event)
+    public void catchFrameworkDescException(@BeforeHandles(ordinal = -50) ExceptionEvent<Exception> event)
     {
         // Nothing to do here
     }
 
-    public void catchRuntime(@Handles CaughtException<RuntimeException> event)
+    public void catchRuntime(@Handles ExceptionEvent<RuntimeException> event)
     {
         // Nothing to do currently
     }
 
     public void catchThrowableBreadthFirst(
-            @BeforeHandles(ordinal = 10) CaughtException<Throwable> event)
+            @BeforeHandles(ordinal = 10) ExceptionEvent<Throwable> event)
     {
         // Nothing to do currently
     }
 
     public void catchThrowableP20BreadthFirst(
-            @BeforeHandles(ordinal = 20) CaughtException<Throwable> event)
+            @BeforeHandles(ordinal = 20) ExceptionEvent<Throwable> event)
     {
         // Nothing to do currently
     }
 
     public void catchThrowable(
-            @Handles(ordinal = 10) CaughtException<Throwable> event)
+            @Handles(ordinal = 10) ExceptionEvent<Throwable> event)
     {
         // Nothing to do currently
     }
 
     public void catchThrowableP20(
-            @Handles(ordinal = 20) CaughtException<Throwable> event)
+            @Handles(ordinal = 20) ExceptionEvent<Throwable> event)
     {
         // Nothing to do currently
     }
 
-    public void catchIAE(@Handles CaughtException<IllegalArgumentException> event)
+    public void catchIAE(@Handles ExceptionEvent<IllegalArgumentException> event)
     {
         // Nothing to do currently
     }
 
-    public void qualifiedHandler(@Handles @CatchQualifier CaughtException<Exception> event)
+    public void qualifiedHandler(@Handles @CatchQualifier ExceptionEvent<Exception> event)
     {
         // Method to verify the qualifiers are working correctly for handlers
     }
 
-    public void arqHandler(@Handles @Arquillian CaughtException<Throwable> event)
+    public void arqHandler(@Handles @Arquillian ExceptionEvent<Throwable> event)
     {
         // Method to verify the qualifiers are working correctly for handlers
     }
 
-    public void arqTestingHandler(@Handles @Arquillian @CatchQualifier CaughtException<Throwable> event)
+    public void arqTestingHandler(@Handles @Arquillian @CatchQualifier ExceptionEvent<Throwable> event)
     {
         // Method to verify the qualifiers are working correctly for handlers
     }
 
     public void differentParamHandlerLocationHandler(Account act, BeanManager bm,
-                                                     @Handles CaughtException<SQLException> event)
+                                                     @Handles ExceptionEvent<SQLException> event)
     {
         // Nothing here, just need to make sure this handler is picked up
     }

@@ -19,7 +19,7 @@
 
 package org.apache.deltaspike.core.impl.exception.control;
 
-import org.apache.deltaspike.core.api.exception.control.CaughtException;
+import org.apache.deltaspike.core.api.exception.control.ExceptionEvent;
 import org.apache.deltaspike.core.api.metadata.builder.ParameterValueRedefiner;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 
@@ -27,22 +27,22 @@ import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 
 /**
- * Redefiner allowing to inject a non contextual instance of {@link CaughtException} into the first parameter. This
+ * Redefiner allowing to inject a non contextual instance of {@link ExceptionEventImpl} into the first parameter. This
  * class is immutable.
  */
 class OutboundParameterValueRedefiner implements ParameterValueRedefiner
 {
-    private final CaughtException<?> event;
+    private final ExceptionEvent<?> event;
     private final Bean<?> declaringBean;
     private final HandlerMethodImpl<?> handlerMethod;
 
     /**
      * Sole constructor.
      *
-     * @param event   instance of CaughtException to inject.
+     * @param event         instance of ExceptionEventImpl to inject.
      * @param handlerMethod Handler method this redefiner is for
      */
-    OutboundParameterValueRedefiner(final CaughtException<?> event, final HandlerMethodImpl<?> handlerMethod)
+    OutboundParameterValueRedefiner(final ExceptionEvent<?> event, final HandlerMethodImpl<?> handlerMethod)
     {
         this.event = event;
         this.declaringBean = handlerMethod.getBean();
@@ -56,7 +56,7 @@ class OutboundParameterValueRedefiner implements ParameterValueRedefiner
     public Object redefineParameterValue(ParameterValue value)
     {
         CreationalContext<?> ctx = BeanManagerProvider.getInstance().getBeanManager()
-            .createCreationalContext(this.declaringBean);
+                .createCreationalContext(this.declaringBean);
 
         try
         {

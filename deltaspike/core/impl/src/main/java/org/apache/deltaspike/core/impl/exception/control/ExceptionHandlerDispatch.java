@@ -19,7 +19,6 @@
 
 package org.apache.deltaspike.core.impl.exception.control;
 
-import org.apache.deltaspike.core.api.exception.control.CaughtException;
 import org.apache.deltaspike.core.api.exception.control.ExceptionStack;
 import org.apache.deltaspike.core.api.exception.control.ExceptionToCatch;
 import org.apache.deltaspike.core.api.exception.control.HandlerMethod;
@@ -52,10 +51,10 @@ public class ExceptionHandlerDispatch
      * Observes the event, finds the correct exception handler(s) and invokes them.
      *
      * @param exceptionEvent exception to be invoked
-     * @param beanManager             active bean manager
+     * @param beanManager    active bean manager
      * @throws Throwable If a handler requests the exception to be re-thrown.
      */
-    @SuppressWarnings({ "unchecked", "MethodWithMultipleLoops", "ThrowableResultOfMethodCallIgnored" })
+    @SuppressWarnings({"unchecked", "MethodWithMultipleLoops", "ThrowableResultOfMethodCallIgnored"})
     public void executeHandlers(@Observes @Any ExceptionToCatch exceptionEvent,
                                 final BeanManager beanManager) throws Throwable
     {
@@ -66,7 +65,7 @@ public class ExceptionHandlerDispatch
         Throwable throwException = null;
 
         final HandlerMethodStorage handlerMethodStorage =
-            BeanProvider.getContextualReference(HandlerMethodStorage.class);
+                BeanProvider.getContextualReference(HandlerMethodStorage.class);
 
         try
         {
@@ -78,7 +77,8 @@ public class ExceptionHandlerDispatch
 
             beanManager.fireEvent(stack); // Allow for modifying the exception stack
 
-        inbound_cause: //indentation needed by the current checkstyle rules
+            inbound_cause:
+            //indentation needed by the current checkstyle rules
             while (stack.getCurrent() != null)
             {
                 final List<HandlerMethod<?>> breadthFirstHandlerMethods = new ArrayList<HandlerMethod<?>>(
@@ -92,7 +92,7 @@ public class ExceptionHandlerDispatch
                         LOG.fine(String.format("Notifying handler %s", handler));
 
                         @SuppressWarnings("rawtypes")
-                        final CaughtException breadthFirstEvent = new CaughtException(stack, true,
+                        final ExceptionEventImpl breadthFirstEvent = new ExceptionEventImpl(stack, true,
                                 exceptionEvent.isHandled());
 
                         handler.notify(breadthFirstEvent);
@@ -127,7 +127,7 @@ public class ExceptionHandlerDispatch
                                 break;
                             default:
                                 throw new IllegalStateException(
-                                    "Unexpected enum type " + breadthFirstEvent.getCurrentExceptionHandlingFlow());
+                                        "Unexpected enum type " + breadthFirstEvent.getCurrentExceptionHandlingFlow());
                         }
                     }
                 }
@@ -149,7 +149,7 @@ public class ExceptionHandlerDispatch
                         LOG.fine(String.format("Notifying handler %s", handler));
 
                         @SuppressWarnings("rawtypes")
-                        final CaughtException depthFirstEvent = new CaughtException(stack, false,
+                        final ExceptionEventImpl depthFirstEvent = new ExceptionEventImpl(stack, false,
                                 exceptionEvent.isHandled());
                         handler.notify(depthFirstEvent);
 
@@ -183,7 +183,7 @@ public class ExceptionHandlerDispatch
                                 break;
                             default:
                                 throw new IllegalStateException(
-                                    "Unexpected enum type " + depthFirstEvent.getCurrentExceptionHandlingFlow());
+                                        "Unexpected enum type " + depthFirstEvent.getCurrentExceptionHandlingFlow());
                         }
                     }
                 }

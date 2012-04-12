@@ -20,7 +20,7 @@
 package org.apache.deltaspike.core.impl.exception.control;
 
 import org.apache.deltaspike.core.api.exception.control.BeforeHandles;
-import org.apache.deltaspike.core.api.exception.control.CaughtException;
+import org.apache.deltaspike.core.api.exception.control.ExceptionEvent;
 import org.apache.deltaspike.core.api.exception.control.HandlerMethod;
 import org.apache.deltaspike.core.api.exception.control.Handles;
 import org.apache.deltaspike.core.api.literal.AnyLiteral;
@@ -207,7 +207,7 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
      * {@inheritDoc}
      */
     @Override
-    public void notify(final CaughtException<T> event)
+    public void notify(final ExceptionEvent<T> event)
     {
         CreationalContext<?> ctx = null;
         try
@@ -266,7 +266,7 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
                 if (!param.equals(this.handlerParameter))
                 {
                     this.injectionPoints.add(
-                        new ImmutableInjectionPoint(param, getBeanManager(), getBean(), false, false));
+                            new ImmutableInjectionPoint(param, getBeanManager(), getBean(), false, false));
                 }
             }
 

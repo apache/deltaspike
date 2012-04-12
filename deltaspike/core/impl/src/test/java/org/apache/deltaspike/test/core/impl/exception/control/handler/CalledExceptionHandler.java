@@ -20,7 +20,7 @@
 package org.apache.deltaspike.test.core.impl.exception.control.handler;
 
 import org.apache.deltaspike.core.api.exception.control.BeforeHandles;
-import org.apache.deltaspike.core.api.exception.control.CaughtException;
+import org.apache.deltaspike.core.api.exception.control.ExceptionEvent;
 import org.apache.deltaspike.core.api.exception.control.ExceptionHandler;
 import org.apache.deltaspike.core.api.exception.control.Handles;
 
@@ -39,19 +39,19 @@ public class CalledExceptionHandler
     private boolean beanmanagerInjected = false;
     private boolean locationDifferBeanmanagerInjected = false;
 
-    public void basicHandler(@Handles CaughtException<Exception> event)
+    public void basicHandler(@Handles ExceptionEvent<Exception> event)
     {
         outboundHandlerCalled = true;
         outboundHandlerTimesCalled++;
     }
 
-    public void basicInboundHandler(@BeforeHandles CaughtException<Exception> event)
+    public void basicInboundHandler(@BeforeHandles ExceptionEvent<Exception> event)
     {
         inboundHandlerTimesCalled++;
         event.handledAndContinue();
     }
 
-    public void extraInjections(@Handles CaughtException<IllegalArgumentException> event, BeanManager bm)
+    public void extraInjections(@Handles ExceptionEvent<IllegalArgumentException> event, BeanManager bm)
     {
         if (bm != null)
         {
@@ -59,7 +59,7 @@ public class CalledExceptionHandler
         }
     }
 
-    void protectedHandler(@Handles CaughtException<IllegalStateException> event)
+    void protectedHandler(@Handles ExceptionEvent<IllegalStateException> event)
     {
         protectedHandlerCalled = true;
 
@@ -70,7 +70,7 @@ public class CalledExceptionHandler
     }
 
     @SuppressWarnings("unused")
-    private void handlerLocationInjections(BeanManager bm, @Handles CaughtException<SQLException> event)
+    private void handlerLocationInjections(BeanManager bm, @Handles ExceptionEvent<SQLException> event)
     {
         if (bm != null)
         {
