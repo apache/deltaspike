@@ -16,12 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
-package org.apache.deltaspike.security.api.authentication.events;
+package org.apache.deltaspike.security.api.authentication.event;
 
 /**
- * This event is raised when user successfully logs in.
+ * This event is raised just before authentication.
  */
-public class LoggedInEvent 
+public class PreAuthenticateEvent 
 {
+
 }

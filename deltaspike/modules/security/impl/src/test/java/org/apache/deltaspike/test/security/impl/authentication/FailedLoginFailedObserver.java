@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.security.impl.authentication;
 
-import org.apache.deltaspike.security.api.authentication.events.LoginFailedEvent;
+import org.apache.deltaspike.security.api.authentication.event.LoginFailedEvent;
 
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.event.Observes;

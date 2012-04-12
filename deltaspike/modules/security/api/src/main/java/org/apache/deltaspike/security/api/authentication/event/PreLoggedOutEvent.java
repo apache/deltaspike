@@ -16,18 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.security.api.authentication.events;
+package org.apache.deltaspike.security.api.authentication.event;
 
 import org.apache.deltaspike.security.api.User;
 
 /**
- * This event is raised just after the user un-authenticates
+ * This event is raised just before the user un-authenticates
  */
-public class PostLoggedOutEvent 
+public class PreLoggedOutEvent 
 {
     private User user;
 
-    public PostLoggedOutEvent(User user)
+    public PreLoggedOutEvent(User user)
     {
         this.user = user;
     }

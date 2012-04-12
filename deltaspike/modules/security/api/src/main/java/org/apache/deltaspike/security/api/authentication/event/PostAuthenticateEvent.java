@@ -17,22 +17,12 @@
  * under the License.
  */
 
-package org.apache.deltaspike.security.api.authentication.events;
+package org.apache.deltaspike.security.api.authentication.event;
 
 /**
- * This event is fired when an authentication attempt fails
+ * This event is raised just after authentication
  */
-public class LoginFailedEvent 
+public class PostAuthenticateEvent 
 {
-    private Exception loginException;
 
-    public LoginFailedEvent(Exception loginException) 
-    {
-        this.loginException = loginException;
-    }
-
-    public Exception getLoginException() 
-    {
-        return loginException;
-    }
 }

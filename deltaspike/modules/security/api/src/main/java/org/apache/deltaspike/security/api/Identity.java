@@ -45,9 +45,12 @@ public interface Identity extends Serializable
      * to whether authentication is successful or not.  The following events may be raised
      * during the call to login():
      * <p/>
-     * org.jboss.seam.security.events.LoggedInEvent - raised when authentication is successful
-     * org.jboss.seam.security.events.LoginFailedEvent - raised when authentication fails
-     * org.jboss.seam.security.events.AlreadyLoggedInEvent - raised if the user is already authenticated
+     * {@link org.apache.deltaspike.security.api.authentication.event.LoggedInEvent}
+     * - raised when authentication is successful
+     * {@link org.apache.deltaspike.security.api.authentication.event.LoginFailedEvent}
+     * - raised when authentication fails
+     * {@link org.apache.deltaspike.security.api.authentication.event.AlreadyLoggedInEvent}
+     * - raised if the user is already authenticated
      *
      * @return AuthenticationResult returns SUCCESS if user is authenticated,
      * FAILED if authentication FAILED, or

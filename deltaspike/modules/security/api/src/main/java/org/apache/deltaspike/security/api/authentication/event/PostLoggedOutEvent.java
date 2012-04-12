@@ -16,13 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.deltaspike.security.api.authentication.event;
 
-package org.apache.deltaspike.security.api.authentication.events;
+import org.apache.deltaspike.security.api.User;
 
 /**
- * This event is fired when an already authenticated user attempts to authenticate again
+ * This event is raised just after the user un-authenticates
  */
-public class AlreadyLoggedInEvent 
+public class PostLoggedOutEvent 
 {
+    private User user;
 
+    public PostLoggedOutEvent(User user)
+    {
+        this.user = user;
+    }
+
+    public User getUser()
+    {
+        return user;
+    }
 }

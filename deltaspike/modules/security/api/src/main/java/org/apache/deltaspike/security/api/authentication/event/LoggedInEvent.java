@@ -17,12 +17,11 @@
  * under the License.
  */
 
-package org.apache.deltaspike.security.api.authentication.events;
+package org.apache.deltaspike.security.api.authentication.event;
 
 /**
- * This event is raised just after authentication
+ * This event is raised when user successfully logs in.
  */
-public class PostAuthenticateEvent 
+public class LoggedInEvent 
 {
-
 }

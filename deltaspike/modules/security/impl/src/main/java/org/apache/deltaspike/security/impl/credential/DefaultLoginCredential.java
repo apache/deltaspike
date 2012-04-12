@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.security.impl.credential;
 
-import org.apache.deltaspike.security.api.authentication.events.LoginFailedEvent;
-import org.apache.deltaspike.security.api.authentication.events.PostAuthenticateEvent;
+import org.apache.deltaspike.security.api.authentication.event.LoginFailedEvent;
+import org.apache.deltaspike.security.api.authentication.event.PostAuthenticateEvent;
 import org.apache.deltaspike.security.api.credential.Credential;
 import org.apache.deltaspike.security.api.credential.LoginCredential;
 
