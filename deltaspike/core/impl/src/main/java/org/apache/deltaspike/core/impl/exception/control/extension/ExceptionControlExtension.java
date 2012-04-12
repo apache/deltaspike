@@ -29,11 +29,14 @@ import javax.enterprise.event.Observes;
 import javax.enterprise.inject.InjectionException;
 import javax.enterprise.inject.spi.AfterDeploymentValidation;
 import javax.enterprise.inject.spi.AnnotatedMethod;
+import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.BeforeBeanDiscovery;
+import javax.enterprise.inject.spi.Decorator;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.InjectionPoint;
-import javax.enterprise.inject.spi.ProcessAnnotatedType;
+import javax.enterprise.inject.spi.Interceptor;
+import javax.enterprise.inject.spi.ProcessBean;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Collection;
@@ -48,9 +51,9 @@ import java.util.logging.Logger;
  * CDI extension to find handlers at startup.
  */
 @SuppressWarnings({ "unchecked", "CdiManagedBeanInconsistencyInspection" })
-public class CatchExtension implements Extension, Deactivatable
+public class ExceptionControlExtension implements Extension, Deactivatable
 {
-    private static final Logger LOG = Logger.getLogger(CatchExtension.class.getName());
+    private static final Logger LOG = Logger.getLogger(ExceptionControlExtension.class.getName());
 
     //this map is application scoped by the def. of the cdi spec.
     //if it needs to be static a classloader key is needed + a cleanup in a BeforeShutdown observer
@@ -68,7 +71,7 @@ public class CatchExtension implements Extension, Deactivatable
     /**
      * Listener to ProcessBean event to locate handlers.
      *
-     * @param processAnnotatedType current annotated type-event
+     * @param processBean current {@link AnnotatedType}
      * @param beanManager  Activated Bean Manager
      * @throws TypeNotPresentException if any of the actual type arguments refers to a non-existent type declaration
      *                                 when trying to obtain the actual type arguments from a
@@ -79,17 +82,24 @@ public class CatchExtension implements Extension, Deactivatable
      *                                 from a {@link java.lang.reflect.ParameterizedType}
      */
     @SuppressWarnings("UnusedDeclaration")
-    public <T> void findHandlers(@Observes final ProcessAnnotatedType processAnnotatedType,
-                                 final BeanManager beanManager)
+    public <T> void findHandlers(@Observes final ProcessBean<?> processBean, final BeanManager beanManager)
     {
         if (!this.isActivated)
         {
             return;
         }
 
-        if (processAnnotatedType.getAnnotatedType().getJavaClass().isAnnotationPresent(ExceptionHandler.class))
+        if (processBean.getBean() instanceof Interceptor || processBean.getBean() instanceof Decorator ||
+                !(processBean.getAnnotated() instanceof AnnotatedType))
         {
-            final Set<AnnotatedMethod<? super T>> methods = processAnnotatedType.getAnnotatedType().getMethods();
+            return;
+        }
+
+        AnnotatedType annotatedType = (AnnotatedType)processBean.getAnnotated();
+
+        if (annotatedType.getJavaClass().isAnnotationPresent(ExceptionHandler.class))
+        {
+            final Set<AnnotatedMethod<? super T>> methods = annotatedType.getMethods();
 
             for (AnnotatedMethod<? super T> method : methods)
             {
@@ -97,9 +107,8 @@ public class CatchExtension implements Extension, Deactivatable
                 {
                     if (method.getJavaMember().getExceptionTypes().length != 0)
                     {
-                        //TODO discuss unified handling of definition errors
-                        throw new IllegalStateException(
-                            String.format("Handler method %s must not throw exceptions", method.getJavaMember()));
+                        processBean.addDefinitionError(new IllegalArgumentException(
+                            String.format("Handler method %s must not throw exceptions", method.getJavaMember())));
                     }
 
                     //beanManager won't be stored in the instance -> no issue with wls12c

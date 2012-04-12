@@ -66,7 +66,7 @@ public class HandlerComparatorTest
     {
         /*
         List<HandlerMethod<? extends Throwable>> handlers = new ArrayList<HandlerMethod<? extends Throwable>>(
-                CatchExtension.createStorage().getHandlersForException(
+                ExceptionControlExtension.createStorage().getHandlersForException(
                         IllegalArgumentException.class, bm, Collections.<Annotation>emptySet(), false));
 
         System.out.println(handlers);
@@ -84,7 +84,7 @@ public class HandlerComparatorTest
     {
         /*
         List<HandlerMethod<? extends Throwable>> handlers = new ArrayList<HandlerMethod<? extends Throwable>>(
-                CatchExtension.createStorage().getHandlersForException(
+                ExceptionControlExtension.createStorage().getHandlersForException(
                         Exception.class, bm, Collections.<Annotation>emptySet(), true));
 
         assertThat(handlers.size(), is(4));
