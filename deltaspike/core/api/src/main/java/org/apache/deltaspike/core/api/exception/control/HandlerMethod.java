@@ -19,6 +19,8 @@
 
 package org.apache.deltaspike.core.api.exception.control;
 
+import org.apache.deltaspike.core.api.exception.control.event.ExceptionEvent;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Set;

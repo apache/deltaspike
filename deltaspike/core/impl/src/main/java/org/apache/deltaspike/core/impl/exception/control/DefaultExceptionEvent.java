@@ -20,7 +20,7 @@
 package org.apache.deltaspike.core.impl.exception.control;
 
 import org.apache.deltaspike.core.api.exception.control.ExceptionHandlingFlow;
-import org.apache.deltaspike.core.api.exception.control.ExceptionStack;
+import org.apache.deltaspike.core.api.exception.control.event.ExceptionStackEvent;
 import org.apache.deltaspike.core.spi.exception.control.IntrospectiveExceptionEvent;
 
 import javax.enterprise.inject.Typed;
@@ -46,19 +46,20 @@ public class DefaultExceptionEvent<T extends Throwable> implements Introspective
     /**
      * Initial state constructor.
      *
-     * @param stack           Information about the current exception and cause chain.
+     * @param stackEvent           Information about the current exception and cause chain.
      * @param beforeTraversal flag indicating the direction of the cause chain traversal
      * @param handled         flag indicating the exception has already been handled by a previous handler
-     * @throws IllegalArgumentException if stack is null
+     * @throws IllegalArgumentException if stackEvent is null
      */
-    public DefaultExceptionEvent(final ExceptionStack stack, final boolean beforeTraversal, final boolean handled)
+    public DefaultExceptionEvent(final ExceptionStackEvent stackEvent, final boolean beforeTraversal,
+                                 final boolean handled)
     {
-        if (stack == null)
+        if (stackEvent == null)
         {
-            throw new IllegalArgumentException("null is not valid for stack");
+            throw new IllegalArgumentException("null is not valid for stackEvent");
         }
 
-        this.exception = (T) stack.getCurrent();
+        this.exception = (T) stackEvent.getCurrent();
         this.beforeTraversal = beforeTraversal;
         this.markedHandled = handled;
         this.flow = ExceptionHandlingFlow.HANDLED_AND_CONTINUE;
@@ -113,7 +114,7 @@ public class DefaultExceptionEvent<T extends Throwable> implements Introspective
     }
 
     /* Later
-    public ExceptionStack getExceptionStack() {
+    public ExceptionStackEvent getExceptionStack() {
     }
     */
 

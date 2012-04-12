@@ -19,8 +19,8 @@
 
 package org.apache.deltaspike.core.impl.exception.control;
 
-import org.apache.deltaspike.core.api.exception.control.ExceptionStack;
-import org.apache.deltaspike.core.api.exception.control.ExceptionToCatch;
+import org.apache.deltaspike.core.api.exception.control.event.ExceptionStackEvent;
+import org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent;
 import org.apache.deltaspike.core.api.exception.control.HandlerMethod;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 
@@ -38,8 +38,8 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 /**
- * Observer of {@link ExceptionToCatch} events and handler dispatcher. All handlers are invoked from this class.  This
- * class is immutable.
+ * Observer of {@link org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent} events and
+ * handler dispatcher. All handlers are invoked from this class.  This class is immutable.
  */
 @ApplicationScoped
 @SuppressWarnings("UnusedDeclaration")
@@ -50,15 +50,15 @@ public class ExceptionHandlerDispatch
     /**
      * Observes the event, finds the correct exception handler(s) and invokes them.
      *
-     * @param exceptionEvent exception to be invoked
+     * @param exceptionEventEvent exception to be invoked
      * @param beanManager    active bean manager
      * @throws Throwable If a handler requests the exception to be re-thrown.
      */
     @SuppressWarnings({ "unchecked", "MethodWithMultipleLoops", "ThrowableResultOfMethodCallIgnored" })
-    public void executeHandlers(@Observes @Any ExceptionToCatch exceptionEvent,
+    public void executeHandlers(@Observes @Any ExceptionToCatchEvent exceptionEventEvent,
                                 final BeanManager beanManager) throws Throwable
     {
-        LOG.entering(ExceptionHandlerDispatch.class.getName(), "executeHandlers", exceptionEvent.getException());
+        LOG.entering(ExceptionHandlerDispatch.class.getName(), "executeHandlers", exceptionEventEvent.getException());
 
         CreationalContext<Object> creationalContext = null;
 
@@ -73,7 +73,7 @@ public class ExceptionHandlerDispatch
 
             final Set<HandlerMethod<?>> processedHandlers = new HashSet<HandlerMethod<?>>();
 
-            final ExceptionStack stack = new ExceptionStack(exceptionEvent.getException());
+            final ExceptionStackEvent stack = new ExceptionStackEvent(exceptionEventEvent.getException());
 
             beanManager.fireEvent(stack); // Allow for modifying the exception stack
 
@@ -83,7 +83,7 @@ public class ExceptionHandlerDispatch
             {
                 final List<HandlerMethod<?>> callbackExceptionEvent = new ArrayList<HandlerMethod<?>>(
                         handlerMethodStorage.getHandlersForException(stack.getCurrent().getClass(),
-                                beanManager, exceptionEvent.getQualifiers(), true));
+                                beanManager, exceptionEventEvent.getQualifiers(), true));
 
                 for (HandlerMethod<?> handler : callbackExceptionEvent)
                 {
@@ -93,7 +93,7 @@ public class ExceptionHandlerDispatch
 
                         @SuppressWarnings("rawtypes")
                         final DefaultExceptionEvent callbackEvent = new DefaultExceptionEvent(stack, true,
-                                exceptionEvent.isHandled());
+                                exceptionEventEvent.isHandled());
 
                         handler.notify(callbackEvent);
 
@@ -108,19 +108,19 @@ public class ExceptionHandlerDispatch
                         switch (callbackEvent.getCurrentExceptionHandlingFlow())
                         {
                             case HANDLED:
-                                exceptionEvent.setHandled(true);
+                                exceptionEventEvent.setHandled(true);
                                 return;
                             case HANDLED_AND_CONTINUE:
-                                exceptionEvent.setHandled(true);
+                                exceptionEventEvent.setHandled(true);
                                 break;
                             case ABORT:
                                 return;
                             case SKIP_CAUSE:
-                                exceptionEvent.setHandled(true);
+                                exceptionEventEvent.setHandled(true);
                                 stack.skipCause();
                                 continue inbound_cause;
                             case THROW_ORIGINAL:
-                                throwException = exceptionEvent.getException();
+                                throwException = exceptionEventEvent.getException();
                                 break;
                             case THROW:
                                 throwException = callbackEvent.getThrowNewException();
@@ -134,7 +134,7 @@ public class ExceptionHandlerDispatch
 
                 final Collection<HandlerMethod<? extends Throwable>> handlersForException =
                         handlerMethodStorage.getHandlersForException(stack.getCurrent().getClass(),
-                                beanManager, exceptionEvent.getQualifiers(), false);
+                                beanManager, exceptionEventEvent.getQualifiers(), false);
 
                 final List<HandlerMethod<? extends Throwable>> handlerMethods =
                         new ArrayList<HandlerMethod<? extends Throwable>>(handlersForException);
@@ -150,7 +150,7 @@ public class ExceptionHandlerDispatch
 
                         @SuppressWarnings("rawtypes")
                         final DefaultExceptionEvent depthFirstEvent = new DefaultExceptionEvent(stack, false,
-                                exceptionEvent.isHandled());
+                                exceptionEventEvent.isHandled());
                         handler.notify(depthFirstEvent);
 
                         LOG.fine(String.format("Handler %s returned status %s", handler,
@@ -164,19 +164,19 @@ public class ExceptionHandlerDispatch
                         switch (depthFirstEvent.getCurrentExceptionHandlingFlow())
                         {
                             case HANDLED:
-                                exceptionEvent.setHandled(true);
+                                exceptionEventEvent.setHandled(true);
                                 return;
                             case HANDLED_AND_CONTINUE:
-                                exceptionEvent.setHandled(true);
+                                exceptionEventEvent.setHandled(true);
                                 break;
                             case ABORT:
                                 return;
                             case SKIP_CAUSE:
-                                exceptionEvent.setHandled(true);
+                                exceptionEventEvent.setHandled(true);
                                 stack.skipCause();
                                 continue inbound_cause;
                             case THROW_ORIGINAL:
-                                throwException = exceptionEvent.getException();
+                                throwException = exceptionEventEvent.getException();
                                 break;
                             case THROW:
                                 throwException = depthFirstEvent.getThrowNewException();
@@ -190,10 +190,10 @@ public class ExceptionHandlerDispatch
                 stack.skipCause();
             }
 
-            if (!exceptionEvent.isHandled() && throwException == null)
+            if (!exceptionEventEvent.isHandled() && throwException == null)
             {
-                LOG.warning(String.format("No handlers found for exception %s", exceptionEvent.getException()));
-                throw exceptionEvent.getException();
+                LOG.warning(String.format("No handlers found for exception %s", exceptionEventEvent.getException()));
+                throw exceptionEventEvent.getException();
             }
 
             if (throwException != null)
@@ -207,7 +207,8 @@ public class ExceptionHandlerDispatch
             {
                 creationalContext.release();
             }
-            LOG.exiting(ExceptionHandlerDispatch.class.getName(), "executeHandlers", exceptionEvent.getException());
+            LOG.exiting(ExceptionHandlerDispatch.class.getName(), "executeHandlers",
+                    exceptionEventEvent.getException());
         }
     }
 }

@@ -20,9 +20,9 @@
 package org.apache.deltaspike.test.core.impl.exception.control.event;
 
 import org.apache.deltaspike.core.api.exception.control.BeforeHandles;
-import org.apache.deltaspike.core.api.exception.control.ExceptionEvent;
+import org.apache.deltaspike.core.api.exception.control.event.ExceptionEvent;
 import org.apache.deltaspike.core.api.exception.control.ExceptionHandler;
-import org.apache.deltaspike.core.api.exception.control.ExceptionToCatch;
+import org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent;
 import org.apache.deltaspike.core.api.exception.control.Handles;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.spi.exception.control.IntrospectiveExceptionEvent;
@@ -76,13 +76,13 @@ public class EventTest
     @Test
     public void assertEventIsCreatedCorrectly()
     {
-        bm.fireEvent(new ExceptionToCatch(new NullPointerException()));
+        bm.fireEvent(new ExceptionToCatchEvent(new NullPointerException()));
     }
 
     @Test
     public void assertEventWithQualifiersIsCreatedCorrectly()
     {
-        this.bm.fireEvent(new ExceptionToCatch(new NullPointerException(), new EventQualifierLiteral()));
+        this.bm.fireEvent(new ExceptionToCatchEvent(new NullPointerException(), new EventQualifierLiteral()));
     }
 
     public void verifyDescEvent(@BeforeHandles IntrospectiveExceptionEvent<NullPointerException> event)

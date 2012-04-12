@@ -19,7 +19,7 @@
 
 package org.apache.deltaspike.test.core.impl.exception.control.flow;
 
-import org.apache.deltaspike.core.api.exception.control.ExceptionToCatch;
+import org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -68,18 +68,18 @@ public class HandledExceptionHandlerTest
     @Test
     public void assertNoHandlersAfterHandledAreCalled()
     {
-        final ExceptionToCatch catchEntry = new ExceptionToCatch(new Exception(
+        final ExceptionToCatchEvent entryEvent = new ExceptionToCatchEvent(new Exception(
                 new NullPointerException()));
-        bm.fireEvent(catchEntry);
+        bm.fireEvent(entryEvent);
         assertTrue(this.exceptionHandledHandler.isNpeDescCalled());
         assertFalse(this.exceptionHandledHandler.isExAscCalled());
-        assertTrue(catchEntry.isHandled());
+        assertTrue(entryEvent.isHandled());
     }
 
     @Test
     public void assertNoHandlersAfterHandledAreCalledDesc()
     {
-        final ExceptionToCatch event = new ExceptionToCatch(new Exception(new IllegalArgumentException()));
+        final ExceptionToCatchEvent event = new ExceptionToCatchEvent(new Exception(new IllegalArgumentException()));
         bm.fireEvent(event);
         assertTrue(this.exceptionHandledHandler.isIaeAscCalled());
         assertFalse(this.exceptionHandledHandler.isExAscCalled());

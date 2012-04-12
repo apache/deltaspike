@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.deltaspike.core.api.exception.control;
+package org.apache.deltaspike.core.api.exception.control.event;
 
 /**
  * Payload for an exception to be handled.  Implementations of this interface should not expose internals and remain

@@ -19,7 +19,7 @@
 
 package org.apache.deltaspike.core.impl.exception.control;
 
-import org.apache.deltaspike.core.api.exception.control.ExceptionEvent;
+import org.apache.deltaspike.core.api.exception.control.event.ExceptionEvent;
 import org.apache.deltaspike.core.api.metadata.builder.ParameterValueRedefiner;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 
