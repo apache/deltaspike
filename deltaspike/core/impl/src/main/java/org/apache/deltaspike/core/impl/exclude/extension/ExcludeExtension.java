@@ -21,6 +21,7 @@ package org.apache.deltaspike.core.impl.exclude.extension;
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.exclude.annotation.Exclude;
 import org.apache.deltaspike.core.api.metadata.builder.AnnotatedTypeBuilder;
+import org.apache.deltaspike.core.impl.exclude.CustomProjectStageBeanFilter;
 import org.apache.deltaspike.core.impl.exclude.GlobalAlternative;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.api.interpreter.ExpressionInterpreter;
@@ -61,6 +62,7 @@ public class ExcludeExtension implements Extension, Deactivatable
 
     private Boolean isActivated = null;
     private Boolean isGlobalAlternativeActivated = null;
+    private Boolean isCustomProjectStageBeanFilterActivated = null;
 
     /**
      * triggers initialization in any case
@@ -96,6 +98,11 @@ public class ExcludeExtension implements Extension, Deactivatable
             }
         }
 
+        if (this.isCustomProjectStageBeanFilterActivated)
+        {
+            vetoCustomProjectStageBeans(processAnnotatedType);
+        }
+
         if (!this.isActivated)
         {
             return;
@@ -129,6 +136,16 @@ public class ExcludeExtension implements Extension, Deactivatable
         }
 
         evalExcludeWithExpression(processAnnotatedType, exclude);
+    }
+
+    protected void vetoCustomProjectStageBeans(ProcessAnnotatedType<Object> processAnnotatedType)
+    {
+        //currently there is a veto for all project-stage implementations,
+        //but we still need @Typed() for the provided implementations in case of the deactivation of this behaviour
+        if (ProjectStage.class.isAssignableFrom(processAnnotatedType.getAnnotatedType().getJavaClass()))
+        {
+            processAnnotatedType.veto();
+        }
     }
 
     private void activateGlobalAlternativesWeld(ProcessAnnotatedType<Object> processAnnotatedType,
@@ -495,8 +512,14 @@ public class ExcludeExtension implements Extension, Deactivatable
     {
         if (isActivated == null)
         {
-            isActivated = ClassDeactivationUtils.isActivated(getClass());
-            isGlobalAlternativeActivated = ClassDeactivationUtils.isActivated(GlobalAlternative.class);
+            isActivated =
+                ClassDeactivationUtils.isActivated(getClass());
+
+            isGlobalAlternativeActivated =
+                ClassDeactivationUtils.isActivated(GlobalAlternative.class);
+
+            isCustomProjectStageBeanFilterActivated =
+                ClassDeactivationUtils.isActivated(CustomProjectStageBeanFilter.class);
         }
     }
 

@@ -34,7 +34,6 @@ import javax.enterprise.inject.Typed;
  */
 public class TestProjectStages implements ProjectStageHolder
 {
-    @Typed()
     public static final class CustomProjectStage extends ProjectStage
     {
         private static final long serialVersionUID = 1029095387976167179L;
