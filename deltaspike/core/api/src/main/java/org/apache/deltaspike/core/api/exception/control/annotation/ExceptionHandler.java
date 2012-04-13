@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.deltaspike.core.api.exception.control;
+package org.apache.deltaspike.core.api.exception.control.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

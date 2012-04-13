@@ -19,8 +19,14 @@
 package org.apache.deltaspike.core.api.converter;
 
 //TODO TBD
+
+/**
+ * Exception which provides the source- and target-type as payload
+ */
 public class ConverterException extends RuntimeException
 {
+    private static final long serialVersionUID = -1399119195483111935L;
+
     private Class<?> sourceType;
     private Class<?> targetType;
 

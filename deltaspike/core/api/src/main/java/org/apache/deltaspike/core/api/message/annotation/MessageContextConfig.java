@@ -29,14 +29,30 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+/**
+ * Allows to customize the message-resolution and processing in combination with {@link MessageBundle}
+ */
 @Target({ TYPE })
 @Retention(RUNTIME)
 @Documented
 public @interface MessageContextConfig
 {
+    /**
+     * {@link MessageResolver} which should be used for resolving the message-template (= basic text)
+     * @return class of the {@link MessageResolver}-bean or the default marker
+     */
     Class<? extends MessageResolver> messageResolver() default MessageResolver.class;
 
+    /**
+     * {@link MessageInterpolator} which should be used for replacing the placeholders in the resolved text
+     * @return class of the {@link MessageInterpolator}-bean or the default marker
+     */
     Class<? extends MessageInterpolator> messageInterpolator() default MessageInterpolator.class;
 
+    /**
+     * {@link LocaleResolver} which should be used for providing the locale for resolving
+     * the message-template (= basic text)
+     * @return class of the {@link LocaleResolver}-bean or the default marker
+     */
     Class<? extends LocaleResolver> localeResolver() default LocaleResolver.class;
 }

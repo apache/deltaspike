@@ -18,6 +18,12 @@
  */
 package org.apache.deltaspike.core.api.converter;
 
+/**
+ * Special converter-interface which allows to provide payload for the conversion process via a custom annotation
+ * @param <S> source type which should be converted
+ * @param <T> target type
+ * @param <M> meta-data type (custom annotation)
+ */
 public interface MetaDataAwareConverter<S, T, M> extends Converter<S, T>
 {
     T convert(S source, M metaData);

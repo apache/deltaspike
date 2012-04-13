@@ -20,7 +20,7 @@ package org.apache.deltaspike.test.security.impl.authentication;
 
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
-import org.apache.deltaspike.core.impl.exclude.ExcludeExtension;
+import org.apache.deltaspike.core.impl.exclude.extension.ExcludeExtension;
 import org.apache.deltaspike.security.api.Identity;
 import org.apache.deltaspike.security.api.authentication.UnexpectedCredentialException;
 import org.apache.deltaspike.security.api.credential.LoginCredential;

@@ -25,6 +25,9 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+/**
+ * Provides the message(-template) for type-safe messages
+ */
 @Target(METHOD)
 @Retention(RUNTIME)
 @Documented

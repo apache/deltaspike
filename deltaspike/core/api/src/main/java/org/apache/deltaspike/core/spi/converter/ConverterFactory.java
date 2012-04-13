@@ -22,6 +22,9 @@ import org.apache.deltaspike.core.api.converter.Converter;
 
 import java.lang.annotation.Annotation;
 
+/**
+ * Factory which allows to customize the creation of {@link Converter} instances
+ */
 public interface ConverterFactory
 {
     //TODO discuss metaDataType

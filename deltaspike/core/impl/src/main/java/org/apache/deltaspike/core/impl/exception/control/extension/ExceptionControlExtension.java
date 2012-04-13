@@ -19,7 +19,7 @@
 
 package org.apache.deltaspike.core.impl.exception.control.extension;
 
-import org.apache.deltaspike.core.api.exception.control.ExceptionHandler;
+import org.apache.deltaspike.core.api.exception.control.annotation.ExceptionHandler;
 import org.apache.deltaspike.core.api.exception.control.HandlerMethod;
 import org.apache.deltaspike.core.impl.exception.control.HandlerMethodImpl;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;

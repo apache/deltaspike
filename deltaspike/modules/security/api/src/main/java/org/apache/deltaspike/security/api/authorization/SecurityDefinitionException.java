@@ -32,7 +32,8 @@ public class SecurityDefinitionException extends org.apache.deltaspike.security.
         super(message);
     }
 
-    public SecurityDefinitionException(Throwable cause) 
+    @SuppressWarnings("UnusedDeclaration")
+    public SecurityDefinitionException(Throwable cause)
     {
         super(cause);
     }

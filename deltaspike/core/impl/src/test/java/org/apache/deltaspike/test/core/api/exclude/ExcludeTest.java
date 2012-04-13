@@ -21,7 +21,7 @@ package org.apache.deltaspike.test.core.api.exclude;
 
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
-import org.apache.deltaspike.core.impl.exclude.ExcludeExtension;
+import org.apache.deltaspike.core.impl.exclude.extension.ExcludeExtension;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.apache.deltaspike.test.util.FileUtils;

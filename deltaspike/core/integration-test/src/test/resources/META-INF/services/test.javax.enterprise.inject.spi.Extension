@@ -18,5 +18,5 @@
 #####################################################################################
 
 org.apache.deltaspike.core.api.provider.BeanManagerProvider
-org.apache.deltaspike.core.impl.exclude.ExcludeExtension
-org.apache.deltaspike.core.impl.config.injectable.ConfigPropertyExtension
+org.apache.deltaspike.core.impl.exclude.extension.ExcludeExtension
+org.apache.deltaspike.core.impl.config.injectable.extension.ConfigPropertyExtension

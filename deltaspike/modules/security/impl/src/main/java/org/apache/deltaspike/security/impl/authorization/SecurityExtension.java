@@ -45,6 +45,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Extension for processing typesafe security annotations
  */
+//TODO move to extension package
 public class SecurityExtension implements Extension, Deactivatable
 {
     private static final SecurityInterceptorBinding INTERCEPTOR_BINDING = new SecurityInterceptorBindingLiteral();

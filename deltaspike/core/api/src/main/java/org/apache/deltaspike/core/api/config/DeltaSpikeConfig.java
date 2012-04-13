@@ -23,6 +23,7 @@ import java.io.Serializable;
 /**
  * Marker interface for all type-safe framework configs.
  */
+@SuppressWarnings("UnusedDeclaration")
 public interface DeltaSpikeConfig extends Serializable
 {
 }

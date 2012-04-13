@@ -27,6 +27,7 @@ import java.security.PrivilegedAction;
  * PrivilegedAction instance to enabling access to the specified {@link AccessibleObject}.
  */
 @Typed()
+//TODO replace it with the SecurityService of OWB
 public class SetAccessiblePrivilegedAction implements PrivilegedAction<Void>
 {
 

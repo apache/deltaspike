@@ -41,6 +41,7 @@ import org.apache.deltaspike.core.api.message.annotation.MessageTemplate;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 
+//TODO move to extension package
 public class MessageBundleExtension implements Extension, Deactivatable
 {
     private final Collection<AnnotatedType<?>> messageBundleTypes = new HashSet<AnnotatedType<?>>();

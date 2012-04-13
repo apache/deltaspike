@@ -20,7 +20,7 @@ package org.apache.deltaspike.test.security.impl.authorization.securitybinding;
 
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
-import org.apache.deltaspike.core.impl.exclude.ExcludeExtension;
+import org.apache.deltaspike.core.impl.exclude.extension.ExcludeExtension;
 import org.apache.deltaspike.security.api.authorization.AccessDeniedException;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;

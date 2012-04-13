@@ -18,6 +18,12 @@
  */
 package org.apache.deltaspike.core.api.converter;
 
+/**
+ * Basic converter interface
+ *
+ * @param <S> source type which should be converted
+ * @param <T> target type
+ */
 public interface Converter<S, T>
 {
     T convert(S source);

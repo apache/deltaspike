@@ -40,11 +40,28 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Qualifier
 public @interface ConfigProperty
 {
+    /**
+     * Name/key of the property
+     * @return name of the property
+     */
     String name();
 
+    /**
+     * Custom converter
+     * @return custom converter or default marker
+     */
     @Nonbinding
     Class<? extends Converter> converter() default Converter.class;
 
+    /**
+     * Per default all properties are validated during the bootstrapping process of the CDI container.
+     * If it can't be resolved, the bootstrapping will fail.
+     *
+     * Set it to true if the property will be set dynamically e.g. during the bootstrapping process and
+     * it will be stored in a dynamic data-store like data-base.
+     *
+     * @return true if the property has to be available from the very beginning, false otherwise
+     */
     @Nonbinding
     boolean eager() default true;
 }

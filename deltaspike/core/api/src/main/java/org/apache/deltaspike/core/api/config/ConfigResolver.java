@@ -68,18 +68,20 @@ public final class ConfigResolver
     {
         ConfigSource[] appConfigSources = getConfigSources();
 
-        for (ConfigSource cs : appConfigSources)
+        String value;
+        for (ConfigSource configSource : appConfigSources)
         {
-            String val = cs.getPropertyValue(key);
-            if (val != null)
+            value = configSource.getPropertyValue(key);
+
+            if (value != null)
             {
                 LOG.log(Level.FINE, "found value {0} for key {1} in ConfigSource {2}.",
-                        new Object[]{val, key, cs.getConfigName()});
-                return val;
+                        new Object[]{value, key, configSource.getConfigName()});
+                return value;
             }
 
             LOG.log(Level.FINER, "NO value found for key {0} in ConfigSource {1}.",
-                    new Object[]{key, cs.getConfigName()});
+                    new Object[]{key, configSource.getConfigName()});
         }
 
         return null;
@@ -97,25 +99,27 @@ public final class ConfigResolver
     public static List<String> getAllPropertyValues(String key)
     {
         List<ConfigSource> appConfigSources = sortAscending(Arrays.asList(getConfigSources()));
-        List<String> allPropValues = new ArrayList<String>();
+        List<String> result = new ArrayList<String>();
 
-        for (ConfigSource cs : appConfigSources)
+        String value;
+        for (ConfigSource configSource : appConfigSources)
         {
-            String val = cs.getPropertyValue(key);
-            if (val != null && !allPropValues.contains(val))
+            value = configSource.getPropertyValue(key);
+
+            if (value != null && !result.contains(value))
             {
-                allPropValues.add(val);
+                result.add(value);
             }
         }
 
-        return allPropValues;
+        return result;
     }
 
     private static synchronized ConfigSource[] getConfigSources()
     {
-        ClassLoader currentCl = ClassUtils.getClassLoader(null);
+        ClassLoader currentClassLoader = ClassUtils.getClassLoader(null);
 
-        ConfigSource[] appConfigSources = configSources.get(currentCl);
+        ConfigSource[] appConfigSources = configSources.get(currentClassLoader);
 
         if (appConfigSources == null)
         {
@@ -130,7 +134,7 @@ public final class ConfigResolver
                 }
             }
 
-            configSources.put(currentCl, appConfigSources);
+            configSources.put(currentClassLoader, appConfigSources);
         }
 
         return appConfigSources;
@@ -143,9 +147,9 @@ public final class ConfigResolver
         List<ConfigSourceProvider> configSourceProviderServiceLoader =
             ServiceUtils.loadServiceImplementations(ConfigSourceProvider.class);
 
-        for (ConfigSourceProvider csp : configSourceProviderServiceLoader)
+        for (ConfigSourceProvider configSourceProvider : configSourceProviderServiceLoader)
         {
-            appConfigSources.addAll(csp.getConfigSources());
+            appConfigSources.addAll(configSourceProvider.getConfigSources());
         }
 
         return appConfigSources;

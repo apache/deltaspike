@@ -24,5 +24,4 @@ package org.apache.deltaspike.security.api.authentication.event;
  */
 public class AlreadyLoggedInEvent 
 {
-
 }

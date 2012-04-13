@@ -19,9 +19,9 @@
 
 package org.apache.deltaspike.test.core.impl.exception.control.handler;
 
+import org.apache.deltaspike.core.api.exception.control.annotation.ExceptionHandler;
+import org.apache.deltaspike.core.api.exception.control.annotation.Handles;
 import org.apache.deltaspike.core.api.exception.control.event.ExceptionEvent;
-import org.apache.deltaspike.core.api.exception.control.ExceptionHandler;
-import org.apache.deltaspike.core.api.exception.control.Handles;
 
 /**
  * This handler is not valid as the injection point firstParam is not valid.

@@ -28,6 +28,12 @@ import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+/**
+ * Marker annotation for a message-bundle interface which provides type-safe messages
+ * (methods annotated with {@link MessageTemplate}).
+ *
+ * Can be combined with {@link MessageContextConfig} to customize the message-resolution and processing
+ */
 @Target({ TYPE, METHOD, PARAMETER, FIELD })
 @Retention(RUNTIME)
 @Documented

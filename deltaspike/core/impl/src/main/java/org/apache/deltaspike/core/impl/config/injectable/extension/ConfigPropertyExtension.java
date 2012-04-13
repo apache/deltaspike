@@ -16,10 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.impl.config.injectable;
+package org.apache.deltaspike.core.impl.config.injectable.extension;
 
 import org.apache.deltaspike.core.api.config.annotation.ConfigProperty;
 import org.apache.deltaspike.core.api.config.ConfigResolver;
+import org.apache.deltaspike.core.impl.config.injectable.ConfigPropertyBean;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 
