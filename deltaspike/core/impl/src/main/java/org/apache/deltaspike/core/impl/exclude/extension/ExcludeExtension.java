@@ -20,7 +20,7 @@ package org.apache.deltaspike.core.impl.exclude.extension;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.exclude.annotation.Exclude;
-import org.apache.deltaspike.core.api.metadata.builder.AnnotatedTypeBuilder;
+import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
 import org.apache.deltaspike.core.impl.exclude.CustomProjectStageBeanFilter;
 import org.apache.deltaspike.core.impl.exclude.GlobalAlternative;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;

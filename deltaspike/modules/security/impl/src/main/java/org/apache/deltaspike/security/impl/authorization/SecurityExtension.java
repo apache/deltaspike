@@ -19,7 +19,7 @@
 
 package org.apache.deltaspike.security.impl.authorization;
 
-import org.apache.deltaspike.core.api.metadata.builder.AnnotatedTypeBuilder;
+import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.core.util.ClassUtils;

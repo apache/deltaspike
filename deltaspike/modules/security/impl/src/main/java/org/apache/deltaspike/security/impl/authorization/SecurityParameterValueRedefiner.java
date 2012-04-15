@@ -30,7 +30,7 @@ import javax.enterprise.inject.spi.Annotated;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.interceptor.InvocationContext;
 
-import org.apache.deltaspike.core.api.metadata.builder.ParameterValueRedefiner;
+import org.apache.deltaspike.core.util.metadata.builder.ParameterValueRedefiner;
 import org.apache.deltaspike.security.api.authorization.annotation.SecurityParameterBinding;
 
 /**

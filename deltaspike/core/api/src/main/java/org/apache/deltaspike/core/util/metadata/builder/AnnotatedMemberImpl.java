@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.deltaspike.core.api.metadata.builder;
+package org.apache.deltaspike.core.util.metadata.builder;
 
 import javax.enterprise.inject.spi.AnnotatedMember;
 import javax.enterprise.inject.spi.AnnotatedType;
@@ -27,7 +27,7 @@ import java.lang.reflect.Type;
 
 /**
  * An implementation of {@link AnnotatedMember} to be used in CDI life cycle events and
- * {@link org.apache.deltaspike.core.api.metadata.builder.AnnotatedTypeBuilder}.
+ * {@link org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder}.
  */
 abstract class AnnotatedMemberImpl<X, M extends Member> extends AnnotatedImpl implements AnnotatedMember<X>
 {

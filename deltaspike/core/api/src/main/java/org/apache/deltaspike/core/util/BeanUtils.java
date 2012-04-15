@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.core.util;
 
-import org.apache.deltaspike.core.api.metadata.builder.ImmutableInjectionPoint;
+import org.apache.deltaspike.core.util.metadata.builder.ImmutableInjectionPoint;
 
 import javax.enterprise.inject.Typed;
 import javax.enterprise.inject.spi.AnnotatedMethod;

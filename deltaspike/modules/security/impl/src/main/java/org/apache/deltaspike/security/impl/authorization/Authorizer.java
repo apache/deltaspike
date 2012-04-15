@@ -35,7 +35,7 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.util.Nonbinding;
 import javax.interceptor.InvocationContext;
 
-import org.apache.deltaspike.core.api.metadata.builder.InjectableMethod;
+import org.apache.deltaspike.core.util.metadata.builder.InjectableMethod;
 import org.apache.deltaspike.security.api.authorization.AccessDeniedException;
 import org.apache.deltaspike.security.api.authorization.SecurityDefinitionException;
 import org.apache.deltaspike.security.api.authorization.SecurityViolation;

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.api.metadata.builder;
+package org.apache.deltaspike.core.util.metadata.builder;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,7 +28,7 @@ import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InjectionPoint;
 
-import org.apache.deltaspike.core.api.metadata.builder.ParameterValueRedefiner.ParameterValue;
+import org.apache.deltaspike.core.util.metadata.builder.ParameterValueRedefiner.ParameterValue;
 
 import static org.apache.deltaspike.core.util.BeanUtils.createInjectionPoints;
 import static org.apache.deltaspike.core.util.ReflectionUtils.invokeMethod;

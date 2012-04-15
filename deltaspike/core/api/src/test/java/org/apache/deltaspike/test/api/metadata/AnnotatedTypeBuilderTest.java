@@ -24,7 +24,7 @@ import org.apache.deltaspike.core.api.literal.AnyLiteral;
 import org.apache.deltaspike.core.api.literal.ApplicationScopedLiteral;
 import org.apache.deltaspike.core.api.literal.NamedLiteral;
 import org.apache.deltaspike.core.api.literal.TypedLiteral;
-import org.apache.deltaspike.core.api.metadata.builder.AnnotatedTypeBuilder;
+import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
 import org.junit.Test;
 
 import javax.enterprise.context.ApplicationScoped;

@@ -19,7 +19,7 @@
 package org.apache.deltaspike.example.metadata;
 
 import org.apache.deltaspike.core.api.literal.NamedLiteral;
-import org.apache.deltaspike.core.api.metadata.builder.AnnotatedTypeBuilder;
+import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
 
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.Extension;

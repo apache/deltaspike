@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.api.metadata.builder;
+package org.apache.deltaspike.core.util.metadata.builder;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Member;

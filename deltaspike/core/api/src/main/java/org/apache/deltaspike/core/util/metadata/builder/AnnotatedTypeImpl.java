@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.deltaspike.core.api.metadata.builder;
+package org.apache.deltaspike.core.util.metadata.builder;
 
 import javax.enterprise.inject.spi.AnnotatedConstructor;
 import javax.enterprise.inject.spi.AnnotatedField;
@@ -34,7 +34,7 @@ import java.util.Set;
 
 /**
  * An implementation of {@link AnnotatedType} to be used in CDI life cycle events and
- * {@link org.apache.deltaspike.core.api.metadata.builder.AnnotatedTypeBuilder}.
+ * {@link org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder}.
  */
 class AnnotatedTypeImpl<X> extends AnnotatedImpl implements AnnotatedType<X>
 {
