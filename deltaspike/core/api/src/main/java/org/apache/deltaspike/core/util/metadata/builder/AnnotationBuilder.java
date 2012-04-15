@@ -34,7 +34,8 @@ import java.util.Set;
  * A store of annotations to be used {@link AnnotatedTypeBuilder} and other places
  * where a collection of annotations needs manipulation.
  */
-public class AnnotationBuilder
+// this class is intentionally made package scope
+class AnnotationBuilder
 {
     private final Map<Class<? extends Annotation>, Annotation> annotationMap;
     private final Set<Annotation> annotationSet;
