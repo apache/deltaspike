@@ -1,0 +1,78 @@
+Apache DeltaSpike-0.2-incubating Release Notes
+
+Sub-task
+
+    [DELTASPIKE-15] - review and discuss @DefaultBean
+    [DELTASPIKE-64] - review and discuss @Secured
+    [DELTASPIKE-65] - review and discuss @SecurityBindingType
+    [DELTASPIKE-83] - unit and integration tests for global alternatives
+    [DELTASPIKE-93] - update java-se example
+    [DELTASPIKE-99] - refactor the owb-se example to a generic se-example
+    [DELTASPIKE-106] - re-visit separation of container control and context management
+    [DELTASPIKE-116] - unit and integration tests for @ConfigProperty
+    [DELTASPIKE-131] - Discuss the concept of exception handlers
+    [DELTASPIKE-133] - Discuss using exception handling should be easy
+    [DELTASPIKE-138] - unit and integration tests for @SecurityBindingType
+    [DELTASPIKE-149] - unit and integration tests for @MessageContextConfig - static usage
+    [DELTASPIKE-154] - unit and integration tests for Message and MessageContext - dynamic usage
+    [DELTASPIKE-159] - unit and integration tests for @ExceptionHandler
+
+Bug
+
+    [DELTASPIKE-95] - ConfigResolver#getAllPropertyValues implementation and javadoc out of sync
+    [DELTASPIKE-124] - tests in ContainerCtrlTckTest don't stop contexts at the end
+    [DELTASPIKE-135] - [CdiControl] make Weld and OWB dependencies <scope>provided
+    [DELTASPIKE-136] - [CdiControl] cdictrl-owb should only use the Session mocks if the servlet-api is available
+
+Improvement
+
+    [DELTASPIKE-56] - Add BeanManagerProvider.getRequiredBeanManager() method
+    [DELTASPIKE-67] - auto-veto for (custom) project-stage beans
+    [DELTASPIKE-72] - BeanManagerProvider#getBeanManager should fail fast if there is no bean-manager
+    [DELTASPIKE-90] - default ConfigSource should have different ordinals
+    [DELTASPIKE-97] - fallback for the lookup via ServiceLoader
+    [DELTASPIKE-98] - fallback for the lookup of resource bundles
+    [DELTASPIKE-100] - improve the bootstrapping module for java-se for simple use-cases
+    [DELTASPIKE-112] - improved root-bean-manager support
+    [DELTASPIKE-120] - BeanProvider: add convenience methods without the 'optional' flag
+    [DELTASPIKE-123] - convenience methods for CdiContainer
+    [DELTASPIKE-126] - Include SecurityParameterBinding support for SecurityBindingType feature
+    [DELTASPIKE-130] - Remove custom ProjectStageProducer logic
+    [DELTASPIKE-151] - Provide lookup method with Map result
+    [DELTASPIKE-152] - unified package names
+
+New Feature
+
+    [DELTASPIKE-61] - global alternatives
+    [DELTASPIKE-69] - @SecurityBindingType
+    [DELTASPIKE-70] - @Secured
+    [DELTASPIKE-92] - ContainerControl API + impls
+    [DELTASPIKE-114] - @ConfigProperty based on ConfigResolver
+    [DELTASPIKE-121] - add a method to inject CDI beans in a particular instance
+    [DELTASPIKE-127] - credential based login/logout
+    [DELTASPIKE-137] - [CdiControl] implement ContainerControl for embedded OpenEJB + OWB
+    [DELTASPIKE-146] - Type Safe Message - Basic
+    [DELTASPIKE-148] - optional @MessageContextConfig - static usage
+    [DELTASPIKE-153] - Message and MessageContext - dynamic usage
+    [DELTASPIKE-158] - @ExceptionHandler
+
+Task
+
+    [DELTASPIKE-57] - Add Apache TomEE managed Arquillian adapter to itests
+    [DELTASPIKE-71] - create deltaspike security module
+    [DELTASPIKE-85] - refactoring of util classes
+    [DELTASPIKE-86] - change the test-config to allow to restrict tests to a specific environment
+    [DELTASPIKE-91] - re-visit test setup
+    [DELTASPIKE-101] - add incubating disclaimer
+    [DELTASPIKE-103] - Integration testing on WebLogic Server 12c
+    [DELTASPIKE-107] - add BackwardCompatibility profile
+    [DELTASPIKE-108] - add profile for snapshots
+    [DELTASPIKE-109] - weekly ci builds for different versions of owb and weld
+    [DELTASPIKE-117] - create profile jbossas-build-managed-7
+    [DELTASPIKE-125] - refactor "deploy"-methods of arquillian tests
+    [DELTASPIKE-129] - re-visit visibility of AnnotationBuilder, ImmutableInjectionPoint, InjectableMethod and ParameterValueRedefiner
+    [DELTASPIKE-141] - move internal test artifacts to group-id orgapache.deltaspike.test
+    [DELTASPIKE-142] - remove @author in javadoc
+    [DELTASPIKE-144] - create profile jbossas-remote-7
+    [DELTASPIKE-163] - preparations for v0.2
+
