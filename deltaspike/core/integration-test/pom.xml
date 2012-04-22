@@ -138,7 +138,8 @@
                         </goals>
                         <configuration>
                             <includes>**/*Test.class</includes>
-                            <includes>**/*.properties</includes>
+                            <!-- TODO re-activate it as soon as the test-setup is fixed -->
+                            <!--includes>**/*.properties</includes-->
                             <excludes>org.apache.deltaspike.test.core.api.projectstage.*</excludes>
                             <artifactItems>
                                 <artifactItem>

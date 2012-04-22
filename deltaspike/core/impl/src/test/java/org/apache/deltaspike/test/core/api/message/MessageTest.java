@@ -20,6 +20,7 @@ package org.apache.deltaspike.test.core.api.message;
 
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.impl.message.MessageBundleExtension;
+import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -28,6 +29,7 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
 import javax.enterprise.inject.spi.Extension;
@@ -39,6 +41,7 @@ import static org.junit.Assert.assertEquals;
  * Tests for {@link org.apache.deltaspike.core.api.message.annotation.MessageTemplate}
  */
 @RunWith(Arquillian.class)
+@Category(SeCategory.class)
 public class MessageTest
 {
     @Inject
