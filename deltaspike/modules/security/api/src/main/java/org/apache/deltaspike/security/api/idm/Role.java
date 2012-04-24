@@ -19,12 +19,11 @@
 package org.apache.deltaspike.security.api.idm;
 
 import java.util.Collection;
-import java.util.Map;
 
 /**
  * Role representation
  */
-public interface Role extends IdentityObject
+public interface Role extends IdentityType
 {
     //TODO: Javadocs
     //TODO: Exceptions
@@ -32,6 +31,8 @@ public interface Role extends IdentityObject
     //TODO: Group related methods
 
     // Self
+
+    String getName();
 
     boolean exists(User user, Group group);
 

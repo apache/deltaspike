@@ -24,14 +24,11 @@ import java.util.Map;
  * IdentityObject
  *
  */
-public interface IdentityObject
+public interface IdentityType
 {
 
-    /**
-     *
-     * @return name
-     */
-    String getName();
+    String getKey();
+
 
     // Attributes
 

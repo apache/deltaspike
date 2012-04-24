@@ -26,7 +26,7 @@ import java.util.Set;
 /**
  * User representation
  */
-public interface User extends IdentityObject
+public interface User extends IdentityType
 {
     //TODO: Javadocs
     //TODO: Exceptions
@@ -44,6 +44,8 @@ public interface User extends IdentityObject
 
 
     // Built in attributes
+
+    String getId();
 
     String getFirstName();
 

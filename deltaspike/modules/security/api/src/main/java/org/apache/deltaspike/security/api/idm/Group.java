@@ -25,7 +25,7 @@ import java.util.Set;
 /**
  * Group representation
  */
-public interface Group extends IdentityObject
+public interface Group extends IdentityType
 {
     //TODO: Javadocs
     //TODO: Exceptions
@@ -45,7 +45,14 @@ public interface Group extends IdentityObject
      */
     String getId();
 
-
+    /**
+     * Group name is unique identifier in specific group tree branch. For example
+     * group with id "/acme/departments/marketing" will have name "marketing" and
+     * parent group of id "/acme/departments"
+     *
+     * @return name
+     */
+    String getName();
 
     // Sub groups
 
