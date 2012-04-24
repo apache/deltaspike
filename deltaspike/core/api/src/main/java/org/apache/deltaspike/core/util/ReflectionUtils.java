@@ -20,10 +20,7 @@
 package org.apache.deltaspike.core.util;
 
 import javax.enterprise.inject.Typed;
-import javax.enterprise.inject.spi.AnnotatedField;
-import javax.enterprise.inject.spi.AnnotatedType;
 import java.io.Serializable;
-import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
@@ -35,6 +32,8 @@ import java.security.AccessController;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.apache.deltaspike.core.util.securitymanaged.SetAccessiblePrivilegedAction;
 
 /**
  * Utilities for common reflection based actions. Some are basic Java Reflection based, others are CDI based.
@@ -114,27 +113,6 @@ public abstract class ReflectionUtils
     }
 
     /**
-     * Search the annotatedType for the field, returning the
-     * {@link AnnotatedField}
-     *
-     * @param annotatedType The annotatedType to search
-     * @param field         the field to search for
-     * @return The {@link AnnotatedField} found, or null if no field is found
-     */
-    public static <X> AnnotatedField<? super X> getField(AnnotatedType<X> annotatedType, Field field)
-    {
-        for (AnnotatedField<? super X> annotatedField : annotatedType.getFields())
-        {
-            if (annotatedField.getDeclaringType().getJavaClass().equals(field.getDeclaringClass()) &&
-                    annotatedField.getJavaMember().getName().equals(field.getName()))
-            {
-                return annotatedField;
-            }
-        }
-        return null;
-    }
-
-    /**
      * Get all the declared methods on the class hierarchy. This <b>will</b>
      * return overridden methods.
      *
@@ -164,22 +142,6 @@ public abstract class ReflectionUtils
         }
         message.append("]");
         return message.toString();
-    }
-
-    /**
-     * Set the accessibility flag on the {@link AccessibleObject} as described in
-     * {@link AccessibleObject#setAccessible(boolean)} within the context of
-     * a {@link java.security.PrivilegedAction}.
-     *
-     * @param <A>    member the accessible object type
-     * @param member the accessible object
-     * @return the accessible object after the accessible flag has been altered
-     */
-    @Deprecated //X TODO use SecurityService of OWB
-    public static <A extends AccessibleObject> A setAccessible(A member)
-    {
-        AccessController.doPrivileged(new SetAccessiblePrivilegedAction(member));
-        return member;
     }
 
     /**
@@ -233,7 +195,7 @@ public abstract class ReflectionUtils
     {
         if (setAccessible && !method.isAccessible())
         {
-            setAccessible(method);
+            AccessController.doPrivileged(new SetAccessiblePrivilegedAction(method));
         }
 
         try

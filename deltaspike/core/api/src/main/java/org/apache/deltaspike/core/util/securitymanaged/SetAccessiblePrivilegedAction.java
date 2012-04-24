@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.deltaspike.core.util;
+package org.apache.deltaspike.core.util.securitymanaged;
 
 import javax.enterprise.inject.Typed;
 import java.lang.reflect.AccessibleObject;

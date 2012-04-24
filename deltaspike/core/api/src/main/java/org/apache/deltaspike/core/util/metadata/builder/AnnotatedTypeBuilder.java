@@ -20,6 +20,7 @@
 package org.apache.deltaspike.core.util.metadata.builder;
 
 import org.apache.deltaspike.core.util.ReflectionUtils;
+import org.apache.deltaspike.core.util.securitymanaged.SetAccessiblePrivilegedAction;
 
 import javax.enterprise.inject.spi.Annotated;
 import javax.enterprise.inject.spi.AnnotatedConstructor;
@@ -32,6 +33,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.security.AccessController;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -657,7 +659,7 @@ public class AnnotatedTypeBuilder<X>
                 annotationBuilder = new AnnotationBuilder();
                 fields.put(field, annotationBuilder);
             }
-            ReflectionUtils.setAccessible(field);
+            AccessController.doPrivileged(new SetAccessiblePrivilegedAction(field));
 
             for (Annotation annotation : field.getAnnotations())
             {
@@ -676,7 +678,7 @@ public class AnnotatedTypeBuilder<X>
                 annotationBuilder = new AnnotationBuilder();
                 methods.put(method, annotationBuilder);
             }
-            ReflectionUtils.setAccessible(method);
+            AccessController.doPrivileged(new SetAccessiblePrivilegedAction(method));
 
             for (Annotation annotation : method.getAnnotations())
             {
