@@ -137,9 +137,12 @@
                             <goal>unpack</goal>
                         </goals>
                         <configuration>
+                            <!--
+                                We just need to unpack our Test classes for the surefire runner to
+                                pick up the tests. All other test resources are available via the
+                                dependency to the core-impl-tests anyway.
+                            -->
                             <includes>**/*Test.class</includes>
-                            <!-- TODO re-activate it as soon as the test-setup is fixed -->
-                            <!--includes>**/*.properties</includes-->
                             <excludes>org.apache.deltaspike.test.core.api.projectstage.*</excludes>
                             <artifactItems>
                                 <artifactItem>
