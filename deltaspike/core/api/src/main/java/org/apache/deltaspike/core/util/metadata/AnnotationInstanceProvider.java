@@ -16,8 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.deltaspike.core.util.metadata;
 
+
+import org.apache.deltaspike.core.util.ClassUtils;
 
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
@@ -27,8 +30,6 @@ import java.lang.reflect.Proxy;
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.apache.deltaspike.core.util.ClassUtils;
 
 /**
  * <p>A small helper class to create an Annotation instance of the given annotation class
@@ -44,7 +45,6 @@ import org.apache.deltaspike.core.util.ClassUtils;
  *     (Class<? extends Annotation>) ClassUtils.getClassLoader(null).loadClass(annotationClassName);
  * Annotation a = DefaultAnnotation.of(annotationClass)
  * </pre>
- *
  */
 public class AnnotationInstanceProvider implements Annotation, InvocationHandler, Serializable
 {
@@ -54,7 +54,7 @@ public class AnnotationInstanceProvider implements Annotation, InvocationHandler
     // NOTE that this cache needs to be a WeakHashMap in order to prevent a memory leak
     // (the garbage collector should be able to remove the ClassLoader).
     private static volatile Map<ClassLoader, Map<String, Annotation>> annotationCache
-        = new WeakHashMap<ClassLoader, Map<String, Annotation>>();
+            = new WeakHashMap<ClassLoader, Map<String, Annotation>>();
 
     private Class<? extends Annotation> annotationClass;
 
@@ -73,8 +73,9 @@ public class AnnotationInstanceProvider implements Annotation, InvocationHandler
 
     /**
      * Creates an annotation instance for the given annotation class
+     *
      * @param annotationClass type of the target annotation
-     * @param <T> current type
+     * @param <T>             current type
      * @return annotation instance for the given type
      */
     public static <T extends Annotation> T of(Class<T> annotationClass)
@@ -149,6 +150,13 @@ public class AnnotationInstanceProvider implements Annotation, InvocationHandler
         }
         else if ("equals".equals(method.getName()))
         {
+            if (Proxy.isProxyClass(args[0].getClass()))
+            {
+                if (Proxy.getInvocationHandler(args[0]) instanceof AnnotationInstanceProvider)
+                {
+                    return equals(Proxy.getInvocationHandler(args[0]));
+                }
+            }
             return equals(args[0]);
         }
         else if ("annotationType".equals(method.getName()))
@@ -174,7 +182,7 @@ public class AnnotationInstanceProvider implements Annotation, InvocationHandler
 
     /**
      * Copied from Apache OWB (javax.enterprise.util.AnnotationLiteral#toString())
-     * with minor changes. 
+     * with minor changes.
      *
      * @return the current state of the annotation as string
      */
