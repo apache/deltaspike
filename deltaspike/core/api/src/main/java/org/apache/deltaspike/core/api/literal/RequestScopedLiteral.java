@@ -24,7 +24,7 @@ import javax.enterprise.util.AnnotationLiteral;
 /**
  * Literal for {@link RequestScoped}
  */
-public class RequestedScopeLiteral extends AnnotationLiteral<RequestScoped> implements RequestScoped
+public class RequestScopedLiteral extends AnnotationLiteral<RequestScoped> implements RequestScoped
 {
     private static final long serialVersionUID = -6365776352042023537L;
 }

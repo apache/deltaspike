@@ -308,4 +308,13 @@ public class AnnotationInstanceProviderTest
     {
         assertFalse(AnnotationInstanceProvider.of(Named.class).equals(""));
     }
+
+    @Test
+    public void assertHashCodeSameAsLiteral()
+    {
+        Named a1 = AnnotationInstanceProvider.of(Named.class);
+        Named a2 = new NamedLiteral();
+
+        assertThat(a2.hashCode(), is(a1.hashCode()));
+    }
 }
