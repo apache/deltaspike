@@ -25,8 +25,11 @@ import org.apache.deltaspike.core.util.ClassUtils;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
@@ -50,14 +53,15 @@ public class AnnotationInstanceProvider implements Annotation, InvocationHandler
 {
     private static final long serialVersionUID = -2345068201195886173L;
     private static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
+    private static final Class[] EMPTY_CLASS_ARRAY = new Class[0];
 
     // NOTE that this cache needs to be a WeakHashMap in order to prevent a memory leak
     // (the garbage collector should be able to remove the ClassLoader).
     private static volatile Map<ClassLoader, Map<String, Annotation>> annotationCache
             = new WeakHashMap<ClassLoader, Map<String, Annotation>>();
 
-    private Class<? extends Annotation> annotationClass;
-
+    private final Class<? extends Annotation> annotationClass;
+    private final Map<String, ?> memberValues;
 
     /**
      * Required to use the result of the factory instead of a default implementation
@@ -65,11 +69,41 @@ public class AnnotationInstanceProvider implements Annotation, InvocationHandler
      *
      * @param annotationClass class of the target annotation
      */
-    private AnnotationInstanceProvider(Class<? extends Annotation> annotationClass)
+    private AnnotationInstanceProvider(Class<? extends Annotation> annotationClass, Map<String, ?> memberValues)
     {
         this.annotationClass = annotationClass;
+        this.memberValues = memberValues;
     }
 
+    /**
+     * Creates an annotation instance for the given annotation class
+     *
+     * @param annotationClass type of the target annotation
+     * @param values          A non-null map of the member values, keys being the name of the members
+     * @param <T>             current type
+     * @return annotation instance for the given type
+     */
+    @SuppressWarnings("unchecked")
+    public static <T extends Annotation> T of(Class<T> annotationClass, Map<String, ?> values)
+    {
+        if (values == null)
+        {
+            throw new IllegalArgumentException("Map of values must not be null");
+        }
+
+        String key = annotationClass.getName() + "_" + values.hashCode();
+
+        Map<String, Annotation> cache = getAnnotationCache();
+
+        Annotation annotation = cache.get(key);
+
+        if (annotation == null)
+        {
+            annotation = initAnnotation(key, annotationClass, cache, values);
+        }
+
+        return (T) annotation;
+    }
 
     /**
      * Creates an annotation instance for the given annotation class
@@ -78,25 +112,16 @@ public class AnnotationInstanceProvider implements Annotation, InvocationHandler
      * @param <T>             current type
      * @return annotation instance for the given type
      */
+    @SuppressWarnings("unchecked")
     public static <T extends Annotation> T of(Class<T> annotationClass)
     {
-        String key = annotationClass.getName();
-
-        Map<String, Annotation> cache = getAnnotationCache();
-
-        Annotation annotation = cache.get(key);
-
-        if (annotation == null)
-        {
-            annotation = initAnnotation(key, annotationClass, cache);
-        }
-
-        return (T) annotation;
+        return (T) of(annotationClass, Collections.EMPTY_MAP);
     }
 
     private static synchronized <T extends Annotation> Annotation initAnnotation(String key,
                                                                                  Class<T> annotationClass,
-                                                                                 Map<String, Annotation> cache)
+                                                                                 Map<String, Annotation> cache,
+                                                                                 Map<String, ?> values)
     {
         Annotation annotation = cache.get(key);
 
@@ -105,7 +130,7 @@ public class AnnotationInstanceProvider implements Annotation, InvocationHandler
         {
             annotation = (Annotation) Proxy.newProxyInstance(annotationClass.getClassLoader(),
                     new Class[]{annotationClass},
-                    new AnnotationInstanceProvider(annotationClass));
+                    new AnnotationInstanceProvider(annotationClass, values));
 
             cache.put(key, annotation);
         }
@@ -167,8 +192,17 @@ public class AnnotationInstanceProvider implements Annotation, InvocationHandler
         {
             return toString();
         }
-
-        return method.getDefaultValue();
+        else
+        {
+            if (this.memberValues.containsKey(method.getName()))
+            {
+                return this.memberValues.get(method.getName());
+            }
+            else // Default cause, probably won't ever happen, unless annotations get actual methods
+            {
+                return method.getDefaultValue();
+            }
+        }
     }
 
     /**
@@ -231,6 +265,41 @@ public class AnnotationInstanceProvider implements Annotation, InvocationHandler
         }
         if (!(o instanceof AnnotationInstanceProvider))
         {
+            if (annotationClass.isInstance(o))
+            {
+                for (Map.Entry<String, ?> entry : this.memberValues.entrySet())
+                {
+                    try
+                    {
+                        Object oValue = annotationClass.getMethod(entry.getKey(), EMPTY_CLASS_ARRAY)
+                                .invoke(o, EMPTY_OBJECT_ARRAY);
+                        if (oValue != null && entry.getValue() != null)
+                        {
+                            if (!oValue.equals(entry.getValue()))
+                            {
+                                return false;
+                            }
+                        }
+                        else // This may not actually ever happen, unless null is a default for a member
+                        {
+                            return false;
+                        }
+                    }
+                    catch (IllegalAccessException e)
+                    {
+                        throw new RuntimeException(e);
+                    }
+                    catch (InvocationTargetException e)
+                    {
+                        throw new RuntimeException(e);
+                    }
+                    catch (NoSuchMethodException e)
+                    {
+                        throw new RuntimeException(e);
+                    }
+                }
+                return true;
+            }
             return false;
         }
 
@@ -241,12 +310,140 @@ public class AnnotationInstanceProvider implements Annotation, InvocationHandler
             return false;
         }
 
-        return true;
+        return memberValues.equals(that.memberValues);
     }
 
     @Override
     public int hashCode()
     {
-        return annotationClass.hashCode();
+        int result = 0;
+        Class<? extends Annotation> type = annotationClass;
+        for (Method m : type.getDeclaredMethods())
+        {
+            try
+            {
+                Object value = this.invoke(this, m, EMPTY_OBJECT_ARRAY);
+                if (value == null)
+                {
+                    throw new IllegalStateException(String.format("Annotation method %s returned null", m));
+                }
+                result += hashMember(m.getName(), value);
+            }
+            catch (RuntimeException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new RuntimeException(ex);
+            }
+        }
+        return result;
+    }
+
+    //besides modularity, this has the advantage of autoboxing primitives:
+
+    /**
+     * Helper method for generating a hash code for a member of an annotation.
+     *
+     * @param name  the name of the member
+     * @param value the value of the member
+     * @return a hash code for this member
+     */
+    private int hashMember(String name, Object value)
+    {
+        int part1 = name.hashCode() * 127;
+        if (value.getClass().isArray())
+        {
+            return part1 ^ arrayMemberHash(value.getClass().getComponentType(), value);
+        }
+        if (value instanceof Annotation)
+        {
+            return part1 ^ hashCode((Annotation) value);
+        }
+        return part1 ^ value.hashCode();
+    }
+
+    /**
+     * Helper method for generating a hash code for an array.
+     *
+     * @param componentType the component type of the array
+     * @param o             the array
+     * @return a hash code for the specified array
+     */
+    private static int arrayMemberHash(Class<?> componentType, Object o)
+    {
+        if (componentType.equals(Byte.TYPE))
+        {
+            return Arrays.hashCode((byte[]) o);
+        }
+        if (componentType.equals(Short.TYPE))
+        {
+            return Arrays.hashCode((short[]) o);
+        }
+        if (componentType.equals(Integer.TYPE))
+        {
+            return Arrays.hashCode((int[]) o);
+        }
+        if (componentType.equals(Character.TYPE))
+        {
+            return Arrays.hashCode((char[]) o);
+        }
+        if (componentType.equals(Long.TYPE))
+        {
+            return Arrays.hashCode((long[]) o);
+        }
+        if (componentType.equals(Float.TYPE))
+        {
+            return Arrays.hashCode((float[]) o);
+        }
+        if (componentType.equals(Double.TYPE))
+        {
+            return Arrays.hashCode((double[]) o);
+        }
+        if (componentType.equals(Boolean.TYPE))
+        {
+            return Arrays.hashCode((boolean[]) o);
+        }
+        return Arrays.hashCode((Object[]) o);
+    }
+
+    /**
+     * <p>Generate a hash code for the given annotation using the algorithm
+     * presented in the {@link Annotation#hashCode()} API docs.</p>
+     *
+     * @param a the Annotation for a hash code calculation is desired, not
+     *          {@code null}
+     * @return the calculated hash code
+     * @throws RuntimeException      if an {@code Exception} is encountered during
+     *                               annotation member access
+     * @throws IllegalStateException if an annotation method invocation returns
+     *                               {@code null}
+     */
+    private int hashCode(Annotation a)
+    {
+        int result = 0;
+        Class<? extends Annotation> type = a.annotationType();
+        for (Method m : type.getDeclaredMethods())
+        {
+            try
+            {
+                Object value = m.invoke(a);
+                if (value == null)
+                {
+                    throw new IllegalStateException(String.format("Annotation method %s returned null", m));
+                }
+                result += hashMember(m.getName(), value);
+            }
+            catch (RuntimeException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new RuntimeException(ex);
+            }
+        }
+        return result;
     }
 }
