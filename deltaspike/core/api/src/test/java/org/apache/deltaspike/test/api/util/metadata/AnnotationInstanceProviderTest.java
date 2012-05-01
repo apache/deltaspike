@@ -242,21 +242,22 @@ public class AnnotationInstanceProviderTest
         memberValues.put("floatValue", (float) 0);
         memberValues.put("floatValues", new float[]{(float) 0});
         memberValues.put("intValue", 0);
-        memberValues.put("intValues", new int[]{0});
+        memberValues.put("intValues", new int[] { 0 } );
         memberValues.put("longValue", 0L);
-        memberValues.put("longValues", new long[]{0L});
+        memberValues.put("longValues", new long[] { 0L } ) ;
         memberValues.put("shortValue", (short) 0);
-        memberValues.put("shortValues", new short[]{(short) 0});
+        memberValues.put("shortValues", new short[] { (short) 0 } );
         memberValues.put("stooge", Stooge.SHEMP);
-        memberValues.put("stooges", new Stooge[]{Stooge.MOE, Stooge.LARRY, Stooge.CURLY});
+        memberValues.put("stooges", new Stooge[] { Stooge.MOE, Stooge.LARRY, Stooge.CURLY } );
         memberValues.put("string", "");
-        memberValues.put("strings", new String[]{""});
+        memberValues.put("strings", new String[] { "" } );
         memberValues.put("type", Object.class);
         memberValues.put("types", new Class[]{Object.class});
 
         Map<String, Object> nestMemberValues = new HashMap<String, Object>(memberValues);
         memberValues.put("nest", AnnotationInstanceProvider.of(NestAnnotation.class, nestMemberValues));
-        memberValues.put("nests", new NestAnnotation[]{AnnotationInstanceProvider.of(NestAnnotation.class, nestMemberValues)});
+        memberValues.put("nests", new NestAnnotation[] { AnnotationInstanceProvider.of(NestAnnotation.class,
+                nestMemberValues) } );
 
         TestAnnotation testAnnotation = AnnotationInstanceProvider.of(TestAnnotation.class, memberValues);
         String testAnnotationToString = testAnnotation.toString();

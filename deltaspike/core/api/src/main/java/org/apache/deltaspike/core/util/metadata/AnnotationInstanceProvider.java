@@ -58,7 +58,7 @@ public class AnnotationInstanceProvider implements Annotation, InvocationHandler
     // NOTE that this cache needs to be a WeakHashMap in order to prevent a memory leak
     // (the garbage collector should be able to remove the ClassLoader).
     private static volatile Map<ClassLoader, Map<String, Annotation>> annotationCache
-            = new WeakHashMap<ClassLoader, Map<String, Annotation>>();
+        = new WeakHashMap<ClassLoader, Map<String, Annotation>>();
 
     private final Class<? extends Annotation> annotationClass;
     private final Map<String, ?> memberValues;
