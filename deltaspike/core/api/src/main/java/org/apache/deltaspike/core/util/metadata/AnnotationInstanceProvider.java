@@ -20,8 +20,6 @@
 package org.apache.deltaspike.core.util.metadata;
 
 
-import org.apache.deltaspike.core.util.ClassUtils;
-
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
@@ -31,8 +29,6 @@ import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
-import java.util.WeakHashMap;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <p>A small helper class to create an Annotation instance of the given annotation class
@@ -54,11 +50,6 @@ public class AnnotationInstanceProvider implements Annotation, InvocationHandler
     private static final long serialVersionUID = -2345068201195886173L;
     private static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
     private static final Class[] EMPTY_CLASS_ARRAY = new Class[0];
-
-    // NOTE that this cache needs to be a WeakHashMap in order to prevent a memory leak
-    // (the garbage collector should be able to remove the ClassLoader).
-    private static volatile Map<ClassLoader, Map<String, Annotation>> annotationCache
-        = new WeakHashMap<ClassLoader, Map<String, Annotation>>();
 
     private final Class<? extends Annotation> annotationClass;
     private final Map<String, ?> memberValues;
@@ -93,16 +84,7 @@ public class AnnotationInstanceProvider implements Annotation, InvocationHandler
 
         String key = annotationClass.getName() + "_" + values.hashCode();
 
-        Map<String, Annotation> cache = getAnnotationCache();
-
-        Annotation annotation = cache.get(key);
-
-        if (annotation == null)
-        {
-            annotation = initAnnotation(key, annotationClass, cache, values);
-        }
-
-        return (T) annotation;
+            return (T) initAnnotation(key, annotationClass, values);
     }
 
     /**
@@ -120,47 +102,11 @@ public class AnnotationInstanceProvider implements Annotation, InvocationHandler
 
     private static synchronized <T extends Annotation> Annotation initAnnotation(String key,
                                                                                  Class<T> annotationClass,
-                                                                                 Map<String, Annotation> cache,
                                                                                  Map<String, ?> values)
     {
-        Annotation annotation = cache.get(key);
-
-        // switch into paranoia mode
-        if (annotation == null)
-        {
-            annotation = (Annotation) Proxy.newProxyInstance(annotationClass.getClassLoader(),
+            return (Annotation) Proxy.newProxyInstance(annotationClass.getClassLoader(),
                     new Class[]{annotationClass},
                     new AnnotationInstanceProvider(annotationClass, values));
-
-            cache.put(key, annotation);
-        }
-
-        return annotation;
-    }
-
-    private static Map<String, Annotation> getAnnotationCache()
-    {
-        ClassLoader classLoader = ClassUtils.getClassLoader(null);
-        Map<String, Annotation> cache = annotationCache.get(classLoader);
-
-        if (cache == null)
-        {
-            cache = init(classLoader);
-        }
-
-        return cache;
-    }
-
-    private static synchronized Map<String, Annotation> init(ClassLoader classLoader)
-    {
-        // switch into paranoia mode
-        Map<String, Annotation> cache = annotationCache.get(classLoader);
-        if (cache == null)
-        {
-            cache = new ConcurrentHashMap<String, Annotation>();
-            annotationCache.put(classLoader, cache);
-        }
-        return cache;
     }
 
     /**

@@ -74,27 +74,6 @@ public class AnnotationInstanceProviderTest
     }
 
     @Test
-    public void assertSameInstance()
-    {
-        Annotation a1 = AnnotationInstanceProvider.of(RequestScoped.class);
-        Annotation a2 = AnnotationInstanceProvider.of(RequestScoped.class);
-
-        assertThat(a2, sameInstance(a1));
-    }
-
-    @Test
-    public void assertSameInstanceWithSameMembers()
-    {
-        Map<String, String> memberValues = new HashMap<String, String>();
-        memberValues.put("value", "test");
-
-        Annotation a1 = AnnotationInstanceProvider.of(Named.class, memberValues);
-        Annotation a2 = AnnotationInstanceProvider.of(Named.class, memberValues);
-
-        assertThat(a2, sameInstance(a1));
-    }
-
-    @Test
     public void assertDifferentInstanceWithDifferentMembers()
     {
         Map<String, String> memberValues = new HashMap<String, String>();
@@ -110,7 +89,7 @@ public class AnnotationInstanceProviderTest
     }
 
     @Test
-    public void assertSameInstanceUsingEquals()
+    public void assertSameUsingEquals()
     {
         Annotation a1 = AnnotationInstanceProvider.of(RequestScoped.class);
         Annotation a2 = AnnotationInstanceProvider.of(RequestScoped.class);
