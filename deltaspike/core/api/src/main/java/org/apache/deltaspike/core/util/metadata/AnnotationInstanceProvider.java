@@ -84,7 +84,7 @@ public class AnnotationInstanceProvider implements Annotation, InvocationHandler
 
         String key = annotationClass.getName() + "_" + values.hashCode();
 
-            return (T) initAnnotation(key, annotationClass, values);
+        return (T) initAnnotation(key, annotationClass, values);
     }
 
     /**
@@ -104,9 +104,9 @@ public class AnnotationInstanceProvider implements Annotation, InvocationHandler
                                                                                  Class<T> annotationClass,
                                                                                  Map<String, ?> values)
     {
-            return (Annotation) Proxy.newProxyInstance(annotationClass.getClassLoader(),
-                    new Class[]{annotationClass},
-                    new AnnotationInstanceProvider(annotationClass, values));
+        return (Annotation) Proxy.newProxyInstance(annotationClass.getClassLoader(),
+            new Class[]{annotationClass},
+            new AnnotationInstanceProvider(annotationClass, values));
     }
 
     /**
