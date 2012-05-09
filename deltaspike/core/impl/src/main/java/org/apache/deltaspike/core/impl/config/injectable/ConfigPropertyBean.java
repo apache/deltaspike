@@ -154,6 +154,11 @@ public class ConfigPropertyBean<T> implements Bean<T>, Serializable
 
         if (converter == null)
         {
+            if (String.class.isAssignableFrom(this.beanType))
+            {
+                return (T)configuredValue;
+            }
+            
             throw new IllegalStateException("can't find config for " +
                     String.class.getName() + " -> " + beanType.getName());
         }
