@@ -49,28 +49,6 @@ public abstract class ReflectionUtils
     }
 
     /**
-     * <p>
-     * Perform a runtime cast. Similar to {@link Class#cast(Object)}, but useful
-     * when you do not have a {@link Class} object for type you wish to cast to.
-     * </p>
-     * <p/>
-     * <p>
-     * {@link Class#cast(Object)} should be used if possible
-     * </p>
-     *
-     * @param <T> the type to cast to
-     * @param obj the object to perform the cast on
-     * @return the casted object
-     * @throws ClassCastException if the type T is not a subtype of the object
-     * @see Class#cast(Object)
-     */
-    @SuppressWarnings("unchecked")
-    public static <T> T cast(Object obj)
-    {
-        return (T) obj;
-    }
-
-    /**
      * Get all the declared fields on the class hierarchy. This <b>will</b>
      * return overridden fields.
      *

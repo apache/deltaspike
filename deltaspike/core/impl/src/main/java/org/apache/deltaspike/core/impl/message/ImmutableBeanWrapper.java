@@ -25,8 +25,6 @@ import java.util.Set;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 
-import org.apache.deltaspike.core.util.ReflectionUtils;
-
 /**
  * <p>
  * This bean-wrapper allows you to build a general purpose bean (likely a
@@ -115,7 +113,7 @@ class ImmutableBeanWrapper<T> extends AbstractImmutableBean<T>
     @Override
     public T create(CreationalContext<T> creationalContext)
     {
-        return ReflectionUtils.cast(wrapped.create(creationalContext));
+        return wrapped.create(creationalContext);
     }
 
     @Override
