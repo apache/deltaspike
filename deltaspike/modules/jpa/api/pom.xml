@@ -21,28 +21,40 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.apache.deltaspike</groupId>
-        <artifactId>parent-code</artifactId>
+        <groupId>org.apache.deltaspike.modules</groupId>
+        <artifactId>jpa-module-project</artifactId>
         <version>0.3-incubating-SNAPSHOT</version>
-        <relativePath>../parent/code/pom.xml</relativePath>
     </parent>
 
     <groupId>org.apache.deltaspike.modules</groupId>
-    <artifactId>modules-project</artifactId>
-    <version>0.3-incubating-SNAPSHOT</version>
-    <packaging>pom</packaging>
+    <artifactId>deltaspike-jpa-module-api</artifactId>
 
-    <name>Apache DeltaSpike Modules</name>
-
-    <modules>
-        <module>security</module>
-        <module>jpa</module>
-    </modules>
+    <name>Apache DeltaSpike JPA-Module API</name>
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.geronimo.specs</groupId>
-            <artifactId>geronimo-jcdi_1.0_spec</artifactId>
+            <groupId>org.apache.deltaspike.core</groupId>
+            <artifactId>deltaspike-core-api</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <inherited>true</inherited>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>

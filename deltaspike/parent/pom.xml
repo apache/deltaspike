@@ -346,6 +346,20 @@
                 <scope>runtime</scope>
             </dependency>
 
+            <dependency>
+                <groupId>org.apache.deltaspike.modules</groupId>
+                <artifactId>deltaspike-jpa-module-api</artifactId>
+                <version>${project.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.deltaspike.modules</groupId>
+                <artifactId>deltaspike-jpa-module-impl</artifactId>
+                <version>${project.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+
             <!-- Dependencies for Java-SE -->
             <dependency>
                 <groupId>org.apache.deltaspike.cdictrl</groupId>

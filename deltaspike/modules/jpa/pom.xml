@@ -21,28 +21,28 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.apache.deltaspike</groupId>
-        <artifactId>parent-code</artifactId>
+        <groupId>org.apache.deltaspike.modules</groupId>
+        <artifactId>modules-project</artifactId>
         <version>0.3-incubating-SNAPSHOT</version>
-        <relativePath>../parent/code/pom.xml</relativePath>
     </parent>
 
     <groupId>org.apache.deltaspike.modules</groupId>
-    <artifactId>modules-project</artifactId>
+    <artifactId>jpa-module-project</artifactId>
     <version>0.3-incubating-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Apache DeltaSpike Modules</name>
+    <name>Apache DeltaSpike JPA-Module</name>
 
     <modules>
-        <module>security</module>
-        <module>jpa</module>
+        <module>api</module>
+        <module>impl</module>
     </modules>
 
     <dependencies>
+        <!-- JPA API -->
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
-            <artifactId>geronimo-jcdi_1.0_spec</artifactId>
+            <artifactId>geronimo-jpa_2.0_spec</artifactId>
         </dependency>
     </dependencies>
 </project>
