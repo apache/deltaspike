@@ -24,6 +24,7 @@ import org.apache.deltaspike.test.jpa.api.shared.Second;
 import org.apache.deltaspike.test.jpa.api.shared.TestEntityManager;
 
 import javax.enterprise.context.RequestScoped;
+import javax.enterprise.inject.Default;
 import javax.enterprise.inject.Disposes;
 import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
@@ -84,7 +85,7 @@ public class TestEntityManagerProducer
         throw new IllegalStateException("a second producer call isn't allowed");
     }
 
-    protected void closeDefaultEntityManager(@Disposes EntityManager entityManager)
+    protected void closeDefaultEntityManager(@Disposes @Default EntityManager entityManager)
     {
         if (entityManager.isOpen())
         {
