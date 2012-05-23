@@ -18,12 +18,15 @@
  */
 package org.apache.deltaspike.jpa.impl.transaction;
 
+import org.apache.deltaspike.core.api.projectstage.TestStage;
+import org.apache.deltaspike.core.util.ProjectStageProducer;
 import org.apache.deltaspike.jpa.api.Transactional;
 import org.apache.deltaspike.jpa.impl.EntityManagerRef;
 import org.apache.deltaspike.jpa.impl.PersistenceHelper;
 import org.apache.deltaspike.jpa.impl.transaction.context.TransactionBeanStorage;
 import org.apache.deltaspike.jpa.spi.PersistenceStrategy;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Any;
 import javax.enterprise.inject.Default;
@@ -71,9 +74,20 @@ public class TransactionalInterceptorStrategy implements PersistenceStrategy
     @Inject
     private BeanManager beanManager;
 
+    private boolean isTestProjectStage;
+
+    @PostConstruct
+    protected void init()
+    {
+        this.isTestProjectStage = TestStage.class.isAssignableFrom(
+            ProjectStageProducer.getInstance().getProjectStage().getClass());
+    }
+
     public Object execute(InvocationContext invocationContext) throws Exception
     {
         Transactional transactionalAnnotation = extractTransactionalAnnotation(invocationContext);
+
+        //TODO add support for entity managers injected as argument/s
 
         InternalTransactionContext currentTransactionContext =
                 getOrCreateTransactionContext(transactionalAnnotation, invocationContext.getTarget());
@@ -145,6 +159,8 @@ public class TransactionalInterceptorStrategy implements PersistenceStrategy
                         //but we have to continue to cleanup the scope
                     }
                 }
+
+                cleanupTransactionBeanStorage();
             }
 
             // give any extensions a chance to supply a better error message
@@ -223,10 +239,7 @@ public class TransactionalInterceptorStrategy implements PersistenceStrategy
                             }
                         }
                     }
-
-                    // and now we close all open transaction-scopes and reset the storage
-                    TransactionBeanStorage.getStorage().endAllTransactionScopes();
-                    TransactionBeanStorage.resetStorage();
+                    cleanupTransactionBeanStorage();
                 }
                 else
                 {
@@ -249,6 +262,13 @@ public class TransactionalInterceptorStrategy implements PersistenceStrategy
         }
     }
 
+    private void cleanupTransactionBeanStorage()
+    {
+        // and now we close all open transaction-scopes and reset the storage
+        TransactionBeanStorage.getStorage().endAllTransactionScopes();
+        TransactionBeanStorage.resetStorage();
+    }
+
     private List<String> getTransactionKeys(InternalTransactionContext currentTransactionContext)
     {
         List<String> transactionKeys = new ArrayList<String>();
@@ -267,6 +287,11 @@ public class TransactionalInterceptorStrategy implements PersistenceStrategy
 
     private void removeTransactionContext()
     {
+        if (this.isTestProjectStage)
+        {
+            this.beanManager.fireEvent(new PersistenceStrategyCleanupTestEvent());
+        }
+
         transactionContext.set(null);
         transactionContext.remove();
     }

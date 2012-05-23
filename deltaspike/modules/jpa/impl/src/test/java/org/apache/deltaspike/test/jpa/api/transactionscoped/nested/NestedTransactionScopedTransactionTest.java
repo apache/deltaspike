@@ -18,9 +18,12 @@
  */
 package org.apache.deltaspike.test.jpa.api.transactionscoped.nested;
 
+import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
+import org.apache.deltaspike.core.util.ProjectStageProducer;
 import org.apache.deltaspike.jpa.impl.transaction.context.TransactionContextExtension;
 import org.apache.deltaspike.test.jpa.api.shared.TestEntityTransaction;
+import org.apache.deltaspike.test.jpa.api.shared.TestEventObserver;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -29,6 +32,7 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -43,6 +47,9 @@ public class NestedTransactionScopedTransactionTest
 
     @Inject
     private TestEntityManagerProducer entityManagerProducer;
+
+    @Inject
+    private TestEventObserver testEventObserver;
 
     @Deployment
     public static WebArchive deploy()
@@ -68,6 +75,12 @@ public class NestedTransactionScopedTransactionTest
                 .addAsWebInfResource(ArchiveUtils.getBeansXml(), "beans.xml");
     }
 
+    @Before
+    public void init()
+    {
+        ProjectStageProducer.setProjectStage(ProjectStage.UnitTest);
+    }
+
     @Test
     public void nestedTransactionScopedTransaction()
     {
@@ -82,5 +95,8 @@ public class NestedTransactionScopedTransactionTest
         Assert.assertEquals(false, testTransaction.isRolledBack());
 
         Assert.assertEquals(1, this.entityManagerProducer.getCloseEntityManagerCount());
+
+        Assert.assertEquals(1, this.testEventObserver.getPersistenceStrategyCleanupCalls());
+        Assert.assertEquals(1, this.testEventObserver.getTransactionBeanStorageCleanupCalls());
     }
 }

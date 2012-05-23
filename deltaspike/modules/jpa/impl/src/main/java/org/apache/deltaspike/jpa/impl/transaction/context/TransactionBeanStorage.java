@@ -18,6 +18,11 @@
  */
 package org.apache.deltaspike.jpa.impl.transaction.context;
 
+import org.apache.deltaspike.core.api.projectstage.TestStage;
+import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
+import org.apache.deltaspike.core.util.ProjectStageProducer;
+import org.apache.deltaspike.jpa.impl.transaction.TransactionBeanStorageCleanupTestEvent;
+
 import javax.enterprise.context.spi.Contextual;
 import javax.enterprise.inject.Typed;
 import java.util.ArrayList;
@@ -62,8 +67,12 @@ public class TransactionBeanStorage
 
     private List<String> activeTransactionKeyList = new ArrayList<String>();
 
+    private boolean isTestProjectStage;
+
     private TransactionBeanStorage()
     {
+        this.isTestProjectStage = TestStage.class.isAssignableFrom(
+            ProjectStageProducer.getInstance().getProjectStage().getClass());
     }
 
     /**
@@ -91,8 +100,23 @@ public class TransactionBeanStorage
      */
     public static void resetStorage()
     {
-        currentStorage.set(null);
-        currentStorage.remove();
+        TransactionBeanStorage currentBeanStorage = currentStorage.get();
+
+        if (currentBeanStorage != null)
+        {
+            currentBeanStorage.close();
+
+            currentStorage.set(null);
+            currentStorage.remove();
+        }
+    }
+
+    private void close()
+    {
+        if (this.isTestProjectStage)
+        {
+            BeanManagerProvider.getInstance().getBeanManager().fireEvent(new TransactionBeanStorageCleanupTestEvent());
+        }
     }
 
     /**

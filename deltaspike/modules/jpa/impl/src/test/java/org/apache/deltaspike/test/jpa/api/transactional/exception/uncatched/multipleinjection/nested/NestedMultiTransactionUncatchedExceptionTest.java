@@ -18,10 +18,13 @@
  */
 package org.apache.deltaspike.test.jpa.api.transactional.exception.uncatched.multipleinjection.nested;
 
+import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
+import org.apache.deltaspike.core.util.ProjectStageProducer;
 import org.apache.deltaspike.jpa.impl.transaction.context.TransactionContextExtension;
 import org.apache.deltaspike.test.jpa.api.shared.TestEntityManager;
 import org.apache.deltaspike.test.jpa.api.shared.TestEntityTransaction;
+import org.apache.deltaspike.test.jpa.api.shared.TestEventObserver;
 import org.apache.deltaspike.test.jpa.api.shared.TestException;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -31,6 +34,7 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -45,6 +49,9 @@ public class NestedMultiTransactionUncatchedExceptionTest
 
     @Inject
     private TestEntityManagerProducer entityManagerProducer;
+
+    @Inject
+    private TestEventObserver testEventObserver;
 
     @Deployment
     public static WebArchive deploy()
@@ -68,6 +75,12 @@ public class NestedMultiTransactionUncatchedExceptionTest
                 .addAsLibraries(testJar)
                 .addAsServiceProvider(Extension.class, TransactionContextExtension.class)
                 .addAsWebInfResource(ArchiveUtils.getBeansXml(), "beans.xml");
+    }
+
+    @Before
+    public void init()
+    {
+        ProjectStageProducer.setProjectStage(ProjectStage.UnitTest);
     }
 
     @Test
@@ -115,5 +128,8 @@ public class NestedMultiTransactionUncatchedExceptionTest
         Assert.assertEquals(true, secondTransaction.isStarted());
         Assert.assertEquals(false, secondTransaction.isCommitted());
         Assert.assertEquals(true, secondTransaction.isRolledBack());
+
+        Assert.assertEquals(1, this.testEventObserver.getPersistenceStrategyCleanupCalls());
+        Assert.assertEquals(1, this.testEventObserver.getTransactionBeanStorageCleanupCalls());
     }
 }
