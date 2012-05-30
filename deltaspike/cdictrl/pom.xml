@@ -38,6 +38,6 @@
         <module>tck</module>
         <module>impl-owb</module>
         <module>impl-weld</module>
-        <!--module>impl-openejb</module-->
+        <module>impl-openejb</module>
     </modules>
 </project>
