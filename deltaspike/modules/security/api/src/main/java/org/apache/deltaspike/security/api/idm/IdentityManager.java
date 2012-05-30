@@ -19,6 +19,7 @@
 package org.apache.deltaspike.security.api.idm;
 
 import java.util.Collection;
+import java.util.Date;
 
 /**
  * IdentityManager
@@ -64,7 +65,12 @@ public interface IdentityManager
     Group getGroup(String groupId, Group parent);
 
     Collection<Group> getAllGroups();
+    
+    void addToGroup(IdentityType identityType, Group group);
+    
+    void removeFromGroup(IdentityType identityType, Group group);
 
+    Collection<IdentityType> getGroupMembers(Group group);   
 
     // Roles
 
@@ -78,16 +84,13 @@ public interface IdentityManager
 
     Collection<Role> getAllRoles();
 
-    Collection<Role> getRoles(User user, Group group);
+    Collection<Role> getRoles(IdentityType identityType, Group group);
 
-    Collection<Role> getRoles(String user, String groupId);
-
-    boolean hasRole(Role role, User user, Group group);
-
-    boolean hasRole(String role, String user, String groupId);
-
-
-
+    boolean hasRole(Role role, IdentityType identityType, Group group);
+    
+    void grantRole(Role role, IdentityType identityType, Group group);
+    
+    void revokeRole(Role role, IdentityType identityType, Group group);
 
     // Queries
 
@@ -99,4 +102,15 @@ public interface IdentityManager
 
     MembershipQuery createMembershipQuery();
 
+    // Password Management
+    
+    boolean validatePassword(String password);
+
+    void updatePassword(String password);
+    
+    // User / Role / Group enablement / expiry
+
+    void setEnabled(IdentityType identityType, boolean enabled);    
+
+    void setExpirationDate(IdentityType identityType, Date expirationDate);    
 }

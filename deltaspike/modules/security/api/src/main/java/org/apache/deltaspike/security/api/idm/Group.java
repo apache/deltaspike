@@ -18,9 +18,6 @@
  */
 package org.apache.deltaspike.security.api.idm;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Group representation
@@ -60,65 +57,5 @@ public interface Group extends IdentityType
      * @return parent group or null if it refers to root ("/") in a group tree.
      */
     Group getParentGroup();
-
-    /**
-     * Creates a new child group.
-     *
-     * @param name
-     */
-    void createChildGroup(String name);
-
-    /**
-     * Removes child group
-     *
-     * @param group
-     */
-    void removeChildGroup(Group group);
-
-
-    /**
-     * Removes child group
-     *
-     * @param name
-     */
-    void removeChildGroup(String name);
-
-    /**
-     * @return child group. Only groups that exist one level below in the tree will be returned.
-     */
-    Collection<Group> getChildGroups();
-
-
-    // Roles
-
-
-    void addRole(Role role, User user);
-
-    void addRole(String role, String user);
-
-    void removeRole(Role role, User user);
-
-    void removeRole(String role, String user);
-
-    Collection<Role> getRoles(User user);
-
-    Collection<Role> getRoles(String user);
-
-    Collection<User> getUsers(User user);
-
-    Collection<User> getUsers(String user);
-
-    Collection<User> getUsersWithRole(Role role);
-
-    Collection<User> getUsersWithRole(String role);
-
-    Map<Role, Set<User>> getMembershipsMap();
-
-    Collection<Membership> getMemberships();
-
-    boolean hasRole(Role role, User user);
-
-    boolean hasRole(String role, String user);
-
 
 }

@@ -37,24 +37,15 @@ public interface RoleQuery
 
     List<Role> executeQuery(RoleQuery query);
 
-
     // Conditions
 
     RoleQuery setName(String name);
 
-    String getName();
-
-    RoleQuery setUser(User user);
-
-    RoleQuery setUser(String user);
-
-    User getUser();
+    RoleQuery setOwner(IdentityType owner);
 
     RoleQuery setGroup(Group group);
 
     RoleQuery setGroup(String groupId);
-
-    Group getGroup();
 
     RoleQuery setAttributeFilter(String name, String[] values);
 

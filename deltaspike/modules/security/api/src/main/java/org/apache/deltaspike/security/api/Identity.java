@@ -67,4 +67,26 @@ public interface Identity extends Serializable
      * Logs out the currently authenticated user
      */
     void logout();
+    
+    /**
+     * Tests if the currently authenticated user has permission to perform the specified operation on
+     * the specified resource.  This method should be preferred over the overloaded hasPermission() method
+     * if a reference to the resource in question is already available.  
+     * 
+     * @param resource The resource for which the permission is required
+     * @param operation The operation that the user wishes to perform on the resource
+     * @return true if the current user has the permission.
+     */
+    boolean hasPermission(Object resource, String operation);
+    
+    /**
+     * As above, however this method should be used when a reference to the resource is not available, or
+     * is expensive to retrieve, for example looking up an entity from a relational database.
+     * 
+     * @param resourceClass The class of the resource
+     * @param identifier The identifier of the resource, for example may be a primary key value if an entity
+     * @param operation The operation that the user wishes to perform on the resource
+     * @return true if the current user has the permission.
+     */
+    boolean hasPermission(Class<?> resourceClass, Serializable identifier, String operation);
 }

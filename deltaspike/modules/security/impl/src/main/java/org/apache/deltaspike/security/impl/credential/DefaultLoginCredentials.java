@@ -21,20 +21,20 @@ package org.apache.deltaspike.security.impl.credential;
 import org.apache.deltaspike.security.api.authentication.event.LoginFailedEvent;
 import org.apache.deltaspike.security.api.authentication.event.PostAuthenticateEvent;
 import org.apache.deltaspike.security.api.credential.Credential;
-import org.apache.deltaspike.security.api.credential.LoginCredential;
+import org.apache.deltaspike.security.api.credential.LoginCredentials;
 
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Named;
 
 /**
- * The default LoginCredential implementation.  This implementation allows for a
+ * The default LoginCredentials implementation.  This implementation allows for a
  * username and plain text password to be set, and uses the PasswordCredential
  * implementation of the Credential interface for authentication.
  */
-@Named("loginCredential")
+@Named("loginCredentials")
 @RequestScoped
-public class DefaultLoginCredential implements LoginCredential
+public class DefaultLoginCredentials implements LoginCredentials
 {
     private Credential credential;
 
@@ -61,6 +61,25 @@ public class DefaultLoginCredential implements LoginCredential
     {
         this.credential = credential;
         //X TODO manager.fireEvent(new CredentialsUpdatedEvent(this.credential));
+    }
+    
+    public String getPassword()
+    {        
+        return credential != null && credential.getValue() instanceof String ? (String) credential.getValue() : null;
+    }
+
+    /**
+     * Convenience method that allows a plain text password credential to be set
+     */
+    public void setPassword(final String password)
+    {
+        this.credential = new Credential<String>() {
+            @Override
+            public String getValue()
+            {
+                return password;
+            }
+        };
     }
 
     public void invalidate()

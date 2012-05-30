@@ -18,11 +18,6 @@
  */
 package org.apache.deltaspike.security.api.idm;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.Map;
-import java.util.Set;
-
 /**
  * User representation
  */
@@ -53,7 +48,7 @@ public interface User extends IdentityType
 
     String getLastName();
 
-    void setLastName();
+    void setLastName(String lastName);
 
     //TODO: this one could be configurable with some regex
     String getFullName();
@@ -61,56 +56,4 @@ public interface User extends IdentityType
     String getEmail();
 
     void setEmail(String email);
-
-    boolean isEnabled();
-
-    void enable();
-
-    void disable();
-
-    Date getExpirationDate();
-
-    void setExpirationDate(Date expirationDate);
-
-    Date getCreationDate();
-
-
-    // Roles
-
-    void addRole(Role role, Group group);
-
-    void addRole(String role, String groupId);
-
-    Collection<Role> getRoles(Group group);
-
-    Collection<Role> getRoles(String groupId);
-
-    Map<Role, Set<Group>> getMembershipsMap();
-
-    // TODO: ?? Map<Group, Set<Role>> getMembershipMap() <-- both?
-
-    Collection<Membership> getMemberships();
-
-    Collection<Group> getGroups(Role role);
-
-    Collection<Group> getGroups(String role);
-
-    boolean hasRole(Role role, Group group);
-
-    boolean hasRole(String role, String groupId);
-
-
-    // Authentication
-
-    // TODO: token stuff
-    // TODO: boolean validateToken(Object token); ???
-
-    boolean validatePassword(String password);
-
-    void updatePassword(String password);
-
-
-
-
-
 }

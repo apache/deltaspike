@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.security.api.idm;
 
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -28,7 +29,12 @@ public interface IdentityType
 {
 
     String getKey();
+    
+    boolean isEnabled();
 
+    Date getExpirationDate();
+
+    Date getCreationDate();   
 
     // Attributes
 

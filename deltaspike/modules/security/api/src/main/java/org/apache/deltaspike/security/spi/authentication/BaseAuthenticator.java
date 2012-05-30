@@ -18,13 +18,16 @@
  */
 package org.apache.deltaspike.security.spi.authentication;
 
+import org.apache.deltaspike.security.api.User;
+
 /**
  * Abstract base class that Authenticator implementations can extend for convenience. 
  *
  */
 public abstract class BaseAuthenticator implements Authenticator
 {
-    private AuthenticationStatus status;
+    private AuthenticationStatus status = AuthenticationStatus.FAILURE;
+    private User user;
     
     public AuthenticationStatus getStatus()
     {
@@ -34,6 +37,16 @@ public abstract class BaseAuthenticator implements Authenticator
     protected void setStatus(AuthenticationStatus status)
     {
         this.status = status;
+    }
+    
+    protected void setUser(User user)
+    {
+        this.user = user;
+    }
+    
+    public User getUser()
+    {
+        return user;
     }
 
     public void postAuthenticate()
