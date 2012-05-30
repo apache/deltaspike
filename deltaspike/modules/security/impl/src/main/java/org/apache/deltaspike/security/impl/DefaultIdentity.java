@@ -22,6 +22,10 @@ import java.io.Serializable;
 
 import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.security.api.Identity;
+<<<<<<< HEAD
+=======
+import org.apache.deltaspike.security.api.User;
+>>>>>>> added missing files
 import org.apache.deltaspike.security.api.authentication.AuthenticationException;
 import org.apache.deltaspike.security.api.authentication.UnexpectedCredentialException;
 import org.apache.deltaspike.security.api.authentication.event.AlreadyLoggedInEvent;
@@ -31,8 +35,12 @@ import org.apache.deltaspike.security.api.authentication.event.PostAuthenticateE
 import org.apache.deltaspike.security.api.authentication.event.PostLoggedOutEvent;
 import org.apache.deltaspike.security.api.authentication.event.PreAuthenticateEvent;
 import org.apache.deltaspike.security.api.authentication.event.PreLoggedOutEvent;
+<<<<<<< HEAD
 import org.apache.deltaspike.security.api.credential.LoginCredentials;
 import org.apache.deltaspike.security.api.idm.User;
+=======
+import org.apache.deltaspike.security.api.credential.LoginCredential;
+>>>>>>> added missing files
 import org.apache.deltaspike.security.spi.authentication.Authenticator;
 import org.apache.deltaspike.security.spi.authentication.Authenticator.AuthenticationStatus;
 import org.apache.deltaspike.security.spi.authentication.AuthenticatorSelector;
@@ -62,7 +70,11 @@ public class DefaultIdentity implements Identity
 
     @Inject
     @SuppressWarnings("NonSerializableFieldInSerializableClass")
+<<<<<<< HEAD
     private LoginCredentials loginCredential;
+=======
+    private LoginCredential loginCredential;
+>>>>>>> added missing files
 
     /**
      * Flag indicating whether we are currently authenticating
