@@ -51,14 +51,4 @@ public @interface Transactional
      */
     @Nonbinding Class<? extends Annotation>[] qualifier() default Any.class;
 
-    //TODO remove it if we keep Any as default qualifier
-    /*
-    //alternative if we keep Default as default qualifier instead of Any
-    / **
-     * In case of false only transactions for entity-managers listed at {@link #qualifier()} will be handled
-     * @return true to use the injected entity-managers and
-     * false to restrict a service call to the specified entity managers
-     * /
-    @Nonbinding boolean autoDetection() default true;
-     */
 }

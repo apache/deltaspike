@@ -401,25 +401,6 @@ public class TransactionalInterceptorStrategy implements PersistenceStrategy
             findAndAddInjectedEntityManagers(target, currentTransactionContext);
         }
 
-        //TODO remove it if we don't use Transactional#autoDetection
-        /*
-        if (transactionalAnnotation == null)
-        {
-            currentTransactionContext.addTransactionMetaDataEntry(Default.class);
-        }
-        else if (!transactionalAnnotation.autoDetection())
-        {
-            for (Class<? extends Annotation> qualifier : transactionalAnnotation.qualifier())
-            {
-                currentTransactionContext.addTransactionMetaDataEntry(qualifier);
-            }
-        }
-        else
-        {
-            findAndAddInjectedEntityManagers(target, currentTransactionContext);
-        }
-        */
-
         return currentTransactionContext;
     }
 

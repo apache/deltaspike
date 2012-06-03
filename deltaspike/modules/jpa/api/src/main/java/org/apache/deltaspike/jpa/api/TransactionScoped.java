@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
 import javax.enterprise.context.NormalScope;
 
 /**
- * <p>A &#064;TransactionScoped contextual instance will unique for a given
+ * <p>A &#064;TransactionScoped contextual instance will be unique for a given
  * CODI-managed Transaction. The context will get started when the outermost
  * {@link Transactional} method gets invoked and will get closed when
  * the call chain leaves the outermost {@link Transactional} method.</p>
