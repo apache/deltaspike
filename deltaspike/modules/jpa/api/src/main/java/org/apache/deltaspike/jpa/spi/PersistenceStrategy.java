@@ -21,7 +21,7 @@ package org.apache.deltaspike.jpa.spi;
 import org.apache.deltaspike.core.spi.InterceptorStrategy;
 
 /**
- * Marker interface for a pluggable strategy for {@link org.apache.deltaspike.jpa.api.Transactional}
+ * Marker interface for a plugable strategy for {@link org.apache.deltaspike.jpa.api.Transactional}.
  */
 public interface PersistenceStrategy extends InterceptorStrategy
 {

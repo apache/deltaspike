@@ -18,18 +18,13 @@
  */
 package org.apache.deltaspike.jpa.impl.transaction;
 
-import org.apache.deltaspike.core.api.projectstage.TestStage;
-import org.apache.deltaspike.core.util.ProjectStageProducer;
+
+import org.apache.deltaspike.core.api.literal.AnyLiteral;
 import org.apache.deltaspike.jpa.api.Transactional;
-import org.apache.deltaspike.jpa.impl.EntityManagerRef;
-import org.apache.deltaspike.jpa.impl.PersistenceHelper;
 import org.apache.deltaspike.jpa.impl.transaction.context.TransactionBeanStorage;
 import org.apache.deltaspike.jpa.spi.PersistenceStrategy;
-
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.Any;
-import javax.enterprise.inject.Default;
+import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.interceptor.InvocationContext;
@@ -37,130 +32,129 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * <p>Default implementation of our pluggable PersistenceStrategy.
+ * <p>Default implementation of our plugable PersistenceStrategy.
  * It supports nested Transactions with the MANDATORY behaviour.</p>
- * <p/>
+ *
  * <p>The outermost &#064;Transactional interceptor for the given
  * {@link javax.inject.Qualifier} will open an {@link javax.persistence.EntityTransaction}
  * and the outermost &#064;Transactional interceptor for <b>all</b>
  * EntityManagers will flush and subsequently close all open transactions.</p>
- * <p/>
+ *
  * <p>If an Exception occurs in flushing the EntityManagers or any other Exception
  * gets thrown inside the intercepted method chain and <i>not</i> gets catched
  * until the outermost &#064;Transactional interceptor gets reached, then all
  * open transactions will get rollbacked.</p>
- * <p/>
+ *
  * <p>If you like to implement your own PersistenceStrategy, then use the
  * standard CDI &#064;Alternative mechanism.</p>
  */
 @Dependent
 public class TransactionalInterceptorStrategy implements PersistenceStrategy
 {
-    private static final long serialVersionUID = 2433371956913151976L;
+    private static final long serialVersionUID = -1432802805095533499L;
 
     private static final Logger LOGGER = Logger.getLogger(TransactionalInterceptorStrategy.class.getName());
-
-    /**
-     * key=qualifier name, value= reference counter
-     */
-    private static transient ThreadLocal<InternalTransactionContext> transactionContext =
-            new ThreadLocal<InternalTransactionContext>();
 
     @Inject
     private BeanManager beanManager;
 
-    private boolean isTestProjectStage;
+    @Inject
+    private TransactionBeanStorage transactionBeanStorage;
 
-    @PostConstruct
-    protected void init()
-    {
-        this.isTestProjectStage = TestStage.class.isAssignableFrom(
-            ProjectStageProducer.getInstance().getProjectStage().getClass());
-    }
+    @Inject
+    private PersistenceStrategyHelper persistenceHelper;
+
 
     public Object execute(InvocationContext invocationContext) throws Exception
     {
-        Transactional transactionalAnnotation = extractTransactionalAnnotation(invocationContext);
+        Transactional transactionalAnnotation = persistenceHelper.extractTransactionalAnnotation(invocationContext);
 
-        //TODO add support for entity managers injected as argument/s
+        // all the configured qualifier keys
+        Set<Class<? extends Annotation>> emQualifiers = persistenceHelper.resolveEntityManagerQualifiers(
+                    transactionalAnnotation, invocationContext.getTarget().getClass());
 
-        InternalTransactionContext currentTransactionContext =
-                getOrCreateTransactionContext(transactionalAnnotation, invocationContext.getTarget());
+        List<EntityManager> ems = new ArrayList<EntityManager>();
 
-        List<String> transactionKeys = getTransactionKeys(currentTransactionContext);
+        boolean isOutermostInterceptor = transactionBeanStorage.isEmpty();
 
-        if (TransactionBeanStorage.getStorage() == null)
+        if (isOutermostInterceptor)
         {
-            TransactionBeanStorage.activateNewStorage();
+            // a new Context needs to get started
+            transactionBeanStorage.startTransactionScope();
         }
 
-        for (String transactionKey : transactionKeys)
+        // the 'layer' of the transactional invocation, aka the refCounter
+        int transactionLayer = transactionBeanStorage.incrementRefCounter();
+
+
+        for (Class<? extends Annotation> emQualifier : emQualifiers)
         {
-            TransactionBeanStorage.getStorage().startTransactionScope(transactionKey);
+            EntityManager entityManager = resolveEntityManagerForQualifier(emQualifier);
+
+            transactionBeanStorage.storeUsedEntityManager(emQualifier, entityManager);
+
+            ems.add(entityManager);
         }
 
-        List<String> previousTransactionKeys = null;
 
-        if (transactionKeys != null && !transactionKeys.isEmpty())
-        {
-            TransactionBeanStorage.getStorage().activateTransactionScope(transactionKeys);
-        }
-
-        beginOrJoinTransactionsAndEnter(currentTransactionContext);
-
-        // used to store any exception we get from the services
         Exception firstException = null;
 
         try
         {
+            for (EntityManager entityManager : ems)
+            {
+                EntityTransaction transaction = entityManager.getTransaction();
+
+                if (!transaction.isActive())
+                {
+                    transaction.begin();
+                }
+            }
+
             return invocationContext.proceed();
         }
         catch (Exception e)
         {
             firstException = e;
 
-            leave(currentTransactionContext);
             // we only cleanup and rollback all open transactions in the outermost interceptor!
             // this way, we allow inner functions to catch and handle exceptions properly.
-            if (isOutermostInterceptor(currentTransactionContext))
+            if (isOutermostInterceptor)
             {
-                for (TransactionMetaDataEntry transactionMetaDataEntry :
-                        currentTransactionContext.getTransactionMetaDataEntries())
+                HashMap<Class, EntityManager> emsEntries = transactionBeanStorage.getUsedEntityManagers();
+                for (Map.Entry<Class, EntityManager> emsEntry: emsEntries.entrySet())
                 {
-                    try
+                    EntityManager em = emsEntry.getValue();
+                    EntityTransaction transaction = em.getTransaction();
+                    if (transaction != null && transaction.isActive())
                     {
-                        EntityTransaction transaction = transactionMetaDataEntry.getEntityManager().getTransaction();
-
-                        if (transaction != null && transaction.isActive())
+                        try
                         {
-                            try
+                            transaction.rollback();
+                        }
+                        catch (Exception eRollback)
+                        {
+                            if (LOGGER.isLoggable(Level.SEVERE))
                             {
-                                transaction.rollback();
-                            }
-                            catch (Exception eRollback)
-                            {
-                                if (LOGGER.isLoggable(Level.SEVERE))
-                                {
-                                    LOGGER.log(Level.SEVERE,
-                                            "Got additional Exception while subsequently " +
-                                                    "rolling back other SQL transactions", eRollback);
-                                }
+                                LOGGER.log(Level.SEVERE,
+                                        "Got additional Exception while subsequently " +
+                                                "rolling back other SQL transactions", eRollback);
                             }
                         }
                     }
-                    catch (IllegalStateException e2)
-                    {
-                        //just happens if the setup is wrong -> we can't do a proper cleanup
-                        //but we have to continue to cleanup the scope
-                    }
                 }
 
-                cleanupTransactionBeanStorage();
+                // drop all EntityManagers from the ThreadLocal
+                transactionBeanStorage.cleanUsedEntityManagers();
             }
 
             // give any extensions a chance to supply a better error message
@@ -168,6 +162,7 @@ public class TransactionalInterceptorStrategy implements PersistenceStrategy
 
             // rethrow the exception
             throw e;
+
         }
         finally
         {
@@ -175,32 +170,28 @@ public class TransactionalInterceptorStrategy implements PersistenceStrategy
             // in this case, we rollback all later transactions too.
             boolean commitFailed = false;
 
-            // only commit all transactions if we didn't rollback them already
-            if (firstException == null)
+            // commit all open transactions in the outermost interceptor!
+            // this is a 'JTA for poor men' only, and will not guaranty
+            // commit stability over various databases!
+            if (isOutermostInterceptor)
             {
-                leave(currentTransactionContext);
 
-                // commit all open transactions in the outermost interceptor!
-                // this is a 'JTA for poor men' only, and will not guaranty
-                // commit stability over various databases!
-                if (isOutermostInterceptor(currentTransactionContext))
+                // only commit all transactions if we didn't rollback
+                // them already
+                if (firstException == null)
                 {
-                    EntityTransaction transaction;
-                    EntityManager entityManager;
+                    HashMap<Class, EntityManager> emsEntries = transactionBeanStorage.getUsedEntityManagers();
                     // but first try to flush all the transactions and write the updates to the database
-                    for (TransactionMetaDataEntry transactionMetaDataEntry :
-                            currentTransactionContext.getTransactionMetaDataEntries())
+                    for (EntityManager em: emsEntries.values())
                     {
-                        entityManager = transactionMetaDataEntry.getEntityManager();
-                        transaction = entityManager.getTransaction();
-
+                        EntityTransaction transaction = em.getTransaction();
                         if (transaction != null && transaction.isActive())
                         {
                             try
                             {
                                 if (!commitFailed)
                                 {
-                                    entityManager.flush();
+                                    em.flush();
                                 }
                             }
                             catch (Exception e)
@@ -213,19 +204,16 @@ public class TransactionalInterceptorStrategy implements PersistenceStrategy
                     }
 
                     // and now either commit or rollback all transactions
-                    for (TransactionMetaDataEntry transactionMetaDataEntry :
-                            currentTransactionContext.getTransactionMetaDataEntries())
+                    for (EntityManager em : emsEntries.values())
                     {
-                        entityManager = transactionMetaDataEntry.getEntityManager();
-                        transaction = entityManager.getTransaction();
-
+                        EntityTransaction transaction = em.getTransaction();
                         if (transaction != null && transaction.isActive())
                         {
                             try
                             {
                                 if (!commitFailed)
                                 {
-                                    transaction.commit(); //shouldn't fail since the transaction was flushed already
+                                    transaction.commit();
                                 }
                                 else
                                 {
@@ -239,20 +227,14 @@ public class TransactionalInterceptorStrategy implements PersistenceStrategy
                             }
                         }
                     }
-                    cleanupTransactionBeanStorage();
+
+                    // and now we close the open transaction scope
+                    transactionBeanStorage.endTransactionScope();
                 }
-                else
-                {
-                    // we are NOT the outermost TransactionInterceptor
-                    // so we have to re-activate the previous transaction
-                    if (previousTransactionKeys != null && !previousTransactionKeys.isEmpty())
-                    {
-                        TransactionBeanStorage.getStorage().activateTransactionScope(previousTransactionKeys);
-                    }
-                }
+
             }
 
-            cleanup(currentTransactionContext);
+            transactionBeanStorage.decrementRefCounter();
 
             if (commitFailed)
             {
@@ -262,202 +244,54 @@ public class TransactionalInterceptorStrategy implements PersistenceStrategy
         }
     }
 
-    private void cleanupTransactionBeanStorage()
-    {
-        // and now we close all open transaction-scopes and reset the storage
-        TransactionBeanStorage.getStorage().endAllTransactionScopes();
-        TransactionBeanStorage.resetStorage();
-    }
 
-    private List<String> getTransactionKeys(InternalTransactionContext currentTransactionContext)
+    private EntityManager resolveEntityManagerForQualifier(Class<? extends Annotation> emQualifier)
     {
-        List<String> transactionKeys = new ArrayList<String>();
+        Bean<EntityManager> entityManagerBean = resolveEntityManagerBean(emQualifier);
 
-        for (TransactionMetaDataEntry transactionMetaDataEntry :
-                currentTransactionContext.getTransactionMetaDataEntries())
+        if (entityManagerBean == null)
         {
-            if (transactionMetaDataEntry.getMethodCallDepth() == 0)
-            {
-                transactionKeys.add(transactionMetaDataEntry.getId());
-            }
+            return null;
         }
 
-        return transactionKeys;
-    }
-
-    private void removeTransactionContext()
-    {
-        if (this.isTestProjectStage)
-        {
-            this.beanManager.fireEvent(new PersistenceStrategyCleanupTestEvent());
-        }
-
-        transactionContext.set(null);
-        transactionContext.remove();
-    }
-
-    private void startTransactionStorage(String transactionKey)
-    {
-        if (TransactionBeanStorage.getStorage() == null)
-        {
-            TransactionBeanStorage.activateNewStorage();
-        }
-
-        TransactionBeanStorage.getStorage().startTransactionScope(transactionKey);
-    }
-
-    private void beginOrJoinTransactionsAndEnter(InternalTransactionContext transactionContext)
-    {
-        for (TransactionMetaDataEntry transactionMetaDataEntry : transactionContext.getTransactionMetaDataEntries())
-        {
-            if (transactionMetaDataEntry.getMethodCallDepth() == 0)
-            {
-                startTransactionStorage(transactionMetaDataEntry.getId());
-
-                beginTransaction(transactionMetaDataEntry);
-            }
-            transactionMetaDataEntry.enterNewMethodLevel();
-        }
-    }
-
-    private void beginTransaction(TransactionMetaDataEntry transactionMetaDataEntry)
-    {
-        EntityManager entityManager = transactionMetaDataEntry.getEntityManager();
-
-        EntityTransaction transaction = entityManager.getTransaction();
-
-        if (!transaction.isActive())
-        {
-            transaction.begin();
-            transactionMetaDataEntry.markLevel();
-        }
+        return (EntityManager) beanManager.getReference(entityManagerBean, EntityManager.class,
+                beanManager.createCreationalContext(entityManagerBean));
     }
 
     /**
      * This method might get overridden in subclasses to supply better error messages.
      * This is useful if e.g. a JPA provider only provides a stubborn Exception for
      * their ConstraintValidationExceptions.
+     * @param e
+     * @return the wrapped or unwrapped Exception
      */
     protected Exception prepareException(Exception e)
     {
         return e;
     }
 
-    protected Transactional extractTransactionalAnnotation(InvocationContext context)
-    {
-        Transactional transactionalAnnotation = context.getMethod().getAnnotation(Transactional.class);
 
-        if (transactionalAnnotation == null)
+
+    protected Bean<EntityManager> resolveEntityManagerBean(Class<? extends Annotation> qualifierClass)
+    {
+        Set<Bean<?>> entityManagerBeans = beanManager.getBeans(EntityManager.class, new AnyLiteral());
+        if (entityManagerBeans == null)
         {
-            transactionalAnnotation = context.getTarget().getClass().getAnnotation(Transactional.class);
+            entityManagerBeans = new HashSet<Bean<?>>();
         }
 
-        //check class stereotypes
-        if (transactionalAnnotation == null)
+        for (Bean<?> currentEntityManagerBean : entityManagerBeans)
         {
-            for (Annotation annotation : context.getTarget().getClass().getAnnotations())
+            Set<Annotation> foundQualifierAnnotations = currentEntityManagerBean.getQualifiers();
+
+            for (Annotation currentQualifierAnnotation : foundQualifierAnnotations)
             {
-                if (this.beanManager.isQualifier(annotation.annotationType()))
+                if (currentQualifierAnnotation.annotationType().equals(qualifierClass))
                 {
-                    for (Annotation metaAnnotation : annotation.annotationType().getAnnotations())
-                    {
-                        if (Transactional.class.isAssignableFrom(metaAnnotation.annotationType()))
-                        {
-                            return (Transactional) metaAnnotation;
-                        }
-                    }
+                    return (Bean<EntityManager>) currentEntityManagerBean;
                 }
             }
         }
-
-        return transactionalAnnotation;
-    }
-
-    private InternalTransactionContext getOrCreateTransactionContext(Transactional transactionalAnnotation,
-                                                                     Object target)
-    {
-        InternalTransactionContext currentTransactionContext = transactionContext.get();
-
-        if (currentTransactionContext == null)
-        {
-            currentTransactionContext = new InternalTransactionContext(beanManager);
-            transactionContext.set(currentTransactionContext);
-        }
-
-        if (transactionalAnnotation == null)
-        {
-            //TODO check if we still need it
-            currentTransactionContext.addTransactionMetaDataEntry(Default.class);
-        }
-        else if (!Any.class.isAssignableFrom(transactionalAnnotation.qualifier()[0]))
-        {
-            for (Class<? extends Annotation> qualifier : transactionalAnnotation.qualifier())
-            {
-                currentTransactionContext.addTransactionMetaDataEntry(qualifier);
-            }
-        }
-        else
-        {
-            findAndAddInjectedEntityManagers(target, currentTransactionContext);
-        }
-
-        return currentTransactionContext;
-    }
-
-    private void findAndAddInjectedEntityManagers(Object target, InternalTransactionContext currentTransactionContext)
-    {
-        List<EntityManagerRef> entityManagerRefList = PersistenceHelper.tryToFindEntityManagerReference(target);
-
-        if (entityManagerRefList == null)
-        {
-            return;
-        }
-
-        for (EntityManagerRef entityManagerRef : entityManagerRefList)
-        {
-            currentTransactionContext.addTransactionMetaDataEntry(
-                    entityManagerRef.getKey(), entityManagerRef.getEntityManager(target));
-        }
-    }
-
-    private void leave(InternalTransactionContext currentTransactionContext)
-    {
-        for (TransactionMetaDataEntry transactionMetaDataEntry :
-                currentTransactionContext.getTransactionMetaDataEntries())
-        {
-            transactionMetaDataEntry.leave();
-        }
-    }
-
-    private boolean isOutermostInterceptor(InternalTransactionContext currentTransactionContext)
-    {
-        for (TransactionMetaDataEntry transactionMetaDataEntry :
-                currentTransactionContext.getTransactionMetaDataEntries())
-        {
-            //can be < 0 if a 2nd entity-manager is used for a nested call which
-            //should be committed/rolled back before the outermost method returns
-            if (transactionMetaDataEntry.getMethodCallDepth() > 0)
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private void cleanup(InternalTransactionContext currentTransactionContext)
-    {
-        for (TransactionMetaDataEntry transactionMetaDataEntry :
-                currentTransactionContext.getTransactionMetaDataEntries())
-        {
-            //can be < 0 if a 2nd entity-manager is used for a nested call which
-            //should be committed/rolled back before the outermost method returns
-            if (transactionMetaDataEntry.getMethodCallDepth() > 0)
-            {
-                return;
-            }
-        }
-
-        removeTransactionContext();
+        return null;
     }
 }

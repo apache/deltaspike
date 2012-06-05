@@ -20,10 +20,6 @@ package org.apache.deltaspike.jpa.impl.transaction.context;
 
 import javax.enterprise.context.spi.Contextual;
 import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.spi.Bean;
-import java.lang.annotation.Annotation;
-import java.util.Collections;
-import java.util.Set;
 
 /**
  * Holds the information we need store to manage
@@ -56,14 +52,5 @@ public class TransactionBeanEntry<T>
     public CreationalContext<T> getCreationalContext()
     {
         return creationalContext;
-    }
-
-    public Set<Annotation> getQualifiers()
-    {
-        if (bean instanceof Bean)
-        {
-            return ((Bean<?>) bean).getQualifiers();
-        }
-        return Collections.emptySet();
     }
 }

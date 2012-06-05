@@ -24,7 +24,6 @@ import org.apache.deltaspike.core.util.ProjectStageProducer;
 import org.apache.deltaspike.jpa.impl.transaction.context.TransactionContextExtension;
 import org.apache.deltaspike.test.jpa.api.shared.TestEntityManager;
 import org.apache.deltaspike.test.jpa.api.shared.TestEntityTransaction;
-import org.apache.deltaspike.test.jpa.api.shared.TestEventObserver;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -48,9 +47,6 @@ public class ManualTransactionTest
 
     @Inject
     private TestEntityManagerProducer entityManagerProducer;
-
-    @Inject
-    private TestEventObserver testEventObserver;
 
     @Deployment
     public static WebArchive deploy()
@@ -157,8 +153,5 @@ public class ManualTransactionTest
         Assert.assertEquals(true, secondTransaction.isStarted());
         Assert.assertEquals(true, secondTransaction.isCommitted());
         Assert.assertEquals(false, secondTransaction.isRolledBack());
-
-        Assert.assertEquals(3, this.testEventObserver.getPersistenceStrategyCleanupCalls());
-        Assert.assertEquals(3, this.testEventObserver.getTransactionBeanStorageCleanupCalls());
     }
 }

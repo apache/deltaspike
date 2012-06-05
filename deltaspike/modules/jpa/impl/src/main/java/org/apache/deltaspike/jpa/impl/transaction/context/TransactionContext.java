@@ -19,6 +19,8 @@
 package org.apache.deltaspike.jpa.impl.transaction.context;
 
 
+
+import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.jpa.api.TransactionScoped;
 import org.apache.deltaspike.jpa.api.Transactional;
 
@@ -26,46 +28,34 @@ import javax.enterprise.context.ContextNotActiveException;
 import javax.enterprise.context.spi.Context;
 import javax.enterprise.context.spi.Contextual;
 import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.Any;
-import javax.enterprise.inject.Typed;
-import javax.enterprise.inject.spi.Bean;
-import javax.inject.Named;
 import java.lang.annotation.Annotation;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
- * CDI Context for managing &#064;{@link TransactionScoped} contextual instances.
+ * CDI Context for managing &#064;{@link org.apache.deltaspike.jpa.api.TransactionScoped} contextual instances.
  */
-@Typed()
 public class TransactionContext implements Context
 {
+    // Attention! this is not a normal instance but a PROXY
+    // thus it resolves the correct contextual instance every time
+    // it will lazily initialized at runtime after the container
+    // got started.
+    private TransactionBeanStorage beanStorage;
+
+
     public <T> T get(Contextual<T> component)
     {
-        List<Map<Contextual, TransactionBeanEntry>> transactionBeanEntryMaps = getTransactionBeanEntryMaps();
+        Map<Contextual, TransactionBeanEntry> transactionBeanEntryMap = getBeanStorage().getActiveTransactionContext();
 
-        if (transactionBeanEntryMaps == null)
+        if (transactionBeanEntryMap == null)
         {
-            return null;
+            throw new ContextNotActiveException("Not accessed within a transactional method - use @" +
+                    Transactional.class.getName());
         }
 
-        TransactionBeanEntry transactionBeanEntry = null;
-
-        for (Map<Contextual, TransactionBeanEntry> transactionBeanEntryMap : transactionBeanEntryMaps)
-        {
-            transactionBeanEntry = transactionBeanEntryMap.get(component);
-
-            if (transactionBeanEntry != null)
-            {
-                break;
-            }
-        }
-
+        TransactionBeanEntry transactionBeanEntry = transactionBeanEntryMap.get(component);
         if (transactionBeanEntry != null)
         {
-            checkTransactionBeanEntry(transactionBeanEntry);
             return (T) transactionBeanEntry.getContextualInstance();
         }
 
@@ -74,121 +64,26 @@ public class TransactionContext implements Context
 
     public <T> T get(Contextual<T> component, CreationalContext<T> creationalContext)
     {
-        if (!(component instanceof Bean))
-        {
-            throw new IllegalStateException(Contextual.class.getName() + " is not of type " + Bean.class.getName());
-        }
+        Map<Contextual, TransactionBeanEntry> transactionBeanEntryMap = getBeanStorage().getActiveTransactionContext();
 
-        Set<Annotation> qualifiers = ((Bean)component).getQualifiers();
-        Set<Annotation> transactionKeys = new HashSet<Annotation>();
-
-        for (Annotation currentQualifier : qualifiers)
-        {
-            if (Any.class.isAssignableFrom(currentQualifier.annotationType()))
-            {
-                continue;
-            }
-            if (Named.class.isAssignableFrom(currentQualifier.annotationType()))
-            {
-                continue;
-            }
-
-            //TODO since we just support a simple qualifier as key, we can exclude all other qualifiers
-
-            transactionKeys.add(currentQualifier);
-        }
-        
-        if (transactionKeys.size() != 1)
-        {
-            throw new IllegalStateException(transactionKeys.size() + " qualifiers found at " + component.toString() +
-                " only one is allowed!");
-        }
-        
-        String transactionKey = transactionKeys.iterator().next().annotationType().getName();
-        
-        if (TransactionBeanStorage.getStorage().getActiveTransactionContextList() == null)
-        {
-            TransactionBeanStorage.activateNewStorage();
-        }
-
-        List<Map<Contextual, TransactionBeanEntry>> activeTransactionBeanEntryMaps = getTransactionBeanEntryMaps();
-
-        if (activeTransactionBeanEntryMaps == null)
+        if (transactionBeanEntryMap == null)
         {
             throw new ContextNotActiveException("Not accessed within a transactional method - use @" +
                     Transactional.class.getName());
         }
 
-        TransactionBeanEntry transactionBeanEntry;
-        if (!activeTransactionBeanEntryMaps.isEmpty())
+        TransactionBeanEntry transactionBeanEntry = transactionBeanEntryMap.get(component);
+        if (transactionBeanEntry != null)
         {
-            for (Map<Contextual, TransactionBeanEntry> currentTransactionBeanEntryMap : activeTransactionBeanEntryMaps)
-            {
-                transactionBeanEntry = currentTransactionBeanEntryMap.get(component);
-
-                if (transactionBeanEntry != null)
-                {
-                    checkTransactionBeanEntry(transactionBeanEntry);
-                    return (T) transactionBeanEntry.getContextualInstance();
-                }
-            }
+            return (T) transactionBeanEntry.getContextualInstance();
         }
 
         // if it doesn't yet exist, we need to create it now!
         T instance = component.create(creationalContext);
         transactionBeanEntry = new TransactionBeanEntry(component, instance, creationalContext);
-
-        checkTransactionBeanEntry(transactionBeanEntry);
-
-        TransactionBeanStorage.getStorage().storeTransactionBeanEntry(transactionKey, transactionBeanEntry);
+        transactionBeanEntryMap.put(component, transactionBeanEntry);
 
         return instance;
-    }
-
-    private void checkTransactionBeanEntry(TransactionBeanEntry<?> transactionBeanEntry)
-    {
-        List<String> activeTransactionKeys = TransactionBeanStorage.getStorage().getActiveTransactionKeyList();
-
-        for (Annotation qualifier : transactionBeanEntry.getQualifiers())
-        {
-            if (activeTransactionKeys.contains(qualifier.annotationType().getName()))
-            {
-                return;
-            }
-        }
-
-        throw new IllegalStateException("Transaction qualifier of the intercepted bean or method and " +
-                "the injected entity-manager has to be the same. Active transaction qualifier: " +
-                //TODO
-                activeTransactionKeys + " qualifier/s of the entity-manager: " +
-                extractQualifiers(transactionBeanEntry));
-    }
-
-    private String extractQualifiers(TransactionBeanEntry<?> transactionBeanEntry)
-    {
-        StringBuilder result = new StringBuilder();
-        for (Annotation annotation : transactionBeanEntry.getQualifiers())
-        {
-            if (result.length() != 0)
-            {
-                result.append(";");
-            }
-
-            result.append(annotation.annotationType().getName());
-        }
-        return result.toString();
-    }
-
-    private List<Map<Contextual, TransactionBeanEntry>> getTransactionBeanEntryMaps()
-    {
-        TransactionBeanStorage transactionBeanStorage = TransactionBeanStorage.getStorage();
-
-        if (transactionBeanStorage != null)
-        {
-            transactionBeanStorage.activateTransactionScope(null);
-            return transactionBeanStorage.getActiveTransactionContextList();
-        }
-        return null;
     }
 
     public Class<? extends Annotation> getScope()
@@ -198,6 +93,26 @@ public class TransactionContext implements Context
 
     public boolean isActive()
     {
-        return TransactionBeanStorage.getStorage() != null;
+        try
+        {
+            return getBeanStorage().getActiveTransactionContext() != null;
+        }
+        catch (ContextNotActiveException e)
+        {
+            return false;
+        }
     }
+
+    private TransactionBeanStorage getBeanStorage()
+    {
+        if (beanStorage == null)
+        {
+            synchronized (this)
+            {
+                beanStorage = BeanProvider.getContextualReference(TransactionBeanStorage.class);
+            }
+        }
+        return beanStorage;
+    }
+
 }

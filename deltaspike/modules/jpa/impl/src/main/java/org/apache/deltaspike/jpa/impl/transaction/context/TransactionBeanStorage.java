@@ -18,229 +18,200 @@
  */
 package org.apache.deltaspike.jpa.impl.transaction.context;
 
-import org.apache.deltaspike.core.api.projectstage.TestStage;
-import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
-import org.apache.deltaspike.core.util.ProjectStageProducer;
-import org.apache.deltaspike.jpa.impl.transaction.TransactionBeanStorageCleanupTestEvent;
-
+import javax.annotation.PreDestroy;
+import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.spi.Contextual;
-import javax.enterprise.inject.Typed;
-import java.util.ArrayList;
-import java.util.Collections;
+import javax.persistence.EntityManager;
+import java.lang.annotation.Annotation;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Stack;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * <p>This bean stores information about
+ * <p>This class stores information about
  * &#064;{@link org.apache.deltaspike.jpa.api.TransactionScoped}
  * contextual instances, their {@link javax.enterprise.context.spi.CreationalContext} etc.</p>
- * <p/>
+ *
  * <p>We use a RequestScoped bean because this way we don't need to take
  * care about cleaning up any ThreadLocals ourselves. This also makes sure that
  * we subsequently destroy any left over TransactionScoped beans (which should not happen,
  * but who knows). We also don't need to do any fancy synchronization stuff since
  * we are sure that we are always in the same Thread.</p>
  */
-@Typed()
+@RequestScoped
 public class TransactionBeanStorage
 {
     private static final Logger LOGGER = Logger.getLogger(TransactionBeanStorage.class.getName());
 
-    private static ThreadLocal<TransactionBeanStorage> currentStorage = new ThreadLocal<TransactionBeanStorage>();
-
-    /**
-     * This is the actual bean storage.
-     * The structure is:
-     * <ol>
-     * <li>transactioKey identifies the 'database qualifier'</li>
-     * <li>transactionKey -> Stack: we need the Stack because of REQUIRES_NEW, etc</li>
-     * <li>top Element in the Stack -> Context beans for the transactionKey</li>
-     * </ol>
-     */
-    private Map<String, Map<Contextual, TransactionBeanEntry>> storedTransactionContexts =
-            new HashMap<String, Map<Contextual, TransactionBeanEntry>>();
-
-    private List<Map<Contextual, TransactionBeanEntry>> activeTransactionContextList;
-
-    private List<String> activeTransactionKeyList = new ArrayList<String>();
-
-    private boolean isTestProjectStage;
-
-    private TransactionBeanStorage()
+    private static class TransactionContextInfo
     {
-        this.isTestProjectStage = TestStage.class.isAssignableFrom(
-            ProjectStageProducer.getInstance().getProjectStage().getClass());
+        /**
+         * This is the actual bean storage.
+         * The structure is:
+         * <ol>
+         *     <li>transactioKey identifies the 'database qualifier'</li>
+         *     <li>transactionKey -> Stack: we need the Stack because of REQUIRES_NEW, etc</li>
+         *     <li>top Element in the Stack -> Context beans for the transactionKey</li>
+         * </ol>
+         *
+         */
+        private Map<Contextual, TransactionBeanEntry> contextualInstances =
+                new HashMap<Contextual, TransactionBeanEntry>();
+
+        /** key=qualifier name, value= EntityManager */
+        private HashMap<Class, EntityManager> ems = new HashMap<Class, EntityManager>();
+
+        /**
+         * counts the 'depth' of the interceptor invocation.
+         */
+        private AtomicInteger refCounter = new AtomicInteger(0);
     }
 
     /**
-     * @return the storage for the current thread if there is one - null otherwise
+     * If we hit a layer with REQUIRES_NEW, then create a new TransactionContextInfo
+     * and push the old one on top of this stack.
      */
-    public static TransactionBeanStorage getStorage()
-    {
-        return currentStorage.get();
-    }
+    private Stack<TransactionContextInfo> oldTci = new Stack<TransactionContextInfo>();
 
     /**
-     * Creates a new storage for the current thread
+     * The TransactionContextInfo which is on top of the stack.
+     */
+    private TransactionContextInfo currentTci = null;
+
+    /**
+     * Increment the ref counter and return the old value.
+     * Must only be called if the bean storage is not {@link #isEmpty()}.
      *
-     * @return the storage which was associated with the thread before - null if there was no storage
+     * @return the the previous values of the refCounters. If 0 then we are 'outermost'
      */
-    public static TransactionBeanStorage activateNewStorage()
+    public int incrementRefCounter()
     {
-        TransactionBeanStorage previousStorage = currentStorage.get();
-        currentStorage.set(new TransactionBeanStorage());
-        return previousStorage;
+        return currentTci.refCounter.incrementAndGet() - 1;
     }
 
     /**
-     * Removes the current storage
-     */
-    public static void resetStorage()
-    {
-        TransactionBeanStorage currentBeanStorage = currentStorage.get();
-
-        if (currentBeanStorage != null)
-        {
-            currentBeanStorage.close();
-
-            currentStorage.set(null);
-            currentStorage.remove();
-        }
-    }
-
-    private void close()
-    {
-        if (this.isTestProjectStage)
-        {
-            BeanManagerProvider.getInstance().getBeanManager().fireEvent(new TransactionBeanStorageCleanupTestEvent());
-        }
-    }
-
-    /**
-     * Start the TransactionScope with the given qualifier
+     * Decrement the reference counter and return the layer.
      *
-     * @param transactionKey
+     * @return the layer number. 0 represents the outermost interceptor for the qualifier
      */
-    public void startTransactionScope(String transactionKey)
+    public int decrementRefCounter()
     {
-        if (LOGGER.isLoggable(Level.FINER))
+        if (currentTci == null)
         {
-            LOGGER.finer("starting TransactionScope " + transactionKey);
+            return 0;
         }
 
-        Map<Contextual, TransactionBeanEntry> transactionBeanEntryMap = storedTransactionContexts.get(transactionKey);
+        return currentTci.refCounter.decrementAndGet();
+    }
 
-        if (transactionBeanEntryMap == null)
+
+    /**
+     * @return <code>true</code> if we are the outermost interceptor over all qualifiers
+     *         and the TransactionBeanStorage is yet empty.
+     */
+    public boolean isEmpty()
+    {
+        return currentTci == null;
+    }
+
+    /**
+     * Start a new TransactionScope
+     * @return the
+     */
+    public void startTransactionScope()
+    {
+        // first store away any previous TransactionContextInfo
+        if (currentTci != null)
         {
-            transactionBeanEntryMap = new HashMap<Contextual, TransactionBeanEntry>();
-            storedTransactionContexts.put(transactionKey, transactionBeanEntryMap);
+            oldTci.push(currentTci);
+        }
+        currentTci = new TransactionContextInfo();
+
+        if (LOGGER.isLoggable(Level.FINER))
+        {
+            LOGGER.finer( "starting TransactionScope");
         }
     }
 
     /**
-     * Activate the TransactionScope with the given qualifier.
-     * This is needed if a subsequently invoked &#064;Transactional
-     * method will switch to another persistence unit.
-     * This method must also be invoked when the transaction just got started
-     * with {@link #startTransactionScope(String)}.
+     * End the TransactionScope with the given qualifier.
+     * This will subsequently destroy all beans which are stored
+     * in the context.
+     *
+     * This method only gets used if we leave a transaction with REQUIRES_NEW.
+     * In all other cases we use {@link #endAllTransactionScopes()}.
      */
-    public void activateTransactionScope(List<String> transactionKeyList)
-    {
-        //TODO remove it after a review
-        /*
-        if (transactionKeyList != null && transactionKeyList.isEmpty())
-        {
-            transactionKeyList.add(Default.class.getName()); //needed for the transaction test helper
-        }
-        */
-
-        if (LOGGER.isLoggable(Level.FINER))
-        {
-            if (transactionKeyList != null && LOGGER.isLoggable(Level.FINER))
-            {
-                for (String transactionKey : transactionKeyList)
-                {
-                    LOGGER.finer("activating TransactionScope " + transactionKey);
-                }
-            }
-        }
-
-        //can be null on the topmost stack-layer
-        if (transactionKeyList == null && this.activeTransactionKeyList == null)
-        {
-            return;
-        }
-
-        if (transactionKeyList == null)
-        {
-            transactionKeyList = this.activeTransactionKeyList;
-        }
-
-        if (activeTransactionContextList == null)
-        {
-            activeTransactionContextList = new ArrayList<Map<Contextual, TransactionBeanEntry>>();
-        }
-
-        for (String transactionKey : transactionKeyList)
-        {
-            Map<Contextual, TransactionBeanEntry> transactionBeanEntryMap =
-                    this.storedTransactionContexts.get(transactionKey);
-
-            if (transactionBeanEntryMap == null)
-            {
-                throw new IllegalStateException("Cannot activate TransactionScope with key " + transactionKey);
-            }
-
-            if (!this.activeTransactionContextList.contains(transactionBeanEntryMap))
-            {
-                this.activeTransactionContextList.add(transactionBeanEntryMap);
-            }
-        }
-
-        this.activeTransactionKeyList.addAll(transactionKeyList);
-    }
-
-    public List<String> getActiveTransactionKeyList()
-    {
-        return Collections.unmodifiableList(this.activeTransactionKeyList);
-    }
-
-    /**
-     * This will destroy all stored transaction contexts.
-     */
-    public void endAllTransactionScopes()
+    public void endTransactionScope()
     {
         if (LOGGER.isLoggable(Level.FINER))
         {
-            LOGGER.finer("destroying all TransactionScopes");
+            LOGGER.finer("ending TransactionScope");
         }
 
-        for (Map<Contextual, TransactionBeanEntry> beans : this.storedTransactionContexts.values())
+        destroyBeans(currentTci.contextualInstances);
+
+        if (oldTci.size() > 0)
         {
-            destroyBeans(beans);
+            currentTci = oldTci.pop();
         }
-
-        // we also need to clean our active context info
-        storedTransactionContexts.clear();
-        activeTransactionContextList.clear();
-        activeTransactionKeyList.clear();
+        else
+        {
+            currentTci = null;
+        }
     }
 
+
+    public EntityManager storeUsedEntityManager(Class<? extends Annotation> emQualifier, EntityManager entityManager)
+    {
+        return currentTci.ems.put(emQualifier, entityManager);
+    }
+
+    public HashMap<Class,EntityManager> getUsedEntityManagers()
+    {
+        return currentTci.ems;
+    }
+
+    public void cleanUsedEntityManagers()
+    {
+        currentTci.ems.clear();
+    }
 
     /**
      * @return the Map which represents the currently active Context content.
      */
-    public List<Map<Contextual, TransactionBeanEntry>> getActiveTransactionContextList()
+    public Map<Contextual, TransactionBeanEntry> getActiveTransactionContext()
     {
-        return Collections.unmodifiableList(this.activeTransactionContextList);
+        if (currentTci == null)
+        {
+            return null;
+        }
+
+        return currentTci.contextualInstances;
+    }
+
+    /**
+     * At the end of the request we will destroy all beans still
+     * stored in the context.
+     */
+    @PreDestroy
+    public void requestEnded()
+    {
+        endAllTransactionScopes();
+    }
+
+    private void endAllTransactionScopes()
+    {
+        while (!isEmpty())
+        {
+            endTransactionScope();
+        }
     }
 
     /**
      * Properly destroy all the given beans.
-     *
      * @param activeBeans
      */
     private void destroyBeans(Map<Contextual, TransactionBeanEntry> activeBeans)
@@ -249,25 +220,6 @@ public class TransactionBeanStorage
         {
             beanBag.getBean().destroy(beanBag.getContextualInstance(), beanBag.getCreationalContext());
         }
-    }
-
-    public void storeTransactionBeanEntry(String transactionKey, TransactionBeanEntry transactionBeanEntry)
-    {
-        if (!this.activeTransactionKeyList.contains(transactionKey))
-        {
-            throw new IllegalStateException("Transaction for " + transactionKey + " is not active.");
-        }
-
-        Map<Contextual, TransactionBeanEntry> storedTransactionContext =
-            this.storedTransactionContexts.get(transactionKey);
-
-        if (storedTransactionContext == null)
-        {
-            storedTransactionContext = new HashMap<Contextual, TransactionBeanEntry>();
-            this.storedTransactionContexts.put(transactionKey, storedTransactionContext);
-        }
-
-        storedTransactionContext.put(transactionBeanEntry.getBean(), transactionBeanEntry);
     }
 }
 

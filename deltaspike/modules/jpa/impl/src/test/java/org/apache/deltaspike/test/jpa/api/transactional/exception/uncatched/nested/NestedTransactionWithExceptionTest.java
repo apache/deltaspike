@@ -24,7 +24,6 @@ import org.apache.deltaspike.core.util.ProjectStageProducer;
 import org.apache.deltaspike.jpa.impl.transaction.context.TransactionContextExtension;
 import org.apache.deltaspike.test.jpa.api.shared.TestEntityManager;
 import org.apache.deltaspike.test.jpa.api.shared.TestEntityTransaction;
-import org.apache.deltaspike.test.jpa.api.shared.TestEventObserver;
 import org.apache.deltaspike.test.jpa.api.shared.TestException;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -49,9 +48,6 @@ public class NestedTransactionWithExceptionTest
 
     @Inject
     private TestEntityManagerProducer entityManagerProducer;
-
-    @Inject
-    private TestEventObserver testEventObserver;
 
     @Deployment
     public static WebArchive deploy()
@@ -113,7 +109,5 @@ public class NestedTransactionWithExceptionTest
         Assert.assertEquals(false, firstTransaction.isCommitted());
         Assert.assertEquals(true, firstTransaction.isRolledBack());
 
-        Assert.assertEquals(1, this.testEventObserver.getPersistenceStrategyCleanupCalls());
-        Assert.assertEquals(1, this.testEventObserver.getTransactionBeanStorageCleanupCalls());
     }
 }

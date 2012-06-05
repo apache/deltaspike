@@ -16,14 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.jpa.api.transactional.stereotype;
+package org.apache.deltaspike.test.jpa.api.transactional.transactionhelper;
 
-import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
-import org.apache.deltaspike.core.util.ProjectStageProducer;
+import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.jpa.api.TransactionHelper;
 import org.apache.deltaspike.jpa.impl.transaction.context.TransactionContextExtension;
-import org.apache.deltaspike.test.jpa.api.shared.TestEntityManager;
-import org.apache.deltaspike.test.jpa.api.shared.TestEntityTransaction;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -31,24 +29,20 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.Test;
+import org.junit.Assert;
 
+import javax.enterprise.context.ContextNotActiveException;
 import javax.enterprise.inject.spi.Extension;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import java.util.concurrent.Callable;
+
 
 @RunWith(Arquillian.class)
-public class StereotypeTransactionalTest
+public class TransactionHelperTest
 {
-    @Inject
-    private TransactionalBean transactionalBean;
-
-    @Inject
-    private TestEntityManagerProducer entityManagerProducer;
-
     @Deployment
     public static WebArchive deploy()
     {
@@ -61,9 +55,9 @@ public class StereotypeTransactionalTest
             }
         }.setTestMode();
 
-        JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "stereotypeTransactionalTest.jar")
+        JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "defaultInjectionTest.jar")
                 .addPackage(ArchiveUtils.SHARED_PACKAGE)
-                .addPackage(StereotypeTransactionalTest.class.getPackage().getName())
+                .addPackage(TransactionHelperTest.class.getPackage().getName())
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
         return ShrinkWrap.create(WebArchive.class)
@@ -73,33 +67,50 @@ public class StereotypeTransactionalTest
                 .addAsWebInfResource(ArchiveUtils.getBeansXml(), "beans.xml");
     }
 
-    @Before
-    public void init()
+    @Test
+    public void testTransactionHelper() throws Exception
     {
-        ProjectStageProducer.setProjectStage(ProjectStage.UnitTest);
+        try
+        {
+            resolveEntityManager();
+            Assert.fail("ContextNotActiveException expected!");
+        }
+        catch(ContextNotActiveException cnae)
+        {
+            // this was expected, all is fine!
+        }
+
+        Integer retVal = TransactionHelper.getInstance().executeTransactional( new Callable<Integer>() {
+
+            public Integer call() throws Exception
+            {
+                resolveEntityManager();
+
+                return Integer.valueOf(3);
+            }
+        });
+
+        Assert.assertEquals(retVal, Integer.valueOf(3));
+
+        try
+        {
+            resolveEntityManager();
+            Assert.fail("ContextNotActiveException expected!");
+        }
+        catch(ContextNotActiveException cnae)
+        {
+            // this was expected, all is fine!
+        }
+
+        //X Assert.assertNull(TransactionBeanStorage.getStorage());
     }
 
-    @Test
-    public void transactionalBeanViaStereotype()
+    private void resolveEntityManager()
     {
-        EntityManager injectedEntityManager = this.entityManagerProducer.getEntityManager();
-
-        Assert.assertNotNull(injectedEntityManager);
-        Assert.assertTrue(injectedEntityManager instanceof TestEntityManager);
-        TestEntityTransaction testTransaction = (TestEntityTransaction) (injectedEntityManager).getTransaction();
-
-        Assert.assertEquals(false, ((TestEntityManager) injectedEntityManager).isFlushed());
-        Assert.assertEquals(false, testTransaction.isActive());
-        Assert.assertEquals(false, testTransaction.isStarted());
-        Assert.assertEquals(false, testTransaction.isCommitted());
-        Assert.assertEquals(false, testTransaction.isRolledBack());
-
-        this.transactionalBean.executeInTransaction();
-
-        Assert.assertEquals(true, ((TestEntityManager) injectedEntityManager).isFlushed());
-        Assert.assertEquals(false, testTransaction.isActive());
-        Assert.assertEquals(true, testTransaction.isStarted());
-        Assert.assertEquals(true, testTransaction.isCommitted());
-        Assert.assertEquals(false, testTransaction.isRolledBack());
+        EntityManager em = BeanProvider.getContextualReference(EntityManager.class);
+        Assert.assertNotNull(em);
+        EntityTransaction et = em.getTransaction();
+        Assert.assertNotNull(et);
     }
 }
+

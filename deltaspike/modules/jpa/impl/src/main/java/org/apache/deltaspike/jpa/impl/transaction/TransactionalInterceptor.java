@@ -29,6 +29,9 @@ import java.io.Serializable;
 
 /**
  * Interceptor for wrapping transactional database requests.
+ * This interceptor itself doesn't contain any functionality.
+ * Instead the 'real' work is done inside a pluggable
+ * {@link PersistenceStrategy}.
  */
 @Interceptor
 @Transactional
