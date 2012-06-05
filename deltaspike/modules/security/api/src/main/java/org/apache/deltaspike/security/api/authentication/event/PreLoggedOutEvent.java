@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.security.api.authentication.event;
 
-import org.apache.deltaspike.security.api.User;
+import org.apache.deltaspike.security.api.idm.User;
 
 /**
  * This event is raised just before the user un-authenticates

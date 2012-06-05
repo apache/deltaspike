@@ -20,6 +20,8 @@ package org.apache.deltaspike.security.api;
 
 import java.io.Serializable;
 
+import org.apache.deltaspike.security.api.idm.User;
+
 /**
  * Represents the identity of the current user, and provides an API for authentication and authorization. 
  *

@@ -19,7 +19,8 @@
 
 package org.apache.deltaspike.security.spi.authentication;
 
-import org.apache.deltaspike.security.api.User;
+import org.apache.deltaspike.security.api.idm.User;
+
 
 /**
  * An Authenticator implementation is responsible for managing the user authentication process. 

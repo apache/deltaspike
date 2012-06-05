@@ -16,33 +16,53 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.security.spi.permission;
+package org.apache.deltaspike.security.impl.permission;
 
 import java.util.Collection;
-import java.util.List;
 
 import org.apache.deltaspike.security.api.permission.Permission;
+import org.apache.deltaspike.security.api.permission.PermissionManager;
 import org.apache.deltaspike.security.api.permission.PermissionQuery;
 
 /**
- * 
- *
+ * Default implementation of the PermissionManager interface
  */
-public interface PermissionStore
+public class DefaultPermissionManager implements PermissionManager
 {
-    List<Permission> getPermissions(PermissionQuery query);
 
-    boolean grantPermission(Permission permission);
+    @Override
+    public PermissionQuery createPermissionQuery()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-    boolean grantPermissions(Collection<Permission> permissions);
+    @Override
+    public void grantPermission(Permission permission)
+    {
+        // TODO Auto-generated method stub
+        
+    }
 
-    boolean revokePermission(Permission permission);
+    @Override
+    public void grantPermissions(Collection<Permission> permission)
+    {
+        // TODO Auto-generated method stub
+        
+    }
 
-    boolean revokePermissions(Collection<Permission> permissions);
+    @Override
+    public void revokePermission(Permission permission)
+    {
+        // TODO Auto-generated method stub
+        
+    }
 
-    List<String> listAvailableActions(Object target);
+    @Override
+    public void revokePermissions(Collection<Permission> permissions)
+    {
+        // TODO Auto-generated method stub
+        
+    }
 
-    void clearPermissions(Object target);
-
-    boolean isEnabled();
 }

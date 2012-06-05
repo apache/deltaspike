@@ -16,41 +16,34 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.security.spi.authentication;
-
-import org.apache.deltaspike.security.api.idm.User;
+package org.apache.deltaspike.security.api;
 
 /**
- * Abstract base class that Authenticator implementations can extend for convenience. 
+ * This exception is thrown when a problem is found with the Security API configuration   
  *
  */
-public abstract class BaseAuthenticator implements Authenticator
+public class SecurityConfigurationException extends SecurityException
 {
-    private AuthenticationStatus status = AuthenticationStatus.FAILURE;
-    private User user;
+    private static final long serialVersionUID = -8895836939958745981L;
     
-    public AuthenticationStatus getStatus()
+    public SecurityConfigurationException() 
     {
-        return status;
+        super();
     }
 
-    protected void setStatus(AuthenticationStatus status)
+    public SecurityConfigurationException(String message, Throwable cause) 
     {
-        this.status = status;
-    }
-    
-    protected void setUser(User user)
-    {
-        this.user = user;
-    }
-    
-    public User getUser()
-    {
-        return user;
+        super(message, cause);
     }
 
-    public void postAuthenticate()
+    public SecurityConfigurationException(String message) 
     {
-        // No-op, override if any post-authentication processing is required.
+        super(message);
     }
+
+    public SecurityConfigurationException(Throwable cause) 
+    {
+        super(cause);
+    }
+
 }

@@ -44,57 +44,57 @@ public interface IdentityStore
    //TODO: authentication, password strenght, salted password hashes
 
 
-   // User
+    // User
 
-   User createUser(String name);
+    User createUser(String name);
    
-   void removeUser(User user);
+    void removeUser(User user);
    
-   User getUser(String name);
+    User getUser(String name);
    
 
-   // Group
+    // Group
 
-   Group createGroup(String name, Group parent);
+    Group createGroup(String name, Group parent);
    
-   void removeGroup(Group group);
+    void removeGroup(Group group);
    
-   Group getGroup(String name);
+    Group getGroup(String name);
 
 
-   // Role
+    // Role
    
-   Role createRole(String name);
+    Role createRole(String name);
    
-   void removeRole(Role role);
+    void removeRole(Role role);
    
-   Role getRole(String role);
+    Role getRole(String role);
  
    
-   // Memberships
+    // Memberships
    
-   Membership createMembership(Role role, User user, Group group);
+    Membership createMembership(Role role, User user, Group group);
    
-   void removeMembership(Role role, User user, Group group);
+    void removeMembership(Role role, User user, Group group);
    
-   Membership getMembership(Role role, User user, Group group);
+    Membership getMembership(Role role, User user, Group group);
    
 
-   // Queries
+    // Queries
 
-   List<User> executeQuery(UserQuery query, Range range);
+    List<User> executeQuery(UserQuery query, Range range);
 
-   List<Group> executeQuery(GroupQuery query, Range range);
+    List<Group> executeQuery(GroupQuery query, Range range);
+ 
+    List<Role> executeQuery(RoleQuery query, Range range);
 
-   List<Role> executeQuery(RoleQuery query, Range range);
-
-   List<Membership> executeQuery(MembershipQuery query, Range range);
+    List<Membership> executeQuery(MembershipQuery query, Range range);
    
    
-   // Attributes
+    // Attributes
    
    
-   // User
+    // User
 
    /**
     * Set attribute with given name and values. Operation will overwrite any previous values.
@@ -104,7 +104,7 @@ public interface IdentityStore
     * @param name of attribute
     * @param values to be set
     */
-   void setAttribute(User user, String name, String[] values);
+    void setAttribute(User user, String name, String[] values);
 
    /**
     * @param user
@@ -112,7 +112,7 @@ public interface IdentityStore
     *
     * @param name of attribute
     */
-   void removeAttribute(User user, String name);
+    void removeAttribute(User user, String name);
 
    
    /**
@@ -120,13 +120,13 @@ public interface IdentityStore
     * @param name of attribute
     * @return attribute values or null if attribute with given name doesn't exist
     */
-   String[] getAttributeValues(User user, String name);
+    String[] getAttributeValues(User user, String name);
 
    /**
     * @param user
     * @return map of attribute names and their values
     */
-   Map<String, String[]> getAttributes(User user);
+    Map<String, String[]> getAttributes(User user);
    
    
    // Group
@@ -139,7 +139,7 @@ public interface IdentityStore
     * @param name of attribute
     * @param values to be set
     */
-   void setAttribute(Group group, String name, String[] values);
+    void setAttribute(Group group, String name, String[] values);
 
    /**
     * Remove attribute with given name
@@ -147,7 +147,7 @@ public interface IdentityStore
     * @param group
     * @param name of attribute
     */
-   void removeAttribute(Group group, String name);
+    void removeAttribute(Group group, String name);
 
 
    /**
@@ -155,13 +155,13 @@ public interface IdentityStore
     * @param name of attribute
     * @return attribute values or null if attribute with given name doesn't exist
     */
-   String[] getAttributeValues(Group group, String name);
+    String[] getAttributeValues(Group group, String name);
 
    /**
     * @param group
     * @return map of attribute names and their values
     */
-   Map<String, String[]> getAttributes(Group group);
+    Map<String, String[]> getAttributes(Group group);
    
    
    // Role
@@ -174,7 +174,7 @@ public interface IdentityStore
     * @param name of attribute
     * @param values to be set
     */
-   void setAttribute(Role role, String name, String[] values);
+    void setAttribute(Role role, String name, String[] values);
 
    /**
     * Remove attribute with given name
@@ -182,7 +182,7 @@ public interface IdentityStore
     * @param role
     * @param name of attribute
     */
-   void removeAttribute(Role role, String name);
+    void removeAttribute(Role role, String name);
 
 
    /**
@@ -190,14 +190,12 @@ public interface IdentityStore
     * @param name of attribute
     * @return attribute values or null if attribute with given name doesn't exist
     */
-   String[] getAttributeValues(Role role, String name);
+    String[] getAttributeValues(Role role, String name);
 
    /**
     * @param role
     * @return map of attribute names and their values
     */
-   Map<String, String[]> getAttributes(Role role);
-   
-   
+    Map<String, String[]> getAttributes(Role role);
 
 }

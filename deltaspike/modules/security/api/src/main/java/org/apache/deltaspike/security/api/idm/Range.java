@@ -29,33 +29,40 @@ public class Range
 
     private int limit = -1;
 
-    private Range() {
+    private Range() 
+    {
     }
 
-    private Range(int offset, int limit) {
+    private Range(int offset, int limit) 
+    {
         this.offset = offset;
         this.limit = limit;
     }
 
-    int getPage() {
+    int getPage() 
+    {
         //TODO: Calculate based on limit/offset.
         //TODO: Should it start from 0 or 1? Rather 1....
         return 1;
     }
 
-    public int getOffset() {
+    public int getOffset() 
+    {
         return offset;
     }
 
-    public int getLimit() {
+    public int getLimit() 
+    {
         return limit;
     }
 
-    public Range of(int offset, int limit) {
+    public Range of(int offset, int limit) 
+    {
         return new Range(offset, limit);
     }
 
-    public Range next() {
+    public Range next() 
+    {
         offset += limit;
         return this;
     }
