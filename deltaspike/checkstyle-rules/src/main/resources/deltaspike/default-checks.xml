@@ -192,7 +192,6 @@
         <module name="NoFinalizer"/>
         <module name="MissingOverride"/>
         <module name="HideUtilityClassConstructor"/>
-        <module name="InnerTypeLast"/>
         <module name="EqualsAvoidNull"/>
         <module name="ModifiedControlVariable"/>
         <module name="DeclarationOrder"/>
