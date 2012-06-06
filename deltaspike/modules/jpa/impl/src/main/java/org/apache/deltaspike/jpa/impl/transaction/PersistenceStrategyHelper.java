@@ -30,6 +30,7 @@ import javax.persistence.EntityManager;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -59,9 +60,7 @@ public class PersistenceStrategyHelper implements Serializable
     public Set<Class<? extends Annotation>> resolveEntityManagerQualifiers(Transactional transactionalAnnotation,
                                                                            Class interceptedTargetClass)
     {
-        HashSet<Class<? extends Annotation>> emQualifiers;
-
-
+        Set<Class<? extends Annotation>> emQualifiers = new HashSet<Class<? extends Annotation>>();
         Class<? extends Annotation>[] qualifierClasses = null;
 
         if (transactionalAnnotation != null)
@@ -73,17 +72,12 @@ public class PersistenceStrategyHelper implements Serializable
         {
             // this means we have no special EntityManager configured in the interceptor
             // thus we should scan all the EntityManagers ourselfs from the intercepted class
-            emQualifiers = new HashSet<Class<? extends Annotation>>();
             collectEntityManagerQualifiersOnClass(emQualifiers, interceptedTargetClass);
         }
         else
         {
             // take the qualifierKeys from the qualifierClasses
-            emQualifiers = new HashSet<Class<? extends Annotation>>();
-            for (Class<? extends Annotation> qualifier : qualifierClasses)
-            {
-                emQualifiers.add(qualifier);
-            }
+            Collections.addAll(emQualifiers, qualifierClasses);
         }
 
         return emQualifiers;
@@ -188,6 +182,4 @@ public class PersistenceStrategyHelper implements Serializable
 
         return null;
     }
-
-
 }

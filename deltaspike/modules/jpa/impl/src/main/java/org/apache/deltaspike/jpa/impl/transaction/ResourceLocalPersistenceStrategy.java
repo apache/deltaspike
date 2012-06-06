@@ -73,7 +73,6 @@ public class ResourceLocalPersistenceStrategy implements PersistenceStrategy
     @Inject
     private PersistenceStrategyHelper persistenceHelper;
 
-
     public Object execute(InvocationContext invocationContext) throws Exception
     {
         Transactional transactionalAnnotation = persistenceHelper.extractTransactionalAnnotation(invocationContext);
@@ -93,8 +92,8 @@ public class ResourceLocalPersistenceStrategy implements PersistenceStrategy
         }
 
         // the 'layer' of the transactional invocation, aka the refCounter
+        @SuppressWarnings("UnusedDeclaration")
         int transactionLayer = transactionBeanStorage.incrementRefCounter();
-
 
         for (Class<? extends Annotation> emQualifier : emQualifiers)
         {
@@ -104,7 +103,6 @@ public class ResourceLocalPersistenceStrategy implements PersistenceStrategy
 
             ems.add(entityManager);
         }
-
 
         Exception firstException = null;
 
@@ -153,7 +151,7 @@ public class ResourceLocalPersistenceStrategy implements PersistenceStrategy
                     }
                 }
 
-                // drop all EntityManagers from the ThreadLocal
+                // drop all EntityManagers from the request-context cache
                 transactionBeanStorage.cleanUsedEntityManagers();
             }
 
@@ -162,7 +160,6 @@ public class ResourceLocalPersistenceStrategy implements PersistenceStrategy
 
             // rethrow the exception
             throw e;
-
         }
         finally
         {
@@ -175,7 +172,6 @@ public class ResourceLocalPersistenceStrategy implements PersistenceStrategy
             // commit stability over various databases!
             if (isOutermostInterceptor)
             {
-
                 // only commit all transactions if we didn't rollback
                 // them already
                 if (firstException == null)
@@ -227,11 +223,9 @@ public class ResourceLocalPersistenceStrategy implements PersistenceStrategy
                             }
                         }
                     }
-
-                    // and now we close the open transaction scope
-                    transactionBeanStorage.endTransactionScope();
                 }
-
+                // and now we close the open transaction scope
+                transactionBeanStorage.endTransactionScope();
             }
 
             transactionBeanStorage.decrementRefCounter();
@@ -243,7 +237,6 @@ public class ResourceLocalPersistenceStrategy implements PersistenceStrategy
             }
         }
     }
-
 
     private EntityManager resolveEntityManagerForQualifier(Class<? extends Annotation> emQualifier)
     {
@@ -267,10 +260,9 @@ public class ResourceLocalPersistenceStrategy implements PersistenceStrategy
      */
     protected Exception prepareException(Exception e)
     {
+        //TODO integrate with the exception-handler provided by ds-core
         return e;
     }
-
-
 
     protected Bean<EntityManager> resolveEntityManagerBean(Class<? extends Annotation> qualifierClass)
     {

@@ -42,7 +42,6 @@ public class TransactionContext implements Context
     // got started.
     private TransactionBeanStorage beanStorage;
 
-
     public <T> T get(Contextual<T> component)
     {
         Map<Contextual, TransactionBeanEntry> transactionBeanEntryMap = getBeanStorage().getActiveTransactionContext();

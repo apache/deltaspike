@@ -107,7 +107,6 @@ public class TransactionBeanStorage
         return currentTci.refCounter.decrementAndGet();
     }
 
-
     /**
      * @return <code>true</code> if we are the outermost interceptor over all qualifiers
      *         and the TransactionBeanStorage is yet empty.
@@ -119,7 +118,6 @@ public class TransactionBeanStorage
 
     /**
      * Start a new TransactionScope
-     * @return the
      */
     public void startTransactionScope()
     {
@@ -142,7 +140,6 @@ public class TransactionBeanStorage
      * in the context.
      *
      * This method only gets used if we leave a transaction with REQUIRES_NEW.
-     * In all other cases we use {@link #endAllTransactionScopes()}.
      */
     public void endTransactionScope()
     {
@@ -156,6 +153,7 @@ public class TransactionBeanStorage
         if (oldTci.size() > 0)
         {
             currentTci = oldTci.pop();
+            endTransactionScope();
         }
         else
         {
@@ -199,6 +197,10 @@ public class TransactionBeanStorage
     @PreDestroy
     public void requestEnded()
     {
+        if (!isEmpty())
+        {
+            LOGGER.warning("the current TransactionContextInfo isn't empty. a fallback cleanup will be performed.");
+        }
         endAllTransactionScopes();
     }
 
@@ -216,9 +218,9 @@ public class TransactionBeanStorage
      */
     private void destroyBeans(Map<Contextual, TransactionBeanEntry> activeBeans)
     {
-        for (TransactionBeanEntry beanBag : activeBeans.values())
+        for (TransactionBeanEntry beanEntry : activeBeans.values())
         {
-            beanBag.getBean().destroy(beanBag.getContextualInstance(), beanBag.getCreationalContext());
+            beanEntry.getBean().destroy(beanEntry.getContextualInstance(), beanEntry.getCreationalContext());
         }
     }
 }
