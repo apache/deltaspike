@@ -62,9 +62,14 @@ public class PersistenceStrategyHelper implements Serializable
         HashSet<Class<? extends Annotation>> emQualifiers;
 
 
-        Class<? extends Annotation>[] qualifierClasses = transactionalAnnotation.qualifier();
+        Class<? extends Annotation>[] qualifierClasses = null;
 
-        if (qualifierClasses.length == 1 && Any.class.equals(qualifierClasses[0]) )
+        if (transactionalAnnotation != null)
+        {
+            qualifierClasses = transactionalAnnotation.qualifier();
+        }
+
+        if (qualifierClasses == null || qualifierClasses.length == 1 && Any.class.equals(qualifierClasses[0]) )
         {
             // this means we have no special EntityManager configured in the interceptor
             // thus we should scan all the EntityManagers ourselfs from the intercepted class
