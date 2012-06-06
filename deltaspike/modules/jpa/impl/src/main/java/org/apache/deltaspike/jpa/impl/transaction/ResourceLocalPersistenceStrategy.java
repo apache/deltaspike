@@ -58,11 +58,11 @@ import java.util.logging.Logger;
  * standard CDI &#064;Alternative mechanism.</p>
  */
 @Dependent
-public class TransactionalInterceptorStrategy implements PersistenceStrategy
+public class ResourceLocalPersistenceStrategy implements PersistenceStrategy
 {
     private static final long serialVersionUID = -1432802805095533499L;
 
-    private static final Logger LOGGER = Logger.getLogger(TransactionalInterceptorStrategy.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ResourceLocalPersistenceStrategy.class.getName());
 
     @Inject
     private BeanManager beanManager;
