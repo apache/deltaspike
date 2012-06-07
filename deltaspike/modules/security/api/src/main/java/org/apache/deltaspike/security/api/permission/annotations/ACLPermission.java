@@ -16,9 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.security.spi.permission;
+package org.apache.deltaspike.security.api.permission.annotations;
 
-import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Documented;
@@ -26,17 +27,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * Denotes an entity bean (i.e. a class annotated with @Entity) as being a storage container
- * for object permissions.  If the value member is set, then the annotated entity will be used
- * to lookup object permissions for objects of that class only, otherwise if it is not set the
- * entity will be used to store general object permissions (only one entity may be used for
- * general permissions, if more than one entity is defined then a deployment exception will be
- * thrown).
+ * Marker annotation.  Denotes the field of an @ACLStore annotated entity bean as containing the 
+ * granted ACL permissions.
+ *
  */
-@Target({ TYPE })
+@Target({ METHOD, FIELD })
 @Retention(RUNTIME)
 @Documented
-public @interface ACLStore
+public @interface ACLPermission
 {
-    Class<?> value();
+
 }

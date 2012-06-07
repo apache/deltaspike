@@ -24,31 +24,40 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
+import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
+import javax.inject.Inject;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
 
 import org.apache.deltaspike.security.api.SecurityConfigurationException;
 import org.apache.deltaspike.security.api.permission.Permission;
 import org.apache.deltaspike.security.api.permission.PermissionQuery;
-import org.apache.deltaspike.security.spi.permission.ACLStore;
+import org.apache.deltaspike.security.api.permission.annotations.ACLStore;
 import org.apache.deltaspike.security.spi.permission.PermissionStore;
 
 /**
  * A PermissionStore implementation backed by a JPA datasource
  *
  */
+@ApplicationScoped
 public class JPAPermissionStore implements PermissionStore, Extension
 {
-    Class<?> generalPermissionStore = null;
+    private Class<?> generalPermissionStore = null;
     
-    Map<Class<?>, Class<?>> permissionStoreMap = new HashMap<Class<?>, Class<?>>();)
+    private Map<Class<?>, Class<?>> permissionStoreMap = new HashMap<Class<?>, Class<?>>();
+    
+    @Inject 
+    private Instance<EntityManager> entityManagerInstance;
     
     public <X> void processAnnotatedType(@Observes ProcessAnnotatedType<X> event,
-            final BeanManager beanManager) {
+            final BeanManager beanManager) 
+    {
         
         if (event.getAnnotatedType().isAnnotationPresent(Entity.class)) {
             AnnotatedType<X> type = event.getAnnotatedType();
@@ -92,6 +101,8 @@ public class JPAPermissionStore implements PermissionStore, Extension
     @Override
     public List<Permission> getPermissions(PermissionQuery query)
     {
+        EntityManager em = entityManagerInstance.get();
+        
         // TODO Auto-generated method stub
         return null;
     }
