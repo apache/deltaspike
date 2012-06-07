@@ -43,7 +43,8 @@ public class ConfigPropertyExtension implements Extension, Deactivatable
 
     private Set<InjectionTargetEntry> injectionTargets = new HashSet<InjectionTargetEntry>();
 
-    protected void recordConfigPropertyAwareInjectionPoint(@Observes ProcessInjectionTarget event)
+    @SuppressWarnings("UnusedDeclaration")
+    protected void recordConfigPropertyAwareInjectionPoint(@Observes ProcessInjectionTarget<?> event)
     {
         initActivation();
 
