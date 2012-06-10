@@ -20,7 +20,6 @@ package org.apache.deltaspike.core.impl.exclude.extension;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.exclude.annotation.Exclude;
-import org.apache.deltaspike.core.impl.exclude.InternalUntypedBean;
 import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
 import org.apache.deltaspike.core.impl.exclude.CustomProjectStageBeanFilter;
 import org.apache.deltaspike.core.impl.exclude.GlobalAlternative;
@@ -34,13 +33,11 @@ import org.apache.deltaspike.core.util.ProjectStageProducer;
 
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Alternative;
-import javax.enterprise.inject.Typed;
 import javax.enterprise.inject.spi.AfterDeploymentValidation;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import javax.enterprise.util.Nonbinding;
-import javax.inject.Named;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -66,7 +63,6 @@ public class ExcludeExtension implements Extension, Deactivatable
     private Boolean isActivated = null;
     private Boolean isGlobalAlternativeActivated = null;
     private Boolean isCustomProjectStageBeanFilterActivated = null;
-    private Boolean isInternalUntypedBeanFilterActivated = null;
 
     /**
      * triggers initialization in any case
@@ -107,11 +103,6 @@ public class ExcludeExtension implements Extension, Deactivatable
             vetoCustomProjectStageBeans(processAnnotatedType);
         }
 
-        if (this.isInternalUntypedBeanFilterActivated)
-        {
-            vetoInternalUntypedBeans(processAnnotatedType);
-        }
-        
         if (!this.isActivated)
         {
             return;
@@ -157,17 +148,7 @@ public class ExcludeExtension implements Extension, Deactivatable
         }
     }
 
-    protected void vetoInternalUntypedBeans(ProcessAnnotatedType<Object> processAnnotatedType)
-    {
-        Class<?> beanClass = processAnnotatedType.getAnnotatedType().getJavaClass();
-        Typed typed = beanClass.getAnnotation(Typed.class);
 
-        if (typed != null && typed.value().length == 0 && !beanClass.isAnnotationPresent(Named.class) &&
-            beanClass.getName().startsWith("org.apache.deltaspike."))
-        {
-            processAnnotatedType.veto();
-        }
-    }
 
     private void activateGlobalAlternativesWeld(ProcessAnnotatedType<Object> processAnnotatedType,
         BeanManager beanManager)
@@ -541,9 +522,6 @@ public class ExcludeExtension implements Extension, Deactivatable
 
             isCustomProjectStageBeanFilterActivated =
                 ClassDeactivationUtils.isActivated(CustomProjectStageBeanFilter.class);
-            
-            isInternalUntypedBeanFilterActivated =
-                ClassDeactivationUtils.isActivated(InternalUntypedBean.class);
         }
     }
 
