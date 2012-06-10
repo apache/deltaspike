@@ -34,8 +34,12 @@ import java.util.concurrent.Callable;
  * for another EntityManager, then you need to copy this code and adopt it.</p>
  * <p> Usage:
  * <pre>
- * TODO add example:
- *
+ *  SomeEntity retVal = TransactionHelper.getInstance().executeTransactional( new Callable<Integer>() {
+ *    private @Inject EntityManager em;
+ *    public SomeEntity call() throws Exception {
+ *      return em.find(entityId, SomeEntity.class);
+ *    }
+ *  } );
  * </pre>
  * </p>
  */
