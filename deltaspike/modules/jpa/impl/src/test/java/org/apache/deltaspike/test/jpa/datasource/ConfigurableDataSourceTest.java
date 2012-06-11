@@ -19,6 +19,7 @@
 package org.apache.deltaspike.test.jpa.datasource;
 
 import org.apache.deltaspike.jpa.api.datasource.DataSourceConfig;
+import org.apache.deltaspike.jpa.impl.datasource.ConfigurableDataSource;
 import org.apache.deltaspike.jpa.impl.transaction.context.TransactionContextExtension;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -33,6 +34,7 @@ import org.junit.Assert;
 
 import javax.enterprise.inject.spi.Extension;
 import javax.inject.Inject;
+import java.sql.Connection;
 
 @RunWith(Arquillian.class)
 public class ConfigurableDataSourceTest
@@ -60,7 +62,17 @@ public class ConfigurableDataSourceTest
     public void testLocalDataSource() throws Exception
     {
         Assert.assertNull(dataSourceConfig.getJndiResourceName(null));
-        Assert.assertEquals("org.hsqldb.jdbcDriver", dataSourceConfig.getConnectionClassName(null));
+        Assert.assertEquals("org.apache.deltaspike.test.jpa.datasource.DummyJdbcDriver",
+                dataSourceConfig.getConnectionClassName(null));
     }
 
+    @Test
+    public void testConfigurableDataSource() throws Exception
+    {
+        // we do not use @Inject as this is normally instantiated
+        // via newInstance()
+        ConfigurableDataSource cds = new ConfigurableDataSource();
+        Connection connection = cds.getConnection();
+        Assert.assertNotNull(connection);
+    }
 }

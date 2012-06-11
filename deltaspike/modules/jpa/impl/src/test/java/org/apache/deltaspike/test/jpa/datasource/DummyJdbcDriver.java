@@ -18,41 +18,50 @@
  */
 package org.apache.deltaspike.test.jpa.datasource;
 
-
-import org.apache.deltaspike.jpa.api.datasource.DataSourceConfig;
-
-import javax.enterprise.context.ApplicationScoped;
+import java.sql.Connection;
+import java.sql.Driver;
+import java.sql.DriverPropertyInfo;
+import java.sql.SQLException;
 import java.util.Properties;
 
 /**
- * {@link DataSourceConfig} for our test database.
+ * A dummy JDBC driver for use in our unit tests
  */
-@ApplicationScoped
-public class LocalDatabaseConfig implements DataSourceConfig
+public class DummyJdbcDriver implements Driver
 {
-    public String getJndiResourceName(String connectionId)
+    @Override
+    public boolean acceptsURL(String url) throws SQLException
     {
-        return null;
+        return true;
     }
 
-    public String getConnectionClassName(String connectionId)
+    @Override
+    public Connection connect(String url, Properties info) throws SQLException
     {
-        return "org.apache.deltaspike.test.jpa.datasource.DummyJdbcDriver";
+        return new DummyConnection();
     }
 
-    public String getJdbcConnectionUrl(String connectionId)
+    @Override
+    public DriverPropertyInfo[] getPropertyInfo(String url, Properties info) throws SQLException
     {
-        return "jdbc:dummy:mem:test";
+        return new DriverPropertyInfo[0];  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public Properties getConnectionProperties(String connectionId)
+    @Override
+    public int getMajorVersion()
     {
-        Properties props = new Properties();
-
-        props.put("userName", "sa");
-        props.put("", "");
-
-        return props;
+        return 1;
     }
 
+    @Override
+    public int getMinorVersion()
+    {
+        return 0;
+    }
+
+    @Override
+    public boolean jdbcCompliant()
+    {
+        return true;
+    }
 }
