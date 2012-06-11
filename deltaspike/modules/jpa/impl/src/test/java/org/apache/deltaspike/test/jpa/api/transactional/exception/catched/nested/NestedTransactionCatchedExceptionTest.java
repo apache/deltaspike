@@ -51,15 +51,6 @@ public class NestedTransactionCatchedExceptionTest
     @Deployment
     public static WebArchive deploy()
     {
-        new BeanManagerProvider()
-        {
-            @Override
-            public void setTestMode()
-            {
-                super.setTestMode();
-            }
-        }.setTestMode();
-
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "nestedTransactionCatchedExceptionTest.jar")
                 .addPackage(ArchiveUtils.SHARED_PACKAGE)
                 .addPackage(NestedTransactionCatchedExceptionTest.class.getPackage().getName())

@@ -52,15 +52,6 @@ public class MultipleEntityManagerInjectionUncatchedExceptionTest
     @Deployment
     public static WebArchive deploy()
     {
-        new BeanManagerProvider()
-        {
-            @Override
-            public void setTestMode()
-            {
-                super.setTestMode();
-            }
-        }.setTestMode();
-
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "autoInjectionUncatchedExceptionTest.jar")
                 .addPackage(ArchiveUtils.SHARED_PACKAGE)
                 .addPackage(MultipleEntityManagerInjectionUncatchedExceptionTest.class.getPackage().getName())

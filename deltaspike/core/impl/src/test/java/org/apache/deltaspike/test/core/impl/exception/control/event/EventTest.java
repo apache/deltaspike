@@ -52,15 +52,6 @@ public class EventTest
     @Deployment(name = "EventTest")
     public static Archive<?> createTestArchive()
     {
-        new BeanManagerProvider()
-        {
-            @Override
-            public void setTestMode()
-            {
-                super.setTestMode();
-            }
-        }.setTestMode();
-
         return ShrinkWrap
                 .create(WebArchive.class, "eventTest.war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())

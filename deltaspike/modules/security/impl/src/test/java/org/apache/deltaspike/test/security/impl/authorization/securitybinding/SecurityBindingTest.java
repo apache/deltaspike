@@ -45,15 +45,6 @@ public class SecurityBindingTest
     @Deployment
     public static WebArchive deploy()
     {
-        new BeanManagerProvider()
-        {
-            @Override
-            public void setTestMode()
-            {
-                super.setTestMode();
-            }
-        }.setTestMode();
-
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, SecurityBindingTest.class.getSimpleName() + ".jar")
                 .addPackage(SecurityBindingTest.class.getPackage().getName())
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");

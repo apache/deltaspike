@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.test.core.api.config.injectable;
 
-import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.test.util.ArchiveUtils;
@@ -46,14 +45,6 @@ public class InjectableConfigPropertyTest
     @Deployment
     public static WebArchive deploy()
     {
-        new BeanManagerProvider() {
-            @Override
-            public void setTestMode()
-            {
-                super.setTestMode();
-            }
-        }.setTestMode();
-
         URL fileUrl = InjectableConfigPropertyTest.class.getClassLoader()
                 .getResource("META-INF/apache-deltaspike.properties");
 

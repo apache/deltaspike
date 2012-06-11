@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.test.security.impl.authentication;
 
-import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.impl.exclude.extension.ExcludeExtension;
 import org.apache.deltaspike.security.api.Identity;
@@ -63,14 +62,6 @@ public class LoginLogoutTest
     @Deployment
     public static WebArchive deploy()
     {
-        new BeanManagerProvider() {
-            @Override
-            public void setTestMode()
-            {
-                super.setTestMode();
-            }
-        }.setTestMode();
-
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "loginLogoutTest.jar")
                 .addPackage("org.apache.deltaspike.test.security.impl.authentication")
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");

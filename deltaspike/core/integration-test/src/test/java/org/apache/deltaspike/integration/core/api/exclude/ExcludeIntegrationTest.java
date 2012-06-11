@@ -20,7 +20,6 @@ package org.apache.deltaspike.integration.core.api.exclude;
 
 
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
-import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
 import org.apache.deltaspike.test.category.WebProfileCategory;
@@ -58,14 +57,6 @@ public class ExcludeIntegrationTest
     @Deployment
     public static WebArchive deploy()
     {
-        new BeanManagerProvider() {
-            @Override
-            public void setTestMode()
-            {
-                super.setTestMode();
-            }
-        }.setTestMode();
-
         URL deltaSpikeConfig = ExcludeIntegrationTest.class.getClassLoader()
                 .getResource("META-INF/apache-deltaspike.properties");
 

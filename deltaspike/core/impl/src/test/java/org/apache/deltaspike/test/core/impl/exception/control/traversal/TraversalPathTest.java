@@ -45,15 +45,6 @@ public class TraversalPathTest
     @Deployment
     public static Archive<?> createTestArchive()
     {
-        new BeanManagerProvider()
-        {
-            @Override
-            public void setTestMode()
-            {
-                super.setTestMode();
-            }
-        }.setTestMode();
-
         return ShrinkWrap
                 .create(WebArchive.class, "traversalPath.war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())

@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.test.security.impl.authorization.secured;
 
-import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.impl.exclude.extension.ExcludeExtension;
 import org.apache.deltaspike.security.api.authorization.AccessDeniedException;
@@ -45,14 +44,6 @@ public class SecuredAnnotationTest
     @Deployment
     public static WebArchive deploy()
     {
-        new BeanManagerProvider() {
-            @Override
-            public void setTestMode()
-            {
-                super.setTestMode();
-            }
-        }.setTestMode();
-
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "securedAnnotationTest.jar")
                 .addPackage("org.apache.deltaspike.test.security.impl.authorization.secured")
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");

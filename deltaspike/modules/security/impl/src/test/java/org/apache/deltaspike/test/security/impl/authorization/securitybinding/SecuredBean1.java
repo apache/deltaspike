@@ -18,9 +18,6 @@
  */
 package org.apache.deltaspike.test.security.impl.authorization.securitybinding;
 
-import org.apache.deltaspike.security.api.authorization.annotation.Secured;
-import org.apache.deltaspike.test.security.impl.authorization.secured.TestAccessDecisionVoter;
-
 import javax.enterprise.context.ApplicationScoped;
 
 @CustomSecurityBinding

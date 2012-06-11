@@ -19,7 +19,6 @@
 package org.apache.deltaspike.test.core.api.alternative.global;
 
 
-import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.test.core.api.alternative.global.qualifier.AlternativeBaseBeanB;
@@ -68,14 +67,6 @@ public class GlobalAlternativeTest
     @Deployment
     public static WebArchive deploy()
     {
-        new BeanManagerProvider() {
-            @Override
-            public void setTestMode()
-            {
-                super.setTestMode();
-            }
-        }.setTestMode();
-
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "excludeIntegrationTest.jar")
                 .addPackage("org.apache.deltaspike.test.core.api.alternative.global")
                 .addPackage("org.apache.deltaspike.test.core.api.alternative.global.qualifier")

@@ -46,15 +46,6 @@ public class TransactionHelperTest
     @Deployment
     public static WebArchive deploy()
     {
-        new BeanManagerProvider()
-        {
-            @Override
-            public void setTestMode()
-            {
-                super.setTestMode();
-            }
-        }.setTestMode();
-
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "defaultInjectionTest.jar")
                 .addPackage(ArchiveUtils.SHARED_PACKAGE)
                 .addPackage(TransactionHelperTest.class.getPackage().getName())

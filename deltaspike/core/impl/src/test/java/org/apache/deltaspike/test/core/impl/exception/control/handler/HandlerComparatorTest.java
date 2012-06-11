@@ -39,15 +39,6 @@ public class HandlerComparatorTest
     @Deployment(name = "HandlerComparatorTest")
     public static Archive<?> createTestArchive()
     {
-        new BeanManagerProvider()
-        {
-            @Override
-            public void setTestMode()
-            {
-                super.setTestMode();
-            }
-        }.setTestMode();
-
         return ShrinkWrap
                 .create(WebArchive.class, "handlerComparator.war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())

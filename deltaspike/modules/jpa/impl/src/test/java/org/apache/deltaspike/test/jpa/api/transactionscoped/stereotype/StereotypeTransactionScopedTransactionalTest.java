@@ -53,15 +53,6 @@ public class StereotypeTransactionScopedTransactionalTest
     @Deployment
     public static WebArchive deploy()
     {
-        new BeanManagerProvider()
-        {
-            @Override
-            public void setTestMode()
-            {
-                super.setTestMode();
-            }
-        }.setTestMode();
-
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "stereotypeTransactionScopedTransactionalTest.jar")
                 .addPackage(ArchiveUtils.SHARED_PACKAGE)
                 .addPackage(StereotypeTransactionScopedTransactionalTest.class.getPackage().getName())

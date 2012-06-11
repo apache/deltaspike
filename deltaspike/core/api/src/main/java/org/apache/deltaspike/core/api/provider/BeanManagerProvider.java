@@ -229,9 +229,4 @@ public class BeanManagerProvider implements Extension
 
         return bmp;
     }
-
-    @Deprecated
-    protected void setTestMode()
-    {
-    }
 }

@@ -45,15 +45,6 @@ public class UnMuteHandlerTest
     @Deployment(name = "UnMuteHandlerTest")
     public static Archive<?> createTestArchive()
     {
-        new BeanManagerProvider()
-        {
-            @Override
-            public void setTestMode()
-            {
-                super.setTestMode();
-            }
-        }.setTestMode();
-
         return ShrinkWrap
                 .create(WebArchive.class, "unMuteHandler.war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())

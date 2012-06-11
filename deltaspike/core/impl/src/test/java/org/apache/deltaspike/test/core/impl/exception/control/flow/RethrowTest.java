@@ -40,15 +40,6 @@ public class RethrowTest
     @Deployment(name = "RethrowTest")
     public static Archive<?> createTestArchive()
     {
-        new BeanManagerProvider()
-        {
-            @Override
-            public void setTestMode()
-            {
-                super.setTestMode();
-            }
-        }.setTestMode();
-
         return ShrinkWrap
                 .create(WebArchive.class, "rethrow.war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())

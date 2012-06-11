@@ -44,15 +44,6 @@ public class SecurityParameterBindingTest
    @Deployment
    public static WebArchive deploy()
    {
-      new BeanManagerProvider()
-      {
-         @Override
-         public void setTestMode()
-         {
-            super.setTestMode();
-         }
-      }.setTestMode();
-
       JavaArchive testJar = ShrinkWrap
                .create(JavaArchive.class, SecurityParameterBindingTest.class.getSimpleName() + ".jar")
                .addPackage(SecurityParameterBindingTest.class.getPackage().getName())

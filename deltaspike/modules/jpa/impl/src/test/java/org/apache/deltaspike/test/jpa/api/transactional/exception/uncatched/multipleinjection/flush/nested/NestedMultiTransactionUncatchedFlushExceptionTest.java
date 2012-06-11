@@ -52,15 +52,6 @@ public class NestedMultiTransactionUncatchedFlushExceptionTest
     @Deployment
     public static WebArchive deploy()
     {
-        new BeanManagerProvider()
-        {
-            @Override
-            public void setTestMode()
-            {
-                super.setTestMode();
-            }
-        }.setTestMode();
-
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "nestedMultiTransactionUncatchedFlushExceptionTest.jar")
                 .addPackage(ArchiveUtils.SHARED_PACKAGE)
                 .addPackage(NestedMultiTransactionUncatchedFlushExceptionTest.class.getPackage().getName())

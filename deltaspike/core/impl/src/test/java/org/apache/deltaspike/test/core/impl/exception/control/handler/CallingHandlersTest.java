@@ -47,15 +47,6 @@ public class CallingHandlersTest
     @Deployment(name = "CallingHandlersTest")
     public static Archive<?> createTestArchive()
     {
-        new BeanManagerProvider()
-        {
-            @Override
-            public void setTestMode()
-            {
-                super.setTestMode();
-            }
-        }.setTestMode();
-
         return ShrinkWrap
                 .create(WebArchive.class, "callingHandlers.war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())

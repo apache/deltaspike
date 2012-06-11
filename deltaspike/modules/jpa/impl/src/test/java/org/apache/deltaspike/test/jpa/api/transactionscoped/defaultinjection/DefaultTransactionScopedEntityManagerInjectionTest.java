@@ -55,15 +55,6 @@ public class DefaultTransactionScopedEntityManagerInjectionTest
     @Deployment
     public static WebArchive deploy()
     {
-        new BeanManagerProvider()
-        {
-            @Override
-            public void setTestMode()
-            {
-                super.setTestMode();
-            }
-        }.setTestMode();
-
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "defaultTransactionScopedInjectionTest.jar")
                 .addPackage(ArchiveUtils.SHARED_PACKAGE)
                 .addPackage(DefaultTransactionScopedEntityManagerInjectionTest.class.getPackage().getName())

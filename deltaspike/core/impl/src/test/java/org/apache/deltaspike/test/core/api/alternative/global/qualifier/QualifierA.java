@@ -18,7 +18,6 @@
 */
 package org.apache.deltaspike.test.core.api.alternative.global.qualifier;
 
-import javax.enterprise.util.Nonbinding;
 import javax.inject.Qualifier;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;

@@ -51,15 +51,6 @@ public class MultipleTransactionScopedEntityManagerInjectionTest
     @Deployment
     public static WebArchive deploy()
     {
-        new BeanManagerProvider()
-        {
-            @Override
-            public void setTestMode()
-            {
-                super.setTestMode();
-            }
-        }.setTestMode();
-
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "autoTransactionScopedInjectionTest.jar")
                 .addPackage(ArchiveUtils.SHARED_PACKAGE)
                 .addPackage(MultipleTransactionScopedEntityManagerInjectionTest.class.getPackage().getName())

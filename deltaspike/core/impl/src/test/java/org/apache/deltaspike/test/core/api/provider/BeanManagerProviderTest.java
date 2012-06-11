@@ -41,14 +41,6 @@ public class BeanManagerProviderTest
     @Deployment
     public static WebArchive deploy()
     {
-        new BeanManagerProvider() {
-            @Override
-            public void setTestMode()
-            {
-                super.setTestMode();
-            }
-        }.setTestMode();
-
         return ShrinkWrap.create(WebArchive.class, "beanManagerProvider.war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");

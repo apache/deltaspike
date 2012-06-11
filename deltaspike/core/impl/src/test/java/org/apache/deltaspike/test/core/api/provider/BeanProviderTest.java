@@ -19,7 +19,6 @@
 package org.apache.deltaspike.test.core.api.provider;
 
 
-import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -44,14 +43,6 @@ public class BeanProviderTest
     @Deployment
     public static WebArchive deploy()
     {
-        new BeanManagerProvider() {
-            @Override
-            public void setTestMode()
-            {
-                super.setTestMode();
-            }
-        }.setTestMode();
-
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "beanProviderTest.jar")
                 .addPackage("org.apache.deltaspike.test.category")
                 .addPackage("org.apache.deltaspike.test.core.api.provider")

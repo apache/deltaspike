@@ -50,15 +50,6 @@ public class NestedTransactionScopedTransactionTest
     @Deployment
     public static WebArchive deploy()
     {
-        new BeanManagerProvider()
-        {
-            @Override
-            public void setTestMode()
-            {
-                super.setTestMode();
-            }
-        }.setTestMode();
-
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "nestedTransactionScopedTransaction.jar")
                 .addPackage(ArchiveUtils.SHARED_PACKAGE)
                 .addPackage(NestedTransactionScopedTransactionTest.class.getPackage().getName())

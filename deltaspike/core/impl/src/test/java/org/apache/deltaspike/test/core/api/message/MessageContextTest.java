@@ -59,15 +59,6 @@ public class MessageContextTest
     @Deployment
     public static WebArchive deploy()
     {
-        new BeanManagerProvider()
-        {
-            @Override
-            public void setTestMode()
-            {
-                super.setTestMode();
-            }
-        }.setTestMode();
-
         JavaArchive testJar = ShrinkWrap
                 .create(JavaArchive.class, "messageContextTest.jar")
                 .addPackage("org.apache.deltaspike.test.core.api.message")
