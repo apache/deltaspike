@@ -25,6 +25,7 @@ import javax.enterprise.inject.spi.BeforeShutdown;
 import javax.enterprise.inject.spi.Extension;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -48,11 +49,19 @@ import org.apache.deltaspike.core.util.ClassUtils;
  */
 public class BeanManagerProvider implements Extension
 {
-    private static Boolean testMode;
-
     private static BeanManagerProvider bmp = null;
 
-    private volatile Map<ClassLoader, BeanManagerHolder> bms = new ConcurrentHashMap<ClassLoader, BeanManagerHolder>();
+    /**
+     * The BeanManagers picked up via Extension loading
+     */
+    private volatile Map<ClassLoader, BeanManager> loadTimeBms = new HashMap<ClassLoader, BeanManager>();
+
+    /**
+     * The final BeanManagers.
+     * After the container did finally boot, we first try to resolve them from JNDI,
+     * and only if we don't find any BM there we take the ones picked up at startup.
+     */
+    private volatile Map<ClassLoader, BeanManager> finalBms = new ConcurrentHashMap<ClassLoader, BeanManager>();
 
     /**
      * Returns if the {@link BeanManagerProvider} has been initialized.
@@ -94,6 +103,22 @@ public class BeanManagerProvider implements Extension
         return bmp;
     }
 
+    /**
+     * It basically doesn't matter which of the system events we use,
+     * but basically we use the {@link AfterBeanDiscovery} event since it allows to use the
+     * {@link BeanManagerProvider} for all events which occur after the {@link AfterBeanDiscovery} event.
+     *
+     * @param afterBeanDiscovery event which we don't actually use ;)
+     * @param beanManager        the BeanManager we store and make available.
+     */
+    public void setBeanManager(@Observes AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager)
+    {
+        BeanManagerProvider bmpFirst = setBeanManagerProvider(this);
+
+        ClassLoader cl = ClassUtils.getClassLoader(null);
+        bmpFirst.loadTimeBms.put(cl, beanManager);
+    }
+
 
     /**
      * The active {@link BeanManager} for the current application (/{@link ClassLoader}). This method will throw an
@@ -106,99 +131,38 @@ public class BeanManagerProvider implements Extension
     {
         ClassLoader classLoader = ClassUtils.getClassLoader(null);
 
-        BeanManagerHolder resultHolder = bms.get(classLoader);
-        BeanManager result;
-
-        if (resultHolder == null)
-        {
-            result = resolveBeanManagerViaJndi();
-
-            if (result != null)
-            {
-                bms.put(classLoader, new RootBeanManagerHolder(result));
-            }
-        }
-        else
-        {
-            result = resultHolder.getBeanManager();
-
-            if (!(resultHolder instanceof RootBeanManagerHolder))
-            {
-                BeanManager jndiBeanManager = resolveBeanManagerViaJndi();
-
-                if (jndiBeanManager != null && /*same instance check:*/jndiBeanManager != result)
-                {
-                    setRootBeanManager(jndiBeanManager);
-
-                    result = jndiBeanManager;
-                }
-                else
-                {
-                    setRootBeanManager(result);
-                }
-            }
-        }
+        BeanManager result = bmp.finalBms.get(classLoader);
 
         if (result == null)
         {
-            throw new IllegalStateException("Unable to find BeanManager. " +
-                    "Please ensure that you configured the CDI implementation of your choice properly.");
+            synchronized (this)
+            {
+                result = bmp.finalBms.get(classLoader);
+                if (result == null)
+                {
+                    // first we look for a BeanManager from JNDI
+                    result = resolveBeanManagerViaJndi();
+                    if (result == null)
+                    {
+                        // if none found, we take the one we got from the Extension loading
+                        result = bmp.loadTimeBms.get(classLoader);
+                    }
+                    if (result == null)
+                    {
+                        throw new IllegalStateException("Unable to find BeanManager. " +
+                                "Please ensure that you configured the CDI implementation of your choice properly.");
+                    }
+
+                    // finally store the resolved BeanManager in the result cache
+                    bmp.finalBms.put(classLoader, result);
+                }
+            }
         }
 
         return result;
     }
 
-    /**
-     * It basically doesn't matter which of the system events we use,
-     * but basically we use the {@link AfterBeanDiscovery} event since it allows to use the
-     * {@link BeanManagerProvider} for all events which occur after the {@link AfterBeanDiscovery} event.
-     *
-     * @param afterBeanDiscovery event which we don't actually use ;)
-     * @param beanManager        the BeanManager we store and make available.
-     */
-    protected void setBeanManager(@Observes AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager)
-    {
-        setBeanManager(new BeanManagerHolder(beanManager));
-    }
 
-    public void setRootBeanManager(BeanManager beanManager)
-    {
-        setBeanManager(new RootBeanManagerHolder(beanManager));
-    }
-
-    private void setBeanManager(BeanManagerHolder beanManagerHolder)
-    {
-        BeanManagerProvider bmpFirst = setBeanManagerProvider(this);
-
-        ClassLoader cl = ClassUtils.getClassLoader(null);
-
-        if (beanManagerHolder instanceof RootBeanManagerHolder ||
-                //the lat bm wins - as before, but don't replace a root-bmh with a normal bmh
-                (!(bmpFirst.bms.get(cl) instanceof RootBeanManagerHolder)))
-        {
-            bmpFirst.bms.put(cl, beanManagerHolder);
-        }
-
-        //override in any case in test-mode
-        /*
-         * use:
-         * new BeanManagerProvider() {
-         * @Override
-         * public void setTestMode() {
-         *     super.setTestMode();
-         *   }
-         * }.setTestMode();
-         *
-         * to activate it
-         */
-        if (Boolean.TRUE.equals(testMode))
-        {
-            bmpFirst.bms.put(cl, new TestBeanManagerHolder(beanManagerHolder.getBeanManager()));
-        }
-
-        //X TODO Java-EE5 support needs to be discussed
-        //CodiStartupBroadcaster.broadcastStartup();
-    }
 
     /**
      * Cleanup on container shutdown
@@ -207,15 +171,17 @@ public class BeanManagerProvider implements Extension
      */
     public void cleanupStoredBeanManagerOnShutdown(@Observes BeforeShutdown beforeShutdown)
     {
-        bms.remove(ClassUtils.getClassLoader(null));
+        ClassLoader classLoader = ClassUtils.getClassLoader(null);
+        bmp.finalBms.remove(classLoader);
+        bmp.loadTimeBms.remove(classLoader);
+
+
+        //X TODO this might not be enough as there might be
+        //X ClassLoaders used during Weld startup which are not the TCCL...
     }
 
     /**
      * Get the BeanManager from the JNDI registry.
-     * <p/>
-     * Workaround for JBossAS 6 (see EXTCDI-74)
-     * {@link #setBeanManager(javax.enterprise.inject.spi.AfterBeanDiscovery, javax.enterprise.inject.spi.BeanManager)}
-     * is called in context of a different {@link ClassLoader}
      *
      * @return current {@link javax.enterprise.inject.spi.BeanManager} which is provided via JNDI
      */
@@ -223,11 +189,13 @@ public class BeanManagerProvider implements Extension
     {
         try
         {
+            // this location is specified in JSR-299 and must be
+            // supported in all certified EE environments
             return (BeanManager) new InitialContext().lookup("java:comp/BeanManager");
         }
         catch (NamingException e)
         {
-            //workaround didn't work -> force NPE
+            //workaround didn't work -> return null
             return null;
         }
     }
@@ -249,13 +217,8 @@ public class BeanManagerProvider implements Extension
         return bmp;
     }
 
+    @Deprecated
     protected void setTestMode()
     {
-        activateTestMode();
-    }
-
-    private static void activateTestMode()
-    {
-        testMode = true;
     }
 }

@@ -22,6 +22,8 @@ import javax.enterprise.inject.Typed;
 import javax.enterprise.inject.spi.BeanManager;
 
 @Typed()
+@Deprecated
+//X TODO remove - not needed anymore
 class RootBeanManagerHolder extends BeanManagerHolder
 {
     RootBeanManagerHolder(BeanManager beanManager)

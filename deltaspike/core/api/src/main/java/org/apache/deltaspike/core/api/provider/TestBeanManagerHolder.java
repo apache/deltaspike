@@ -20,6 +20,8 @@ package org.apache.deltaspike.core.api.provider;
 
 import javax.enterprise.inject.spi.BeanManager;
 
+@Deprecated
+//X TODO remove - not needed anymore
 class TestBeanManagerHolder extends RootBeanManagerHolder
 {
     private BeanManager lazyBeanManager;

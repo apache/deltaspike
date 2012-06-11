@@ -22,6 +22,8 @@ import javax.enterprise.inject.Typed;
 import javax.enterprise.inject.spi.BeanManager;
 
 @Typed()
+@Deprecated
+//X TODO remove - not needed anymore
 class BeanManagerHolder
 {
     private BeanManager beanManager;
