@@ -19,7 +19,6 @@
 
 package org.apache.deltaspike.test.core.impl.exception.control.handler;
 
-import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.test.core.impl.exception.control.extension.Account;
 import org.apache.deltaspike.test.core.impl.exception.control.extension.CatchQualifier;
 import org.apache.deltaspike.test.util.ArchiveUtils;

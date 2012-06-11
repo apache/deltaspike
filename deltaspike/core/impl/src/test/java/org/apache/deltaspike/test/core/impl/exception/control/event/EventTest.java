@@ -24,7 +24,6 @@ import org.apache.deltaspike.core.api.exception.control.annotation.ExceptionHand
 import org.apache.deltaspike.core.api.exception.control.annotation.Handles;
 import org.apache.deltaspike.core.api.exception.control.event.ExceptionEvent;
 import org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent;
-import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.spi.exception.control.IntrospectiveExceptionEvent;
 import org.apache.deltaspike.test.core.impl.exception.control.event.literal.EventQualifierLiteral;
 import org.apache.deltaspike.test.util.ArchiveUtils;

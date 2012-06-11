@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.test.jpa.api.transactional.transactionhelper;
 
-import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.jpa.api.TransactionHelper;
 import org.apache.deltaspike.jpa.impl.transaction.context.TransactionContextExtension;

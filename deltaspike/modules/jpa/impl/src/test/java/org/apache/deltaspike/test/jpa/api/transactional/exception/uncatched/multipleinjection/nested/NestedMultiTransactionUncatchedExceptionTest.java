@@ -19,7 +19,6 @@
 package org.apache.deltaspike.test.jpa.api.transactional.exception.uncatched.multipleinjection.nested;
 
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
-import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
 import org.apache.deltaspike.jpa.impl.transaction.context.TransactionContextExtension;
 import org.apache.deltaspike.test.jpa.api.shared.TestEntityManager;

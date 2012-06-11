@@ -20,7 +20,6 @@
 package org.apache.deltaspike.test.core.impl.exception.control.traversal;
 
 import org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent;
-import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;

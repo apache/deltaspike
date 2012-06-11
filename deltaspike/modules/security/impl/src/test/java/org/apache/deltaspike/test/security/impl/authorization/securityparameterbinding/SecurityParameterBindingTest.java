@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.test.security.impl.authorization.securityparameterbinding;
 
-import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.impl.exclude.extension.ExcludeExtension;
 import org.apache.deltaspike.security.api.authorization.AccessDeniedException;
