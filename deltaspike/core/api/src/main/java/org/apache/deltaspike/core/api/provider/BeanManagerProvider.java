@@ -20,6 +20,7 @@ package org.apache.deltaspike.core.api.provider;
 
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AfterBeanDiscovery;
+import javax.enterprise.inject.spi.AfterDeploymentValidation;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.BeforeShutdown;
 import javax.enterprise.inject.spi.Extension;
@@ -163,6 +164,18 @@ public class BeanManagerProvider implements Extension
     }
 
 
+    /**
+     * By cleaning the final BeanManager map after the Deployment got Validated,
+     * we prevent premature loading of information from JNDI in cases where the
+     * container might not be fully setup yet.
+     *
+     * This might happen if someone uses the BeanManagerProvider during Extension
+     * startup.
+     */
+    public void cleanFinalBeanManagerMap(@Observes AfterDeploymentValidation adv)
+    {
+        bmp.finalBms.clear();
+    }
 
     /**
      * Cleanup on container shutdown
