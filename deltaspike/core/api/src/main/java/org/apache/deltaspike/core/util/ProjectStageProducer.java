@@ -169,7 +169,7 @@ public class ProjectStageProducer implements Serializable
      * Usage:
      * <pre>
      * new ProjectStageProducer() {
-     *     @Override
+     *     &#064;Override
      *     protected void reset() { super.reset(); }
      * }.reset();
      * </pre>

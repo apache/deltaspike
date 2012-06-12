@@ -54,7 +54,7 @@ public class TransactionHelper
     /**
      * Execute the given {@link Callable} in a Transitional manner.
      *
-     * @param callable
+     * @param callable which will get executed in a &#064;Transactional block
      * @param <T> the return type of the executed {@link Callable}
      * @return the return value of the executed {@link Callable}
      * @throws Exception

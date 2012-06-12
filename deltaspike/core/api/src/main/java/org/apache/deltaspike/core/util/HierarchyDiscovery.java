@@ -146,8 +146,6 @@ public class HierarchyDiscovery
     /**
      * Gets the actual types by resolving TypeParameters.
      *
-     * @param beanType
-     * @param type
      * @return actual type
      */
     private Type resolveType(Type beanType, Type beanType2, Type type)

@@ -55,8 +55,6 @@ public class DefaultAuthenticatorSelector implements AuthenticatorSelector
      * and the user has provided their own custom Authenticator, return that one
      * 4. If the user hasn't provided a custom Authenticator, return IdmAuthenticator
      * and attempt to use the Identity Management API to authenticate
-     *
-     * @return
      */
     public Authenticator getSelectedAuthenticator() 
     {

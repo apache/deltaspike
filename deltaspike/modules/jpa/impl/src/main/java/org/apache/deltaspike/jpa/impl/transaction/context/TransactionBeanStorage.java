@@ -214,7 +214,7 @@ public class TransactionBeanStorage
 
     /**
      * Properly destroy all the given beans.
-     * @param activeBeans
+     * @param activeBeans to destroy
      */
     private void destroyBeans(Map<Contextual, TransactionBeanEntry> activeBeans)
     {

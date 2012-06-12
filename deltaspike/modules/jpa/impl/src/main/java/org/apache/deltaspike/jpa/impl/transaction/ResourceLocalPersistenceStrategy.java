@@ -255,7 +255,6 @@ public class ResourceLocalPersistenceStrategy implements PersistenceStrategy
      * This method might get overridden in subclasses to supply better error messages.
      * This is useful if e.g. a JPA provider only provides a stubborn Exception for
      * their ConstraintValidationExceptions.
-     * @param e
      * @return the wrapped or unwrapped Exception
      */
     protected Exception prepareException(Exception e)

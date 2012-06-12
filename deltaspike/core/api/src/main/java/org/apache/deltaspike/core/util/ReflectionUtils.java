@@ -293,9 +293,6 @@ public abstract class ReflectionUtils
 
     /**
      * Checks if a method is abstract
-     *
-     * @param method
-     * @return
      */
     public static boolean isAbstract(Method method)
     {

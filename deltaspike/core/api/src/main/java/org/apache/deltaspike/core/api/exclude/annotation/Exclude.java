@@ -29,11 +29,11 @@ import java.lang.annotation.Target;
 /**
  * Supported usages:
  * <pre>
- * @Exclude
- * @Exclude(ifProjectStage=Production.class)
- * @Exclude(exceptIfProjectStage=UnitTest.class)
- * @Exclude(onExpression="myProperty==myValue")
- * @Exclude(onExpression="[my custom expression syntax]", interpretedBy=CustomExpressionInterpreter.class)
+ * &#064;Exclude
+ * &#064;Exclude(ifProjectStage=Production.class)
+ * &#064;Exclude(exceptIfProjectStage=UnitTest.class)
+ * &#064;Exclude(onExpression="myProperty==myValue")
+ * &#064;Exclude(onExpression="[my custom expression syntax]", interpretedBy=CustomExpressionInterpreter.class)
  * </pre>
  *
  * <p/>
@@ -41,21 +41,21 @@ import java.lang.annotation.Target;
  * <p/>
  * <p>the following bean gets excluded in any case</p>
  * <pre>
- * @Exclude
+ * &#064;Exclude
  * public class NoBean {}
  * </pre>
  *
  * <p/>
  * <p>the following bean gets excluded in case of project-stage development</p>
  * <pre>
- * @Exclude(ifProjectStage = ProjectStage.Development.class)
+ * &#064;Exclude(ifProjectStage = ProjectStage.Development.class)
  * public class ProductionBean {}
  * </pre>
  *
  * <p/>
  * <p>the following bean gets excluded in every case except of project-stage development</p>
  * <pre>
- * @Exclude(exceptIfProjectStage = ProjectStage.Development.class)
+ * &#064;Exclude(exceptIfProjectStage = ProjectStage.Development.class)
  * public class DevBean {}
  * </pre>
  *
@@ -63,13 +63,13 @@ import java.lang.annotation.Target;
  * <p>the following bean gets excluded if the expression evaluates to true.
  * that means there is a configured property called 'myProper' with the value 'myValue'</p>
  * <pre>
- * @Exclude(onExpression="myProperty==myValue")
+ * &#064;Exclude(onExpression="myProperty==myValue")
  * public class ProductionBean {}
  * </pre>
  *
  * <p/>
  * <p>the following bean gets excluded if the expression evaluates to true</p>
- * @Exclude(onExpression="[my custom expression syntax]", interpretedBy=CustomExpressionInterpreter.class)
+ * &#064;Exclude(onExpression="[my custom expression syntax]", interpretedBy=CustomExpressionInterpreter.class)
  * public class ProductionBean {}
  */
 @Retention(RetentionPolicy.RUNTIME)

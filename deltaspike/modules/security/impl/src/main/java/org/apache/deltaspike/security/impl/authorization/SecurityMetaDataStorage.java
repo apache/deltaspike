@@ -70,10 +70,6 @@ class SecurityMetaDataStorage
     /**
      * This method is invoked by the security interceptor to obtain the
      * authorizer stack for a secured method
-     *
-     * @param targetClass
-     * @param targetMethod
-     * @return
      */
     Set<Authorizer> getAuthorizers(Class<?> targetClass, Method targetMethod)
     {

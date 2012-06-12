@@ -49,11 +49,10 @@ public class ShrinkWrapArchiveUtil
      * Resolve all markerFiles from the current ClassPath and package the root nodes
      * into a JavaArchive.
      * @param classLoader to use
-     * @param markerFile
+     * @param markerFile finding this marker file will trigger creating the JavaArchive.
      * @param includeIfPackageExists if not null, we will only create JavaArchives if the given package exists
      * @param excludeIfPackageExists if not null, we will <b>not</b> create JavaArchives if the given package exists.
      *                               This has a higher precedence than includeIfPackageExists.
-     * @return
      */
     public static JavaArchive[] getArchives(ClassLoader classLoader,
                                             String markerFile,
@@ -288,8 +287,7 @@ public class ShrinkWrapArchiveUtil
 
     /**
      * check if the given url path is a Jar
-     * @param urlPath
-     * @return
+     * @param urlPath to check
      */
     private static String isJarUrl(String urlPath) {
         // common prefixes of the url are: jar: (tomcat), zip: (weblogic) and wsjar: (websphere)

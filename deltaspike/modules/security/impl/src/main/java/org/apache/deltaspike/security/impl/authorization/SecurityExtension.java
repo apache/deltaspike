@@ -84,9 +84,7 @@ public class SecurityExtension implements Extension, Deactivatable
     }
 
     /**
-     * @param <X>
-     * @param event
-     * @param beanManager
+     * Handles &#064;Secured beans
      */
     @SuppressWarnings("UnusedDeclaration")
     public <X> void processAnnotatedType(@Observes ProcessAnnotatedType<X> event, final BeanManager beanManager)
@@ -222,8 +220,6 @@ public class SecurityExtension implements Extension, Deactivatable
      * Registers the specified authorizer method (i.e. a method annotated with
      * the @Secures annotation)
      *
-     * @param annotatedMethod
-     * @param beanManager
      * @throws SecurityDefinitionException
      */
     private void registerAuthorizer(AnnotatedMethod<?> annotatedMethod, BeanManager beanManager)
