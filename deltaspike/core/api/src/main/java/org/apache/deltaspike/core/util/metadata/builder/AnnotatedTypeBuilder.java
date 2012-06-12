@@ -782,11 +782,11 @@ public class AnnotatedTypeBuilder<X>
      */
     public AnnotatedType<X> create()
     {
-        Map<Constructor<?>, Map<Integer, AnnotationStore>> constructorParameterAnnnotations =
+        Map<Constructor<?>, Map<Integer, AnnotationStore>> constructorParameterAnnotations =
                 new HashMap<Constructor<?>, Map<Integer, AnnotationStore>>();
         Map<Constructor<?>, AnnotationStore> constructorAnnotations =
                 new HashMap<Constructor<?>, AnnotationStore>();
-        Map<Method, Map<Integer, AnnotationStore>> methodParameterAnnnotations =
+        Map<Method, Map<Integer, AnnotationStore>> methodParameterAnnotations =
                 new HashMap<Method, Map<Integer, AnnotationStore>>();
         Map<Method, AnnotationStore> methodAnnotations =
                 new HashMap<Method, AnnotationStore>();
@@ -805,7 +805,7 @@ public class AnnotatedTypeBuilder<X>
         for (Map.Entry<Method, Map<Integer, AnnotationBuilder>> parameters : methodParameters.entrySet())
         {
             Map<Integer, AnnotationStore> parameterAnnotations = new HashMap<Integer, AnnotationStore>();
-            methodParameterAnnnotations.put(parameters.getKey(), parameterAnnotations);
+            methodParameterAnnotations.put(parameters.getKey(), parameterAnnotations);
             for (Map.Entry<Integer, AnnotationBuilder> parameter : parameters.getValue().entrySet())
             {
                 parameterAnnotations.put(parameter.getKey(), parameter.getValue().create());
@@ -819,7 +819,7 @@ public class AnnotatedTypeBuilder<X>
         for (Map.Entry<Constructor<?>, Map<Integer, AnnotationBuilder>> parameters : constructorParameters.entrySet())
         {
             Map<Integer, AnnotationStore> parameterAnnotations = new HashMap<Integer, AnnotationStore>();
-            constructorParameterAnnnotations.put(parameters.getKey(), parameterAnnotations);
+            constructorParameterAnnotations.put(parameters.getKey(), parameterAnnotations);
             for (Map.Entry<Integer, AnnotationBuilder> parameter : parameters.getValue().entrySet())
             {
                 parameterAnnotations.put(parameter.getKey(), parameter.getValue().create());
@@ -827,7 +827,7 @@ public class AnnotatedTypeBuilder<X>
         }
 
         return new AnnotatedTypeImpl<X>(javaClass, typeAnnotations.create(), fieldAnnotations, methodAnnotations,
-                methodParameterAnnnotations, constructorAnnotations, constructorParameterAnnnotations, fieldTypes,
+                methodParameterAnnotations, constructorAnnotations, constructorParameterAnnotations, fieldTypes,
                 methodParameterTypes, constructorParameterTypes);
     }
 

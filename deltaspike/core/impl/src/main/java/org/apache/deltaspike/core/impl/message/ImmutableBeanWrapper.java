@@ -64,7 +64,7 @@ import javax.enterprise.inject.spi.Bean;
  * <p/>
  * <p>
  * {@link ImmutableBeanWrapper} will use the annotations on
- * <code>defininingType</code> to discover the qualifiers, types, scope,
+ * <code>definingType</code> to discover the qualifiers, types, scope,
  * stereotypes of the bean, as well as determine it's name (if any) and whether
  * it is an alternative.
  * </p>

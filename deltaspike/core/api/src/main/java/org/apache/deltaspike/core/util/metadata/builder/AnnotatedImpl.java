@@ -38,9 +38,9 @@ abstract class AnnotatedImpl implements Annotated
     private final Set<Type> typeClosure;
     private final AnnotationStore annotations;
 
-    protected AnnotatedImpl(Class<?> type, AnnotationStore annotations, Type genericType, Type overridenType)
+    protected AnnotatedImpl(Class<?> type, AnnotationStore annotations, Type genericType, Type overriddenType)
     {
-        if (overridenType == null)
+        if (overriddenType == null)
         {
             if (genericType != null)
             {
@@ -55,8 +55,8 @@ abstract class AnnotatedImpl implements Annotated
         }
         else
         {
-            this.type = overridenType;
-            typeClosure = Collections.singleton(overridenType);
+            this.type = overriddenType;
+            typeClosure = Collections.singleton(overriddenType);
         }
 
 

@@ -35,9 +35,9 @@ abstract class AnnotatedMemberImpl<X, M extends Member> extends AnnotatedImpl im
     private final M javaMember;
 
     protected AnnotatedMemberImpl(AnnotatedType<X> declaringType, M member, Class<?> memberType,
-                                  AnnotationStore annotations, Type genericType, Type overridenType)
+                                  AnnotationStore annotations, Type genericType, Type overriddenType)
     {
-        super(memberType, annotations, genericType, overridenType);
+        super(memberType, annotations, genericType, overriddenType);
         this.declaringType = declaringType;
         javaMember = member;
     }

@@ -41,7 +41,7 @@ import java.util.logging.Logger;
  *
  *   public void fn() {
  *     if(projectStage == ProjectStage.Production) {
- *        // do some prodution stuff...
+ *        // do some production stuff...
  *     }
  *   }
  * }

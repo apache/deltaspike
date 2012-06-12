@@ -28,7 +28,7 @@ import org.apache.deltaspike.core.api.exception.control.ExceptionHandlingFlow;
 public interface IntrospectiveExceptionEvent<T extends Throwable> extends ExceptionEvent<T>
 {
     /**
-     * Check to see if this event has been unmutted and therefore called again.
+     * Check to see if this event has been unmuted and therefore called again.
      */
     boolean isUnmute();
 

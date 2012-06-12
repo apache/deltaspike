@@ -99,7 +99,7 @@ public @interface Exclude
     String onExpression() default "";
 
     /**
-     * @return class of the interpeter which should be used (default leads to a simple config-property interpreter)
+     * @return class of the interpreter which should be used (default leads to a simple config-property interpreter)
      */
     Class<? extends ExpressionInterpreter> interpretedBy() default ExpressionInterpreter.class;
 }
