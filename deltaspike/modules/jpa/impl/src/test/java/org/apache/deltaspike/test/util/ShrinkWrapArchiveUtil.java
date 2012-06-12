@@ -192,7 +192,7 @@ public class ShrinkWrapArchiveUtil
     private static JavaArchive addFileArchive(File archiveBasePath,
                                               String[] includeIfPackageExists,
                                               String[] excludeIfPackageExists)
-            throws IOException {
+    {
         if (!archiveBasePath.exists()) {
             return null;
         }

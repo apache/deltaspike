@@ -18,8 +18,6 @@
 */
 package org.apache.deltaspike.test.core.api.alternative.global;
 
-import org.apache.deltaspike.test.core.api.alternative.global.BaseBean1;
-
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Alternative;
 

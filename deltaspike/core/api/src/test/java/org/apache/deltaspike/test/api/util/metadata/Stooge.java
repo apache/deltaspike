@@ -24,5 +24,5 @@ package org.apache.deltaspike.test.api.util.metadata;
  */
 public enum Stooge
 {
-    MOE, LARRY, CURLY, JOE, SHEMP;
+    MOE, LARRY, CURLY, JOE, SHEMP
 }
