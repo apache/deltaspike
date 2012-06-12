@@ -65,6 +65,12 @@
 
         <profile>
             <id>coverage</id>
+            <!--
+             * Activate this profile to gather unit test coverage
+             * Start with:
+             * $> mvn clean install -Pcoverage
+             * The generated information will be in target/site/jacoco/index.html
+            -->
 
             <dependencies>
                 <dependency>
@@ -206,6 +212,7 @@
             <email>struberg@apache.org</email>
             <roles>
                 <role>PPMC</role>
+                <role>Champion</role>
             </roles>
             <timezone>+1</timezone>
         </developer>
