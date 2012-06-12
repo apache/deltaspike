@@ -25,6 +25,16 @@ import java.util.ServiceLoader;
  * <p>This class provides access to the ContainerControl.</p>
  * <p>It uses the {@code java.util.ServiceLoader} mechanism  to 
  * automatically pickup the container providers from the classpath.</p>
+ * <p>Usage:
+ * <pre>
+ *     CdiContainer container = CdiContainerLoader.getCdiContainer();
+ *     container.boot();
+ *     ...
+ * </pre>
+ * </p>
+ * <p>CdiContainerLoader internally uses the {@link java.util.ServiceLoader}
+ * to automatically detect the container implementation which should be used.
+ * </p>
  */
 public final class CdiContainerLoader
 {
@@ -33,7 +43,12 @@ public final class CdiContainerLoader
         // private ct to prevent instantiation
     }
 
-    
+
+    /**
+     * @return the {@link CdiContainer} implementation available on the classpath
+     * @throws IllegalStateException if none or multiple CdiContainer implementations
+     *         are found on the classpath.
+     */
     public static CdiContainer getCdiContainer()
     {
         CdiContainer testContainer;
