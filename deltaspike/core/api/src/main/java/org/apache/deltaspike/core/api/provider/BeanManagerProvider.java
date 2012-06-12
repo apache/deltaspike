@@ -51,16 +51,15 @@ import org.apache.deltaspike.core.util.ClassUtils;
  * <p><b>Attention:</b> This method is intended for being used in user code at runtime.
  * If this method gets used during Container boot (in an Extension), non-portable
  * behaviour results. During bootstrapping an Extension shall &#064;Inject BeanManager to get
- * access to the underlying BeanManager (see e.g. {@link #cleanFinalBeanManagerMap(AfterDeploymentValidation)} ).
+ * access to the underlying BeanManager (see e.g. {@link #cleanupFinalBeanManagers} ).
  * This is the only way to guarantee to get the right
  * BeanManager in more complex Container scenarios.</p>
  */
 public class BeanManagerProvider implements Extension
 {
-    private static BeanManagerProvider bmpSingleton = null;
-
     private static Logger logger = Logger.getLogger(BeanManagerProvider.class.getName());
 
+    private static BeanManagerProvider bmpSingleton = null;
 
     /**
      * This data container is used for storing the BeanManager for each
@@ -95,8 +94,6 @@ public class BeanManagerProvider implements Extension
      */
     private volatile Map<ClassLoader, BeanManagerInfo> bmInfos = new ConcurrentHashMap<ClassLoader, BeanManagerInfo>();
 
-
-
     /**
      * Returns if the {@link BeanManagerProvider} has been initialized.
      * Usually it isn't needed to call this method in application code.
@@ -128,6 +125,7 @@ public class BeanManagerProvider implements Extension
             // CodiStartupBroadcaster.broadcastStartup();
             // here bmp might not be null (depends on the broadcasters)
         }
+
         if (bmpSingleton == null)
         {
             throw new IllegalStateException("No " + BeanManagerProvider.class.getName() + " in place! " +
@@ -149,31 +147,8 @@ public class BeanManagerProvider implements Extension
     {
         setBeanManagerProvider(this);
 
-        ClassLoader cl = ClassUtils.getClassLoader(null);
-        BeanManagerInfo bmi = getBeanManagerInfo(cl);
+        BeanManagerInfo bmi = getBeanManagerInfo(ClassUtils.getClassLoader(null));
         bmi.loadTimeBm =  beanManager;
-    }
-
-    /**
-     * Get or create the BeanManagerInfo for the given ClassLoader
-     */
-    private BeanManagerInfo getBeanManagerInfo(ClassLoader cl)
-    {
-        BeanManagerInfo bmi = bmpSingleton.bmInfos.get(cl);
-        if (bmi == null)
-        {
-            synchronized (this)
-            {
-                bmi = bmpSingleton.bmInfos.get(cl);
-                if (bmi == null)
-                {
-                    bmi = new BeanManagerInfo();
-                    bmpSingleton.bmInfos.put(cl, bmi);
-                }
-            }
-        }
-
-        return bmi;
     }
 
     /**
@@ -185,11 +160,9 @@ public class BeanManagerProvider implements Extension
      */
     public BeanManager getBeanManager()
     {
-        ClassLoader classLoader = ClassUtils.getClassLoader(null);
+        BeanManagerInfo bmi = getBeanManagerInfo(ClassUtils.getClassLoader(null));
 
-        BeanManagerInfo bmi = getBeanManagerInfo(classLoader);
-
-        // warn the user if he tries to use the BeanManager before container starupt
+        // warn the user if he tries to use the BeanManager before container startup
         if (!bmi.booted)
         {
             logger.warning("When using the BeanManager to retrieve Beans before the Container is started," +
@@ -207,18 +180,21 @@ public class BeanManagerProvider implements Extension
                 {
                     // first we look for a BeanManager from JNDI
                     result = resolveBeanManagerViaJndi();
+
                     if (result == null)
                     {
                         // if none found, we take the one we got from the Extension loading
                         result = bmi.loadTimeBm;
                     }
+
                     if (result == null)
                     {
                         throw new IllegalStateException("Unable to find BeanManager. " +
                                 "Please ensure that you configured the CDI implementation of your choice properly.");
                     }
 
-                    // finally store the resolved BeanManager in the result cache
+                    // store the resolved BeanManager in the result cache until #cleanupFinalBeanManagers gets called
+                    // -> afterwards the next call of #getBeanManager will trigger the final lookup
                     bmi.finalBm = result;
                 }
             }
@@ -226,7 +202,6 @@ public class BeanManagerProvider implements Extension
 
         return result;
     }
-
 
     /**
      * By cleaning the final BeanManager map after the Deployment got Validated,
@@ -236,12 +211,17 @@ public class BeanManagerProvider implements Extension
      * This might happen if someone uses the BeanManagerProvider during Extension
      * startup.
      */
-    public void cleanFinalBeanManagerMap(@Observes AfterDeploymentValidation adv)
+    public void cleanupFinalBeanManagers(@Observes AfterDeploymentValidation adv)
     {
         for (BeanManagerInfo bmi : bmpSingleton.bmInfos.values())
         {
             bmi.finalBm = null;
             bmi.booted = true;
+
+            /*possible issue with >weld< based servers:
+            if #getBeanManager gets called in a custom AfterDeploymentValidation observer >after< this observer,
+            the wrong bean-manager might get stored (not deterministic due to the unspecified order of observers).
+            finally a bean-manager for a single bda will be stored and returned (which isn't the bm exposed via jndi).*/
         }
     }
 
@@ -264,7 +244,7 @@ public class BeanManagerProvider implements Extension
      *
      * @return current {@link BeanManager} which is provided via JNDI
      */
-    BeanManager resolveBeanManagerViaJndi()
+    private BeanManager resolveBeanManagerViaJndi()
     {
         try
         {
@@ -277,6 +257,29 @@ public class BeanManagerProvider implements Extension
             //workaround didn't work -> return null
             return null;
         }
+    }
+
+    /**
+     * Get or create the BeanManagerInfo for the given ClassLoader
+     */
+    private BeanManagerInfo getBeanManagerInfo(ClassLoader cl)
+    {
+        BeanManagerInfo bmi = bmpSingleton.bmInfos.get(cl);
+
+        if (bmi == null)
+        {
+            synchronized (this)
+            {
+                bmi = bmpSingleton.bmInfos.get(cl);
+                if (bmi == null)
+                {
+                    bmi = new BeanManagerInfo();
+                    bmpSingleton.bmInfos.put(cl, bmi);
+                }
+            }
+        }
+
+        return bmi;
     }
 
     /**
