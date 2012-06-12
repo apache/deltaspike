@@ -28,6 +28,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 
 import org.apache.deltaspike.core.util.ClassUtils;
 
@@ -57,6 +58,9 @@ import org.apache.deltaspike.core.util.ClassUtils;
 public class BeanManagerProvider implements Extension
 {
     private static BeanManagerProvider bmpSingleton = null;
+
+    private static Logger logger = Logger.getLogger(BeanManagerProvider.class.getName());
+
 
     /**
      * This data container is used for storing the BeanManager for each
@@ -184,6 +188,13 @@ public class BeanManagerProvider implements Extension
         ClassLoader classLoader = ClassUtils.getClassLoader(null);
 
         BeanManagerInfo bmi = getBeanManagerInfo(classLoader);
+
+        // warn the user if he tries to use the BeanManager before container starupt
+        if (!bmi.booted)
+        {
+            logger.warning("When using the BeanManager to retrieve Beans before the Container is started," +
+                    " non-portable behaviour results!");
+        }
 
         BeanManager result = bmi.finalBm;
 
