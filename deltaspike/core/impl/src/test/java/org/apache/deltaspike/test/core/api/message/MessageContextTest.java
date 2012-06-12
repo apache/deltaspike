@@ -76,7 +76,7 @@ public class MessageContextTest
     public void testSimpleMessage()
     {
         assertEquals("Welcome to DeltaSpike",
-                this.simpleMessage.welcomeTo(this.messageContext, "DeltaSpike").toString());
+                simpleMessage.welcomeTo(messageContext, "DeltaSpike").toString());
     }
 
     @Test
@@ -84,7 +84,7 @@ public class MessageContextTest
     {
         LocaleResolver localeResolver = new TestLocalResolver();
 
-        String messageText = this.messageContext.config()
+        String messageText = messageContext.config()
                 .use()
                     .localeResolver(localeResolver)
                     .messageResolver(new TestMessageResolver(localeResolver))
@@ -97,7 +97,7 @@ public class MessageContextTest
     public void resolveGermanMessageTextTest()
     {
         LocaleResolver localeResolver = new TestGermanLocaleResolver();
-        String messageText = this.messageContext.config()
+        String messageText = messageContext.config()
                 .use()
                     .localeResolver(localeResolver)
                     .messageResolver(new TestMessageResolver(localeResolver))
@@ -109,7 +109,7 @@ public class MessageContextTest
     @Test
     public void createInvalidMessageTest()
     {
-        String messageText = this.messageContext.message().text("{xyz123}").toText();
+        String messageText = messageContext.message().text("{xyz123}").toText();
 
         assertEquals("???xyz123???", messageText);
     }
@@ -117,7 +117,7 @@ public class MessageContextTest
     @Test
     public void createInvalidMessageWithArgumentsTest()
     {
-        String messageText = this.messageContext.message().text("{xyz123}").argument("123").argument("456").argument("789").toText();
+        String messageText = messageContext.message().text("{xyz123}").argument("123").argument("456").argument("789").toText();
 
         assertEquals("???xyz123??? (123,456,789)", messageText);
     }

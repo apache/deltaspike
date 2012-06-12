@@ -62,12 +62,12 @@ public class ExceptionToCatchEvent implements Serializable
     public ExceptionToCatchEvent(Throwable exception)
     {
         this.exception = exception;
-        this.qualifiers = Collections.emptySet();
+        qualifiers = Collections.emptySet();
     }
 
     public Throwable getException()
     {
-        return this.exception;
+        return exception;
     }
 
     /**
@@ -87,7 +87,7 @@ public class ExceptionToCatchEvent implements Serializable
      */
     public boolean isHandled()
     {
-        return this.handled;
+        return handled;
     }
 
     /**
@@ -97,6 +97,6 @@ public class ExceptionToCatchEvent implements Serializable
      */
     public Set<Annotation> getQualifiers()
     {
-        return Collections.unmodifiableSet(this.qualifiers);
+        return Collections.unmodifiableSet(qualifiers);
     }
 }

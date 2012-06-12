@@ -43,8 +43,8 @@ class AnnotationStore
 
     AnnotationStore()
     {
-        this.annotationMap = emptyMap();
-        this.annotationSet = emptySet();
+        annotationMap = emptyMap();
+        annotationSet = emptySet();
     }
 
     <T extends Annotation> T getAnnotation(Class<T> annotationType)

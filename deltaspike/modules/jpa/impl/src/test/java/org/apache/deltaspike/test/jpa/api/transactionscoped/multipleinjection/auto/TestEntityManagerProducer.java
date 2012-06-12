@@ -48,10 +48,10 @@ public class TestEntityManagerProducer
     @TransactionScoped
     protected EntityManager defaultEntityManager()
     {
-        if (this.defaultEntityManager == null)
+        if (defaultEntityManager == null)
         {
-            this.defaultEntityManager = new TestEntityManager();
-            return this.defaultEntityManager;
+            defaultEntityManager = new TestEntityManager();
+            return defaultEntityManager;
         }
 
         throw new IllegalStateException("a second producer call isn't allowed");
@@ -62,10 +62,10 @@ public class TestEntityManagerProducer
     @TransactionScoped
     protected EntityManager firstEntityManager()
     {
-        if (this.firstEntityManager == null)
+        if (firstEntityManager == null)
         {
-            this.firstEntityManager = new TestEntityManager();
-            return this.firstEntityManager;
+            firstEntityManager = new TestEntityManager();
+            return firstEntityManager;
         }
 
         throw new IllegalStateException("a second producer call isn't allowed");
@@ -76,10 +76,10 @@ public class TestEntityManagerProducer
     @TransactionScoped
     protected EntityManager secondEntityManager()
     {
-        if (this.secondEntityManager == null)
+        if (secondEntityManager == null)
         {
-            this.secondEntityManager = new TestEntityManager();
-            return this.secondEntityManager;
+            secondEntityManager = new TestEntityManager();
+            return secondEntityManager;
         }
 
         throw new IllegalStateException("a second producer call isn't allowed");
@@ -91,7 +91,7 @@ public class TestEntityManagerProducer
         {
             entityManager.close();
         }
-        this.closeEntityManagerCountDefaultEntityManager++;
+        closeEntityManagerCountDefaultEntityManager++;
     }
 
     protected void closeFirstEntityManager(@Disposes @First EntityManager entityManager)
@@ -100,7 +100,7 @@ public class TestEntityManagerProducer
         {
             entityManager.close();
         }
-        this.closeEntityManagerCountFirstEntityManager++;
+        closeEntityManagerCountFirstEntityManager++;
     }
 
     protected void closeSecondEntityManager(@Disposes @Second EntityManager entityManager)
@@ -109,7 +109,7 @@ public class TestEntityManagerProducer
         {
             entityManager.close();
         }
-        this.closeEntityManagerCountSecondEntityManager++;
+        closeEntityManagerCountSecondEntityManager++;
     }
 
     public TestEntityManager getDefaultEntityManager()

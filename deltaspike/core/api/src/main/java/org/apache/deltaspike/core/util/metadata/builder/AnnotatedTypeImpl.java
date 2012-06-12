@@ -63,8 +63,8 @@ class AnnotatedTypeImpl<X> extends AnnotatedImpl implements AnnotatedType<X>
                       Map<Constructor<?>, Map<Integer, Type>> constructorParameterTypes)
     {
         super(clazz, typeAnnotations, null, null);
-        this.javaClass = clazz;
-        this.constructors = new HashSet<AnnotatedConstructor<X>>();
+        javaClass = clazz;
+        constructors = new HashSet<AnnotatedConstructor<X>>();
         Set<Constructor<?>> cset = new HashSet<Constructor<?>>();
         Set<Method> mset = new HashSet<Method>();
         Set<Field> fset = new HashSet<Field>();
@@ -86,7 +86,7 @@ class AnnotatedTypeImpl<X> extends AnnotatedImpl implements AnnotatedType<X>
                 constructors.add(nc);
             }
         }
-        this.methods = new HashSet<AnnotatedMethod<? super X>>();
+        methods = new HashSet<AnnotatedMethod<? super X>>();
         for (Method m : clazz.getMethods())
         {
             if (!m.getDeclaringClass().equals(Object.class))
@@ -109,7 +109,7 @@ class AnnotatedTypeImpl<X> extends AnnotatedImpl implements AnnotatedType<X>
                 methods.add(nc);
             }
         }
-        this.fields = new HashSet<AnnotatedField<? super X>>();
+        fields = new HashSet<AnnotatedField<? super X>>();
         for (Field f : clazz.getFields())
         {
             AnnotatedField<X> b = new AnnotatedFieldImpl<X>(this, f, fieldAnnotations.get(f), fieldTypes.get(f));

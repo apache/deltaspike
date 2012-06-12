@@ -54,6 +54,6 @@ public class TransactionalInterceptor implements Serializable
     @AroundInvoke
     public Object executeInTransaction(InvocationContext invocationContext) throws Exception
     {
-        return this.persistenceStrategy.execute(invocationContext);
+        return persistenceStrategy.execute(invocationContext);
     }
 }

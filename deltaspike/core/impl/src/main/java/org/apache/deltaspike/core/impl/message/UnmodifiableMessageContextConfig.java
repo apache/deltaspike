@@ -42,7 +42,7 @@ class UnmodifiableMessageContextConfig implements MessageContext.Config
     public MessageContextBuilder use()
     {
         //it's ok to delegate - the call of #use creates a new instance of the context - the old context is untouched
-        return this.messageContextConfig.use();
+        return messageContextConfig.use();
     }
 
 

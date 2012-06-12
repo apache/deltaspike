@@ -30,7 +30,7 @@ public class FailedLoginFailedObserver
 
     protected void onFailedLogin(@Observes LoginFailedEvent loginFailedEvent)
     {
-        this.observedException = loginFailedEvent.getLoginException();
+        observedException = loginFailedEvent.getLoginException();
     }
 
     Exception getObservedException()

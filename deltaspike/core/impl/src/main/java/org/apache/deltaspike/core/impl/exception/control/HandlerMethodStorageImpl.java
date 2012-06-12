@@ -56,13 +56,13 @@ class HandlerMethodStorageImpl implements HandlerMethodStorage
     public <T extends Throwable> void registerHandlerMethod(HandlerMethod<T> handlerMethod)
     {
         log.fine(String.format("Adding handler %s to known handlers", handlerMethod));
-        if (this.allHandlers.containsKey(handlerMethod.getExceptionType()))
+        if (allHandlers.containsKey(handlerMethod.getExceptionType()))
         {
-            this.allHandlers.get(handlerMethod.getExceptionType()).add(handlerMethod);
+            allHandlers.get(handlerMethod.getExceptionType()).add(handlerMethod);
         }
         else
         {
-            this.allHandlers.put(handlerMethod.getExceptionType(),
+            allHandlers.put(handlerMethod.getExceptionType(),
                     new HashSet<HandlerMethod<? extends Throwable>>(Arrays.asList(handlerMethod)));
         }
     }
@@ -80,9 +80,9 @@ class HandlerMethodStorageImpl implements HandlerMethodStorage
 
         for (Type hierarchyType : closure)
         {
-            if (this.allHandlers.get(hierarchyType) != null)
+            if (allHandlers.get(hierarchyType) != null)
             {
-                for (HandlerMethod<?> handler : this.allHandlers.get(hierarchyType))
+                for (HandlerMethod<?> handler : allHandlers.get(hierarchyType))
                 {
                     if (handler.isBeforeHandler() && isBefore)
                     {
@@ -92,7 +92,7 @@ class HandlerMethodStorageImpl implements HandlerMethodStorage
                         }
                         else
                         {
-                            if (!handlerQualifiers.isEmpty() && this.containsAny(handler.getQualifiers(),
+                            if (!handlerQualifiers.isEmpty() && containsAny(handler.getQualifiers(),
                                     handlerQualifiers))
                             {
                                 returningHandlers.add(handler);
@@ -107,7 +107,7 @@ class HandlerMethodStorageImpl implements HandlerMethodStorage
                         }
                         else
                         {
-                            if (!handlerQualifiers.isEmpty() && this.containsAny(handler.getQualifiers(),
+                            if (!handlerQualifiers.isEmpty() && containsAny(handler.getQualifiers(),
                                     handlerQualifiers))
                             {
                                 returningHandlers.add(handler);

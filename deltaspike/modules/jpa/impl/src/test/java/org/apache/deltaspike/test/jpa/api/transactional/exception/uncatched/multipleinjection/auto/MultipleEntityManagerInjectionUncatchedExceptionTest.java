@@ -72,9 +72,9 @@ public class MultipleEntityManagerInjectionUncatchedExceptionTest
     @Test
     public void autoInjectionUncatchedExceptionTest()
     {
-        TestEntityManager defaultEntityManager = this.entityManagerProducer.getDefaultEntityManager();
-        TestEntityManager firstEntityManager = this.entityManagerProducer.getFirstEntityManager();
-        TestEntityManager secondEntityManager = this.entityManagerProducer.getSecondEntityManager();
+        TestEntityManager defaultEntityManager = entityManagerProducer.getDefaultEntityManager();
+        TestEntityManager firstEntityManager = entityManagerProducer.getFirstEntityManager();
+        TestEntityManager secondEntityManager = entityManagerProducer.getSecondEntityManager();
 
         Assert.assertNotNull(defaultEntityManager);
         TestEntityTransaction defaultTransaction = (TestEntityTransaction) (defaultEntityManager).getTransaction();
@@ -105,7 +105,7 @@ public class MultipleEntityManagerInjectionUncatchedExceptionTest
 
         try
         {
-            this.multiTransactionBean.executeInTransaction();
+            multiTransactionBean.executeInTransaction();
             Assert.fail(TestException.class.getName() + " expected!");
         }
         catch (TestException e)

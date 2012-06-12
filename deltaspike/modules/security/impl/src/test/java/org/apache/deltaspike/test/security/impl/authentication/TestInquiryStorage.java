@@ -44,18 +44,18 @@ public class TestInquiryStorage implements InquiryStorage
         }
         else
         {
-            this.anonymInquiries.put(inquiry.getInquiryId(), inquiry);
+            anonymInquiries.put(inquiry.getInquiryId(), inquiry);
         }
         return true;
     }
     
     Collection<InquiryEntry> getUserInquiries()
     {
-        return this.userInquiries.values();
+        return userInquiries.values();
     }
 
     Collection<Inquiry> getAnonymInquiries()
     {
-        return this.anonymInquiries.values();
+        return anonymInquiries.values();
     }
 }

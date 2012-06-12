@@ -59,7 +59,7 @@ public class UnMuteHandlerTest
     {
         bm.fireEvent(new ExceptionToCatchEvent(new Exception(new NullPointerException())));
 
-        assertEquals(2, this.unMuteHandler.getDepthFirstNumberCalled());
-        assertEquals(2, this.unMuteHandler.getBreadthFirstNumberCalled());
+        assertEquals(2, unMuteHandler.getDepthFirstNumberCalled());
+        assertEquals(2, unMuteHandler.getBreadthFirstNumberCalled());
     }
 }

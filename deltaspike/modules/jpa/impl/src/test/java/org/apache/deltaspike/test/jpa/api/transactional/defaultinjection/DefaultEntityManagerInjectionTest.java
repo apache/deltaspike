@@ -80,7 +80,7 @@ public class DefaultEntityManagerInjectionTest
     @Test
     public void defaultEntityManagerInjection()
     {
-        EntityManager injectedEntityManager = this.entityManagerProducer.getDefaultEntityManager();
+        EntityManager injectedEntityManager = entityManagerProducer.getDefaultEntityManager();
 
         Assert.assertNotNull(injectedEntityManager);
         Assert.assertTrue(injectedEntityManager instanceof TestEntityManager);
@@ -92,7 +92,7 @@ public class DefaultEntityManagerInjectionTest
         Assert.assertEquals(false, testTransaction.isCommitted());
         Assert.assertEquals(false, testTransaction.isRolledBack());
 
-        this.transactionalBean.executeInTransaction();
+        transactionalBean.executeInTransaction();
 
         Assert.assertEquals(true, ((TestEntityManager) injectedEntityManager).isFlushed());
         Assert.assertEquals(false, testTransaction.isActive());
@@ -104,7 +104,7 @@ public class DefaultEntityManagerInjectionTest
     @Test
     public void defaultEntityManagerInjectionFailedTransaction()
     {
-        EntityManager injectedEntityManager = this.entityManagerProducer.getDefaultEntityManager();
+        EntityManager injectedEntityManager = entityManagerProducer.getDefaultEntityManager();
 
         Assert.assertNotNull(injectedEntityManager);
         Assert.assertTrue(injectedEntityManager instanceof TestEntityManager);
@@ -118,7 +118,7 @@ public class DefaultEntityManagerInjectionTest
 
         try
         {
-            this.failedTransactionalBean.executeInTransaction();
+            failedTransactionalBean.executeInTransaction();
             Assert.fail(TestException.class.getName() + " expected!");
         }
         catch (TestException e)
@@ -136,7 +136,7 @@ public class DefaultEntityManagerInjectionTest
     @Test
     public void defaultEntityManagerInjectionFailedFlush()
     {
-        EntityManager injectedEntityManager = this.entityManagerProducer.getFailedFlushEntityManager();
+        EntityManager injectedEntityManager = entityManagerProducer.getFailedFlushEntityManager();
 
         Assert.assertNotNull(injectedEntityManager);
         Assert.assertTrue(injectedEntityManager instanceof TestEntityManager);
@@ -150,7 +150,7 @@ public class DefaultEntityManagerInjectionTest
 
         try
         {
-            this.failedFlushTransactionalBean.executeInTransaction();
+            failedFlushTransactionalBean.executeInTransaction();
             Assert.fail(TestException.class.getName() + " expected!");
         }
         catch (TestException e)

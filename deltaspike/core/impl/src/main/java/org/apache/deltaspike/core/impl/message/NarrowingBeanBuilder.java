@@ -75,9 +75,9 @@ class NarrowingBeanBuilder<T>
      */
     public NarrowingBeanBuilder<T> readFromType(AnnotatedType<T> type)
     {
-        this.types = new HashSet<Type>(type.getTypeClosure());
-        this.qualifiers = new HashSet<Annotation>();
-        this.stereotypes = new HashSet<Class<? extends Annotation>>();
+        types = new HashSet<Type>(type.getTypeClosure());
+        qualifiers = new HashSet<Annotation>();
+        stereotypes = new HashSet<Class<? extends Annotation>>();
         String name = null;
         Class<? extends Annotation> scope = Dependent.class;
 
@@ -85,7 +85,7 @@ class NarrowingBeanBuilder<T>
         {
             if (beanManager.isQualifier(annotation.annotationType()))
             {
-                this.qualifiers.add(annotation);
+                qualifiers.add(annotation);
             }
             else if (annotation.annotationType().equals(Named.class))
             {
@@ -97,17 +97,17 @@ class NarrowingBeanBuilder<T>
             }
             else if (beanManager.isStereotype(annotation.annotationType()))
             {
-                this.stereotypes.add(annotation.annotationType());
+                stereotypes.add(annotation.annotationType());
             }
         }
         if (qualifiers.isEmpty())
         {
-            this.qualifiers.add(new DefaultLiteral());
+            qualifiers.add(new DefaultLiteral());
         }
-        this.qualifiers.add(new AnyLiteral());
+        qualifiers.add(new AnyLiteral());
         this.name = "".equals(name) ? null : name;
         this.scope = scope;
-        this.alternative = type.isAnnotationPresent(Alternative.class);
+        alternative = type.isAnnotationPresent(Alternative.class);
         return this;
     }
 
@@ -150,7 +150,7 @@ class NarrowingBeanBuilder<T>
      */
     public NarrowingBeanBuilder<T> addType(Type type)
     {
-        this.types.add(type);
+        types.add(type);
         return this;
     }
 
@@ -215,7 +215,7 @@ class NarrowingBeanBuilder<T>
      */
     public NarrowingBeanBuilder<T> addQualifier(Annotation qualifier)
     {
-        this.qualifiers.add(qualifier);
+        qualifiers.add(qualifier);
         return this;
     }
 

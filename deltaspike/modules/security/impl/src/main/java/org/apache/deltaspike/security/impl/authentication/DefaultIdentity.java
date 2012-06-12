@@ -70,13 +70,13 @@ public class DefaultIdentity implements Identity
     public boolean isLoggedIn() 
     {
         // If there is a user set, then the user is logged in.
-        return this.user != null;
+        return user != null;
     }
 
     @Override
     public User getUser()
     {
-        return this.user;
+        return user;
     }
 
     @Override
@@ -88,8 +88,8 @@ public class DefaultIdentity implements Identity
             {
                 if (isAuthenticationRequestWithDifferentUserId())
                 {
-                    throw new UnexpectedCredentialException("active user: " + this.user.getId() +
-                            " provided credentials: " + this.loginCredential.getUserId());
+                    throw new UnexpectedCredentialException("active user: " + user.getId() +
+                            " provided credentials: " + loginCredential.getUserId());
                 }
 
                 beanManager.fireEvent(new AlreadyLoggedInEvent());
@@ -125,8 +125,8 @@ public class DefaultIdentity implements Identity
 
     private boolean isAuthenticationRequestWithDifferentUserId()
     {
-        return isLoggedIn() && this.loginCredential.getUserId() != null &&
-                !this.loginCredential.getUserId().equals(this.user.getId());
+        return isLoggedIn() && loginCredential.getUserId() != null &&
+                !loginCredential.getUserId().equals(user.getId());
     }
 
     protected boolean authenticate() throws AuthenticationException 
@@ -155,7 +155,7 @@ public class DefaultIdentity implements Identity
             if (activeAuthenticator.getStatus() == AuthenticationStatus.SUCCESS)
             {
                 postAuthenticate(activeAuthenticator);
-                this.user = activeAuthenticator.getUser();
+                user = activeAuthenticator.getUser();
                 return true;
             }
         } 
@@ -199,9 +199,9 @@ public class DefaultIdentity implements Identity
     {
         if (isLoggedIn())
         {
-            beanManager.fireEvent(new PreLoggedOutEvent(this.user));
+            beanManager.fireEvent(new PreLoggedOutEvent(user));
 
-            PostLoggedOutEvent postLoggedOutEvent = new PostLoggedOutEvent(this.user);
+            PostLoggedOutEvent postLoggedOutEvent = new PostLoggedOutEvent(user);
 
             unAuthenticate(invalidateLoginCredential);
 
@@ -214,7 +214,7 @@ public class DefaultIdentity implements Identity
      */
     private void unAuthenticate(boolean invalidateLoginCredential)
     {
-        this.user = null;
+        user = null;
 
         if (invalidateLoginCredential)
         {

@@ -107,7 +107,7 @@ class ImmutableBeanWrapper<T> extends AbstractImmutableBean<T>
         super(bean.getBeanClass(), name, qualifiers, scope, stereotypes,
             types, alternative, nullable, bean.getInjectionPoints(), toString);
 
-        this.wrapped = bean;
+        wrapped = bean;
     }
 
     @Override

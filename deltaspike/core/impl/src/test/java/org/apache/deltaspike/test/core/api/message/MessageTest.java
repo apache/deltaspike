@@ -76,12 +76,12 @@ public class MessageTest
     @Test
     public void testInternationalizedMessage()
     {
-        assertEquals("Welcome to DeltaSpike", this.messages.welcomeToDeltaSpike());
+        assertEquals("Welcome to DeltaSpike", messages.welcomeToDeltaSpike());
     }
 
     @Test
     public void testInternationalizedParametrizedMessage()
     {
-        assertEquals("Welcome to Apache DeltaSpike", this.messages.welcomeTo("Apache DeltaSpike"));
+        assertEquals("Welcome to Apache DeltaSpike", messages.welcomeTo("Apache DeltaSpike"));
     }
 }

@@ -232,13 +232,13 @@ public class WeldContextControl implements ContextControl
 
     private ContextController getContextController()
     {
-        if (this.contextController != null)
+        if (contextController != null)
         {
-            return this.contextController;
+            return contextController;
         }
 
-        this.contextController = new ContextController();
-        return tryToInjectFields(this.contextController);
+        contextController = new ContextController();
+        return tryToInjectFields(contextController);
     }
 
     private <T> T tryToInjectFields(T instance)

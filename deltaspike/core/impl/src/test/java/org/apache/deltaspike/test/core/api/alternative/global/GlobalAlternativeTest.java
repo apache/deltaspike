@@ -97,13 +97,13 @@ public class GlobalAlternativeTest
     @Test
     public void alternativeImplementationWithInterfaceAsBaseType()
     {
-        Assert.assertEquals(BaseInterface1AlternativeImplementation.class.getName(), this.bean.getClass().getName());
+        Assert.assertEquals(BaseInterface1AlternativeImplementation.class.getName(), bean.getClass().getName());
     }
 
     @Test
     public void alternativeImplementationWithInterfaceAsBaseTypeAndQualifier()
     {
-        Assert.assertEquals(BaseBeanA.class.getName(), this.beanA.getClass().getName());
-        Assert.assertEquals(AlternativeBaseBeanB.class.getName(), this.beanB.getClass().getName());
+        Assert.assertEquals(BaseBeanA.class.getName(), beanA.getClass().getName());
+        Assert.assertEquals(AlternativeBaseBeanB.class.getName(), beanB.getClass().getName());
     }
 }

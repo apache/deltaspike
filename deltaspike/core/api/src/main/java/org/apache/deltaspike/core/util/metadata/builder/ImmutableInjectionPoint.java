@@ -66,10 +66,10 @@ public class ImmutableInjectionPoint implements InjectionPoint
     public ImmutableInjectionPoint(AnnotatedField<?> field, Set<Annotation> qualifiers, Bean<?> declaringBean,
                                    boolean isTransient, boolean delegate)
     {
-        this.annotated = field;
-        this.member = field.getJavaMember();
+        annotated = field;
+        member = field.getJavaMember();
         this.qualifiers = new HashSet<Annotation>(qualifiers);
-        this.type = field.getJavaMember().getGenericType();
+        type = field.getJavaMember().getGenericType();
         this.isTransient = isTransient;
         this.delegate = delegate;
         this.declaringBean = declaringBean;
@@ -89,10 +89,10 @@ public class ImmutableInjectionPoint implements InjectionPoint
     public ImmutableInjectionPoint(AnnotatedField<?> field, BeanManager beanManager, Bean<?> declaringBean,
                                    boolean isTransient, boolean delegate)
     {
-        this.annotated = field;
-        this.member = field.getJavaMember();
-        this.qualifiers = BeanUtils.getQualifiers(beanManager, field.getAnnotations());
-        this.type = field.getJavaMember().getGenericType();
+        annotated = field;
+        member = field.getJavaMember();
+        qualifiers = BeanUtils.getQualifiers(beanManager, field.getAnnotations());
+        type = field.getJavaMember().getGenericType();
         this.isTransient = isTransient;
         this.delegate = delegate;
         this.declaringBean = declaringBean;
@@ -112,13 +112,13 @@ public class ImmutableInjectionPoint implements InjectionPoint
     public ImmutableInjectionPoint(AnnotatedParameter<?> parameter, Set<Annotation> qualifiers, Bean<?> declaringBean,
                                    boolean isTransient, boolean delegate)
     {
-        this.annotated = parameter;
-        this.member = parameter.getDeclaringCallable().getJavaMember();
+        annotated = parameter;
+        member = parameter.getDeclaringCallable().getJavaMember();
         this.qualifiers = new HashSet<Annotation>(qualifiers);
         this.isTransient = isTransient;
         this.delegate = delegate;
         this.declaringBean = declaringBean;
-        this.type = parameter.getBaseType();
+        type = parameter.getBaseType();
     }
 
     /**
@@ -135,13 +135,13 @@ public class ImmutableInjectionPoint implements InjectionPoint
     public ImmutableInjectionPoint(AnnotatedParameter<?> parameter, BeanManager beanManager, Bean<?> declaringBean,
                                    boolean isTransient, boolean delegate)
     {
-        this.annotated = parameter;
-        this.member = parameter.getDeclaringCallable().getJavaMember();
-        this.qualifiers = BeanUtils.getQualifiers(beanManager, parameter.getAnnotations());
+        annotated = parameter;
+        member = parameter.getDeclaringCallable().getJavaMember();
+        qualifiers = BeanUtils.getQualifiers(beanManager, parameter.getAnnotations());
         this.isTransient = isTransient;
         this.delegate = delegate;
         this.declaringBean = declaringBean;
-        this.type = parameter.getBaseType();
+        type = parameter.getBaseType();
     }
 
     public Annotated getAnnotated()

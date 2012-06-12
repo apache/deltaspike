@@ -71,9 +71,9 @@ public class MultipleEntityManagerInjectionTest
     @Test
     public void autoEntityManagerInjection()
     {
-        TestEntityManager defaultEntityManager = this.entityManagerProducer.getDefaultEntityManager();
-        TestEntityManager firstEntityManager = this.entityManagerProducer.getFirstEntityManager();
-        TestEntityManager secondEntityManager = this.entityManagerProducer.getSecondEntityManager();
+        TestEntityManager defaultEntityManager = entityManagerProducer.getDefaultEntityManager();
+        TestEntityManager firstEntityManager = entityManagerProducer.getFirstEntityManager();
+        TestEntityManager secondEntityManager = entityManagerProducer.getSecondEntityManager();
 
         Assert.assertNotNull(defaultEntityManager);
         TestEntityTransaction defaultTransaction = (TestEntityTransaction) (defaultEntityManager).getTransaction();
@@ -102,7 +102,7 @@ public class MultipleEntityManagerInjectionTest
         Assert.assertEquals(false, secondTransaction.isCommitted());
         Assert.assertEquals(false, secondTransaction.isRolledBack());
 
-        this.multiTransactionBean.executeInTransaction();
+        multiTransactionBean.executeInTransaction();
 
         Assert.assertEquals(true, defaultEntityManager.isFlushed());
         Assert.assertEquals(false, defaultTransaction.isActive());

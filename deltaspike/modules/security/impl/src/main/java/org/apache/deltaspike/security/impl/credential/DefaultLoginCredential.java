@@ -65,8 +65,8 @@ public class DefaultLoginCredential implements LoginCredential
 
     public void invalidate()
     {
-        this.credential = null;
-        this.userId = null;
+        credential = null;
+        userId = null;
     }
 
     protected void setValid(@Observes PostAuthenticateEvent event)
@@ -88,6 +88,6 @@ public class DefaultLoginCredential implements LoginCredential
     @Override
     public String toString() 
     {
-        return "LoginCredential[" + (this.userId != null ? this.userId : "unknown" ) + "]";
+        return "LoginCredential[" + (userId != null ? userId : "unknown" ) + "]";
     }
 }

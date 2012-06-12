@@ -59,58 +59,58 @@ public class DefaultExceptionEvent<T extends Throwable> implements Introspective
             throw new IllegalArgumentException("null is not valid for stackEvent");
         }
 
-        this.exception = (T) stackEvent.getCurrent();
+        exception = (T) stackEvent.getCurrent();
         this.beforeTraversal = beforeTraversal;
-        this.markedHandled = handled;
-        this.flow = ExceptionHandlingFlow.HANDLED_AND_CONTINUE;
+        markedHandled = handled;
+        flow = ExceptionHandlingFlow.HANDLED_AND_CONTINUE;
     }
 
     @Override
     public T getException()
     {
-        return this.exception;
+        return exception;
     }
 
     @Override
     public void abort()
     {
-        this.flow = ExceptionHandlingFlow.ABORT;
+        flow = ExceptionHandlingFlow.ABORT;
     }
 
     @Override
     public void throwOriginal()
     {
-        this.flow = ExceptionHandlingFlow.THROW_ORIGINAL;
+        flow = ExceptionHandlingFlow.THROW_ORIGINAL;
     }
 
     @Override
     public void handled()
     {
-        this.flow = ExceptionHandlingFlow.HANDLED;
+        flow = ExceptionHandlingFlow.HANDLED;
     }
 
     @Override
     public void handledAndContinue()
     {
-        this.flow = ExceptionHandlingFlow.HANDLED_AND_CONTINUE;
+        flow = ExceptionHandlingFlow.HANDLED_AND_CONTINUE;
     }
 
     @Override
     public void skipCause()
     {
-        this.flow = ExceptionHandlingFlow.SKIP_CAUSE;
+        flow = ExceptionHandlingFlow.SKIP_CAUSE;
     }
 
     @Override
     public void unmute()
     {
-        this.unmute = true;
+        unmute = true;
     }
 
     @Override
     public boolean isUnmute()
     {
-        return this.unmute;
+        return unmute;
     }
 
     /* Later
@@ -121,13 +121,13 @@ public class DefaultExceptionEvent<T extends Throwable> implements Introspective
     @Override
     public ExceptionHandlingFlow getCurrentExceptionHandlingFlow()
     {
-        return this.flow;
+        return flow;
     }
 
     @Override
     public boolean isMarkedHandled()
     {
-        return this.markedHandled;
+        return markedHandled;
     }
 
     @Override
@@ -139,13 +139,13 @@ public class DefaultExceptionEvent<T extends Throwable> implements Introspective
     @Override
     public void rethrow(Throwable t)
     {
-        this.throwNewException = t;
-        this.flow = ExceptionHandlingFlow.THROW;
+        throwNewException = t;
+        flow = ExceptionHandlingFlow.THROW;
     }
 
     @Override
     public Throwable getThrowNewException()
     {
-        return this.throwNewException;
+        return throwNewException;
     }
 }

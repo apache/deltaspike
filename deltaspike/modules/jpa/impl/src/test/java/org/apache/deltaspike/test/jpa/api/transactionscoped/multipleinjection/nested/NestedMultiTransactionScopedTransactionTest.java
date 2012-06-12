@@ -71,10 +71,10 @@ public class NestedMultiTransactionScopedTransactionTest
     @Test
     public void nestedMultiTransactionScopedTransactionTest()
     {
-        this.firstLevelTransactionBean.executeInTransaction();
+        firstLevelTransactionBean.executeInTransaction();
 
-        TestEntityManager firstEntityManager = this.entityManagerProducer.getFirstEntityManager();
-        TestEntityManager secondEntityManager = this.entityManagerProducer.getSecondEntityManager();
+        TestEntityManager firstEntityManager = entityManagerProducer.getFirstEntityManager();
+        TestEntityManager secondEntityManager = entityManagerProducer.getSecondEntityManager();
 
         Assert.assertNotNull(firstEntityManager);
         TestEntityTransaction firstTransaction = (TestEntityTransaction) (firstEntityManager).getTransaction();
@@ -94,8 +94,8 @@ public class NestedMultiTransactionScopedTransactionTest
         Assert.assertEquals(true, secondTransaction.isCommitted());
         Assert.assertEquals(false, secondTransaction.isRolledBack());
 
-        Assert.assertEquals(1, this.entityManagerProducer.getCloseEntityManagerCountFirstEntityManager());
-        Assert.assertEquals(1, this.entityManagerProducer.getCloseEntityManagerCountSecondEntityManager());
+        Assert.assertEquals(1, entityManagerProducer.getCloseEntityManagerCountFirstEntityManager());
+        Assert.assertEquals(1, entityManagerProducer.getCloseEntityManagerCountSecondEntityManager());
 
     }
 }

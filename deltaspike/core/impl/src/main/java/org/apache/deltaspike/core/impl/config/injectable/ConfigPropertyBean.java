@@ -51,35 +51,35 @@ public class ConfigPropertyBean<T> implements Bean<T>, Serializable
     {
         this.configProperty = configProperty;
 
-        this.qualifiers = new HashSet<Annotation>();
+        qualifiers = new HashSet<Annotation>();
 
         if (customQualifier != null)
         {
-            this.qualifiers.add(customQualifier);
+            qualifiers.add(customQualifier);
         }
         else
         {
-            this.qualifiers.add(configProperty);
+            qualifiers.add(configProperty);
         }
 
         this.customQualifier = customQualifier;
 
-        this.beanType = (Class<?>) targetType;
+        beanType = (Class<?>) targetType;
 
-        this.types = new HashSet<Type>();
-        this.types.add(this.beanType);
+        types = new HashSet<Type>();
+        types.add(beanType);
     }
 
     @Override
     public Set<Type> getTypes()
     {
-        return this.types;
+        return types;
     }
 
     @Override
     public Set<Annotation> getQualifiers()
     {
-        return this.qualifiers;
+        return qualifiers;
     }
 
     @Override
@@ -110,7 +110,7 @@ public class ConfigPropertyBean<T> implements Bean<T>, Serializable
     @Override
     public Class<?> getBeanClass()
     {
-        return this.beanType;
+        return beanType;
     }
 
     @Override
@@ -139,8 +139,8 @@ public class ConfigPropertyBean<T> implements Bean<T>, Serializable
         if (Converter.class.equals(configProperty.converter()))
         {
             //TODO add exception handling, if we throw an exception for an unknown converter
-            converter = converterFactory.create(String.class, (Class<?>) this.beanType,
-                this.customQualifier != null ? customQualifier.annotationType() : null);
+            converter = converterFactory.create(String.class, (Class<?>) beanType,
+                    customQualifier != null ? customQualifier.annotationType() : null);
         }
         else
         {
@@ -154,7 +154,7 @@ public class ConfigPropertyBean<T> implements Bean<T>, Serializable
 
         if (converter == null)
         {
-            if (String.class.isAssignableFrom(this.beanType))
+            if (String.class.isAssignableFrom(beanType))
             {
                 return (T)configuredValue;
             }
@@ -163,9 +163,9 @@ public class ConfigPropertyBean<T> implements Bean<T>, Serializable
                     String.class.getName() + " -> " + beanType.getName());
         }
 
-        if (this.customQualifier != null && converter instanceof MetaDataAwareConverter)
+        if (customQualifier != null && converter instanceof MetaDataAwareConverter)
         {
-            return (T) ((MetaDataAwareConverter) converter).convert(configuredValue, this.customQualifier);
+            return (T) ((MetaDataAwareConverter) converter).convert(configuredValue, customQualifier);
         }
         //noinspection unchecked
         return (T) converter.convert(configuredValue);

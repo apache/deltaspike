@@ -59,7 +59,7 @@ public class BreadthFirstAbortControlTest
     public void assertNoOtherHandlersCalledAfterAbort()
     {
         bm.fireEvent(new ExceptionToCatchEvent(new NullPointerException()));
-        assertTrue(this.abortingBreadthFirstHandler.isAbortCalled());
-        assertFalse(this.abortingBreadthFirstHandler.isProceedCalled());
+        assertTrue(abortingBreadthFirstHandler.isAbortCalled());
+        assertFalse(abortingBreadthFirstHandler.isProceedCalled());
     }
 }

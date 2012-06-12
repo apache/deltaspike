@@ -71,7 +71,7 @@ public class DefaultNestedTransactionTest
     @Test
     public void defaultNestedTransaction()
     {
-        TestEntityManager firstEntityManager = this.entityManagerProducer.getFirstEntityManager();
+        TestEntityManager firstEntityManager = entityManagerProducer.getFirstEntityManager();
 
         Assert.assertNotNull(firstEntityManager);
         TestEntityTransaction firstTransaction = (TestEntityTransaction) (firstEntityManager).getTransaction();
@@ -82,7 +82,7 @@ public class DefaultNestedTransactionTest
         Assert.assertEquals(false, firstTransaction.isCommitted());
         Assert.assertEquals(false, firstTransaction.isRolledBack());
 
-        this.firstLevelTransactionBean.executeInTransaction();
+        firstLevelTransactionBean.executeInTransaction();
 
         Assert.assertEquals(true, firstEntityManager.isFlushed());
         Assert.assertEquals(false, firstTransaction.isActive());

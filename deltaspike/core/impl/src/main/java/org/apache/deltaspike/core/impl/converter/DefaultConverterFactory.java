@@ -61,7 +61,7 @@ public class DefaultConverterFactory implements ConverterFactory
         Converter<S, T> result;
 
         //try to find meta-data-aware converter
-        result = this.converterMapping.get(new ConverterKey(sourceType, targetType, metaDataType));
+        result = converterMapping.get(new ConverterKey(sourceType, targetType, metaDataType));
 
         //for a simple custom configuration-annotation a custom converter isn't required
         //in this case the custom annotation is just used to keep the (string-based) property in a central place
@@ -71,7 +71,7 @@ public class DefaultConverterFactory implements ConverterFactory
             return result;
         }
 
-        return this.converterMapping.get(new ConverterKey(sourceType, targetType, null));
+        return converterMapping.get(new ConverterKey(sourceType, targetType, null));
     }
 
     private void addDefaultConverters()
@@ -184,6 +184,6 @@ public class DefaultConverterFactory implements ConverterFactory
             }
         }
 
-        this.converterMapping.put(new ConverterKey(sourceType, targetType, metaDataType), converter);
+        converterMapping.put(new ConverterKey(sourceType, targetType, metaDataType), converter);
     }
 }

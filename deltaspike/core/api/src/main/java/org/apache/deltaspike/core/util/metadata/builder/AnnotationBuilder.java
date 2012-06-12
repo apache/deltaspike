@@ -43,8 +43,8 @@ class AnnotationBuilder
      */
     public AnnotationBuilder()
     {
-        this.annotationMap = new HashMap<Class<? extends Annotation>, Annotation>();
-        this.annotationSet = new HashSet<Annotation>();
+        annotationMap = new HashMap<Class<? extends Annotation>, Annotation>();
+        annotationSet = new HashSet<Annotation>();
     }
 
     /**

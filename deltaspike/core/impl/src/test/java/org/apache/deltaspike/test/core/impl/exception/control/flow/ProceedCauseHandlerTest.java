@@ -58,10 +58,10 @@ public class ProceedCauseHandlerTest
     public void assertCorrectNumberOfHandlerCallsForProceedCause()
     {
         bm.fireEvent(new ExceptionToCatchEvent(new Exception(new IllegalArgumentException(new NullPointerException()))));
-        assertEquals(0, this.proceedCauseHandler.getBreadthFirstNpeLowerPrecedenceCalled());
-        assertEquals(1, this.proceedCauseHandler.getBreadthFirstNpeCalled());
+        assertEquals(0, proceedCauseHandler.getBreadthFirstNpeLowerPrecedenceCalled());
+        assertEquals(1, proceedCauseHandler.getBreadthFirstNpeCalled());
 
-        assertEquals(0, this.proceedCauseHandler.getDepthFirstNpeHigherPrecedenceCalled());
-        assertEquals(0, this.proceedCauseHandler.getDepthFirstNpeCalled());
+        assertEquals(0, proceedCauseHandler.getDepthFirstNpeHigherPrecedenceCalled());
+        assertEquals(0, proceedCauseHandler.getDepthFirstNpeCalled());
     }
 }

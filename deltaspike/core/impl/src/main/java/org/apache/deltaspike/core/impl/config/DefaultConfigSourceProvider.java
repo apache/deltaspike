@@ -48,9 +48,9 @@ public class DefaultConfigSourceProvider implements ConfigSourceProvider
      */
     public DefaultConfigSourceProvider()
     {
-        this.configSources.add(new SystemPropertyConfigSource());
-        this.configSources.add(new EnvironmentPropertyConfigSource());
-        this.configSources.add(new LocalJndiConfigSource());
+        configSources.add(new SystemPropertyConfigSource());
+        configSources.add(new EnvironmentPropertyConfigSource());
+        configSources.add(new LocalJndiConfigSource());
 
         try
         {
@@ -59,7 +59,7 @@ public class DefaultConfigSourceProvider implements ConfigSourceProvider
             while (propertyFileUrls.hasMoreElements())
             {
                 URL propertyFileUrl = propertyFileUrls.nextElement();
-                this.configSources.add(new PropertyFileConfigSource(propertyFileUrl));
+                configSources.add(new PropertyFileConfigSource(propertyFileUrl));
             }
         }
         catch (IOException ioe) 
@@ -74,6 +74,6 @@ public class DefaultConfigSourceProvider implements ConfigSourceProvider
     @Override
     public List<ConfigSource> getConfigSources()
     {
-        return this.configSources;
+        return configSources;
     }
 }

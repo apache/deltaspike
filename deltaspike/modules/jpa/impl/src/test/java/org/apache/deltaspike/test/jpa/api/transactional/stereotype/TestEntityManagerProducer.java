@@ -32,6 +32,6 @@ public class TestEntityManagerProducer
     @Produces
     protected EntityManager getEntityManager()
     {
-        return this.entityManager;
+        return entityManager;
     }
 }

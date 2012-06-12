@@ -71,15 +71,15 @@ public class AnnotatedTypeBuilder<X>
      */
     public AnnotatedTypeBuilder()
     {
-        this.typeAnnotations = new AnnotationBuilder();
-        this.constructors = new HashMap<Constructor<?>, AnnotationBuilder>();
-        this.constructorParameters = new HashMap<Constructor<?>, Map<Integer, AnnotationBuilder>>();
-        this.constructorParameterTypes = new HashMap<Constructor<?>, Map<Integer, Type>>();
-        this.fields = new HashMap<Field, AnnotationBuilder>();
-        this.fieldTypes = new HashMap<Field, Type>();
-        this.methods = new HashMap<Method, AnnotationBuilder>();
-        this.methodParameters = new HashMap<Method, Map<Integer, AnnotationBuilder>>();
-        this.methodParameterTypes = new HashMap<Method, Map<Integer, Type>>();
+        typeAnnotations = new AnnotationBuilder();
+        constructors = new HashMap<Constructor<?>, AnnotationBuilder>();
+        constructorParameters = new HashMap<Constructor<?>, Map<Integer, AnnotationBuilder>>();
+        constructorParameterTypes = new HashMap<Constructor<?>, Map<Integer, Type>>();
+        fields = new HashMap<Field, AnnotationBuilder>();
+        fieldTypes = new HashMap<Field, Type>();
+        methods = new HashMap<Method, AnnotationBuilder>();
+        methodParameters = new HashMap<Method, Map<Integer, AnnotationBuilder>>();
+        methodParameterTypes = new HashMap<Method, Map<Integer, Type>>();
     }
 
     /**
@@ -553,7 +553,7 @@ public class AnnotatedTypeBuilder<X>
         }
         if (javaClass == null || overwrite)
         {
-            this.javaClass = type.getJavaClass();
+            javaClass = type.getJavaClass();
         }
         mergeAnnotationsOnElement(type, overwrite, typeAnnotations);
         for (AnnotatedField<? super X> field : type.getFields())
@@ -641,7 +641,7 @@ public class AnnotatedTypeBuilder<X>
         }
         if (javaClass == null || overwrite)
         {
-            this.javaClass = type;
+            javaClass = type;
         }
         for (Annotation annotation : type.getAnnotations())
         {

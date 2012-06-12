@@ -75,17 +75,17 @@ public class DefaultTransactionScopedEntityManagerInjectionTest
     @Test
     public void defaultTransactionScopedEntityManagerInjection()
     {
-        this.transactionalBean.executeInTransaction();
+        transactionalBean.executeInTransaction();
 
         TestEntityTransaction testTransaction =
-            (TestEntityTransaction)this.entityManagerProducer.getEntityManager().getTransaction();
+            (TestEntityTransaction) entityManagerProducer.getEntityManager().getTransaction();
 
         Assert.assertEquals(false, testTransaction.isActive());
         Assert.assertEquals(true, testTransaction.isStarted());
         Assert.assertEquals(true, testTransaction.isCommitted());
         Assert.assertEquals(false, testTransaction.isRolledBack());
 
-        Assert.assertEquals(1, this.entityManagerProducer.getCloseEntityManagerCount());
+        Assert.assertEquals(1, entityManagerProducer.getCloseEntityManagerCount());
 
     }
 
@@ -95,7 +95,7 @@ public class DefaultTransactionScopedEntityManagerInjectionTest
         try
         {
             //not available because there is no transactional method
-            this.entityManager.getTransaction();
+            entityManager.getTransaction();
             Assert.fail(ContextNotActiveException.class.getName() + " expected!");
         }
         catch (ContextNotActiveException e)
@@ -110,7 +110,7 @@ public class DefaultTransactionScopedEntityManagerInjectionTest
         try
         {
             //not available because there is no transactional method
-            this.entityManager.getTransaction();
+            entityManager.getTransaction();
             Assert.fail(ContextNotActiveException.class.getName() + " expected!");
         }
         catch (ContextNotActiveException e)

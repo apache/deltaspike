@@ -53,19 +53,19 @@ public class TestMessageResolver implements MessageResolver
             resolvedBundle = null;
         }
 
-        this.messageBundle = resolvedBundle;
+        messageBundle = resolvedBundle;
     }
 
     @Override
     public String getMessage(String messageTemplate)
     {
-        if (this.messageBundle != null && messageTemplate != null &&
+        if (messageBundle != null && messageTemplate != null &&
                 messageTemplate.startsWith("{") && messageTemplate.endsWith("}"))
         {
             messageTemplate = messageTemplate.substring(1, messageTemplate.length() - 1);
             try
             {
-                return this.messageBundle.getString(messageTemplate);
+                return messageBundle.getString(messageTemplate);
             }
             catch (MissingResourceException e)
             {

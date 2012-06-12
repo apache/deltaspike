@@ -32,7 +32,7 @@ public class TestEntityManagerProducer
     @Produces
     protected EntityManager firstEntityManager()
     {
-        return this.firstEntityManager;
+        return firstEntityManager;
     }
 
     public TestEntityManager getFirstEntityManager()

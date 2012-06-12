@@ -70,6 +70,6 @@ public class SimpleMessageTest
     @Test
     public void testSimpleMessage()
     {
-        assertEquals("Welcome to DeltaSpike", this.simpleMessage.welcomeToDeltaSpike());
+        assertEquals("Welcome to DeltaSpike", simpleMessage.welcomeToDeltaSpike());
     }
 }

@@ -39,9 +39,10 @@ public class ShopClient
 
     public void login(String userName, final String password)
     {
-        this.loginCredential.setUserId(userName);
+        loginCredential.setUserId(userName);
         //TODO discuss #setSecurityToken
-        this.loginCredential.setCredential(new Credential<String>() {
+        loginCredential.setCredential(new Credential<String>()
+        {
             @Override
             public String getValue()
             {
@@ -49,16 +50,16 @@ public class ShopClient
             }
         });
 
-        this.identity.login();
+        identity.login();
     }
 
     public void logout()
     {
-        this.identity.logout();
+        identity.logout();
     }
 
     public String requestNewProduct(String customText)
     {
-        return this.shop.sendInquiry(new NewProductInquiry(customText));
+        return shop.sendInquiry(new NewProductInquiry(customText));
     }
 }

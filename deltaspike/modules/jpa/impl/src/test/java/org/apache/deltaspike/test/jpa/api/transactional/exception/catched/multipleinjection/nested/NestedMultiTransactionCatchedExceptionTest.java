@@ -71,8 +71,8 @@ public class NestedMultiTransactionCatchedExceptionTest
     @Test
     public void nestedMultiTransactionCatchedExceptionTest()
     {
-        TestEntityManager firstEntityManager = this.entityManagerProducer.getFirstEntityManager();
-        TestEntityManager secondEntityManager = this.entityManagerProducer.getSecondEntityManager();
+        TestEntityManager firstEntityManager = entityManagerProducer.getFirstEntityManager();
+        TestEntityManager secondEntityManager = entityManagerProducer.getSecondEntityManager();
 
         Assert.assertNotNull(firstEntityManager);
         TestEntityTransaction firstTransaction = (TestEntityTransaction) (firstEntityManager).getTransaction();
@@ -92,7 +92,7 @@ public class NestedMultiTransactionCatchedExceptionTest
         Assert.assertEquals(false, secondTransaction.isCommitted());
         Assert.assertEquals(false, secondTransaction.isRolledBack());
 
-        this.firstLevelTransactionBean.executeInTransaction();
+        firstLevelTransactionBean.executeInTransaction();
 
         Assert.assertEquals(true, firstEntityManager.isFlushed());
         Assert.assertEquals(false, firstTransaction.isActive());

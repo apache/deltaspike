@@ -61,43 +61,43 @@ public class CallingHandlersTest
     {
         bm.fireEvent(new ExceptionToCatchEvent(new IllegalArgumentException()));
 
-        assertTrue(this.calledExceptionHandler.isOutboundHandlerCalled());
+        assertTrue(calledExceptionHandler.isOutboundHandlerCalled());
     }
 
     @Test
     public void assertOutboundHanldersAreCalledOnce()
     {
-        this.calledExceptionHandler.setOutboundHandlerTimesCalled(0);
+        calledExceptionHandler.setOutboundHandlerTimesCalled(0);
         bm.fireEvent(new ExceptionToCatchEvent(new IllegalArgumentException()));
-        assertEquals(1, this.calledExceptionHandler.getOutboundHandlerTimesCalled());
+        assertEquals(1, calledExceptionHandler.getOutboundHandlerTimesCalled());
     }
 
     @Test
     public void assertInboundHanldersAreCalledOnce()
     {
-        this.calledExceptionHandler.setInboundHandlerTimesCalled(0);
+        calledExceptionHandler.setInboundHandlerTimesCalled(0);
         bm.fireEvent(new ExceptionToCatchEvent(new IllegalArgumentException()));
-        assertEquals(1, this.calledExceptionHandler.getInboundHandlerTimesCalled());
+        assertEquals(1, calledExceptionHandler.getInboundHandlerTimesCalled());
     }
 
     @Test
     public void assertAdditionalParamsAreInjected()
     {
         bm.fireEvent(new ExceptionToCatchEvent(new RuntimeException(new IllegalArgumentException())));
-        assertTrue(this.calledExceptionHandler.isBeanmanagerInjected());
+        assertTrue(calledExceptionHandler.isBeanmanagerInjected());
     }
 
     //@Test //TODO discuss this test
     public void assertAdditionalParamsAreInjectedWithDifferentHandlerLocation()
     {
         bm.fireEvent(new ExceptionToCatchEvent(new SQLException()));
-        assertTrue(this.calledExceptionHandler.isLocationDifferBeanmanagerInjected());
+        assertTrue(calledExceptionHandler.isLocationDifferBeanmanagerInjected());
     }
 
     @Test
     public void assertProtectedHandlersAreCalled()
     {
         bm.fireEvent(new ExceptionToCatchEvent(new IllegalStateException()));
-        assertTrue(this.calledExceptionHandler.isProtectedHandlerCalled());
+        assertTrue(calledExceptionHandler.isProtectedHandlerCalled());
     }
 }

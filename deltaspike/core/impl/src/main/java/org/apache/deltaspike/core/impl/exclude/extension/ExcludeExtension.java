@@ -84,7 +84,7 @@ public class ExcludeExtension implements Extension, Deactivatable
         initActivation();
 
         //we need to do it before the exclude logic to keep the @Exclude support for global alternatives
-        if (this.isGlobalAlternativeActivated)
+        if (isGlobalAlternativeActivated)
         {
             detectCdiImplementation();
 
@@ -98,12 +98,12 @@ public class ExcludeExtension implements Extension, Deactivatable
             }
         }
 
-        if (this.isCustomProjectStageBeanFilterActivated)
+        if (isCustomProjectStageBeanFilterActivated)
         {
             vetoCustomProjectStageBeans(processAnnotatedType);
         }
 
-        if (!this.isActivated)
+        if (!isActivated)
         {
             return;
         }

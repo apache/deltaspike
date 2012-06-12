@@ -53,18 +53,18 @@ public class MessageContextConfigLiteral extends AnnotationLiteral<MessageContex
     @Override
     public Class<? extends MessageResolver> messageResolver()
     {
-        return this.messageResolver;
+        return messageResolver;
     }
 
     @Override
     public Class<? extends MessageInterpolator> messageInterpolator()
     {
-        return this.messageInterpolator;
+        return messageInterpolator;
     }
 
     @Override
     public Class<? extends LocaleResolver> localeResolver()
     {
-        return this.localeResolver;
+        return localeResolver;
     }
 }

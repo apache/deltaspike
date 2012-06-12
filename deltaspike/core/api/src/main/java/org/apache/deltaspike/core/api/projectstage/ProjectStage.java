@@ -152,7 +152,7 @@ public abstract class ProjectStage implements Serializable
      */
     protected ProjectStage()
     {
-        String projectStageClassName = this.getClass().getSimpleName();
+        String projectStageClassName = getClass().getSimpleName();
         psName = projectStageClassName;
 
         init(projectStageClassName, this);

@@ -72,7 +72,7 @@ public class NestedTransactionWithExceptionTest
     @Test
     public void nestedTransactionWithExceptionTest()
     {
-        TestEntityManager firstEntityManager = this.entityManagerProducer.getFirstEntityManager();
+        TestEntityManager firstEntityManager = entityManagerProducer.getFirstEntityManager();
 
         Assert.assertNotNull(firstEntityManager);
         TestEntityTransaction firstTransaction = (TestEntityTransaction) (firstEntityManager).getTransaction();
@@ -85,7 +85,7 @@ public class NestedTransactionWithExceptionTest
 
         try
         {
-            this.firstLevelTransactionBean.executeInTransaction();
+            firstLevelTransactionBean.executeInTransaction();
             Assert.fail(TestException.class.getName() + " expected!");
         }
         catch (TestException e)

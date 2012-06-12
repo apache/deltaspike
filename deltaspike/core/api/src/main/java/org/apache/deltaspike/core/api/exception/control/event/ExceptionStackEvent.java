@@ -61,11 +61,11 @@ public class ExceptionStackEvent implements Serializable
         }
 
         Throwable e = exception;
-        this.exceptionStackItems = new ArrayDeque<ExceptionStackItem>();
+        exceptionStackItems = new ArrayDeque<ExceptionStackItem>();
 
         do
         {
-            this.exceptionStackItems.addFirst(new ExceptionStackItem(e));
+            exceptionStackItems.addFirst(new ExceptionStackItem(e));
             if (e instanceof SQLException)
             {
                 SQLException sqlException = (SQLException) e;
@@ -73,37 +73,37 @@ public class ExceptionStackEvent implements Serializable
                 while (sqlException.getNextException() != null)
                 {
                     sqlException = sqlException.getNextException();
-                    this.exceptionStackItems.addFirst(new ExceptionStackItem(sqlException));
+                    exceptionStackItems.addFirst(new ExceptionStackItem(sqlException));
                 }
             }
             e = e.getCause();
         }
         while (e != null);
 
-        this.initialStackSize = this.exceptionStackItems.size();
-        this.causes = this.createThrowableCollection(exceptionStackItems);
+        initialStackSize = exceptionStackItems.size();
+        causes = createThrowableCollection(exceptionStackItems);
         // TODO: Later this.origExceptionStackItems = new ArrayDeque<ExceptionStackItem>(exceptionStackItems);
-        this.init();
+        init();
 
     }
 
     private void init()
     {
-        this.root = this.exceptionStackItems.size() == this.initialStackSize;
+        root = exceptionStackItems.size() == initialStackSize;
 
-        if (!this.exceptionStackItems.isEmpty())
+        if (!exceptionStackItems.isEmpty())
         {
-            this.current = this.exceptionStackItems.removeFirst().getThrowable();
-            this.remaining = Collections.unmodifiableCollection(this.exceptionStackItems);
+            current = exceptionStackItems.removeFirst().getThrowable();
+            remaining = Collections.unmodifiableCollection(exceptionStackItems);
         }
         else
         {
-            this.remaining = Collections.emptyList();
-            this.current = null;
+            remaining = Collections.emptyList();
+            current = null;
         }
 
-        this.last = this.remaining.isEmpty();
-        this.next = (this.last) ? null : this.exceptionStackItems.peekFirst().getThrowable();
+        last = remaining.isEmpty();
+        next = (last) ? null : exceptionStackItems.peekFirst().getThrowable();
     }
 
     private Collection<ExceptionStackItem> createExceptionStackFrom(Collection<Throwable> throwables)
@@ -133,7 +133,7 @@ public class ExceptionStackEvent implements Serializable
 
     public Collection<Throwable> getCauseElements()
     {
-        return Collections.unmodifiableCollection(this.causes);
+        return Collections.unmodifiableCollection(causes);
     }
 
     /**
@@ -143,17 +143,17 @@ public class ExceptionStackEvent implements Serializable
      */
     public boolean isLast()
     {
-        return this.last;
+        return last;
     }
 
     public Throwable getNext()
     {
-        return this.next;
+        return next;
     }
 
     public Collection<Throwable> getRemaining()
     {
-        return Collections.unmodifiableCollection(this.createThrowableCollection(this.remaining));
+        return Collections.unmodifiableCollection(createThrowableCollection(remaining));
     }
 
     /**
@@ -163,7 +163,7 @@ public class ExceptionStackEvent implements Serializable
      */
     public boolean isRoot()
     {
-        return this.root;
+        return root;
     }
 
     /**
@@ -173,7 +173,7 @@ public class ExceptionStackEvent implements Serializable
      */
     public Throwable getCurrent()
     {
-        return this.current;
+        return current;
     }
 
     /**
@@ -183,8 +183,8 @@ public class ExceptionStackEvent implements Serializable
      */
     public void setCauseElements(Collection<Throwable> elements)
     {
-        this.exceptionStackItems = new ArrayDeque<ExceptionStackItem>(this.createExceptionStackFrom(elements));
-        this.init();
+        exceptionStackItems = new ArrayDeque<ExceptionStackItem>(createExceptionStackFrom(elements));
+        init();
     }
 
     /**
@@ -192,7 +192,7 @@ public class ExceptionStackEvent implements Serializable
      */
     public void skipCause()
     {
-        this.init();
+        init();
     }
 
     /**

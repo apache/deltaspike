@@ -81,6 +81,6 @@ public class BdaAlternativeTest
     @Test
     public void alternativeImplementationWithInterfaceAsBaseType()
     {
-        Assert.assertEquals(BaseInterface2DefaultImplementation.class.getName(), this.bean.getClass().getName());
+        Assert.assertEquals(BaseInterface2DefaultImplementation.class.getName(), bean.getClass().getName());
     }
 }

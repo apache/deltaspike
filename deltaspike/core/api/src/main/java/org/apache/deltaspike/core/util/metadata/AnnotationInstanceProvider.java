@@ -140,9 +140,9 @@ public class AnnotationInstanceProvider implements Annotation, InvocationHandler
         }
         else
         {
-            if (this.memberValues.containsKey(method.getName()))
+            if (memberValues.containsKey(method.getName()))
             {
-                return this.memberValues.get(method.getName());
+                return memberValues.get(method.getName());
             }
             else // Default cause, probably won't ever happen, unless annotations get actual methods
             {
@@ -169,7 +169,7 @@ public class AnnotationInstanceProvider implements Annotation, InvocationHandler
     @Override
     public String toString()
     {
-        Method[] methods = this.annotationClass.getDeclaredMethods();
+        Method[] methods = annotationClass.getDeclaredMethods();
 
         StringBuilder sb = new StringBuilder("@" + annotationType().getName() + "(");
         int length = methods.length;
@@ -213,7 +213,7 @@ public class AnnotationInstanceProvider implements Annotation, InvocationHandler
         {
             if (annotationClass.isInstance(o))
             {
-                for (Map.Entry<String, ?> entry : this.memberValues.entrySet())
+                for (Map.Entry<String, ?> entry : memberValues.entrySet())
                 {
                     try
                     {
@@ -268,7 +268,7 @@ public class AnnotationInstanceProvider implements Annotation, InvocationHandler
         {
             try
             {
-                Object value = this.invoke(this, m, EMPTY_OBJECT_ARRAY);
+                Object value = invoke(this, m, EMPTY_OBJECT_ARRAY);
                 if (value == null)
                 {
                     throw new IllegalStateException(String.format("Annotation method %s returned null", m));

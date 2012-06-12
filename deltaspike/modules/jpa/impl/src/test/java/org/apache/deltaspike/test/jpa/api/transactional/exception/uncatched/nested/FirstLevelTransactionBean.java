@@ -37,6 +37,6 @@ public class FirstLevelTransactionBean
     @Transactional
     public void executeInTransaction()
     {
-        this.nestedTransactionBean.executeInTransaction();
+        nestedTransactionBean.executeInTransaction();
     }
 }

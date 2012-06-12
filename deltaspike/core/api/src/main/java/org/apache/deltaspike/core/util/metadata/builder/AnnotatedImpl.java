@@ -56,7 +56,7 @@ abstract class AnnotatedImpl implements Annotated
         else
         {
             this.type = overridenType;
-            this.typeClosure = Collections.singleton(overridenType);
+            typeClosure = Collections.singleton(overridenType);
         }
 
 

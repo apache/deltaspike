@@ -50,7 +50,7 @@ public final class ExceptionHandlerComparator implements Comparator<HandlerMetho
         // before, the other is not
         if (lhs.getExceptionType().equals(rhs.getExceptionType()))
         {
-            final int returnValue = this.comparePrecedence(lhs.getOrdinal(), rhs.getOrdinal(),
+            final int returnValue = comparePrecedence(lhs.getOrdinal(), rhs.getOrdinal(),
                     lhs.isBeforeHandler());
             // Compare number of qualifiers if they exist so handlers that handle the same type
             // are both are returned and not thrown out (order doesn't really matter)

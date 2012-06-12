@@ -59,26 +59,26 @@ class DefaultMessageBuilder implements MessageContext.MessageBuilder
     @Override
     public MessageContext.MessageBuilder argument(Object... arguments)
     {
-        Collections.addAll(this.argumentList, arguments);
+        Collections.addAll(argumentList, arguments);
 
         return this;
     }
 
     private Message buildMessageTemplate()
     {
-        if (this.messageTemplate == null)
+        if (messageTemplate == null)
         {
             throw new IllegalStateException("messageTemplate is missing");
         }
 
-        return new DefaultMessage(this.messageContext.config(), this.messageTemplate,
-                this.argumentList.toArray(new Object[this.argumentList.size()]));
+        return new DefaultMessage(messageContext.config(), messageTemplate,
+                argumentList.toArray(new Object[argumentList.size()]));
     }
 
     protected void reset()
     {
-        this.messageTemplate = null;
-        this.argumentList = new ArrayList<Object>();
+        messageTemplate = null;
+        argumentList = new ArrayList<Object>();
     }
 
     @Override
@@ -101,13 +101,13 @@ class DefaultMessageBuilder implements MessageContext.MessageBuilder
     {
         String messageTemplate = baseMessage.getMessageTemplate();
 
-        MessageResolver messageResolver = this.messageContext.config().getMessageResolver();
+        MessageResolver messageResolver = messageContext.config().getMessageResolver();
         if (messageResolver != null)
         {
             messageTemplate = resolveMessage(messageResolver, baseMessage);
         }
 
-        MessageInterpolator messageInterpolator = this.messageContext.config().getMessageInterpolator();
+        MessageInterpolator messageInterpolator = messageContext.config().getMessageInterpolator();
 
         if (messageInterpolator != null && messageTemplate != null)
         {

@@ -40,14 +40,14 @@ public class TestEntityManagerProducer
     @Produces
     protected EntityManager defaultEntityManager()
     {
-        return this.defaultEntityManager;
+        return defaultEntityManager;
     }
 
     @Produces
     @Failed
     protected EntityManager failedFlushEntityManager()
     {
-        return this.failedFlushEntityManager;
+        return failedFlushEntityManager;
     }
 
     public TestEntityManager getDefaultEntityManager()

@@ -36,7 +36,7 @@ public class TransactionalBean
 
     public void executeInTransaction()
     {
-        this.testEntityTransactionHolder.setTestEntityTransaction(
-            (TestEntityTransaction)this.entityManager.getTransaction());
+        testEntityTransactionHolder.setTestEntityTransaction(
+                (TestEntityTransaction) entityManager.getTransaction());
     }
 }

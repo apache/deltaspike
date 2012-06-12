@@ -72,7 +72,7 @@ public class StereotypeTransactionalTest
     @Test
     public void transactionalBeanViaStereotype()
     {
-        EntityManager injectedEntityManager = this.entityManagerProducer.getEntityManager();
+        EntityManager injectedEntityManager = entityManagerProducer.getEntityManager();
 
         Assert.assertNotNull(injectedEntityManager);
         Assert.assertTrue(injectedEntityManager instanceof TestEntityManager);
@@ -84,7 +84,7 @@ public class StereotypeTransactionalTest
         Assert.assertEquals(false, testTransaction.isCommitted());
         Assert.assertEquals(false, testTransaction.isRolledBack());
 
-        this.transactionalBean.executeInTransaction();
+        transactionalBean.executeInTransaction();
 
         Assert.assertEquals(true, ((TestEntityManager) injectedEntityManager).isFlushed());
         Assert.assertEquals(false, testTransaction.isActive());

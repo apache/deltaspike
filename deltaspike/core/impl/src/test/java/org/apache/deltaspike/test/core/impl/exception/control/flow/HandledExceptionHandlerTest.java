@@ -61,8 +61,8 @@ public class HandledExceptionHandlerTest
         final ExceptionToCatchEvent entryEvent = new ExceptionToCatchEvent(new Exception(
                 new NullPointerException()));
         bm.fireEvent(entryEvent);
-        assertTrue(this.exceptionHandledHandler.isNpeDescCalled());
-        assertFalse(this.exceptionHandledHandler.isExAscCalled());
+        assertTrue(exceptionHandledHandler.isNpeDescCalled());
+        assertFalse(exceptionHandledHandler.isExAscCalled());
         assertTrue(entryEvent.isHandled());
     }
 
@@ -71,8 +71,8 @@ public class HandledExceptionHandlerTest
     {
         final ExceptionToCatchEvent event = new ExceptionToCatchEvent(new Exception(new IllegalArgumentException()));
         bm.fireEvent(event);
-        assertTrue(this.exceptionHandledHandler.isIaeAscCalled());
-        assertFalse(this.exceptionHandledHandler.isExAscCalled());
+        assertTrue(exceptionHandledHandler.isIaeAscCalled());
+        assertFalse(exceptionHandledHandler.isExAscCalled());
         assertTrue(event.isHandled());
     }
 }

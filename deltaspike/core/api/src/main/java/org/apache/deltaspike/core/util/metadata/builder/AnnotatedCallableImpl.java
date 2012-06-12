@@ -43,7 +43,7 @@ abstract class AnnotatedCallableImpl<X, Y extends Member> extends AnnotatedMembe
                                     Map<Integer, Type> parameterTypeOverrides)
     {
         super(declaringType, member, memberType, annotations, genericType, null);
-        this.parameters = getAnnotatedParameters(this, parameterTypes, genericTypes, parameterAnnotations,
+        parameters = getAnnotatedParameters(this, parameterTypes, genericTypes, parameterAnnotations,
                 parameterTypeOverrides);
     }
 

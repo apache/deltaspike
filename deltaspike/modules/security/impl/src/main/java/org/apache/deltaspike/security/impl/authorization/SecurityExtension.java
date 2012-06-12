@@ -91,7 +91,7 @@ public class SecurityExtension implements Extension, Deactivatable
     @SuppressWarnings("UnusedDeclaration")
     public <X> void processAnnotatedType(@Observes ProcessAnnotatedType<X> event, final BeanManager beanManager)
     {
-        if (!this.isActivated)
+        if (!isActivated)
         {
             return;
         }
@@ -158,7 +158,7 @@ public class SecurityExtension implements Extension, Deactivatable
     @SuppressWarnings("UnusedDeclaration")
     public void validateBindings(@Observes AfterBeanDiscovery event, BeanManager beanManager)
     {
-        if (!this.isActivated)
+        if (!isActivated)
         {
             return;
         }
@@ -265,7 +265,7 @@ public class SecurityExtension implements Extension, Deactivatable
     @SuppressWarnings("UnusedDeclaration")
     public void validateAuthenticatorImplementation(@Observes ProcessSessionBean<Authenticator> event)
     {
-        if (!this.isActivated)
+        if (!isActivated)
         {
             return;
         }

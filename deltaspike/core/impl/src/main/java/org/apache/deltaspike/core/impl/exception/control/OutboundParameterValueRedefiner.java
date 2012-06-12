@@ -45,7 +45,7 @@ class OutboundParameterValueRedefiner implements ParameterValueRedefiner
     OutboundParameterValueRedefiner(final ExceptionEvent<?> event, final HandlerMethodImpl<?> handlerMethod)
     {
         this.event = event;
-        this.declaringBean = handlerMethod.getBean();
+        declaringBean = handlerMethod.getBean();
         this.handlerMethod = handlerMethod;
     }
 
@@ -56,11 +56,11 @@ class OutboundParameterValueRedefiner implements ParameterValueRedefiner
     public Object redefineParameterValue(ParameterValue value)
     {
         CreationalContext<?> ctx = BeanManagerProvider.getInstance().getBeanManager()
-                .createCreationalContext(this.declaringBean);
+                .createCreationalContext(declaringBean);
 
         try
         {
-            if (value.getPosition() == this.handlerMethod.getHandlerParameter().getPosition())
+            if (value.getPosition() == handlerMethod.getHandlerParameter().getPosition())
             {
                 return event;
             }

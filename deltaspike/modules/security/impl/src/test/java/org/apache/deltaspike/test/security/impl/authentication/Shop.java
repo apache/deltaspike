@@ -32,7 +32,7 @@ public class Shop
 
     public String sendInquiry(Inquiry inquiry)
     {
-        if (this.inquiryStorage.addInquiry(inquiry))
+        if (inquiryStorage.addInquiry(inquiry))
         {
             return inquiry.getInquiryId();
             //TODO e.g. send notification in case of inquiries of premium users,...

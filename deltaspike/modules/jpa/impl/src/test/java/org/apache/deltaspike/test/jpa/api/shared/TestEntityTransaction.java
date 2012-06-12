@@ -29,24 +29,24 @@ public class TestEntityTransaction implements EntityTransaction
     @Override
     public void begin()
     {
-        if (this.started)
+        if (started)
         {
             throw new IllegalStateException("transaction started already");
         }
 
-        this.started = true;
+        started = true;
     }
 
     @Override
     public void commit()
     {
-        this.committed = true;
+        committed = true;
     }
 
     @Override
     public void rollback()
     {
-        this.rolledBack = true;
+        rolledBack = true;
     }
 
     @Override
@@ -64,7 +64,7 @@ public class TestEntityTransaction implements EntityTransaction
     @Override
     public boolean isActive()
     {
-        return this.started && !(this.committed || this.rolledBack);
+        return started && !(committed || rolledBack);
     }
 
     public boolean isStarted()

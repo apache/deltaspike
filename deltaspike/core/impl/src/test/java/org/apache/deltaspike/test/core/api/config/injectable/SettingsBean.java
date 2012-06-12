@@ -51,7 +51,7 @@ public class SettingsBean
     @Inject
     protected void init(@CustomConfigAnnotationWithMetaData(inverseConvert = true) Long inverseProperty)
     {
-        this.inverseProperty2 = inverseProperty;
+        inverseProperty2 = inverseProperty;
     }
 
     int getProperty1()

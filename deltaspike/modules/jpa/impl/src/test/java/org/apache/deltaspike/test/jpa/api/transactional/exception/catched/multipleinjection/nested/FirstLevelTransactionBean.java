@@ -40,7 +40,7 @@ public class FirstLevelTransactionBean
     {
         try
         {
-            this.nestedTransactionBean.executeInTransaction();
+            nestedTransactionBean.executeInTransaction();
         }
         catch (TestException e)
         {

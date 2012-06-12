@@ -71,9 +71,9 @@ public class ManualTransactionTest
     @Test
     public void manualTransactionTest()
     {
-        TestEntityManager defaultEntityManager = this.entityManagerProducer.getDefaultEntityManager();
-        TestEntityManager firstEntityManager = this.entityManagerProducer.getFirstEntityManager();
-        TestEntityManager secondEntityManager = this.entityManagerProducer.getSecondEntityManager();
+        TestEntityManager defaultEntityManager = entityManagerProducer.getDefaultEntityManager();
+        TestEntityManager firstEntityManager = entityManagerProducer.getFirstEntityManager();
+        TestEntityManager secondEntityManager = entityManagerProducer.getSecondEntityManager();
 
         Assert.assertNotNull(defaultEntityManager);
         TestEntityTransaction defaultTransaction = (TestEntityTransaction) (defaultEntityManager).getTransaction();
@@ -102,7 +102,7 @@ public class ManualTransactionTest
         Assert.assertEquals(false, secondTransaction.isCommitted());
         Assert.assertEquals(false, secondTransaction.isRolledBack());
 
-        this.manualTransactionBean.executeInDefaultTransaction();
+        manualTransactionBean.executeInDefaultTransaction();
 
         Assert.assertEquals(true, defaultEntityManager.isFlushed());
         Assert.assertEquals(false, defaultTransaction.isActive());
@@ -122,7 +122,7 @@ public class ManualTransactionTest
         Assert.assertEquals(false, secondTransaction.isCommitted());
         Assert.assertEquals(false, secondTransaction.isRolledBack());
 
-        this.manualTransactionBean.executeInFirstTransaction();
+        manualTransactionBean.executeInFirstTransaction();
 
         Assert.assertEquals(true, firstEntityManager.isFlushed());
         Assert.assertEquals(false, firstTransaction.isActive());
@@ -136,7 +136,7 @@ public class ManualTransactionTest
         Assert.assertEquals(false, secondTransaction.isCommitted());
         Assert.assertEquals(false, secondTransaction.isRolledBack());
 
-        this.manualTransactionBean.executeInSecondTransaction();
+        manualTransactionBean.executeInSecondTransaction();
 
         Assert.assertEquals(true, secondEntityManager.isFlushed());
         Assert.assertEquals(false, secondTransaction.isActive());

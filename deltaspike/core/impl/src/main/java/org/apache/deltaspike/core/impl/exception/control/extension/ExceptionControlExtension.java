@@ -84,7 +84,7 @@ public class ExceptionControlExtension implements Extension, Deactivatable
     @SuppressWarnings("UnusedDeclaration")
     public <T> void findHandlers(@Observes final ProcessBean<?> processBean, final BeanManager beanManager)
     {
-        if (!this.isActivated)
+        if (!isActivated)
         {
             return;
         }
@@ -129,7 +129,7 @@ public class ExceptionControlExtension implements Extension, Deactivatable
                                       final AfterDeploymentValidation afterDeploymentValidation,
                                       final BeanManager beanManager)
     {
-        if (!this.isActivated)
+        if (!isActivated)
         {
             return;
         }

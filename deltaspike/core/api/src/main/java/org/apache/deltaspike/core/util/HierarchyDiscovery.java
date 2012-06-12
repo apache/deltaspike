@@ -65,7 +65,7 @@ public class HierarchyDiscovery
 
     private void init()
     {
-        this.types = new HashMap<Type, Class<?>>();
+        types = new HashMap<Type, Class<?>>();
         try
         {
             discoverTypes(type);

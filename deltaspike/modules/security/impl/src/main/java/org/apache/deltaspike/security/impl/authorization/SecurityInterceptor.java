@@ -41,6 +41,6 @@ public class SecurityInterceptor implements Serializable
     @AroundInvoke
     public Object filterDeniedInvocations(InvocationContext invocationContext) throws Exception
     {
-        return this.securityStrategy.execute(invocationContext);
+        return securityStrategy.execute(invocationContext);
     }
 }

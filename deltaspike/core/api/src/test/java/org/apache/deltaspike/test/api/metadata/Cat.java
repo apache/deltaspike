@@ -71,6 +71,6 @@ public class Cat
     {
         // whoah, someone fires cats around ^^
         // at least it tests parameter scanning ;)
-        this.color = cat.color;
+        color = cat.color;
     }
 }

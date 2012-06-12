@@ -57,21 +57,21 @@ public class TestEntityManagerProducer
     @Produces
     protected EntityManager defaultEntityManager()
     {
-        return this.defaultEntityManager;
+        return defaultEntityManager;
     }
 
     @Produces
     @First
     protected EntityManager firstEntityManager()
     {
-        return this.firstEntityManager;
+        return firstEntityManager;
     }
 
     @Produces
     @Second
     protected EntityManager secondEntityManager()
     {
-        return this.secondEntityManager;
+        return secondEntityManager;
     }
 
     public TestEntityManager getDefaultEntityManager()

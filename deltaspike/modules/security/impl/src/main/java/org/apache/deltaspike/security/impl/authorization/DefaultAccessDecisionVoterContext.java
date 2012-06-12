@@ -49,7 +49,7 @@ public class DefaultAccessDecisionVoterContext implements EditableAccessDecision
     @Override
     public AccessDecisionState getState()
     {
-        return this.state;
+        return state;
     }
 
     /**
@@ -58,11 +58,11 @@ public class DefaultAccessDecisionVoterContext implements EditableAccessDecision
     @Override
     public List<SecurityViolation> getViolations()
     {
-        if (this.securityViolations == null)
+        if (securityViolations == null)
         {
             return Collections.emptyList();
         }
-        return Collections.unmodifiableList(this.securityViolations);
+        return Collections.unmodifiableList(securityViolations);
     }
 
     /**
@@ -71,7 +71,7 @@ public class DefaultAccessDecisionVoterContext implements EditableAccessDecision
     @Override
     public <T> T getSource()
     {
-        return (T)this.source;
+        return (T) source;
     }
 
     /**
@@ -89,7 +89,7 @@ public class DefaultAccessDecisionVoterContext implements EditableAccessDecision
     @Override
     public Map<String, Object> getMetaData()
     {
-        return Collections.unmodifiableMap(this.metaData);
+        return Collections.unmodifiableMap(metaData);
     }
 
     /**
@@ -98,7 +98,7 @@ public class DefaultAccessDecisionVoterContext implements EditableAccessDecision
     @Override
     public <T> T getMetaDataFor(String key, Class<T> targetType)
     {
-        return (T) this.metaData.get(key);
+        return (T) metaData.get(key);
     }
 
     /**
@@ -119,10 +119,10 @@ public class DefaultAccessDecisionVoterContext implements EditableAccessDecision
     {
         if (AccessDecisionState.VOTE_IN_PROGRESS.equals(accessDecisionVoterState))
         {
-            this.securityViolations = new ArrayList<SecurityViolation>(); //lazy init
+            securityViolations = new ArrayList<SecurityViolation>(); //lazy init
         }
 
-        this.state = accessDecisionVoterState;
+        state = accessDecisionVoterState;
 
         if (AccessDecisionState.INITIAL.equals(accessDecisionVoterState) ||
                 AccessDecisionState.VOTE_IN_PROGRESS.equals(accessDecisionVoterState))
@@ -131,7 +131,7 @@ public class DefaultAccessDecisionVoterContext implements EditableAccessDecision
         }
 
         //meta-data is only needed until the end of a voting process
-        this.metaData.clear();
+        metaData.clear();
     }
 
     /**
@@ -140,11 +140,11 @@ public class DefaultAccessDecisionVoterContext implements EditableAccessDecision
     @Override
     public void addViolation(SecurityViolation securityViolation)
     {
-        if (this.securityViolations == null)
+        if (securityViolations == null)
         {
             throw new IllegalStateException(
                     AccessDecisionState.VOTE_IN_PROGRESS.name() + " is required for adding security-violations");
         }
-        this.securityViolations.add(securityViolation);
+        securityViolations.add(securityViolation);
     }
 }

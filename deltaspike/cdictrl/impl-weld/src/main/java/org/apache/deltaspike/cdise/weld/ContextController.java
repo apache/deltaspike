@@ -68,21 +68,21 @@ public class ContextController
     //X TODO check if we can remove it
     void startApplicationScope()
     {
-        if (this.applicationScopeStarted)
+        if (applicationScopeStarted)
         {
             throw new IllegalStateException(ApplicationScoped.class.getName() + " started already");
         }
-        this.applicationScopeStarted = true;
+        applicationScopeStarted = true;
     }
 
     void stopApplicationScope()
     {
-        if (Boolean.FALSE.equals(this.resetSuccessful) /*|| TODO detect weld 2.x+*/)
+        if (Boolean.FALSE.equals(resetSuccessful) /*|| TODO detect weld 2.x+*/)
         {
             if (applicationContext.isActive())
             {
                 applicationContext.invalidate();
-                this.applicationScopeStarted = false;
+                applicationScopeStarted = false;
             }
             return;
         }
@@ -94,9 +94,9 @@ public class ContextController
             BeanStore originalBeanStore = null;
             try
             {
-                Field field = this.applicationContext.getClass().getSuperclass().getDeclaredField("beanStore");
+                Field field = applicationContext.getClass().getSuperclass().getDeclaredField("beanStore");
                 field.setAccessible(true);
-                beanStoreHolder = (org.jboss.weld.bootstrap.api.Singleton)field.get(this.applicationContext);
+                beanStoreHolder = (org.jboss.weld.bootstrap.api.Singleton)field.get(applicationContext);
                 final BeanStore beanStore = beanStoreHolder.get();
                 originalBeanStore = beanStore;
 
@@ -136,13 +136,13 @@ public class ContextController
             catch (Exception e)
             {
                 //do nothing
-                this.resetSuccessful = false;
+                resetSuccessful = false;
             }
             catch (LinkageError e)
             {
                 //do nothing - a new version of weld is used which introduced other required dependencies.
                 //WELD-1072 should be fixed in this version already
-                this.resetSuccessful = false;
+                resetSuccessful = false;
             }
 
             applicationContext.invalidate();
@@ -170,92 +170,92 @@ public class ContextController
                 beanStoreHolder.set(originalBeanStore);
             }
 
-            this.applicationScopeStarted = false;
+            applicationScopeStarted = false;
 
-            this.resetSuccessful = true;
+            resetSuccessful = true;
         }
     }
 
     //X TODO check if we can remove it
     void startSingletonScope()
     {
-        if (this.singletonScopeStarted)
+        if (singletonScopeStarted)
         {
             throw new IllegalStateException(Singleton.class.getName() + " started already");
         }
-        this.singletonScopeStarted = true;
+        singletonScopeStarted = true;
     }
 
     void stopSingletonScope()
     {
-        this.singletonScopeStarted = false;
+        singletonScopeStarted = false;
     }
 
     void startSessionScope()
     {
-        if (this.sessionMap == null)
+        if (sessionMap == null)
         {
-            this.sessionMap = new HashMap<String, Object>();
+            sessionMap = new HashMap<String, Object>();
         }
         else
         {
             throw new IllegalStateException(SessionScoped.class.getName() + " started already");
         }
 
-        this.sessionContext.associate(this.sessionMap);
-        this.sessionContext.activate();
+        sessionContext.associate(sessionMap);
+        sessionContext.activate();
     }
 
     void stopSessionScope()
     {
-        if (this.sessionContext.isActive())
+        if (sessionContext.isActive())
         {
-            this.sessionContext.invalidate();
-            this.sessionContext.deactivate();
-            this.sessionContext.dissociate(this.sessionMap);
-            this.sessionMap = null;
+            sessionContext.invalidate();
+            sessionContext.deactivate();
+            sessionContext.dissociate(sessionMap);
+            sessionMap = null;
         }
     }
 
     void startConversationScope(String cid)
     {
-        this.conversationContext.associate(new MutableBoundRequest(this.requestMap, this.sessionMap));
-        this.conversationContext.activate(cid);
+        conversationContext.associate(new MutableBoundRequest(requestMap, sessionMap));
+        conversationContext.activate(cid);
     }
 
     void stopConversationScope()
     {
         if (conversationContext.isActive())
         {
-            this.conversationContext.invalidate();
-            this.conversationContext.deactivate();
-            this.conversationContext.dissociate(new MutableBoundRequest(this.requestMap, this.sessionMap));
+            conversationContext.invalidate();
+            conversationContext.deactivate();
+            conversationContext.dissociate(new MutableBoundRequest(requestMap, sessionMap));
         }
     }
 
     void startRequestScope()
     {
-        if (this.requestMap == null)
+        if (requestMap == null)
         {
-            this.requestMap = new HashMap<String, Object>();
+            requestMap = new HashMap<String, Object>();
         }
         else
         {
             throw new IllegalStateException(RequestScoped.class.getName() + " started already");
         }
 
-        this.requestContext.associate(this.requestMap);
-        this.requestContext.activate();
+        requestContext.associate(requestMap);
+        requestContext.activate();
     }
 
     void stopRequestScope()
     {
-        if (this.requestContext.isActive())
+        if (requestContext.isActive())
         {
-            this.requestContext.invalidate();
-            this.requestContext.deactivate();
-            this.requestContext.dissociate(this.requestMap);
-            this.requestMap = null;
+            requestContext.invalidate();
+            requestContext.deactivate();
+            requestContext.dissociate(requestMap);
+            requestMap = null;
         }
     }
 }

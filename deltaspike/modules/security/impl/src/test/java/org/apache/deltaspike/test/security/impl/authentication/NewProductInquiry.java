@@ -29,30 +29,30 @@ class NewProductInquiry implements Inquiry
     NewProductInquiry(String question)
     {
         this.question = question;
-        this.id = UUID.randomUUID().toString();
+        id = UUID.randomUUID().toString();
     }
 
     @Override
     public String getInquiryId()
     {
-        return this.id;
+        return id;
     }
 
     @Override
     public String toString()
     {
-        return this.question;
+        return question;
     }
 
     @Override
     public int hashCode()
     {
-        return this.id.hashCode();
+        return id.hashCode();
     }
 
     @Override
     public boolean equals(Object obj)
     {
-        return obj instanceof NewProductInquiry && this.id.equals(((NewProductInquiry) obj).id);
+        return obj instanceof NewProductInquiry && id.equals(((NewProductInquiry) obj).id);
     }
 }

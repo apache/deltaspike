@@ -39,7 +39,7 @@ abstract class AnnotatedMemberImpl<X, M extends Member> extends AnnotatedImpl im
     {
         super(memberType, annotations, genericType, overridenType);
         this.declaringType = declaringType;
-        this.javaMember = member;
+        javaMember = member;
     }
 
     /**

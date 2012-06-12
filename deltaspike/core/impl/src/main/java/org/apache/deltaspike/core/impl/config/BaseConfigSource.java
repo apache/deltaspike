@@ -49,7 +49,7 @@ public abstract class BaseConfigSource implements ConfigSource
      */
     protected void initOrdinal(int defaultOrdinal)
     {
-        this.ordinal = defaultOrdinal;
+        ordinal = defaultOrdinal;
 
         String configuredOrdinalString = getPropertyValue(ConfigSource.DELTASPIKE_ORDINAL);
 

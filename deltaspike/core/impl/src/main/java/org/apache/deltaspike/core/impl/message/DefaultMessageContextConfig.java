@@ -45,9 +45,9 @@ class DefaultMessageContextConfig implements MessageContext.Config
     private DefaultMessageContextConfig(MessageContext.Config messageContextConfigTemplate)
     {
         this();
-        this.messageInterpolator = messageContextConfigTemplate.getMessageInterpolator();
-        this.messageResolver = messageContextConfigTemplate.getMessageResolver();
-        this.localeResolver = messageContextConfigTemplate.getLocaleResolver();
+        messageInterpolator = messageContextConfigTemplate.getMessageInterpolator();
+        messageResolver = messageContextConfigTemplate.getMessageResolver();
+        localeResolver = messageContextConfigTemplate.getLocaleResolver();
     }
 
     @Override
@@ -82,7 +82,7 @@ class DefaultMessageContextConfig implements MessageContext.Config
             @Override
             public MessageContext create()
             {
-                return new DefaultMessageContext(this.newMessageContextConfig);
+                return new DefaultMessageContext(newMessageContextConfig);
             }
         };
     }
@@ -123,27 +123,27 @@ class DefaultMessageContextConfig implements MessageContext.Config
 
     private void resetMessageContextConfig()
     {
-        this.messageInterpolator = new DefaultMessageInterpolator();
-        this.messageResolver = null;
-        this.localeResolver = new DefaultLocaleResolver();
+        messageInterpolator = new DefaultMessageInterpolator();
+        messageResolver = null;
+        localeResolver = new DefaultLocaleResolver();
     }
 
     @Override
     public MessageInterpolator getMessageInterpolator()
     {
-        return this.messageInterpolator;
+        return messageInterpolator;
     }
 
     @Override
     public MessageResolver getMessageResolver()
     {
-        return this.messageResolver;
+        return messageResolver;
     }
 
     @Override
     public LocaleResolver getLocaleResolver()
     {
-        return this.localeResolver;
+        return localeResolver;
     }
 
     private void setMessageInterpolator(MessageInterpolator messageInterpolator)
@@ -170,9 +170,9 @@ class DefaultMessageContextConfig implements MessageContext.Config
         configInfo.append(getClass().getName());
         configInfo.append(newLine);
 
-        if (this.messageInterpolator != null)
+        if (messageInterpolator != null)
         {
-            configInfo.append("   MessageInterpolator class: ").append(this.messageInterpolator.getClass());
+            configInfo.append("   MessageInterpolator class: ").append(messageInterpolator.getClass());
         }
         else
         {
@@ -180,9 +180,9 @@ class DefaultMessageContextConfig implements MessageContext.Config
         }
         configInfo.append(newLine);
 
-        if (this.messageResolver != null)
+        if (messageResolver != null)
         {
-            configInfo.append("   MessageResolver class: ").append(this.messageResolver.getClass());
+            configInfo.append("   MessageResolver class: ").append(messageResolver.getClass());
         }
         else
         {
@@ -192,9 +192,9 @@ class DefaultMessageContextConfig implements MessageContext.Config
 
         configInfo.append(newLine);
 
-        if (this.localeResolver != null)
+        if (localeResolver != null)
         {
-            configInfo.append("   LocaleResolver class: ").append(this.localeResolver.getClass());
+            configInfo.append("   LocaleResolver class: ").append(localeResolver.getClass());
         }
         else
         {

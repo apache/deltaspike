@@ -73,16 +73,16 @@ public class StereotypeTransactionScopedTransactionalTest
     @Test
     public void transactionalBeanViaStereotypeInTransactionScoped()
     {
-        this.transactionalBean.executeInTransaction();
+        transactionalBean.executeInTransaction();
 
-        TestEntityTransaction testTransaction = this.testEntityTransactionHolder.getTestEntityTransaction();
+        TestEntityTransaction testTransaction = testEntityTransactionHolder.getTestEntityTransaction();
 
         Assert.assertEquals(false, testTransaction.isActive());
         Assert.assertEquals(true, testTransaction.isStarted());
         Assert.assertEquals(true, testTransaction.isCommitted());
         Assert.assertEquals(false, testTransaction.isRolledBack());
 
-        Assert.assertEquals(1, this.entityManagerProducer.getCloseEntityManagerCount());
+        Assert.assertEquals(1, entityManagerProducer.getCloseEntityManagerCount());
 
     }
 }

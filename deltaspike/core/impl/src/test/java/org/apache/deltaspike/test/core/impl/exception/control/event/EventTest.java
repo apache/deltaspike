@@ -72,24 +72,24 @@ public class EventTest
     @Test
     public void assertEventWithQualifiersIsCreatedCorrectly()
     {
-        this.bm.fireEvent(new ExceptionToCatchEvent(new NullPointerException(), new EventQualifierLiteral()));
+        bm.fireEvent(new ExceptionToCatchEvent(new NullPointerException(), new EventQualifierLiteral()));
     }
 
     public void verifyDescEvent(@BeforeHandles IntrospectiveExceptionEvent<NullPointerException> event)
     {
-        this.qualiferCalledCount++;
+        qualiferCalledCount++;
         assertTrue(event.isBeforeTraversal());
     }
 
     public void verifyAscEvent(@Handles IntrospectiveExceptionEvent<NullPointerException> event)
     {
-        this.qualiferCalledCount++;
+        qualiferCalledCount++;
         assertFalse(event.isBeforeTraversal());
     }
 
     public void verifyQualifierEvent(@Handles @EventQualifier ExceptionEvent<NullPointerException> event)
     {
-        this.qualiferCalledCount++;
-        assertThat(this.qualiferCalledCount, is(1));
+        qualiferCalledCount++;
+        assertThat(qualiferCalledCount, is(1));
     }
 }

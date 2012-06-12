@@ -72,8 +72,8 @@ public class NestedMultiTransactionUncatchedFlushExceptionTest
     @Test
     public void nestedMultiTransactionUncatchedFlushExceptionTest()
     {
-        TestEntityManager firstEntityManager = this.entityManagerProducer.getFirstEntityManager();
-        TestEntityManager secondEntityManager = this.entityManagerProducer.getSecondEntityManager();
+        TestEntityManager firstEntityManager = entityManagerProducer.getFirstEntityManager();
+        TestEntityManager secondEntityManager = entityManagerProducer.getSecondEntityManager();
 
         Assert.assertNotNull(firstEntityManager);
         TestEntityTransaction firstTransaction = (TestEntityTransaction) (firstEntityManager).getTransaction();
@@ -95,7 +95,7 @@ public class NestedMultiTransactionUncatchedFlushExceptionTest
 
         try
         {
-            this.firstLevelTransactionBean.executeInTransaction();
+            firstLevelTransactionBean.executeInTransaction();
             Assert.fail(TestException.class.getName() + " expected!");
         }
         catch (TestException e)

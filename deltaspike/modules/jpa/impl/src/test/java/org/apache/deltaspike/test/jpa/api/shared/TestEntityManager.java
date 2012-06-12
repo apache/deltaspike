@@ -90,7 +90,7 @@ public class TestEntityManager implements EntityManager
     @Override
     public void flush()
     {
-        this.flushed = true;
+        flushed = true;
     }
 
     @Override
@@ -246,23 +246,23 @@ public class TestEntityManager implements EntityManager
     @Override
     public void close()
     {
-        if (!this.open)
+        if (!open)
         {
             throw new IllegalStateException("entity manager is closed already");
         }
-        this.open = false;
+        open = false;
     }
 
     @Override
     public boolean isOpen()
     {
-        return this.open;
+        return open;
     }
 
     @Override
     public EntityTransaction getTransaction()
     {
-        return this.entityTransaction;
+        return entityTransaction;
     }
 
     @Override

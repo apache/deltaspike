@@ -48,12 +48,12 @@ public final class ExceptionStackItem implements Serializable
 
     public StackTraceElement[] getStackTraceElements()
     {
-        return this.stackTraceElements.clone();
+        return stackTraceElements.clone();
     }
 
     public Throwable getThrowable()
     {
-        return this.throwable;
+        return throwable;
     }
 
     @Override

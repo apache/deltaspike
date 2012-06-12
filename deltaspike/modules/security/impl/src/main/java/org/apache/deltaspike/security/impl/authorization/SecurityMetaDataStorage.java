@@ -49,12 +49,12 @@ class SecurityMetaDataStorage
 
     void addAuthorizer(Authorizer authorizer)
     {
-        this.authorizers.add(authorizer);
+        authorizers.add(authorizer);
     }
 
     void addSecuredType(AnnotatedType<?> annotatedType)
     {
-        this.securedTypes.add(annotatedType);
+        securedTypes.add(annotatedType);
     }
 
     Set<AnnotatedType<?>> getSecuredTypes()
@@ -64,7 +64,7 @@ class SecurityMetaDataStorage
 
     void resetSecuredTypes()
     {
-        this.securedTypes = null;
+        securedTypes = null;
     }
 
     /**
@@ -122,7 +122,7 @@ class SecurityMetaDataStorage
                 boolean found = false;
 
                 // For each security binding, find a valid authorizer
-                for (Authorizer authorizer : this.authorizers)
+                for (Authorizer authorizer : authorizers)
                 {
                     if (authorizer.matchesBinding(binding))
                     {
@@ -179,34 +179,34 @@ class SecurityMetaDataStorage
 
     private boolean containsMethodAuthorizers(Class<?> targetClass, Method targetMethod)
     {
-        Map<Method, Set<Authorizer>> resultForClass = this.methodAuthorizers.get(targetClass);
+        Map<Method, Set<Authorizer>> resultForClass = methodAuthorizers.get(targetClass);
         return resultForClass.containsKey(targetMethod);
     }
 
     private void ensureInitializedAuthorizersForClass(Class<?> targetClass)
     {
-        Map<Method, Set<Authorizer>> resultForClass = this.methodAuthorizers.get(targetClass);
+        Map<Method, Set<Authorizer>> resultForClass = methodAuthorizers.get(targetClass);
 
         if (resultForClass == null)
         {
-            this.methodAuthorizers.put(targetClass, new HashMap<Method, Set<Authorizer>>());
+            methodAuthorizers.put(targetClass, new HashMap<Method, Set<Authorizer>>());
         }
     }
 
     private boolean isMethodMetaDataAvailable(Class<?> targetClass, Method targetMethod)
     {
-        Map<Method, Set<Authorizer>> result = this.methodAuthorizers.get(targetClass);
+        Map<Method, Set<Authorizer>> result = methodAuthorizers.get(targetClass);
         return result != null && result.containsKey(targetMethod);
     }
 
     private void addMethodAuthorizer(Class<?> targetClass, Method targetMethod, Set<Authorizer> authorizersToAdd)
     {
-        Map<Method, Set<Authorizer>> authorizerMapping = this.methodAuthorizers.get(targetClass);
+        Map<Method, Set<Authorizer>> authorizerMapping = methodAuthorizers.get(targetClass);
 
         if (authorizerMapping == null)
         {
             authorizerMapping = new HashMap<Method, Set<Authorizer>>();
-            this.methodAuthorizers.put(targetClass, authorizerMapping);
+            methodAuthorizers.put(targetClass, authorizerMapping);
         }
 
         Set<Authorizer> authorizersForMethod = authorizerMapping.get(targetMethod);
@@ -222,7 +222,7 @@ class SecurityMetaDataStorage
 
     private Set<Authorizer> getMethodAuthorizers(Class<?> targetClass, Method targetMethod)
     {
-        Map<Method, Set<Authorizer>> resultForClass = this.methodAuthorizers.get(targetClass);
+        Map<Method, Set<Authorizer>> resultForClass = methodAuthorizers.get(targetClass);
 
         if (resultForClass == null)
         {

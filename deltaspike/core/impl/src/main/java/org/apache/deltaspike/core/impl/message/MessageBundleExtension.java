@@ -58,7 +58,7 @@ public class MessageBundleExtension implements Extension, Deactivatable
     @SuppressWarnings("UnusedDeclaration")
     protected void detectInterfaces(@Observes ProcessAnnotatedType<?> event)
     {
-        if (!this.isActivated)
+        if (!isActivated)
         {
             return;
         }
@@ -122,7 +122,7 @@ public class MessageBundleExtension implements Extension, Deactivatable
     @SuppressWarnings("UnusedDeclaration")
     protected void detectProducers(@Observes ProcessProducerMethod<Object, TypedMessageBundleProducer> event)
     {
-        if (!this.isActivated)
+        if (!isActivated)
         {
             return;
         }
@@ -136,7 +136,7 @@ public class MessageBundleExtension implements Extension, Deactivatable
     @SuppressWarnings("UnusedDeclaration")
     protected void detectProducersInverted(@Observes ProcessProducerMethod<TypedMessageBundleProducer, Object> event)
     {
-        if (!this.isActivated)
+        if (!isActivated)
         {
             return;
         }
@@ -149,7 +149,7 @@ public class MessageBundleExtension implements Extension, Deactivatable
     {
         if (method.isAnnotationPresent(TypedMessageBundle.class))
         {
-            this.bundleProducerBean = (Bean<Object>) bean;
+            bundleProducerBean = (Bean<Object>) bean;
         }
     }
 
@@ -176,7 +176,7 @@ public class MessageBundleExtension implements Extension, Deactivatable
     @SuppressWarnings("UnusedDeclaration")
     protected void cleanup(@Observes AfterDeploymentValidation event)
     {
-        this.messageBundleTypes.clear();
+        messageBundleTypes.clear();
     }
 
     protected void initActivation()

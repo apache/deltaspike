@@ -71,15 +71,15 @@ public class MultipleTransactionScopedEntityManagerInjectionTest
     @Test
     public void autoTransactionScopedEntityManagerInjection()
     {
-        this.multiTransactionBean.executeInTransaction();
+        multiTransactionBean.executeInTransaction();
 
-        TestEntityManager defaultEntityManager = this.entityManagerProducer.getDefaultEntityManager();
+        TestEntityManager defaultEntityManager = entityManagerProducer.getDefaultEntityManager();
         TestEntityTransaction defaultTransaction = (TestEntityTransaction)defaultEntityManager.getTransaction();
 
-        TestEntityManager firstEntityManager = this.entityManagerProducer.getFirstEntityManager();
+        TestEntityManager firstEntityManager = entityManagerProducer.getFirstEntityManager();
         TestEntityTransaction firstTransaction = (TestEntityTransaction)firstEntityManager.getTransaction();
 
-        TestEntityManager secondEntityManager = this.entityManagerProducer.getSecondEntityManager();
+        TestEntityManager secondEntityManager = entityManagerProducer.getSecondEntityManager();
         TestEntityTransaction secondTransaction = (TestEntityTransaction)secondEntityManager.getTransaction();
 
         Assert.assertEquals(true, defaultEntityManager.isFlushed());
@@ -100,9 +100,9 @@ public class MultipleTransactionScopedEntityManagerInjectionTest
         Assert.assertEquals(true, secondTransaction.isCommitted());
         Assert.assertEquals(false, secondTransaction.isRolledBack());
 
-        Assert.assertEquals(1, this.entityManagerProducer.getCloseEntityManagerCountDefaultEntityManager());
-        Assert.assertEquals(1, this.entityManagerProducer.getCloseEntityManagerCountFirstEntityManager());
-        Assert.assertEquals(1, this.entityManagerProducer.getCloseEntityManagerCountSecondEntityManager());
+        Assert.assertEquals(1, entityManagerProducer.getCloseEntityManagerCountDefaultEntityManager());
+        Assert.assertEquals(1, entityManagerProducer.getCloseEntityManagerCountFirstEntityManager());
+        Assert.assertEquals(1, entityManagerProducer.getCloseEntityManagerCountSecondEntityManager());
 
     }
 }

@@ -37,10 +37,10 @@ public class TestEntityManagerProducer
     @TransactionScoped
     protected EntityManager entityManager()
     {
-        if (this.entityManager == null)
+        if (entityManager == null)
         {
-            this.entityManager = new TestEntityManager();
-            return this.entityManager;
+            entityManager = new TestEntityManager();
+            return entityManager;
         }
 
         throw new IllegalStateException("a second producer call isn't allowed");
@@ -52,7 +52,7 @@ public class TestEntityManagerProducer
         {
             entityManager.close();
         }
-        this.closeEntityManagerCount++;
+        closeEntityManagerCount++;
     }
 
     public int getCloseEntityManagerCount()

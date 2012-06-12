@@ -103,31 +103,31 @@ class DefaultMessage implements Message
 
     protected void addNumberedArgument(Serializable argument)
     {
-        if (this.arguments == null)
+        if (arguments == null)
         {
-            this.arguments = new ArrayList<Object>();
+            arguments = new ArrayList<Object>();
         }
 
-        this.arguments.add(argument);
+        arguments.add(argument);
     }
 
     @Override
     public String getMessageTemplate()
     {
-        return this.messageTemplate;
+        return messageTemplate;
     }
 
     @Override
     public Object[] getArguments()
     {
-        return this.arguments.toArray();
+        return arguments.toArray();
     }
 
 
     @Override
     public String toString()
     {
-        return toString(new DefaultMessageContext(this.messageContextConfig));
+        return toString(new DefaultMessageContext(messageContextConfig));
     }
 
     public String toString(MessageContext messageContext)

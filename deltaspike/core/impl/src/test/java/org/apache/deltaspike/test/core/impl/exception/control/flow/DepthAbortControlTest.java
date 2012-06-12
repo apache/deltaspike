@@ -59,7 +59,7 @@ public class DepthAbortControlTest
     public void assertNoOtherHandlersCalledAfterAbort()
     {
         bm.fireEvent(new ExceptionToCatchEvent(new NullPointerException()));
-        assertTrue(this.abortingDepthHandler.isAbortCalled());
-        assertFalse(this.abortingDepthHandler.isProceedCalled());
+        assertTrue(abortingDepthHandler.isAbortCalled());
+        assertFalse(abortingDepthHandler.isProceedCalled());
     }
 }

@@ -48,7 +48,7 @@ public class ConfigPropertyExtension implements Extension, Deactivatable
     {
         initActivation();
 
-        if (!this.isActivated)
+        if (!isActivated)
         {
             return;
         }
@@ -84,7 +84,7 @@ public class ConfigPropertyExtension implements Extension, Deactivatable
                     throw new IllegalStateException("no configured value found for property: " + configProperty.name());
                 }
 
-                this.injectionTargets.add(
+                injectionTargets.add(
                         new InjectionTargetEntry(injectionPoint.getType(), configProperty, qualifier));
             }
         }
@@ -95,12 +95,12 @@ public class ConfigPropertyExtension implements Extension, Deactivatable
     {
         initActivation();
 
-        if (!this.isActivated)
+        if (!isActivated)
         {
             return;
         }
 
-        for (InjectionTargetEntry injectionTargetEntry : this.injectionTargets)
+        for (InjectionTargetEntry injectionTargetEntry : injectionTargets)
         {
             event.addBean(new ConfigPropertyBean<Object>(injectionTargetEntry.getType(), injectionTargetEntry
                     .getConfigProperty(), injectionTargetEntry.getCustomQualifier()));
@@ -109,9 +109,9 @@ public class ConfigPropertyExtension implements Extension, Deactivatable
 
     protected void initActivation()
     {
-        if (this.isActivated == null)
+        if (isActivated == null)
         {
-            this.isActivated = ClassDeactivationUtils.isActivated(getClass());
+            isActivated = ClassDeactivationUtils.isActivated(getClass());
         }
     }
 }

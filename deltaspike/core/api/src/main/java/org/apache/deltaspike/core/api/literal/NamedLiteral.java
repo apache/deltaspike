@@ -38,7 +38,7 @@ public class NamedLiteral extends AnnotationLiteral<Named> implements Named
 
     public NamedLiteral()
     {
-        this.value = "";
+        value = "";
     }
 
     @Override public String value()

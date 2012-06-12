@@ -70,17 +70,17 @@ public class DefaultTransactionScopedNestedTransactionTest
     @Test
     public void defaultTransactionScopedNestedTransaction()
     {
-        this.firstLevelTransactionBean.executeInTransaction();
+        firstLevelTransactionBean.executeInTransaction();
 
         TestEntityTransaction testTransaction =
-            (TestEntityTransaction)this.entityManagerProducer.getEntityManager().getTransaction();
+            (TestEntityTransaction) entityManagerProducer.getEntityManager().getTransaction();
 
         Assert.assertEquals(false, testTransaction.isActive());
         Assert.assertEquals(true, testTransaction.isStarted());
         Assert.assertEquals(true, testTransaction.isCommitted());
         Assert.assertEquals(false, testTransaction.isRolledBack());
 
-        Assert.assertEquals(1, this.entityManagerProducer.getCloseEntityManagerCount());
+        Assert.assertEquals(1, entityManagerProducer.getCloseEntityManagerCount());
 
     }
 }
