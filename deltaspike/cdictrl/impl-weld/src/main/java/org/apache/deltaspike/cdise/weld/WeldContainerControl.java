@@ -38,8 +38,6 @@ public class WeldContainerControl implements CdiContainer
     private WeldContainer weldContainer;
 
     private ContextControl ctxCtrl = null;
-    private Bean<ContextControl> ctxCtrlBean = null;
-    private CreationalContext<ContextControl> ctxCtrlCreationalContext = null;
 
 
     @Override
@@ -68,8 +66,8 @@ public class WeldContainerControl implements CdiContainer
         if (ctxCtrl == null)
         {
             Set<Bean<?>> beans = getBeanManager().getBeans(ContextControl.class);
-            ctxCtrlBean = (Bean<ContextControl>) getBeanManager().resolve(beans);
-            ctxCtrlCreationalContext = getBeanManager().createCreationalContext(ctxCtrlBean);
+            Bean<ContextControl> ctxCtrlBean = (Bean<ContextControl>) getBeanManager().resolve(beans);
+            CreationalContext<ContextControl> ctxCtrlCreationalContext = getBeanManager().createCreationalContext(ctxCtrlBean);
             ctxCtrl = (ContextControl)
                     getBeanManager().getReference(ctxCtrlBean, ContextControl.class, ctxCtrlCreationalContext);
         }
