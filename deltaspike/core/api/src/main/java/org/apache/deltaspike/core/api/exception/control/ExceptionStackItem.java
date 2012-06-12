@@ -61,7 +61,7 @@ public final class ExceptionStackItem implements Serializable
     {
         return new StringBuilder().
                 append("throwable: ").append(throwable).append(", ").
-                append("stackTraceElements: ").append(stackTraceElements).
+                append("stackTraceElements: ").append(Arrays.toString(stackTraceElements)).
                 toString();
     }
 
