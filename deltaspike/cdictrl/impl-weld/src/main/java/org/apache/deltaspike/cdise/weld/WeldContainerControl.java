@@ -43,21 +43,21 @@ public class WeldContainerControl implements CdiContainer
     @Override
     public BeanManager getBeanManager()
     {
-        return this.weldContainer.getBeanManager();
+        return weldContainer.getBeanManager();
     }
 
 
     @Override
     public void boot()
     {
-        this.weld = new Weld();
-        this.weldContainer = weld.initialize();
+        weld = new Weld();
+        weldContainer = weld.initialize();
     }
 
     @Override
     public void shutdown()
     {
-        this.weld.shutdown();
+        weld.shutdown();
     }
 
     @Override
@@ -67,7 +67,10 @@ public class WeldContainerControl implements CdiContainer
         {
             Set<Bean<?>> beans = getBeanManager().getBeans(ContextControl.class);
             Bean<ContextControl> ctxCtrlBean = (Bean<ContextControl>) getBeanManager().resolve(beans);
-            CreationalContext<ContextControl> ctxCtrlCreationalContext = getBeanManager().createCreationalContext(ctxCtrlBean);
+
+            CreationalContext<ContextControl> ctxCtrlCreationalContext =
+                    getBeanManager().createCreationalContext(ctxCtrlBean);
+
             ctxCtrl = (ContextControl)
                     getBeanManager().getReference(ctxCtrlBean, ContextControl.class, ctxCtrlCreationalContext);
         }
