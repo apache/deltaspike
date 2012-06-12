@@ -47,6 +47,13 @@ import org.apache.deltaspike.core.util.ClassUtils;
  * <pre>
  * BeanManager bm = BeanManagerProvider.getInstance().getBeanManager();
  * </pre>
+ *
+ * <p><b>Attention:</b> This method is intended for being used in user code at runtime.
+ * If this method gets used during Container boot (in an Extension), non-portable
+ * behaviour results. During bootstrapping an Extension shall &#064;Inject BeanManager to get
+ * access to the underlying BeanManager (see e.g. {@link #cleanFinalBeanManagerMap(AfterDeploymentValidation)} ).
+ * This is the only way to guarantee to get the right
+ * BeanManager in more complex Container scenarios.</p>
  */
 public class BeanManagerProvider implements Extension
 {

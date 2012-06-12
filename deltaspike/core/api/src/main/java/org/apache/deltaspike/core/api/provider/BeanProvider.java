@@ -38,8 +38,16 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * This class contains utility methods to resolve contextual references
- * in situations where no injection is available.
+ * <p>This class contains utility methods to resolve contextual references
+ * in situations where no injection is available because the
+ * current class is not managed by the CDI Container. This can happen
+ * in e.g. a JPA-2.0 EntityListener, a ServletFilter, a Spring managed
+ * Bean, etc.</p>
+ *
+ * <p><b>Attention:</b> This method is intended for being used in user code at runtime.
+ * If this method gets used during Container boot (in an Extension), non-portable
+ * behaviour results. The CDI specification only allows injection of the
+ * BeanManager during CDI-Container boot time.</>
  *
  * @see BeanManagerProvider
  */
