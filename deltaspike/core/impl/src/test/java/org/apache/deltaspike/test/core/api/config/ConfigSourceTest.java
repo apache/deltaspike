@@ -59,8 +59,21 @@ public class ConfigSourceTest
         String value = "test_value_02";
 
         String configuredValue = ConfigResolver.getPropertyValue(key);
-
         Assert.assertEquals(value, configuredValue);
+    }
+
+    @Test
+    public void testConfigUninitializedDefaultValue()
+    {
+        String key = "nonexistingProperty01";
+
+        // passing in null as default value should work fine
+        String configuredValue = ConfigResolver.getPropertyValue(key, null);
+        Assert.assertNull(configuredValue);
+
+        String myDefaultValue = "theDefaultValueDummy";
+        configuredValue = ConfigResolver.getPropertyValue(key, myDefaultValue);
+        Assert.assertEquals(myDefaultValue, configuredValue);
     }
 
     @Test
@@ -70,7 +83,6 @@ public class ConfigSourceTest
         String value = "test_value_03";
 
         String configuredValue = ConfigResolver.getPropertyValue(key);
-
         Assert.assertEquals(value, configuredValue);
     }
 
