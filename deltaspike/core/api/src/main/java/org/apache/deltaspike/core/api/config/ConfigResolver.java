@@ -58,6 +58,29 @@ public final class ConfigResolver
 
     /**
      * Resolve the property value by going through the list of configured {@link ConfigSource}s
+     * and use the one with the highest priority. If no configured value has been found that
+     * way we will use the defaultValue.
+     *
+     * @param key the property key.
+     * @param defaultValue will be used if no configured value for the key could be found.
+     * @return the configured property value from the {@link ConfigSource} with the highest ordinal or
+     *         the defaultValue if there is no value explicitly configured.
+     */
+    public static String getPropertyValue(String key, String defaultValue)
+    {
+        String configuredValue = getPropertyValue(key);
+        if (configuredValue == null)
+        {
+            LOG.log(Level.FINE, "no configured value found for key {1}, using default value {2}.",
+                    new Object[]{key, defaultValue});
+
+            configuredValue = defaultValue;
+        }
+        return configuredValue;
+    }
+
+    /**
+     * Resolve the property value by going through the list of configured {@link ConfigSource}s
      * and use the one with the highest priority.
      *
      * @param key the property key.

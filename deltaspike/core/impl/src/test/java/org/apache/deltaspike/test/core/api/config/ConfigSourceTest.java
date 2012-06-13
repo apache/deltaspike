@@ -32,17 +32,24 @@ public class ConfigSourceTest
     {
         String key = "testProperty01";
         String value = "test_value_01";
-        System.setProperty(key, value);
-        
+
+        // the value is not yet configured
         String configuredValue = ConfigResolver.getPropertyValue(key);
-        
+        Assert.assertNull(configuredValue);
+
+        String myDefaultValue = "theDefaultValueDummy";
+        configuredValue = ConfigResolver.getPropertyValue(key, myDefaultValue);
+        Assert.assertEquals(myDefaultValue, configuredValue);
+
+        // now we set a value for the config key
+        System.setProperty(key, value);
+        configuredValue = ConfigResolver.getPropertyValue(key);
         Assert.assertEquals(value, configuredValue);
 
         System.setProperty(key, "");
-
         configuredValue = ConfigResolver.getPropertyValue(key);
-
         Assert.assertEquals("", configuredValue);
+
     }
 
     @Test
