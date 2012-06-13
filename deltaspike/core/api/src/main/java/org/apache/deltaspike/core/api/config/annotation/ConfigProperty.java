@@ -52,10 +52,23 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface ConfigProperty
 {
     /**
+     * This constant is a workaround for the java restriction that Annotation values
+     * cannot be set to null. Do not use this String in your configuration...
+     */
+    String NULL = "org.apache.deltaspike.NullValueMarker";
+
+    /**
      * Name/key of the property
      * @return name of the property
      */
     String name();
+
+    /**
+     * <b>Optional</b> default value.
+     * @return the default value which should be used if no config value could be found
+     */
+    @Nonbinding
+    String defaultValue() default NULL;
 
     /**
      * Custom converter
@@ -65,11 +78,13 @@ public @interface ConfigProperty
     Class<? extends Converter> converter() default Converter.class;
 
     /**
-     * Per default all properties are validated during the bootstrapping process of the CDI container.
-     * If it can't be resolved, the bootstrapping will fail.
+     * <p>Per default all properties are validated during the bootstrapping process of the CDI container.
+     * If it can't be resolved, the bootstrapping will fail.</p>
      *
-     * Set it to true if the property will be set dynamically e.g. during the bootstrapping process and
-     * it will be stored in a dynamic data-store like data-base.
+     * <p>Set it to true if the property will be set dynamically e.g. during the bootstrapping process and
+     * it will be stored in a dynamic data-store like data-base.</p>
+     *
+     * <p>This flag has no effect if a {@link #defaultValue()} is set!</p>
      *
      * @return true if the property has to be available from the very beginning, false otherwise
      */

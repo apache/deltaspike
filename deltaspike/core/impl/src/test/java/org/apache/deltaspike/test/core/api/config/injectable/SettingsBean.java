@@ -33,6 +33,20 @@ public class SettingsBean
     private Long property2;
 
     @Inject
+    @ConfigProperty(name = "configProperty1", defaultValue = "myDefaultValue")
+    private String stringProperty3Filled;
+
+    @Inject
+    @ConfigProperty(name = "nonexistingProperty", defaultValue = "myDefaultValue")
+    private String stringProperty3Defaulted;
+
+    @Inject
+    @ConfigProperty(name = "nonexistingProperty", defaultValue = "42")
+    private Integer intProperty4Defaulted;
+
+
+
+    @Inject
     @CustomConfigAnnotationWithMetaDataWithCustomConverter(inverseConvert = true)
     private Integer inverseProperty1;
 
@@ -72,5 +86,20 @@ public class SettingsBean
     long getInverseProperty2()
     {
         return inverseProperty2;
+    }
+
+    public String getProperty3Defaulted()
+    {
+        return stringProperty3Defaulted;
+    }
+
+    public String getProperty3Filled()
+    {
+        return stringProperty3Filled;
+    }
+
+    public int getProperty4Defaulted()
+    {
+        return intProperty4Defaulted;
     }
 }

@@ -77,8 +77,8 @@ public class ConfigPropertyExtension implements Extension, Deactivatable
 
             if (configProperty != null)
             {
-                //TODO add support for collections,...
-                if (configProperty.eager() && ConfigResolver.getPropertyValue(configProperty.name()) == null)
+                if (configProperty.eager() && ConfigProperty.NULL.equals(configProperty.defaultValue()) &&
+                        ConfigResolver.getPropertyValue(configProperty.name()) == null)
                 {
                     throw new IllegalStateException("no configured value found for property: " + configProperty.name());
                 }

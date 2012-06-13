@@ -131,8 +131,17 @@ public class ConfigPropertyBean<T> implements Bean<T>, Serializable
         ConverterFactory converterFactory = BeanProvider.getContextualReference(ConverterFactory.class, false);
 
         //TODO add support for collections, ...
-        //TODO discuss handling of null values
-        String configuredValue = ConfigResolver.getPropertyValue(configProperty.name());
+        String configuredValue;
+        String defaultValue = configProperty.defaultValue();
+        if (ConfigProperty.NULL.equals(defaultValue))
+        {
+            // no special defaultValue has been configured
+            configuredValue = ConfigResolver.getPropertyValue(configProperty.name());
+        }
+        else
+        {
+            configuredValue = ConfigResolver.getPropertyValue(configProperty.name(), defaultValue);
+        }
 
         Converter converter;
 
