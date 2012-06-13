@@ -57,7 +57,7 @@ import org.apache.deltaspike.core.util.ClassUtils;
  */
 public class BeanManagerProvider implements Extension
 {
-    private static Logger logger = Logger.getLogger(BeanManagerProvider.class.getName());
+    private static Logger LOG = Logger.getLogger(BeanManagerProvider.class.getName());
 
     private static BeanManagerProvider bmpSingleton = null;
 
@@ -165,7 +165,7 @@ public class BeanManagerProvider implements Extension
         // warn the user if he tries to use the BeanManager before container startup
         if (!bmi.booted)
         {
-            logger.warning("When using the BeanManager to retrieve Beans before the Container is started," +
+            LOG.warning("When using the BeanManager to retrieve Beans before the Container is started," +
                     " non-portable behaviour results!");
         }
 
