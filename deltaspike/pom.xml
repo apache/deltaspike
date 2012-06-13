@@ -58,6 +58,7 @@
         <module>core</module>
         <module>cdictrl</module>
         <module>modules</module>
+        <module>examples</module>
     </modules>
 
     <build>
@@ -94,14 +95,5 @@
             </plugins>
         </pluginManagement>
     </build>
-
-    <profiles>
-        <profile>
-            <id>examples</id>
-            <modules>
-                <module>examples</module>
-            </modules>
-        </profile>
-    </profiles>
 
 </project>
