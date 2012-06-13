@@ -32,7 +32,7 @@ import org.apache.deltaspike.core.api.config.annotation.ConfigProperty;
  * annotation.
  */
 @ApplicationScoped
-public class ConfigPropertyProducer extends BaseConfigPropertyProducer
+public class DefaultConfigPropertyProducer extends BaseConfigPropertyProducer
 {
 
     @Produces
@@ -69,6 +69,36 @@ public class ConfigPropertyProducer extends BaseConfigPropertyProducer
         }
 
         return Long.parseLong(configuredValue);
+    }
+
+    @Produces
+    @Dependent
+    @ConfigProperty(name = "ignored") // we actually don't need the name
+    public Boolean produceBooleanConfiguration(InjectionPoint injectionPoint)
+    {
+        String configuredValue = getStringPropertyValue(injectionPoint);
+        if (configuredValue == null)
+        {
+            return null;
+        }
+
+        //X TODO do we like to support more than just "true" ?
+        return Boolean.parseBoolean(configuredValue);
+    }
+
+    @Produces
+    @Dependent
+    @ConfigProperty(name = "ignored") // we actually don't need the name
+    public Float produceFloatConfiguration(InjectionPoint injectionPoint)
+    {
+        String configuredValue = getStringPropertyValue(injectionPoint);
+        if (configuredValue == null)
+        {
+            return null;
+        }
+
+        //X TODO think about something like @NumberFormat(...)
+        return Float.parseFloat(configuredValue);
     }
 
 
