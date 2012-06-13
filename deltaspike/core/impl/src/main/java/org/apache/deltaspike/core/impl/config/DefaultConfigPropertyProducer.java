@@ -30,12 +30,12 @@ import org.apache.deltaspike.core.api.config.annotation.ConfigProperty;
  * This class contains producer methods for injecting
  * configuration provided with the {@link ConfigProperty}
  * annotation.
- * TODO allow a custom implementation without a dependency to core-impl
  */
+//X TODO allow a custom implementation without a dependency to core-impl
 @ApplicationScoped
+@SuppressWarnings("UnusedDeclaration")
 public class DefaultConfigPropertyProducer extends BaseConfigPropertyProducer
 {
-
     @Produces
     @Dependent
     @ConfigProperty(name = "ignored") // we actually don't need the name
@@ -55,6 +55,7 @@ public class DefaultConfigPropertyProducer extends BaseConfigPropertyProducer
             return null;
         }
 
+        //X TODO integrate with the HandledHandler of DeltaSpike
         return Integer.parseInt(configuredValue);
     }
 
@@ -69,6 +70,7 @@ public class DefaultConfigPropertyProducer extends BaseConfigPropertyProducer
             return null;
         }
 
+        //X TODO integrate with the HandledHandler of DeltaSpike
         return Long.parseLong(configuredValue);
     }
 
@@ -100,14 +102,14 @@ public class DefaultConfigPropertyProducer extends BaseConfigPropertyProducer
     public Float produceFloatConfiguration(InjectionPoint injectionPoint)
     {
         String configuredValue = getStringPropertyValue(injectionPoint);
+
         if (configuredValue == null)
         {
             return null;
         }
 
         //X TODO think about something like @NumberFormat(...)
+        //X TODO integrate with the HandledHandler of DeltaSpike
         return Float.parseFloat(configuredValue);
     }
-
-
 }
