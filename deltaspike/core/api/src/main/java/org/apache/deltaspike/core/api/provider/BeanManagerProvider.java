@@ -57,7 +57,7 @@ import org.apache.deltaspike.core.util.ClassUtils;
  */
 public class BeanManagerProvider implements Extension
 {
-    private static Logger LOG = Logger.getLogger(BeanManagerProvider.class.getName());
+    private static final Logger  LOG = Logger.getLogger(BeanManagerProvider.class.getName());
 
     private static BeanManagerProvider bmpSingleton = null;
 
