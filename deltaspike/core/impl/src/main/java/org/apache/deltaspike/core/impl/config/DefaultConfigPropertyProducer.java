@@ -30,6 +30,7 @@ import org.apache.deltaspike.core.api.config.annotation.ConfigProperty;
  * This class contains producer methods for injecting
  * configuration provided with the {@link ConfigProperty}
  * annotation.
+ * TODO allow a custom implementation without a dependency to core-impl
  */
 @ApplicationScoped
 public class DefaultConfigPropertyProducer extends BaseConfigPropertyProducer
