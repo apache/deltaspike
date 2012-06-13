@@ -48,6 +48,47 @@ public class SettingsBean
 
     private Long inverseProperty2;
 
+    @Inject
+    @ConfigProperty(name = "configProperty1")
+    private Boolean booleanPropertyNull;
+
+    @Inject
+    @ConfigProperty(name = "configProperty1", defaultValue = "false")
+    private Boolean booleanPropertyFalse;
+
+    @Inject
+    @ConfigProperty(name = "configPropertyTrue1")
+    private Boolean booleanPropertyTrue1;
+
+    @Inject
+    @ConfigProperty(name = "configPropertyTrue2")
+    private Boolean booleanPropertyTrue2;
+
+    @Inject
+    @ConfigProperty(name = "configPropertyTrue3")
+    private Boolean booleanPropertyTrue3;
+
+    @Inject
+    @ConfigProperty(name = "configPropertyTrue4")
+    private Boolean booleanPropertyTrue4;
+
+    @Inject
+    @ConfigProperty(name = "configPropertyTrue5")
+    private Boolean booleanPropertyTrue5;
+
+    @Inject
+    @ConfigProperty(name = "configPropertyTrue6")
+    private Boolean booleanPropertyTrue6;
+
+    @Inject
+    @ConfigProperty(name = "configPropertyTrue7")
+    private Boolean booleanPropertyTrue7;
+
+    @Inject
+    @ConfigProperty(name = "configPropertyTrue8")
+    private Boolean booleanPropertyTrue8;
+
+
     protected SettingsBean()
     {
     }
@@ -93,5 +134,56 @@ public class SettingsBean
     public int getProperty4Defaulted()
     {
         return intProperty4Defaulted;
+    }
+
+
+    public Boolean getBooleanPropertyNull()
+    {
+        return booleanPropertyNull;
+    }
+
+    public boolean getBooleanPropertyFalse()
+    {
+        return booleanPropertyFalse;
+    }
+
+    public Boolean getBooleanPropertyTrue1()
+    {
+        return booleanPropertyTrue1;
+    }
+
+    public Boolean getBooleanPropertyTrue2()
+    {
+        return booleanPropertyTrue2;
+    }
+
+    public Boolean getBooleanPropertyTrue3()
+    {
+        return booleanPropertyTrue3;
+    }
+
+    public Boolean getBooleanPropertyTrue4()
+    {
+        return booleanPropertyTrue4;
+    }
+
+    public Boolean getBooleanPropertyTrue5()
+    {
+        return booleanPropertyTrue5;
+    }
+
+    public Boolean getBooleanPropertyTrue6()
+    {
+        return booleanPropertyTrue6;
+    }
+
+    public Boolean getBooleanPropertyTrue7()
+    {
+        return booleanPropertyTrue7;
+    }
+
+    public Boolean getBooleanPropertyTrue8()
+    {
+        return booleanPropertyTrue8;
     }
 }

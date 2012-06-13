@@ -74,4 +74,21 @@ public class InjectableConfigPropertyTest
         Assert.assertEquals("myDefaultValue", settingsBean.getProperty3Defaulted());
         Assert.assertEquals(42, settingsBean.getProperty4Defaulted());
     }
+
+    @Test
+    public void testBooleanPropertyInjection()
+    {
+        SettingsBean settingsBean = BeanProvider.getContextualReference(SettingsBean.class, false);
+        Assert.assertEquals(Boolean.FALSE, settingsBean.getBooleanPropertyFalse());
+
+        Assert.assertEquals(Boolean.TRUE, settingsBean.getBooleanPropertyTrue1());
+        Assert.assertEquals(Boolean.TRUE, settingsBean.getBooleanPropertyTrue2());
+        Assert.assertEquals(Boolean.TRUE, settingsBean.getBooleanPropertyTrue3());
+        Assert.assertEquals(Boolean.TRUE, settingsBean.getBooleanPropertyTrue4());
+        Assert.assertEquals(Boolean.TRUE, settingsBean.getBooleanPropertyTrue5());
+        Assert.assertEquals(Boolean.TRUE, settingsBean.getBooleanPropertyTrue6());
+        Assert.assertEquals(Boolean.TRUE, settingsBean.getBooleanPropertyTrue7());
+        Assert.assertEquals(Boolean.TRUE, settingsBean.getBooleanPropertyTrue8());
+
+    }
 }

@@ -82,8 +82,15 @@ public class DefaultConfigPropertyProducer extends BaseConfigPropertyProducer
             return null;
         }
 
-        //X TODO do we like to support more than just "true" ?
-        return Boolean.parseBoolean(configuredValue);
+        Boolean isTrue = "TRUE".equalsIgnoreCase(configuredValue);
+        isTrue |= "1".equalsIgnoreCase(configuredValue);
+        isTrue |= "YES".equalsIgnoreCase(configuredValue);
+        isTrue |= "Y".equalsIgnoreCase(configuredValue);
+        isTrue |= "JA".equalsIgnoreCase(configuredValue);
+        isTrue |= "J".equalsIgnoreCase(configuredValue);
+        isTrue |= "OUI".equalsIgnoreCase(configuredValue);
+
+        return isTrue;
     }
 
     @Produces
