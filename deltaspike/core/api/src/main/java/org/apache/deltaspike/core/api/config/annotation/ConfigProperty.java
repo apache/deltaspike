@@ -18,8 +18,6 @@
  */
 package org.apache.deltaspike.core.api.config.annotation;
 
-import org.apache.deltaspike.core.api.converter.Converter;
-
 import javax.enterprise.util.Nonbinding;
 import javax.inject.Qualifier;
 import java.lang.annotation.Documented;
@@ -70,14 +68,6 @@ public @interface ConfigProperty
      */
     @Nonbinding
     String defaultValue() default NULL;
-
-    /**
-     * Custom converter
-     * @return custom converter or default marker
-     */
-    @Nonbinding
-    @Deprecated
-    Class<? extends Converter> converter() default Converter.class;
 
     /**
      * <p>Per default all properties are validated during the bootstrapping process of the CDI container.

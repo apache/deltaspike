@@ -46,10 +46,6 @@ public class SettingsBean
     @ConfigProperty(name = "nonexistingProperty", defaultValue = "42")
     private Integer intProperty4Defaulted;
 
-    @Inject
-    @CustomConfigAnnotationWithMetaDataWithCustomConverter(inverseConvert = true)
-    private Integer inverseProperty1;
-
     private Long inverseProperty2;
 
     protected SettingsBean()
@@ -78,10 +74,6 @@ public class SettingsBean
         return property2;
     }
 
-    int getInverseProperty1()
-    {
-        return inverseProperty1;
-    }
 
     long getInverseProperty2()
     {

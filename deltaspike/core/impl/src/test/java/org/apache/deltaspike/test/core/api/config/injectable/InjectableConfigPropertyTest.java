@@ -67,7 +67,6 @@ public class InjectableConfigPropertyTest
 
         Assert.assertEquals(14, settingsBean.getProperty1());
         Assert.assertEquals(7L, settingsBean.getProperty2());
-        Assert.assertEquals(-14, settingsBean.getInverseProperty1());
         Assert.assertEquals(-7L, settingsBean.getInverseProperty2());
 
         // also check the ones with defaultValue

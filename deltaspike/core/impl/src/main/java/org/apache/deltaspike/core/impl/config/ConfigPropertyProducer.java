@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.impl.config.injectable.extension;
+package org.apache.deltaspike.core.impl.config;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Dependent;

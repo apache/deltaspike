@@ -32,23 +32,16 @@ public class SettingsBean
 
     private Long property2;
 
-    private Long inverseProperty;
-
     protected SettingsBean()
     {
     }
 
     @Inject
-    public SettingsBean(@Property2 Long property2)
+    public SettingsBean(@ConfigProperty(name = "property2") Long property2)
     {
         this.property2 = property2;
     }
 
-    @Inject
-    protected void init(@Property2WithInverseSupport(inverseConvert = true) Long inverseProperty)
-    {
-        this.inverseProperty = inverseProperty;
-    }
 
     public Integer getIntProperty1()
     {
@@ -60,8 +53,4 @@ public class SettingsBean
         return property2;
     }
 
-    public Long getInverseProperty()
-    {
-        return inverseProperty;
-    }
 }
