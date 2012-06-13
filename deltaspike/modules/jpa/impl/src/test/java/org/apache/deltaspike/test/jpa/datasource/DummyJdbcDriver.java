@@ -22,7 +22,9 @@ import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 /**
  * A dummy JDBC driver for use in our unit tests
@@ -63,5 +65,13 @@ public class DummyJdbcDriver implements Driver
     public boolean jdbcCompliant()
     {
         return true;
+    }
+
+    /*
+     * This method was introduced by Java7's java.sql.Driver and breaks backwards compatibility.
+     */
+    public Logger getParentLogger() throws SQLFeatureNotSupportedException
+    {
+        return null;
     }
 }

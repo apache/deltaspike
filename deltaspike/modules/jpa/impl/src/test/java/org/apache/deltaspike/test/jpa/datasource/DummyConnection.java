@@ -35,6 +35,7 @@ import java.sql.Statement;
 import java.sql.Struct;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.Executor;
 
 /**
  * Dummy JDBC Connection for use in a unit test
@@ -333,5 +334,45 @@ public class DummyConnection implements Connection
     public boolean isWrapperFor(Class<?> iface) throws SQLException
     {
         return false;
+    }
+
+    /*
+     * This method was introduced by Java7's java.sql.Driver and breaks backwards compatibility.
+     */
+    public int getNetworkTimeout() throws SQLException
+    {
+        return 0;
+    }
+    
+    /*
+     * This method was introduced by Java7's java.sql.Driver and breaks backwards compatibility.
+     */
+    public void setNetworkTimeout(Executor executor, int milliseconds) throws SQLException
+    {
+        // not implemented
+    }
+
+    /*
+     * This method was introduced by Java7's java.sql.Driver and breaks backwards compatibility.
+     */
+    public void abort(Executor executor) throws SQLException
+    {
+        // not implemented
+    }
+    
+    /*
+     * This method was introduced by Java7's java.sql.Driver and breaks backwards compatibility.
+     */
+    public String getSchema() throws SQLException
+    {
+        return null;
+    }
+
+    /*
+     * This method was introduced by Java7's java.sql.Driver and breaks backwards compatibility.
+     */
+    public void setSchema(String schema) throws SQLException
+    {
+        // not implemented
     }
 }
