@@ -36,7 +36,7 @@ import org.junit.runner.RunWith;
 import java.net.URL;
 
 @RunWith(Arquillian.class)
-@Category(SeCategory.class)
+@Category(SeCategory.class) //X TODO this is only SeCategory as there is currently an Arq problem with properties!
 public class InjectableConfigPropertyTest
 {
     /**
