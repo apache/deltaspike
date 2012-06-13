@@ -39,7 +39,8 @@ import java.util.Set;
  */
 public class ConfigPropertyExtension implements Extension, Deactivatable
 {
-    private Boolean isActivated = null;
+    private Boolean isActivated = Boolean.FALSE;
+    //X TODO private Boolean isActivated = null;
 
     private Set<ConfigInjectionTargetEntry> injectionTargets = new HashSet<ConfigInjectionTargetEntry>();
 

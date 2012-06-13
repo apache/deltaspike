@@ -24,6 +24,7 @@ import org.apache.deltaspike.core.api.converter.MetaDataAwareConverter;
 import javax.enterprise.context.Dependent;
 
 @Dependent
+@Deprecated
 public class CustomInverseStringToLongConverter
     implements MetaDataAwareConverter<String, Long, CustomConfigAnnotationWithMetaData>
 {

@@ -20,6 +20,7 @@ package org.apache.deltaspike.test.core.api.config.injectable;
 
 import org.apache.deltaspike.core.api.config.annotation.ConfigProperty;
 
+import javax.enterprise.inject.Stereotype;
 import javax.inject.Qualifier;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -35,10 +36,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({ PARAMETER, FIELD, METHOD, CONSTRUCTOR, ANNOTATION_TYPE })
 @Retention(RUNTIME)
 @Documented
-
 @ConfigProperty(name = "configProperty2")
-
-@Qualifier
+@Deprecated
 public @interface SimpleCustomConfigAnnotation
 {
 }

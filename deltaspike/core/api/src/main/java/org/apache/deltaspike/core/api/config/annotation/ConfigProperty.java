@@ -61,6 +61,7 @@ public @interface ConfigProperty
      * Name/key of the property
      * @return name of the property
      */
+    @Nonbinding
     String name();
 
     /**
@@ -75,6 +76,7 @@ public @interface ConfigProperty
      * @return custom converter or default marker
      */
     @Nonbinding
+    @Deprecated
     Class<? extends Converter> converter() default Converter.class;
 
     /**

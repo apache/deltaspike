@@ -26,6 +26,8 @@ import javax.inject.Inject;
 @ApplicationScoped
 public class SettingsBean
 {
+    final static String PROPERTY_NAME = "configProperty2";
+
     @Inject
     @ConfigProperty(name = "configProperty1")
     private Integer intProperty1;
@@ -44,8 +46,6 @@ public class SettingsBean
     @ConfigProperty(name = "nonexistingProperty", defaultValue = "42")
     private Integer intProperty4Defaulted;
 
-
-
     @Inject
     @CustomConfigAnnotationWithMetaDataWithCustomConverter(inverseConvert = true)
     private Integer inverseProperty1;
@@ -57,7 +57,7 @@ public class SettingsBean
     }
 
     @Inject
-    public SettingsBean(@SimpleCustomConfigAnnotation Long property2)
+    public SettingsBean(@ConfigProperty(name= PROPERTY_NAME) Long property2)
     {
         this.property2 = property2;
     }

@@ -24,6 +24,7 @@ import org.apache.deltaspike.core.api.converter.MetaDataAwareConverter;
 import javax.enterprise.inject.Typed;
 
 @Typed
+@Deprecated
 public class CustomInverseStringToIntegerConverter
     implements MetaDataAwareConverter<String, Integer, CustomConfigAnnotationWithMetaDataWithCustomConverter>
 {
