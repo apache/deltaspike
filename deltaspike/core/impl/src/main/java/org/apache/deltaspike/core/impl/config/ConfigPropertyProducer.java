@@ -23,7 +23,7 @@ import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
 
-import org.apache.deltaspike.core.api.config.BaseConfigPropertyProducer;
+import org.apache.deltaspike.core.spi.config.BaseConfigPropertyProducer;
 import org.apache.deltaspike.core.api.config.annotation.ConfigProperty;
 
 /**

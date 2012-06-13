@@ -16,12 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.api.config;
+package org.apache.deltaspike.core.spi.config;
 
 import javax.enterprise.inject.spi.Annotated;
 import javax.enterprise.inject.spi.InjectionPoint;
 import java.lang.annotation.Annotation;
 
+import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.config.annotation.ConfigProperty;
 
 /**
@@ -30,7 +31,7 @@ import org.apache.deltaspike.core.api.config.annotation.ConfigProperty;
  *
  * TODO: add documentation
  */
-public class BaseConfigPropertyProducer
+public abstract class BaseConfigPropertyProducer
 {
 
     /**
