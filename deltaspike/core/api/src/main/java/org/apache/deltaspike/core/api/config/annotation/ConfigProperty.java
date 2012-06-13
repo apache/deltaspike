@@ -33,10 +33,21 @@ import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+/**
+ * <p>This Qualifier allows to use the DeltaSpike configuration mechanism
+ * via simple injection.</p>
+ *
+ * A small Example:
+ * <pre>
+ *   &#064;Inject &#064;ConfigProperty(name=&quot;database&quot;)
+ *   private String configuredDatabase;
+ * </pre>
+ *
+ * @see org.apache.deltaspike.core.api.config.ConfigResolver
+ */
 @Target({ PARAMETER, FIELD, METHOD, CONSTRUCTOR, ANNOTATION_TYPE })
 @Retention(RUNTIME)
 @Documented
-
 @Qualifier
 public @interface ConfigProperty
 {

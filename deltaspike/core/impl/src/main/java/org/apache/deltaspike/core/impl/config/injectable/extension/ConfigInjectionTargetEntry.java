@@ -23,13 +23,13 @@ import org.apache.deltaspike.core.api.config.annotation.ConfigProperty;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
-class InjectionTargetEntry
+class ConfigInjectionTargetEntry
 {
     private final Type type;
     private final ConfigProperty configProperty;
     private final Annotation optionalCustomQualifier;
 
-    InjectionTargetEntry(Type type, ConfigProperty configProperty, Annotation optionalCustomQualifier)
+    ConfigInjectionTargetEntry(Type type, ConfigProperty configProperty, Annotation optionalCustomQualifier)
     {
         this.type = type;
         this.configProperty = configProperty;
@@ -63,7 +63,7 @@ class InjectionTargetEntry
             return false;
         }
 
-        InjectionTargetEntry that = (InjectionTargetEntry) o;
+        ConfigInjectionTargetEntry that = (ConfigInjectionTargetEntry) o;
 
         if (!configProperty.equals(that.configProperty))
         {

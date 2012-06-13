@@ -41,7 +41,7 @@ public class ConfigPropertyExtension implements Extension, Deactivatable
 {
     private Boolean isActivated = null;
 
-    private Set<InjectionTargetEntry> injectionTargets = new HashSet<InjectionTargetEntry>();
+    private Set<ConfigInjectionTargetEntry> injectionTargets = new HashSet<ConfigInjectionTargetEntry>();
 
     @SuppressWarnings("UnusedDeclaration")
     protected void recordConfigPropertyAwareInjectionPoint(@Observes ProcessInjectionTarget<?> event)
@@ -55,15 +55,14 @@ public class ConfigPropertyExtension implements Extension, Deactivatable
 
         InjectionTarget<?> injectionTarget = event.getInjectionTarget();
 
-        ConfigProperty configProperty;
-        Annotation qualifier;
         for (InjectionPoint injectionPoint : injectionTarget.getInjectionPoints())
         {
-            qualifier = null;
-            configProperty = injectionPoint.getAnnotated().getAnnotation(ConfigProperty.class);
+            Annotation qualifier = null;
+            ConfigProperty configProperty = injectionPoint.getAnnotated().getAnnotation(ConfigProperty.class);
 
             if (configProperty == null)
             {
+                // scan for meta-annotation
                 for (Annotation annotation : injectionPoint.getAnnotated().getAnnotations())
                 {
                     configProperty = annotation.annotationType().getAnnotation(ConfigProperty.class);
@@ -84,8 +83,8 @@ public class ConfigPropertyExtension implements Extension, Deactivatable
                     throw new IllegalStateException("no configured value found for property: " + configProperty.name());
                 }
 
-                injectionTargets.add(
-                        new InjectionTargetEntry(injectionPoint.getType(), configProperty, qualifier));
+                injectionTargets.add(new ConfigInjectionTargetEntry(injectionPoint.getType(),
+                        configProperty, qualifier));
             }
         }
     }
@@ -100,10 +99,10 @@ public class ConfigPropertyExtension implements Extension, Deactivatable
             return;
         }
 
-        for (InjectionTargetEntry injectionTargetEntry : injectionTargets)
+        for (ConfigInjectionTargetEntry injectionTargetEntry : injectionTargets)
         {
-            event.addBean(new ConfigPropertyBean<Object>(injectionTargetEntry.getType(), injectionTargetEntry
-                    .getConfigProperty(), injectionTargetEntry.getCustomQualifier()));
+            event.addBean(new ConfigPropertyBean<Object>(injectionTargetEntry.getType(),
+                    injectionTargetEntry.getConfigProperty(), injectionTargetEntry.getCustomQualifier()));
         }
     }
 
