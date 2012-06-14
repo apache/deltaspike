@@ -54,7 +54,17 @@ public class DefaultConfigPropertyProducer extends BaseConfigPropertyProducer
             return null;
         }
 
-        return Integer.parseInt(configuredValue);
+        try
+        {
+            return Integer.parseInt(configuredValue);
+        }
+        catch (NumberFormatException nfe)
+        {
+            ConfigProperty configProperty = getAnnotation(injectionPoint, ConfigProperty.class);
+            throw new RuntimeException("Error while converting Integer property '" + configProperty.name() +
+                    "' value: " + configuredValue + " happening in bean " + injectionPoint.getBean() , nfe);
+        }
+
     }
 
     @Produces
@@ -68,7 +78,16 @@ public class DefaultConfigPropertyProducer extends BaseConfigPropertyProducer
             return null;
         }
 
-        return Long.parseLong(configuredValue);
+        try
+        {
+            return Long.parseLong(configuredValue);
+        }
+        catch (NumberFormatException nfe)
+        {
+            ConfigProperty configProperty = getAnnotation(injectionPoint, ConfigProperty.class);
+            throw new RuntimeException("Error while converting Long property '" + configProperty.name() +
+                    "' value: " + configuredValue + " happening in bean " + injectionPoint.getBean() , nfe);
+        }
     }
 
     @Produces
@@ -105,7 +124,16 @@ public class DefaultConfigPropertyProducer extends BaseConfigPropertyProducer
             return null;
         }
 
-        //X TODO think about something like @NumberFormat(...)
-        return Float.parseFloat(configuredValue);
+        try
+        {
+            return Float.parseFloat(configuredValue);
+        }
+        catch (NumberFormatException nfe)
+        {
+            ConfigProperty configProperty = getAnnotation(injectionPoint, ConfigProperty.class);
+            throw new RuntimeException("Error while converting Float property '" + configProperty.name() +
+                    "' value: " + configuredValue + " happening in bean " + injectionPoint.getBean() , nfe);
+        }
+
     }
 }
