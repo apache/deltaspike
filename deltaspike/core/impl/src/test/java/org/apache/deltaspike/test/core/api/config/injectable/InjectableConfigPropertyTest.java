@@ -18,6 +18,8 @@
  */
 package org.apache.deltaspike.test.core.api.config.injectable;
 
+import java.net.URL;
+
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.test.util.ArchiveUtils;
@@ -33,7 +35,8 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
-import java.net.URL;
+import org.apache.deltaspike.test.core.api.config.injectable.numberconfig.NumberConfiguredBean;
+
 
 @RunWith(Arquillian.class)
 @Category(SeCategory.class) //X TODO this is only SeCategory as there is currently an Arq problem with properties!
@@ -49,7 +52,8 @@ public class InjectableConfigPropertyTest
                 .getResource("META-INF/apache-deltaspike.properties");
 
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "injectableConfigPropertyTest.jar")
-                .addPackage("org.apache.deltaspike.test.core.api.config.injectable")
+                .addPackage(SettingsBean.class.getPackage())
+                .addPackage(NumberConfiguredBean.class.getPackage())
                 .addPackage("org.apache.deltaspike.test.category")
                 .addAsManifestResource(FileUtils.getFileForURL(fileUrl.toString()))
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
@@ -89,5 +93,14 @@ public class InjectableConfigPropertyTest
         Assert.assertEquals(Boolean.TRUE, settingsBean.getBooleanPropertyTrue6());
         Assert.assertEquals(Boolean.TRUE, settingsBean.getBooleanPropertyTrue7());
         Assert.assertEquals(Boolean.TRUE, settingsBean.getBooleanPropertyTrue8());
+    }
+
+    @Test
+    public void testNmberConfigInjection()
+    {
+        NumberConfiguredBean numberBean = BeanProvider.getContextualReference(NumberConfiguredBean.class, false);
+        Assert.assertNull(numberBean.getPropertyNonexisting());
+        Assert.assertEquals(Float.valueOf(123.45f), numberBean.getPropertyFromConfig());
+        Assert.assertEquals(Float.valueOf(42.42f), numberBean.getPropertyNonexistingDefaulted());
     }
 }

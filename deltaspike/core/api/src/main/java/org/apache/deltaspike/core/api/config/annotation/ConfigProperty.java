@@ -42,52 +42,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * </pre>
  * </p>
  *
- * <h2>Providing own Converters and Type injection</h2>
- * <p>DeltaSpikes own configuration system only natively only supports Strings.
- * If you like to apply own Converters or extract other types from those Strings,
- * you can simply do this by providing an own Qualifier and a simple
- * CDI producer method for it.</p>
- *
- * <p>First we write a simple Qualifier:
- * <pre>
- * &#064;Target({ PARAMETER, FIELD, METHOD, CONSTRUCTOR, ANNOTATION_TYPE })
- * &#064;Retention(RUNTIME)
- * &#064;Qualifier
- * public @interface NumberConfig
- * {
- *     &#064;Nonbinding
- *     boolean name(); // the name of the configuration-key to lookup the value
- *
- *     &#064;Nonbinding
- *     boolean pattern(); // the pattern for NumberFormatter
- * }
- * </pre>
- * </p>
- *
- * <p>The producer method implementation is pretty easy as well:
- * <pre>
- * &#064;ApplicationScoped
- * public class NumberConfigProducer extends BaseConfigPropertyProducer
- * {
- *     &#064;Produces
- *     &#064;Dependent
- *     &#064;NumberConfig
- *     public Float produceNumberConfig(InjectionPoint injectionPoint)
- *     {
- *         String configuredValue = getStringPropertyValue(injectionPoint);
- *
- *         if (configuredValue == null || configuredValue.length() == 0)
- *         {
- *             return null; // or 0.f depending on what you need
- *         }
- *
- *         NumberConfig metaData = getAnnotation(injectionPoint, NumberConfig.class);
- *         DecimalFormat df = new DecimalFormat(metaData.pattern());
- *         return df.parse(configuredValue).floatValue();
- *     }
- * }
- * </pre>
- * </p>
+ * <p>See the sample in {@link org.apache.deltaspike.core.spi.config.BaseConfigPropertyProducer}
+ * for how to implement own configuration injection.</p>
  *
  * @see org.apache.deltaspike.core.api.config.ConfigResolver
  * @see org.apache.deltaspike.core.spi.config.BaseConfigPropertyProducer
