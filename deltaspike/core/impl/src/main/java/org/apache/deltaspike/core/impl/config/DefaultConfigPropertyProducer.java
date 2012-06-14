@@ -31,7 +31,6 @@ import org.apache.deltaspike.core.api.config.annotation.ConfigProperty;
  * configuration provided with the {@link ConfigProperty}
  * annotation.
  */
-//X TODO allow a custom implementation without a dependency to core-impl
 @ApplicationScoped
 @SuppressWarnings("UnusedDeclaration")
 public class DefaultConfigPropertyProducer extends BaseConfigPropertyProducer
