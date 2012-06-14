@@ -33,13 +33,13 @@ import org.apache.deltaspike.core.api.config.annotation.ConfigProperty;
  */
 public abstract class BaseConfigPropertyProducer
 {
-
     /**
+     * @param injectionPoint current injection point
      * @return the configured value for the given InjectionPoint
      */
     protected String getStringPropertyValue(InjectionPoint injectionPoint)
     {
-        ConfigProperty configProperty = extractConfigProperty(injectionPoint.getAnnotated());
+        ConfigProperty configProperty = getAnnotation(injectionPoint, ConfigProperty.class);
 
         if (configProperty == null)
         {
@@ -48,6 +48,7 @@ public abstract class BaseConfigPropertyProducer
 
         String configuredValue;
         String defaultValue = configProperty.defaultValue();
+
         if (ConfigProperty.NULL.equals(defaultValue))
         {
             // no special defaultValue has been configured
@@ -61,28 +62,31 @@ public abstract class BaseConfigPropertyProducer
         return configuredValue;
     }
 
-
     /**
-     * Extract the ConfigProperty annotation from the given Annotated member.
+     * @param injectionPoint current injection point
+     * @param targetType target type
+     * @param <T> type
+     * @return annotation instance extracted from the injection point which matches the given type
      */
-    protected ConfigProperty extractConfigProperty(Annotated annotated)
+    protected <T extends Annotation> T getAnnotation(InjectionPoint injectionPoint, Class<T> targetType)
     {
-        ConfigProperty configProperty = annotated.getAnnotation(ConfigProperty.class);
+        Annotated annotated = injectionPoint.getAnnotated();
 
-        if (configProperty == null)
+        T result = annotated.getAnnotation(targetType);
+
+        if (result == null)
         {
-            // scan for meta-annotation
             for (Annotation annotation : annotated.getAnnotations())
             {
-                configProperty = annotation.annotationType().getAnnotation(ConfigProperty.class);
+                result = annotation.annotationType().getAnnotation(targetType);
 
-                if (configProperty != null)
+                if (result != null)
                 {
                     break;
                 }
             }
         }
 
-        return configProperty;
+        return result;
     }
 }

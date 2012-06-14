@@ -20,48 +20,28 @@ package org.apache.deltaspike.example.config;
 
 import org.apache.deltaspike.core.api.config.annotation.ConfigProperty;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import javax.enterprise.util.Nonbinding;
+import javax.inject.Qualifier;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-@ApplicationScoped
-public class SettingsBean
+import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
+import static java.lang.annotation.ElementType.CONSTRUCTOR;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
+@Target({ PARAMETER, FIELD, METHOD, CONSTRUCTOR, ANNOTATION_TYPE })
+@Retention(RUNTIME)
+@Documented
+
+@ConfigProperty(name = "property2")
+
+@Qualifier
+public @interface Property2
 {
-    @Inject
-    @ConfigProperty(name = "property1")
-    private Integer intProperty1;
-
-    private Long property2;
-
-    private Long inverseProperty;
-
-    protected SettingsBean()
-    {
-    }
-
-    @Inject
-    public SettingsBean(@Property2 Long property2)
-    {
-        this.property2 = property2;
-    }
-
-    @Inject
-    protected void init(@Property2WithInverseSupport(inverseConvert = true) Long inverseProperty)
-    {
-        this.inverseProperty = inverseProperty;
-    }
-
-    public Integer getIntProperty1()
-    {
-        return intProperty1;
-    }
-
-    public Long getProperty2()
-    {
-        return property2;
-    }
-
-    public Long getInverseProperty()
-    {
-        return inverseProperty;
-    }
+    @Nonbinding
+    boolean logValue() default true;
 }

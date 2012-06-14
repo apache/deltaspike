@@ -46,6 +46,7 @@ public class ConverterExample
 
         LOG.info("configured int-value #1: " + settingsBean.getIntProperty1());
         LOG.info("configured long-value #2: " + settingsBean.getProperty2());
+        LOG.info("configured inverse-value #2: " + settingsBean.getInverseProperty());
 
         contextControl.stopContext(ApplicationScoped.class);
         cdiContainer.shutdown();
