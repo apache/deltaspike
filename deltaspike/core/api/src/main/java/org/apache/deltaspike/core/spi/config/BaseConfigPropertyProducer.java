@@ -18,12 +18,13 @@
  */
 package org.apache.deltaspike.core.spi.config;
 
-import javax.enterprise.inject.spi.Annotated;
 import javax.enterprise.inject.spi.InjectionPoint;
+
 import java.lang.annotation.Annotation;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.config.annotation.ConfigProperty;
+import org.apache.deltaspike.core.util.BeanUtils;
 
 /**
  * This contains the fundamental parts for implementing own
@@ -70,23 +71,6 @@ public abstract class BaseConfigPropertyProducer
      */
     protected <T extends Annotation> T getAnnotation(InjectionPoint injectionPoint, Class<T> targetType)
     {
-        Annotated annotated = injectionPoint.getAnnotated();
-
-        T result = annotated.getAnnotation(targetType);
-
-        if (result == null)
-        {
-            for (Annotation annotation : annotated.getAnnotations())
-            {
-                result = annotation.annotationType().getAnnotation(targetType);
-
-                if (result != null)
-                {
-                    break;
-                }
-            }
-        }
-
-        return result;
+        return BeanUtils.extractAnnotation(injectionPoint.getAnnotated(), targetType);
     }
 }

@@ -21,6 +21,7 @@ package org.apache.deltaspike.core.util;
 import org.apache.deltaspike.core.util.metadata.builder.ImmutableInjectionPoint;
 
 import javax.enterprise.inject.Typed;
+import javax.enterprise.inject.spi.Annotated;
 import javax.enterprise.inject.spi.AnnotatedMethod;
 import javax.enterprise.inject.spi.AnnotatedParameter;
 import javax.enterprise.inject.spi.Bean;
@@ -91,6 +92,33 @@ public abstract class BeanUtils
         }
         return qualifiers;
     }
+
+    /**
+     * @param annotated element to search in
+     * @param targetType target type to search for
+     * @param <T> type of the Annotation which get searched
+     * @return annotation instance extracted from the annotated member
+     */
+    public static <T extends Annotation> T extractAnnotation(Annotated annotated, Class<T> targetType)
+    {
+        T result = annotated.getAnnotation(targetType);
+
+        if (result == null)
+        {
+            for (Annotation annotation : annotated.getAnnotations())
+            {
+                result = annotation.annotationType().getAnnotation(targetType);
+
+                if (result != null)
+                {
+                    break;
+                }
+            }
+        }
+
+        return result;
+    }
+
 
     /**
      * Given a method, and the bean on which the method is declared, create a
