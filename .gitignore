@@ -10,3 +10,4 @@ target
 .checkstyle
 atlassian-ide-plugin.xml
 .sonar-ide.properties
+*.patch
