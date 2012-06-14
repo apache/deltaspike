@@ -80,6 +80,7 @@ public @interface ConfigProperty
      *
      * @return true if the property has to be available from the very beginning, false otherwise
      */
+    //X TODO fix it (broken since c0e020943ca7d4eeba1e8810cf1b55dcbab422a4)
     @Nonbinding
     boolean eager() default true;
 }

@@ -89,6 +89,5 @@ public class InjectableConfigPropertyTest
         Assert.assertEquals(Boolean.TRUE, settingsBean.getBooleanPropertyTrue6());
         Assert.assertEquals(Boolean.TRUE, settingsBean.getBooleanPropertyTrue7());
         Assert.assertEquals(Boolean.TRUE, settingsBean.getBooleanPropertyTrue8());
-
     }
 }

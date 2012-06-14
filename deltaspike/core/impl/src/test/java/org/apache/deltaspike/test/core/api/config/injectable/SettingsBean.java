@@ -88,7 +88,6 @@ public class SettingsBean
     @ConfigProperty(name = "configPropertyTrue8")
     private Boolean booleanPropertyTrue8;
 
-
     protected SettingsBean()
     {
     }
@@ -114,7 +113,6 @@ public class SettingsBean
     {
         return property2;
     }
-
 
     long getInverseProperty2()
     {

@@ -1,11 +1,11 @@
 package org.apache.deltaspike.test.core.api.config.injectable;
 
+import org.apache.deltaspike.core.spi.config.BaseConfigPropertyProducer;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
-
-import org.apache.deltaspike.core.spi.config.BaseConfigPropertyProducer;
 
 /**
  * Sample producer for {@link CustomConfigAnnotationWithMetaData}
@@ -13,13 +13,13 @@ import org.apache.deltaspike.core.spi.config.BaseConfigPropertyProducer;
 @ApplicationScoped
 public class CustomConfigAnnotationWithMetaDataProducer extends BaseConfigPropertyProducer
 {
-
     @Produces
     @Dependent
     @CustomConfigAnnotationWithMetaData
     public Integer produceIntegerCustomConfig(InjectionPoint injectionPoint)
     {
         String configuredValue = getStringPropertyValue(injectionPoint);
+
         if (configuredValue == null || configuredValue.length() == 0)
         {
             return 0;
@@ -28,7 +28,8 @@ public class CustomConfigAnnotationWithMetaDataProducer extends BaseConfigProper
         Integer result = Integer.parseInt(configuredValue);
 
         CustomConfigAnnotationWithMetaData metaData =
-                injectionPoint.getAnnotated().getAnnotation(CustomConfigAnnotationWithMetaData.class);
+                getAnnotation(injectionPoint, CustomConfigAnnotationWithMetaData.class);
+
         if (metaData != null && metaData.inverseConvert())
         {
             return result * -1;
@@ -43,6 +44,7 @@ public class CustomConfigAnnotationWithMetaDataProducer extends BaseConfigProper
     public Long produceLongCustomConfig(InjectionPoint injectionPoint)
     {
         String configuredValue = getStringPropertyValue(injectionPoint);
+
         if (configuredValue == null || configuredValue.length() == 0)
         {
             return 0L;
@@ -51,7 +53,8 @@ public class CustomConfigAnnotationWithMetaDataProducer extends BaseConfigProper
         Long result = Long.parseLong(configuredValue);
 
         CustomConfigAnnotationWithMetaData metaData =
-                injectionPoint.getAnnotated().getAnnotation(CustomConfigAnnotationWithMetaData.class);
+                getAnnotation(injectionPoint, CustomConfigAnnotationWithMetaData.class);
+
         if (metaData != null && metaData.inverseConvert())
         {
             return result * -1L;
