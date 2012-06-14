@@ -54,7 +54,6 @@ public class DefaultConfigPropertyProducer extends BaseConfigPropertyProducer
             return null;
         }
 
-        //X TODO integrate with the HandledHandler of DeltaSpike
         return Integer.parseInt(configuredValue);
     }
 
@@ -69,7 +68,6 @@ public class DefaultConfigPropertyProducer extends BaseConfigPropertyProducer
             return null;
         }
 
-        //X TODO integrate with the HandledHandler of DeltaSpike
         return Long.parseLong(configuredValue);
     }
 
@@ -108,7 +106,6 @@ public class DefaultConfigPropertyProducer extends BaseConfigPropertyProducer
         }
 
         //X TODO think about something like @NumberFormat(...)
-        //X TODO integrate with the HandledHandler of DeltaSpike
         return Float.parseFloat(configuredValue);
     }
 }
