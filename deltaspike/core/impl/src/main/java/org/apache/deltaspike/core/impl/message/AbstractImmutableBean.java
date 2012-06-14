@@ -23,6 +23,7 @@ import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.spi.Bean;
@@ -46,6 +47,8 @@ import org.apache.deltaspike.core.impl.util.ArraysUtils;
  */
 abstract class AbstractImmutableBean<T> implements Bean<T>
 {
+    private static final Logger LOG = Logger.getLogger(AbstractImmutableBean.class.getName());
+
     private final Class<?> beanClass;
     private final String name;
     private final Set<Annotation> qualifiers;
@@ -99,8 +102,7 @@ abstract class AbstractImmutableBean<T> implements Bean<T>
         {
             this.qualifiers = Collections.<Annotation>singleton(new DefaultLiteral());
 
-            //X TODO re-visit after the logging discussion
-            //LOG.finest("No qualifers provided for bean class " + beanClass + ", using singleton set of @Default");
+            LOG.finest("No qualifers provided for bean class " + beanClass + ", using singleton set of @Default");
         }
         else
         {
@@ -111,8 +113,7 @@ abstract class AbstractImmutableBean<T> implements Bean<T>
         {
             this.scope = Dependent.class;
 
-            //X TODO re-visit after the logging discussion
-            //LOG.finest("No scope provided for bean class " + beanClass + ", using @Dependent");
+            LOG.finest("No scope provided for bean class " + beanClass + ", using @Dependent");
         }
         else
         {
@@ -133,12 +134,9 @@ abstract class AbstractImmutableBean<T> implements Bean<T>
             //noinspection unchecked
             this.types = ArraysUtils.<Type>asSet(Object.class, beanClass);
 
-            //X TODO re-visit after the logging discussion
-            /*
             LOG.finest("No types provided for bean class " + beanClass
                     + ", using [java.lang.Object.class, " + beanClass.getName()
                     + ".class]");
-            */
         }
         else
         {
