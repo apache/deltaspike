@@ -18,36 +18,33 @@
  */
 package org.apache.deltaspike.test.api.config;
 
-import org.apache.deltaspike.core.api.config.ConfigResolver;
-import org.junit.Assert;
-import org.junit.Test;
+import org.apache.deltaspike.core.spi.config.ConfigSource;
 
-import java.util.List;
-
-public class ConfigResolverTest
+/**
+ * Test ConfigSource
+ *
+ * It statically returns 'testvalue' for the key 'testkey'
+ */
+public class TestConfigSource implements ConfigSource
 {
-    @Test
-    public void testOverruledValue()
-    {
-        String result = ConfigResolver.getPropertyValue("test");
 
-        Assert.assertEquals("test2", result);
+    private int ordinal = 700;
+
+    @Override
+    public String getConfigName()
+    {
+        return "testConfig";
     }
 
-    @Test
-    public void testOrderOfAllValues()
+    @Override
+    public int getOrdinal()
     {
-        List<String> result = ConfigResolver.getAllPropertyValues("test");
-
-        Assert.assertEquals(2, result.size());
-        Assert.assertEquals("test1", result.get(0));
-        Assert.assertEquals("test2", result.get(1));
+        return ordinal;
     }
 
-    @Test
-    public void testStandaloneConfigSource()
+    @Override
+    public String getPropertyValue(String key)
     {
-        Assert.assertNull(ConfigResolver.getPropertyValue("notexisting"));
-        Assert.assertEquals("testvalue", ConfigResolver.getPropertyValue("testkey"));
+        return "testkey".equals(key) ? "testvalue" : null;
     }
 }

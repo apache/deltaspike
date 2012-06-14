@@ -36,7 +36,11 @@ import org.apache.deltaspike.core.util.ServiceUtils;
 import javax.enterprise.inject.Typed;
 
 /**
- * Resolve the configuration via their well defined ordinals.
+ * <p>Resolve the configuration via their well defined ordinals.</p>
+ *
+ * <p>You can provide your own lookup paths by implementing
+ * and registering additional {@link ConfigSource} or
+ * {@link ConfigSourceProvider} implementations.</p>
  */
 @Typed()
 public final class ConfigResolver
@@ -165,7 +169,7 @@ public final class ConfigResolver
 
     private static List<ConfigSource> resolveConfigSources()
     {
-        List<ConfigSource> appConfigSources = new ArrayList<ConfigSource>();
+        List<ConfigSource> appConfigSources = ServiceUtils.loadServiceImplementations(ConfigSource.class);
 
         List<ConfigSourceProvider> configSourceProviderServiceLoader =
             ServiceUtils.loadServiceImplementations(ConfigSourceProvider.class);

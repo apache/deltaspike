@@ -24,7 +24,12 @@ package org.apache.deltaspike.core.spi.config;
  * JNDI configuration, a properties file, etc</p>
  * 
  * <p>The custom implementation can be 'registered' using a
- * {@link ConfigSourceProvider} </p>
+ * {@link ConfigSourceProvider} or via the
+ * {@link java.util.ServiceLoader} mechanism. In the later case
+ * it must get registered via creating a
+ * <i>META-INF/services/org.apache.deltaspike.core.spi.config.ConfigSource</i>
+ * file and adding the fully qualified class name of your ConfigSource
+ * implementation into it. </p>
  */
 public interface ConfigSource
 {
