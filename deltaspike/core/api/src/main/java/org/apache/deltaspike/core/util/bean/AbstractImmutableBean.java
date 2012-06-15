@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.util.builder;
+package org.apache.deltaspike.core.util.bean;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
@@ -45,7 +45,7 @@ import org.apache.deltaspike.core.util.ArraysUtils;
  *
  * @see ImmutableBeanWrapper
  */
-abstract class AbstractImmutableBean<T> implements Bean<T>
+public abstract class AbstractImmutableBean<T> implements Bean<T>
 {
     private static final Logger LOG = Logger.getLogger(AbstractImmutableBean.class.getName());
 

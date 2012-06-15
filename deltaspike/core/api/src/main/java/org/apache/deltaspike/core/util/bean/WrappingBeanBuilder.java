@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.util.builder;
+package org.apache.deltaspike.core.util.bean;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
