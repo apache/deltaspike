@@ -109,6 +109,8 @@ class DefaultMessageBuilder implements MessageContext.MessageBuilder
 
         MessageInterpolator messageInterpolator = messageContext.config().getMessageInterpolator();
 
+        //X TODO: this logic is odd. It's completely out of the standard flow
+        //X TODO: handling is different based on where the interpolator gets configured :(
         if (messageInterpolator != null && messageTemplate != null)
         {
             return checkedResult(
@@ -128,7 +130,7 @@ class DefaultMessageBuilder implements MessageContext.MessageBuilder
             //minor performance tweak for inline-msg
             String oldTemplate = extractTemplate(baseMessage.getMessageTemplate());
 
-            if (result == null || result.equals(oldTemplate))
+            if (result == null || result.equals(oldTemplate) || result.equals(baseMessage.getMessageTemplate()))
             {
                 return MessageResolver.MISSING_RESOURCE_MARKER + oldTemplate +
                         MessageResolver.MISSING_RESOURCE_MARKER + getArguments(baseMessage);

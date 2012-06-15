@@ -18,16 +18,18 @@
  */
 package org.apache.deltaspike.core.impl.message;
 
+import org.apache.deltaspike.core.api.config.annotation.DefaultConfiguration;
 import org.apache.deltaspike.core.api.message.MessageInterpolator;
 
-import javax.enterprise.inject.Typed;
+import javax.enterprise.context.Dependent;
 import java.io.Serializable;
 
 /**
  * {@inheritDoc}
  */
-@Typed()
-class DefaultMessageInterpolator implements MessageInterpolator, Serializable
+@Dependent
+@DefaultConfiguration
+public class DefaultMessageInterpolator implements MessageInterpolator, Serializable
 {
     private static final long serialVersionUID = -8854087197813424812L;
 

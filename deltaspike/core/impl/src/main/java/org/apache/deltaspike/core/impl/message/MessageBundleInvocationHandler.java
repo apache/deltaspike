@@ -18,6 +18,8 @@
  */
 package org.apache.deltaspike.core.impl.message;
 
+import org.apache.deltaspike.core.api.config.annotation.DefaultConfiguration;
+import org.apache.deltaspike.core.api.literal.DefaultConfigurationLiteral;
 import org.apache.deltaspike.core.api.literal.MessageContextConfigLiteral;
 import org.apache.deltaspike.core.api.message.LocaleResolver;
 import org.apache.deltaspike.core.api.message.MessageContext;
@@ -36,6 +38,8 @@ import java.util.Locale;
 
 class MessageBundleInvocationHandler implements InvocationHandler
 {
+    private MessageInterpolator interpolator;
+    private LocaleResolver localeResolver;
 
     /**
      * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object,
@@ -117,12 +121,18 @@ class MessageBundleInvocationHandler implements InvocationHandler
                     ClassUtils.tryToLoadClassForName(messageContextConfig.messageInterpolator().getName());
 
             String result = resolvedMessageTemplate;
+            MessageInterpolator messageInterpolator;
 
             if (!MessageInterpolator.class.equals(messageInterpolatorClass))
             {
-                MessageInterpolator messageInterpolator = BeanProvider.getContextualReference(messageInterpolatorClass);
-                result = messageInterpolator.interpolate(resolvedMessageTemplate, args);
+                messageInterpolator = BeanProvider.getContextualReference(messageInterpolatorClass);
             }
+            else
+            {
+                messageInterpolator = getDefaultMessageInterpolator();
+            }
+
+            result = messageInterpolator.interpolate(resolvedMessageTemplate, args);
 
             return result;
         }
@@ -134,6 +144,37 @@ class MessageBundleInvocationHandler implements InvocationHandler
             }
 
             return messageContext.message().text(messageTemplate.value()).argument(arguments.toArray()).create();
+        }
+    }
+
+    private MessageInterpolator getDefaultMessageInterpolator()
+    {
+        if (interpolator == null)
+        {
+            initDefaultConfig();
+        }
+        return interpolator;
+    }
+
+    private LocaleResolver getDefaultLocaleResolver()
+    {
+        if (localeResolver == null)
+        {
+            initDefaultConfig();
+        }
+        return localeResolver;
+    }
+
+    /**
+     * Lazily initialize {@link #interpolator} and {@link #localeResolver}.
+     */
+    private synchronized void initDefaultConfig()
+    {
+        if (interpolator == null)
+        {
+            DefaultConfiguration defaultConfiguration = new DefaultConfigurationLiteral();
+            interpolator = BeanProvider.getContextualReference(MessageInterpolator.class, defaultConfiguration);
+            localeResolver = BeanProvider.getContextualReference(LocaleResolver.class, defaultConfiguration);
         }
     }
 }

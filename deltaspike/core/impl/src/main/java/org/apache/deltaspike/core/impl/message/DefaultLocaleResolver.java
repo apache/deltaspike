@@ -19,17 +19,20 @@
 package org.apache.deltaspike.core.impl.message;
 
 
+import org.apache.deltaspike.core.api.config.annotation.DefaultConfiguration;
 import org.apache.deltaspike.core.api.message.LocaleResolver;
 
-import javax.enterprise.inject.Typed;
+import javax.enterprise.context.Dependent;
 import java.io.Serializable;
 import java.util.Locale;
 
 /**
- * {@inheritDoc}
+ * Provide the default implementation for picking up the Locale
+ * for messages.
  */
-@Typed()
-class DefaultLocaleResolver implements LocaleResolver, Serializable
+@Dependent
+@DefaultConfiguration
+public class DefaultLocaleResolver implements LocaleResolver, Serializable
 {
     private static final long serialVersionUID = 2075618472090834156L;
 

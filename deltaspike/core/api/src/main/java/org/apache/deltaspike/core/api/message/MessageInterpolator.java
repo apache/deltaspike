@@ -20,10 +20,18 @@ package org.apache.deltaspike.core.api.message;
 
 import java.io.Serializable;
 
+import org.apache.deltaspike.core.api.config.DeltaSpikeConfig;
+
 /**
- * Implementations are responsible to replace placeholders in a message with the final value
+ * <p>Implementations are responsible to replace placeholders
+ * in a message with the final value.</p>
+ *
+ * <p>An application can provide an own implementation as
+ * &#064;Alternative with a
+ * &#064;{@link org.apache.deltaspike.core.api.config.annotation.DefaultConfiguration}
+ * annotation.</p>
  */
-public interface MessageInterpolator extends Serializable
+public interface MessageInterpolator extends Serializable, DeltaSpikeConfig
 {
     /**
      * replaces the arguments of the given message with the given arguments

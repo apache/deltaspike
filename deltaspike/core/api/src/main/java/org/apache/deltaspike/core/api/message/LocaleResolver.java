@@ -22,10 +22,19 @@ package org.apache.deltaspike.core.api.message;
 import java.io.Serializable;
 import java.util.Locale;
 
+import org.apache.deltaspike.core.api.config.DeltaSpikeConfig;
+
 /**
- * Implementations have to provide the current locale
+ * <p>Provides the current {@link java.util.Locale}.</p>
+ * <p>DeltaSpike provides a default implementation which
+ * returns the current system Locale.</p>
+ * <p>An application can provide an own implementation as
+ * &#064;Alternative with a
+ * &#064;{@link org.apache.deltaspike.core.api.config.annotation.DefaultConfiguration}
+ * annotation. This could e.g. examine a JSF View or the Locale
+ * of any currently logged in User.</p>
  */
-public interface LocaleResolver extends Serializable
+public interface LocaleResolver extends Serializable, DeltaSpikeConfig
 {
     /**
      * @return the current locale

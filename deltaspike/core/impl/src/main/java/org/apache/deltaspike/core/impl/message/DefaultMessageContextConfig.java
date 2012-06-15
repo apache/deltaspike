@@ -33,13 +33,12 @@ class DefaultMessageContextConfig implements MessageContext.Config
 {
     private static final long serialVersionUID = 2919944628020782545L;
 
-    private MessageInterpolator messageInterpolator;
-    private MessageResolver messageResolver;
-    private LocaleResolver localeResolver;
+    private MessageInterpolator messageInterpolator = null;
+    private MessageResolver messageResolver = null;
+    private LocaleResolver localeResolver = null;
 
     DefaultMessageContextConfig()
     {
-        resetMessageContextConfig();
     }
 
     private DefaultMessageContextConfig(MessageContext.Config messageContextConfigTemplate)
@@ -119,13 +118,6 @@ class DefaultMessageContextConfig implements MessageContext.Config
                 return new DefaultMessageContext(DefaultMessageContextConfig.this);
             }
         };
-    }
-
-    private void resetMessageContextConfig()
-    {
-        messageInterpolator = new DefaultMessageInterpolator();
-        messageResolver = null;
-        localeResolver = new DefaultLocaleResolver();
     }
 
     @Override
