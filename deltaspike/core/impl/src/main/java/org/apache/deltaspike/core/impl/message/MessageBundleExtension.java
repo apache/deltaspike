@@ -202,6 +202,7 @@ public class MessageBundleExtension implements Extension, Deactivatable
         {
             abd.addDefinitionError(new IllegalArgumentException("The following MessageBundle problems where found: " +
                     Arrays.toString(deploymentErrors.toArray())));
+            return;
         }
 
         for (AnnotatedType<?> type : messageBundleTypes)
