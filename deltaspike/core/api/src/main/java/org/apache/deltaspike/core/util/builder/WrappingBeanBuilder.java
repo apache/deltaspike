@@ -35,7 +35,17 @@ import org.apache.deltaspike.core.api.literal.AnyLiteral;
 import org.apache.deltaspike.core.api.literal.DefaultLiteral;
 import org.apache.deltaspike.core.util.ArraysUtils;
 
-//X TODO update javadoc
+/**
+ * <p>A WrappingBeanBuilder helps creating Beans which internally
+ * just wrap another existing Bean. The Types, Qualifiers
+ * and other attributes of the resulting Bean can be modified.</p>
+ *
+ * <p>The {@link Bean#create(javax.enterprise.context.spi.CreationalContext)}
+ * and {@link Bean#destroy(Object, javax.enterprise.context.spi.CreationalContext)}
+ * methods will get delegated to the underlying wrapped Bean.</p>
+ *
+ * @param <T> the type of the Bean
+ */
 public class WrappingBeanBuilder<T>
 {
     private final Bean<T> delegate;
@@ -338,15 +348,17 @@ public class WrappingBeanBuilder<T>
      */
     public ImmutableBeanWrapper<T> create()
     {
-        // Commented out due to it not being required for initial Message
-        // implementation
-        // if (isPassivationCapable()) {
-        // return new ImmutablePassivationCapableNarrowingBean<T>(delegate,
-        // name, qualifiers, scope, stereotypes, types, alternative,
-        // nullable, toString, id);
-        // } else {
-        return new ImmutableBeanWrapper<T>(delegate, name, qualifiers, scope,
-                stereotypes, types, alternative, nullable, toString);
+        if (isPassivationCapable())
+        {
+            return new ImmutablePassivationCapableBeanWrapper<T>(delegate,
+                    name, qualifiers, scope, stereotypes, types, alternative,
+                    nullable, toString, id);
+        }
+        else
+        {
+            return new ImmutableBeanWrapper<T>(delegate, name, qualifiers, scope,
+                    stereotypes, types, alternative, nullable, toString);
+        }
     }
 
     // }
