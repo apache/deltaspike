@@ -31,4 +31,7 @@ public interface SimpleMessage
 
     @MessageTemplate("Welcome to %s")
     Message welcomeTo(MessageContext messageContext, String name);
+
+    @MessageTemplate("Welcome to %s")
+    String simpleText(String name);
 }

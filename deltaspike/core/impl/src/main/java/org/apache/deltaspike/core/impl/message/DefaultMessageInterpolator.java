@@ -34,6 +34,11 @@ class DefaultMessageInterpolator implements MessageInterpolator, Serializable
     @Override
     public String interpolate(String messageTemplate, Object... arguments)
     {
-        return messageTemplate;
+        if (arguments == null || arguments.length == 0)
+        {
+            return messageTemplate;
+        }
+
+        return String.format(messageTemplate, arguments);
     }
 }

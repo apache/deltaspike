@@ -86,8 +86,8 @@ public class MessageContextTest
 
         String messageText = messageContext.config()
                 .use()
-                    .localeResolver(localeResolver)
-                    .messageResolver(new TestMessageResolver(localeResolver))
+                .localeResolver(localeResolver)
+                .messageResolver(new TestMessageResolver(localeResolver))
                 .create().message().text("{hello}").toText();
 
         assertEquals("test message", messageText);

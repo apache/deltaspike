@@ -71,5 +71,6 @@ public class SimpleMessageTest
     public void testSimpleMessage()
     {
         assertEquals("Welcome to DeltaSpike", simpleMessage.welcomeToDeltaSpike());
+        //X assertEquals("Welcome to DeltaSpike", simpleMessage.simpleText("DeltaSpike"));
     }
 }

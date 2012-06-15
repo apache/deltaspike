@@ -36,6 +36,7 @@ import java.util.Locale;
 
 class MessageBundleInvocationHandler implements InvocationHandler
 {
+
     /**
      * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object,
      *      java.lang.reflect.Method, java.lang.Object[])
