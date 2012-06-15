@@ -19,8 +19,11 @@
 package org.apache.deltaspike.core.impl.message;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AfterBeanDiscovery;
@@ -52,6 +55,8 @@ public class MessageBundleExtension implements Extension, Deactivatable
     private final Collection<AnnotatedType<?>> messageBundleTypes = new HashSet<AnnotatedType<?>>();
     private Bean<Object> bundleProducerBean;
 
+    private List<String> deploymentErrors = new ArrayList<String>();
+
     private Boolean isActivated = null;
 
     @SuppressWarnings("UnusedDeclaration")
@@ -72,19 +77,26 @@ public class MessageBundleExtension implements Extension, Deactivatable
 
         if (type.isAnnotationPresent(MessageBundle.class))
         {
-            validateMessageBundle(type.getJavaClass());
-
-            messageBundleTypes.add(type);
+            if (validateMessageBundle(type.getJavaClass()))
+            {
+                messageBundleTypes.add(type);
+            }
         }
     }
 
-    private void validateMessageBundle(Class<?> currentClass)
+    /**
+     * @return <code>true</code> if all is well
+     */
+    private boolean validateMessageBundle(Class<?> currentClass)
     {
+        boolean ok = true;
+
         // sanity check: annotated class must be an Interface
         if (!currentClass.isInterface())
         {
-            throw new IllegalStateException("@MessageBundle must only be used on Interfaces, but got used on class " +
+            deploymentErrors.add("@MessageBundle must only be used on Interfaces, but got used on class " +
                     currentClass.getName());
+            return false;
         }
 
         for (Method currentMethod : currentClass.getDeclaredMethods())
@@ -101,31 +113,34 @@ public class MessageBundleExtension implements Extension, Deactivatable
 
             if (Message.class.isAssignableFrom(currentMethod.getReturnType()))
             {
-                validateMessageContextAwareMethod(currentMethod);
+                ok |= validateMessageContextAwareMethod(currentMethod);
             }
             else
             {
-                throw new IllegalStateException(
-                        currentMethod.getReturnType().getName() + " isn't supported. Details: " +
+                deploymentErrors.add(currentMethod.getReturnType().getName() + " isn't supported. Details: " +
                         currentMethod.getDeclaringClass().getName() + "#" + currentMethod.getName() +
                         " only " + String.class.getName() + " or " + Message.class.getName());
+                ok = false;
             }
         }
+
+        return ok;
     }
 
-    private void validateMessageContextAwareMethod(Method currentMethod)
+    private boolean validateMessageContextAwareMethod(Method currentMethod)
     {
         for (Class currentParameterType : currentMethod.getParameterTypes())
         {
             if (MessageContext.class.isAssignableFrom(currentParameterType))
             {
-                return;
+                return true;
             }
         }
 
-        throw new IllegalStateException("No " + MessageContext.class.getName() + " parameter found at: " +
+        deploymentErrors.add("No " + MessageContext.class.getName() + " parameter found at: " +
                 currentMethod.getDeclaringClass().getName() + "#" + currentMethod.getName() +
                 ". That is required for return-type " + Message.class.getName());
+        return false;
     }
 
     /**
@@ -181,11 +196,17 @@ public class MessageBundleExtension implements Extension, Deactivatable
     }
 
     @SuppressWarnings("UnusedDeclaration")
-    protected void installMessageBundleProducerBeans(@Observes AfterBeanDiscovery event, BeanManager beanManager)
+    protected void installMessageBundleProducerBeans(@Observes AfterBeanDiscovery abd, BeanManager beanManager)
     {
+        if (!deploymentErrors.isEmpty())
+        {
+            abd.addDefinitionError(new IllegalArgumentException("The following MessageBundle problems where found: " +
+                    Arrays.toString(deploymentErrors.toArray())));
+        }
+
         for (AnnotatedType<?> type : messageBundleTypes)
         {
-            event.addBean(createMessageBundleBean(bundleProducerBean, type, beanManager));
+            abd.addBean(createMessageBundleBean(bundleProducerBean, type, beanManager));
         }
     }
 
@@ -201,7 +222,7 @@ public class MessageBundleExtension implements Extension, Deactivatable
     }
 
     @SuppressWarnings("UnusedDeclaration")
-    protected void cleanup(@Observes AfterDeploymentValidation event)
+    protected void cleanup(@Observes AfterDeploymentValidation afterDeploymentValidation)
     {
         messageBundleTypes.clear();
     }

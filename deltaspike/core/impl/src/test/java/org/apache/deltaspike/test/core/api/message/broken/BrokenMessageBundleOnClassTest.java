@@ -26,11 +26,14 @@ import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.ShouldThrowException;
+//X import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.experimental.categories.Category;
+//X import org.junit.Test;
+//X import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertEquals;
 
@@ -72,7 +75,7 @@ public class BrokenMessageBundleOnClassTest
                         MessageBundleExtension.class);
     }
 
-    //X @Test
+    //X     @Test
     public void testSimpleMessage()
     {
         assertEquals("Welcome to DeltaSpike", messageBundle.welcomeToDeltaSpike());
