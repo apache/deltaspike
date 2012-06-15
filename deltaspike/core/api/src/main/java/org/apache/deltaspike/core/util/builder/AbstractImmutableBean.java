@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.impl.message;
+package org.apache.deltaspike.core.util.builder;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
@@ -30,7 +30,7 @@ import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.InjectionPoint;
 
 import org.apache.deltaspike.core.api.literal.DefaultLiteral;
-import org.apache.deltaspike.core.impl.util.ArraysUtils;
+import org.apache.deltaspike.core.util.ArraysUtils;
 
 /**
  * <p>

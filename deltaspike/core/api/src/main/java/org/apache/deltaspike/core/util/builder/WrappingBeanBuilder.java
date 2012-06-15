@@ -16,9 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.impl.message;
-
-import static org.apache.deltaspike.core.impl.util.ArraysUtils.asSet;
+package org.apache.deltaspike.core.util.builder;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
@@ -35,9 +33,10 @@ import javax.inject.Named;
 
 import org.apache.deltaspike.core.api.literal.AnyLiteral;
 import org.apache.deltaspike.core.api.literal.DefaultLiteral;
+import org.apache.deltaspike.core.util.ArraysUtils;
 
 //X TODO update javadoc
-class NarrowingBeanBuilder<T>
+public class WrappingBeanBuilder<T>
 {
     private final Bean<T> delegate;
     private final BeanManager beanManager;
@@ -54,12 +53,12 @@ class NarrowingBeanBuilder<T>
     private String id;
 
     /**
-     * Instantiate a new {@link NarrowingBeanBuilder}.
+     * Instantiate a new {@link WrappingBeanBuilder}.
      *
      * @param delegate    the delegate bean
      * @param beanManager current bean-manager
      */
-    NarrowingBeanBuilder(Bean<Object> delegate, BeanManager beanManager)
+    public WrappingBeanBuilder(Bean<Object> delegate, BeanManager beanManager)
     {
         this.delegate = (Bean<T>)delegate;
         this.beanManager = beanManager;
@@ -73,7 +72,7 @@ class NarrowingBeanBuilder<T>
      *
      * @param type the type to read
      */
-    public NarrowingBeanBuilder<T> readFromType(AnnotatedType<T> type)
+    public WrappingBeanBuilder<T> readFromType(AnnotatedType<T> type)
     {
         types = new HashSet<Type>(type.getTypeClosure());
         qualifiers = new HashSet<Annotation>();
@@ -126,7 +125,7 @@ class NarrowingBeanBuilder<T>
      *
      * @param types the type closure to use
      */
-    public NarrowingBeanBuilder<T> types(Set<Type> types)
+    public WrappingBeanBuilder<T> types(Set<Type> types)
     {
         this.types = types;
         return this;
@@ -137,9 +136,9 @@ class NarrowingBeanBuilder<T>
      *
      * @param types the type closure to use
      */
-    public NarrowingBeanBuilder<T> types(Type... types)
+    public WrappingBeanBuilder<T> types(Type... types)
     {
-        this.types = asSet(types);
+        this.types = ArraysUtils.asSet(types);
         return this;
     }
 
@@ -148,7 +147,7 @@ class NarrowingBeanBuilder<T>
      *
      * @param type additional type to use
      */
-    public NarrowingBeanBuilder<T> addType(Type type)
+    public WrappingBeanBuilder<T> addType(Type type)
     {
         types.add(type);
         return this;
@@ -159,9 +158,9 @@ class NarrowingBeanBuilder<T>
      *
      * @param types the additional types to use
      */
-    public NarrowingBeanBuilder<T> addTypes(Type... types)
+    public WrappingBeanBuilder<T> addTypes(Type... types)
     {
-        this.types.addAll(asSet(types));
+        this.types.addAll(ArraysUtils.asSet(types));
         return this;
     }
 
@@ -170,7 +169,7 @@ class NarrowingBeanBuilder<T>
      *
      * @param types the additional types to use
      */
-    public NarrowingBeanBuilder<T> addTypes(Collection<Type> types)
+    public WrappingBeanBuilder<T> addTypes(Collection<Type> types)
     {
         this.types.addAll(types);
         return this;
@@ -191,7 +190,7 @@ class NarrowingBeanBuilder<T>
      *
      * @param qualifiers the qualifiers to use
      */
-    public NarrowingBeanBuilder<T> qualifiers(Set<Annotation> qualifiers)
+    public WrappingBeanBuilder<T> qualifiers(Set<Annotation> qualifiers)
     {
         this.qualifiers = qualifiers;
         return this;
@@ -202,9 +201,9 @@ class NarrowingBeanBuilder<T>
      *
      * @param qualifiers the qualifiers to use
      */
-    public NarrowingBeanBuilder<T> qualifiers(Annotation... qualifiers)
+    public WrappingBeanBuilder<T> qualifiers(Annotation... qualifiers)
     {
-        this.qualifiers = asSet(qualifiers);
+        this.qualifiers = ArraysUtils.asSet(qualifiers);
         return this;
     }
 
@@ -213,7 +212,7 @@ class NarrowingBeanBuilder<T>
      *
      * @param qualifier the additional qualifier to use
      */
-    public NarrowingBeanBuilder<T> addQualifier(Annotation qualifier)
+    public WrappingBeanBuilder<T> addQualifier(Annotation qualifier)
     {
         qualifiers.add(qualifier);
         return this;
@@ -224,9 +223,9 @@ class NarrowingBeanBuilder<T>
      *
      * @param qualifiers the additional qualifiers to use
      */
-    public NarrowingBeanBuilder<T> addQualifiers(Annotation... qualifiers)
+    public WrappingBeanBuilder<T> addQualifiers(Annotation... qualifiers)
     {
-        this.qualifiers.addAll(asSet(qualifiers));
+        this.qualifiers.addAll(ArraysUtils.asSet(qualifiers));
         return this;
     }
 
@@ -235,7 +234,7 @@ class NarrowingBeanBuilder<T>
      *
      * @param qualifiers the additional qualifiers to use
      */
-    public NarrowingBeanBuilder<T> addQualifiers(
+    public WrappingBeanBuilder<T> addQualifiers(
             Collection<Annotation> qualifiers)
     {
         this.qualifiers.addAll(qualifiers);
@@ -258,7 +257,7 @@ class NarrowingBeanBuilder<T>
      * @param name the name of the bean to use or <code>null</code> if the bean
      *             should have no name
      */
-    public NarrowingBeanBuilder<T> name(String name)
+    public WrappingBeanBuilder<T> name(String name)
     {
         this.name = name;
         return this;
@@ -279,7 +278,7 @@ class NarrowingBeanBuilder<T>
      *
      * @param scope the scope to use
      */
-    public NarrowingBeanBuilder<T> scope(Class<? extends Annotation> scope)
+    public WrappingBeanBuilder<T> scope(Class<? extends Annotation> scope)
     {
         this.scope = scope;
         return this;
@@ -302,7 +301,7 @@ class NarrowingBeanBuilder<T>
      * @param alternative <code>true</code> if the created bean should be an
      *                    alternative, otherwise <code>false</code>
      */
-    public NarrowingBeanBuilder<T> alternative(boolean alternative)
+    public WrappingBeanBuilder<T> alternative(boolean alternative)
     {
         this.alternative = alternative;
         return this;
@@ -323,7 +322,7 @@ class NarrowingBeanBuilder<T>
      *
      * @param stereotypes the stereotypes to use
      */
-    public NarrowingBeanBuilder<T> stereotypes(
+    public WrappingBeanBuilder<T> stereotypes(
             Set<Class<? extends Annotation>> stereotypes)
     {
         this.stereotypes = stereotypes;
@@ -367,7 +366,7 @@ class NarrowingBeanBuilder<T>
      *
      * @param toString the string to use
      */
-    public NarrowingBeanBuilder<T> toString(String toString)
+    public WrappingBeanBuilder<T> toString(String toString)
     {
         this.toString = toString;
         return this;
@@ -390,7 +389,7 @@ class NarrowingBeanBuilder<T>
      * @param nullable <code>true</code> if the created bean should be nullable,
      *                 otherwise <code>false</code>
      */
-    public NarrowingBeanBuilder<T> nullable(boolean nullable)
+    public WrappingBeanBuilder<T> nullable(boolean nullable)
     {
         this.nullable = nullable;
         return this;
@@ -413,7 +412,7 @@ class NarrowingBeanBuilder<T>
      * @param passivationCapable <code>true</code> if the created bean should be passivation
      *                           capable, otherwise <code>false</code>
      */
-    public NarrowingBeanBuilder<T> passivationCapable(boolean passivationCapable)
+    public WrappingBeanBuilder<T> passivationCapable(boolean passivationCapable)
     {
         this.passivationCapable = passivationCapable;
         return this;
@@ -434,7 +433,7 @@ class NarrowingBeanBuilder<T>
      *
      * @param id the id to use
      */
-    public NarrowingBeanBuilder<T> id(String id)
+    public WrappingBeanBuilder<T> id(String id)
     {
         this.id = id;
         return this;

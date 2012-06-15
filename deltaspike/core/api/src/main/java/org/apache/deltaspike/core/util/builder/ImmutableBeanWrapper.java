@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.impl.message;
+package org.apache.deltaspike.core.util.builder;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
@@ -75,7 +75,7 @@ import javax.enterprise.inject.spi.Bean;
  * not specified.
  * </p>
  *
- * @see NarrowingBeanBuilder
+ * @see WrappingBeanBuilder
  */
 class ImmutableBeanWrapper<T> extends AbstractImmutableBean<T>
 {

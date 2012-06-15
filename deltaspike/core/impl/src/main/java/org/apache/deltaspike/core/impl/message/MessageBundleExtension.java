@@ -41,6 +41,7 @@ import org.apache.deltaspike.core.api.message.Message;
 import org.apache.deltaspike.core.api.message.MessageContext;
 import org.apache.deltaspike.core.api.message.annotation.MessageBundle;
 import org.apache.deltaspike.core.api.message.annotation.MessageTemplate;
+import org.apache.deltaspike.core.util.builder.WrappingBeanBuilder;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 
@@ -215,7 +216,7 @@ public class MessageBundleExtension implements Extension, Deactivatable
                                                        AnnotatedType<T> annotatedType,
                                                        BeanManager beanManager)
     {
-        return new NarrowingBeanBuilder<T>(delegate, beanManager)
+        return new WrappingBeanBuilder<T>(delegate, beanManager)
                 .readFromType(annotatedType)
                 //X TODO re-visit type.getBaseType() in combination with #addQualifier
                 .types(annotatedType.getJavaClass(), Object.class)

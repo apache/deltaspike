@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.impl.util;
+package org.apache.deltaspike.core.util;
 
 import javax.enterprise.inject.Typed;
 import java.util.Collections;
