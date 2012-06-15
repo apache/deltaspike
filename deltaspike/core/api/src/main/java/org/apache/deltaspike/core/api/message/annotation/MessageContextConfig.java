@@ -30,7 +30,8 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * Allows to customize the message-resolution and processing in combination with {@link MessageBundle}
+ * Allows to customize the message-resolution and processing
+ * in combination with {@link MessageBundle}.
  */
 @Target({ TYPE })
 @Retention(RUNTIME)

@@ -26,7 +26,10 @@ import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * Provides the message(-template) for type-safe messages
+ * <p>Provides the message(-template) for type-safe messages</p>
+ *
+ * <p>This only works on interfaces which are annotated with
+ * {@link MessageBundle}.</p>
  */
 @Target(METHOD)
 @Retention(RUNTIME)

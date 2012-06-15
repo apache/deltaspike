@@ -41,7 +41,12 @@ import org.apache.deltaspike.core.api.message.annotation.MessageTemplate;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 
-//TODO move to extension package
+/**
+ * Extension for handling {@link MessageBundle}s.
+ *
+ * @see MessageBundle
+ * @see MessageTemplate
+ */
 public class MessageBundleExtension implements Extension, Deactivatable
 {
     private final Collection<AnnotatedType<?>> messageBundleTypes = new HashSet<AnnotatedType<?>>();
@@ -50,20 +55,20 @@ public class MessageBundleExtension implements Extension, Deactivatable
     private Boolean isActivated = null;
 
     @SuppressWarnings("UnusedDeclaration")
-    protected void init(@Observes BeforeBeanDiscovery afterBeanDiscovery)
+    protected void init(@Observes BeforeBeanDiscovery beforeBeanDiscovery)
     {
         initActivation();
     }
 
     @SuppressWarnings("UnusedDeclaration")
-    protected void detectInterfaces(@Observes ProcessAnnotatedType<?> event)
+    protected void detectInterfaces(@Observes ProcessAnnotatedType<?> processAnnotatedType)
     {
         if (!isActivated)
         {
             return;
         }
 
-        AnnotatedType<?> type = event.getAnnotatedType();
+        AnnotatedType<?> type = processAnnotatedType.getAnnotatedType();
 
         if (type.isAnnotationPresent(MessageBundle.class))
         {
@@ -75,6 +80,13 @@ public class MessageBundleExtension implements Extension, Deactivatable
 
     private void validateMessageBundle(Class<?> currentClass)
     {
+        // sanity check: annotated class must be an Interface
+        if (!currentClass.isInterface())
+        {
+            throw new IllegalStateException("@MessageBundle must only be used on Interfaces, but got used on class " +
+                    currentClass.getName());
+        }
+
         for (Method currentMethod : currentClass.getDeclaredMethods())
         {
             if (!currentMethod.isAnnotationPresent(MessageTemplate.class))
@@ -116,9 +128,16 @@ public class MessageBundleExtension implements Extension, Deactivatable
                 ". That is required for return-type " + Message.class.getName());
     }
 
-    // according to the Java EE 6 javadoc (the authority according to the powers
-    // that be),
-    // this is the correct order of type parameters
+    /**
+     * Part of a workaround for very old CDI containers. The spec originally had a
+     * mismatch in the generic parameters of ProcessProducerMethod between the JavaDoc
+     * and the spec PDF.
+     *
+     * According to the Java EE 6 javadoc (the authority according to the powers
+     * that be), this is the correct order of type parameters.
+     *
+     * @see #detectProducersInverted(javax.enterprise.inject.spi.ProcessProducerMethod)
+     */
     @SuppressWarnings("UnusedDeclaration")
     protected void detectProducers(@Observes ProcessProducerMethod<Object, TypedMessageBundleProducer> event)
     {
@@ -130,8 +149,16 @@ public class MessageBundleExtension implements Extension, Deactivatable
         captureProducers(event.getAnnotatedProducerMethod(), event.getBean());
     }
 
-    // according to JSR-299 spec, this is the correct order of type parameters
-    //X TODO re-visit it
+    /**
+     * Part of a workaround for very old CDI containers. The spec originally had a
+     * mismatch in the generic parameters of ProcessProducerMethod between the JavaDoc
+     * and the spec PDF.
+     *
+     * According to the old JSR-299 spec wording, this is the correct order of type parameters.
+     * This is now fixed in the spec as of today, but old containers might still fire it!
+     *
+     * @see #detectProducersInverted(javax.enterprise.inject.spi.ProcessProducerMethod)
+     */
     @Deprecated
     @SuppressWarnings("UnusedDeclaration")
     protected void detectProducersInverted(@Observes ProcessProducerMethod<TypedMessageBundleProducer, Object> event)

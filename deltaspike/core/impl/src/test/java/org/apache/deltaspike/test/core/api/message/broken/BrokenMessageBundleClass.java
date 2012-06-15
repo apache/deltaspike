@@ -16,28 +16,28 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.api.message.annotation;
+package org.apache.deltaspike.test.core.api.message.broken;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import org.apache.deltaspike.core.api.message.Message;
+import org.apache.deltaspike.core.api.message.MessageContext;
+import org.apache.deltaspike.core.api.message.annotation.MessageBundle;
+import org.apache.deltaspike.core.api.message.annotation.MessageTemplate;
 
 /**
- * <p>Marker annotation for a message-bundle interface which provides type-safe messages
- * (methods annotated with {@link MessageTemplate}).</p>
- *
- * <p>This annotation must only be used on interfaces.
- * If this annotation gets used on a concrete class, a deployment error results!</p>
- *
- * <p>Can be combined with {@link MessageContextConfig} to customize the
- * message-resolution and processing.</p>
+ * This class is broken, as MessageBundle must only be used on Interfaces
  */
-@Target({ TYPE })
-@Retention(RUNTIME)
-@Documented
-public @interface MessageBundle
+@MessageBundle
+public class BrokenMessageBundleClass
 {
+    @MessageTemplate("Welcome to DeltaSpike")
+    String welcomeToDeltaSpike()
+    {
+        return null;
+    }
+
+    @MessageTemplate("Welcome to %s")
+    Message welcomeTo(MessageContext messageContext, String name)
+    {
+        return null;
+    }
 }
