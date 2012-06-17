@@ -19,12 +19,11 @@
 package org.apache.deltaspike.core.api.message;
 
 import java.io.Serializable;
-import java.util.Locale;
 
 /**
  * Central context for handling dynamic messages
  */
-public interface MessageContext extends Serializable
+public interface MessageContext extends LocaleResolver
 {
     /**
      * @return message builder to add and/or create a new message based on the current context via a fluent api
@@ -35,12 +34,6 @@ public interface MessageContext extends Serializable
      * @return the current config to change it or create a new one base on the current config
      */
     Config config();
-
-    /**
-     * @return the current locale or <code>null</code> if
-     *         the one from the {@link LocaleResolver} should be taken.
-     */
-    Locale getLocale();
 
     /*
      * @param messageTemplate a message which should be added to the current context (message handlers)
