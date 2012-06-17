@@ -21,6 +21,7 @@ package org.apache.deltaspike.test.core.api.message;
 import org.apache.deltaspike.core.api.message.MessageInterpolator;
 
 import javax.enterprise.context.ApplicationScoped;
+import java.util.Locale;
 
 @ApplicationScoped
 public class TestMessageInterpolator implements MessageInterpolator
@@ -28,8 +29,8 @@ public class TestMessageInterpolator implements MessageInterpolator
     private static final long serialVersionUID = 5636914399691923602L;
 
     @Override
-    public String interpolate(String messageText, Object[] arguments)
+    public String interpolate(Locale locale, String messageText, Object[] arguments)
     {
-        return String.format(messageText, arguments);
+        return String.format(locale, messageText, arguments);
     }
 }

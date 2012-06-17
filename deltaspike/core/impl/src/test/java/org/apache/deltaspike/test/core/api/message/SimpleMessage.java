@@ -33,5 +33,8 @@ public interface SimpleMessage
     Message welcomeTo(MessageContext messageContext, String name);
 
     @MessageTemplate("Welcome to %s")
-    String simpleText(String name);
+    String welcomeWithStringVariable(String name);
+
+    @MessageTemplate("Welcome to %f")
+    String welcomeWithFloatVariable(Float value);
 }

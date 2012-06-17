@@ -27,6 +27,7 @@ import javax.enterprise.inject.Typed;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * {@inheritDoc}
@@ -36,6 +37,7 @@ class DefaultMessageBuilder implements MessageContext.MessageBuilder
 {
     private String messageTemplate;
     private ArrayList<Object> argumentList;
+    private Locale locale; //X TODO this might not always get properly initialized atm!
 
     private final MessageContext messageContext;
 
@@ -47,6 +49,7 @@ class DefaultMessageBuilder implements MessageContext.MessageBuilder
     {
         reset();
         this.messageContext = new UnmodifiableMessageContext(messageContext.config().use().create() /*== clone*/);
+        this.locale = messageContext.getLocale();
     }
 
     @Override
@@ -224,7 +227,8 @@ class DefaultMessageBuilder implements MessageContext.MessageBuilder
     private String interpolateMessage(MessageInterpolator messageInterpolator,
                                       String messageTemplate, Object... arguments)
     {
-        return messageInterpolator.interpolate(getEscapedTemplate(messageTemplate), arguments);
+        Locale l = locale != null ? locale : Locale.getDefault();
+        return messageInterpolator.interpolate(l, getEscapedTemplate(messageTemplate), arguments);
     }
 
     private String getEscapedTemplate(String messageTemplate)

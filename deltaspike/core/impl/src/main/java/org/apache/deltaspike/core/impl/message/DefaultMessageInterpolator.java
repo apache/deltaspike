@@ -23,6 +23,7 @@ import org.apache.deltaspike.core.api.message.MessageInterpolator;
 
 import javax.enterprise.context.Dependent;
 import java.io.Serializable;
+import java.util.Locale;
 
 /**
  * {@inheritDoc}
@@ -34,13 +35,13 @@ public class DefaultMessageInterpolator implements MessageInterpolator, Serializ
     private static final long serialVersionUID = -8854087197813424812L;
 
     @Override
-    public String interpolate(String messageTemplate, Object... arguments)
+    public String interpolate(Locale locale, String messageTemplate, Object... arguments)
     {
         if (arguments == null || arguments.length == 0)
         {
             return messageTemplate;
         }
 
-        return String.format(messageTemplate, arguments);
+        return String.format(locale, messageTemplate, arguments);
     }
 }

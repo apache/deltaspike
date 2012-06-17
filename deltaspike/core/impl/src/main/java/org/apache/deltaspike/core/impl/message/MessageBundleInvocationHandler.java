@@ -38,8 +38,8 @@ import java.util.Locale;
 
 class MessageBundleInvocationHandler implements InvocationHandler
 {
-    private MessageInterpolator interpolator;
-    private LocaleResolver localeResolver;
+    private MessageInterpolator defaultInterpolator;
+    private LocaleResolver defaultLocaleResolver;
 
     /**
      * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object,
@@ -122,6 +122,7 @@ class MessageBundleInvocationHandler implements InvocationHandler
 
             String result = resolvedMessageTemplate;
             MessageInterpolator messageInterpolator;
+            LocaleResolver localeResolver = getDefaultLocaleResolver(); //X TODO implement lookup chain
 
             if (!MessageInterpolator.class.equals(messageInterpolatorClass))
             {
@@ -132,7 +133,7 @@ class MessageBundleInvocationHandler implements InvocationHandler
                 messageInterpolator = getDefaultMessageInterpolator();
             }
 
-            result = messageInterpolator.interpolate(resolvedMessageTemplate, args);
+            result = messageInterpolator.interpolate(localeResolver.getLocale(), resolvedMessageTemplate, args);
 
             return result;
         }
@@ -149,32 +150,32 @@ class MessageBundleInvocationHandler implements InvocationHandler
 
     private MessageInterpolator getDefaultMessageInterpolator()
     {
-        if (interpolator == null)
+        if (defaultInterpolator == null)
         {
             initDefaultConfig();
         }
-        return interpolator;
+        return defaultInterpolator;
     }
 
     private LocaleResolver getDefaultLocaleResolver()
     {
-        if (localeResolver == null)
+        if (defaultLocaleResolver == null)
         {
             initDefaultConfig();
         }
-        return localeResolver;
+        return defaultLocaleResolver;
     }
 
     /**
-     * Lazily initialize {@link #interpolator} and {@link #localeResolver}.
+     * Lazily initialize {@link #defaultInterpolator} and {@link #defaultLocaleResolver}.
      */
     private synchronized void initDefaultConfig()
     {
-        if (interpolator == null)
+        if (defaultInterpolator == null)
         {
             DefaultConfiguration defaultConfiguration = new DefaultConfigurationLiteral();
-            interpolator = BeanProvider.getContextualReference(MessageInterpolator.class, defaultConfiguration);
-            localeResolver = BeanProvider.getContextualReference(LocaleResolver.class, defaultConfiguration);
+            defaultInterpolator = BeanProvider.getContextualReference(MessageInterpolator.class, defaultConfiguration);
+            defaultLocaleResolver = BeanProvider.getContextualReference(LocaleResolver.class, defaultConfiguration);
         }
     }
 }

@@ -19,6 +19,7 @@
 package org.apache.deltaspike.core.api.message;
 
 import java.io.Serializable;
+import java.util.Locale;
 
 import org.apache.deltaspike.core.api.config.DeltaSpikeConfig;
 
@@ -30,6 +31,10 @@ import org.apache.deltaspike.core.api.config.DeltaSpikeConfig;
  * &#064;Alternative with a
  * &#064;{@link org.apache.deltaspike.core.api.config.annotation.DefaultConfiguration}
  * annotation.</p>
+ *
+ * <p>A simple implementation which uses the
+ * {@link String#format(java.util.Locale, String, Object...)}
+ * will be used by default.</p>
  */
 public interface MessageInterpolator extends Serializable, DeltaSpikeConfig
 {
@@ -37,11 +42,12 @@ public interface MessageInterpolator extends Serializable, DeltaSpikeConfig
      * replaces the arguments of the given message with the given arguments
      *
      * instead of a MessageContextAware interface. we need it to avoid expensive operations like locking or deep cloning
+     * @param locale to use for the formatting
      * @param messageText the message text which has to be interpolated
      * @param arguments a list of numbered and/or named arguments for the current message
      * @return the final (interpolated) message text
      *         if it was possible to replace the parameters with the given arguments
      *         the unmodified messageText otherwise
      */
-    String interpolate(String messageText, Object[] arguments);
+    String interpolate(Locale locale, String messageText, Object[] arguments);
 }

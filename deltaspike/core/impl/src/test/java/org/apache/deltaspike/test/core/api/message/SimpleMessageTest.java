@@ -34,6 +34,8 @@ import org.junit.runner.RunWith;
 import javax.enterprise.inject.spi.Extension;
 import javax.inject.Inject;
 
+import java.util.Locale;
+
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -71,6 +73,23 @@ public class SimpleMessageTest
     public void testSimpleMessage()
     {
         assertEquals("Welcome to DeltaSpike", simpleMessage.welcomeToDeltaSpike());
-        assertEquals("Welcome to DeltaSpike", simpleMessage.simpleText("DeltaSpike"));
+        assertEquals("Welcome to DeltaSpike", simpleMessage.welcomeWithStringVariable("DeltaSpike"));
+    }
+
+    /**
+     * This test checks if the {@link org.apache.deltaspike.core.api.message.LocaleResolver}
+     * gets properly invoked.
+     */
+    @Test
+    public void testDefaultLocaleInMessage()
+    {
+        float f = 123.45f;
+
+        // this is what the DefaultLocale uses as well
+        Locale defaultLocale = Locale.getDefault();
+
+        String expectedResult = "Welcome to " + String.format("%f", f);
+        String result = simpleMessage.welcomeWithFloatVariable(f);
+        assertEquals(expectedResult, result);
     }
 }
