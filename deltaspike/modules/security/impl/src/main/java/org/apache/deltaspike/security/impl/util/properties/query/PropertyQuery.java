@@ -112,11 +112,14 @@ public class PropertyQuery<V>
         } 
         else if (results.isEmpty()) 
         {
-            throw new RuntimeException("Expected one property match, but the criteria did not match any properties on " + targetClass.getName());
+            throw new RuntimeException(
+                    "Expected one property match, but the criteria did not match any properties on " + 
+                    targetClass.getName());
         } 
         else 
         {
-            throw new RuntimeException("Expected one property match, but the criteria matched " + results.size() + " properties on " + targetClass.getName());
+            throw new RuntimeException("Expected one property match, but the criteria matched " + results.size() + 
+                    " properties on " + targetClass.getName());
         }
     }
 
@@ -137,11 +140,14 @@ public class PropertyQuery<V>
         } 
         else if (results.isEmpty()) 
         {
-            throw new RuntimeException("Expected one property match, but the criteria did not match any properties on " + targetClass.getName());
+            throw new RuntimeException(
+                 "Expected one property match, but the criteria did not match any properties on " + 
+                 targetClass.getName());
         } 
         else 
         {
-            throw new RuntimeException("Expected one property match, but the criteria matched " + results.size() + " properties on " + targetClass.getName());
+            throw new RuntimeException("Expected one property match, but the criteria matched " + 
+                 results.size() + " properties on " + targetClass.getName());
         }
     }
 

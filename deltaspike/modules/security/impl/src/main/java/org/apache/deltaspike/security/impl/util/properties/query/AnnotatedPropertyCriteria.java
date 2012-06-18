@@ -27,18 +27,22 @@ import java.lang.reflect.Method;
  *
  * @see PropertyCriteria
  */
-public class AnnotatedPropertyCriteria implements PropertyCriteria {
+public class AnnotatedPropertyCriteria implements PropertyCriteria 
+{
     private final Class<? extends Annotation> annotationClass;
 
-    public AnnotatedPropertyCriteria(Class<? extends Annotation> annotationClass) {
+    public AnnotatedPropertyCriteria(Class<? extends Annotation> annotationClass) 
+    {
         this.annotationClass = annotationClass;
     }
 
-    public boolean fieldMatches(Field f) {
+    public boolean fieldMatches(Field f) 
+    {
         return f.isAnnotationPresent(annotationClass);
     }
 
-    public boolean methodMatches(Method m) {
+    public boolean methodMatches(Method m) 
+    {
         return m.isAnnotationPresent(annotationClass);
     }
 

@@ -40,7 +40,8 @@ import java.lang.reflect.Method;
  * @see AnnotatedPropertyCriteria
  * @see NamedPropertyCriteria
  */
-public interface PropertyCriteria {
+public interface PropertyCriteria 
+{
     /**
      * Tests whether the specified field matches the criteria
      *

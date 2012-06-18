@@ -81,7 +81,8 @@ public class Properties
         } 
         else 
         {
-            throw new IllegalArgumentException("Cannot make a property of " + member + " - it is neither a method or a field");
+            throw new IllegalArgumentException("Cannot make a property of " + 
+                member + " - it is neither a method or a field");
         }
     }
 

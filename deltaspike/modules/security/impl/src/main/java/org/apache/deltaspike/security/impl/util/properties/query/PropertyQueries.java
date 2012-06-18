@@ -23,9 +23,11 @@ package org.apache.deltaspike.security.impl.util.properties.query;
  *
  * @see PropertyQuery
  */
-public class PropertyQueries {
+public class PropertyQueries 
+{
 
-    private PropertyQueries() {
+    private PropertyQueries() 
+    {
     }
 
     /**
@@ -35,7 +37,8 @@ public class PropertyQueries {
      * @param targetClass
      * @return
      */
-    public static <V> PropertyQuery<V> createQuery(Class<?> targetClass) {
+    public static <V> PropertyQuery<V> createQuery(Class<?> targetClass) 
+    {
         return new PropertyQuery<V>(targetClass);
     }
 

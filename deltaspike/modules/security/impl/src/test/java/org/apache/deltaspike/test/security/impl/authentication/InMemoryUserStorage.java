@@ -25,8 +25,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Exclude
 class InMemoryUserStorage
-{
+{       
     private static Map<String, String> simpleUserPasswordMapping = new ConcurrentHashMap<String, String>();
+    
+    private InMemoryUserStorage() { }    
     
     static void setPassword(String userName, String password)
     {

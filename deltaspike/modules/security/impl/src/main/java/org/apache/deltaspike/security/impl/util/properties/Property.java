@@ -21,7 +21,6 @@ package org.apache.deltaspike.security.impl.util.properties;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Member;
 import java.lang.reflect.Type;
-import java.security.PrivilegedAction;
 
 /**
  * A representation of a JavaBean style property

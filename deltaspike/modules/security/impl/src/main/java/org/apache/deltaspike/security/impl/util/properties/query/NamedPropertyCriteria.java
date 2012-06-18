@@ -27,24 +27,36 @@ import java.lang.reflect.Method;
  *
  * @see PropertyCriteria
  */
-public class NamedPropertyCriteria implements PropertyCriteria {
+public class NamedPropertyCriteria implements PropertyCriteria 
+{
     private final String[] propertyNames;
 
-    public NamedPropertyCriteria(String... propertyNames) {
+    public NamedPropertyCriteria(String... propertyNames) 
+    {
         this.propertyNames = propertyNames;
     }
 
-    public boolean fieldMatches(Field f) {
-        for (String propertyName : propertyNames) {
-            if (propertyName.equals(f.getName())) return true;
+    public boolean fieldMatches(Field f) 
+    {
+        for (String propertyName : propertyNames) 
+        {
+            if (propertyName.equals(f.getName())) 
+            {
+                return true;
+            }
         }
         return false;
     }
 
-    public boolean methodMatches(Method m) {
-        for (String propertyName : propertyNames) {
+    public boolean methodMatches(Method m) 
+    {
+        for (String propertyName : propertyNames) 
+        {
             if (m.getName().startsWith("get") &&
-                    Introspector.decapitalize(m.getName().substring(3)).equals(propertyName)) return true;
+                    Introspector.decapitalize(m.getName().substring(3)).equals(propertyName)) 
+            {
+                return true;
+            }
 
         }
         return false;

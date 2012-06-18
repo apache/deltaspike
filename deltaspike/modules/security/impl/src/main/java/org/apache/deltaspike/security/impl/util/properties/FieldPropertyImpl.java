@@ -60,7 +60,8 @@ class FieldPropertyImpl<V> implements FieldProperty<V>
     }
 
     @SuppressWarnings("unchecked")
-    public Class<V> getJavaClass() {
+    public Class<V> getJavaClass() 
+    {
         return (Class<V>) field.getType();
     }
 
@@ -70,35 +71,42 @@ class FieldPropertyImpl<V> implements FieldProperty<V>
         return getFieldValue(field, instance, getJavaClass());
     }
 
-    public void setValue(Object instance, V value) {
+    public void setValue(Object instance, V value) 
+    {
         setAccessible();
         setFieldValue(true, field, instance, value);
     }
 
-    public Class<?> getDeclaringClass() {
+    public Class<?> getDeclaringClass() 
+    {
         return field.getDeclaringClass();
     }
 
-    public boolean isReadOnly() {
+    public boolean isReadOnly() 
+    {
         return false;
     }
 
-    public void setAccessible() {
+    public void setAccessible() 
+    {
         Reflections.setAccessible(field);
     }
 
     @Override
-    public String toString() {
+    public String toString() 
+    {
         return field.toString();
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode() 
+    {
         return field.hashCode();
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Object obj) 
+    {
         return field.equals(obj);
     }
 }

@@ -30,7 +30,8 @@ public class CustomAuthorizer
     @Secures
     @CustomSecurityBinding
     @SuppressWarnings("UnusedDeclaration")
-    public boolean doSecuredCheck(@MockParamBinding MockObject obj, InvocationContext invocationContext) throws Exception
+    public boolean doSecuredCheck(@MockParamBinding MockObject obj, InvocationContext invocationContext) 
+        throws Exception
     {
         return obj.isValue();
     }

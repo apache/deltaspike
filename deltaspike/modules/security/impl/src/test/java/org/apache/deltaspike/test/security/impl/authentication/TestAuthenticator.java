@@ -18,8 +18,9 @@
  */
 package org.apache.deltaspike.test.security.impl.authentication;
 
-import org.apache.deltaspike.security.api.User;
-import org.apache.deltaspike.security.api.credential.LoginCredential;
+import org.apache.deltaspike.security.api.idm.User;
+import org.apache.deltaspike.security.api.credential.LoginCredentials;
+import org.apache.deltaspike.security.impl.idm.SimpleUser;
 import org.apache.deltaspike.security.spi.authentication.BaseAuthenticator;
 
 import javax.enterprise.context.RequestScoped;
@@ -29,7 +30,7 @@ import javax.inject.Inject;
 public class TestAuthenticator extends BaseAuthenticator
 {
     @Inject
-    private LoginCredential loginCredential;
+    private LoginCredentials loginCredential;
 
     private User user;
 
@@ -41,7 +42,8 @@ public class TestAuthenticator extends BaseAuthenticator
         if (password != null && password.equals(loginCredential.getCredential().getValue()))
         {
             setStatus(AuthenticationStatus.SUCCESS);
-            user = new User(loginCredential.getUserId());
+
+            this.user = new SimpleUser(this.loginCredential.getUserId());
             return;
         }
 

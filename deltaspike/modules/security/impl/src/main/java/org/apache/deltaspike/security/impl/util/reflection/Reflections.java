@@ -70,6 +70,10 @@ public class Reflections
     public static final Type[] EMPTY_TYPES = {};
 
     public static final Class<?>[] EMPTY_CLASSES = new Class<?>[0];
+    
+    private Reflections() 
+    {
+    }    
 
     /**
      * <p>
@@ -150,7 +154,8 @@ public class Reflections
     {
         for (AnnotatedField<? super X> annotatedField : annotatedType.getFields()) 
         {
-            if (annotatedField.getDeclaringType().getJavaClass().equals(field.getDeclaringClass()) && annotatedField.getJavaMember().getName().equals(field.getName())) 
+            if (annotatedField.getDeclaringType().getJavaClass().equals(
+                    field.getDeclaringClass()) && annotatedField.getJavaMember().getName().equals(field.getName())) 
             {
                 return annotatedField;
             }
@@ -166,7 +171,8 @@ public class Reflections
      * @return The set of annotations with the specified meta annotation, or an
      *         empty set if none are found
      */
-    public static Set<Annotation> getAnnotationsWithMetaAnnotation(Set<Annotation> annotations, Class<? extends Annotation> metaAnnotationType) 
+    public static Set<Annotation> getAnnotationsWithMetaAnnotation(
+            Set<Annotation> annotations, Class<? extends Annotation> metaAnnotationType) 
     {
         Set<Annotation> set = new HashSet<Annotation>();
         for (Annotation annotation : annotations) 
@@ -366,7 +372,8 @@ public class Reflections
      */
     public static Class<?> classForName(String name, ClassLoader... loaders) throws ClassNotFoundException 
     {
-        try {
+        try 
+        {
             if (Thread.currentThread().getContextClassLoader() != null) 
             {
                 return Class.forName(name, true, Thread.currentThread().getContextClassLoader());
@@ -392,17 +399,23 @@ public class Reflections
         }
         if (Thread.currentThread().getContextClassLoader() != null) 
         {
-            throw new ClassNotFoundException("Could not load class " + name + " with the context class loader " + Thread.currentThread().getContextClassLoader().toString() + " or any of the additional ClassLoaders: " + Arrays.toString(loaders));
+            throw new ClassNotFoundException("Could not load class " + name + 
+                    " with the context class loader " + Thread.currentThread().getContextClassLoader().toString() + 
+                    " or any of the additional ClassLoaders: " + Arrays.toString(loaders));
         } 
         else 
         {
-            throw new ClassNotFoundException("Could not load class " + name + " using Class.forName or using any of the additional ClassLoaders: " + Arrays.toString(loaders));
+            throw new ClassNotFoundException("Could not load class " + name + 
+                    " using Class.forName or using any of the additional ClassLoaders: " + 
+                    Arrays.toString(loaders));
         }
     }
 
     private static String buildInvokeMethodErrorMessage(Method method, Object obj, Object... args) 
     {
-        StringBuilder message = new StringBuilder(String.format("Exception invoking method [%s] on object [%s], using arguments [", method.getName(), obj));
+        StringBuilder message = new StringBuilder(
+                String.format("Exception invoking method [%s] on object [%s], using arguments [", 
+                        method.getName(), obj));
         if (args != null)
         {
             for (int i = 0; i < args.length; i++)
@@ -534,7 +547,8 @@ public class Reflections
      *                                     method fails.
      * @see Method#invoke(Object, Object...)
      */
-    public static <T> T invokeMethod(boolean setAccessible, Method method, Class<T> expectedReturnType, Object instance, Object... args) 
+    public static <T> T invokeMethod(boolean setAccessible, Method method, 
+            Class<T> expectedReturnType, Object instance, Object... args) 
     {
         if (setAccessible && !method.isAccessible()) 
         {
@@ -565,7 +579,8 @@ public class Reflections
         } 
         catch (ExceptionInInitializerError e) 
         {
-            ExceptionInInitializerError e2 = new ExceptionInInitializerError(buildInvokeMethodErrorMessage(method, instance, args));
+            ExceptionInInitializerError e2 = new ExceptionInInitializerError(
+                    buildInvokeMethodErrorMessage(method, instance, args));
             e2.initCause(e.getCause());
             throw e2;
         }
@@ -638,7 +653,8 @@ public class Reflections
         } 
         catch (ExceptionInInitializerError e) 
         {
-            ExceptionInInitializerError e2 = new ExceptionInInitializerError(buildSetFieldValueErrorMessage(field, instance, value));
+            ExceptionInInitializerError e2 = new ExceptionInInitializerError(
+                    buildSetFieldValueErrorMessage(field, instance, value));
             e2.initCause(e.getCause());
             throw e2;
         }
@@ -702,7 +718,8 @@ public class Reflections
         } 
         catch (ExceptionInInitializerError e) 
         {
-            ExceptionInInitializerError e2 = new ExceptionInInitializerError(buildGetFieldValueErrorMessage(field, instance));
+            ExceptionInInitializerError e2 = new ExceptionInInitializerError(
+                    buildGetFieldValueErrorMessage(field, instance));
             e2.initCause(e.getCause());
             throw e2;
         }
@@ -1054,14 +1071,18 @@ public class Reflections
      *                             empty array if not a parameterized type
      * @return
      */
-    public static boolean isAssignableFrom(Class<?> rawType1, Type[] actualTypeArguments1, Class<?> rawType2, Type[] actualTypeArguments2) 
+    public static boolean isAssignableFrom(Class<?> rawType1, Type[] actualTypeArguments1, 
+            Class<?> rawType2, Type[] actualTypeArguments2) 
     {
-        return Types.boxedClass(rawType1).isAssignableFrom(Types.boxedClass(rawType2)) && isAssignableFrom(actualTypeArguments1, actualTypeArguments2);
+        return Types.boxedClass(rawType1).isAssignableFrom(Types.boxedClass(rawType2)) && 
+                isAssignableFrom(actualTypeArguments1, actualTypeArguments2);
     }
 
-    public static boolean matches(Class<?> rawType1, Type[] actualTypeArguments1, Class<?> rawType2, Type[] actualTypeArguments2) 
+    public static boolean matches(Class<?> rawType1, Type[] actualTypeArguments1, 
+            Class<?> rawType2, Type[] actualTypeArguments2) 
     {
-        return Types.boxedClass(rawType1).equals(Types.boxedClass(rawType2)) && isAssignableFrom(actualTypeArguments1, actualTypeArguments2);
+        return Types.boxedClass(rawType1).equals(Types.boxedClass(rawType2)) && 
+                isAssignableFrom(actualTypeArguments1, actualTypeArguments2);
     }
 
     public static boolean isAssignableFrom(Type[] actualTypeArguments1, Type[] actualTypeArguments2) 
@@ -1133,7 +1154,8 @@ public class Reflections
             ParameterizedType parameterizedType1 = (ParameterizedType) type1;
             if (parameterizedType1.getRawType() instanceof Class<?>) 
             {
-                if (isAssignableFrom((Class<?>) parameterizedType1.getRawType(), parameterizedType1.getActualTypeArguments(), type2)) 
+                if (isAssignableFrom((Class<?>) parameterizedType1.getRawType(), 
+                        parameterizedType1.getActualTypeArguments(), type2)) 
                 {
                     return true;
                 }
@@ -1147,7 +1169,8 @@ public class Reflections
                 return true;
             }
         }
-        if (type2 instanceof WildcardType) {
+        if (type2 instanceof WildcardType) 
+        {
             WildcardType wildcardType = (WildcardType) type2;
             if (isTypeBounded(type1, wildcardType.getUpperBounds(), wildcardType.getLowerBounds())) 
             {
@@ -1188,7 +1211,8 @@ public class Reflections
             ParameterizedType parameterizedType1 = (ParameterizedType) type1;
             if (parameterizedType1.getRawType() instanceof Class<?>) 
             {
-                if (matches((Class<?>) parameterizedType1.getRawType(), parameterizedType1.getActualTypeArguments(), type2)) 
+                if (matches((Class<?>) parameterizedType1.getRawType(), 
+                        parameterizedType1.getActualTypeArguments(), type2)) 
                 {
                     return true;
                 }
@@ -1346,7 +1370,7 @@ public class Reflections
     }
 
     /**
-     * Check the assiginability of a set of <b>flattened</b> types. This
+     * Check the assignability of a set of <b>flattened</b> types. This
      * algorithm will check whether any of the types1 matches a type in types2
      *
      * @param types1
@@ -1383,9 +1407,5 @@ public class Reflections
         return rawType == null ? false : rawType.isPrimitive();
     }
 
-
-    private Reflections() 
-    {
-    }
 
 }

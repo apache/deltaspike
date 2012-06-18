@@ -20,7 +20,7 @@ package org.apache.deltaspike.test.security.impl.authentication;
 
 import org.apache.deltaspike.security.api.Identity;
 import org.apache.deltaspike.security.api.credential.Credential;
-import org.apache.deltaspike.security.api.credential.LoginCredential;
+import org.apache.deltaspike.security.api.credential.LoginCredentials;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -29,7 +29,7 @@ import javax.inject.Inject;
 public class ShopClient
 {
     @Inject
-    private LoginCredential loginCredential;
+    private LoginCredentials loginCredential;
 
     @Inject
     private Identity identity;

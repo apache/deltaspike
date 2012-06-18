@@ -22,7 +22,7 @@ import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.impl.exclude.extension.ExcludeExtension;
 import org.apache.deltaspike.security.api.Identity;
 import org.apache.deltaspike.security.api.authentication.UnexpectedCredentialException;
-import org.apache.deltaspike.security.api.credential.LoginCredential;
+import org.apache.deltaspike.security.api.credential.LoginCredentials;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -138,7 +138,7 @@ public class LoginLogoutTest
         Assert.assertEquals(userName, identity.getUser().getId());
 
         //X TODO stop and start new request via ContextControl - instead of:
-        BeanProvider.getContextualReference(LoginCredential.class).invalidate();
+        BeanProvider.getContextualReference(LoginCredentials.class).invalidate();
 
         try
         {

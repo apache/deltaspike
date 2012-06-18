@@ -54,11 +54,13 @@ class MethodPropertyImpl<V> implements MethodProperty<V>
         {
             if (method.getReturnType() == Void.TYPE) 
             {
-                throw new IllegalArgumentException("Invalid accessor method, must have return value if starts with 'get'. Method: " + method);
+                throw new IllegalArgumentException(
+                        "Invalid accessor method, must have return value if starts with 'get'. Method: " + method);
             } 
             else if (method.getParameterTypes().length > 0) 
             {
-                throw new IllegalArgumentException("Invalid accessor method, must have zero arguments if starts with 'get'. Method: " + method);
+                throw new IllegalArgumentException(
+                        "Invalid accessor method, must have zero arguments if starts with 'get'. Method: " + method);
             }
             propertyNameInAccessorMethod = method.getName().substring(GETTER_METHOD_PREFIX_LENGTH);
             accessorMethodPrefix = GETTER_METHOD_PREFIX;
@@ -67,11 +69,13 @@ class MethodPropertyImpl<V> implements MethodProperty<V>
         {
             if (method.getReturnType() != Void.TYPE) 
             {
-                throw new IllegalArgumentException("Invalid accessor method, must not have return value if starts with 'set'. Method: " + method);
+                throw new IllegalArgumentException(
+                        "Invalid accessor method, must not have return value if starts with 'set'. Method: " + method);
             } 
             else if (method.getParameterTypes().length != 1) 
             {
-                throw new IllegalArgumentException("Invalid accessor method, must have one argument if starts with 'set'. Method: " + method);
+                throw new IllegalArgumentException(
+                        "Invalid accessor method, must have one argument if starts with 'set'. Method: " + method);
             }
             propertyNameInAccessorMethod = method.getName().substring(SETTER_METHOD_PREFIX_LENGTH);
             accessorMethodPrefix = SETTER_METHOD_PREFIX;
@@ -80,17 +84,21 @@ class MethodPropertyImpl<V> implements MethodProperty<V>
         {
             if (method.getReturnType() != Boolean.TYPE || !method.getReturnType().isPrimitive()) 
             {
-                throw new IllegalArgumentException("Invalid accessor method, must return boolean primitive if starts with 'is'. Method: " + method);
+                throw new IllegalArgumentException(
+                        "Invalid accessor method, must return boolean primitive if starts with 'is'. Method: " + 
+                         method);
             }
             propertyNameInAccessorMethod = method.getName().substring(BOOLEAN_GETTER_METHOD_PREFIX_LENGTH);
             accessorMethodPrefix = BOOLEAN_GETTER_METHOD_PREFIX;
         } 
         else 
         {
-            throw new IllegalArgumentException("Invalid accessor method, must start with 'get', 'set' or 'is'.  " + "Method: " + method);
+            throw new IllegalArgumentException(
+                    "Invalid accessor method, must start with 'get', 'set' or 'is'.  " + "Method: " + method);
         }
         
-        if (propertyNameInAccessorMethod.length() == 0 || !Character.isUpperCase(propertyNameInAccessorMethod.charAt(0))) 
+        if (propertyNameInAccessorMethod.length() == 0 || 
+                !Character.isUpperCase(propertyNameInAccessorMethod.charAt(0))) 
         {
             throw new IllegalArgumentException("Invalid accessor method, prefix '" + accessorMethodPrefix +
                     "' must be followed a non-empty property name, capitalized. Method: " + method);
@@ -127,18 +135,24 @@ class MethodPropertyImpl<V> implements MethodProperty<V>
         return getterMethod;
     }
 
-	public V getValue(Object instance) 
-	{
-        if (getterMethod == null) {
-            throw new UnsupportedOperationException("Property " + this.setterMethod.getDeclaringClass() + "." + propertyName + " cannot be read, as there is no getter method.");
+    public V getValue(Object instance) 
+    {
+        if (getterMethod == null) 
+        {
+            throw new UnsupportedOperationException("Property " + 
+                this.setterMethod.getDeclaringClass() + "." + propertyName + 
+                " cannot be read, as there is no getter method.");
         }
         return Reflections.cast(invokeMethod(getterMethod, instance));
     }
 
     public void setValue(Object instance, V value) 
     {
-        if (setterMethod == null) {
-            throw new UnsupportedOperationException("Property " + this.getterMethod.getDeclaringClass() + "." + propertyName + " is read only, as there is no setter method.");
+        if (setterMethod == null) 
+        {
+            throw new UnsupportedOperationException("Property " + 
+                this.getterMethod.getDeclaringClass() + "." + propertyName + 
+                " is read only, as there is no setter method.");
         }
         invokeMethod(setterMethod, instance, value);
     }
@@ -176,7 +190,8 @@ class MethodPropertyImpl<V> implements MethodProperty<V>
                 } 
                 else if (methodName.startsWith(BOOLEAN_GETTER_METHOD_PREFIX)) 
                 {
-                    if (Introspector.decapitalize(methodName.substring(BOOLEAN_GETTER_METHOD_PREFIX_LENGTH)).equals(name)) 
+                    if (Introspector.decapitalize(
+                            methodName.substring(BOOLEAN_GETTER_METHOD_PREFIX_LENGTH)).equals(name)) 
                     {
                         return method;
                     }
@@ -238,7 +253,8 @@ class MethodPropertyImpl<V> implements MethodProperty<V>
             if (this.setterMethod == null) 
             {
                 return that.setterMethod == null && this.getterMethod.equals(that.getterMethod);
-            } else 
+            } 
+            else 
             {
                 return this.setterMethod.equals(that.setterMethod) && this.getterMethod.equals(that.getterMethod);
             }

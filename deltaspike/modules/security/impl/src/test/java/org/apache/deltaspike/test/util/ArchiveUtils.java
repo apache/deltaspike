@@ -27,6 +27,8 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
  */
 public class ArchiveUtils
 {
+    private ArchiveUtils() { }
+    
     public static JavaArchive[] getDeltaSpikeCoreAndSecurityArchive()
     {
         //X TODO remove this workaround - lightguard.jp We don't need the work around, we have to have the META-INF/beans.xml for all containers
