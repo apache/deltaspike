@@ -242,7 +242,16 @@ public class AnnotationInstanceProviderTest
         String testAnnotationToString = testAnnotation.toString();
 
         assertTrue(testAnnotationToString.startsWith("@org.apache.deltaspike.test.api.util.metadata.TestAnnotation("));
-        assertTrue(testAnnotationToString.contains("type=class java.lang.Object,booleanValue=false,byteValue=0"));
+        //assertTrue(testAnnotationToString.contains("type=class java.lang.Object,booleanValue=false,byteValue=0"));
+        // Order depends on the JVM (Sun, Oracle JRockit, ...)
+        for (String key : memberValues.keySet()) {
+            assertTrue(testAnnotationToString.contains(key+"="));
+        }
+
+        assertTrue(testAnnotationToString.contains("type=class java.lang.Object"));
+        assertTrue(testAnnotationToString.contains("booleanValue=false"));
+        assertTrue(testAnnotationToString.contains("byteValue=0"));
+        // End changed test
         assertTrue(testAnnotationToString.contains("nest=@org.apache.deltaspike.test.api.util.metadata.NestAnnotation"));
         assertTrue(testAnnotationToString.endsWith(")"));
     }
