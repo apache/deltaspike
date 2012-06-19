@@ -28,7 +28,8 @@ class InMemoryUserStorage
 {       
     private static Map<String, String> simpleUserPasswordMapping = new ConcurrentHashMap<String, String>();
     
-    private InMemoryUserStorage() { }    
+    private InMemoryUserStorage() 
+    { }    
     
     static void setPassword(String userName, String password)
     {

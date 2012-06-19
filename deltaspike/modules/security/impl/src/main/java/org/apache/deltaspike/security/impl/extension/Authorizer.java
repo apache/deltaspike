@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.security.impl.authorization;
+package org.apache.deltaspike.security.impl.extension;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
@@ -40,6 +40,8 @@ import org.apache.deltaspike.security.api.authorization.AccessDeniedException;
 import org.apache.deltaspike.security.api.authorization.SecurityDefinitionException;
 import org.apache.deltaspike.security.api.authorization.SecurityViolation;
 import org.apache.deltaspike.security.api.authorization.annotation.SecurityBindingType;
+import org.apache.deltaspike.security.impl.authorization.SecurityParameterValueRedefiner;
+import org.apache.deltaspike.security.impl.util.SecurityUtils;
 
 /**
  * Responsible for authorizing method invocations.

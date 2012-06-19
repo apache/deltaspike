@@ -48,6 +48,7 @@ public class SecurityBindingTest
 //                .addAsLibraries(testJar)
 //                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
 
+
         return ShrinkWrap.create(WebArchive.class, "security-binding-test.war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndSecurityArchive())
                 .addPackage(SecurityBindingTest.class.getPackage())

@@ -27,7 +27,8 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
  */
 public class ArchiveUtils
 {
-    private ArchiveUtils() { }
+    private ArchiveUtils() 
+    { }
     
     public static JavaArchive[] getDeltaSpikeCoreAndSecurityArchive()
     {

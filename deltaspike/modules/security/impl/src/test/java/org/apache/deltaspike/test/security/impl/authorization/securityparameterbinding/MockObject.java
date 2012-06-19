@@ -21,21 +21,20 @@ package org.apache.deltaspike.test.security.impl.authorization.securityparameter
 public class MockObject
 {
 
-   private boolean value;
+    private boolean value;
 
-   public MockObject(boolean value)
-   {
-      this.value = value;
-   }
+    public MockObject(boolean value)
+    {
+        this.value = value;
+    }
 
-   public boolean isValue()
-   {
-      return value;
-   }
+    public boolean isValue()
+    {
+        return value;
+    }
 
-   public void setValue(boolean value)
-   {
-      this.value = value;
-   }
-   
+    public void setValue(boolean value)
+    {
+        this.value = value;
+    }
 }

@@ -40,6 +40,7 @@ public class SecuredAnnotationTest
     public static WebArchive deploy()
     {
         return ShrinkWrap.create(WebArchive.class, "secured-annotation-test.war")
+
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndSecurityArchive())
                 .addPackage("org.apache.deltaspike.test.security.impl.authorization.secured")
                 .addAsWebInfResource(ArchiveUtils.getBeansXml(), "beans.xml");

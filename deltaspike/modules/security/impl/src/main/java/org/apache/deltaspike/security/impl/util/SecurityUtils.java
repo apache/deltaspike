@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.security.impl.authorization;
+package org.apache.deltaspike.security.impl.util;
 
 import org.apache.deltaspike.security.api.authorization.annotation.SecurityBindingType;
 
@@ -27,14 +27,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Typed()
-abstract class SecurityUtils
+public abstract class SecurityUtils
 {
     private SecurityUtils()
     {
         // prevent instantiation
     }
 
-    static boolean isMetaAnnotatedWithSecurityBindingType(Annotation annotation)
+    public static boolean isMetaAnnotatedWithSecurityBindingType(Annotation annotation)
     {
         if (annotation.annotationType().isAnnotationPresent(SecurityBindingType.class))
         {
@@ -53,7 +53,7 @@ abstract class SecurityUtils
         return false;
     }
 
-    static Annotation resolveSecurityBindingType(Annotation annotation)
+    public static Annotation resolveSecurityBindingType(Annotation annotation)
     {
         List<Annotation> result = getAllAnnotations(annotation.annotationType().getAnnotations());
 
@@ -68,7 +68,7 @@ abstract class SecurityUtils
                 " but it isn't annotated with " + SecurityBindingType.class.getName());
     }
 
-    static List<Annotation> getAllAnnotations(Annotation[] annotations)
+    public static List<Annotation> getAllAnnotations(Annotation[] annotations)
     {
         List<Annotation> result = new ArrayList<Annotation>();
 

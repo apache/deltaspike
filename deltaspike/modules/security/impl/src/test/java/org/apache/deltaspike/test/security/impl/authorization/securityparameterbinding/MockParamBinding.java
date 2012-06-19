@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
 import org.apache.deltaspike.security.api.authorization.annotation.SecurityParameterBinding;
 
 @Retention(value = RUNTIME)
-@Target({PARAMETER})
+@Target({ PARAMETER })
 
 @Documented
 

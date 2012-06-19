@@ -25,11 +25,7 @@ import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.security.api.authorization.SecurityDefinitionException;
 import org.apache.deltaspike.security.api.authorization.annotation.Secures;
-import org.apache.deltaspike.security.impl.authorization.Authorizer;
-import org.apache.deltaspike.security.impl.authorization.SecurityInterceptorBinding;
-import org.apache.deltaspike.security.impl.authorization.SecurityInterceptorBindingLiteral;
-import org.apache.deltaspike.security.impl.authorization.SecurityMetaDataStorage;
-import org.apache.deltaspike.security.impl.authorization.SecurityUtils;
+import org.apache.deltaspike.security.impl.util.SecurityUtils;
 import org.apache.deltaspike.security.spi.authentication.Authenticator;
 
 import javax.enterprise.event.Observes;
@@ -50,7 +46,6 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Extension for processing typesafe security annotations
  */
-//TODO move to extension package
 public class SecurityExtension implements Extension, Deactivatable
 {
     private static final SecurityInterceptorBinding INTERCEPTOR_BINDING = new SecurityInterceptorBindingLiteral();

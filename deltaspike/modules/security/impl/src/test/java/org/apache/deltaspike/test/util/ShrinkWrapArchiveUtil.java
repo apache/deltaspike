@@ -43,6 +43,10 @@ import java.util.zip.ZipEntry;
 public class ShrinkWrapArchiveUtil
 {
     private static final Logger LOG = Logger.getLogger(ShrinkWrapArchiveUtil.class.getName());
+    
+    private ShrinkWrapArchiveUtil()
+    { }
+    
     /**
      * Resolve all markerFiles from the current ClassPath and package the root nodes
      * into a JavaArchive.

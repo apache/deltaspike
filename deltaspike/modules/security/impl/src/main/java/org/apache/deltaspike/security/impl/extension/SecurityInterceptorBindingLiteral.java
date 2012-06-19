@@ -18,22 +18,16 @@
  */
 
 
-package org.apache.deltaspike.security.impl.authorization;
+package org.apache.deltaspike.security.impl.extension;
 
-import javax.interceptor.InterceptorBinding;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import javax.enterprise.util.AnnotationLiteral;
+
 
 /**
- * Interceptor binding type for SecurityInterceptor.  Users should not apply
- * this binding themselves, it is applied by the security portable extension.
+ * Annotation literal for SecurityInterceptorBinding 
  */
-@Retention(RetentionPolicy.RUNTIME)
-@InterceptorBinding
-@Target({ElementType.TYPE, ElementType.METHOD })
-@interface SecurityInterceptorBinding 
+class SecurityInterceptorBindingLiteral extends AnnotationLiteral<SecurityInterceptorBinding> 
+    implements SecurityInterceptorBinding
 {
-
+    private static final long serialVersionUID = 2189092542638784524L;
 }

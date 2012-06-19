@@ -16,9 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.security.impl.authorization;
+package org.apache.deltaspike.security.impl.extension;
 
 import org.apache.deltaspike.security.api.authorization.SecurityDefinitionException;
+import org.apache.deltaspike.security.impl.util.SecurityUtils;
 
 import javax.enterprise.inject.spi.AnnotatedType;
 import java.lang.annotation.Annotation;
