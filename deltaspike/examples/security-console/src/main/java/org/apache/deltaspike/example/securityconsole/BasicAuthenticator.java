@@ -2,21 +2,21 @@ package org.apache.deltaspike.example.securityconsole;
 
 import javax.inject.Inject;
 
-import org.apache.deltaspike.security.api.User;
-import org.apache.deltaspike.security.api.credential.LoginCredential;
+import org.apache.deltaspike.security.api.credential.LoginCredentials;
+import org.apache.deltaspike.security.impl.idm.SimpleUser;
 import org.apache.deltaspike.security.spi.authentication.BaseAuthenticator;
 
 public class BasicAuthenticator extends BaseAuthenticator 
 {
     @Inject 
-    private LoginCredential loginCredential;
+    private LoginCredentials credentials;
 
     public void authenticate() 
     {
-        if ("shane".equals(loginCredential.getUserId()) &&
-                "password".equals(loginCredential.getCredential().getValue()))
+        if ("shane".equals(credentials.getUserId()) &&
+                "password".equals(credentials.getCredential().getValue()))
         {
-            setUser(new User("shane"));
+            setUser(new SimpleUser("shane"));
             setStatus(AuthenticationStatus.SUCCESS);
         }
     }

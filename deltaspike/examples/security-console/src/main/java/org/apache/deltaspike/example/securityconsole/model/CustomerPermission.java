@@ -8,11 +8,11 @@ import javax.persistence.Id;
 
 import org.apache.deltaspike.security.api.permission.annotations.ACLStore;
 
-@ACLStore
+@ACLStore(Customer.class)
 @Entity
-public class ObjectPermission implements Serializable 
+public class CustomerPermission implements Serializable
 {
-    private static final long serialVersionUID = 2386489292457994509L;
+    private static final long serialVersionUID = 372174826909042844L;
     
     @Id @GeneratedValue
     private Long id;
@@ -26,4 +26,5 @@ public class ObjectPermission implements Serializable
     {
         this.id = id;
     }
+
 }
