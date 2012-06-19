@@ -62,21 +62,26 @@ public class ShrinkWrapArchiveUtil
                                             String[] includeIfPackageExists,
                                             String[] excludeIfPackageExists)
     {
-        if (classLoader == null) {
+        if (classLoader == null) 
+        {
             classLoader = ShrinkWrapArchiveUtil.class.getClassLoader();
         }
 
-        try {
+        try 
+        {
             Enumeration<URL> foundFiles = classLoader.getResources(markerFile);
 
             List<JavaArchive> archives = new ArrayList<JavaArchive>();
 
-            while (foundFiles.hasMoreElements()) {
+            while (foundFiles.hasMoreElements()) 
+            {
                 URL foundFile = foundFiles.nextElement();
                 LOG.fine("Evaluating Java ClassPath URL " + foundFile.toExternalForm());
 
-                JavaArchive archive = createArchive(foundFile, markerFile, includeIfPackageExists, excludeIfPackageExists);
-                if (archive != null) {
+                JavaArchive archive = createArchive(foundFile, markerFile, includeIfPackageExists, 
+                        excludeIfPackageExists);
+                if (archive != null) 
+                {
                     LOG.info("Adding Java ClassPath URL as JavaArchive " + foundFile.toExternalForm());
                     archives.add(archive);
                 }
@@ -84,7 +89,8 @@ public class ShrinkWrapArchiveUtil
 
             return archives.toArray(new JavaArchive[archives.size()]);
         }
-        catch (IOException ioe) {
+        catch (IOException ioe) 
+        {
             throw new RuntimeException(ioe);
         }
 
@@ -92,7 +98,8 @@ public class ShrinkWrapArchiveUtil
 
     private static JavaArchive createArchive(URL foundFile, String markerFile,
                                              String[] includeIfPackageExists, String[] excludeIfPackageExists)
-            throws IOException {
+        throws IOException 
+    {
         String urlString = foundFile.toString();
         int idx = urlString.lastIndexOf(markerFile);
         urlString = urlString.substring(0, idx);
@@ -100,13 +107,15 @@ public class ShrinkWrapArchiveUtil
         String jarUrlPath = isJarUrl(urlString);
         if (jarUrlPath != null)
         {
-            final JavaArchive foundJar = ShrinkWrap.createFromZipFile(JavaArchive.class, new File(URI.create(jarUrlPath)));
+            final JavaArchive foundJar = ShrinkWrap.createFromZipFile(JavaArchive.class, 
+                    new File(URI.create(jarUrlPath)));
 
             if (excludeIfPackageExists != null)
             {
                 for (String excludePackage : excludeIfPackageExists)
                 {
-                    if (foundJar.contains(excludePackage.replaceAll("\\.", "\\/"))) {
+                    if (foundJar.contains(excludePackage.replaceAll("\\.", "\\/"))) 
+                    {
                         return null;
                     }
                 }
@@ -180,7 +189,8 @@ public class ShrinkWrapArchiveUtil
 
                 if (entryName.endsWith(".class")) 
                 {
-                    String className = pathToClassName(entryName.substring(0, entryName.length()-(".class".length())));
+                    String className = pathToClassName(
+                            entryName.substring(0, entryName.length() - (".class".length())));
                     javaArchive.addClass(className);
                 }
                 else 
@@ -207,7 +217,7 @@ public class ShrinkWrapArchiveUtil
     private static JavaArchive addFileArchive(File archiveBasePath,
                                               String[] includeIfPackageExists,
                                               String[] excludeIfPackageExists)
-            throws IOException 
+        throws IOException 
     {
         if (!archiveBasePath.exists()) 
         {
@@ -243,7 +253,7 @@ public class ShrinkWrapArchiveUtil
 
             if (entryName.endsWith(".class")) 
             {
-                String className = pathToClassName(entryName.substring(0, entryName.length()-(".class".length())));
+                String className = pathToClassName(entryName.substring(0, entryName.length() - (".class".length())));
 
                 javaArchive.addClass(className);
             }
@@ -340,7 +350,7 @@ public class ShrinkWrapArchiveUtil
     private static String ensureCorrectUrlFormat(String url) 
     {
         //fix for wls
-        if(!url.startsWith("file:/")) 
+        if (!url.startsWith("file:/")) 
         {
             url = "file:/" + url;
         }
@@ -351,6 +361,4 @@ public class ShrinkWrapArchiveUtil
     {
         return pathName.replace('/', '.').replace('\\', '.');   // replace unix and windows separators
     }
-
-
 }
