@@ -38,5 +38,9 @@ import java.lang.annotation.Target;
 @Documented
 public @interface ACLStore
 {
-    Class<?> value();
+    Class<?> value() default GENERAL.class;
+    
+    // Dummy class to enable the entity bean for general storage of ACL permissions
+    static final class GENERAL 
+    { }
 }
