@@ -58,7 +58,7 @@ public class ArchiveUtils
         Asset beansXml = new StringAsset(
             "<beans>" +
                 "<interceptors>" +
-                    "<class>org.apache.deltaspike.security.impl.authorization.SecurityInterceptor</class>" +
+                    "<class>org.apache.deltaspike.security.impl.extension.SecurityInterceptor</class>" +
                 "</interceptors>" +
             "</beans>"
         );
