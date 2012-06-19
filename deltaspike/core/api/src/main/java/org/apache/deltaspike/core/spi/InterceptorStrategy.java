@@ -22,7 +22,8 @@ import javax.interceptor.InvocationContext;
 import java.io.Serializable;
 
 /**
- * Base interface for all interceptor strategies which allow to provide custom implementations for CODI interceptors.
+ * Base interface for all interceptor strategies which allow to provide
+ * custom implementations for DeltaSpike interceptors.
  */
 public interface InterceptorStrategy extends Serializable
 {
