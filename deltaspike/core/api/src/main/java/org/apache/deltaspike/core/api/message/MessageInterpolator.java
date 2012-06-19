@@ -42,12 +42,12 @@ public interface MessageInterpolator extends Serializable, DeltaSpikeConfig
      * replaces the arguments of the given message with the given arguments
      *
      * instead of a MessageContextAware interface. we need it to avoid expensive operations like locking or deep cloning
-     * @param locale to use for the formatting
      * @param messageText the message text which has to be interpolated
      * @param arguments a list of numbered and/or named arguments for the current message
+     * @param locale to use for the formatting
      * @return the final (interpolated) message text
      *         if it was possible to replace the parameters with the given arguments
      *         the unmodified messageText otherwise
      */
-    String interpolate(Locale locale, String messageText, Object[] arguments);
+    String interpolate(String messageText, Object[] arguments, Locale locale);
 }

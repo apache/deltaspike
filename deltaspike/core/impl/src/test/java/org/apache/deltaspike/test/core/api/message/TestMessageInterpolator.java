@@ -29,8 +29,8 @@ public class TestMessageInterpolator implements MessageInterpolator
     private static final long serialVersionUID = 5636914399691923602L;
 
     @Override
-    public String interpolate(Locale locale, String messageText, Object[] arguments)
+    public String interpolate(String messageTemplate, Object[] arguments, Locale locale)
     {
-        return String.format(locale, messageText, arguments);
+        return String.format(locale, messageTemplate, arguments);
     }
 }
