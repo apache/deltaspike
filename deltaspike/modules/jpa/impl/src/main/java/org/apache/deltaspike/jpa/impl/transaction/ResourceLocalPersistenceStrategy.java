@@ -259,7 +259,6 @@ public class ResourceLocalPersistenceStrategy implements PersistenceStrategy
      */
     protected Exception prepareException(Exception e)
     {
-        //TODO integrate with the exception-handler provided by ds-core
         return e;
     }
 
