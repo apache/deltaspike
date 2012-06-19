@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.deltaspike.security.impl.authorization;
+package org.apache.deltaspike.security.impl.extension;
 
 import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
@@ -25,6 +25,11 @@ import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.security.api.authorization.SecurityDefinitionException;
 import org.apache.deltaspike.security.api.authorization.annotation.Secures;
+import org.apache.deltaspike.security.impl.authorization.Authorizer;
+import org.apache.deltaspike.security.impl.authorization.SecurityInterceptorBinding;
+import org.apache.deltaspike.security.impl.authorization.SecurityInterceptorBindingLiteral;
+import org.apache.deltaspike.security.impl.authorization.SecurityMetaDataStorage;
+import org.apache.deltaspike.security.impl.authorization.SecurityUtils;
 import org.apache.deltaspike.security.spi.authentication.Authenticator;
 
 import javax.enterprise.event.Observes;

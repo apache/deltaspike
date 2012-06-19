@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.security.impl.authorization;
 
+import org.apache.deltaspike.security.impl.extension.SecurityExtension;
 import org.apache.deltaspike.security.spi.authorization.SecurityStrategy;
 
 import javax.enterprise.context.Dependent;
