@@ -3,7 +3,7 @@ package org.apache.deltaspike.example.securityconsole;
 import javax.inject.Inject;
 
 import org.apache.deltaspike.security.api.credential.LoginCredentials;
-import org.apache.deltaspike.security.impl.idm.SimpleUser;
+import org.apache.deltaspike.security.api.idm.SimpleUser;
 import org.apache.deltaspike.security.spi.authentication.BaseAuthenticator;
 
 public class BasicAuthenticator extends BaseAuthenticator 
