@@ -18,6 +18,12 @@
  */
 package org.apache.deltaspike.core.impl.message;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
 import org.apache.deltaspike.core.api.config.annotation.DefaultConfiguration;
 import org.apache.deltaspike.core.api.literal.DefaultConfigurationLiteral;
 import org.apache.deltaspike.core.api.literal.MessageContextConfigLiteral;
@@ -29,12 +35,6 @@ import org.apache.deltaspike.core.api.message.annotation.MessageContextConfig;
 import org.apache.deltaspike.core.api.message.annotation.MessageTemplate;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.ClassUtils;
-
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
 class MessageBundleInvocationHandler implements InvocationHandler
 {
@@ -133,7 +133,7 @@ class MessageBundleInvocationHandler implements InvocationHandler
                 messageInterpolator = getDefaultMessageInterpolator();
             }
 
-            result = messageInterpolator.interpolate(localeResolver.getLocale(), resolvedMessageTemplate, args);
+            result = messageInterpolator.interpolate(resolvedMessageTemplate, args, localeResolver.getLocale());
 
             return result;
         }
