@@ -54,7 +54,7 @@ public class ExcludeTestProjectStageDevelopment
         return ShrinkWrap.create(WebArchive.class, "excludeProjectStageDevelopment.war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
                 .addAsLibraries(testJar)
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
     /**

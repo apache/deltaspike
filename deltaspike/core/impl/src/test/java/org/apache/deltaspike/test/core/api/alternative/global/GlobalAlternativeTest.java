@@ -76,7 +76,7 @@ public class GlobalAlternativeTest
         return ShrinkWrap.create(WebArchive.class, "globalAlternative.war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive(new String[]{"META-INF.config"}))
                 .addAsLibraries(testJar)
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
     /**
