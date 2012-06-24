@@ -43,13 +43,17 @@ public class OpenWebBeansContainerControl implements CdiContainer
     @Override
     public BeanManager getBeanManager()
     {
+        if (this.lifecycle == null)
+        {
+            initLifecycle();
+        }
         return lifecycle.getBeanManager();
     }
 
     @Override
     public synchronized void boot()
     {
-        lifecycle = WebBeansContext.getInstance().getService(ContainerLifecycle.class);
+        initLifecycle();
         lifecycle.startApplication(null);
     }
 
@@ -79,5 +83,10 @@ public class OpenWebBeansContainerControl implements CdiContainer
                     getBeanManager().getReference(ctxCtrlBean, ContextControl.class, ctxCtrlCreationalContext);
         }
         return ctxCtrl;
+    }
+
+    private void initLifecycle()
+    {
+        lifecycle = WebBeansContext.getInstance().getService(ContainerLifecycle.class);
     }
 }
