@@ -70,18 +70,18 @@ public class MessageTest
     @Test
     public void testMessageBundleInjection(Jay jay)
     {
-        assertEquals("Spotted 8 jays", jay.getMessage());
+        assertEquals(TestMessageInterpolator.SPECIALFORMATTED + "Spotted 8 jays", jay.getMessage());
     }
 
     @Test
     public void testInternationalizedMessage()
     {
-        assertEquals("Welcome to DeltaSpike", messages.welcomeToDeltaSpike());
+        assertEquals(TestMessageInterpolator.SPECIALFORMATTED + "Welcome to DeltaSpike", messages.welcomeToDeltaSpike());
     }
 
     @Test
     public void testInternationalizedParametrizedMessage()
     {
-        assertEquals("Welcome to Apache DeltaSpike", messages.welcomeTo("Apache DeltaSpike"));
+        assertEquals(TestMessageInterpolator.SPECIALFORMATTED + "Welcome to Apache DeltaSpike", messages.welcomeTo("Apache DeltaSpike"));
     }
 }

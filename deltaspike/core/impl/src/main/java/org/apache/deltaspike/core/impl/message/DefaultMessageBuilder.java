@@ -227,7 +227,7 @@ class DefaultMessageBuilder implements MessageContext.MessageBuilder
     private String interpolateMessage(MessageInterpolator messageInterpolator,
                                       String messageTemplate, Object... arguments)
     {
-        Locale l = locale != null ? locale : Locale.getDefault();
+        Locale l = messageContext.getLocale();
         return messageInterpolator.interpolate(getEscapedTemplate(messageTemplate), arguments, l);
     }
 

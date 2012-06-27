@@ -27,10 +27,11 @@ import java.util.Locale;
 public class TestMessageInterpolator implements MessageInterpolator
 {
     private static final long serialVersionUID = 5636914399691923602L;
+    public static final String SPECIALFORMATTED = "specialformatted ";
 
     @Override
     public String interpolate(String messageTemplate, Object[] arguments, Locale locale)
     {
-        return String.format(locale, messageTemplate, arguments);
+        return SPECIALFORMATTED + String.format(locale, messageTemplate, arguments);
     }
 }

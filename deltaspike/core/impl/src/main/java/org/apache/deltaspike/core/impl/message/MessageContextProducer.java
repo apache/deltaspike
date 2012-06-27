@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.core.impl.message;
 
+import org.apache.deltaspike.core.api.config.annotation.DefaultConfiguration;
 import org.apache.deltaspike.core.api.message.LocaleResolver;
 import org.apache.deltaspike.core.api.message.MessageContext;
 import org.apache.deltaspike.core.api.message.MessageInterpolator;
@@ -28,17 +29,24 @@ import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.Typed;
+import javax.inject.Inject;
 
 @ApplicationScoped
 @SuppressWarnings("UnusedDeclaration")
 public class MessageContextProducer
 {
+    @Inject
+    @DefaultConfiguration
+    private LocaleResolver localeResolver;
+
+    @Inject
+    @DefaultConfiguration
+    private MessageInterpolator messageInterpolator;
+
     @Produces
     @Typed(MessageContext.class)
     @Dependent
-    protected MessageContext createDefaultMessageContext(Instance<MessageResolver> customMessageResolver,
-                                                         Instance<MessageInterpolator> customMessageInterpolator,
-                                                         Instance<LocaleResolver> customLocalResolver)
+    protected MessageContext createDefaultMessageContext(Instance<MessageResolver> customMessageResolver)
     {
         MessageContext.Config messageContextConfig = new DefaultMessageContext().config();
 
@@ -47,15 +55,8 @@ public class MessageContextProducer
             messageContextConfig.change().messageResolver(customMessageResolver.get());
         }
 
-        if (!customMessageInterpolator.isUnsatisfied())
-        {
-            messageContextConfig.change().messageInterpolator(customMessageInterpolator.get());
-        }
-
-        if (!customLocalResolver.isUnsatisfied())
-        {
-            messageContextConfig.change().localeResolver(customLocalResolver.get());
-        }
+        messageContextConfig.change().messageInterpolator(messageInterpolator);
+        messageContextConfig.change().localeResolver(localeResolver);
 
         return messageContextConfig.use().create();
     }

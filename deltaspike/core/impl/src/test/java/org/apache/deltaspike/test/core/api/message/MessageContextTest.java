@@ -99,8 +99,8 @@ public class MessageContextTest
         LocaleResolver localeResolver = new TestGermanLocaleResolver();
         String messageText = messageContext.config()
                 .use()
-                    .localeResolver(localeResolver)
-                    .messageResolver(new TestMessageResolver(localeResolver))
+                .localeResolver(localeResolver)
+                .messageResolver(new TestMessageResolver(localeResolver))
                 .create().message().text("{hello}").toText();
 
         assertEquals("Test Nachricht", messageText);
