@@ -113,8 +113,9 @@ class MessageBundleInvocationHandler implements InvocationHandler
                 }
 
                 String messageBundleName = method.getDeclaringClass().getName();
-                resolvedMessageTemplate = new DefaultMessageResolver(messageBundleName, resolvedLocale)
-                    .getMessage(messageTemplate.value());
+                MessageResolver messageResolver = new DefaultMessageResolver();
+                messageResolver.initialize(messageBundleName, resolvedLocale);
+                resolvedMessageTemplate = messageResolver.getMessage(messageTemplate.value());
             }
 
             Class<? extends MessageInterpolator> messageInterpolatorClass =

@@ -18,22 +18,24 @@
  */
 package org.apache.deltaspike.core.impl.message;
 
+import org.apache.deltaspike.core.api.config.annotation.DefaultConfiguration;
 import org.apache.deltaspike.core.api.message.MessageResolver;
 import org.apache.deltaspike.core.util.PropertyFileUtils;
 
-import javax.enterprise.inject.Typed;
+import javax.enterprise.context.Dependent;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-@Typed()
+@Dependent
+@DefaultConfiguration
 class DefaultMessageResolver implements MessageResolver
 {
     private static final long serialVersionUID = 5834411208472341006L;
 
-    private final ResourceBundle messageBundle;
+    private ResourceBundle messageBundle;
 
-    DefaultMessageResolver(String messageBundleName, Locale locale)
+    public void initialize(String messageBundleName, Locale locale)
     {
         ResourceBundle resolvedBundle;
         try

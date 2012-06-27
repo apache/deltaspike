@@ -19,9 +19,11 @@
 package org.apache.deltaspike.core.api.message;
 
 import java.io.Serializable;
+import java.util.Locale;
 
 /**
- * Implementations have to resolve the text stored for a given key in the message-source they are aware of
+ * Implementations have to resolve the text stored for a given key in the message-source they are aware of.
+ * Implementations should always be &#064;Dependent scoped!
  */
 public interface MessageResolver extends Serializable
 {
@@ -32,4 +34,10 @@ public interface MessageResolver extends Serializable
      * @return the final but not interpolated message text
      */
     String getMessage(String messageTemplate);
+
+    /**
+     * Initialize the MessageResolver with the message bundle and Locale
+     * which should be used
+     */
+    void initialize(String messageBundleName, Locale locale);
 }

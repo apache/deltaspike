@@ -74,13 +74,13 @@ public class ConfigurableLocaleMessageTest
         JavaArchive testJar = ShrinkWrap
                 .create(JavaArchive.class, "simpleMessageTest.jar")
                 .addPackage(ConfigurableLocaleMessageTest.class.getPackage())
-                .addAsManifestResource(new StringAsset(BEANS_XML_CONTENT), "beans.xml");
+                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
         return ShrinkWrap
                 .create(WebArchive.class, "simpleMessageTest.war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
                 .addAsLibraries(testJar)
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+                .addAsWebInfResource(new StringAsset(BEANS_XML_CONTENT), "beans.xml")
                 .addAsServiceProvider(Extension.class,
                         MessageBundleExtension.class);
     }

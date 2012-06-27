@@ -26,7 +26,6 @@ import org.apache.deltaspike.core.api.message.MessageResolver;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.Typed;
 import javax.inject.Inject;
@@ -43,20 +42,20 @@ public class MessageContextProducer
     @DefaultConfiguration
     private MessageInterpolator messageInterpolator;
 
+    @Inject
+    @DefaultConfiguration
+    private MessageResolver messageResolver;
+
     @Produces
     @Typed(MessageContext.class)
     @Dependent
-    protected MessageContext createDefaultMessageContext(Instance<MessageResolver> customMessageResolver)
+    protected MessageContext createDefaultMessageContext()
     {
         MessageContext.Config messageContextConfig = new DefaultMessageContext().config();
 
-        if (!customMessageResolver.isUnsatisfied())
-        {
-            messageContextConfig.change().messageResolver(customMessageResolver.get());
-        }
-
         messageContextConfig.change().messageInterpolator(messageInterpolator);
         messageContextConfig.change().localeResolver(localeResolver);
+        messageContextConfig.change().messageResolver(messageResolver);
 
         return messageContextConfig.use().create();
     }

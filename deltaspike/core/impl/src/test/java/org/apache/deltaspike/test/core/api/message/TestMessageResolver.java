@@ -24,6 +24,7 @@ import org.apache.deltaspike.core.util.PropertyFileUtils;
 
 import javax.enterprise.inject.Typed;
 import javax.inject.Inject;
+import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
@@ -54,6 +55,12 @@ public class TestMessageResolver implements MessageResolver
         }
 
         messageBundle = resolvedBundle;
+    }
+
+    @Override
+    public void initialize(String messageBundleName, Locale locale)
+    {
+
     }
 
     @Override
