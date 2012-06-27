@@ -37,7 +37,8 @@ public interface MessageResolver extends Serializable
 
     /**
      * Initialize the MessageResolver with the message bundle and Locale
-     * which should be used
+     * which should be used.
+     * TODO review! It might be better to pass a whole configuration
      */
     void initialize(String messageBundleName, Locale locale);
 }

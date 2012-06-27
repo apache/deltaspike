@@ -28,10 +28,11 @@ class DefaultMessageContext implements MessageContext
 {
     private static final long serialVersionUID = -110779217295211303L;
 
-    private Config config = new DefaultMessageContextConfig();
+    private Config config = null;
 
     DefaultMessageContext()
     {
+        config = new DefaultMessageContextConfig();
     }
 
     DefaultMessageContext(Config config)

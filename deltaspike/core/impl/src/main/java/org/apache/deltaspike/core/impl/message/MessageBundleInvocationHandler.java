@@ -22,24 +22,21 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
-import org.apache.deltaspike.core.api.config.annotation.DefaultConfiguration;
-import org.apache.deltaspike.core.api.literal.DefaultConfigurationLiteral;
-import org.apache.deltaspike.core.api.literal.MessageContextConfigLiteral;
-import org.apache.deltaspike.core.api.message.LocaleResolver;
 import org.apache.deltaspike.core.api.message.MessageContext;
-import org.apache.deltaspike.core.api.message.MessageInterpolator;
 import org.apache.deltaspike.core.api.message.MessageResolver;
 import org.apache.deltaspike.core.api.message.annotation.MessageContextConfig;
 import org.apache.deltaspike.core.api.message.annotation.MessageTemplate;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
-import org.apache.deltaspike.core.util.ClassUtils;
+
 
 class MessageBundleInvocationHandler implements InvocationHandler
 {
-    private MessageInterpolator defaultInterpolator;
-    private LocaleResolver defaultLocaleResolver;
+    /**
+     * Don't use this directly!
+     * @see #getDefaultMessageContext()
+     */
+    private MessageContext defaultMessageContext = null;
 
     /**
      * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object,
@@ -56,127 +53,99 @@ class MessageBundleInvocationHandler implements InvocationHandler
             return null;
         }
 
-        MessageContext messageContext = null;
 
-        List<Object> arguments = null;
-
-        if (args != null && args.length > 0)
-        {
-            arguments = new ArrayList<Object>(args.length);
-
-            for (Object arg : args)
-            {
-                if (MessageContext.class.isAssignableFrom(arg.getClass()))
-                {
-                    messageContext = (MessageContext)arg;
-                    continue;
-                }
-
-                arguments.add(arg);
-            }
-        }
+        MessageContext messageContext = resolveMessageContextFromArguments(args);
+        List<Object> arguments = resolveMessageArguments(args);
 
         if (messageContext == null)
         {
-            //X TODO discuss use-cases for a deeper lookup and qualifier support
             MessageContextConfig messageContextConfig =
                 method.getDeclaringClass().getAnnotation(MessageContextConfig.class);
 
-            if (messageContextConfig == null)
+            if (messageContextConfig != null)
             {
-                messageContextConfig = new MessageContextConfigLiteral();
-            }
-
-            String resolvedMessageTemplate;
-
-            if (!MessageResolver.class.equals(messageContextConfig.messageResolver()))
-            {
-                Class<? extends MessageResolver> messageResolverClass =
-                        ClassUtils.tryToLoadClassForName(messageContextConfig.messageResolver().getName());
-
-                MessageResolver messageResolver = BeanProvider.getContextualReference(messageResolverClass);
-
-                resolvedMessageTemplate = messageResolver.getMessage(messageTemplate.value());
+                messageContext = applyMessageContextConfig(messageContextConfig, method.getDeclaringClass().getName());
             }
             else
             {
-                Class<? extends LocaleResolver> localeResolverClass =
-                        ClassUtils.tryToLoadClassForName(messageContextConfig.localeResolver().getName());
+                messageContext = getDefaultMessageContext();
+            }
+        }
 
-                Locale resolvedLocale = Locale.getDefault();
 
-                if (!LocaleResolver.class.equals(localeResolverClass))
+        if (String.class.isAssignableFrom(method.getReturnType()))
+        {
+            return messageContext.message().text(messageTemplate.value()).argument(arguments.toArray()).toText();
+        }
+
+        return messageContext.message().text(messageTemplate.value()).argument(arguments.toArray()).create();
+
+    }
+
+    private MessageContext applyMessageContextConfig(MessageContextConfig messageContextConfigLiteral,
+                                                     String messageBundleName)
+    {
+        MessageContext.Config config = new DefaultMessageContextConfig(messageContextConfigLiteral);
+
+        if (MessageResolver.class.equals(messageContextConfigLiteral.messageResolver()))
+        {
+            MessageResolver messageResolver = new DefaultMessageResolver();
+
+            messageResolver.initialize(messageBundleName, config.getLocaleResolver().getLocale());
+            config.change().messageResolver(messageResolver);
+        }
+
+        return config.use().create();
+    }
+
+    private List<Object> resolveMessageArguments(Object[] args)
+    {
+        List<Object> arguments = new ArrayList<Object>();
+        if (args != null && args.length > 0)
+        {
+            for (int i = 0; i < args.length; i++)
+            {
+                if (i == 0 && MessageContext.class.isAssignableFrom(args[0].getClass()))
                 {
-                    LocaleResolver localeResolver = BeanProvider.getContextualReference(localeResolverClass);
-
-                    resolvedLocale = localeResolver.getLocale();
+                    continue;
                 }
 
-                String messageBundleName = method.getDeclaringClass().getName();
-                MessageResolver messageResolver = new DefaultMessageResolver();
-                messageResolver.initialize(messageBundleName, resolvedLocale);
-                resolvedMessageTemplate = messageResolver.getMessage(messageTemplate.value());
+                arguments.add(args[i]);
             }
-
-            Class<? extends MessageInterpolator> messageInterpolatorClass =
-                    ClassUtils.tryToLoadClassForName(messageContextConfig.messageInterpolator().getName());
-
-            String result = resolvedMessageTemplate;
-            MessageInterpolator messageInterpolator;
-            LocaleResolver localeResolver = getDefaultLocaleResolver(); //X TODO implement lookup chain
-
-            if (!MessageInterpolator.class.equals(messageInterpolatorClass))
-            {
-                messageInterpolator = BeanProvider.getContextualReference(messageInterpolatorClass);
-            }
-            else
-            {
-                messageInterpolator = getDefaultMessageInterpolator();
-            }
-
-            result = messageInterpolator.interpolate(resolvedMessageTemplate, args, localeResolver.getLocale());
-
-            return result;
         }
-        else
-        {
-            if (String.class.isAssignableFrom(method.getReturnType()))
-            {
-                return messageContext.message().text(messageTemplate.value()).argument(arguments.toArray()).toText();
-            }
 
-            return messageContext.message().text(messageTemplate.value()).argument(arguments.toArray()).create();
-        }
+        return arguments;
     }
 
-    private MessageInterpolator getDefaultMessageInterpolator()
+    private MessageContext resolveMessageContextFromArguments(Object[] args)
     {
-        if (defaultInterpolator == null)
+        if (args != null && args.length > 0 &&
+            MessageContext.class.isAssignableFrom(args[0].getClass()))
+        {
+            return (MessageContext) args[0];
+        }
+
+        return null;
+    }
+
+    private MessageContext getDefaultMessageContext()
+    {
+        if (defaultMessageContext == null)
         {
             initDefaultConfig();
         }
-        return defaultInterpolator;
+        return defaultMessageContext;
     }
 
-    private LocaleResolver getDefaultLocaleResolver()
-    {
-        if (defaultLocaleResolver == null)
-        {
-            initDefaultConfig();
-        }
-        return defaultLocaleResolver;
-    }
 
     /**
-     * Lazily initialize {@link #defaultInterpolator} and {@link #defaultLocaleResolver}.
+     * Lazily initialize {@link #defaultMessageContext}.
      */
     private synchronized void initDefaultConfig()
     {
-        if (defaultInterpolator == null)
+        if (defaultMessageContext == null)
         {
-            DefaultConfiguration defaultConfiguration = new DefaultConfigurationLiteral();
-            defaultInterpolator = BeanProvider.getContextualReference(MessageInterpolator.class, defaultConfiguration);
-            defaultLocaleResolver = BeanProvider.getContextualReference(LocaleResolver.class, defaultConfiguration);
+            defaultMessageContext = BeanProvider.getContextualReference(MessageContext.class);
         }
     }
 }

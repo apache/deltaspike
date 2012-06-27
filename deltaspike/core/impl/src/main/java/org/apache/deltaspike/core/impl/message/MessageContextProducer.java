@@ -47,7 +47,7 @@ public class MessageContextProducer
     private MessageResolver messageResolver;
 
     @Produces
-    @Typed(MessageContext.class)
+    @Typed(MessageContext.class) // needed for _not_ serving as LocaleResolver!
     @Dependent
     protected MessageContext createDefaultMessageContext()
     {
