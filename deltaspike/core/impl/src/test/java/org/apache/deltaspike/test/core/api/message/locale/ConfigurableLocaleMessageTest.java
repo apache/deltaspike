@@ -23,7 +23,6 @@ import javax.inject.Inject;
 import java.util.Date;
 import java.util.Locale;
 
-import org.apache.deltaspike.core.api.config.annotation.DefaultConfiguration;
 import org.apache.deltaspike.core.api.message.MessageContext;
 import org.apache.deltaspike.core.impl.message.MessageBundleExtension;
 import org.apache.deltaspike.test.category.SeCategory;
@@ -57,7 +56,6 @@ public class ConfigurableLocaleMessageTest
     private MessageWithLocale localizedMessage;
 
     @Inject
-    @DefaultConfiguration
     private ConfigurableLocaleResolver localeResolver;
 
     @Inject

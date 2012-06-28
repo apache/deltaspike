@@ -23,6 +23,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.deltaspike.core.api.literal.AnyLiteral;
 import org.apache.deltaspike.core.api.message.MessageContext;
 import org.apache.deltaspike.core.api.message.MessageResolver;
 import org.apache.deltaspike.core.api.message.annotation.MessageContextConfig;
@@ -145,7 +146,7 @@ class MessageBundleInvocationHandler implements InvocationHandler
     {
         if (defaultMessageContext == null)
         {
-            defaultMessageContext = BeanProvider.getContextualReference(MessageContext.class);
+            defaultMessageContext = BeanProvider.getContextualReference(MessageContext.class, new AnyLiteral());
         }
     }
 }

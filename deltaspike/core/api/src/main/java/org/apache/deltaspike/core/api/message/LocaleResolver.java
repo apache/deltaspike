@@ -29,9 +29,7 @@ import org.apache.deltaspike.core.api.config.DeltaSpikeConfig;
  * <p>DeltaSpike provides a default implementation which
  * returns the current system Locale.</p>
  * <p>An application can provide an own implementation as
- * &#064;Alternative with a
- * &#064;{@link org.apache.deltaspike.core.api.config.annotation.DefaultConfiguration}
- * annotation. This could e.g. examine a JSF View or the Locale
+ * &#064;Alternative. This could e.g. examine a JSF View or the Locale
  * of any currently logged in User.</p>
  */
 public interface LocaleResolver extends Serializable, DeltaSpikeConfig

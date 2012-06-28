@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.test.core.api.message;
 
+import org.apache.deltaspike.core.api.message.MessageContext;
 import org.apache.deltaspike.core.api.message.annotation.MessageTemplate;
 import org.apache.deltaspike.core.api.message.annotation.MessageBundle;
 import org.apache.deltaspike.core.api.message.annotation.MessageContextConfig;
@@ -38,7 +39,6 @@ public interface TestMessages
     @MessageTemplate("{welcome_to}")
     String welcomeTo(String name);
 
-    //X TODO
-    //@Message("{welcome_to}")
-    //String welcomeTo(MessageContext messageContext, String name);
+    @MessageTemplate("{welcome_to}")
+    String welcomeTo(MessageContext messageContext, String name);
 }

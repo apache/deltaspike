@@ -19,7 +19,6 @@
 package org.apache.deltaspike.core.impl.message;
 
 
-import org.apache.deltaspike.core.api.config.annotation.DefaultConfiguration;
 import org.apache.deltaspike.core.api.message.LocaleResolver;
 
 import javax.enterprise.context.Dependent;
@@ -31,7 +30,6 @@ import java.util.Locale;
  * for messages.
  */
 @Dependent
-@DefaultConfiguration
 public class DefaultLocaleResolver implements LocaleResolver, Serializable
 {
     private static final long serialVersionUID = 2075618472090834156L;

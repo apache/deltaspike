@@ -28,9 +28,7 @@ import org.apache.deltaspike.core.api.config.DeltaSpikeConfig;
  * in a message with the final value.</p>
  *
  * <p>An application can provide an own implementation as
- * &#064;Alternative with a
- * &#064;{@link org.apache.deltaspike.core.api.config.annotation.DefaultConfiguration}
- * annotation.</p>
+ * &#064;Alternative.</p>
  *
  * <p>A simple implementation which uses the
  * {@link String#format(java.util.Locale, String, Object...)}

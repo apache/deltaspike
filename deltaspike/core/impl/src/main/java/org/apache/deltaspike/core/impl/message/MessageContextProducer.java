@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.core.impl.message;
 
-import org.apache.deltaspike.core.api.config.annotation.DefaultConfiguration;
 import org.apache.deltaspike.core.api.message.LocaleResolver;
 import org.apache.deltaspike.core.api.message.MessageContext;
 import org.apache.deltaspike.core.api.message.MessageInterpolator;
@@ -35,15 +34,12 @@ import javax.inject.Inject;
 public class MessageContextProducer
 {
     @Inject
-    @DefaultConfiguration
     private LocaleResolver localeResolver;
 
     @Inject
-    @DefaultConfiguration
     private MessageInterpolator messageInterpolator;
 
     @Inject
-    @DefaultConfiguration
     private MessageResolver messageResolver;
 
     @Produces

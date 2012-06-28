@@ -23,7 +23,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
 import java.util.Locale;
 
-import org.apache.deltaspike.core.api.config.annotation.DefaultConfiguration;
 import org.apache.deltaspike.core.api.message.LocaleResolver;
 
 /**
@@ -33,7 +32,6 @@ import org.apache.deltaspike.core.api.message.LocaleResolver;
  * only run in a single timezone/locale.
  */
 @ApplicationScoped
-@DefaultConfiguration
 @Alternative
 public class ConfigurableLocaleResolver implements LocaleResolver
 {

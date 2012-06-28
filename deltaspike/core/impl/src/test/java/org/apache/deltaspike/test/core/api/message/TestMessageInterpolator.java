@@ -24,6 +24,7 @@ import javax.enterprise.context.ApplicationScoped;
 import java.util.Locale;
 
 @ApplicationScoped
+@TestConfiguration
 public class TestMessageInterpolator implements MessageInterpolator
 {
     private static final long serialVersionUID = 5636914399691923602L;

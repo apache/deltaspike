@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.core.impl.message;
 
+import org.apache.deltaspike.core.api.literal.AnyLiteral;
 import org.apache.deltaspike.core.api.message.LocaleResolver;
 import org.apache.deltaspike.core.api.message.MessageContext;
 import org.apache.deltaspike.core.api.message.MessageInterpolator;
@@ -51,7 +52,7 @@ class DefaultMessageContextConfig implements MessageContext.Config
             Class<? extends MessageResolver> messageResolverClass =
                     ClassUtils.tryToLoadClassForName(messageContextConfig.messageResolver().getName());
 
-            messageResolver = BeanProvider.getContextualReference(messageResolverClass);
+            messageResolver = BeanProvider.getContextualReference(messageResolverClass, new AnyLiteral());
         }
 
         if (!MessageInterpolator.class.equals(messageContextConfig.messageInterpolator()))
@@ -59,7 +60,7 @@ class DefaultMessageContextConfig implements MessageContext.Config
             Class<? extends MessageInterpolator> messageInterpolatorClass =
                     ClassUtils.tryToLoadClassForName(messageContextConfig.messageInterpolator().getName());
 
-            messageInterpolator = BeanProvider.getContextualReference(messageInterpolatorClass);
+            messageInterpolator = BeanProvider.getContextualReference(messageInterpolatorClass, new AnyLiteral());
         }
 
         if (!LocaleResolver.class.equals(messageContextConfig.localeResolver()))
@@ -67,7 +68,7 @@ class DefaultMessageContextConfig implements MessageContext.Config
             Class<? extends LocaleResolver> localeResolverClass =
                     ClassUtils.tryToLoadClassForName(messageContextConfig.localeResolver().getName());
 
-            localeResolver = BeanProvider.getContextualReference(localeResolverClass);
+            localeResolver = BeanProvider.getContextualReference(localeResolverClass, new AnyLiteral());
         }
     }
 

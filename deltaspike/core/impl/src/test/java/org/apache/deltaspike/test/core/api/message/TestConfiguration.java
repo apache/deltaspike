@@ -16,16 +16,27 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.api.literal;
+package org.apache.deltaspike.test.core.api.message;
 
-import javax.enterprise.util.AnnotationLiteral;
+import javax.inject.Qualifier;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-import org.apache.deltaspike.core.api.config.annotation.DefaultConfiguration;
+import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * Literal for the {@link DefaultConfiguration} annotation.
+ * <p>Qualifier for marking beans which provide other configuration.</p>
  */
-public class DefaultConfigurationLiteral extends AnnotationLiteral<DefaultConfiguration> implements DefaultConfiguration
+@Target({ TYPE, PARAMETER, FIELD, METHOD, ANNOTATION_TYPE })
+@Retention(RUNTIME)
+@Documented
+@Qualifier
+public @interface TestConfiguration
 {
-    private static final long serialVersionUID = -8623640277155878657L;
 }
