@@ -79,7 +79,7 @@ public class ExcludeExtension implements Extension, Deactivatable
      * @param processAnnotatedType observed event
      */
     @SuppressWarnings("UnusedDeclaration")
-    protected void vetoBeans(@Observes ProcessAnnotatedType<Object> processAnnotatedType, BeanManager beanManager)
+    protected void vetoBeans(@Observes ProcessAnnotatedType processAnnotatedType, BeanManager beanManager)
     {
         initActivation();
 
@@ -118,7 +118,7 @@ public class ExcludeExtension implements Extension, Deactivatable
             return;
         }
 
-        Exclude exclude = processAnnotatedType.getAnnotatedType().getJavaClass().getAnnotation(Exclude.class);
+        Exclude exclude = (Exclude) processAnnotatedType.getAnnotatedType().getJavaClass().getAnnotation(Exclude.class);
 
         if (!evalExcludeWithoutCondition(processAnnotatedType, exclude))
         {
@@ -138,7 +138,7 @@ public class ExcludeExtension implements Extension, Deactivatable
         evalExcludeWithExpression(processAnnotatedType, exclude);
     }
 
-    protected void vetoCustomProjectStageBeans(ProcessAnnotatedType<Object> processAnnotatedType)
+    protected void vetoCustomProjectStageBeans(ProcessAnnotatedType processAnnotatedType)
     {
         //currently there is a veto for all project-stage implementations,
         //but we still need @Typed() for the provided implementations in case of the deactivation of this behaviour
@@ -150,7 +150,7 @@ public class ExcludeExtension implements Extension, Deactivatable
 
 
 
-    private void activateGlobalAlternativesWeld(ProcessAnnotatedType<Object> processAnnotatedType,
+    private void activateGlobalAlternativesWeld(ProcessAnnotatedType processAnnotatedType,
         BeanManager beanManager)
     {
         Class<Object> currentBean = processAnnotatedType.getAnnotatedType().getJavaClass();
@@ -229,7 +229,7 @@ public class ExcludeExtension implements Extension, Deactivatable
     //see OWB-643
     //just #veto the original implementation and remove @Alternative from the ProcessAnnotatedType of
     // the configured alternative doesn't work with OWB (due to OWB-643)
-    private void activateGlobalAlternativesOwb(ProcessAnnotatedType<Object> processAnnotatedType,
+    private void activateGlobalAlternativesOwb(ProcessAnnotatedType processAnnotatedType,
         BeanManager beanManager)
     {
         //the current bean is the bean with a potential global alternative
@@ -400,7 +400,7 @@ public class ExcludeExtension implements Extension, Deactivatable
         return result;
     }
 
-    private boolean evalExcludeWithoutCondition(ProcessAnnotatedType<Object> processAnnotatedType, Exclude exclude)
+    private boolean evalExcludeWithoutCondition(ProcessAnnotatedType processAnnotatedType, Exclude exclude)
     {
         if (exclude.ifProjectStage().length == 0 && exclude.exceptIfProjectStage().length == 0 &&
                 "".equals(exclude.onExpression()))
@@ -411,7 +411,7 @@ public class ExcludeExtension implements Extension, Deactivatable
         return true;
     }
 
-    private boolean evalExcludeInProjectStage(ProcessAnnotatedType<Object> processAnnotatedType, Exclude exclude,
+    private boolean evalExcludeInProjectStage(ProcessAnnotatedType processAnnotatedType, Exclude exclude,
         ProjectStage currentlyConfiguredProjectStage)
     {
         Class<? extends ProjectStage>[] activatedIn = exclude.ifProjectStage();
@@ -429,7 +429,7 @@ public class ExcludeExtension implements Extension, Deactivatable
         return true;
     }
 
-    private boolean evalExcludeNotInProjectStage(ProcessAnnotatedType<Object> processAnnotatedType, Exclude exclude,
+    private boolean evalExcludeNotInProjectStage(ProcessAnnotatedType processAnnotatedType, Exclude exclude,
         ProjectStage currentlyConfiguredProjectStage)
     {
         Class<? extends ProjectStage>[] notIn = exclude.exceptIfProjectStage();
@@ -447,7 +447,7 @@ public class ExcludeExtension implements Extension, Deactivatable
         return true;
     }
 
-    private void evalExcludeWithExpression(ProcessAnnotatedType<Object> processAnnotatedType, Exclude exclude)
+    private void evalExcludeWithExpression(ProcessAnnotatedType processAnnotatedType, Exclude exclude)
     {
         if ("".equals(exclude.onExpression()))
         {
@@ -503,7 +503,7 @@ public class ExcludeExtension implements Extension, Deactivatable
         return expressionInterpreter.evaluate(expressions);
     }
 
-    private void veto(ProcessAnnotatedType<?> processAnnotatedType, String vetoType)
+    private void veto(ProcessAnnotatedType processAnnotatedType, String vetoType)
     {
         processAnnotatedType.veto();
         LOG.finer(vetoType + " based veto for bean with type: " +

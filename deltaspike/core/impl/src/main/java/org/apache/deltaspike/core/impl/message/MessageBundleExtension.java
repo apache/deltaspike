@@ -67,7 +67,7 @@ public class MessageBundleExtension implements Extension, Deactivatable
     }
 
     @SuppressWarnings("UnusedDeclaration")
-    protected void detectInterfaces(@Observes ProcessAnnotatedType<?> processAnnotatedType)
+    protected void detectInterfaces(@Observes ProcessAnnotatedType processAnnotatedType)
     {
         if (!isActivated)
         {
