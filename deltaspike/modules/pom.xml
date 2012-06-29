@@ -38,11 +38,4 @@
         <module>security</module>
         <module>jpa</module>
     </modules>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.apache.geronimo.specs</groupId>
-            <artifactId>geronimo-jcdi_1.0_spec</artifactId>
-        </dependency>
-    </dependencies>
 </project>
