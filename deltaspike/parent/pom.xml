@@ -468,26 +468,6 @@
             <version>${arquillian.version}</version>
             <scope>test</scope>
         </dependency>
-
-
-        <!-- atinject and cdi specs for OWB-->
-        <dependency>
-            <groupId>org.apache.geronimo.specs</groupId>
-            <artifactId>geronimo-atinject_1.0_spec</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.geronimo.specs</groupId>
-            <artifactId>geronimo-jcdi_1.0_spec</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- the interceptors spec from EE6 -->
-        <dependency>
-            <groupId>org.apache.geronimo.specs</groupId>
-            <artifactId>geronimo-interceptor_1.1_spec</artifactId>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
 
     <build>
