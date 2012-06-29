@@ -35,9 +35,15 @@ import javax.enterprise.inject.spi.BeanManager;
 public interface CdiContainer
 {
     /**
-     * Booting the CdiTestContainer will scan the whole classpath
+     * <b>Booting the CdiTestContainer will scan the whole classpath
      * for Beans and extensions available.
-     * The container might throw a DeploymentException or similar on startup.
+     * The container might throw a DeploymentException or similar on startup.</b>
+     *
+     * <p><b>Note:</b> booting the container does <i>not</i> automatically
+     * start all CDI Contexts! Depending on the underlying CDI container you
+     * might need to invoke {@link #getContextControl()} and execute
+     * {@link ContextControl#startContext(Class)} or
+     * {@link ContextControl#startContexts()}</p>
      */
     void boot();
     
