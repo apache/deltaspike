@@ -61,6 +61,30 @@ public final class ConfigResolver
     }
 
     /**
+     * This method can be used for programmatically adding {@link ConfigSource}s.
+     * It is not needed for normal 'usage' by end users, but only for Extension Developers!
+     *
+     * @see PropertyConfigSource if you like to register user config sources for property files
+     *
+     * @param configSourcesToAdd the ConfigSources to add
+     */
+    public static synchronized void addConfigSources(List<ConfigSource> configSourcesToAdd)
+    {
+        // we first pickup all pre-configured ConfigSources...
+        getConfigSources();
+
+        // and now we can easily add our own
+        ClassLoader currentClassLoader = ClassUtils.getClassLoader(null);
+        ConfigSource[] configuredConfigSources = configSources.get(currentClassLoader);
+
+        List<ConfigSource> allConfigSources = Arrays.asList(configuredConfigSources);
+        allConfigSources.addAll(configSourcesToAdd);
+
+        // finally put all the configSources back into the map
+        configSources.put(currentClassLoader, sortDescending(allConfigSources));
+    }
+
+    /**
      * Resolve the property value by going through the list of configured {@link ConfigSource}s
      * and use the one with the highest priority. If no configured value has been found that
      * way we will use the defaultValue.

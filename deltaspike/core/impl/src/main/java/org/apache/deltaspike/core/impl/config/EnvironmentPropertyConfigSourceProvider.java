@@ -18,43 +18,43 @@
  */
 package org.apache.deltaspike.core.impl.config;
 
-import org.apache.deltaspike.core.spi.config.ConfigSource;
-import org.apache.deltaspike.core.spi.config.ConfigSourceProvider;
-
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
-/**
- * Default implementation which uses:
- * <ol>
- * <li>SystemPropertyConfigSource</li>
- * <li>EnvironmentPropertyConfigSource</li>
- * <li>LocalJndiConfigSource</li>
- * <li>PropertyFileConfigSource</li>
- * </ol>
- */
-public class DefaultConfigSourceProvider implements ConfigSourceProvider
-{
-    private static final String PROPERTY_FILE_NAME = "META-INF/apache-deltaspike.properties";
+import org.apache.deltaspike.core.spi.config.ConfigSource;
+import org.apache.deltaspike.core.spi.config.ConfigSourceProvider;
+import org.apache.deltaspike.core.util.PropertyFileUtils;
 
+/**
+ * Register all property files with the given propertyFileName
+ * as {@link ConfigSource}.
+ */
+public class EnvironmentPropertyConfigSourceProvider implements ConfigSourceProvider
+{
     private List<ConfigSource> configSources = new ArrayList<ConfigSource>();
 
-    /**
-     * Default constructor which adds the {@link ConfigSource} implementations which are supported by default
-     */
-    public DefaultConfigSourceProvider()
+    public EnvironmentPropertyConfigSourceProvider(String propertyFileName)
     {
-        configSources.add(new SystemPropertyConfigSource());
-        configSources.add(new EnvironmentPropertyConfigSource());
-        configSources.add(new LocalJndiConfigSource());
+        try
+        {
+            Enumeration<URL> propertyFileUrls = PropertyFileUtils.resolvePropertyFiles(propertyFileName);
 
-        EnvironmentPropertyConfigSourceProvider epcsp = new EnvironmentPropertyConfigSourceProvider(PROPERTY_FILE_NAME);
-        configSources.addAll(epcsp.getConfigSources());
+            while (propertyFileUrls.hasMoreElements())
+            {
+                URL propertyFileUrl = propertyFileUrls.nextElement();
+                configSources.add(new PropertyFileConfigSource(propertyFileUrl));
+            }
+        }
+        catch (IOException ioe)
+        {
+            throw new IllegalStateException("problem while loading DeltaSpike property files", ioe);
+        }
+
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<ConfigSource> getConfigSources()
     {
