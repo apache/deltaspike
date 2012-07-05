@@ -131,7 +131,7 @@
 
         <!-- testing stuff -->
         <junit.version>4.10</junit.version>
-        <arquillian.version>1.0.0.Final</arquillian.version>
+        <arquillian.version>1.0.1.Final</arquillian.version>
         <tomee.version>1.1.0-SNAPSHOT</tomee.version>
 
         <!-- JSF-2.0 implementations-->
