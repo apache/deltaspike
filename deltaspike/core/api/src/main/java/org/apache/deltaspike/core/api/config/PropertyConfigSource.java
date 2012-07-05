@@ -36,7 +36,6 @@ package org.apache.deltaspike.core.api.config;
  *  after the boot is finished. This means that you cannot use
  *  this configuration inside a CDI Extension before the boot
  *  is finished!</p>
- *
  */
 public interface PropertyConfigSource extends DeltaSpikeConfig
 {

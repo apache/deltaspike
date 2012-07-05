@@ -77,7 +77,8 @@ public final class ConfigResolver
         ClassLoader currentClassLoader = ClassUtils.getClassLoader(null);
         ConfigSource[] configuredConfigSources = configSources.get(currentClassLoader);
 
-        List<ConfigSource> allConfigSources = Arrays.asList(configuredConfigSources);
+        List<ConfigSource> allConfigSources = new ArrayList<ConfigSource>();
+        allConfigSources.addAll(Arrays.asList(configuredConfigSources));
         allConfigSources.addAll(configSourcesToAdd);
 
         // finally put all the configSources back into the map

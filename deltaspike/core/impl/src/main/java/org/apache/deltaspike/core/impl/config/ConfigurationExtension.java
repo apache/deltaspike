@@ -59,7 +59,18 @@ public class ConfigurationExtension implements Extension, Deactivatable
             return;
         }
 
-        configSourcesClasses.add(pat.getAnnotatedType().getJavaClass());
+        Class<? extends PropertyConfigSource> pcsClass = pat.getAnnotatedType().getJavaClass();
+        if (pcsClass.isAnnotation() ||
+            pcsClass.isInterface()  ||
+            pcsClass.isSynthetic()  ||
+            pcsClass.isArray()      ||
+            pcsClass.isEnum()         )
+        {
+            // we only like to add real classes
+            return;
+        }
+
+        configSourcesClasses.add(pcsClass);
     }
 
     @SuppressWarnings("UnusedDeclaration")
