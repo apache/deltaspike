@@ -260,6 +260,7 @@
         </profile>
 
         <profile>
+            <!-- JBoss AS-7 has to be locally installed and must be started -->
             <id>jbossas-managed-7</id>
             <!-- JBOSS_HOME must be set for this work correctly -->
             <dependencies>
@@ -313,6 +314,7 @@
         </profile>
 
         <profile>
+            <!-- JBoss AS-7 will be downloaded as maven dependency -->
             <id>jbossas-build-managed-7</id>
             <dependencies>
 
