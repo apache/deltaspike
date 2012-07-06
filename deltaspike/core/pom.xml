@@ -36,9 +36,6 @@
     <modules>
         <module>api</module>
         <module>impl</module>
-<!--X ITs run with impl now
-        <module>integration-test</module>
--->
     </modules>
 
 </project>
