@@ -144,11 +144,11 @@
         <mojarra1.version>1.2_14</mojarra1.version>
 
         <maven.jetty.plugin.version>7.1.5.v20100705</maven.jetty.plugin.version>
-        <maven.surefire.plugin.version>2.11</maven.surefire.plugin.version>
+        <maven.surefire.plugin.version>2.12</maven.surefire.plugin.version>
 
         <hamcrest.version>1.3.RC2</hamcrest.version>
 
-        <jacoco.version>0.5.6.201201232323</jacoco.version>
+        <jacoco.version>0.5.7.201204190339</jacoco.version>
 
         <arquillian-openwebbeans.version>1.0.0.CR2</arquillian-openwebbeans.version>
         <arquillian-weld.version>1.0.0.CR3</arquillian-weld.version>
