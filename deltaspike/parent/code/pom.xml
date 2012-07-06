@@ -71,6 +71,19 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 
 
@@ -295,10 +308,34 @@
         </profile>
 
         <profile>
-            <!-- JBoss AS-7 has to be locally installed and must be started -->
+            <!--
+             * JBoss AS-7 has to be locally installed and must be started
+             *
+             * JBOSS_HOME must be set for this work correctly!
+             *
+             * Start the build with:
+             * $> mvn clean install -Pjbossas-managed-7
+             *
+             -->
             <id>jbossas-managed-7</id>
-            <!-- JBOSS_HOME must be set for this work correctly -->
+
+            <dependencyManagement>
+                <dependencies><!-- org.jboss.weld -->
+                    <dependency>
+                        <groupId>org.jboss.weld</groupId>
+                        <artifactId>weld-core-bom</artifactId>
+                        <version>${weld.version}</version>
+                        <type>pom</type>
+                        <scope>import</scope>
+                    </dependency>
+                </dependencies>
+            </dependencyManagement>
             <dependencies>
+                <dependency>
+                    <groupId>org.jboss.weld</groupId>
+                    <artifactId>weld-api</artifactId>
+                    <scope>provided</scope>
+                </dependency>
 
                 <dependency>
                     <groupId>org.jboss.as</groupId>
@@ -349,8 +386,17 @@
         </profile>
 
         <profile>
-            <!-- JBoss AS-7 will be downloaded as maven dependency -->
+            <!--
+             * JBoss AS-7  will be downloaded as maven dependency
+             *
+             * JBOSS_HOME must be set for this work correctly!
+             *
+             * Start the build with:
+             * $> mvn clean install -Pjbossas-build-managed-7
+             *
+             -->
             <id>jbossas-build-managed-7</id>
+
             <dependencyManagement>
                 <dependencies><!-- org.jboss.weld -->
                     <dependency>
