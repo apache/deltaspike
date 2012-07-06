@@ -156,7 +156,6 @@
 
     <modules>
         <module>code</module>
-        <module>it</module>
     </modules>
 
     <developers>
