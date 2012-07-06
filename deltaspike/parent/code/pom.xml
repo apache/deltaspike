@@ -35,7 +35,7 @@
     <description>Apache DeltaSpike Parent for container projects</description>
 
     <properties>
-        <jboss.as.version>7.1.0.Final</jboss.as.version>
+        <jboss.as.version>7.1.1.Final</jboss.as.version>
     </properties>
 
 
@@ -106,7 +106,7 @@
                 <repository>
                     <id>JBoss-Snapshots</id>
                     <name>JBoss Snapshots</name>
-                    <url>http://snapshots.jboss.org/maven2/</url>
+                    <url>https://repository.jboss.org/nexus/content/repositories/snapshots/</url>
                 </repository>
             </repositories>
         </profile>
