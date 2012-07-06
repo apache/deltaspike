@@ -37,7 +37,6 @@ class DefaultMessageBuilder implements MessageContext.MessageBuilder
 {
     private String messageTemplate;
     private ArrayList<Object> argumentList;
-    private Locale locale; //X TODO this might not always get properly initialized atm!
 
     private final MessageContext messageContext;
 
@@ -49,7 +48,6 @@ class DefaultMessageBuilder implements MessageContext.MessageBuilder
     {
         reset();
         this.messageContext = new UnmodifiableMessageContext(messageContext.config().use().create() /*== clone*/);
-        this.locale = messageContext.getLocale();
     }
 
     @Override
@@ -172,8 +170,6 @@ class DefaultMessageBuilder implements MessageContext.MessageBuilder
             }
 
             argument = arguments[i];
-
-            //TODO discuss Localizable
 
             result.append(argument.toString());
         }

@@ -24,7 +24,7 @@ import javax.enterprise.inject.Typed;
 import java.util.Locale;
 
 @Typed()
-class TestGermanLocaleResolver implements LocaleResolver
+class FixedGermanLocaleResolver implements LocaleResolver
 {
     private static final long serialVersionUID = 1927000487639667775L;
 

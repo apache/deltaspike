@@ -69,7 +69,6 @@ class DefaultMessage implements Message
 
     private void addArgumentToMessage(Object argument)
     {
-        //TODO discuss Localizable
         String result;
 
         if (argument instanceof String)

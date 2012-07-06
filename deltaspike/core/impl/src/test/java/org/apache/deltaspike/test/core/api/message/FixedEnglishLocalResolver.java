@@ -25,7 +25,7 @@ import java.util.Locale;
 
 @ApplicationScoped
 @TestConfiguration
-public class TestLocalResolver implements LocaleResolver
+public class FixedEnglishLocalResolver implements LocaleResolver
 {
     private static final long serialVersionUID = 6947516315363672494L;
 

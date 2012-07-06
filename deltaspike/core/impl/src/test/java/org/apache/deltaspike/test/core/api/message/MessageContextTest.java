@@ -82,28 +82,28 @@ public class MessageContextTest
     @Test
     public void resolveTextTest()
     {
-        LocaleResolver localeResolver = new TestLocalResolver();
+        LocaleResolver localeResolver = new FixedEnglishLocalResolver();
 
         String messageText = messageContext.config()
                 .use()
                 .localeResolver(localeResolver)
                 .messageResolver(new TestMessageResolver(localeResolver))
-                .create().message().text("{hello}").toText();
+                .create().message().text("{hello}").argument("hans").toText();
 
-        assertEquals("test message", messageText);
+        assertEquals("test message to hans", messageText);
     }
 
     @Test
     public void resolveGermanMessageTextTest()
     {
-        LocaleResolver localeResolver = new TestGermanLocaleResolver();
+        LocaleResolver localeResolver = new FixedGermanLocaleResolver();
         String messageText = messageContext.config()
                 .use()
                 .localeResolver(localeResolver)
                 .messageResolver(new TestMessageResolver(localeResolver))
-                .create().message().text("{hello}").toText();
+                .create().message().text("{hello}").argument("hans").toText();
 
-        assertEquals("Test Nachricht", messageText);
+        assertEquals("Test Nachricht an hans", messageText);
     }
 
     @Test

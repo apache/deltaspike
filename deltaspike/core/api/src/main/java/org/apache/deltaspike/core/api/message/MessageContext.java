@@ -35,11 +35,6 @@ public interface MessageContext extends LocaleResolver
      */
     Config config();
 
-    /*
-     * @param messageTemplate a message which should be added to the current context (message handlers)
-     */
-    //void addMessage(Message messageTemplate);
-
     /**
      * Helper for building instances of {@link Message}
      */

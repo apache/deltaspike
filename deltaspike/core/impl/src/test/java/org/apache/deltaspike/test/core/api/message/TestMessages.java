@@ -26,7 +26,7 @@ import org.apache.deltaspike.core.api.message.annotation.MessageContextConfig;
 @MessageBundle
 @MessageContextConfig(
         messageInterpolator = TestMessageInterpolator.class,
-        localeResolver = TestLocalResolver.class
+        localeResolver = FixedEnglishLocalResolver.class
 )
 public interface TestMessages
 {
