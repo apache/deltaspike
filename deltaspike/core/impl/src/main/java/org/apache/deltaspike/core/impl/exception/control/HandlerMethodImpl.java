@@ -290,7 +290,7 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
         {
             return true;
         }
-        if (o == null || getClass() != o.getClass())
+        if (o == null || !HandlerMethod.class.isAssignableFrom(o.getClass()))
         {
             return false;
         }

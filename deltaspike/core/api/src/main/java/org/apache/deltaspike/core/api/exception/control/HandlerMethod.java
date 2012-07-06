@@ -57,7 +57,7 @@ public interface HandlerMethod<T extends Throwable>
     void notify(ExceptionEvent<T> event);
 
     /**
-     * Obtains the precedence of the handler.
+     * Obtains the precedence of the handler, relative to other handlers for the same type.
      */
     int getOrdinal();
 
