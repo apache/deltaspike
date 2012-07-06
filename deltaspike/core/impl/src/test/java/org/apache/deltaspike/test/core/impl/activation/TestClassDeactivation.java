@@ -19,6 +19,7 @@
 package org.apache.deltaspike.test.core.impl.activation;
 
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
+import org.apache.deltaspike.test.category.DeltaSpikeTest;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.apache.deltaspike.test.util.FileUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -46,7 +47,7 @@ public class TestClassDeactivation
     public static WebArchive deploy()
     {
         URL fileUrl = TestClassDeactivation.class.getClassLoader()
-                .getResource("META-INF/apache-deltaspike.properties");
+                .getResource(DeltaSpikeTest.DELTASPIKE_PROPERTIES);
 
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "testClassDeactivationTest.jar")
                 .addPackage("org.apache.deltaspike.test.core.api.provider")
@@ -56,7 +57,7 @@ public class TestClassDeactivation
         return ShrinkWrap.create(WebArchive.class, "classDeactivation.war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
                 .addAsLibraries(testJar)
-                .addAsResource(FileUtils.getFileForURL(fileUrl.toString()))
+                .addAsResource(FileUtils.getFileForURL(fileUrl.toString()), DeltaSpikeTest.DELTASPIKE_PROPERTIES)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
