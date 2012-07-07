@@ -36,7 +36,6 @@ import org.apache.deltaspike.core.util.ClassUtils;
 
 class MessageBundleInvocationHandler implements InvocationHandler
 {
-
     /**
      * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object,
      *      java.lang.reflect.Method, java.lang.Object[])
@@ -46,12 +45,16 @@ class MessageBundleInvocationHandler implements InvocationHandler
     {
         final MessageTemplate messageTemplate = method.getAnnotation(MessageTemplate.class);
 
-        if (messageTemplate == null)
-        {
-            // nothing to do... TODO discuss it
-            return null;
-        }
+        String messageTemplateValue;
 
+        if (messageTemplate != null)
+        {
+            messageTemplateValue = messageTemplate.value();
+        }
+        else
+        {
+            messageTemplateValue = "{" + method.getName() + "}";
+        }
 
         MessageContext messageContext = resolveMessageContextFromArguments(args);
         List<Object> arguments = resolveMessageArguments(args);
@@ -73,11 +76,11 @@ class MessageBundleInvocationHandler implements InvocationHandler
 
         if (String.class.isAssignableFrom(method.getReturnType()))
         {
-            return messageContext.bundle(messageBundleName).message().template(messageTemplate.value())
+            return messageContext.bundle(messageBundleName).message().template(messageTemplateValue)
                     .argument(arguments.toArray()).toString();
         }
 
-        return messageContext.bundle(messageBundleName).message().template(messageTemplate.value())
+        return messageContext.bundle(messageBundleName).message().template(messageTemplateValue)
                 .argument(arguments.toArray());
 
     }
@@ -146,5 +149,4 @@ class MessageBundleInvocationHandler implements InvocationHandler
     {
         return BeanProvider.getContextualReference(MessageContext.class);
     }
-
 }
