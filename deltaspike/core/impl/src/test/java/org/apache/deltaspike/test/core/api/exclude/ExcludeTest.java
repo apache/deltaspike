@@ -58,8 +58,7 @@ public class ExcludeTest
 
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "excludeTest.jar")
                 .addPackage(SeCategory.class.getPackage())
-                .addPackage("org.apache.deltaspike.test.core.api.exclude")
-                .addPackage("org.apache.deltaspike.test.core.impl.activation")
+                .addPackage(ExcludeTest.class.getPackage())
                 .addAsManifestResource(FileUtils.getFileForURL(fileUrl.toString()))
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 

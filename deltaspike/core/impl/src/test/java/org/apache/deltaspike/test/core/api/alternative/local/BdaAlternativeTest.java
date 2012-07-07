@@ -55,7 +55,7 @@ public class BdaAlternativeTest
     {
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "securedAnnotationTest.jar")
                 .addPackage(SeCategory.class.getPackage())
-                .addPackage("org.apache.deltaspike.test.core.api.alternative.local")
+                .addPackage(BdaAlternativeTest.class.getPackage())
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
         return ShrinkWrap.create(WebArchive.class, "bdaAlternative.war")

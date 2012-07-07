@@ -68,8 +68,8 @@ public class GlobalAlternativeTest
     public static WebArchive deploy()
     {
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "excludeIntegrationTest.jar")
-                .addPackage("org.apache.deltaspike.test.core.api.alternative.global")
-                .addPackage("org.apache.deltaspike.test.core.api.alternative.global.qualifier")
+                .addPackage(GlobalAlternativeTest.class.getPackage())
+                .addPackage(QualifierA.class.getPackage())
                 .addPackage(SeCategory.class.getPackage())
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 

@@ -48,7 +48,7 @@ public class ExcludeTestProjectStageDevelopment
         ProjectStageProducer.setProjectStage(null);
 
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "excludeTestProjectStageDevelopmentTest.jar")
-                .addPackage("org.apache.deltaspike.test.core.api.exclude")
+                .addPackage(ExcludeTestProjectStageDevelopment.class.getPackage())
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
         return ShrinkWrap.create(WebArchive.class, "excludeProjectStageDevelopment.war")

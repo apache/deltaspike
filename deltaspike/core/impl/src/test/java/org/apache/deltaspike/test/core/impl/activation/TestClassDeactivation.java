@@ -50,8 +50,7 @@ public class TestClassDeactivation
                 .getResource(DeltaSpikeTest.DELTASPIKE_PROPERTIES);
 
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "testClassDeactivationTest.jar")
-                .addPackage("org.apache.deltaspike.test.core.api.provider")
-                .addPackage("org.apache.deltaspike.test.core.impl.activation")
+                .addPackage(TestClassDeactivation.class.getPackage())
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
         return ShrinkWrap.create(WebArchive.class, "classDeactivation.war")
