@@ -73,11 +73,11 @@ class MessageBundleInvocationHandler implements InvocationHandler
 
         if (String.class.isAssignableFrom(method.getReturnType()))
         {
-            return messageContext.message().bundle(messageBundleName).template(messageTemplate.value())
+            return messageContext.bundle(messageBundleName).message().template(messageTemplate.value())
                     .argument(arguments.toArray()).toString();
         }
 
-        return messageContext.message().bundle(messageBundleName).template(messageTemplate.value())
+        return messageContext.bundle(messageBundleName).message().template(messageTemplate.value())
                 .argument(arguments.toArray());
 
     }

@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.core.impl.message;
 
+import org.apache.deltaspike.core.api.message.MessageContext;
 import org.apache.deltaspike.core.api.message.MessageResolver;
 import org.apache.deltaspike.core.util.PropertyFileUtils;
 
@@ -33,7 +34,7 @@ class DefaultMessageResolver implements MessageResolver
 
 
     @Override
-    public String getMessage(String bundleName, Locale locale, String messageTemplate)
+    public String getMessage(MessageContext messageContext, String messageTemplate)
     {
         // we can use {{ as escaping for now
         if (messageTemplate.startsWith("{{"))
@@ -45,6 +46,9 @@ class DefaultMessageResolver implements MessageResolver
         if (messageTemplate.startsWith("{") && messageTemplate.endsWith("}"))
         {
             String resourceKey = messageTemplate.substring(1, messageTemplate.length() - 1);
+
+            String bundleName = messageContext.getBundle();
+
             if (bundleName == null)
             {
                 // using {} without a bundle is always an error
@@ -53,6 +57,7 @@ class DefaultMessageResolver implements MessageResolver
 
             try
             {
+                Locale locale = messageContext.getLocale();
                 ResourceBundle messageBundle = PropertyFileUtils.getResourceBundle(bundleName, locale);
 
                 return messageBundle.getString(resourceKey);

@@ -18,11 +18,11 @@
  */
 package org.apache.deltaspike.test.core.api.message;
 
+import org.apache.deltaspike.core.api.message.MessageContext;
 import org.apache.deltaspike.core.api.message.MessageResolver;
 import org.apache.deltaspike.core.util.PropertyFileUtils;
 
 import javax.enterprise.inject.Typed;
-import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
@@ -36,7 +36,7 @@ public class TestMessageResolver implements MessageResolver
     }
 
     @Override
-    public String getMessage(String messageBundleName, Locale locale, String messageTemplate)
+    public String getMessage(MessageContext messageContext, String messageTemplate)
     {
         if ( messageTemplate.startsWith("{") && messageTemplate.endsWith("}"))
         {
@@ -44,7 +44,7 @@ public class TestMessageResolver implements MessageResolver
             try
             {
                 ResourceBundle resolvedBundle = PropertyFileUtils
-                        .getResourceBundle(TestMessages.class.getName(), locale);
+                        .getResourceBundle(TestMessages.class.getName(), messageContext.getLocale());
                 return resolvedBundle.getString(messageTemplate);
             }
             catch (MissingResourceException e)

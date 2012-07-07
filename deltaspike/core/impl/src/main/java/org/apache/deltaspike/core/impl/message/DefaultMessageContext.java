@@ -35,6 +35,7 @@ class DefaultMessageContext implements MessageContext
     private MessageInterpolator messageInterpolator = null;
     private MessageResolver messageResolver = null;
     private LocaleResolver localeResolver = null;
+    private String messageBundleName = null;
 
     DefaultMessageContext()
     {
@@ -45,12 +46,26 @@ class DefaultMessageContext implements MessageContext
         messageInterpolator(otherMessageContext.getMessageInterpolator());
         localeResolver(otherMessageContext.getLocaleResolver());
         messageResolver(otherMessageContext.getMessageResolver()) ;
+
     }
 
     @Override
     public MessageContext clone()
     {
         return new DefaultMessageContext(this);
+    }
+
+    @Override
+    public MessageContext bundle(String messageBundleName)
+    {
+        this.messageBundleName = messageBundleName;
+        return this;
+    }
+
+    @Override
+    public String getBundle()
+    {
+        return messageBundleName;
     }
 
     @Override
@@ -103,48 +118,4 @@ class DefaultMessageContext implements MessageContext
         return this;
     }
 
-/*
-    * generated
-    */
-
-    @Override
-    public boolean equals(Object o)
-    {
-        if (this == o)
-        {
-            return true;
-        }
-        if (!(o instanceof DefaultMessageContext))
-        {
-            return false;
-        }
-
-        DefaultMessageContext that = (DefaultMessageContext) o;
-
-        if (!localeResolver.equals(that.localeResolver))
-        {
-            return false;
-        }
-        if (messageInterpolator != null
-                ? !messageInterpolator.equals(that.messageInterpolator) : that.messageInterpolator != null)
-        {
-            return false;
-        }
-        //noinspection RedundantIfStatement
-        if (messageResolver != null ? !messageResolver.equals(that.messageResolver) : that.messageResolver != null)
-        {
-            return false;
-        }
-
-        return true;
-    }
-
-    @Override
-    public int hashCode()
-    {
-        int result = messageInterpolator != null ? messageInterpolator.hashCode() : 0;
-        result = 31 * result + (messageResolver != null ? messageResolver.hashCode() : 0);
-        result = 31 * result + localeResolver.hashCode();
-        return result;
-    }
 }

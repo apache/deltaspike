@@ -36,7 +36,7 @@ import org.junit.runner.RunWith;
 import javax.enterprise.inject.spi.Extension;
 import javax.inject.Inject;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Assert;
 
 /**
  * Tests for {@link MessageContext}
@@ -75,7 +75,7 @@ public class MessageContextTest
     @Test
     public void testSimpleMessage()
     {
-        assertEquals("Welcome to DeltaSpike",
+        Assert.assertEquals("Welcome to DeltaSpike",
                 simpleMessage.welcomeTo(messageContext, "DeltaSpike").toString());
     }
 
@@ -89,7 +89,7 @@ public class MessageContextTest
                 .messageResolver(new TestMessageResolver())
                 .message().template("{hello}").argument("hans").toString();
 
-        assertEquals("test message to hans", messageText);
+        Assert.assertEquals("test message to hans", messageText);
     }
 
     @Test
@@ -101,17 +101,17 @@ public class MessageContextTest
                 .messageResolver(new TestMessageResolver())
                 .message().template("{hello}").argument("hans").toString();
 
-        assertEquals("Test Nachricht an hans", messageText);
+        Assert.assertEquals("Test Nachricht an hans", messageText);
     }
 
     @Test
     public void createInvalidMessageTest()
     {
         String messageText = messageContext.message().template("{xyz123}").toString();
-        assertEquals("???xyz123???", messageText);
+        Assert.assertEquals("???xyz123???", messageText);
 
-        messageText = messageContext.message().bundle("nonexistingbundle.properties").template("{xyz123}").toString();
-        assertEquals("???xyz123???", messageText);
+        messageText = messageContext.bundle("nonexistingbundle.properties").message().template("{xyz123}").toString();
+        Assert.assertEquals("???xyz123???", messageText);
     }
 
     @Test
@@ -120,6 +120,7 @@ public class MessageContextTest
         String messageText = messageContext.message().template("{xyz123}").
                 argument("123").argument("456").argument("789").toString();
 
-        assertEquals("???xyz123??? [123, 456, 789]", messageText);
+        Assert.assertEquals("???xyz123??? [123, 456, 789]", messageText);
     }
+
 }

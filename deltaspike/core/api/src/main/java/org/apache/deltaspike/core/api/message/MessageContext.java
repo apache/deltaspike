@@ -38,6 +38,18 @@ public interface MessageContext extends LocaleResolver, Serializable, Cloneable
     Message message();
 
     /**
+     * @param messageBundleName a name of the message bundle which should be used
+     * @return the instance of the current message context builder
+     */
+    MessageContext bundle(String messageBundleName);
+
+    /**
+     * @return the configured message bundle name
+     */
+    String getBundle();
+
+
+    /**
      * @param messageInterpolator a new message interpolator to be set
      * @return the instance of the current message context builder
      */

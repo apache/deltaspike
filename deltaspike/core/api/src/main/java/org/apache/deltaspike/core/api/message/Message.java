@@ -24,12 +24,6 @@ package org.apache.deltaspike.core.api.message;
 public interface Message
 {
     /**
-     * @param messageBundleName a name of the message bundle which should be used
-     * @return the instance of the current message context builder
-     */
-    Message bundle(String messageBundleName);
-
-    /**
      * @param messageTemplate message key (or inline-text) for the current message
      * @return the current instance of the message builder to allow a fluent api
      */
@@ -40,11 +34,6 @@ public interface Message
      * @return the current instance of the message builder to allow a fluent api
      */
     Message argument(Object... arguments);
-
-    /**
-     * @return the configured message bundle name
-     */
-    String getBundle();
 
     /**
      * @return the message key (or inline-text) of the current message

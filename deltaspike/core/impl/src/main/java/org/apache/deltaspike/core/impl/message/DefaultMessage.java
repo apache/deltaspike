@@ -40,7 +40,6 @@ class DefaultMessage implements Message
 {
     protected String messageTemplate;
     protected List<Object> arguments = new ArrayList<Object>();
-    protected String messageBundleName = null;
 
     private MessageContext messageContext;
 
@@ -52,13 +51,11 @@ class DefaultMessage implements Message
     }
 
     DefaultMessage(MessageContext messageContext,
-                   String messageBundleName,
                    String messageTemplate,
                    Object... arguments)
     {
         reset();
 
-        this.messageBundleName = messageBundleName;
         this.messageContext = messageContext;
         this.messageTemplate = messageTemplate;
 
@@ -67,16 +64,8 @@ class DefaultMessage implements Message
 
     protected void reset()
     {
-        messageBundleName = null;
         messageTemplate = null;
         arguments = new ArrayList<Object>();
-    }
-
-    @Override
-    public Message bundle(String messageBundleName)
-    {
-        this.messageBundleName = messageBundleName;
-        return this;
     }
 
     @Override
@@ -91,12 +80,6 @@ class DefaultMessage implements Message
     {
         this.messageTemplate = messageTemplate;
         return this;
-    }
-
-    @Override
-    public String getBundle()
-    {
-        return messageBundleName;
     }
 
     @Override
@@ -118,16 +101,13 @@ class DefaultMessage implements Message
 
         // the string construction happens in 3 phases
 
-        // first we need the Locale which should get used
-        Locale locale = messageContext.getLocale();
-
-        // we then try to pickup the message via the MessageResolver
+        // first try to pickup the message via the MessageResolver
         String template = getTemplate();
         String ret = template;
         MessageResolver messageResolver = messageContext.getMessageResolver();
         if (messageResolver != null)
         {
-            String resolvedTemplate = messageResolver.getMessage(getBundle(), locale, template);
+            String resolvedTemplate = messageResolver.getMessage(messageContext, template);
             if (resolvedTemplate == null)
             {
                 // this means an error happened during message resolving
@@ -141,6 +121,8 @@ class DefaultMessage implements Message
         MessageInterpolator messageInterpolator = messageContext.getMessageInterpolator();
         if (messageInterpolator != null)
         {
+            Locale locale = messageContext.getLocale();
+
             ret = messageInterpolator.interpolate(template, getArguments(), locale);
         }
 
