@@ -19,6 +19,7 @@
 package org.apache.deltaspike.test.core.api.message;
 
 import org.apache.deltaspike.core.api.message.LocaleResolver;
+import org.apache.deltaspike.core.api.message.Message;
 import org.apache.deltaspike.core.api.message.MessageContext;
 import org.apache.deltaspike.core.impl.message.MessageBundleExtension;
 import org.apache.deltaspike.test.category.SeCategory;
@@ -126,5 +127,27 @@ public class MessageContextTest
                 argument("123").argument("456").argument("789").toString();
 
         Assert.assertEquals("???xyz123??? [123, 456, 789]", messageText);
+    }
+
+    @Test
+    public void testMessageEquals()
+    {
+        Message m1 = messageContext.message();
+        Message m2 = messageContext.message();
+        Message m3 = messageContext.messageResolver(new TestMessageResolver()).message();
+
+        Assert.assertEquals(m1, m1);
+        Assert.assertEquals(m1, m2);
+        Assert.assertEquals(m1, m3);
+        Assert.assertEquals(m3, m1);
+        Assert.assertEquals(m2, m3);
+
+        m1.template("dumdidum").argument("nonono");
+        m2.template("dumdidum").argument("nonono");
+        Assert.assertEquals(m1, m2);
+
+        m2.argument("toomuch");
+        Assert.assertFalse(m1.equals(m2));
+        Assert.assertFalse(m2.equals(m1));
     }
 }

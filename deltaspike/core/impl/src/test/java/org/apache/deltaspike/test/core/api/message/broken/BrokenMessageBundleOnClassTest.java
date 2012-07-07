@@ -58,7 +58,7 @@ public class BrokenMessageBundleOnClassTest
      * cannot contain other archives.
      */
     @Deployment
-    @ShouldThrowException(IllegalStateException.class)
+    @ShouldThrowException(Exception.class)
     public static WebArchive deploy()
     {
         JavaArchive testJar = ShrinkWrap

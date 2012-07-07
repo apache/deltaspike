@@ -50,18 +50,6 @@ class DefaultMessage implements Message
         this.messageContext = messageContext;
     }
 
-    DefaultMessage(MessageContext messageContext,
-                   String messageTemplate,
-                   Object... arguments)
-    {
-        reset();
-
-        this.messageContext = messageContext;
-        this.messageTemplate = messageTemplate;
-
-        Collections.addAll(this.arguments, arguments);
-    }
-
     protected void reset()
     {
         messageTemplate = null;
@@ -103,6 +91,11 @@ class DefaultMessage implements Message
 
         // first try to pickup the message via the MessageResolver
         String template = getTemplate();
+        if (template == null)
+        {
+            return "";
+        }
+
         String ret = template;
         MessageResolver messageResolver = messageContext.getMessageResolver();
         if (messageResolver != null)
@@ -170,15 +163,22 @@ class DefaultMessage implements Message
             return false;
         }
 
-        Message that = (Message) o;
+        Message other = (Message) o;
 
-        if (!getTemplate().equals(that.getTemplate()))
+        if (getTemplate() == null && other.getTemplate() != null)
+        {
+            return false;
+        }
+
+        if (getTemplate() != null && !getTemplate().equals(other.getTemplate()))
         {
             return false;
         }
 
         //noinspection RedundantIfStatement
-        if (arguments != null ? !Arrays.equals(arguments.toArray(), that.getArguments()) : that.getArguments() != null)
+        if (arguments != null
+                ? !Arrays.equals(arguments.toArray(), other.getArguments())
+                : other.getArguments() != null)
         {
             return false;
         }
