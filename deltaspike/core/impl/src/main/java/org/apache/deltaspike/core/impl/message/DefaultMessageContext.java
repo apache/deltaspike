@@ -26,7 +26,6 @@ import org.apache.deltaspike.core.api.message.MessageResolver;
 
 import javax.enterprise.inject.Typed;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -69,8 +68,18 @@ class DefaultMessageContext implements MessageContext
     @Override
     public MessageContext messageSource(String... messageSource)
     {
+        List<String> newMessageSources = new ArrayList<String>();
+
+        for (String currentMessageSource : messageSource)
+        {
+            //don't insert message-sources twice
+            if (!this.messageSources.contains(currentMessageSource))
+            {
+                newMessageSources.add(currentMessageSource);
+            }
+        }
         // add on first position
-        this.messageSources.addAll(0, Arrays.asList(messageSource));
+        this.messageSources.addAll(0, newMessageSources);
         return this;
     }
 
