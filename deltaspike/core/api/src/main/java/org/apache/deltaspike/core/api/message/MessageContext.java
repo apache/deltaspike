@@ -43,15 +43,7 @@ public interface MessageContext extends LocaleResolver, Serializable, Cloneable
      * @param messageSource message-source to add
      * @return the instance of the current message context builder
      */
-    MessageContext messageSource(MessageSource messageSource);
-
-    /**
-     * Allows to add a message-source class which needs to provide a default constructor.
-     * The message-source can be used by a {@link MessageResolver}
-     * @param messageSourceClass class of a message-source to add
-     * @return the instance of the current message context builder
-     */
-    MessageContext messageSource(Class<? extends MessageSource> messageSourceClass);
+    MessageContext messageSource(String... messageSource);
 
     /**
      * @param messageInterpolator a new message interpolator to be set
@@ -89,5 +81,5 @@ public interface MessageContext extends LocaleResolver, Serializable, Cloneable
     /**
      * @return list of registered message-sources
      */
-    List<MessageSource> getMessageSources();
+    List<String> getMessageSources();
 }

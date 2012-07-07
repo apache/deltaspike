@@ -20,7 +20,6 @@ package org.apache.deltaspike.core.impl.message;
 
 import org.apache.deltaspike.core.api.message.MessageContext;
 import org.apache.deltaspike.core.api.message.MessageResolver;
-import org.apache.deltaspike.core.api.message.MessageSource;
 import org.apache.deltaspike.core.util.PropertyFileUtils;
 
 import javax.enterprise.context.Dependent;
@@ -50,7 +49,7 @@ class DefaultMessageResolver implements MessageResolver
         {
             String resourceKey = messageTemplate.substring(1, messageTemplate.length() - 1);
 
-            List<MessageSource> messageSources = messageContext.getMessageSources();
+            List<String> messageSources = messageContext.getMessageSources();
 
             if (messageSources == null || messageSources.isEmpty())
             {
@@ -58,9 +57,9 @@ class DefaultMessageResolver implements MessageResolver
                 return null;
             }
 
-            Iterator<MessageSource> messageSourceIterator = messageSources.iterator();
+            Iterator<String> messageSourceIterator = messageSources.iterator();
 
-            MessageSource currentMessageSource;
+            String currentMessageSource;
             while (messageSourceIterator.hasNext())
             {
                 currentMessageSource = messageSourceIterator.next();
@@ -68,8 +67,7 @@ class DefaultMessageResolver implements MessageResolver
                 try
                 {
                     Locale locale = messageContext.getLocale();
-                    ResourceBundle messageBundle = PropertyFileUtils
-                        .getResourceBundle(currentMessageSource.getKey(), locale);
+                    ResourceBundle messageBundle = PropertyFileUtils.getResourceBundle(currentMessageSource, locale);
 
                     return messageBundle.getString(resourceKey);
                 }

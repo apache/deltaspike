@@ -23,11 +23,10 @@ import org.apache.deltaspike.core.api.message.Message;
 import org.apache.deltaspike.core.api.message.MessageContext;
 import org.apache.deltaspike.core.api.message.MessageInterpolator;
 import org.apache.deltaspike.core.api.message.MessageResolver;
-import org.apache.deltaspike.core.api.message.MessageSource;
-import org.apache.deltaspike.core.util.ClassUtils;
 
 import javax.enterprise.inject.Typed;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -40,7 +39,7 @@ class DefaultMessageContext implements MessageContext
     private MessageInterpolator messageInterpolator = null;
     private MessageResolver messageResolver = null;
     private LocaleResolver localeResolver = null;
-    private List<MessageSource> messageSources = new ArrayList<MessageSource>();
+    private List<String> messageSources = new ArrayList<String>();
 
     DefaultMessageContext()
     {
@@ -68,21 +67,11 @@ class DefaultMessageContext implements MessageContext
     }
 
     @Override
-    public MessageContext messageSource(MessageSource messageSource)
+    public MessageContext messageSource(String... messageSource)
     {
-        this.messageSources.add(messageSource);
+        // add on first position
+        this.messageSources.addAll(0, Arrays.asList(messageSource));
         return this;
-    }
-
-    @Override
-    public MessageContext messageSource(Class<? extends MessageSource> messageSourceClass)
-    {
-        //prevent adding the interface itself - TODO discuss it
-        if (MessageSource.class.equals(messageSourceClass))
-        {
-            return this;
-        }
-        return messageSource(ClassUtils.tryToInstantiateClass(messageSourceClass));
     }
 
     @Override
@@ -103,7 +92,7 @@ class DefaultMessageContext implements MessageContext
     }
 
     @Override
-    public List<MessageSource> getMessageSources()
+    public List<String> getMessageSources()
     {
         return Collections.unmodifiableList(this.messageSources);
     }

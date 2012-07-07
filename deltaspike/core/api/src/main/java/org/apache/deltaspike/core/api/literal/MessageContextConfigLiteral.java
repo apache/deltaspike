@@ -19,7 +19,6 @@
 package org.apache.deltaspike.core.api.literal;
 
 import org.apache.deltaspike.core.api.message.LocaleResolver;
-import org.apache.deltaspike.core.api.message.MessageSource;
 import org.apache.deltaspike.core.api.message.annotation.MessageContextConfig;
 import org.apache.deltaspike.core.api.message.MessageInterpolator;
 import org.apache.deltaspike.core.api.message.MessageResolver;
@@ -36,17 +35,17 @@ public class MessageContextConfigLiteral extends AnnotationLiteral<MessageContex
     private final Class<? extends MessageResolver> messageResolver;
     private final Class<? extends MessageInterpolator> messageInterpolator;
     private final Class<? extends LocaleResolver> localeResolver;
-    private final Class<? extends MessageSource>[] messageSource;
+    private final String[] messageSource;
 
     public MessageContextConfigLiteral()
     {
-        this(MessageResolver.class, MessageInterpolator.class, LocaleResolver.class, MessageSource.class);
+        this(MessageResolver.class, MessageInterpolator.class, LocaleResolver.class, new String[0]);
     }
 
     public MessageContextConfigLiteral(Class<? extends MessageResolver> messageResolver,
                                        Class<? extends MessageInterpolator> messageInterpolator,
                                        Class<? extends LocaleResolver> localeResolver,
-                                       Class<? extends MessageSource>... messageSource)
+                                       String[] messageSource)
     {
         this.messageResolver = messageResolver;
         this.messageInterpolator = messageInterpolator;
@@ -55,7 +54,7 @@ public class MessageContextConfigLiteral extends AnnotationLiteral<MessageContex
     }
 
     @Override
-    public Class<? extends MessageSource>[] messageSource()
+    public String[] messageSource()
     {
         return this.messageSource;
     }

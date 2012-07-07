@@ -21,7 +21,6 @@ package org.apache.deltaspike.core.api.message.annotation;
 import org.apache.deltaspike.core.api.message.LocaleResolver;
 import org.apache.deltaspike.core.api.message.MessageInterpolator;
 import org.apache.deltaspike.core.api.message.MessageResolver;
-import org.apache.deltaspike.core.api.message.MessageSource;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -43,7 +42,7 @@ public @interface MessageContextConfig
      * Optional custom message-source.
      * @return classes of the message-sources
      */
-    Class<? extends MessageSource>[] messageSource() default MessageSource.class;
+    String[] messageSource() default { };
 
     /**
      * {@link MessageResolver} which should be used for resolving the message-template (= basic text)

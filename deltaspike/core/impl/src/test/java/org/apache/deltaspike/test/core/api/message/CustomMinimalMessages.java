@@ -20,12 +20,11 @@ package org.apache.deltaspike.test.core.api.message;
 
 import org.apache.deltaspike.core.api.message.annotation.MessageBundle;
 import org.apache.deltaspike.core.api.message.annotation.MessageContextConfig;
-import org.apache.deltaspike.test.core.api.message.source.MinimalMessageSource;
 
 @MessageBundle
 @MessageContextConfig(
     localeResolver = FixedEnglishLocalResolver.class,
-    messageSource = MinimalMessageSource.class)
+    messageSource = "customMinimalMessage")
 public interface CustomMinimalMessages
 {
     String sayHello(String name);
