@@ -61,7 +61,7 @@ public class MessageContextTest
     {
         JavaArchive testJar = ShrinkWrap
                 .create(JavaArchive.class, "messageContextTest.jar")
-                .addPackage("org.apache.deltaspike.test.core.api.message")
+                .addPackage(MessageContextTest.class.getPackage())
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
         return ShrinkWrap
