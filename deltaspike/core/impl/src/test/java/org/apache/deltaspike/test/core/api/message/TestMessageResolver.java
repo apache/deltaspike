@@ -18,12 +18,10 @@
  */
 package org.apache.deltaspike.test.core.api.message;
 
-import org.apache.deltaspike.core.api.message.LocaleResolver;
 import org.apache.deltaspike.core.api.message.MessageResolver;
 import org.apache.deltaspike.core.util.PropertyFileUtils;
 
 import javax.enterprise.inject.Typed;
-import javax.inject.Inject;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -33,46 +31,21 @@ public class TestMessageResolver implements MessageResolver
 {
     private static final long serialVersionUID = -7977480064291950923L;
 
-    private ResourceBundle messageBundle;
-
     protected TestMessageResolver()
     {
     }
 
-    @Inject
-    public TestMessageResolver(LocaleResolver localeResolver)
-    {
-        ResourceBundle resolvedBundle;
-        try
-        {
-            resolvedBundle = PropertyFileUtils
-                .getResourceBundle(TestMessages.class.getName(), localeResolver.getLocale());
-        }
-        catch (MissingResourceException e)
-        {
-            //X TODO log it
-            resolvedBundle = null;
-        }
-
-        messageBundle = resolvedBundle;
-    }
-
     @Override
-    public void initialize(String messageBundleName, Locale locale)
+    public String getMessage(String messageBundleName, Locale locale, String messageTemplate)
     {
-
-    }
-
-    @Override
-    public String getMessage(String messageTemplate)
-    {
-        if (messageBundle != null && messageTemplate != null &&
-                messageTemplate.startsWith("{") && messageTemplate.endsWith("}"))
+        if ( messageTemplate.startsWith("{") && messageTemplate.endsWith("}"))
         {
             messageTemplate = messageTemplate.substring(1, messageTemplate.length() - 1);
             try
             {
-                return messageBundle.getString(messageTemplate);
+                ResourceBundle resolvedBundle = PropertyFileUtils
+                        .getResourceBundle(TestMessages.class.getName(), locale);
+                return resolvedBundle.getString(messageTemplate);
             }
             catch (MissingResourceException e)
             {

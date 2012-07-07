@@ -25,15 +25,13 @@ import org.apache.deltaspike.core.api.message.MessageResolver;
 
 import javax.enterprise.inject.Typed;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Locale;
 
 /**
  * {@inheritDoc}
  */
 @Typed()
-class DefaultMessageBuilder implements MessageContext.MessageBuilder
+class DefaultMessageBuilder
 {
     private String messageTemplate;
     private ArrayList<Object> argumentList;
@@ -47,23 +45,9 @@ class DefaultMessageBuilder implements MessageContext.MessageBuilder
     public DefaultMessageBuilder(MessageContext messageContext)
     {
         reset();
-        this.messageContext = new UnmodifiableMessageContext(messageContext);
+        this.messageContext = messageContext;
     }
 
-    @Override
-    public MessageContext.MessageBuilder text(String messageTemplate)
-    {
-        this.messageTemplate = messageTemplate;
-        return this;
-    }
-
-    @Override
-    public MessageContext.MessageBuilder argument(Object... arguments)
-    {
-        Collections.addAll(argumentList, arguments);
-
-        return this;
-    }
 
     private Message buildMessageTemplate()
     {
@@ -72,7 +56,7 @@ class DefaultMessageBuilder implements MessageContext.MessageBuilder
             throw new IllegalStateException("messageTemplate is missing");
         }
 
-        return new DefaultMessage(messageContext, messageTemplate,
+        return new DefaultMessage(messageContext, null, messageTemplate,
                 argumentList.toArray(new Object[argumentList.size()]));
     }
 
@@ -82,7 +66,6 @@ class DefaultMessageBuilder implements MessageContext.MessageBuilder
         argumentList = new ArrayList<Object>();
     }
 
-    @Override
     public Message create()
     {
         Message result = buildMessageTemplate();
@@ -90,7 +73,6 @@ class DefaultMessageBuilder implements MessageContext.MessageBuilder
         return result;
     }
 
-    @Override
     public String toText()
     {
         Message baseMessage = buildMessageTemplate();
@@ -100,7 +82,7 @@ class DefaultMessageBuilder implements MessageContext.MessageBuilder
 
     private String getMessageText(Message baseMessage)
     {
-        String messageTemplate = baseMessage.getMessageTemplate();
+        String messageTemplate = baseMessage.getTemplate();
 
         MessageResolver messageResolver = messageContext.getMessageResolver();
         if (messageResolver != null)
@@ -126,12 +108,12 @@ class DefaultMessageBuilder implements MessageContext.MessageBuilder
 
     private String checkedResult(String result, Message baseMessage)
     {
-        if (result == null || isKey(baseMessage.getMessageTemplate()) || isKeyWithoutMarkers(result, baseMessage))
+        if (result == null || isKey(baseMessage.getTemplate()) || isKeyWithoutMarkers(result, baseMessage))
         {
             //minor performance tweak for inline-msg
-            String oldTemplate = extractTemplate(baseMessage.getMessageTemplate());
+            String oldTemplate = extractTemplate(baseMessage.getTemplate());
 
-            if (result == null || result.equals(oldTemplate) || result.equals(baseMessage.getMessageTemplate()))
+            if (result == null || result.equals(oldTemplate) || result.equals(baseMessage.getTemplate()))
             {
                 return MessageResolver.MISSING_RESOURCE_MARKER + oldTemplate +
                         MessageResolver.MISSING_RESOURCE_MARKER + getArguments(baseMessage);
@@ -142,7 +124,7 @@ class DefaultMessageBuilder implements MessageContext.MessageBuilder
 
     private boolean isKeyWithoutMarkers(String result, Message baseMessage)
     {
-        return (!result.contains(" ") && result.endsWith(baseMessage.getMessageTemplate()));
+        return (!result.contains(" ") && result.endsWith(baseMessage.getTemplate()));
     }
 
     private String getArguments(Message message)
@@ -178,20 +160,6 @@ class DefaultMessageBuilder implements MessageContext.MessageBuilder
         return result.toString();
     }
 
-    private void resolveAndProcessLazyNumberedArgument(
-            MessageContext messageContext, List<Object> result, String argument)
-    {
-        String resolvedArgumentValue = resolveValueOfArgumentDescriptor(messageContext, argument);
-
-        result.add(resolvedArgumentValue);
-    }
-
-    private String resolveValueOfArgumentDescriptor(MessageContext messageContext, String argumentAsKey)
-    {
-        return messageContext.message()
-                .text(argumentAsKey)
-                .toText();
-    }
 
     private String extractTemplate(String template)
     {
@@ -217,7 +185,7 @@ class DefaultMessageBuilder implements MessageContext.MessageBuilder
 
     private String resolveMessage(MessageResolver messageResolver, Message baseMessage)
     {
-        return messageResolver.getMessage(baseMessage.getMessageTemplate());
+        return null; //X messageResolver.getMessage(baseMessage.getTemplate());
     }
 
     private String interpolateMessage(MessageInterpolator messageInterpolator,

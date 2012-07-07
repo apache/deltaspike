@@ -21,14 +21,39 @@ package org.apache.deltaspike.core.api.message;
 import java.io.Serializable;
 
 /**
- * Central context for handling dynamic messages
+ * Central context for handling dynamic messages.
+ * Instances of this type are mutable but also {@link Cloneable}.
+ * If you need a new instance, then use {@link Object#clone()}
  */
-public interface MessageContext extends LocaleResolver, Serializable
+public interface MessageContext extends LocaleResolver, Serializable, Cloneable
 {
     /**
-     * @return message builder to add and/or create a new message based on the current context via a fluent api
+     * Clones the current MessageContext
      */
-    MessageBuilder message();
+    MessageContext clone();
+
+    /**
+     * @return message based on the current context modifiable via a fluent api
+     */
+    Message message();
+
+    /**
+     * @param messageInterpolator a new message interpolator to be set
+     * @return the instance of the current message context builder
+     */
+    MessageContext messageInterpolator(MessageInterpolator messageInterpolator);
+
+    /**
+     * @param messageResolver a new message resolver to be set
+     * @return the instance of the current message context builder
+     */
+    MessageContext messageResolver(MessageResolver messageResolver);
+
+    /**
+     * @param localeResolver a new locale resolver to be set
+     * @return the instance of the current message context builder
+     */
+    MessageContext localeResolver(LocaleResolver localeResolver);
 
     /**
      * @return the current message interpolator
@@ -45,51 +70,6 @@ public interface MessageContext extends LocaleResolver, Serializable
      */
     LocaleResolver getLocaleResolver();
 
-    /**
-     * @param messageInterpolator a new message interpolator
-     * @return the instance of the current message context builder
-     */
-    MessageContext setMessageInterpolator(MessageInterpolator messageInterpolator);
 
-    /**
-     * @param messageResolver a new message resolver
-     * @return the instance of the current message context builder
-     */
-    MessageContext setMessageResolver(MessageResolver messageResolver);
-
-    /**
-     * @param localeResolver a new locale resolver
-     * @return the instance of the current message context builder
-     */
-    MessageContext setLocaleResolver(LocaleResolver localeResolver);
-
-
-    /**
-     * Helper for building instances of {@link Message}
-     */
-    interface MessageBuilder
-    {
-        /**
-         * @param messageTemplate message key (or inline-text) for the current message
-         * @return the current instance of the message builder to allow a fluent api
-         */
-        MessageBuilder text(String messageTemplate);
-
-        /**
-         * @param arguments numbered and/or named argument(s) for the current message
-         * @return the current instance of the message builder to allow a fluent api
-         */
-        MessageBuilder argument(Object... arguments);
-
-        /**
-         * @return the message which was built via the fluent api
-         */
-        Message create();
-
-        /**
-         * @return the text of the message which was built via the fluent api
-         */
-        String toText();
-    }
 
 }

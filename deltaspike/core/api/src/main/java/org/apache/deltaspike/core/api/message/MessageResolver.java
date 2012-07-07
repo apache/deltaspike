@@ -30,15 +30,12 @@ public interface MessageResolver extends Serializable
     String MISSING_RESOURCE_MARKER = "???";
 
     /**
+     * @param bundleName the name of the messageBundle to use or <code>null</code> if none should be used
+     * @param locale the Locale to use for the resolving or <code>null</code> if the default should be used
      * @param messageTemplate the message key (or in-lined text) of the current message
      * @return the final but not interpolated message text
+     *         or <code>null</code> if an error happened or the resource could not be resolved.
      */
-    String getMessage(String messageTemplate);
+    String getMessage(String bundleName, Locale locale, String messageTemplate);
 
-    /**
-     * Initialize the MessageResolver with the message bundle and Locale
-     * which should be used.
-     * TODO review! It might be better to pass a whole configuration
-     */
-    void initialize(String messageBundleName, Locale locale);
 }

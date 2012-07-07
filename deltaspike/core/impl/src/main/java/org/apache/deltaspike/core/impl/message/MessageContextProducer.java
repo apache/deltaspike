@@ -49,9 +49,9 @@ public class MessageContextProducer
     {
         MessageContext messageContext = new DefaultMessageContext();
 
-        messageContext.setMessageInterpolator(messageInterpolator);
-        messageContext.setLocaleResolver(localeResolver);
-        messageContext.setMessageResolver(messageResolver);
+        messageContext.messageInterpolator(messageInterpolator);
+        messageContext.localeResolver(localeResolver);
+        messageContext.messageResolver(messageResolver);
 
         return messageContext;
     }

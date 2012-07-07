@@ -117,7 +117,7 @@ public class ConfigurableLocaleMessageTest
         result = localizedMessage.welcomeWithDateVariable(dt);
         assertEquals(expectedResult, result);
 
-        result = messageContext.message().text("Welcome at %tB").argument(dt).toText();
+        result = messageContext.message().template("Welcome at %tB").argument(dt).toString();
         assertEquals("Welcome at " + String.format(locale, "%1$tB", dt), result);
 
     }

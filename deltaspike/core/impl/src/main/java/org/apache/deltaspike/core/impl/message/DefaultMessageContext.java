@@ -18,14 +18,11 @@
  */
 package org.apache.deltaspike.core.impl.message;
 
-import org.apache.deltaspike.core.api.literal.AnyLiteral;
 import org.apache.deltaspike.core.api.message.LocaleResolver;
+import org.apache.deltaspike.core.api.message.Message;
 import org.apache.deltaspike.core.api.message.MessageContext;
 import org.apache.deltaspike.core.api.message.MessageInterpolator;
 import org.apache.deltaspike.core.api.message.MessageResolver;
-import org.apache.deltaspike.core.api.message.annotation.MessageContextConfig;
-import org.apache.deltaspike.core.api.provider.BeanProvider;
-import org.apache.deltaspike.core.util.ClassUtils;
 
 import javax.enterprise.inject.Typed;
 import java.util.Locale;
@@ -45,43 +42,21 @@ class DefaultMessageContext implements MessageContext
 
     DefaultMessageContext(MessageContext otherMessageContext)
     {
-        setMessageInterpolator(otherMessageContext.getMessageInterpolator());
-        setLocaleResolver(otherMessageContext.getLocaleResolver());
-        setMessageResolver(otherMessageContext.getMessageResolver()) ;
+        messageInterpolator(otherMessageContext.getMessageInterpolator());
+        localeResolver(otherMessageContext.getLocaleResolver());
+        messageResolver(otherMessageContext.getMessageResolver()) ;
     }
-
-    DefaultMessageContext(MessageContextConfig messageContextConfig)
-    {
-        if (!MessageResolver.class.equals(messageContextConfig.messageResolver()))
-        {
-            Class<? extends MessageResolver> messageResolverClass =
-                    ClassUtils.tryToLoadClassForName(messageContextConfig.messageResolver().getName());
-
-            messageResolver = BeanProvider.getContextualReference(messageResolverClass, new AnyLiteral());
-        }
-
-        if (!MessageInterpolator.class.equals(messageContextConfig.messageInterpolator()))
-        {
-            Class<? extends MessageInterpolator> messageInterpolatorClass =
-                    ClassUtils.tryToLoadClassForName(messageContextConfig.messageInterpolator().getName());
-
-            messageInterpolator = BeanProvider.getContextualReference(messageInterpolatorClass, new AnyLiteral());
-        }
-
-        if (!LocaleResolver.class.equals(messageContextConfig.localeResolver()))
-        {
-            Class<? extends LocaleResolver> localeResolverClass =
-                    ClassUtils.tryToLoadClassForName(messageContextConfig.localeResolver().getName());
-
-            localeResolver = BeanProvider.getContextualReference(localeResolverClass, new AnyLiteral());
-        }
-    }
-
 
     @Override
-    public MessageBuilder message()
+    public MessageContext clone()
     {
-        return new DefaultMessageBuilder(this);
+        return new DefaultMessageContext(this);
+    }
+
+    @Override
+    public Message message()
+    {
+        return new DefaultMessage(this);
     }
 
     @Override
@@ -89,7 +64,7 @@ class DefaultMessageContext implements MessageContext
     {
         if (getLocaleResolver() == null)
         {
-            return null;
+            return Locale.getDefault();
         }
 
         return getLocaleResolver().getLocale();
@@ -100,7 +75,7 @@ class DefaultMessageContext implements MessageContext
         return localeResolver;
     }
 
-    public MessageContext setLocaleResolver(LocaleResolver localeResolver)
+    public MessageContext localeResolver(LocaleResolver localeResolver)
     {
         this.localeResolver = localeResolver;
         return this;
@@ -111,7 +86,7 @@ class DefaultMessageContext implements MessageContext
         return messageInterpolator;
     }
 
-    public MessageContext setMessageInterpolator(MessageInterpolator messageInterpolator)
+    public MessageContext messageInterpolator(MessageInterpolator messageInterpolator)
     {
         this.messageInterpolator = messageInterpolator;
         return this;
@@ -122,7 +97,7 @@ class DefaultMessageContext implements MessageContext
         return messageResolver;
     }
 
-    public MessageContext setMessageResolver(MessageResolver messageResolver)
+    public MessageContext messageResolver(MessageResolver messageResolver)
     {
         this.messageResolver = messageResolver;
         return this;

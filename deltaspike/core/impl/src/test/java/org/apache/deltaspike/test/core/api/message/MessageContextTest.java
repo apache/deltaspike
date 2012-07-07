@@ -85,9 +85,9 @@ public class MessageContextTest
         LocaleResolver localeResolver = new FixedEnglishLocalResolver();
 
         String messageText = messageContext
-                .setLocaleResolver(localeResolver)
-                .setMessageResolver(new TestMessageResolver(localeResolver))
-                .message().text("{hello}").argument("hans").toText();
+                .localeResolver(localeResolver)
+                .messageResolver(new TestMessageResolver())
+                .message().template("{hello}").argument("hans").toString();
 
         assertEquals("test message to hans", messageText);
     }
@@ -97,9 +97,9 @@ public class MessageContextTest
     {
         LocaleResolver localeResolver = new FixedGermanLocaleResolver();
         String messageText = messageContext
-                .setLocaleResolver(localeResolver)
-                .setMessageResolver(new TestMessageResolver(localeResolver))
-                .message().text("{hello}").argument("hans").toText();
+                .localeResolver(localeResolver)
+                .messageResolver(new TestMessageResolver())
+                .message().template("{hello}").argument("hans").toString();
 
         assertEquals("Test Nachricht an hans", messageText);
     }
@@ -107,16 +107,19 @@ public class MessageContextTest
     @Test
     public void createInvalidMessageTest()
     {
-        String messageText = messageContext.message().text("{xyz123}").toText();
+        String messageText = messageContext.message().template("{xyz123}").toString();
+        assertEquals("???xyz123???", messageText);
 
+        messageText = messageContext.message().bundle("nonexistingbundle.properties").template("{xyz123}").toString();
         assertEquals("???xyz123???", messageText);
     }
 
     @Test
     public void createInvalidMessageWithArgumentsTest()
     {
-        String messageText = messageContext.message().text("{xyz123}").argument("123").argument("456").argument("789").toText();
+        String messageText = messageContext.message().template("{xyz123}").
+                argument("123").argument("456").argument("789").toString();
 
-        assertEquals("???xyz123??? (123,456,789)", messageText);
+        assertEquals("???xyz123??? [123, 456, 789]", messageText);
     }
 }

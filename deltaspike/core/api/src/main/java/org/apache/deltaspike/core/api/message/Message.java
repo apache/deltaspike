@@ -24,18 +24,37 @@ package org.apache.deltaspike.core.api.message;
 public interface Message
 {
     /**
+     * @param messageBundleName a name of the message bundle which should be used
+     * @return the instance of the current message context builder
+     */
+    Message bundle(String messageBundleName);
+
+    /**
+     * @param messageTemplate message key (or inline-text) for the current message
+     * @return the current instance of the message builder to allow a fluent api
+     */
+    Message template(String messageTemplate);
+
+    /**
+     * @param arguments numbered and/or named argument(s) for the current message
+     * @return the current instance of the message builder to allow a fluent api
+     */
+    Message argument(Object... arguments);
+
+    /**
+     * @return the configured message bundle name
+     */
+    String getBundle();
+
+    /**
      * @return the message key (or inline-text) of the current message
      */
-    String getMessageTemplate();
+    String getTemplate();
 
     /**
      * @return all named and numbered arguments
      */
     Object[] getArguments();
 
-    /**
-     * @param arguments 1-n new arguments for the current message
-     * @return the current instance
-     */
-    Message addArgument(Object... arguments);
+
 }

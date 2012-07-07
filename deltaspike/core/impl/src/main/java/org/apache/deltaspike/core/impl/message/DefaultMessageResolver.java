@@ -31,40 +31,39 @@ class DefaultMessageResolver implements MessageResolver
 {
     private static final long serialVersionUID = 5834411208472341006L;
 
-    private ResourceBundle messageBundle;
-
-    public void initialize(String messageBundleName, Locale locale)
-    {
-        ResourceBundle resolvedBundle;
-        try
-        {
-            resolvedBundle = PropertyFileUtils.getResourceBundle(messageBundleName, locale);
-        }
-        catch (MissingResourceException e)
-        {
-            //X TODO log it
-            resolvedBundle = null;
-        }
-
-        messageBundle = resolvedBundle;
-    }
 
     @Override
-    public String getMessage(String messageTemplate)
+    public String getMessage(String bundleName, Locale locale, String messageTemplate)
     {
-        if (messageBundle != null && messageTemplate != null &&
-            messageTemplate.startsWith("{") && messageTemplate.endsWith("}"))
+        // we can use {{ as escaping for now
+        if (messageTemplate.startsWith("{{"))
         {
+            // in which case we just cut of the first '{'
+            return messageTemplate.substring(1);
+        }
+
+        if (messageTemplate.startsWith("{") && messageTemplate.endsWith("}"))
+        {
+            String resourceKey = messageTemplate.substring(1, messageTemplate.length() - 1);
+            if (bundleName == null)
+            {
+                // using {} without a bundle is always an error
+                return null;
+            }
+
             try
             {
-                return messageBundle.getString(messageTemplate.substring(1, messageTemplate.length() - 1));
+                ResourceBundle messageBundle = PropertyFileUtils.getResourceBundle(bundleName, locale);
+
+                return messageBundle.getString(resourceKey);
             }
             catch (MissingResourceException e)
             {
-                return MISSING_RESOURCE_MARKER + messageTemplate + MISSING_RESOURCE_MARKER;
+                return null;
             }
         }
 
         return messageTemplate;
     }
+
 }
