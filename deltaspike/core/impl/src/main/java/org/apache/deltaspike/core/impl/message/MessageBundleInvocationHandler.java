@@ -28,6 +28,7 @@ import org.apache.deltaspike.core.api.message.LocaleResolver;
 import org.apache.deltaspike.core.api.message.MessageContext;
 import org.apache.deltaspike.core.api.message.MessageInterpolator;
 import org.apache.deltaspike.core.api.message.MessageResolver;
+import org.apache.deltaspike.core.api.message.MessageSource;
 import org.apache.deltaspike.core.api.message.annotation.MessageContextConfig;
 import org.apache.deltaspike.core.api.message.annotation.MessageTemplate;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
@@ -72,17 +73,14 @@ class MessageBundleInvocationHandler implements InvocationHandler
             }
         }
 
-        String messageBundleName = method.getDeclaringClass().getName();
+        messageContext.messageSource(createDefaultMessageSource(method.getDeclaringClass()));
 
         if (String.class.isAssignableFrom(method.getReturnType()))
         {
-            return messageContext.bundle(messageBundleName).message().template(messageTemplateValue)
-                    .argument(arguments.toArray()).toString();
+            return messageContext.message().template(messageTemplateValue).argument(arguments.toArray()).toString();
         }
 
-        return messageContext.bundle(messageBundleName).message().template(messageTemplateValue)
-                .argument(arguments.toArray());
-
+        return messageContext.message().template(messageTemplateValue).argument(arguments.toArray());
     }
 
     private void applyMessageContextConfig(MessageContext messageContext, MessageContextConfig messageContextConfig)
@@ -112,6 +110,13 @@ class MessageBundleInvocationHandler implements InvocationHandler
 
             messageContext.localeResolver(
                     BeanProvider.getContextualReference(localeResolverClass, new AnyLiteral()));
+        }
+        
+        Class<? extends MessageSource>[] messageSources = messageContextConfig.messageSource();
+
+        for (Class<? extends MessageSource> currentMessageSource : messageSources)
+        {
+            messageContext.messageSource(currentMessageSource);
         }
     }
 
@@ -148,5 +153,23 @@ class MessageBundleInvocationHandler implements InvocationHandler
     private MessageContext getDefaultMessageContext()
     {
         return BeanProvider.getContextualReference(MessageContext.class);
+    }
+
+    /**
+     * the fully qualified class name is the name of the bundle
+     * @param messageBundleClass message-bundle class
+     * @return message source for the given message-bundle class
+     */
+    private MessageSource createDefaultMessageSource(final Class<?> messageBundleClass)
+    {
+        final String className = messageBundleClass.getName();
+        return new MessageSource()
+        {
+            @Override
+            public String getKey()
+            {
+                return className;
+            }
+        };
     }
 }

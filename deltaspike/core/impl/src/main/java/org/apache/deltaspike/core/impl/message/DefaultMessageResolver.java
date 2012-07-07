@@ -20,18 +20,21 @@ package org.apache.deltaspike.core.impl.message;
 
 import org.apache.deltaspike.core.api.message.MessageContext;
 import org.apache.deltaspike.core.api.message.MessageResolver;
+import org.apache.deltaspike.core.api.message.MessageSource;
 import org.apache.deltaspike.core.util.PropertyFileUtils;
 
 import javax.enterprise.context.Dependent;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 @Dependent
+@SuppressWarnings("UnusedDeclaration")
 class DefaultMessageResolver implements MessageResolver
 {
     private static final long serialVersionUID = 5834411208472341006L;
-
 
     @Override
     public String getMessage(MessageContext messageContext, String messageTemplate)
@@ -47,28 +50,39 @@ class DefaultMessageResolver implements MessageResolver
         {
             String resourceKey = messageTemplate.substring(1, messageTemplate.length() - 1);
 
-            String bundleName = messageContext.getBundle();
+            List<MessageSource> messageSources = messageContext.getMessageSources();
 
-            if (bundleName == null)
+            if (messageSources == null || messageSources.isEmpty())
             {
                 // using {} without a bundle is always an error
                 return null;
             }
 
-            try
-            {
-                Locale locale = messageContext.getLocale();
-                ResourceBundle messageBundle = PropertyFileUtils.getResourceBundle(bundleName, locale);
+            Iterator<MessageSource> messageSourceIterator = messageSources.iterator();
 
-                return messageBundle.getString(resourceKey);
-            }
-            catch (MissingResourceException e)
+            MessageSource currentMessageSource;
+            while (messageSourceIterator.hasNext())
             {
-                return null;
+                currentMessageSource = messageSourceIterator.next();
+
+                try
+                {
+                    Locale locale = messageContext.getLocale();
+                    ResourceBundle messageBundle = PropertyFileUtils
+                        .getResourceBundle(currentMessageSource.getKey(), locale);
+
+                    return messageBundle.getString(resourceKey);
+                }
+                catch (MissingResourceException e)
+                {
+                    if (!messageSourceIterator.hasNext())
+                    {
+                        return null;
+                    }
+                }
             }
         }
 
         return messageTemplate;
     }
-
 }

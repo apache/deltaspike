@@ -23,8 +23,13 @@ import org.apache.deltaspike.core.api.message.Message;
 import org.apache.deltaspike.core.api.message.MessageContext;
 import org.apache.deltaspike.core.api.message.MessageInterpolator;
 import org.apache.deltaspike.core.api.message.MessageResolver;
+import org.apache.deltaspike.core.api.message.MessageSource;
+import org.apache.deltaspike.core.util.ClassUtils;
 
 import javax.enterprise.inject.Typed;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 
 @Typed()
@@ -35,7 +40,7 @@ class DefaultMessageContext implements MessageContext
     private MessageInterpolator messageInterpolator = null;
     private MessageResolver messageResolver = null;
     private LocaleResolver localeResolver = null;
-    private String messageBundleName = null;
+    private List<MessageSource> messageSources = new ArrayList<MessageSource>();
 
     DefaultMessageContext()
     {
@@ -45,8 +50,9 @@ class DefaultMessageContext implements MessageContext
     {
         messageInterpolator(otherMessageContext.getMessageInterpolator());
         localeResolver(otherMessageContext.getLocaleResolver());
-        messageResolver(otherMessageContext.getMessageResolver()) ;
+        messageResolver(otherMessageContext.getMessageResolver());
 
+        this.messageSources.addAll(otherMessageContext.getMessageSources());
     }
 
     @Override
@@ -56,22 +62,27 @@ class DefaultMessageContext implements MessageContext
     }
 
     @Override
-    public MessageContext bundle(String messageBundleName)
+    public Message message()
     {
-        this.messageBundleName = messageBundleName;
+        return new DefaultMessage(this);
+    }
+
+    @Override
+    public MessageContext messageSource(MessageSource messageSource)
+    {
+        this.messageSources.add(messageSource);
         return this;
     }
 
     @Override
-    public String getBundle()
+    public MessageContext messageSource(Class<? extends MessageSource> messageSourceClass)
     {
-        return messageBundleName;
-    }
-
-    @Override
-    public Message message()
-    {
-        return new DefaultMessage(this);
+        //prevent adding the interface itself - TODO discuss it
+        if (MessageSource.class.equals(messageSourceClass))
+        {
+            return this;
+        }
+        return messageSource(ClassUtils.tryToInstantiateClass(messageSourceClass));
     }
 
     @Override
@@ -85,37 +96,48 @@ class DefaultMessageContext implements MessageContext
         return getLocaleResolver().getLocale();
     }
 
+    @Override
     public LocaleResolver getLocaleResolver()
     {
         return localeResolver;
     }
 
+    @Override
+    public List<MessageSource> getMessageSources()
+    {
+        return Collections.unmodifiableList(this.messageSources);
+    }
+
+    @Override
     public MessageContext localeResolver(LocaleResolver localeResolver)
     {
         this.localeResolver = localeResolver;
         return this;
     }
 
+    @Override
     public MessageInterpolator getMessageInterpolator()
     {
         return messageInterpolator;
     }
 
+    @Override
     public MessageContext messageInterpolator(MessageInterpolator messageInterpolator)
     {
         this.messageInterpolator = messageInterpolator;
         return this;
     }
 
+    @Override
     public MessageResolver getMessageResolver()
     {
         return messageResolver;
     }
 
+    @Override
     public MessageContext messageResolver(MessageResolver messageResolver)
     {
         this.messageResolver = messageResolver;
         return this;
     }
-
 }

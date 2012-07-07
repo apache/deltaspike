@@ -19,6 +19,7 @@
 package org.apache.deltaspike.core.api.message;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Central context for handling dynamic messages.
@@ -38,16 +39,19 @@ public interface MessageContext extends LocaleResolver, Serializable, Cloneable
     Message message();
 
     /**
-     * @param messageBundleName a name of the message bundle which should be used
+     * Allows to add a message-source instance which can be used by a {@link MessageResolver}
+     * @param messageSource message-source to add
      * @return the instance of the current message context builder
      */
-    MessageContext bundle(String messageBundleName);
+    MessageContext messageSource(MessageSource messageSource);
 
     /**
-     * @return the configured message bundle name
+     * Allows to add a message-source class which needs to provide a default constructor.
+     * The message-source can be used by a {@link MessageResolver}
+     * @param messageSourceClass class of a message-source to add
+     * @return the instance of the current message context builder
      */
-    String getBundle();
-
+    MessageContext messageSource(Class<? extends MessageSource> messageSourceClass);
 
     /**
      * @param messageInterpolator a new message interpolator to be set
@@ -82,6 +86,8 @@ public interface MessageContext extends LocaleResolver, Serializable, Cloneable
      */
     LocaleResolver getLocaleResolver();
 
-
-
+    /**
+     * @return list of registered message-sources
+     */
+    List<MessageSource> getMessageSources();
 }

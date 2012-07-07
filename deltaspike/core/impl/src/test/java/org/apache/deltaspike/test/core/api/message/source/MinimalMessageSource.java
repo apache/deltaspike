@@ -16,23 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.api.message;
+package org.apache.deltaspike.test.core.api.message.source;
 
-import java.io.Serializable;
+import org.apache.deltaspike.core.api.exclude.annotation.Exclude;
+import org.apache.deltaspike.core.api.message.MessageSource;
+import org.apache.deltaspike.test.core.api.message.MinimalMessages;
 
 /**
- * Implementations have to resolve the text stored for a given key in the message-source they are aware of.
- * Implementations should always be &#064;Dependent scoped!
+ * Custom message-source
  */
-public interface MessageResolver extends Serializable
+@Exclude
+public class MinimalMessageSource implements MessageSource
 {
-    String MISSING_RESOURCE_MARKER = "???";
-
-    /**
-     * @param messageContext messageContext which should be used
-     * @param messageTemplate the message key (or in-lined text) of the current message
-     * @return the final but not interpolated message text
-     *         or <code>null</code> if an error happened or the resource could not be resolved.
-     */
-    String getMessage(MessageContext messageContext, String messageTemplate);
+    @Override
+    public String getKey()
+    {
+        return MinimalMessages.class.getName();
+    }
 }

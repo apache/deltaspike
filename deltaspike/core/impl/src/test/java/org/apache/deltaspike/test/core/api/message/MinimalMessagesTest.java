@@ -46,6 +46,9 @@ public class MinimalMessagesTest
     @Inject
     private MinimalMessages minimalMessages;
 
+    @Inject
+    private CustomMinimalMessages customMinimalMessages;
+
     /**
      * X TODO creating a WebArchive is only a workaround because JavaArchive
      * cannot contain other archives.
@@ -71,5 +74,11 @@ public class MinimalMessagesTest
     public void testMinimalMessage()
     {
         assertEquals("Hello DeltaSpike", minimalMessages.sayHello("DeltaSpike"));
+    }
+
+    @Test
+    public void testCustomMinimalMessage()
+    {
+        assertEquals("Hello DeltaSpike", customMinimalMessages.sayHello("DeltaSpike"));
     }
 }
