@@ -54,7 +54,7 @@ public class InjectableConfigPropertyTest
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "injectableConfigPropertyTest.jar")
                 .addPackage(SettingsBean.class.getPackage())
                 .addPackage(NumberConfiguredBean.class.getPackage())
-                .addPackage("org.apache.deltaspike.test.category")
+                .addPackage(SeCategory.class.getPackage())
                 .addAsManifestResource(FileUtils.getFileForURL(fileUrl.toString()))
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 

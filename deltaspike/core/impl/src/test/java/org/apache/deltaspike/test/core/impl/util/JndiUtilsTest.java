@@ -19,6 +19,7 @@
 package org.apache.deltaspike.test.core.impl.util;
 
 import org.apache.deltaspike.core.impl.util.JndiUtils;
+import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -43,7 +44,7 @@ public class JndiUtilsTest
     public static WebArchive deploy()
     {
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "jndiTest.jar")
-                .addPackage("org.apache.deltaspike.test.category")
+                .addPackage(SeCategory.class.getPackage())
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
         return ShrinkWrap.create(WebArchive.class, "jndiUtils.war")

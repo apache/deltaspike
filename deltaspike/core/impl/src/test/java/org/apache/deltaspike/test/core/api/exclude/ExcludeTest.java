@@ -22,6 +22,7 @@ package org.apache.deltaspike.test.core.api.exclude;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.impl.exclude.extension.ExcludeExtension;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
+import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.apache.deltaspike.test.util.FileUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -56,7 +57,7 @@ public class ExcludeTest
                 .getResource("META-INF/apache-deltaspike.properties");
 
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "excludeTest.jar")
-                .addPackage("org.apache.deltaspike.test.category")
+                .addPackage(SeCategory.class.getPackage())
                 .addPackage("org.apache.deltaspike.test.core.api.exclude")
                 .addPackage("org.apache.deltaspike.test.core.impl.activation")
                 .addAsManifestResource(FileUtils.getFileForURL(fileUrl.toString()))

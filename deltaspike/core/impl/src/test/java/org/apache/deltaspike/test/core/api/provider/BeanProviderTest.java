@@ -44,7 +44,6 @@ public class BeanProviderTest
     public static WebArchive deploy()
     {
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "beanProviderTest.jar")
-                .addPackage("org.apache.deltaspike.test.category")
                 .addPackage("org.apache.deltaspike.test.core.api.provider")
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 

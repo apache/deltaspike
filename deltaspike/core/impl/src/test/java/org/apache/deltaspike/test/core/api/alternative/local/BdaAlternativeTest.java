@@ -20,6 +20,7 @@ package org.apache.deltaspike.test.core.api.alternative.local;
 
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -53,7 +54,7 @@ public class BdaAlternativeTest
     public static WebArchive deploy()
     {
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "securedAnnotationTest.jar")
-                .addPackage("org.apache.deltaspike.test.category")
+                .addPackage(SeCategory.class.getPackage())
                 .addPackage("org.apache.deltaspike.test.core.api.alternative.local")
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
