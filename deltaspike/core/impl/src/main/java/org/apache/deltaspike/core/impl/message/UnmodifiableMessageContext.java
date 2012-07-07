@@ -18,7 +18,10 @@
  */
 package org.apache.deltaspike.core.impl.message;
 
+import org.apache.deltaspike.core.api.message.LocaleResolver;
 import org.apache.deltaspike.core.api.message.MessageContext;
+import org.apache.deltaspike.core.api.message.MessageInterpolator;
+import org.apache.deltaspike.core.api.message.MessageResolver;
 
 import javax.enterprise.inject.Typed;
 import java.util.Locale;
@@ -38,19 +41,45 @@ class UnmodifiableMessageContext implements MessageContext
     }
 
     @Override
-    public MessageContext.Config config()
+    public LocaleResolver getLocaleResolver()
     {
-        return new UnmodifiableMessageContextConfig(messageContext.config());
+        return messageContext.getLocaleResolver();
     }
 
-    /*
-     * generated
-     */
+    @Override
+    public MessageInterpolator getMessageInterpolator()
+    {
+        return messageContext.getMessageInterpolator();
+    }
+
+    @Override
+    public MessageResolver getMessageResolver()
+    {
+        return messageContext.getMessageResolver();
+    }
 
     @Override
     public MessageBuilder message()
     {
         return messageContext.message();
+    }
+
+    @Override
+    public MessageContext setLocaleResolver(LocaleResolver localeResolver)
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public MessageContext setMessageInterpolator(MessageInterpolator messageInterpolator)
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public MessageContext setMessageResolver(MessageResolver messageResolver)
+    {
+        throw new UnsupportedOperationException();
     }
 
     @Override

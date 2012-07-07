@@ -23,7 +23,7 @@ import java.io.Serializable;
 /**
  * Central context for handling dynamic messages
  */
-public interface MessageContext extends LocaleResolver
+public interface MessageContext extends LocaleResolver, Serializable
 {
     /**
      * @return message builder to add and/or create a new message based on the current context via a fluent api
@@ -31,9 +31,38 @@ public interface MessageContext extends LocaleResolver
     MessageBuilder message();
 
     /**
-     * @return the current config to change it or create a new one base on the current config
+     * @return the current message interpolator
      */
-    Config config();
+    MessageInterpolator getMessageInterpolator();
+
+    /**
+     * @return the current message resolver
+     */
+    MessageResolver getMessageResolver();
+
+    /**
+     * @return the current locale resolver
+     */
+    LocaleResolver getLocaleResolver();
+
+    /**
+     * @param messageInterpolator a new message interpolator
+     * @return the instance of the current message context builder
+     */
+    MessageContext setMessageInterpolator(MessageInterpolator messageInterpolator);
+
+    /**
+     * @param messageResolver a new message resolver
+     * @return the instance of the current message context builder
+     */
+    MessageContext setMessageResolver(MessageResolver messageResolver);
+
+    /**
+     * @param localeResolver a new locale resolver
+     * @return the instance of the current message context builder
+     */
+    MessageContext setLocaleResolver(LocaleResolver localeResolver);
+
 
     /**
      * Helper for building instances of {@link Message}
@@ -63,64 +92,4 @@ public interface MessageContext extends LocaleResolver
         String toText();
     }
 
-    /**
-     * Config for customizing a {@link MessageContext}
-     */
-    interface Config extends Serializable
-    {
-        /**
-         * create a new context based on the default context - the default context won't get modified
-         *
-         * @return a message context builder based on the current config
-         */
-        MessageContextBuilder use();
-
-        /**
-         * change the default context
-         *
-         * @return a message context builder to change the current config
-         */
-        MessageContextBuilder change();
-
-        /**
-         * @return the current message interpolator
-         */
-        MessageInterpolator getMessageInterpolator();
-
-        /**
-         * @return the current message resolver
-         */
-        MessageResolver getMessageResolver();
-
-        /**
-         * @return the current locale resolver
-         */
-        LocaleResolver getLocaleResolver();
-
-        interface MessageContextBuilder
-        {
-            /**
-             * @param messageInterpolator a new message interpolator
-             * @return the instance of the current message context builder
-             */
-            MessageContextBuilder messageInterpolator(MessageInterpolator messageInterpolator);
-
-            /**
-             * @param messageResolver a new message resolver
-             * @return the instance of the current message context builder
-             */
-            MessageContextBuilder messageResolver(MessageResolver messageResolver);
-
-            /**
-             * @param localeResolver a new locale resolver
-             * @return the instance of the current message context builder
-             */
-            MessageContextBuilder localeResolver(LocaleResolver localeResolver);
-
-            /**
-             * @return a new message context based on the current config
-             */
-            MessageContext create();
-        }
-    }
 }

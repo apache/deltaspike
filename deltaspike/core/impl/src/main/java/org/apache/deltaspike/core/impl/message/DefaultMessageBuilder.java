@@ -47,7 +47,7 @@ class DefaultMessageBuilder implements MessageContext.MessageBuilder
     public DefaultMessageBuilder(MessageContext messageContext)
     {
         reset();
-        this.messageContext = new UnmodifiableMessageContext(messageContext.config().use().create() /*== clone*/);
+        this.messageContext = new UnmodifiableMessageContext(messageContext);
     }
 
     @Override
@@ -72,7 +72,7 @@ class DefaultMessageBuilder implements MessageContext.MessageBuilder
             throw new IllegalStateException("messageTemplate is missing");
         }
 
-        return new DefaultMessage(messageContext.config(), messageTemplate,
+        return new DefaultMessage(messageContext, messageTemplate,
                 argumentList.toArray(new Object[argumentList.size()]));
     }
 
@@ -102,13 +102,13 @@ class DefaultMessageBuilder implements MessageContext.MessageBuilder
     {
         String messageTemplate = baseMessage.getMessageTemplate();
 
-        MessageResolver messageResolver = messageContext.config().getMessageResolver();
+        MessageResolver messageResolver = messageContext.getMessageResolver();
         if (messageResolver != null)
         {
             messageTemplate = resolveMessage(messageResolver, baseMessage);
         }
 
-        MessageInterpolator messageInterpolator = messageContext.config().getMessageInterpolator();
+        MessageInterpolator messageInterpolator = messageContext.getMessageInterpolator();
 
         //X TODO: this logic is odd. It's completely out of the standard flow
         //X TODO: handling is different based on where the interpolator gets configured :(

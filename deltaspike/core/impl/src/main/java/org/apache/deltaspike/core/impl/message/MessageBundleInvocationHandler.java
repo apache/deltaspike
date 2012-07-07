@@ -86,17 +86,17 @@ class MessageBundleInvocationHandler implements InvocationHandler
     private MessageContext applyMessageContextConfig(MessageContextConfig messageContextConfigLiteral,
                                                      String messageBundleName)
     {
-        MessageContext.Config config = new DefaultMessageContextConfig(messageContextConfigLiteral);
+        MessageContext messageContext = new DefaultMessageContext(messageContextConfigLiteral);
 
         if (MessageResolver.class.equals(messageContextConfigLiteral.messageResolver()))
         {
             MessageResolver messageResolver = new DefaultMessageResolver();
 
-            messageResolver.initialize(messageBundleName, config.getLocaleResolver().getLocale());
-            config.change().messageResolver(messageResolver);
+            messageResolver.initialize(messageBundleName, messageContext.getLocaleResolver().getLocale());
+            messageContext.setMessageResolver(messageResolver);
         }
 
-        return config.use().create();
+        return messageContext;
     }
 
     private List<Object> resolveMessageArguments(Object[] args)

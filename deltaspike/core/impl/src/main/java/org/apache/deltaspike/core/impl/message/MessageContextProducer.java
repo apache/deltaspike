@@ -47,12 +47,12 @@ public class MessageContextProducer
     @Dependent
     protected MessageContext createDefaultMessageContext()
     {
-        MessageContext.Config messageContextConfig = new DefaultMessageContext().config();
+        MessageContext messageContext = new DefaultMessageContext();
 
-        messageContextConfig.change().messageInterpolator(messageInterpolator);
-        messageContextConfig.change().localeResolver(localeResolver);
-        messageContextConfig.change().messageResolver(messageResolver);
+        messageContext.setMessageInterpolator(messageInterpolator);
+        messageContext.setLocaleResolver(localeResolver);
+        messageContext.setMessageResolver(messageResolver);
 
-        return messageContextConfig.use().create();
+        return messageContext;
     }
 }

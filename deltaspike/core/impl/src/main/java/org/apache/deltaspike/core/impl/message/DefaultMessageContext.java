@@ -18,7 +18,14 @@
  */
 package org.apache.deltaspike.core.impl.message;
 
+import org.apache.deltaspike.core.api.literal.AnyLiteral;
+import org.apache.deltaspike.core.api.message.LocaleResolver;
 import org.apache.deltaspike.core.api.message.MessageContext;
+import org.apache.deltaspike.core.api.message.MessageInterpolator;
+import org.apache.deltaspike.core.api.message.MessageResolver;
+import org.apache.deltaspike.core.api.message.annotation.MessageContextConfig;
+import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.core.util.ClassUtils;
 
 import javax.enterprise.inject.Typed;
 import java.util.Locale;
@@ -28,17 +35,48 @@ class DefaultMessageContext implements MessageContext
 {
     private static final long serialVersionUID = -110779217295211303L;
 
-    private Config config = null;
+    private MessageInterpolator messageInterpolator = null;
+    private MessageResolver messageResolver = null;
+    private LocaleResolver localeResolver = null;
 
     DefaultMessageContext()
     {
-        config = new DefaultMessageContextConfig();
     }
 
-    DefaultMessageContext(Config config)
+    DefaultMessageContext(MessageContext otherMessageContext)
     {
-        this.config = config;
+        setMessageInterpolator(otherMessageContext.getMessageInterpolator());
+        setLocaleResolver(otherMessageContext.getLocaleResolver());
+        setMessageResolver(otherMessageContext.getMessageResolver()) ;
     }
+
+    DefaultMessageContext(MessageContextConfig messageContextConfig)
+    {
+        if (!MessageResolver.class.equals(messageContextConfig.messageResolver()))
+        {
+            Class<? extends MessageResolver> messageResolverClass =
+                    ClassUtils.tryToLoadClassForName(messageContextConfig.messageResolver().getName());
+
+            messageResolver = BeanProvider.getContextualReference(messageResolverClass, new AnyLiteral());
+        }
+
+        if (!MessageInterpolator.class.equals(messageContextConfig.messageInterpolator()))
+        {
+            Class<? extends MessageInterpolator> messageInterpolatorClass =
+                    ClassUtils.tryToLoadClassForName(messageContextConfig.messageInterpolator().getName());
+
+            messageInterpolator = BeanProvider.getContextualReference(messageInterpolatorClass, new AnyLiteral());
+        }
+
+        if (!LocaleResolver.class.equals(messageContextConfig.localeResolver()))
+        {
+            Class<? extends LocaleResolver> localeResolverClass =
+                    ClassUtils.tryToLoadClassForName(messageContextConfig.localeResolver().getName());
+
+            localeResolver = BeanProvider.getContextualReference(localeResolverClass, new AnyLiteral());
+        }
+    }
+
 
     @Override
     public MessageBuilder message()
@@ -47,20 +85,52 @@ class DefaultMessageContext implements MessageContext
     }
 
     @Override
-    public Config config()
-    {
-        return config;
-    }
-
-    @Override
     public Locale getLocale()
     {
-        return config().getLocaleResolver().getLocale();
+        if (getLocaleResolver() == null)
+        {
+            return null;
+        }
+
+        return getLocaleResolver().getLocale();
     }
 
-    /*
-     * generated
-     */
+    public LocaleResolver getLocaleResolver()
+    {
+        return localeResolver;
+    }
+
+    public MessageContext setLocaleResolver(LocaleResolver localeResolver)
+    {
+        this.localeResolver = localeResolver;
+        return this;
+    }
+
+    public MessageInterpolator getMessageInterpolator()
+    {
+        return messageInterpolator;
+    }
+
+    public MessageContext setMessageInterpolator(MessageInterpolator messageInterpolator)
+    {
+        this.messageInterpolator = messageInterpolator;
+        return this;
+    }
+
+    public MessageResolver getMessageResolver()
+    {
+        return messageResolver;
+    }
+
+    public MessageContext setMessageResolver(MessageResolver messageResolver)
+    {
+        this.messageResolver = messageResolver;
+        return this;
+    }
+
+/*
+    * generated
+    */
 
     @Override
     public boolean equals(Object o)
@@ -76,8 +146,17 @@ class DefaultMessageContext implements MessageContext
 
         DefaultMessageContext that = (DefaultMessageContext) o;
 
+        if (!localeResolver.equals(that.localeResolver))
+        {
+            return false;
+        }
+        if (messageInterpolator != null
+                ? !messageInterpolator.equals(that.messageInterpolator) : that.messageInterpolator != null)
+        {
+            return false;
+        }
         //noinspection RedundantIfStatement
-        if (!config.equals(that.config))
+        if (messageResolver != null ? !messageResolver.equals(that.messageResolver) : that.messageResolver != null)
         {
             return false;
         }
@@ -88,6 +167,9 @@ class DefaultMessageContext implements MessageContext
     @Override
     public int hashCode()
     {
-        return config.hashCode();
+        int result = messageInterpolator != null ? messageInterpolator.hashCode() : 0;
+        result = 31 * result + (messageResolver != null ? messageResolver.hashCode() : 0);
+        result = 31 * result + localeResolver.hashCode();
+        return result;
     }
 }

@@ -36,13 +36,13 @@ class DefaultMessage implements Message
     protected String messageTemplate;
     protected List<Object> arguments = new ArrayList<Object>();
 
-    private MessageContext.Config messageContextConfig;
+    private MessageContext messageContext;
 
-    DefaultMessage(MessageContext.Config messageContextConfig,
+    DefaultMessage(MessageContext messageContext,
                    String messageTemplate,
                    Object... arguments)
     {
-        this.messageContextConfig = messageContextConfig;
+        this.messageContext = messageContext;
         this.messageTemplate = messageTemplate;
         this.arguments.addAll(Arrays.asList(arguments));
     }
@@ -126,7 +126,7 @@ class DefaultMessage implements Message
     @Override
     public String toString()
     {
-        return toString(new DefaultMessageContext(messageContextConfig));
+        return toString(new DefaultMessageContext(messageContext));
     }
 
     public String toString(MessageContext messageContext)
