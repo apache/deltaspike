@@ -37,7 +37,7 @@ import javax.inject.Inject;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Tests for {@link org.apache.deltaspike.core.api.message.annotation.MessageTemplate}
+ * Tests for type-safe messages without {@link org.apache.deltaspike.core.api.message.annotation.MessageTemplate}
  */
 @RunWith(Arquillian.class)
 @Category(SeCategory.class)
