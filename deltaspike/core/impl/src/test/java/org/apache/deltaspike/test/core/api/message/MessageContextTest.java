@@ -23,6 +23,7 @@ import org.apache.deltaspike.core.api.message.Message;
 import org.apache.deltaspike.core.api.message.MessageContext;
 import org.apache.deltaspike.core.impl.message.MessageBundleExtension;
 import org.apache.deltaspike.test.category.SeCategory;
+import org.apache.deltaspike.test.category.Serializer;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -106,6 +107,20 @@ public class MessageContextTest
     }
 
     @Test
+    public void testArbitraryMessageContextRendering()
+    {
+        LocaleResolver localeResolver = new FixedGermanLocaleResolver();
+        Message message = messageContext
+                .localeResolver(localeResolver)
+                .messageResolver(new TestMessageResolver())
+                .message().template("{hello}").argument("hans");
+        Assert.assertEquals("Test Nachricht an hans", message.toString());
+
+        MessageContext messageContext2 = messageContext.clone().localeResolver(new FixedEnglishLocalResolver());
+        Assert.assertEquals("test message to hans", message.toString(messageContext2));
+    }
+
+    @Test
     public void createInvalidMessageTest()
     {
         String messageText = messageContext.message().template("{xyz123}").toString();
@@ -144,6 +159,8 @@ public class MessageContextTest
         m1.template("dumdidum").argument("nonono");
         m2.template("dumdidum").argument("nonono");
         Assert.assertEquals(m1, m2);
+
+        Assert.assertEquals(m1.hashCode(), m2.hashCode());
 
         m2.argument("toomuch");
         Assert.assertFalse(m1.equals(m2));

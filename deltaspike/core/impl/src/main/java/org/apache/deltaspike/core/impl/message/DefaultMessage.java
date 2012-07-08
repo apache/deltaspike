@@ -138,6 +138,7 @@ class DefaultMessage implements Message
         return sb.toString();
     }
 
+    @Override
     public String toString(MessageContext messageContext)
     {
         return messageContext.message()

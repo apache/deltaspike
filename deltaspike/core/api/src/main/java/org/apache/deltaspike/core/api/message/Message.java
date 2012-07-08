@@ -45,5 +45,16 @@ public interface Message
      */
     Object[] getArguments();
 
+    /**
+     * Renders the Message to a String, using the {@link MessageContext}
+     * which created the Message.
+     */
+    String toString();
+
+    /**
+     * Renders the Message to a String, using an
+     * arbitrary {@link MessageContext}.
+     */
+    String toString(MessageContext messageContext);
 
 }
