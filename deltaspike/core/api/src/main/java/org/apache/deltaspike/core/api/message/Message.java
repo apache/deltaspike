@@ -18,10 +18,12 @@
  */
 package org.apache.deltaspike.core.api.message;
 
+import java.io.Serializable;
+
 /**
  * Basic interface for all message-types
  */
-public interface Message
+public interface Message extends Serializable
 {
     /**
      * @param messageTemplate message key (or inline-text) for the current message
@@ -33,7 +35,7 @@ public interface Message
      * @param arguments numbered and/or named argument(s) for the current message
      * @return the current instance of the message builder to allow a fluent api
      */
-    Message argument(Object... arguments);
+    Message argument(Serializable... arguments);
 
     /**
      * @return the message key (or inline-text) of the current message

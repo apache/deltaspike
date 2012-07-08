@@ -24,6 +24,7 @@ import org.apache.deltaspike.core.api.message.MessageInterpolator;
 import org.apache.deltaspike.core.api.message.MessageResolver;
 
 import javax.enterprise.inject.Typed;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -39,7 +40,7 @@ import static org.apache.deltaspike.core.api.message.MessageResolver.MISSING_RES
 class DefaultMessage implements Message
 {
     protected String messageTemplate;
-    protected List<Object> arguments = new ArrayList<Object>();
+    protected List<Serializable> arguments = new ArrayList<Serializable>();
 
     private MessageContext messageContext;
 
@@ -53,11 +54,11 @@ class DefaultMessage implements Message
     protected void reset()
     {
         messageTemplate = null;
-        arguments = new ArrayList<Object>();
+        arguments = new ArrayList<Serializable>();
     }
 
     @Override
-    public Message argument(Object... arguments)
+    public Message argument(Serializable... arguments)
     {
         Collections.addAll(this.arguments, arguments);
         return this;
@@ -77,9 +78,9 @@ class DefaultMessage implements Message
     }
 
     @Override
-    public Object[] getArguments()
+    public Serializable[] getArguments()
     {
-        return arguments.toArray();
+        return arguments.toArray(new Serializable[arguments.size()]);
     }
 
 

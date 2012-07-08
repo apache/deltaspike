@@ -21,6 +21,7 @@ package org.apache.deltaspike.test.core.api.message;
 import org.apache.deltaspike.core.api.message.MessageInterpolator;
 
 import javax.enterprise.context.ApplicationScoped;
+import java.io.Serializable;
 import java.util.Locale;
 
 @ApplicationScoped
@@ -31,7 +32,7 @@ public class TestMessageInterpolator implements MessageInterpolator
     public static final String SPECIALFORMATTED = "specialformatted ";
 
     @Override
-    public String interpolate(String messageTemplate, Object[] arguments, Locale locale)
+    public String interpolate(String messageTemplate, Serializable[] arguments, Locale locale)
     {
         return SPECIALFORMATTED + String.format(locale, messageTemplate, arguments);
     }

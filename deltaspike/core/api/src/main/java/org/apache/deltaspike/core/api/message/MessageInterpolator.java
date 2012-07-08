@@ -47,5 +47,5 @@ public interface MessageInterpolator extends Serializable, DeltaSpikeConfig
      *         if it was possible to replace the parameters with the given arguments
      *         the unmodified messageText otherwise
      */
-    String interpolate(String messageText, Object[] arguments, Locale locale);
+    String interpolate(String messageText, Serializable[] arguments, Locale locale);
 }

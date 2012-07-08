@@ -33,7 +33,7 @@ public class DefaultMessageInterpolator implements MessageInterpolator, Serializ
     private static final long serialVersionUID = -8854087197813424812L;
 
     @Override
-    public String interpolate(String messageTemplate, Object[] arguments, Locale locale)
+    public String interpolate(String messageTemplate, Serializable[] arguments, Locale locale)
     {
         if (arguments == null || arguments.length == 0)
         {

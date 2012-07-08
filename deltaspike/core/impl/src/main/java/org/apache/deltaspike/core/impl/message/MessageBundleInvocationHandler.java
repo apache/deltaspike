@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.core.impl.message;
 
+import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import java.util.List;
 
 import org.apache.deltaspike.core.api.literal.AnyLiteral;
 import org.apache.deltaspike.core.api.message.LocaleResolver;
+import org.apache.deltaspike.core.api.message.Message;
 import org.apache.deltaspike.core.api.message.MessageContext;
 import org.apache.deltaspike.core.api.message.MessageInterpolator;
 import org.apache.deltaspike.core.api.message.MessageResolver;
@@ -57,7 +59,7 @@ class MessageBundleInvocationHandler implements InvocationHandler
         }
 
         MessageContext messageContext = resolveMessageContextFromArguments(args);
-        List<Object> arguments = resolveMessageArguments(args);
+        List<Serializable> arguments = resolveMessageArguments(args);
 
         if (messageContext == null)
         {
@@ -74,15 +76,17 @@ class MessageBundleInvocationHandler implements InvocationHandler
 
         String messageBundleName = method.getDeclaringClass().getName();
 
+        Message message =  messageContext
+                .messageSource(messageBundleName).message()
+                .template(messageTemplateValue)
+                .argument(arguments.toArray(new Serializable[arguments.size()]));
+
         if (String.class.isAssignableFrom(method.getReturnType()))
         {
-            return messageContext.messageSource(messageBundleName).message().template(messageTemplateValue)
-                    .argument(arguments.toArray()).toString();
+            return message.toString();
         }
 
-        return messageContext.messageSource(messageBundleName).message().template(messageTemplateValue)
-                .argument(arguments.toArray());
-
+        return message;
     }
 
     private void applyMessageContextConfig(MessageContext messageContext, MessageContextConfig messageContextConfig)
@@ -119,19 +123,29 @@ class MessageBundleInvocationHandler implements InvocationHandler
 
     }
 
-    private List<Object> resolveMessageArguments(Object[] args)
+    private List<Serializable> resolveMessageArguments(Object[] args)
     {
-        List<Object> arguments = new ArrayList<Object>();
+        List<Serializable> arguments = new ArrayList<Serializable>();
         if (args != null && args.length > 0)
         {
             for (int i = 0; i < args.length; i++)
             {
+                Object arg = args[i];
+
                 if (i == 0 && MessageContext.class.isAssignableFrom(args[0].getClass()))
                 {
                     continue;
                 }
 
-                arguments.add(args[i]);
+                if (arg instanceof Serializable)
+                {
+                    arguments.add((Serializable) arg);
+                }
+                else
+                {
+                    // for non-serializable objects we perform an immediate toString() instead
+                    arguments.add(arg.toString());
+                }
             }
         }
 

@@ -166,4 +166,23 @@ public class MessageContextTest
         Assert.assertFalse(m1.equals(m2));
         Assert.assertFalse(m2.equals(m1));
     }
+
+    @Test
+    public void testSerialisation()
+    {
+        Serializer<Message> messageSerializer = new Serializer<Message>();
+
+        LocaleResolver localeResolver = new FixedGermanLocaleResolver();
+        Message message = messageContext
+                .localeResolver(localeResolver)
+                .messageResolver(new TestMessageResolver())
+                .message().template("{hello}").argument("hans");
+        Assert.assertEquals("Test Nachricht an hans", message.toString());
+
+        Message messageClone = messageSerializer.roundTrip(message);
+
+        Assert.assertEquals(message, messageClone);
+        Assert.assertEquals("Test Nachricht an hans", messageClone.toString());
+
+    }
 }
