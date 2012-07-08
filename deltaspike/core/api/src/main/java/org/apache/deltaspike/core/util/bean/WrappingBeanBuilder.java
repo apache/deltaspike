@@ -92,13 +92,15 @@ public class WrappingBeanBuilder<T>
 
         for (Annotation annotation : type.getAnnotations())
         {
-            if (beanManager.isQualifier(annotation.annotationType()))
+            if (annotation.annotationType().equals(Named.class))
+            {
+                // it's important to scan for Named first
+                // as it's also a qualifier!
+                name = Named.class.cast(annotation).value();
+            }
+            else if (beanManager.isQualifier(annotation.annotationType()))
             {
                 qualifiers.add(annotation);
-            }
-            else if (annotation.annotationType().equals(Named.class))
-            {
-                name = Named.class.cast(annotation).value();
             }
             else if (beanManager.isScope(annotation.annotationType()))
             {

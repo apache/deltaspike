@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.test.core.api.message;
 
+import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.impl.message.MessageBundleExtension;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -32,7 +33,7 @@ import org.junit.runner.RunWith;
 import javax.enterprise.inject.spi.Extension;
 import javax.inject.Inject;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Assert;
 
 /**
  * Tests for type-safe messages without {@link org.apache.deltaspike.core.api.message.annotation.MessageTemplate}
@@ -71,12 +72,20 @@ public class MinimalMessagesTest
     @Test
     public void testMinimalMessage()
     {
-        assertEquals("Hello DeltaSpike", minimalMessages.sayHello("DeltaSpike"));
+        Assert.assertEquals("Hello DeltaSpike", minimalMessages.sayHello("DeltaSpike"));
     }
 
     @Test
     public void testCustomMinimalMessage()
     {
-        assertEquals("Hello DeltaSpike", customMinimalMessages.sayHello("DeltaSpike"));
+        Assert.assertEquals("Hello DeltaSpike", customMinimalMessages.sayHello("DeltaSpike"));
+    }
+
+    //X TODO @Test currently disabled as we currently rely on having an InjectionPoint internally...
+    public void testExpressionLanguageIntegration()
+    {
+        ElPickedUpMessages elMessage = (ElPickedUpMessages) BeanProvider.getContextualReference("elPickedUpMessage");
+        Assert.assertNotNull(elMessage);
+        Assert.assertEquals("Hello DeltaSpike", elMessage.sayHello("DeltaSpike"));
     }
 }

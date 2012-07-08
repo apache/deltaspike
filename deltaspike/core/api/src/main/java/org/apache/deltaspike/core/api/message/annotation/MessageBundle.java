@@ -59,6 +59,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  *
  * <p><code>&#064;MessageBundle</code> can be combined with {@link MessageContextConfig}
  * to further customize the message-resolution and processing process.</p>
+ *
+ * <p>Debug hint: Set a breakpoint in <code>MessageBundleInvocationHandler#invoke</code>.
+ * This will get called for every message bundle invocation.</p>
  */
 @Target({ TYPE })
 @Retention(RUNTIME)
