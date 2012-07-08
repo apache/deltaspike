@@ -73,19 +73,4 @@ public @interface ConfigProperty
      */
     @Nonbinding
     String defaultValue() default NULL;
-
-    /**
-     * <p>Per default all properties are validated during the bootstrapping process of the CDI container.
-     * If it can't be resolved, the bootstrapping will fail.</p>
-     *
-     * <p>Set it to true if the property will be set dynamically e.g. during the bootstrapping process and
-     * it will be stored in a dynamic data-store like data-base.</p>
-     *
-     * <p>This flag has no effect if a {@link #defaultValue()} is set!</p>
-     *
-     * @return true if the property has to be available from the very beginning, false otherwise
-     */
-    //X TODO fix it (broken since c0e020943ca7d4eeba1e8810cf1b55dcbab422a4)
-    @Nonbinding
-    boolean eager() default true;
 }
