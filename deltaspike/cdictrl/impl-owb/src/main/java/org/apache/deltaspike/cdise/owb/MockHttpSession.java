@@ -29,6 +29,12 @@ import javax.servlet.http.HttpSessionContext;
  */
 public class MockHttpSession implements HttpSession
 {
+    private String sessionId;
+
+    public MockHttpSession(String sessionId)
+    {
+        this.sessionId = sessionId;
+    }
 
     public long getCreationTime()
     {
@@ -37,7 +43,7 @@ public class MockHttpSession implements HttpSession
 
     public String getId()
     {
-        return "sessId1";
+        return sessionId;
     }
 
     public long getLastAccessedTime()
@@ -109,4 +115,32 @@ public class MockHttpSession implements HttpSession
         return false;
     }
 
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o)
+        {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass())
+        {
+            return false;
+        }
+
+        MockHttpSession that = (MockHttpSession) o;
+
+        if (sessionId != null ? !sessionId.equals(that.sessionId) : that.sessionId != null)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return sessionId != null ? sessionId.hashCode() : 0;
+    }
 }

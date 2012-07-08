@@ -37,7 +37,23 @@ import javax.servlet.ServletException;
  */
 public class MockServletContext implements ServletContext
 {
+    private static MockServletContext instance = new MockServletContext();
+
+
     private Hashtable attributes = new Hashtable();
+
+
+    private MockServletContext()
+    {
+        // this class is only accessible via getInstance
+    }
+
+    public static synchronized MockServletContext getInstance()
+    {
+        return instance;
+    }
+
+
 
     public Object getAttribute(String name)
     {

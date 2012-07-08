@@ -68,7 +68,7 @@ public class OpenWebBeansContextControl implements ContextControl
     {
         if (isServletApiAvailable() && session == null)
         {
-            session = new MockHttpSession();
+            session = new MockHttpSession("mockSession1");
         }
 
         return session;
@@ -78,7 +78,7 @@ public class OpenWebBeansContextControl implements ContextControl
     {
         if (isServletApiAvailable() && servletContext == null)
         {
-            servletContext  = new MockServletContext();
+            servletContext = MockServletContext.getInstance();
         }
 
         return servletContext;
