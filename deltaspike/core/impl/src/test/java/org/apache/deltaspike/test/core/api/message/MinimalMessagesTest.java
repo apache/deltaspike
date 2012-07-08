@@ -60,7 +60,7 @@ public class MinimalMessagesTest
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
         return ShrinkWrap
-                .create(WebArchive.class, "simpleMessageTest.war")
+                .create(WebArchive.class, "minimalMessageTest.war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
                 .addAsLibraries(testJar)
                 .addAsResource("customMinimalMessage_en.properties")

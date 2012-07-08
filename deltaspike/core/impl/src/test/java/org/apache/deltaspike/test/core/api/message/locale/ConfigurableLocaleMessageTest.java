@@ -70,12 +70,12 @@ public class ConfigurableLocaleMessageTest
     public static WebArchive deploy()
     {
         JavaArchive testJar = ShrinkWrap
-                .create(JavaArchive.class, "simpleMessageTest.jar")
+                .create(JavaArchive.class, "localeMessageTest.jar")
                 .addPackage(ConfigurableLocaleMessageTest.class.getPackage())
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
         return ShrinkWrap
-                .create(WebArchive.class, "simpleMessageTest.war")
+                .create(WebArchive.class, "localeMessageTest.war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
                 .addAsLibraries(testJar)
                 .addAsWebInfResource(new StringAsset(BEANS_XML_CONTENT), "beans.xml")

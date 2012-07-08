@@ -62,12 +62,12 @@ public class BrokenMessageBundleOnClassTest
     public static WebArchive deploy()
     {
         JavaArchive testJar = ShrinkWrap
-                .create(JavaArchive.class, "simpleMessageTest.jar")
+                .create(JavaArchive.class, "invalidMessageBundleTest.jar")
                 .addPackage(BrokenMessageBundleClass.class.getPackage())
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
         return ShrinkWrap
-                .create(WebArchive.class, "simpleMessageTest.war")
+                .create(WebArchive.class, "invalidMessageBundleTest.war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
                 .addAsLibraries(testJar)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")

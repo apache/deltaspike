@@ -31,6 +31,7 @@ public interface MessageContext extends LocaleResolver, Serializable, Cloneable
     /**
      * Clones the current MessageContext
      */
+    @SuppressWarnings("CloneDoesntDeclareCloneNotSupportedException")
     MessageContext clone();
 
     /**
