@@ -47,7 +47,7 @@ import org.apache.deltaspike.core.util.BeanUtils;
  *     &#064;Nonbinding
  *     boolean name(); // the name of the configuration-key to lookup the value
  *
- *     @Nonbinding
+ *     &#064;Nonbinding
  *     String defaultValue() default ConfigProperty.NULL;
  *
  *     &#064;Nonbinding

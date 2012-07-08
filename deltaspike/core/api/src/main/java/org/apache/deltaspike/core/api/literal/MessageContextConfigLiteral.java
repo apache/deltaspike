@@ -56,7 +56,7 @@ public class MessageContextConfigLiteral extends AnnotationLiteral<MessageContex
     @Override
     public String[] messageSource()
     {
-        return this.messageSource;
+        return messageSource;
     }
 
     @Override
