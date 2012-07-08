@@ -39,7 +39,19 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface MessageContextConfig
 {
     /**
-     * Optional custom message-source.
+     * <p>Additional message-source.</p>
+     *
+     * <p>A message-source is a lookup hint for the {@link MessageResolver}.
+     * For the default MessageResolver this is the name of the
+     * {@link java.util.ResourceBundle}.</p>
+     *
+     * <p>Example: For using 2 additional ResourceBundles for the lookup,
+     * you can use the MessageContextConfig like that:
+     * <pre>
+     *  &#064;MessageBundle
+     *  &#064;MessageContextConfig(messageSource = {"mycomp.ErrorMessages","mycomp.BusinessMessages"})
+     *  public interface MyCompanyMessages {...
+     * </pre>.</p>
      * @return classes of the message-sources
      */
     String[] messageSource() default { };

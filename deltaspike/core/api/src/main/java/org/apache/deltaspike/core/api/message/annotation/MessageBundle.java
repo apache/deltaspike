@@ -26,11 +26,21 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * <p>Marker annotation for a message-bundle interface which provides type-safe messages
- * (methods annotated with {@link MessageTemplate}).</p>
+ * <p>Marker annotation for a message-bundle interface which provides type-safe messages.
+ * Each method on such an interface will form a type-safe message. The message lookup key
+ * (resource bundle key) can either be defined by annotating those methods
+ * with &#064;{@link MessageTemplate}) or by convention. if no &#064;{@link MessageTemplate}
+ * annotation is used on a method, it's name will be used as resource key.</p>
  *
  * <p>This annotation must only be used on interfaces.
  * If this annotation gets used on a concrete class, a deployment error results!</p>
+ *
+ * <p>The {@link java.util.ResourceBundle} or other resource lookup source is
+ * determined by the {@link org.apache.deltaspike.core.api.message.MessageResolver}
+ * in conjunction with
+ * {@link org.apache.deltaspike.core.api.message.MessageContext#messageSource(String...)}.
+ * The fully qualified class name of the interface annotated with
+ * &#064;MessageBundle will automatically be registered as additional <code>messageSource</code>!</p>
  *
  * <p>Can be combined with {@link MessageContextConfig} to customize the
  * message-resolution and processing.</p>
