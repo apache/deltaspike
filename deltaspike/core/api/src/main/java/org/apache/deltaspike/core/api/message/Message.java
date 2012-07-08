@@ -21,7 +21,11 @@ package org.apache.deltaspike.core.api.message;
 import java.io.Serializable;
 
 /**
- * Basic interface for all message-types
+ * <p>Basic interface for all messages.</p>
+ *
+ * <p>A <code>Message</code> is not a simple String but all the
+ * information needed to create those Strings for multiple situations.
+ * The situation ist determined by the used {@link MessageContext}.</p>
  */
 public interface Message extends Serializable
 {
