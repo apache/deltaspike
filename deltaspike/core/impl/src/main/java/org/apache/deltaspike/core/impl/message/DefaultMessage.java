@@ -37,14 +37,14 @@ import static org.apache.deltaspike.core.api.message.MessageResolver.MISSING_RES
  * {@inheritDoc}
  */
 @Typed()
-class DefaultMessage implements Message
+public class DefaultMessage implements Message
 {
-    protected String messageTemplate;
-    protected List<Serializable> arguments = new ArrayList<Serializable>();
+    private String messageTemplate;
+    private List<Serializable> arguments = new ArrayList<Serializable>();
 
     private MessageContext messageContext;
 
-    DefaultMessage(MessageContext messageContext)
+    public DefaultMessage(MessageContext messageContext)
     {
         reset();
 
@@ -130,7 +130,7 @@ class DefaultMessage implements Message
             template = messageTemplate.substring(1, messageTemplate.length() - 1);
         }
 
-        StringBuffer sb = new StringBuffer(MISSING_RESOURCE_MARKER + template + MISSING_RESOURCE_MARKER);
+        StringBuilder sb = new StringBuilder(MISSING_RESOURCE_MARKER + template + MISSING_RESOURCE_MARKER);
         if (getArguments() != null && getArguments().length > 0)
         {
             sb.append(" ").append(Arrays.toString(getArguments()));

@@ -31,7 +31,7 @@ import java.util.ResourceBundle;
 
 @Dependent
 @SuppressWarnings("UnusedDeclaration")
-class DefaultMessageResolver implements MessageResolver
+public class DefaultMessageResolver implements MessageResolver
 {
     private static final long serialVersionUID = 5834411208472341006L;
 

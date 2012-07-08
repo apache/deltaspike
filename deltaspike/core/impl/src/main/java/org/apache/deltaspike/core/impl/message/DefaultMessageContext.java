@@ -40,17 +40,17 @@ class DefaultMessageContext implements MessageContext
     private LocaleResolver localeResolver = null;
     private List<String> messageSources = new ArrayList<String>();
 
-    DefaultMessageContext()
+    public DefaultMessageContext()
     {
     }
 
-    DefaultMessageContext(MessageContext otherMessageContext)
+    public DefaultMessageContext(MessageContext otherMessageContext)
     {
         messageInterpolator(otherMessageContext.getMessageInterpolator());
         localeResolver(otherMessageContext.getLocaleResolver());
         messageResolver(otherMessageContext.getMessageResolver());
 
-        this.messageSources.addAll(otherMessageContext.getMessageSources());
+        messageSources.addAll(otherMessageContext.getMessageSources());
     }
 
     @Override
@@ -73,13 +73,13 @@ class DefaultMessageContext implements MessageContext
         for (String currentMessageSource : messageSource)
         {
             //don't insert message-sources twice
-            if (!this.messageSources.contains(currentMessageSource))
+            if (!messageSources.contains(currentMessageSource))
             {
                 newMessageSources.add(currentMessageSource);
             }
         }
         // add on first position
-        this.messageSources.addAll(0, newMessageSources);
+        messageSources.addAll(0, newMessageSources);
         return this;
     }
 
@@ -103,7 +103,7 @@ class DefaultMessageContext implements MessageContext
     @Override
     public List<String> getMessageSources()
     {
-        return Collections.unmodifiableList(this.messageSources);
+        return Collections.unmodifiableList(messageSources);
     }
 
     @Override

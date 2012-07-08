@@ -32,7 +32,7 @@ import org.apache.deltaspike.core.util.ClassUtils;
  * The <code>TypedMessageBundleProducer</code> provides a producer method for
  * injected typed message bundles.
  */
-class TypedMessageBundleProducer implements Serializable
+public class TypedMessageBundleProducer implements Serializable
 {
     private static final long serialVersionUID = -5077306523543940760L;
 
