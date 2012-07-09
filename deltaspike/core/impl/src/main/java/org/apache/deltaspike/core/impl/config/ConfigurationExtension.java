@@ -52,7 +52,7 @@ public class ConfigurationExtension implements Extension, Deactivatable
     }
 
     @SuppressWarnings("UnusedDeclaration")
-    public void collectUserConfigSources(@Observes ProcessAnnotatedType<PropertyConfigSource> pat)
+    public void collectUserConfigSources(@Observes ProcessAnnotatedType<? extends PropertyConfigSource> pat)
     {
         if (!isActivated)
         {
