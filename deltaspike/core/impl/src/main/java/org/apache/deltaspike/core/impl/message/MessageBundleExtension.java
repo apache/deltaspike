@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.core.impl.message;
 
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -216,11 +217,12 @@ public class MessageBundleExtension implements Extension, Deactivatable
                                                        AnnotatedType<T> annotatedType,
                                                        BeanManager beanManager)
     {
-        return new WrappingBeanBuilder<T>(delegate, beanManager)
-                .readFromType(annotatedType)
-                //X TODO re-visit type.getBaseType() in combination with #addQualifier
-                .types(annotatedType.getJavaClass(), Object.class)
-                .create();
+        WrappingBeanBuilder<T> beanBuilder = new WrappingBeanBuilder<T>(delegate, beanManager)
+                .readFromType(annotatedType);
+        //X TODO re-visit type.getBaseType() in combination with #addQualifier
+        beanBuilder.types(annotatedType.getJavaClass(), Object.class, Serializable.class);
+
+        return beanBuilder.create();
     }
 
     @SuppressWarnings("UnusedDeclaration")
