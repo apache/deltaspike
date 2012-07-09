@@ -205,6 +205,11 @@
             </dependencyManagement>
             <dependencies>
                 <dependency>
+                    <groupId>javax.enterprise</groupId>
+                    <artifactId>cdi-api</artifactId>
+                    <scope>provided</scope>
+                </dependency>
+                <dependency>
                     <groupId>org.jboss.weld</groupId>
                     <artifactId>weld-api</artifactId>
                     <scope>provided</scope>
