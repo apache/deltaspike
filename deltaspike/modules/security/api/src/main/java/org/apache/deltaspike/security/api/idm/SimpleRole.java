@@ -16,9 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.security.impl.idm;
-
-import org.apache.deltaspike.security.api.idm.Role;
+package org.apache.deltaspike.security.api.idm;
 
 /**
  * Simple implementation of the Role interface

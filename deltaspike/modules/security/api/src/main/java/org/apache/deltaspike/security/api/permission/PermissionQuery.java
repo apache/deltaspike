@@ -23,6 +23,7 @@ import java.util.Set;
 
 import org.apache.deltaspike.security.api.idm.IdentityType;
 import org.apache.deltaspike.security.api.idm.Range;
+import org.apache.deltaspike.security.spi.permission.PermissionStore;
 
 /**
  * API for querying object permissions
@@ -35,15 +36,23 @@ public class PermissionQuery
     private Range range;
     private IdentityType recipient;
     
+    private PermissionStore permissionStore;
+    
+    public PermissionQuery(PermissionStore permissionStore)
+    {
+        this.permissionStore = permissionStore;
+    }
+    
     public Object getResource()
     {
         return resource;
     }
     
-    public void setResource(Object resource)
+    public PermissionQuery setResource(Object resource)
     {
         this.resource = resource;
         this.resources = null;
+        return this;
     }
     
     public Set<Object> getResources()
@@ -51,10 +60,11 @@ public class PermissionQuery
         return resources;
     }
     
-    public void setResources(Set<Object> resources)
+    public PermissionQuery setResources(Set<Object> resources)
     {
         this.resources = resources;
         this.resource = null;
+        return this;
     }
     
     public Range getRange()
@@ -62,9 +72,10 @@ public class PermissionQuery
         return range;
     }
     
-    public void setRange(Range range)
+    public PermissionQuery setRange(Range range)
     {
         this.range = range;
+        return this;
     }
     
     public IdentityType getRecipient()
@@ -72,14 +83,14 @@ public class PermissionQuery
         return recipient;
     }
     
-    public void setRecipient(IdentityType recipient)
+    public PermissionQuery setRecipient(IdentityType recipient)
     {
         this.recipient = recipient;
+        return this;
     }
     
     public List<Permission> getResultList() 
     {
-        // TODO implement
-        return null;
+        return permissionStore.getPermissions(this);
     }    
 }

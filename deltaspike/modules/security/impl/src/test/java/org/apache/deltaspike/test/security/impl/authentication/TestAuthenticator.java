@@ -18,9 +18,9 @@
  */
 package org.apache.deltaspike.test.security.impl.authentication;
 
+import org.apache.deltaspike.security.api.idm.SimpleUser;
 import org.apache.deltaspike.security.api.idm.User;
 import org.apache.deltaspike.security.api.credential.LoginCredentials;
-import org.apache.deltaspike.security.impl.idm.SimpleUser;
 import org.apache.deltaspike.security.spi.authentication.BaseAuthenticator;
 
 import javax.enterprise.context.RequestScoped;

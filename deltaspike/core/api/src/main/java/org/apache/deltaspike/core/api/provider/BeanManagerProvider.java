@@ -46,6 +46,7 @@ import org.apache.deltaspike.core.util.ClassUtils;
  * <p>Usage:<p/>
  * <pre>
  * BeanManager bm = BeanManagerProvider.getInstance().getBeanManager();
+ * 
  * </pre>
  *
  * <p><b>Attention:</b> This method is intended for being used in user code at runtime.

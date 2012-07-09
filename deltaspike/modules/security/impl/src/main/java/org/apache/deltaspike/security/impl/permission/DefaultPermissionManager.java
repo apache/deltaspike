@@ -20,21 +20,28 @@ package org.apache.deltaspike.security.impl.permission;
 
 import java.util.Collection;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
 import org.apache.deltaspike.security.api.permission.Permission;
 import org.apache.deltaspike.security.api.permission.PermissionManager;
 import org.apache.deltaspike.security.api.permission.PermissionQuery;
+import org.apache.deltaspike.security.spi.permission.PermissionStore;
 
 /**
  * Default implementation of the PermissionManager interface
  */
+@ApplicationScoped
 public class DefaultPermissionManager implements PermissionManager
 {
+    @Inject
+    PermissionStore permissionStore;
 
     @Override
     public PermissionQuery createPermissionQuery()
     {
-        // TODO Auto-generated method stub
-        return null;
+        PermissionQuery q = new PermissionQuery(permissionStore);
+        return q;
     }
 
     @Override

@@ -16,13 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.security.impl.idm;
+package org.apache.deltaspike.security.api.idm;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.deltaspike.security.api.idm.IdentityType;
 
 /**
  * Abstract base class for IdentityType implementations 

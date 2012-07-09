@@ -16,39 +16,68 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.security.impl.idm;
-
-import org.apache.deltaspike.security.api.idm.Group;
+package org.apache.deltaspike.security.api.idm;
 
 /**
- * Simple implementation of the Group interface 
- *
+ * A simple User implementation
  */
-public class SimpleGroup extends AbstractIdentityType implements Group
+public class SimpleUser extends AbstractIdentityType implements User
 {
     private String id;
-    private String name;
-    private Group parentGroup;
+    private String firstName;
+    private String lastName;
+    private String email;
     
-    public SimpleGroup(String id, String name, Group parentGroup)
+    public SimpleUser(String id)
     {
         this.id = id;
-        this.name = name;
-        this.parentGroup = parentGroup;
     }
     
+    @Override
     public String getId()
     {
         return id;
     }
 
-    public String getName()
+    @Override
+    public String getFirstName()
     {
-        return name;
+        return firstName;
     }
 
-    public Group getParentGroup()
+    @Override
+    public void setFirstName(String firstName)
     {
-        return parentGroup;
+        this.firstName = firstName;
+    }
+
+    @Override
+    public String getLastName()
+    {
+        return lastName;
+    }
+
+    @Override
+    public void setLastName(String lastName)
+    {
+        this.lastName = lastName;
+    }
+
+    @Override
+    public String getFullName()
+    {
+        return String.format("%s %s", firstName, lastName);
+    }
+
+    @Override
+    public String getEmail()
+    {
+        return email;
+    }
+
+    @Override
+    public void setEmail(String email)
+    {
+        this.email = email;
     }
 }
