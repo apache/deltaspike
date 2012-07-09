@@ -46,4 +46,9 @@ public class Customer implements Serializable
     {
         this.lastName = lastName;
     }
+    
+    public String toString()
+    {
+        return String.format("%d: %s %s", id, firstName, lastName);
+    }
 }

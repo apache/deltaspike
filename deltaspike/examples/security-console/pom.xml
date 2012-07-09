@@ -65,6 +65,12 @@
           <artifactId>geronimo-jpa_2.0_spec</artifactId>
         </dependency>        
 
+	<dependency>
+	  <groupId>org.apache.geronimo.specs</groupId>
+	  <artifactId>geronimo-ejb_3.0_spec</artifactId>
+	  <version>1.0.1</version>
+	</dependency>
+
     </dependencies>
 
     <profiles>
@@ -90,6 +96,7 @@
                 </dependency>
             </dependencies>
         </profile>
+        
         <profile>
             <id>Weld</id>
             <dependencies>
@@ -107,6 +114,25 @@
                 </dependency>
             </dependencies>
         </profile>
+        
+        <profile>
+            <id>jbossas7</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <configuration>
+                            <webResources>
+                                <resource>
+                                    <directory>src/main/resources-jbossas7</directory>
+                                </resource>
+                            </webResources>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>        
     </profiles>
     
     <build>

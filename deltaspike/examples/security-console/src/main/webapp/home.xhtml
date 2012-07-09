@@ -30,7 +30,13 @@
             </div>
 
             Tip: you can login with a username/password of demo/demo.
-
+        </h:form>
+        
+        <h:form>
+            <div>
+              <h:commandButton action="#{modelPopulator.populate}" value="Populate database"/>
+              (TODO - refactor this after DeltaSpike supports application initialization events)
+            </div>
         </h:form>
 
         <br style="clear:both"/>
