@@ -29,6 +29,7 @@ import java.util.StringTokenizer;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletException;
 
 /**
@@ -51,6 +52,11 @@ public class MockServletContext implements ServletContext
     public static synchronized MockServletContext getInstance()
     {
         return instance;
+    }
+
+    public static ServletContextEvent getServletContextEvent()
+    {
+        return new ServletContextEvent(getInstance());
     }
 
 
