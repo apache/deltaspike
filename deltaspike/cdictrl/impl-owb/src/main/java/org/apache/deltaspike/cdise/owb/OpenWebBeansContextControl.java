@@ -26,7 +26,6 @@ import javax.enterprise.context.SessionScoped;
 import javax.enterprise.context.spi.Context;
 
 import java.lang.annotation.Annotation;
-import java.util.logging.Logger;
 
 import org.apache.deltaspike.cdise.api.ContextControl;
 import org.apache.webbeans.config.WebBeansContext;
@@ -37,14 +36,9 @@ import org.apache.webbeans.context.type.ContextTypes;
  * OWB specific impl of the {@link ContextControl}
  */
 @Dependent
+@SuppressWarnings("UnusedDeclaration")
 public class OpenWebBeansContextControl implements ContextControl
 {
-    private static final Logger LOG = Logger.getLogger(OpenWebBeansContextControl.class.getName());
-
-    private Object session = null;
-    private Object servletContext = null;
-    
-
     @Override
     public void startContexts()
     {
