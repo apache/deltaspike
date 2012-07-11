@@ -44,7 +44,6 @@ public class JndiUtilsTest
     public static WebArchive deploy()
     {
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "jndiTest.jar")
-                .addPackage(SeCategory.class.getPackage())
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
         return ShrinkWrap.create(WebArchive.class, "jndiUtils.war")

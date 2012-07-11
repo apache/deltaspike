@@ -54,7 +54,6 @@ public class BdaAlternativeTest
     public static WebArchive deploy()
     {
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "securedAnnotationTest.jar")
-                .addPackage(SeCategory.class.getPackage())
                 .addPackage(BdaAlternativeTest.class.getPackage())
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 

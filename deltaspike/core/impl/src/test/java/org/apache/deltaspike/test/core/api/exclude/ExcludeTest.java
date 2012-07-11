@@ -58,7 +58,6 @@ public class ExcludeTest
                 .getResource("META-INF/apache-deltaspike.properties");
 
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "excludeTest.jar")
-                .addPackage(SeCategory.class.getPackage())
                 .addPackage(ExcludeTest.class.getPackage())
                 .addPackage(TestClassDeactivator.class.getPackage())
                 .addAsManifestResource(FileUtils.getFileForURL(fileUrl.toString()))

@@ -66,7 +66,6 @@ public class MinimalMessagesTest
                 .addAsLibraries(testJar)
                 .addAsResource("customMinimalMessage_en.properties")
                 .addAsResource("org/apache/deltaspike/test/core/api/message/MinimalMessages_en.properties")
-                .addPackage(SeCategory.class.getPackage())
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsServiceProvider(Extension.class,
                         MessageBundleExtension.class);

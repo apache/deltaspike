@@ -45,7 +45,6 @@ public class PropertyConfigSourceTest
     public static WebArchive deploy()
     {
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "PropertyConfigSourceTest.jar")
-                .addPackage(SeCategory.class.getPackage())
                 .addPackage(PropertyConfigSourceTest.class.getPackage())
                 .addAsResource(CONFIG_FILE_NAME)
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");

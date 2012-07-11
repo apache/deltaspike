@@ -70,7 +70,6 @@ public class GlobalAlternativeTest
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "excludeIntegrationTest.jar")
                 .addPackage(GlobalAlternativeTest.class.getPackage())
                 .addPackage(QualifierA.class.getPackage())
-                .addPackage(SeCategory.class.getPackage())
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
         return ShrinkWrap.create(WebArchive.class, "globalAlternative.war")
