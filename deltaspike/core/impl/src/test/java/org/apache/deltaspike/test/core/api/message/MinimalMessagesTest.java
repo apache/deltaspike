@@ -20,6 +20,7 @@ package org.apache.deltaspike.test.core.api.message;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.impl.message.MessageBundleExtension;
+import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -64,6 +65,7 @@ public class MinimalMessagesTest
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
                 .addAsLibraries(testJar)
                 .addAsResource("customMinimalMessage_en.properties")
+                .addPackage(SeCategory.class.getPackage())
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsServiceProvider(Extension.class,
                         MessageBundleExtension.class);
