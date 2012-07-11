@@ -23,6 +23,7 @@ import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.impl.exclude.extension.ExcludeExtension;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
 import org.apache.deltaspike.test.category.SeCategory;
+import org.apache.deltaspike.test.core.impl.activation.TestClassDeactivator;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.apache.deltaspike.test.util.FileUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -59,6 +60,7 @@ public class ExcludeTest
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "excludeTest.jar")
                 .addPackage(SeCategory.class.getPackage())
                 .addPackage(ExcludeTest.class.getPackage())
+                .addPackage(TestClassDeactivator.class.getPackage())
                 .addAsManifestResource(FileUtils.getFileForURL(fileUrl.toString()))
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
