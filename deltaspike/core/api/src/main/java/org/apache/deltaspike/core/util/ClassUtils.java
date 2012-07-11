@@ -54,25 +54,41 @@ public abstract class ClassUtils
      */
     public static ClassLoader getClassLoader(Object o)
     {
-        ClassLoader loader = AccessController.doPrivileged(new PrivilegedAction<ClassLoader>()
+        if (System.getSecurityManager() != null)
         {
-            /**
-             * {@inheritDoc}
-             */
-            @Override
-            public ClassLoader run()
+            return AccessController.doPrivileged(new GetClassLoaderAction(o));
+        }
+        else
+        {
+            return getClassLoaderInternal(o);
+        }
+    }
+
+    static class GetClassLoaderAction implements PrivilegedAction<ClassLoader>
+    {
+        private Object object;
+        GetClassLoaderAction(Object object)
+        {
+            this.object = object;
+        }
+
+        @Override
+        public ClassLoader run()
+        {
+            try
             {
-                try
-                {
-                    return Thread.currentThread().getContextClassLoader();
-                }
-                catch (Exception e)
-                {
-                    return null;
-                }
+                return getClassLoaderInternal(object);
+            }
+            catch (Exception e)
+            {
+                return null;
             }
         }
-        );
+    }
+
+    private static ClassLoader getClassLoaderInternal(Object o)
+    {
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
 
         if (loader == null && o != null)
         {
