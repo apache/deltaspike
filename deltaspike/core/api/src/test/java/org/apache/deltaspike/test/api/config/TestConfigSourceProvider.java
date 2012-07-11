@@ -35,55 +35,59 @@ public class TestConfigSourceProvider implements ConfigSourceProvider
         return new ArrayList<ConfigSource>()
         {
             {
-                add(new ConfigSource()
-                {
-                    @Override
-                    public int getOrdinal()
-                    {
-                        return 1;
-                    }
-
-                    @Override
-                    public String getPropertyValue(String key)
-                    {
-                        if ("test".equals(key))
-                        {
-                            return "test1";
-                        }
-                        return null;
-                    }
-
-                    @Override
-                    public String getConfigName()
-                    {
-                        return TestConfigSourceProvider.class.getName() + "-1";
-                    }
-                });
-                add(new ConfigSource()
-                {
-                    @Override
-                    public int getOrdinal()
-                    {
-                        return 2;
-                    }
-
-                    @Override
-                    public String getPropertyValue(String key)
-                    {
-                        if ("test".equals(key))
-                        {
-                            return "test2";
-                        }
-                        return null;
-                    }
-
-                    @Override
-                    public String getConfigName()
-                    {
-                        return TestConfigSourceProvider.class.getName() + "-2";
-                    }
-                });
+                add(new TestConfigSource1());
+                add(new TestConfigSource2());
             }
         };
+    }
+
+    private static class TestConfigSource1 implements ConfigSource
+    {
+        @Override
+        public int getOrdinal()
+        {
+            return 1;
+        }
+
+        @Override
+        public String getPropertyValue(String key)
+        {
+            if ("test".equals(key))
+            {
+                return "test1";
+            }
+            return null;
+        }
+
+        @Override
+        public String getConfigName()
+        {
+            return TestConfigSourceProvider.class.getName();
+        }
+    }
+
+    private static class TestConfigSource2 implements ConfigSource
+    {
+        @Override
+        public int getOrdinal()
+        {
+            return 2;
+        }
+
+        @Override
+        public String getPropertyValue(String key)
+        {
+            if ("test".equals(key))
+            {
+                return "test2";
+            }
+            return null;
+        }
+
+        @Override
+        public String getConfigName()
+        {
+            return TestConfigSourceProvider.class.getName();
+        }
     }
 }
