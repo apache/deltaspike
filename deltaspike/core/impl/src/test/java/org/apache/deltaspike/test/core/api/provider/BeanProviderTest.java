@@ -191,5 +191,7 @@ public class BeanProviderTest
         TestBean testBean = BeanProvider.getContextualReference(TestBean.class);
 
         Assert.assertEquals(newValue, testBean.getI());
+
+        testBean.setI(4711); // reset the value if this test is executed first
     }
 }
