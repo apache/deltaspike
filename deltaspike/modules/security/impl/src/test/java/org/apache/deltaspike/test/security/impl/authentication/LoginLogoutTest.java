@@ -66,7 +66,7 @@ public class LoginLogoutTest
                 .addPackage("org.apache.deltaspike.test.security.impl.authentication")
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
-        return ShrinkWrap.create(WebArchive.class)
+        return ShrinkWrap.create(WebArchive.class, "login-logout-test.war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndSecurityArchive())
                 .addAsLibraries(testJar)
                 .addAsServiceProvider(Extension.class, ExcludeExtension.class)
@@ -78,7 +78,7 @@ public class LoginLogoutTest
     {
         final String userName = "spike";
         final String password = "apache";
-        
+
         //init
         authenticator.register(userName, password);
 

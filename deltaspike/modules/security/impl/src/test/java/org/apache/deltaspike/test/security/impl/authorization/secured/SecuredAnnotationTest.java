@@ -19,20 +19,15 @@
 package org.apache.deltaspike.test.security.impl.authorization.secured;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
-import org.apache.deltaspike.core.impl.exclude.extension.ExcludeExtension;
 import org.apache.deltaspike.security.api.authorization.AccessDeniedException;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import javax.enterprise.inject.spi.Extension;
 
 
 /**
@@ -44,14 +39,9 @@ public class SecuredAnnotationTest
     @Deployment
     public static WebArchive deploy()
     {
-        JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "securedAnnotationTest.jar")
-                .addPackage("org.apache.deltaspike.test.security.impl.authorization.secured")
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
-
-        return ShrinkWrap.create(WebArchive.class)
+        return ShrinkWrap.create(WebArchive.class, "secured-annotation-test.war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndSecurityArchive())
-                .addAsLibraries(testJar)
-                .addAsServiceProvider(Extension.class, ExcludeExtension.class)
+                .addPackage("org.apache.deltaspike.test.security.impl.authorization.secured")
                 .addAsWebInfResource(ArchiveUtils.getBeansXml(), "beans.xml");
     }
 
@@ -65,11 +55,15 @@ public class SecuredAnnotationTest
         try
         {
             testBean.getBlockedResult();
-            Assert.fail();
+            Assert.fail("AccessDeniedException expect, but was not thrown");
         }
         catch (AccessDeniedException e)
         {
             //expected exception
+        }
+        catch (Exception e)
+        {
+            Assert.fail("Unexpected Exception: " + e);
         }
     }
 
@@ -83,11 +77,15 @@ public class SecuredAnnotationTest
         try
         {
             testBean.getBlockedResult();
-            Assert.fail();
+            Assert.fail("AccessDeniedException expect, but was not thrown");
         }
         catch (AccessDeniedException e)
         {
             //expected exception
+        }
+        catch (Exception e)
+        {
+            Assert.fail("Unexpected Exception: " + e);
         }
     }
 
@@ -101,11 +99,15 @@ public class SecuredAnnotationTest
         try
         {
             testBean.getBlockedResult();
-            Assert.fail();
+            Assert.fail("AccessDeniedException expect, but was not thrown");
         }
         catch (AccessDeniedException e)
         {
             //expected exception
+        }
+        catch (Exception e)
+        {
+            Assert.fail("Unexpected Exception: " + e);
         }
     }
 }

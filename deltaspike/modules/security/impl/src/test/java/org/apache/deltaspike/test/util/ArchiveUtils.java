@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.test.util;
 
-import org.apache.deltaspike.core.util.ClassUtils;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
@@ -30,19 +29,19 @@ public class ArchiveUtils
 {
     public static JavaArchive[] getDeltaSpikeCoreAndSecurityArchive()
     {
-        //X TODO remove this workaround
-        boolean isOwbAvailable = ClassUtils.tryToLoadClassForName("org.apache.webbeans.spi.ContainerLifecycle") != null;
+        //X TODO remove this workaround - lightguard.jp We don't need the work around, we have to have the META-INF/beans.xml for all containers
+        //boolean isOwbAvailable = ClassUtils.tryToLoadClassForName("org.apache.webbeans.spi.ContainerLifecycle") != null;
 
         String[] excludedFiles;
 
-        if (isOwbAvailable)
-        {
+        //if (isOwbAvailable)
+        //{
             excludedFiles = new String[]{"META-INF.apache-deltaspike.properties"};
-        }
-        else
-        {
-            excludedFiles = new String[]{"META-INF.apache-deltaspike.properties", "META-INF.beans.xml"};
-        }
+        //}
+        //else
+        //{
+        //    excludedFiles = new String[]{"META-INF.apache-deltaspike.properties", "META-INF.beans.xml"};
+        //}
 
 
         return ShrinkWrapArchiveUtil.getArchives(null,
