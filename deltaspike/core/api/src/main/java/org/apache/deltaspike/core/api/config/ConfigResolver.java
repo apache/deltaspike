@@ -158,7 +158,8 @@ public final class ConfigResolver
      */
     public static List<String> getAllPropertyValues(String key)
     {
-        List<ConfigSource> appConfigSources = sortAscending(Arrays.asList(getConfigSources()));
+        List<ConfigSource> appConfigSources =
+                sortAscending(new ArrayList<ConfigSource>(Arrays.asList(getConfigSources())));
         List<String> result = new ArrayList<String>();
 
         String value;
