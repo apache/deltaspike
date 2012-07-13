@@ -57,7 +57,7 @@ public class ExceptionControlExtension implements Extension, Deactivatable
 
     //this map is application scoped by the def. of the cdi spec.
     //if it needs to be static a classloader key is needed + a cleanup in a BeforeShutdown observer
-    private Map<? super Type, Collection<HandlerMethod<? extends Throwable>>> allHandlers
+    private Map<Type, Collection<HandlerMethod<? extends Throwable>>> allHandlers
         = new HashMap<Type, Collection<HandlerMethod<? extends Throwable>>>();
 
     private Boolean isActivated = null;
@@ -134,7 +134,7 @@ public class ExceptionControlExtension implements Extension, Deactivatable
             return;
         }
 
-        for (Map.Entry<? super Type, Collection<HandlerMethod<? extends Throwable>>> entry : allHandlers.entrySet())
+        for (Map.Entry<Type, Collection<HandlerMethod<? extends Throwable>>> entry : allHandlers.entrySet())
         {
             for (HandlerMethod<? extends Throwable> handler : entry.getValue())
             {
@@ -153,7 +153,7 @@ public class ExceptionControlExtension implements Extension, Deactivatable
         }
     }
 
-    public Map<? super Type, Collection<HandlerMethod<? extends Throwable>>> getAllExceptionHandlers()
+    public Map<Type, Collection<HandlerMethod<? extends Throwable>>> getAllExceptionHandlers()
     {
         return Collections.unmodifiableMap(allHandlers);
     }

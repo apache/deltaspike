@@ -27,7 +27,6 @@ import javax.enterprise.inject.Typed;
 import javax.enterprise.inject.spi.BeanManager;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -43,11 +42,11 @@ import java.util.logging.Logger;
 @Typed()
 class HandlerMethodStorageImpl implements HandlerMethodStorage
 {
-    private final Map<? super Type, Collection<HandlerMethod<? extends Throwable>>> allHandlers;
+    private final Map<Type, Collection<HandlerMethod<? extends Throwable>>> allHandlers;
 
     private Logger log = Logger.getLogger(HandlerMethodStorageImpl.class.toString());
 
-    HandlerMethodStorageImpl(Map<? super Type, Collection<HandlerMethod<? extends Throwable>>> allHandlers)
+    HandlerMethodStorageImpl(Map<Type, Collection<HandlerMethod<? extends Throwable>>> allHandlers)
     {
         this.allHandlers = allHandlers;
     }
@@ -63,7 +62,7 @@ class HandlerMethodStorageImpl implements HandlerMethodStorage
         else
         {
             allHandlers.put(handlerMethod.getExceptionType(),
-                    new HashSet<HandlerMethod<? extends Throwable>>(Arrays.asList(handlerMethod)));
+                    new HashSet<HandlerMethod<? extends Throwable>>(Collections.singleton(handlerMethod)));
         }
     }
 
