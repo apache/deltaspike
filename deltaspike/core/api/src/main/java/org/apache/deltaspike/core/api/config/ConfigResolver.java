@@ -86,6 +86,14 @@ public final class ConfigResolver
     }
 
     /**
+     * Clear all ConfigSources for the current ClassLoader
+     */
+    public static synchronized void freeConfigSources()
+    {
+        configSources.remove(ClassUtils.getClassLoader(null));
+    }
+
+    /**
      * Resolve the property value by going through the list of configured {@link ConfigSource}s
      * and use the one with the highest priority. If no configured value has been found that
      * way we will use the defaultValue.

@@ -21,6 +21,7 @@ package org.apache.deltaspike.core.impl.config;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AfterDeploymentValidation;
 import javax.enterprise.inject.spi.BeforeBeanDiscovery;
+import javax.enterprise.inject.spi.BeforeShutdown;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 
@@ -90,6 +91,15 @@ public class ConfigurationExtension implements Extension, Deactivatable
 
         // finally add all
         ConfigResolver.addConfigSources(configSources);
+    }
+
+    /**
+     * This method triggers freeing of the ConfigSources.
+     */
+    @SuppressWarnings("UnusedDeclaration")
+    public void freeConfigSources(@Observes BeforeShutdown bs)
+    {
+        ConfigResolver.freeConfigSources();
     }
 
     /**
