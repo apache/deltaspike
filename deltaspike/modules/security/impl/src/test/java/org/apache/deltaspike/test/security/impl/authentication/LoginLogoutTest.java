@@ -154,6 +154,10 @@ public class LoginLogoutTest
             Assert.assertTrue(identity.isLoggedIn());
             return;
         }
+        finally
+        {
+            identity.logout();
+        }
 
         Assert.fail();
     }
