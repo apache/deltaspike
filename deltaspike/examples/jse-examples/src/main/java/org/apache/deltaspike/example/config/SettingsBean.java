@@ -30,6 +30,10 @@ public class SettingsBean
     @ConfigProperty(name = "property1")
     private Integer intProperty1;
 
+    @Inject
+    @Location
+    private LocationId locationId;
+
     private Long property2;
 
     private Long inverseProperty;
@@ -63,5 +67,10 @@ public class SettingsBean
     public Long getInverseProperty()
     {
         return inverseProperty;
+    }
+
+    public LocationId getLocationId()
+    {
+        return locationId;
     }
 }

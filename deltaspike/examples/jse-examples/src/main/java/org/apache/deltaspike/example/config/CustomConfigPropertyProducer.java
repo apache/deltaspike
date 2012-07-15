@@ -82,4 +82,21 @@ public class CustomConfigPropertyProducer extends BaseConfigPropertyProducer
 
         return result;
     }
+
+    @Produces
+    @Dependent
+    @Location
+    public LocationId produceLocationId(InjectionPoint injectionPoint)
+    {
+        String configuredValue = getStringPropertyValue(injectionPoint);
+
+        /*
+        //alternative to @ConfigProperty#defaultValue
+        if (configuredValue == null)
+        {
+            return LocationId.LOCATION_X;
+        }
+        */
+        return LocationId.valueOf(configuredValue.trim().toUpperCase());
+    }
 }
