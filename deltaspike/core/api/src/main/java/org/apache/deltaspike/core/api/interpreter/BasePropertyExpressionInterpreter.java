@@ -29,7 +29,7 @@ package org.apache.deltaspike.core.api.interpreter;
  *     <li>; (separator)</li>
  * </ul>
  */
-public abstract class AbstractPropertyExpressionInterpreter implements ExpressionInterpreter<String, Boolean>
+public abstract class BasePropertyExpressionInterpreter implements ExpressionInterpreter<String, Boolean>
 {
     private static final String ASTERISK = "*";
 

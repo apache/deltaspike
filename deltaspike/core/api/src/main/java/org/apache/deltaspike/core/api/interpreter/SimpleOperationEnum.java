@@ -19,7 +19,7 @@
 package org.apache.deltaspike.core.api.interpreter;
 
 /**
- * Operations supported by {@link AbstractPropertyExpressionInterpreter}
+ * Operations supported by {@link BasePropertyExpressionInterpreter}
  */
 enum SimpleOperationEnum
 {

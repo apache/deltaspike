@@ -68,7 +68,7 @@ import javax.enterprise.inject.spi.Bean;
  *
  * @see org.apache.deltaspike.core.util.bean.WrappingBeanBuilder
  */
-public class ImmutableBeanWrapper<T> extends AbstractImmutableBean<T>
+public class ImmutableBeanWrapper<T> extends BaseImmutableBean<T>
 {
     private final Bean<T> wrapped;
 
