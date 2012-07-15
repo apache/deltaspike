@@ -108,7 +108,7 @@ public final class ConfigResolver
         String configuredValue = getPropertyValue(key);
         if (configuredValue == null)
         {
-            LOG.log(Level.FINE, "no configured value found for key {1}, using default value {2}.",
+            LOG.log(Level.FINE, "no configured value found for key {0}, using default value {1}.",
                     new Object[]{key, defaultValue});
 
             configuredValue = defaultValue;
