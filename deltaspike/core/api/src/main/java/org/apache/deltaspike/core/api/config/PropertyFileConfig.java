@@ -37,7 +37,7 @@ package org.apache.deltaspike.core.api.config;
  *  this configuration inside a CDI Extension before the boot
  *  is finished!</p>
  */
-public interface PropertyConfigSource extends DeltaSpikeConfig
+public interface PropertyFileConfig extends DeltaSpikeConfig
 {
     /**
      * All the property files on the classpath which have this
@@ -45,5 +45,5 @@ public interface PropertyConfigSource extends DeltaSpikeConfig
      *
      * @return the full path name of the property files to pick up.
      */
-    String getPropertyFileName();
+    String getFilePath();
 }

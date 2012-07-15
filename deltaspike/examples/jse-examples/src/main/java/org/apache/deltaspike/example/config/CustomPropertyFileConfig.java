@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.example.config;
 
-import org.apache.deltaspike.core.api.config.PropertyConfigSource;
+import org.apache.deltaspike.core.api.config.PropertyFileConfig;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -26,10 +26,10 @@ import javax.enterprise.context.ApplicationScoped;
  * Allows to use a different file than apache-deltaspike.properties
  */
 @ApplicationScoped
-public class CustomPropertyConfigSource implements PropertyConfigSource
+public class CustomPropertyFileConfig implements PropertyFileConfig
 {
     @Override
-    public String getPropertyFileName()
+    public String getFilePath()
     {
         return "META-INF/location.properties";
     }

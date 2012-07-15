@@ -34,13 +34,13 @@ import org.apache.deltaspike.core.util.PropertyFileUtils;
  * Register all property files with the given propertyFileName
  * as {@link ConfigSource}.
  */
-public class EnvironmentPropertyConfigSourceProvider implements ConfigSourceProvider
+class EnvironmentPropertyConfigSourceProvider implements ConfigSourceProvider
 {
     private static final Logger LOG = Logger.getLogger(EnvironmentPropertyConfigSourceProvider.class.getName());
 
     private List<ConfigSource> configSources = new ArrayList<ConfigSource>();
 
-    public EnvironmentPropertyConfigSourceProvider(String propertyFileName)
+    EnvironmentPropertyConfigSourceProvider(String propertyFileName)
     {
         try
         {

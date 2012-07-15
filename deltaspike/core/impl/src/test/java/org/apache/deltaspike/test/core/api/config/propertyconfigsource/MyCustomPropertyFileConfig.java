@@ -18,15 +18,15 @@
  */
 package org.apache.deltaspike.test.core.api.config.propertyconfigsource;
 
-import org.apache.deltaspike.core.api.config.PropertyConfigSource;
+import org.apache.deltaspike.core.api.config.PropertyFileConfig;
 
 /**
  * Custom
  */
-public class MyCustomPropertyConfigSource implements PropertyConfigSource
+public class MyCustomPropertyFileConfig implements PropertyFileConfig
 {
     @Override
-    public String getPropertyFileName()
+    public String getFilePath()
     {
         return "myconfig.properties";
     }

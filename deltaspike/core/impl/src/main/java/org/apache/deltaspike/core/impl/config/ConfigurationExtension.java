@@ -29,21 +29,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
-import org.apache.deltaspike.core.api.config.PropertyConfigSource;
+import org.apache.deltaspike.core.api.config.PropertyFileConfig;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.spi.config.ConfigSource;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 
 /**
- * This extension handles {@link org.apache.deltaspike.core.api.config.PropertyConfigSource}s
+ * This extension handles {@link org.apache.deltaspike.core.api.config.PropertyFileConfig}s
  * provided by users.
  */
 public class ConfigurationExtension implements Extension, Deactivatable
 {
+    private static final String CANNOT_CREATE_CONFIG_SOURCE_FOR_CUSTOM_PROPERTY_FILE_CONFIG =
+        "Cannot create ConfigSource for custom property-file config ";
+
     private boolean isActivated = false;
 
-    private List<Class<? extends PropertyConfigSource>> configSourcesClasses
-        = new ArrayList<Class<?  extends PropertyConfigSource>>();
+    private List<Class<? extends PropertyFileConfig>> configSourcesClasses
+        = new ArrayList<Class<?  extends PropertyFileConfig>>();
 
 
     @SuppressWarnings("UnusedDeclaration")
@@ -53,14 +56,14 @@ public class ConfigurationExtension implements Extension, Deactivatable
     }
 
     @SuppressWarnings("UnusedDeclaration")
-    public void collectUserConfigSources(@Observes ProcessAnnotatedType<? extends PropertyConfigSource> pat)
+    public void collectUserConfigSources(@Observes ProcessAnnotatedType<? extends PropertyFileConfig> pat)
     {
         if (!isActivated)
         {
             return;
         }
 
-        Class<? extends PropertyConfigSource> pcsClass = pat.getAnnotatedType().getJavaClass();
+        Class<? extends PropertyFileConfig> pcsClass = pat.getAnnotatedType().getJavaClass();
         if (pcsClass.isAnnotation() ||
             pcsClass.isInterface()  ||
             pcsClass.isSynthetic()  ||
@@ -84,9 +87,9 @@ public class ConfigurationExtension implements Extension, Deactivatable
 
         List<ConfigSource> configSources = new ArrayList<ConfigSource>();
 
-        for (Class<? extends PropertyConfigSource> configSourcesClass : configSourcesClasses)
+        for (Class<? extends PropertyFileConfig> propertyFileConfigClass : configSourcesClasses)
         {
-            configSources.addAll(createPropertyConfigSource(configSourcesClass));
+            configSources.addAll(createPropertyConfigSource(propertyFileConfigClass));
         }
 
         // finally add all
@@ -103,25 +106,27 @@ public class ConfigurationExtension implements Extension, Deactivatable
     }
 
     /**
-     * @return create an instance of the given PropertyConfigSource and return all it's ConfigSources.
+     * @return create an instance of the given {@link PropertyFileConfig} and return all it's ConfigSources.
      */
-    private List<ConfigSource> createPropertyConfigSource(Class<? extends PropertyConfigSource> configSourcesClass)
+    private List<ConfigSource> createPropertyConfigSource(Class<? extends PropertyFileConfig> propertyFileConfigClass)
     {
         try
         {
-            PropertyConfigSource propertyConfigSource = configSourcesClass.newInstance();
+            PropertyFileConfig propertyFileConfig = propertyFileConfigClass.newInstance();
             EnvironmentPropertyConfigSourceProvider environmentPropertyConfigSourceProvider
-                = new EnvironmentPropertyConfigSourceProvider(propertyConfigSource.getPropertyFileName());
+                = new EnvironmentPropertyConfigSourceProvider(propertyFileConfig.getFilePath());
 
             return environmentPropertyConfigSourceProvider.getConfigSources();
         }
         catch (InstantiationException e)
         {
-            throw new RuntimeException("Cannot create user ConfigSource " + configSourcesClass.getName(), e);
+            throw new RuntimeException(CANNOT_CREATE_CONFIG_SOURCE_FOR_CUSTOM_PROPERTY_FILE_CONFIG +
+                propertyFileConfigClass.getName(), e);
         }
         catch (IllegalAccessException e)
         {
-            throw new RuntimeException("Cannot create user ConfigSource " + configSourcesClass.getName(), e);
+            throw new RuntimeException(CANNOT_CREATE_CONFIG_SOURCE_FOR_CUSTOM_PROPERTY_FILE_CONFIG +
+                    propertyFileConfigClass.getName(), e);
         }
     }
 

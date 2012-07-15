@@ -39,8 +39,8 @@ import javax.enterprise.inject.Typed;
  * <p>Resolve the configuration via their well defined ordinals.</p>
  *
  * <p>You can provide your own lookup paths by implementing
- * and registering additional {@link ConfigSource} or {@link PropertyConfigSource} or
- * {@link ConfigSourceProvider} implementations.</p>
+ * and registering additional {@link PropertyFileConfig} or
+ * {@link ConfigSource} or {@link ConfigSourceProvider} implementations.</p>
  */
 @Typed()
 public final class ConfigResolver
@@ -63,8 +63,6 @@ public final class ConfigResolver
     /**
      * This method can be used for programmatically adding {@link ConfigSource}s.
      * It is not needed for normal 'usage' by end users, but only for Extension Developers!
-     *
-     * @see PropertyConfigSource if you like to register user config sources for property files
      *
      * @param configSourcesToAdd the ConfigSources to add
      */
