@@ -23,6 +23,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.deltaspike.core.spi.config.ConfigSource;
 import org.apache.deltaspike.core.spi.config.ConfigSourceProvider;
@@ -34,6 +36,8 @@ import org.apache.deltaspike.core.util.PropertyFileUtils;
  */
 public class EnvironmentPropertyConfigSourceProvider implements ConfigSourceProvider
 {
+    private static final Logger LOG = Logger.getLogger(EnvironmentPropertyConfigSourceProvider.class.getName());
+
     private List<ConfigSource> configSources = new ArrayList<ConfigSource>();
 
     public EnvironmentPropertyConfigSourceProvider(String propertyFileName)
@@ -45,6 +49,9 @@ public class EnvironmentPropertyConfigSourceProvider implements ConfigSourceProv
             while (propertyFileUrls.hasMoreElements())
             {
                 URL propertyFileUrl = propertyFileUrls.nextElement();
+                LOG.log(Level.INFO,
+                        "Custom config found by DeltaSpike. Name: ''{0}'', URL: ''{1}''",
+                        new Object[] {propertyFileName, propertyFileUrl});
                 configSources.add(new PropertyFileConfigSource(propertyFileUrl));
             }
         }
