@@ -39,7 +39,7 @@ import javax.enterprise.inject.Typed;
  * <p>Resolve the configuration via their well defined ordinals.</p>
  *
  * <p>You can provide your own lookup paths by implementing
- * and registering additional {@link ConfigSource} or
+ * and registering additional {@link ConfigSource} or {@link PropertyConfigSource} or
  * {@link ConfigSourceProvider} implementations.</p>
  */
 @Typed()
