@@ -35,15 +35,84 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * <p>This Qualifier allows to use the DeltaSpike configuration mechanism
  * via simple injection.</p>
  *
- * <p>A small usage Example:
+ * <p>Example 1:
  * <pre>
- *   &#064;Inject &#064;ConfigProperty(name=&quot;database&quot;)
- *   private String configuredDatabase;
+ *   &#064;Inject &#064;ConfigProperty(name=&quot;locationId&quot;)
+ *   private String locationId;
  * </pre>
  * </p>
  *
- * <p>See the sample in {@link org.apache.deltaspike.core.spi.config.BaseConfigPropertyProducer}
- * for how to implement own configuration injection.</p>
+ * <p>Example 2 (the type-safe alternative):
+ *
+ * <pre>
+ *   &#064;Target({ FIELD, METHOD })
+ *   &#064;Retention(RUNTIME)
+ *   &#064;ConfigProperty(name = "locationId")
+ *   &#064;Qualifier
+ *   public &#064;interface Location
+ *   {
+ *   }
+ * </pre>
+ * </p>
+ *
+ * Depending on the producer it's possible to use a String or a custom type like an enum at the injection point.
+ * <p/>
+ * With a String:
+ * <pre>
+ *   &#064;Location
+ *   private String locationId;
+ * </pre>
+ *
+ * With a custom type:
+ * <pre>
+ *   &#064;Inject
+ *   &#064;Location
+ *   private LocationId locationId;
+ * </pre>
+ * <p>In any case a custom producer is needed.
+ * {@link org.apache.deltaspike.core.spi.config.BaseConfigPropertyProducer} can be used as an base for custom
+ * producers.
+ * Producer for the configured String:
+ * <pre>
+ *   &#064;ApplicationScoped
+ *   public class CustomConfigPropertyProducer extends BaseConfigPropertyProducer
+ *   {
+ *     &#064;Produces
+ *     &#064;Dependent
+ *     &#064;Location
+ *     public String produceLocationId(InjectionPoint injectionPoint)
+ *     {
+ *       String configuredValue = getStringPropertyValue(injectionPoint);
+ *
+ *       if (configuredValue == null)
+ *       {
+ *         return "LOCATION_X";
+ *       }
+ *       return configuredValue;
+ *     }
+ *   }
+ * </pre>
+ *
+ * Producer for a custom type:
+ * <pre>
+ *   &#064;ApplicationScoped
+ *   public class CustomConfigPropertyProducer extends BaseConfigPropertyProducer
+ *   {
+ *     &#064;Produces
+ *     &#064;Dependent
+ *     &#064;Location
+ *     public LocationId produceLocationId(InjectionPoint injectionPoint)
+ *     {
+ *       String configuredValue = getStringPropertyValue(injectionPoint);
+ *
+ *       if (configuredValue == null)
+ *       {
+ *         return LocationId.LOCATION_X;
+ *       }
+ *       return LocationId.valueOf(configuredValue.trim().toUpperCase());
+ *     }
+ *   }
+ * </pre>
  *
  * @see org.apache.deltaspike.core.api.config.ConfigResolver
  * @see org.apache.deltaspike.core.spi.config.BaseConfigPropertyProducer
