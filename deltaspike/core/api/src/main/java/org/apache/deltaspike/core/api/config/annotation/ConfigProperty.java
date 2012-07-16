@@ -48,8 +48,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  *   &#064;Target({ FIELD, METHOD })
  *   &#064;Retention(RUNTIME)
  *   &#064;ConfigProperty(name = "locationId")
- *   //alternative to null check in the producer:
- *   //&#064;ConfigProperty(name = "locationId", defaultValue = "LOCATION_X")
+ *   // alternative to null check in the producer:
+ *   // &#064;ConfigProperty(name = "locationId", defaultValue = "LOCATION_X")
  *   &#064;Qualifier
  *   public &#064;interface Location
  *   {
@@ -85,11 +85,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  *     public String produceLocationId(InjectionPoint injectionPoint)
  *     {
  *       String configuredValue = getStringPropertyValue(injectionPoint);
- *
- *       //null check isn't needed, if {@link #defaultValue} is used
  *       if (configuredValue == null)
  *       {
- *         return "LOCATION_X";
+ *         return null;
  *       }
  *       return configuredValue;
  *     }
@@ -107,10 +105,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  *     public LocationId produceLocationId(InjectionPoint injectionPoint)
  *     {
  *       String configuredValue = getStringPropertyValue(injectionPoint);
- *
  *       if (configuredValue == null)
  *       {
- *         return LocationId.LOCATION_X;
+ *         return null;
  *       }
  *       return LocationId.valueOf(configuredValue.trim().toUpperCase());
  *     }
