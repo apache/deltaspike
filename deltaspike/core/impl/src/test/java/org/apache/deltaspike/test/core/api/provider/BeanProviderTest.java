@@ -194,4 +194,12 @@ public class BeanProviderTest
 
         testBean.setI(4711); // reset the value if this test is executed first
     }
+
+    @Test
+    public void dependentBeanResolving() throws Exception
+    {
+        DependentTestBean dependentTestBean = BeanProvider.getContextualReference(DependentTestBean.class);
+        Assert.assertNotNull(dependentTestBean);
+    }
+
 }

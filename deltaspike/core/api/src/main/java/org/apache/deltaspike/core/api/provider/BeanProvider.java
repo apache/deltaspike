@@ -19,6 +19,8 @@
 package org.apache.deltaspike.core.api.provider;
 
 import org.apache.deltaspike.core.api.literal.AnyLiteral;
+import org.apache.deltaspike.core.api.projectstage.ProjectStage;
+import org.apache.deltaspike.core.util.ProjectStageProducer;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.context.spi.CreationalContext;
@@ -36,6 +38,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * <p>This class contains utility methods to resolve contextual references
@@ -54,6 +58,14 @@ import java.util.Set;
 @Typed()
 public final class BeanProvider
 {
+    private static final Logger LOG = Logger.getLogger(BeanProvider.class.getName());
+
+    private static final boolean LOG_DEPENDENT_WARNINGS;
+    static {
+        ProjectStage ps = ProjectStageProducer.getInstance().getProjectStage();
+        LOG_DEPENDENT_WARNINGS = ps.equals(ProjectStage.Development) || ps.equals(ProjectStage.UnitTest);
+    }
+
     private BeanProvider()
     {
         // this is a utility class which doesn't get instantiated.
@@ -371,11 +383,27 @@ public final class BeanProvider
     {
         Bean<?> bean = beanManager.resolve(beans);
 
+        logWarningIfDependent(bean);
+
         CreationalContext<?> creationalContext = beanManager.createCreationalContext(bean);
 
         @SuppressWarnings({ "unchecked", "UnnecessaryLocalVariable" })
         T result = (T) beanManager.getReference(bean, type, creationalContext);
         return result;
+    }
+
+    /**
+     * Log a warning if the produced creational instance is of
+     * Scope &#064;Dependent as we cannot properly cleanup
+     * the contextual instance afterwards.
+     */
+    private static void logWarningIfDependent(Bean<?> bean)
+    {
+        if (LOG_DEPENDENT_WARNINGS && bean.getScope().equals(Dependent.class))
+        {
+            LOG.log(Level.WARNING, "BeanProvider shall not be used to create @Dependent scoped beans. "
+                    + "Bean: " + bean.toString());
+        }
     }
 
     /**
