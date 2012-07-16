@@ -29,7 +29,7 @@ import javax.enterprise.context.ApplicationScoped;
 public class CustomPropertyFileConfig implements PropertyFileConfig
 {
     @Override
-    public String getFilePath()
+    public String getPropertyFileName()
     {
         return "META-INF/location.properties";
     }

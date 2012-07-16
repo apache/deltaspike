@@ -41,9 +41,10 @@ public interface PropertyFileConfig extends DeltaSpikeConfig
 {
     /**
      * All the property files on the classpath which have this
-     * name will get picked up and registered as {@link org.apache.deltaspike.core.spi.config.ConfigSource}s.
+     * name will get picked up and registered as
+     * {@link org.apache.deltaspike.core.spi.config.ConfigSource}s.
      *
-     * @return the full path name of the property files to pick up.
+     * @return the full file name (including path) of the property files to pick up.
      */
-    String getFilePath();
+    String getPropertyFileName();
 }

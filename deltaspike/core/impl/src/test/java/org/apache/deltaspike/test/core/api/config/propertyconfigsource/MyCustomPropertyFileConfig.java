@@ -26,7 +26,7 @@ import org.apache.deltaspike.core.api.config.PropertyFileConfig;
 public class MyCustomPropertyFileConfig implements PropertyFileConfig
 {
     @Override
-    public String getFilePath()
+    public String getPropertyFileName()
     {
         return "myconfig.properties";
     }

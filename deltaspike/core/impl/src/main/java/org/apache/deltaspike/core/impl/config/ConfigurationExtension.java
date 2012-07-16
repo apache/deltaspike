@@ -114,7 +114,7 @@ public class ConfigurationExtension implements Extension, Deactivatable
         {
             PropertyFileConfig propertyFileConfig = propertyFileConfigClass.newInstance();
             EnvironmentPropertyConfigSourceProvider environmentPropertyConfigSourceProvider
-                = new EnvironmentPropertyConfigSourceProvider(propertyFileConfig.getFilePath());
+                = new EnvironmentPropertyConfigSourceProvider(propertyFileConfig.getPropertyFileName());
 
             return environmentPropertyConfigSourceProvider.getConfigSources();
         }
