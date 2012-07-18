@@ -42,7 +42,7 @@ import java.util.Map;
  * Using the builder is typically done by reading the annotations from a {@link Class} or an
  * {@link AnnotatedType}. Once the starting class or type has been added all of annotations
  * can be modified: constructor, parameter, class, method and fields.
- *
+ * <p/>
  * The AnnotatedTypeBuilder is not thread safe and shall not be used concurrently!
  */
 public class AnnotatedTypeBuilder<X>
@@ -289,7 +289,7 @@ public class AnnotatedTypeBuilder<X>
             {
                 throw new IllegalArgumentException(
                         String.format("parameter %s not present on method %s declared on class %s",
-                        method, position, getJavaClass()));
+                                method, position, getJavaClass()));
             }
             else
             {
@@ -408,7 +408,7 @@ public class AnnotatedTypeBuilder<X>
                                                                   Class<? extends Annotation> annotationType)
     {
         if (constructorParameters.get(constructor) != null &&
-            constructorParameters.get(constructor).get(position) != null)
+                constructorParameters.get(constructor).get(position) != null)
         {
             constructorParameters.get(constructor).get(position).remove(annotationType);
         }
@@ -598,13 +598,13 @@ public class AnnotatedTypeBuilder<X>
                         constructor.getJavaMember()) == null)
                 {
                     constructorParameters.put(
-                        constructor.getJavaMember(), new HashMap<Integer, AnnotationBuilder>());
+                            constructor.getJavaMember(), new HashMap<Integer, AnnotationBuilder>());
                 }
                 if (constructorParameters.get(
                         constructor.getJavaMember()).get(p.getPosition()) == null)
                 {
                     constructorParameters.get(
-                        constructor.getJavaMember()).put(p.getPosition(), new AnnotationBuilder());
+                            constructor.getJavaMember()).put(p.getPosition(), new AnnotationBuilder());
                 }
                 mergeAnnotationsOnElement(
                         p, overwrite, constructorParameters.get(constructor.getJavaMember()).get(p.getPosition()));

@@ -18,11 +18,9 @@
  */
 package org.apache.deltaspike.core.util.bean;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import org.apache.deltaspike.core.api.literal.AnyLiteral;
+import org.apache.deltaspike.core.api.literal.DefaultLiteral;
+import org.apache.deltaspike.core.util.ArraysUtils;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Alternative;
@@ -30,16 +28,17 @@ import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Named;
-
-import org.apache.deltaspike.core.api.literal.AnyLiteral;
-import org.apache.deltaspike.core.api.literal.DefaultLiteral;
-import org.apache.deltaspike.core.util.ArraysUtils;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * <p>A WrappingBeanBuilder helps creating Beans which internally
  * just wrap another existing Bean. The Types, Qualifiers
  * and other attributes of the resulting Bean can be modified.</p>
- *
+ * <p/>
  * <p>The {@link Bean#create(javax.enterprise.context.spi.CreationalContext)}
  * and {@link Bean#destroy(Object, javax.enterprise.context.spi.CreationalContext)}
  * methods will get delegated to the underlying wrapped Bean.</p>
@@ -70,7 +69,7 @@ public class WrappingBeanBuilder<T>
      */
     public WrappingBeanBuilder(Bean<Object> delegate, BeanManager beanManager)
     {
-        this.delegate = (Bean<T>)delegate;
+        this.delegate = (Bean<T>) delegate;
         this.beanManager = beanManager;
     }
 

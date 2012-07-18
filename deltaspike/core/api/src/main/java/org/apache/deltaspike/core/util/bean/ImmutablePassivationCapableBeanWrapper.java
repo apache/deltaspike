@@ -26,7 +26,7 @@ import java.util.Set;
 
 /**
  * <p>PassivationCapable version of an ImmutableBeanWrapper.
- *  You can easily create instances of this class with the
+ * You can easily create instances of this class with the
  * {@link WrappingBeanBuilder}.</p>
  *
  * @see ImmutableBeanWrapper
@@ -35,7 +35,7 @@ import java.util.Set;
 public class ImmutablePassivationCapableBeanWrapper<T> extends ImmutableBeanWrapper<T>
         implements PassivationCapable
 {
-    private String id;
+    private final String id;
 
     /**
      * Instantiate a new {@link ImmutableBeanWrapper} for a  {@link PassivationCapable} Bean.

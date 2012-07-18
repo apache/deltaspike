@@ -18,17 +18,16 @@
  */
 package org.apache.deltaspike.core.util.metadata.builder;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import org.apache.deltaspike.core.util.metadata.builder.ParameterValueRedefiner.ParameterValue;
 
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.AnnotatedMethod;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InjectionPoint;
-
-import org.apache.deltaspike.core.util.metadata.builder.ParameterValueRedefiner.ParameterValue;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import static org.apache.deltaspike.core.util.BeanUtils.createInjectionPoints;
 import static org.apache.deltaspike.core.util.ReflectionUtils.invokeMethod;
@@ -197,7 +196,7 @@ public class InjectableMethod<X>
             if (RuntimeException.class.getName().equals(e.getClass().getName()) &&
                     e.getCause() instanceof RuntimeException)
             {
-                throw (RuntimeException)e.getCause();
+                throw (RuntimeException) e.getCause();
             }
             throw e;
         }

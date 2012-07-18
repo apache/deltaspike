@@ -150,7 +150,7 @@ class AnnotationBuilder
      */
     public <T extends Annotation> T getAnnotation(Class<T> anType)
     {
-        return (T)annotationMap.get(anType);
+        return (T) annotationMap.get(anType);
     }
 
     /**

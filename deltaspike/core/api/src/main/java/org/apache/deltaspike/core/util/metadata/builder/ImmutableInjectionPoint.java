@@ -18,11 +18,7 @@
  */
 package org.apache.deltaspike.core.util.metadata.builder;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Member;
-import java.lang.reflect.Type;
-import java.util.HashSet;
-import java.util.Set;
+import org.apache.deltaspike.core.util.BeanUtils;
 
 import javax.enterprise.inject.spi.Annotated;
 import javax.enterprise.inject.spi.AnnotatedField;
@@ -30,8 +26,11 @@ import javax.enterprise.inject.spi.AnnotatedParameter;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InjectionPoint;
-
-import org.apache.deltaspike.core.util.BeanUtils;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Member;
+import java.lang.reflect.Type;
+import java.util.HashSet;
+import java.util.Set;
 
 import static java.util.Collections.unmodifiableSet;
 
@@ -59,7 +58,7 @@ public class ImmutableInjectionPoint implements InjectionPoint
      * @param field         the field for which to create the injection point
      * @param qualifiers    the qualifiers on the injection point
      * @param declaringBean the declaringBean declaring the injection point
-     * @param isTransient    <code>true</code> if the injection point is transient
+     * @param isTransient   <code>true</code> if the injection point is transient
      * @param delegate      <code>true</code> if the injection point is a delegate
      *                      injection point on a decorator
      */
@@ -82,7 +81,7 @@ public class ImmutableInjectionPoint implements InjectionPoint
      *
      * @param field         the field for which to create the injection point
      * @param declaringBean the declaringBean declaring the injection point
-     * @param isTransient    <code>true</code> if the injection point is transient
+     * @param isTransient   <code>true</code> if the injection point is transient
      * @param delegate      <code>true</code> if the injection point is a delegate
      *                      injection point on a decorator
      */
@@ -105,7 +104,7 @@ public class ImmutableInjectionPoint implements InjectionPoint
      * @param parameter     the parameter for which to create the injection point
      * @param qualifiers    the qualifiers on the injection point
      * @param declaringBean the declaringBean declaring the injection point
-     * @param isTransient    <code>true</code> if the injection point is transient
+     * @param isTransient   <code>true</code> if the injection point is transient
      * @param delegate      <code>true</code> if the injection point is a delegate
      *                      injection point on a decorator
      */
@@ -128,7 +127,7 @@ public class ImmutableInjectionPoint implements InjectionPoint
      *
      * @param parameter     the parameter for which to create the injection point
      * @param declaringBean the declaringBean declaring the injection point
-     * @param isTransient    <code>true</code> if the injection point is transient
+     * @param isTransient   <code>true</code> if the injection point is transient
      * @param delegate      <code>true</code> if the injection point is a delegate
      *                      injection point on a decorator
      */

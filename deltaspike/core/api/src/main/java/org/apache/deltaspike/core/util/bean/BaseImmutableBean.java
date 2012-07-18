@@ -16,21 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.deltaspike.core.util.bean;
 
+import org.apache.deltaspike.core.api.literal.DefaultLiteral;
+import org.apache.deltaspike.core.util.ArraysUtils;
+
+import javax.enterprise.context.Dependent;
+import javax.enterprise.inject.spi.Bean;
+import javax.enterprise.inject.spi.InjectionPoint;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
-
-import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.InjectionPoint;
-
-import org.apache.deltaspike.core.api.literal.DefaultLiteral;
-import org.apache.deltaspike.core.util.ArraysUtils;
 
 /**
  * <p>

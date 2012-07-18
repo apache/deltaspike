@@ -18,12 +18,11 @@
  */
 package org.apache.deltaspike.core.util.bean;
 
+import javax.enterprise.context.spi.CreationalContext;
+import javax.enterprise.inject.spi.Bean;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Set;
-
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.spi.Bean;
 
 /**
  * <p>
@@ -32,7 +31,7 @@ import javax.enterprise.inject.spi.Bean;
  * You can easily create instances of this class with the
  * {@link WrappingBeanBuilder}.
  * </p>
- *
+ * <p/>
  * <p>For example, you could create a producer method which uses an a
  * String ID tolocated an object (the object can have any class):</p>
  * <pre>
@@ -96,7 +95,7 @@ public class ImmutableBeanWrapper<T> extends BaseImmutableBean<T>
                                 String toString)
     {
         super(bean.getBeanClass(), name, qualifiers, scope, stereotypes,
-            types, alternative, nullable, bean.getInjectionPoints(), toString);
+                types, alternative, nullable, bean.getInjectionPoints(), toString);
 
         wrapped = bean;
     }
