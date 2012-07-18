@@ -32,35 +32,12 @@ public class OwbHelper
 
     public static Object getMockSession()
     {
-        if (isServletApiAvailable())
-        {
-            return new MockHttpSession("mockSession1");
-        }
-
-        return null;
+        return new MockHttpSession("mockSession1");
     }
 
     public static Object getMockServletContextEvent()
     {
-        if (isServletApiAvailable() )
-        {
-            return new ServletContextEvent(MockServletContext.getInstance());
-        }
-
-        return null;
-    }
-
-    private static boolean isServletApiAvailable()
-    {
-        try
-        {
-            Class servletClass = Class.forName("javax.servlet.http.HttpSession");
-            return servletClass != null;
-        }
-        catch (ClassNotFoundException e)
-        {
-            return false;
-        }
+        return new ServletContextEvent(MockServletContext.getInstance());
     }
 
 }

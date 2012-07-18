@@ -44,9 +44,20 @@ public class OpenWebBeansContextControl implements ContextControl
     {
         ContextFactory contextFactory = getContextFactory();
 
-        contextFactory.initSingletonContext(OwbHelper.getMockServletContextEvent());
-        contextFactory.initApplicationContext(OwbHelper.getMockServletContextEvent());
-        contextFactory.initSessionContext(OwbHelper.getMockSession());
+        Object mockSession = null;
+        if (isServletApiAvailable())
+        {
+            mockSession = OwbHelper.getMockSession();
+        }
+        Object mockServletContextEvent = null;
+        if (isServletApiAvailable())
+        {
+            mockServletContextEvent = OwbHelper.getMockServletContextEvent();
+        }
+
+        contextFactory.initSingletonContext(mockServletContextEvent);
+        contextFactory.initApplicationContext(mockServletContextEvent);
+        contextFactory.initSessionContext(mockSession);
         contextFactory.initRequestContext(null);
         contextFactory.initConversationContext(null);
     }
@@ -101,6 +112,20 @@ public class OpenWebBeansContextControl implements ContextControl
         }
     }
 
+    private static boolean isServletApiAvailable()
+    {
+        try
+        {
+            Class servletClass = Class.forName("javax.servlet.http.HttpSession");
+            return servletClass != null;
+        }
+        catch (ClassNotFoundException e)
+        {
+            return false;
+        }
+    }
+
+
     /*
     * start scopes
     */
@@ -108,15 +133,24 @@ public class OpenWebBeansContextControl implements ContextControl
     private void startApplicationScope()
     {
         ContextFactory contextFactory = getContextFactory();
-
-        contextFactory.initApplicationContext(OwbHelper.getMockServletContextEvent());
+        Object mockServletContextEvent = null;
+        if (isServletApiAvailable())
+        {
+            mockServletContextEvent = OwbHelper.getMockServletContextEvent();
+        }
+        contextFactory.initApplicationContext(mockServletContextEvent);
     }
 
     private void startSessionScope()
     {
         ContextFactory contextFactory = getContextFactory();
 
-        contextFactory.initSessionContext(OwbHelper.getMockSession());
+        Object mockSession = null;
+        if (isServletApiAvailable())
+        {
+            mockSession = OwbHelper.getMockSession();
+        }
+        contextFactory.initSessionContext(mockSession);
     }
 
     private void startRequestScope()
@@ -144,7 +178,12 @@ public class OpenWebBeansContextControl implements ContextControl
         Context context = contextFactory.getStandardContext(ContextTypes.SINGLETON);
         if (context != null)
         {
-            contextFactory.destroySingletonContext(OwbHelper.getMockServletContextEvent());
+            Object mockServletContextEvent = null;
+            if (isServletApiAvailable())
+            {
+                mockServletContextEvent = OwbHelper.getMockServletContextEvent();
+            }
+            contextFactory.destroySingletonContext(mockServletContextEvent);
         }
     }
 
@@ -155,7 +194,12 @@ public class OpenWebBeansContextControl implements ContextControl
         Context context = contextFactory.getStandardContext(ContextTypes.APPLICATION);
         if (context != null)
         {
-            contextFactory.destroyApplicationContext(OwbHelper.getMockServletContextEvent());
+            Object mockServletContextEvent = null;
+            if (isServletApiAvailable())
+            {
+                mockServletContextEvent = OwbHelper.getMockServletContextEvent();
+            }
+            contextFactory.destroyApplicationContext(mockServletContextEvent);
         }
     }
 
@@ -166,7 +210,12 @@ public class OpenWebBeansContextControl implements ContextControl
         Context context = contextFactory.getStandardContext(ContextTypes.SESSION);
         if (context != null)
         {
-            contextFactory.destroySessionContext(OwbHelper.getMockSession());
+            Object mockSession = null;
+            if (isServletApiAvailable())
+            {
+                mockSession = OwbHelper.getMockSession();
+            }
+            contextFactory.destroySessionContext(mockSession);
         }
     }
 
