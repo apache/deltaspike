@@ -24,13 +24,13 @@ import javax.enterprise.context.Dependent;
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.context.spi.Context;
+import javax.inject.Singleton;
 
 import java.lang.annotation.Annotation;
 
 import org.apache.deltaspike.cdise.api.ContextControl;
 import org.apache.webbeans.config.WebBeansContext;
 import org.apache.webbeans.context.ContextFactory;
-import org.apache.webbeans.context.type.ContextTypes;
 
 /**
  * OWB specific impl of the {@link ContextControl}
@@ -175,7 +175,7 @@ public class OpenWebBeansContextControl implements ContextControl
     {
         ContextFactory contextFactory = getContextFactory();
 
-        Context context = contextFactory.getStandardContext(ContextTypes.SINGLETON);
+        Context context = contextFactory.getStandardContext(Singleton.class);
         if (context != null)
         {
             Object mockServletContextEvent = null;
@@ -191,7 +191,7 @@ public class OpenWebBeansContextControl implements ContextControl
     {
         ContextFactory contextFactory = getContextFactory();
 
-        Context context = contextFactory.getStandardContext(ContextTypes.APPLICATION);
+        Context context = contextFactory.getStandardContext(ApplicationScoped.class);
         if (context != null)
         {
             Object mockServletContextEvent = null;
@@ -207,7 +207,7 @@ public class OpenWebBeansContextControl implements ContextControl
     {
         ContextFactory contextFactory = getContextFactory();
 
-        Context context = contextFactory.getStandardContext(ContextTypes.SESSION);
+        Context context = contextFactory.getStandardContext(SessionScoped.class);
         if (context != null)
         {
             Object mockSession = null;
@@ -223,7 +223,7 @@ public class OpenWebBeansContextControl implements ContextControl
     {
         ContextFactory contextFactory = getContextFactory();
 
-        Context context = contextFactory.getStandardContext(ContextTypes.REQUEST);
+        Context context = contextFactory.getStandardContext(RequestScoped.class);
         if (context != null)
         {
             contextFactory.destroyRequestContext(null);
@@ -234,7 +234,7 @@ public class OpenWebBeansContextControl implements ContextControl
     {
         ContextFactory contextFactory = getContextFactory();
 
-        Context context = contextFactory.getStandardContext(ContextTypes.CONVERSATION);
+        Context context = contextFactory.getStandardContext(ConversationScoped.class);
         if (context != null)
         {
             contextFactory.destroyConversationContext();
