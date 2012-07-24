@@ -20,15 +20,13 @@ package org.apache.deltaspike.security.impl;
 
 import java.io.Serializable;
 
+import javax.enterprise.context.SessionScoped;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.security.api.Identity;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-import org.apache.deltaspike.security.api.User;
->>>>>>> added missing files
-=======
->>>>>>> added ACL permission storage annotations, copied reflections utils from Solder (to be merged with DS core later), minor fixes
 import org.apache.deltaspike.security.api.authentication.AuthenticationException;
 import org.apache.deltaspike.security.api.authentication.UnexpectedCredentialException;
 import org.apache.deltaspike.security.api.authentication.event.AlreadyLoggedInEvent;
@@ -38,25 +36,11 @@ import org.apache.deltaspike.security.api.authentication.event.PostAuthenticateE
 import org.apache.deltaspike.security.api.authentication.event.PostLoggedOutEvent;
 import org.apache.deltaspike.security.api.authentication.event.PreAuthenticateEvent;
 import org.apache.deltaspike.security.api.authentication.event.PreLoggedOutEvent;
-<<<<<<< HEAD
-<<<<<<< HEAD
 import org.apache.deltaspike.security.api.credential.LoginCredentials;
 import org.apache.deltaspike.security.api.idm.User;
-=======
-import org.apache.deltaspike.security.api.credential.LoginCredential;
->>>>>>> added missing files
-=======
-import org.apache.deltaspike.security.api.credential.LoginCredentials;
-import org.apache.deltaspike.security.api.idm.User;
->>>>>>> added ACL permission storage annotations, copied reflections utils from Solder (to be merged with DS core later), minor fixes
 import org.apache.deltaspike.security.spi.authentication.Authenticator;
 import org.apache.deltaspike.security.spi.authentication.Authenticator.AuthenticationStatus;
 import org.apache.deltaspike.security.spi.authentication.AuthenticatorSelector;
-
-import javax.enterprise.context.SessionScoped;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  * Default Identity implementation
@@ -78,15 +62,7 @@ public class DefaultIdentity implements Identity
 
     @Inject
     @SuppressWarnings("NonSerializableFieldInSerializableClass")
-<<<<<<< HEAD
-<<<<<<< HEAD
     private LoginCredentials loginCredential;
-=======
-    private LoginCredential loginCredential;
->>>>>>> added missing files
-=======
-    private LoginCredentials loginCredential;
->>>>>>> added ACL permission storage annotations, copied reflections utils from Solder (to be merged with DS core later), minor fixes
 
     /**
      * Flag indicating whether we are currently authenticating
