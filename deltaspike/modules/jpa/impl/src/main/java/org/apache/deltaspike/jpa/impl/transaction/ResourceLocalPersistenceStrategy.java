@@ -110,7 +110,7 @@ public class ResourceLocalPersistenceStrategy implements PersistenceStrategy
         {
             for (EntityManager entityManager : ems)
             {
-                EntityTransaction transaction = entityManager.getTransaction();
+                EntityTransaction transaction = getTransaction(entityManager);
 
                 if (!transaction.isActive())
                 {
@@ -132,7 +132,7 @@ public class ResourceLocalPersistenceStrategy implements PersistenceStrategy
                 for (Map.Entry<Class, EntityManager> emsEntry: emsEntries.entrySet())
                 {
                     EntityManager em = emsEntry.getValue();
-                    EntityTransaction transaction = em.getTransaction();
+                    EntityTransaction transaction = getTransaction(em);
                     if (transaction != null && transaction.isActive())
                     {
                         try
@@ -180,7 +180,7 @@ public class ResourceLocalPersistenceStrategy implements PersistenceStrategy
                     // but first try to flush all the transactions and write the updates to the database
                     for (EntityManager em: emsEntries.values())
                     {
-                        EntityTransaction transaction = em.getTransaction();
+                        EntityTransaction transaction = getTransaction(em);
                         if (transaction != null && transaction.isActive())
                         {
                             try
@@ -202,7 +202,7 @@ public class ResourceLocalPersistenceStrategy implements PersistenceStrategy
                     // and now either commit or rollback all transactions
                     for (EntityManager em : emsEntries.values())
                     {
-                        EntityTransaction transaction = em.getTransaction();
+                        EntityTransaction transaction = getTransaction(em);
                         if (transaction != null && transaction.isActive())
                         {
                             try
@@ -236,6 +236,16 @@ public class ResourceLocalPersistenceStrategy implements PersistenceStrategy
                 throw firstException;
             }
         }
+    }
+
+    /**
+     * @param entityManager current entity-manager
+     * @return per default the {@link EntityTransaction} of the given {@link EntityManager}.
+     * A subclass can also return an adapter e.g. for an UserTransaction
+     */
+    protected EntityTransaction getTransaction(EntityManager entityManager)
+    {
+        return entityManager.getTransaction();
     }
 
     private EntityManager resolveEntityManagerForQualifier(Class<? extends Annotation> emQualifier)
