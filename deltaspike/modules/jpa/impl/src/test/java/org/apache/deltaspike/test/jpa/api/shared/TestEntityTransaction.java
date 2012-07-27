@@ -52,13 +52,13 @@ public class TestEntityTransaction implements EntityTransaction
     @Override
     public void setRollbackOnly()
     {
-        throw new IllegalStateException("not implemented");
+        this.rolledBack = true;
     }
 
     @Override
     public boolean getRollbackOnly()
     {
-        throw new IllegalStateException("not implemented");
+        return this.rolledBack;
     }
 
     @Override

@@ -177,6 +177,8 @@ public class ResourceLocalPersistenceStrategy implements PersistenceStrategy
                 if (firstException == null)
                 {
                     HashMap<Class, EntityManager> emsEntries = transactionBeanStorage.getUsedEntityManagers();
+
+                    boolean rollbackOnly = false;
                     // but first try to flush all the transactions and write the updates to the database
                     for (EntityManager em: emsEntries.values())
                     {
@@ -188,6 +190,13 @@ public class ResourceLocalPersistenceStrategy implements PersistenceStrategy
                                 if (!commitFailed)
                                 {
                                     em.flush();
+
+                                    if (!rollbackOnly && transaction.getRollbackOnly())
+                                    {
+                                        //don't set commitFailed to true directly
+                                        //(the order of the entity-managers isn't deterministic -> tests would break)
+                                        rollbackOnly = true;
+                                    }
                                 }
                             }
                             catch (Exception e)
@@ -198,6 +207,10 @@ public class ResourceLocalPersistenceStrategy implements PersistenceStrategy
                             }
                         }
                     }
+                    if (rollbackOnly)
+                    {
+                        commitFailed = true;
+                    }
 
                     // and now either commit or rollback all transactions
                     for (EntityManager em : emsEntries.values())
@@ -207,13 +220,13 @@ public class ResourceLocalPersistenceStrategy implements PersistenceStrategy
                         {
                             try
                             {
-                                if (!commitFailed)
+                                if (commitFailed || transaction.getRollbackOnly() /*last chance to check it (again)*/)
                                 {
-                                    transaction.commit();
+                                    transaction.rollback();
                                 }
                                 else
                                 {
-                                    transaction.rollback();
+                                    transaction.commit();
                                 }
                             }
                             catch (Exception e)
@@ -230,7 +243,7 @@ public class ResourceLocalPersistenceStrategy implements PersistenceStrategy
 
             transactionBeanStorage.decrementRefCounter();
 
-            if (commitFailed)
+            if (commitFailed && firstException != null /*null if just #getRollbackOnly is true*/)
             {
                 //noinspection ThrowFromFinallyBlock
                 throw firstException;
