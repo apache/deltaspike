@@ -25,6 +25,11 @@ public class TestEntityTransaction implements EntityTransaction
     private boolean started = false;
     private boolean committed = false;
     private boolean rolledBack = false;
+    private boolean markRolledBack = false;
+
+    public TestEntityTransaction()
+    {
+    }
 
     @Override
     public void begin()
@@ -52,13 +57,13 @@ public class TestEntityTransaction implements EntityTransaction
     @Override
     public void setRollbackOnly()
     {
-        this.rolledBack = true;
+        this.markRolledBack = true;
     }
 
     @Override
     public boolean getRollbackOnly()
     {
-        return this.rolledBack;
+        return this.markRolledBack;
     }
 
     @Override
