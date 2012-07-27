@@ -95,27 +95,27 @@ public class ResourceLocalPersistenceStrategy implements PersistenceStrategy
         @SuppressWarnings("UnusedDeclaration")
         int transactionLayer = transactionBeanStorage.incrementRefCounter();
 
-        for (Class<? extends Annotation> emQualifier : emQualifiers)
-        {
-            EntityManager entityManager = resolveEntityManagerForQualifier(emQualifier);
-
-            transactionBeanStorage.storeUsedEntityManager(emQualifier, entityManager);
-
-            ems.add(entityManager);
-        }
-
         Exception firstException = null;
 
         try
         {
-            for (EntityManager entityManager : ems)
+            for (Class<? extends Annotation> emQualifier : emQualifiers)
             {
+                EntityManager entityManager = resolveEntityManagerForQualifier(emQualifier);
+
+                transactionBeanStorage.storeUsedEntityManager(emQualifier, entityManager);
+
+                ems.add(entityManager);
+
                 EntityTransaction transaction = getTransaction(entityManager);
 
                 if (!transaction.isActive())
                 {
                     transaction.begin();
                 }
+
+                //don't move it before EntityTransaction#begin() and invoke it in any case
+                prepareEntityManager(entityManager);
             }
 
             return invocationContext.proceed();
@@ -246,6 +246,11 @@ public class ResourceLocalPersistenceStrategy implements PersistenceStrategy
     protected EntityTransaction getTransaction(EntityManager entityManager)
     {
         return entityManager.getTransaction();
+    }
+
+    protected void prepareEntityManager(EntityManager entityManager)
+    {
+        //override if needed
     }
 
     private EntityManager resolveEntityManagerForQualifier(Class<? extends Annotation> emQualifier)
