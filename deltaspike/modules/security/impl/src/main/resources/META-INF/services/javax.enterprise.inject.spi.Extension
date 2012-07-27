@@ -18,4 +18,3 @@
 #####################################################################################
 
 org.apache.deltaspike.security.impl.extension.SecurityExtension
-org.apache.deltaspike.security.impl.permission.JPAPermissionStoreConfig

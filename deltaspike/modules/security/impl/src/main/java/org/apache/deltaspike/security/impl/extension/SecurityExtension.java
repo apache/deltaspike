@@ -19,14 +19,13 @@
 
 package org.apache.deltaspike.security.impl.extension;
 
-import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.core.util.ClassUtils;
+import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
 import org.apache.deltaspike.security.api.authorization.SecurityDefinitionException;
 import org.apache.deltaspike.security.api.authorization.annotation.Secures;
 import org.apache.deltaspike.security.impl.util.SecurityUtils;
-import org.apache.deltaspike.security.spi.authentication.Authenticator;
 
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AfterBeanDiscovery;
@@ -37,8 +36,6 @@ import javax.enterprise.inject.spi.BeforeBeanDiscovery;
 import javax.enterprise.inject.spi.BeforeShutdown;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
-import javax.enterprise.inject.spi.ProcessSessionBean;
-import javax.enterprise.inject.spi.SessionBeanType;
 import java.lang.annotation.Annotation;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -251,26 +248,6 @@ public class SecurityExtension implements Extension, Deactivatable
 
         Authorizer authorizer = new Authorizer(binding, annotatedMethod, beanManager);
         getMetaDataStorage().addAuthorizer(authorizer);
-    }
-
-    /**
-     * Ensures that any implementations of the Authenticator interface are not stateless session beans.
-     *
-     * @param event
-     */
-    @SuppressWarnings("UnusedDeclaration")
-    public void validateAuthenticatorImplementation(@Observes ProcessSessionBean<Authenticator> event)
-    {
-        if (!isActivated)
-        {
-            return;
-        }
-
-        if (SessionBeanType.STATELESS.equals(event.getSessionBeanType()))
-        {
-            event.addDefinitionError(new IllegalStateException("Authenticator " + 
-                event.getBean().getClass() + " cannot be a Stateless Session Bean"));
-        }
     }
 
     public void initActivation()
