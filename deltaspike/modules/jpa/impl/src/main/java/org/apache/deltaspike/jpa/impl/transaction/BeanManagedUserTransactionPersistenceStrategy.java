@@ -18,19 +18,19 @@
  */
 package org.apache.deltaspike.jpa.impl.transaction;
 
-import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.impl.util.JndiUtils;
 import org.apache.deltaspike.core.util.ExceptionUtils;
+import org.apache.deltaspike.jpa.impl.transaction.context.EntityManagerEntry;
+import org.apache.deltaspike.jpa.impl.transaction.context.JtaEntityManagerEntry;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Alternative;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.transaction.Status;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
-import java.util.logging.Logger;
+import java.lang.annotation.Annotation;
 
 /**
  * <p>{@link org.apache.deltaspike.jpa.spi.PersistenceStrategy} for using JTA (bean-managed-)transactions
@@ -49,20 +49,21 @@ import java.util.logging.Logger;
 //TODO move to a separated ds-jta module and use @Specializes -> no additional config is needed
 public class BeanManagedUserTransactionPersistenceStrategy extends ResourceLocalPersistenceStrategy
 {
+    protected static final String USER_TRANSACTION_JNDI_NAME = "java:comp/UserTransaction";
+
     private static final long serialVersionUID = -2432802805095533499L;
 
-    private static final Logger LOGGER =
-        Logger.getLogger(BeanManagedUserTransactionPersistenceStrategy.class.getName());
-
-    private static final String USER_TRANSACTION_JNDI_NAME = "java:comp/UserTransaction";
-
-    @Inject
-    private ProjectStage projectStage;
+    @Override
+    protected EntityManagerEntry createEntityManagerEntry(
+        EntityManager entityManager, Class<? extends Annotation> qualifier)
+    {
+        return new JtaEntityManagerEntry(entityManager, qualifier);
+    }
 
     @Override
-    protected EntityTransaction getTransaction(EntityManager entityManager)
+    protected EntityTransaction getTransaction(EntityManagerEntry entityManagerEntry)
     {
-        return new UserTransactionAdapter(entityManager);
+        return new UserTransactionAdapter(entityManagerEntry.getEntityManager());
     }
 
     /**
@@ -82,18 +83,13 @@ public class BeanManagedUserTransactionPersistenceStrategy extends ResourceLocal
      * will only executed once, but {@link javax.persistence.EntityManager#joinTransaction()}
      * needs to be called for every {@link EntityManager}
      *
-     * @param entityManager current entity-manager
+     * @param entityManagerEntry entry of the current entity-manager
      */
 
-    /*
-        Hint: the alternative would be a ThreadLocal to store additional information which would require
-        a callback in ResourceLocalPersistenceStrategy for the cleanup of the ThreadLocal.
-        -> #prepareEntityManager is more solid.
-     */
     @Override
-    protected void prepareEntityManager(EntityManager entityManager)
+    protected void beforeProceed(EntityManagerEntry entityManagerEntry)
     {
-        entityManager.joinTransaction();
+        entityManagerEntry.getEntityManager().joinTransaction();
     }
 
     private class UserTransactionAdapter implements EntityTransaction

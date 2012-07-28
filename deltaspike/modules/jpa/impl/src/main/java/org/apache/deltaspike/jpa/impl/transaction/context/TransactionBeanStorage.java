@@ -21,10 +21,10 @@ package org.apache.deltaspike.jpa.impl.transaction.context;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.spi.Contextual;
-import javax.persistence.EntityManager;
-import java.lang.annotation.Annotation;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.Stack;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
@@ -61,8 +61,7 @@ public class TransactionBeanStorage
         private Map<Contextual, TransactionBeanEntry> contextualInstances =
                 new HashMap<Contextual, TransactionBeanEntry>();
 
-        /** key=qualifier name, value= EntityManager */
-        private HashMap<Class, EntityManager> ems = new HashMap<Class, EntityManager>();
+        private Set<EntityManagerEntry> ems = new HashSet<EntityManagerEntry>();
 
         /**
          * counts the 'depth' of the interceptor invocation.
@@ -162,12 +161,12 @@ public class TransactionBeanStorage
     }
 
 
-    public EntityManager storeUsedEntityManager(Class<? extends Annotation> emQualifier, EntityManager entityManager)
+    public void storeUsedEntityManager(EntityManagerEntry entityManagerEntry)
     {
-        return currentTci.ems.put(emQualifier, entityManager);
+        currentTci.ems.add(entityManagerEntry);
     }
 
-    public HashMap<Class,EntityManager> getUsedEntityManagers()
+    public Set<EntityManagerEntry> getUsedEntityManagerEntries()
     {
         return currentTci.ems;
     }

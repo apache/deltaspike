@@ -21,8 +21,10 @@ package org.apache.deltaspike.jpa.impl.transaction;
 
 import org.apache.deltaspike.core.api.literal.AnyLiteral;
 import org.apache.deltaspike.jpa.api.Transactional;
+import org.apache.deltaspike.jpa.impl.transaction.context.EntityManagerEntry;
 import org.apache.deltaspike.jpa.impl.transaction.context.TransactionBeanStorage;
 import org.apache.deltaspike.jpa.spi.PersistenceStrategy;
+
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
@@ -31,11 +33,7 @@ import javax.interceptor.InvocationContext;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -81,8 +79,6 @@ public class ResourceLocalPersistenceStrategy implements PersistenceStrategy
         Set<Class<? extends Annotation>> emQualifiers = persistenceHelper.resolveEntityManagerQualifiers(
                     transactionalAnnotation, invocationContext.getTarget().getClass());
 
-        List<EntityManager> ems = new ArrayList<EntityManager>();
-
         boolean isOutermostInterceptor = transactionBeanStorage.isEmpty();
 
         if (isOutermostInterceptor)
@@ -103,11 +99,10 @@ public class ResourceLocalPersistenceStrategy implements PersistenceStrategy
             {
                 EntityManager entityManager = resolveEntityManagerForQualifier(emQualifier);
 
-                transactionBeanStorage.storeUsedEntityManager(emQualifier, entityManager);
+                EntityManagerEntry entityManagerEntry = createEntityManagerEntry(entityManager, emQualifier);
+                transactionBeanStorage.storeUsedEntityManager(entityManagerEntry);
 
-                ems.add(entityManager);
-
-                EntityTransaction transaction = getTransaction(entityManager);
+                EntityTransaction transaction = getTransaction(entityManagerEntry);
 
                 if (!transaction.isActive())
                 {
@@ -115,7 +110,7 @@ public class ResourceLocalPersistenceStrategy implements PersistenceStrategy
                 }
 
                 //don't move it before EntityTransaction#begin() and invoke it in any case
-                prepareEntityManager(entityManager);
+                beforeProceed(entityManagerEntry);
             }
 
             return invocationContext.proceed();
@@ -128,11 +123,12 @@ public class ResourceLocalPersistenceStrategy implements PersistenceStrategy
             // this way, we allow inner functions to catch and handle exceptions properly.
             if (isOutermostInterceptor)
             {
-                HashMap<Class, EntityManager> emsEntries = transactionBeanStorage.getUsedEntityManagers();
-                for (Map.Entry<Class, EntityManager> emsEntry: emsEntries.entrySet())
+                Set<EntityManagerEntry> entityManagerEntryList =
+                    transactionBeanStorage.getUsedEntityManagerEntries();
+
+                for (EntityManagerEntry currentEntityManagerEntry : entityManagerEntryList)
                 {
-                    EntityManager em = emsEntry.getValue();
-                    EntityTransaction transaction = getTransaction(em);
+                    EntityTransaction transaction = getTransaction(currentEntityManagerEntry);
                     if (transaction != null && transaction.isActive())
                     {
                         try
@@ -176,20 +172,21 @@ public class ResourceLocalPersistenceStrategy implements PersistenceStrategy
                 // them already
                 if (firstException == null)
                 {
-                    HashMap<Class, EntityManager> emsEntries = transactionBeanStorage.getUsedEntityManagers();
+                    Set<EntityManagerEntry> entityManagerEntryList =
+                        transactionBeanStorage.getUsedEntityManagerEntries();
 
                     boolean rollbackOnly = false;
                     // but first try to flush all the transactions and write the updates to the database
-                    for (EntityManager em: emsEntries.values())
+                    for (EntityManagerEntry currentEntityManagerEntry : entityManagerEntryList)
                     {
-                        EntityTransaction transaction = getTransaction(em);
+                        EntityTransaction transaction = getTransaction(currentEntityManagerEntry);
                         if (transaction != null && transaction.isActive())
                         {
                             try
                             {
                                 if (!commitFailed)
                                 {
-                                    em.flush();
+                                    currentEntityManagerEntry.getEntityManager().flush();
 
                                     if (!rollbackOnly && transaction.getRollbackOnly())
                                     {
@@ -213,9 +210,9 @@ public class ResourceLocalPersistenceStrategy implements PersistenceStrategy
                     }
 
                     // and now either commit or rollback all transactions
-                    for (EntityManager em : emsEntries.values())
+                    for (EntityManagerEntry currentEntityManagerEntry : entityManagerEntryList)
                     {
-                        EntityTransaction transaction = getTransaction(em);
+                        EntityTransaction transaction = getTransaction(currentEntityManagerEntry);
                         if (transaction != null && transaction.isActive())
                         {
                             try
@@ -239,6 +236,7 @@ public class ResourceLocalPersistenceStrategy implements PersistenceStrategy
                 }
                 // and now we close the open transaction scope
                 transactionBeanStorage.endTransactionScope();
+                onCloseTransactionScope();
             }
 
             transactionBeanStorage.decrementRefCounter();
@@ -251,17 +249,24 @@ public class ResourceLocalPersistenceStrategy implements PersistenceStrategy
         }
     }
 
+    protected EntityManagerEntry createEntityManagerEntry(
+        EntityManager entityManager, Class<? extends Annotation> qualifier)
+    {
+        return new EntityManagerEntry(entityManager, qualifier);
+    }
+
     /**
-     * @param entityManager current entity-manager
+     *
+     * @param entityManagerEntry entry of the current entity-manager
      * @return per default the {@link EntityTransaction} of the given {@link EntityManager}.
      * A subclass can also return an adapter e.g. for an UserTransaction
      */
-    protected EntityTransaction getTransaction(EntityManager entityManager)
+    protected EntityTransaction getTransaction(EntityManagerEntry entityManagerEntry)
     {
-        return entityManager.getTransaction();
+        return entityManagerEntry.getEntityManager().getTransaction();
     }
 
-    protected void prepareEntityManager(EntityManager entityManager)
+    protected void beforeProceed(EntityManagerEntry entityManagerEntry)
     {
         //override if needed
     }
@@ -288,6 +293,11 @@ public class ResourceLocalPersistenceStrategy implements PersistenceStrategy
     protected Exception prepareException(Exception e)
     {
         return e;
+    }
+
+    protected void onCloseTransactionScope()
+    {
+        //override if needed
     }
 
     protected Bean<EntityManager> resolveEntityManagerBean(Class<? extends Annotation> qualifierClass)
