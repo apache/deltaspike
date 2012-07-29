@@ -33,16 +33,16 @@ import javax.transaction.UserTransaction;
 import java.lang.annotation.Annotation;
 
 /**
- * <p>{@link org.apache.deltaspike.jpa.spi.PersistenceStrategy} for using JTA (bean-managed-)transactions
+ * <p>{@link org.apache.deltaspike.jpa.spi.TransactionStrategy} for using JTA (bean-managed-)transactions
  * (including XA transactions with a XA DataSource).
- * The basic features are identical to the {@link ResourceLocalPersistenceStrategy} (for
+ * The basic features are identical to the {@link ResourceLocalTransactionStrategy} (for
  * persistent-unit-transaction-type 'RESOURCE_LOCAL' only).</p>
  */
 @Dependent
 @Alternative
 @SuppressWarnings("UnusedDeclaration")
 //TODO move to a separated ds-jta module and use @Specializes -> no additional config is needed
-public class BeanManagedUserTransactionPersistenceStrategy extends ResourceLocalPersistenceStrategy
+public class BeanManagedUserTransactionTransactionStrategy extends ResourceLocalTransactionStrategy
 {
     protected static final String USER_TRANSACTION_JNDI_NAME = "java:comp/UserTransaction";
 
@@ -64,8 +64,8 @@ public class BeanManagedUserTransactionPersistenceStrategy extends ResourceLocal
     /**
      * Needed because the {@link EntityManager} might get created outside of the {@link UserTransaction}
      * (e.g. depending on the implementation of the producer).
-     * Can't be in {@link BeanManagedUserTransactionPersistenceStrategy.UserTransactionAdapter#begin()}
-     * because {@link ResourceLocalPersistenceStrategy} needs to do
+     * Can't be in {@link BeanManagedUserTransactionTransactionStrategy.UserTransactionAdapter#begin()}
+     * because {@link ResourceLocalTransactionStrategy} needs to do
      * <pre>
      * if (!transaction.isActive())
      * {
@@ -73,9 +73,9 @@ public class BeanManagedUserTransactionPersistenceStrategy extends ResourceLocal
      * }
      * </pre>
      * for the {@link EntityTransaction} of every {@link EntityManager}
-     * and {@link BeanManagedUserTransactionPersistenceStrategy.UserTransactionAdapter#isActive()}
+     * and {@link BeanManagedUserTransactionTransactionStrategy.UserTransactionAdapter#isActive()}
      * can only use the status information of the {@link UserTransaction} and therefore
-     * {@link BeanManagedUserTransactionPersistenceStrategy.UserTransactionAdapter#begin()}
+     * {@link BeanManagedUserTransactionTransactionStrategy.UserTransactionAdapter#begin()}
      * will only executed once, but {@link javax.persistence.EntityManager#joinTransaction()}
      * needs to be called for every {@link EntityManager}.
      *
@@ -109,7 +109,7 @@ public class BeanManagedUserTransactionPersistenceStrategy extends ResourceLocal
         {
             try
             {
-                //2nd check (already done by #isActive triggered by ResourceLocalPersistenceStrategy directly before)
+                //2nd check (already done by #isActive triggered by ResourceLocalTransactionStrategy directly before)
                 //currently to filter STATUS_UNKNOWN - see to-do -> TODO re-visit it
                 if (this.userTransaction.getStatus() == Status.STATUS_NO_TRANSACTION)
                 {

@@ -86,7 +86,7 @@ import javax.enterprise.context.NormalScope;
  *
  * <p>
  * It's also possible to use &#064;Transactional and &#064;TransactionScoped in an application-server.
- * Therefore it's only needed to configure one of the {@link org.apache.deltaspike.jpa.spi.PersistenceStrategy}s which
+ * Therefore it's only needed to configure one of the {@link org.apache.deltaspike.jpa.spi.TransactionStrategy}s which
  * support JTA.
  * </p>
  *

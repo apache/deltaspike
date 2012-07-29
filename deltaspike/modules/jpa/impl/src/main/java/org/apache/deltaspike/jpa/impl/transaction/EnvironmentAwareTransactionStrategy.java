@@ -31,7 +31,7 @@ import java.lang.annotation.Annotation;
 import java.util.logging.Logger;
 
 /**
- * This alternative {@link org.apache.deltaspike.jpa.spi.PersistenceStrategy} uses a simple auto-detection
+ * This alternative {@link org.apache.deltaspike.jpa.spi.TransactionStrategy} uses a simple auto-detection
  * based on a failed JNDI lookup (of java:comp/UserTransaction) and
  * can be used if different environments (dev., prod.,...) should use different transaction-types.
  * It requires additional logic in the producer for the {@link EntityManager} to create the {@link EntityManager}
@@ -40,21 +40,21 @@ import java.util.logging.Logger;
  * producer-beans.
  *
  * It's a better alternative than extending
- * {@link org.apache.deltaspike.jpa.impl.transaction.BeanManagedUserTransactionPersistenceStrategy}
+ * {@link BeanManagedUserTransactionTransactionStrategy}
  * (which would lead to an impl. dependency) only for using
  * {@link org.apache.deltaspike.core.api.exclude.annotation.Exclude} at the custom
- * {@link org.apache.deltaspike.jpa.spi.PersistenceStrategy}
+ * {@link org.apache.deltaspike.jpa.spi.TransactionStrategy}
  * (or doing a custom veto-extension).
  */
 @Dependent
 @Alternative
 @SuppressWarnings("UnusedDeclaration")
-public class EnvironmentAwarePersistenceStrategy extends BeanManagedUserTransactionPersistenceStrategy
+public class EnvironmentAwareTransactionStrategy extends BeanManagedUserTransactionTransactionStrategy
 {
     private static final long serialVersionUID = -3432802805095533499L;
 
     private static final Logger LOGGER =
-        Logger.getLogger(EnvironmentAwarePersistenceStrategy.class.getName());
+        Logger.getLogger(EnvironmentAwareTransactionStrategy.class.getName());
 
     @Override
     protected EntityManagerEntry createEntityManagerEntry(

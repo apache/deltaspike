@@ -19,7 +19,7 @@
 package org.apache.deltaspike.jpa.impl.transaction;
 
 import org.apache.deltaspike.jpa.api.Transactional;
-import org.apache.deltaspike.jpa.spi.PersistenceStrategy;
+import org.apache.deltaspike.jpa.spi.TransactionStrategy;
 
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
@@ -31,7 +31,7 @@ import java.io.Serializable;
  * Interceptor for wrapping transactional database requests.
  * This interceptor itself doesn't contain any functionality.
  * Instead the 'real' work is done inside a pluggable
- * {@link PersistenceStrategy}.
+ * {@link org.apache.deltaspike.jpa.spi.TransactionStrategy}.
  */
 @Interceptor
 @Transactional
@@ -40,11 +40,11 @@ public class TransactionalInterceptor implements Serializable
     private static final long serialVersionUID = 8787285444722371172L;
 
     @Inject
-    private PersistenceStrategy persistenceStrategy;
+    private TransactionStrategy transactionStrategy;
 
     /**
      * Creates a transaction before the intercepted method gets called and commits or reverts it after the invocation.
-     * A {@link PersistenceStrategy} is allowed to begin the transaction lazily but
+     * A {@link org.apache.deltaspike.jpa.spi.TransactionStrategy} is allowed to begin the transaction lazily but
      * it has to support nested interceptor calls.
      *
      * @param invocationContext current invocation-context
@@ -54,6 +54,6 @@ public class TransactionalInterceptor implements Serializable
     @AroundInvoke
     public Object executeInTransaction(InvocationContext invocationContext) throws Exception
     {
-        return persistenceStrategy.execute(invocationContext);
+        return transactionStrategy.execute(invocationContext);
     }
 }

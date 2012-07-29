@@ -23,7 +23,7 @@ import org.apache.deltaspike.core.api.literal.AnyLiteral;
 import org.apache.deltaspike.jpa.api.Transactional;
 import org.apache.deltaspike.jpa.impl.transaction.context.EntityManagerEntry;
 import org.apache.deltaspike.jpa.impl.transaction.context.TransactionBeanStorage;
-import org.apache.deltaspike.jpa.spi.PersistenceStrategy;
+import org.apache.deltaspike.jpa.spi.TransactionStrategy;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.spi.Bean;
@@ -39,7 +39,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * <p>Default implementation of our plugable PersistenceStrategy.
+ * <p>Default implementation of our plugable TransactionStrategy.
  * It supports nested Transactions with the MANDATORY behaviour.</p>
  *
  * <p>The outermost &#064;Transactional interceptor for the given
@@ -52,15 +52,15 @@ import java.util.logging.Logger;
  * until the outermost &#064;Transactional interceptor gets reached, then all
  * open transactions will get rollbacked.</p>
  *
- * <p>If you like to implement your own PersistenceStrategy, then use the
+ * <p>If you like to implement your own TransactionStrategy, then use the
  * standard CDI &#064;Alternative mechanism.</p>
  */
 @Dependent
-public class ResourceLocalPersistenceStrategy implements PersistenceStrategy
+public class ResourceLocalTransactionStrategy implements TransactionStrategy
 {
     private static final long serialVersionUID = -1432802805095533499L;
 
-    private static final Logger LOGGER = Logger.getLogger(ResourceLocalPersistenceStrategy.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ResourceLocalTransactionStrategy.class.getName());
 
     @Inject
     private BeanManager beanManager;
@@ -69,14 +69,14 @@ public class ResourceLocalPersistenceStrategy implements PersistenceStrategy
     private TransactionBeanStorage transactionBeanStorage;
 
     @Inject
-    private PersistenceStrategyHelper persistenceHelper;
+    private TransactionStrategyHelper transactionHelper;
 
     public Object execute(InvocationContext invocationContext) throws Exception
     {
-        Transactional transactionalAnnotation = persistenceHelper.extractTransactionalAnnotation(invocationContext);
+        Transactional transactionalAnnotation = transactionHelper.extractTransactionalAnnotation(invocationContext);
 
         // all the configured qualifier keys
-        Set<Class<? extends Annotation>> emQualifiers = persistenceHelper.resolveEntityManagerQualifiers(
+        Set<Class<? extends Annotation>> emQualifiers = transactionHelper.resolveEntityManagerQualifiers(
                     transactionalAnnotation, invocationContext.getTarget().getClass());
 
         boolean isOutermostInterceptor = transactionBeanStorage.isEmpty();

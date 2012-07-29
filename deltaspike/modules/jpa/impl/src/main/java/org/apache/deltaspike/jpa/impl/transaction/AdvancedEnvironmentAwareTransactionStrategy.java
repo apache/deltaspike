@@ -31,24 +31,24 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * This alternative {@link org.apache.deltaspike.jpa.spi.PersistenceStrategy} uses auto-detection and
+ * This alternative {@link org.apache.deltaspike.jpa.spi.TransactionStrategy} uses auto-detection and
  * can be used if different environments (dev., prod.,...) should use different transaction-types.
  *
  * This implementation uses a different approach for the auto-detection which can be used for environments
  * (or producer-constellations) which allow a mixed usage of JTA and RESOURCE_LOCAL.
  * (Within a transactional call it isn't possible to mix different transaction-types.)
  *
- * @see EnvironmentAwarePersistenceStrategy
+ * @see EnvironmentAwareTransactionStrategy
  */
 @Dependent
 @Alternative
 @SuppressWarnings("UnusedDeclaration")
-public class AdvancedEnvironmentAwarePersistenceStrategy extends EnvironmentAwarePersistenceStrategy
+public class AdvancedEnvironmentAwareTransactionStrategy extends EnvironmentAwareTransactionStrategy
 {
     private static final long serialVersionUID = -4432802805095533499L;
 
     private static final Logger LOGGER =
-        Logger.getLogger(AdvancedEnvironmentAwarePersistenceStrategy.class.getName());
+        Logger.getLogger(AdvancedEnvironmentAwareTransactionStrategy.class.getName());
 
     private static ThreadLocal<Boolean> isJtaModeDetected = new ThreadLocal<Boolean>();
 
@@ -88,7 +88,7 @@ public class AdvancedEnvironmentAwarePersistenceStrategy extends EnvironmentAwar
                     "That's valid in case of different transaction-types for different environments " +
                     "e.g. for development and production. " +
                     "Please check your setup - if that isn't the intended use-case, " +
-                    "you could also use the default strategy " + ResourceLocalPersistenceStrategy.class.getName());
+                    "you could also use the default strategy " + ResourceLocalTransactionStrategy.class.getName());
         }
 
         return new JtaEntityManagerEntry(entityManager, qualifier, isTransactionTypeJta);

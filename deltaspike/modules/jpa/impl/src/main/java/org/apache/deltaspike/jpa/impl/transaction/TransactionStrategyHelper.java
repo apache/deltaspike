@@ -36,10 +36,10 @@ import java.util.Set;
 
 /**
  * Helper which provides utility methods for any
- * {@link org.apache.deltaspike.jpa.spi.PersistenceStrategy}.
+ * {@link org.apache.deltaspike.jpa.spi.TransactionStrategy}.
  */
 @Dependent
-public class PersistenceStrategyHelper implements Serializable
+public class TransactionStrategyHelper implements Serializable
 {
     @Inject
     private BeanManager beanManager;

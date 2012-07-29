@@ -23,6 +23,6 @@ import org.apache.deltaspike.core.spi.InterceptorStrategy;
 /**
  * Marker interface for a plugable strategy for {@link org.apache.deltaspike.jpa.api.Transactional}.
  */
-public interface PersistenceStrategy extends InterceptorStrategy
+public interface TransactionStrategy extends InterceptorStrategy
 {
 }
