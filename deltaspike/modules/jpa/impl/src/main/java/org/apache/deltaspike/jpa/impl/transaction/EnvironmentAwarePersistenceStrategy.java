@@ -34,11 +34,16 @@ import java.util.logging.Logger;
  * This alternative {@link org.apache.deltaspike.jpa.spi.PersistenceStrategy} uses a simple auto-detection
  * based on a failed JNDI lookup (of java:comp/UserTransaction) and
  * can be used if different environments (dev., prod.,...) should use different transaction-types.
+ * It requires additional logic in the producer for the {@link EntityManager} to create the {@link EntityManager}
+ * for the correct persistence-unit. In case of a project-stage based logic
+ * {@link org.apache.deltaspike.core.api.exclude.annotation.Exclude} can be used to switch between different
+ * producer-beans.
  *
  * It's a better alternative than extending
  * {@link org.apache.deltaspike.jpa.impl.transaction.BeanManagedUserTransactionPersistenceStrategy}
  * (which would lead to an impl. dependency) only for using
- * {@link org.apache.deltaspike.core.api.exclude.annotation.Exclude}
+ * {@link org.apache.deltaspike.core.api.exclude.annotation.Exclude} at the custom
+ * {@link org.apache.deltaspike.jpa.spi.PersistenceStrategy}
  * (or doing a custom veto-extension).
  */
 @Dependent

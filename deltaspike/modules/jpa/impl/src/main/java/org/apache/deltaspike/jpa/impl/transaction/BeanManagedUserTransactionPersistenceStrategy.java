@@ -36,12 +36,7 @@ import java.lang.annotation.Annotation;
  * <p>{@link org.apache.deltaspike.jpa.spi.PersistenceStrategy} for using JTA (bean-managed-)transactions
  * (including XA transactions with a XA DataSource).
  * The basic features are identical to the {@link ResourceLocalPersistenceStrategy} (for
- * persistent-unit-transaction-type 'RESOURCE_LOCAL' only).
- * Also different transaction-types for different persistence-units are supported.</p>
- *
- * <p>It's possible to extend this class, if {@link org.apache.deltaspike.core.api.exclude.annotation.Exclude}
- * needs to be used e.g. in case of a different dev- and production-environment
- * (in combination with different {@link javax.persistence.EntityManagerFactory}s).</p>
+ * persistent-unit-transaction-type 'RESOURCE_LOCAL' only).</p>
  */
 @Dependent
 @Alternative
@@ -67,7 +62,8 @@ public class BeanManagedUserTransactionPersistenceStrategy extends ResourceLocal
     }
 
     /**
-     * Needed because the {@link EntityManager} was created outside of the {@link UserTransaction}.
+     * Needed because the {@link EntityManager} might get created outside of the {@link UserTransaction}
+     * (e.g. depending on the implementation of the producer).
      * Can't be in {@link BeanManagedUserTransactionPersistenceStrategy.UserTransactionAdapter#begin()}
      * because {@link ResourceLocalPersistenceStrategy} needs to do
      * <pre>
@@ -81,7 +77,7 @@ public class BeanManagedUserTransactionPersistenceStrategy extends ResourceLocal
      * can only use the status information of the {@link UserTransaction} and therefore
      * {@link BeanManagedUserTransactionPersistenceStrategy.UserTransactionAdapter#begin()}
      * will only executed once, but {@link javax.persistence.EntityManager#joinTransaction()}
-     * needs to be called for every {@link EntityManager}
+     * needs to be called for every {@link EntityManager}.
      *
      * @param entityManagerEntry entry of the current entity-manager
      */

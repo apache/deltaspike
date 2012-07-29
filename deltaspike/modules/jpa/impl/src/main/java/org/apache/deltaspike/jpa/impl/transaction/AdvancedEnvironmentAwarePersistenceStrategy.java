@@ -34,10 +34,11 @@ import java.util.logging.Logger;
  * This alternative {@link org.apache.deltaspike.jpa.spi.PersistenceStrategy} uses auto-detection and
  * can be used if different environments (dev., prod.,...) should use different transaction-types.
  *
- * It's a better alternative than extending {@link BeanManagedUserTransactionPersistenceStrategy}
- * (which would lead to an impl. dependency) only for using
- * {@link org.apache.deltaspike.core.api.exclude.annotation.Exclude}
- * (or doing a custom veto-extension).
+ * This implementation uses a different approach for the auto-detection which can be used for environments
+ * (or producer-constellations) which allow a mixed usage of JTA and RESOURCE_LOCAL.
+ * (Within a transactional call it isn't possible to mix different transaction-types.)
+ *
+ * @see EnvironmentAwarePersistenceStrategy
  */
 @Dependent
 @Alternative
