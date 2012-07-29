@@ -659,7 +659,15 @@ public class AnnotatedTypeBuilder<X>
                 annotationBuilder = new AnnotationBuilder();
                 fields.put(field, annotationBuilder);
             }
-            AccessController.doPrivileged(new SetAccessiblePrivilegedAction(field));
+
+            if (System.getSecurityManager() != null)
+            {
+                AccessController.doPrivileged(new SetAccessiblePrivilegedAction(field));
+            }
+            else
+            {
+                field.setAccessible(true);
+            }
 
             for (Annotation annotation : field.getAnnotations())
             {
@@ -678,7 +686,15 @@ public class AnnotatedTypeBuilder<X>
                 annotationBuilder = new AnnotationBuilder();
                 methods.put(method, annotationBuilder);
             }
-            AccessController.doPrivileged(new SetAccessiblePrivilegedAction(method));
+
+            if (System.getSecurityManager() != null)
+            {
+                AccessController.doPrivileged(new SetAccessiblePrivilegedAction(method));
+            }
+            else
+            {
+                method.setAccessible(true);
+            }
 
             for (Annotation annotation : method.getAnnotations())
             {

@@ -173,7 +173,14 @@ public abstract class ReflectionUtils
     {
         if (setAccessible && !method.isAccessible())
         {
-            AccessController.doPrivileged(new SetAccessiblePrivilegedAction(method));
+            if (System.getSecurityManager() != null)
+            {
+                AccessController.doPrivileged(new SetAccessiblePrivilegedAction(method));
+            }
+            else
+            {
+                method.setAccessible(true);
+            }
         }
 
         try

@@ -25,12 +25,11 @@ import java.security.PrivilegedAction;
 
 /**
  * PrivilegedAction instance to enabling access to the specified {@link AccessibleObject}.
+ * It's only useful if {@link System#getSecurityManager()} returns a {@link SecurityManager}.
  */
 @Typed()
-//TODO replace it with the SecurityService of OWB
 public class SetAccessiblePrivilegedAction implements PrivilegedAction<Void>
 {
-
     private final AccessibleObject member;
 
     public SetAccessiblePrivilegedAction(AccessibleObject member)
@@ -43,5 +42,4 @@ public class SetAccessiblePrivilegedAction implements PrivilegedAction<Void>
         member.setAccessible(true);
         return null;
     }
-
 }
