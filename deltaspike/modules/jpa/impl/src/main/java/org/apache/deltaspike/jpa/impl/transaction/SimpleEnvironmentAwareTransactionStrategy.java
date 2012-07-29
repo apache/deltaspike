@@ -49,12 +49,12 @@ import java.util.logging.Logger;
 @Dependent
 @Alternative
 @SuppressWarnings("UnusedDeclaration")
-public class EnvironmentAwareTransactionStrategy extends BeanManagedUserTransactionTransactionStrategy
+public class SimpleEnvironmentAwareTransactionStrategy extends BeanManagedUserTransactionTransactionStrategy
 {
     private static final long serialVersionUID = -3432802805095533499L;
 
     private static final Logger LOGGER =
-        Logger.getLogger(EnvironmentAwareTransactionStrategy.class.getName());
+        Logger.getLogger(SimpleEnvironmentAwareTransactionStrategy.class.getName());
 
     @Override
     protected EntityManagerEntry createEntityManagerEntry(

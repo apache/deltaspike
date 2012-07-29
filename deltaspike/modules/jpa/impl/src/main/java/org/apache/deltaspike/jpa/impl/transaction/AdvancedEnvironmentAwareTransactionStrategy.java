@@ -38,12 +38,12 @@ import java.util.logging.Logger;
  * (or producer-constellations) which allow a mixed usage of JTA and RESOURCE_LOCAL.
  * (Within a transactional call it isn't possible to mix different transaction-types.)
  *
- * @see EnvironmentAwareTransactionStrategy
+ * @see SimpleEnvironmentAwareTransactionStrategy
  */
 @Dependent
 @Alternative
 @SuppressWarnings("UnusedDeclaration")
-public class AdvancedEnvironmentAwareTransactionStrategy extends EnvironmentAwareTransactionStrategy
+public class AdvancedEnvironmentAwareTransactionStrategy extends SimpleEnvironmentAwareTransactionStrategy
 {
     private static final long serialVersionUID = -4432802805095533499L;
 
