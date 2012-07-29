@@ -29,7 +29,7 @@ import javax.enterprise.context.NormalScope;
 
 /**
  * <p>A &#064;TransactionScoped contextual instance will be unique for a given
- * CODI-managed Transaction. The context will get started when the outermost
+ * transaction controlled by {@link Transactional}. The context will get started when the outermost
  * {@link Transactional} method gets invoked and will get closed when
  * the call chain leaves the outermost {@link Transactional} method.</p>
  *
@@ -47,12 +47,48 @@ import javax.enterprise.context.NormalScope;
  *
  *      public void closeEntityManager(&#064;Disposes EntityManager em)
  *      {
- *          em.close();
+ *          if (em.isOpen()) //this check is optional -not needed if #close doesn't get called by the transactional bean
+ *          {
+ *              em.close();
+ *          }
+ *      }
+ *  }
+ * </pre>
+ * </p>
+ * or
+ * <p>
+ * <pre>
+ *  &#064;Dependent
+ *  public class EntityManagerProducer
+ *  {
+ *      private &#064;PersistenceUnit(unitName = "test") EntityManagerFactory entityManagerFactory;
+ *
+ *      public &#064;Produces &#064;TransactionScoped EntityManager createEntityManager()
+ *      {
+ *          return entityManagerFactory.createEntityManager();
+ *      }
+ *
+ *      public void closeEntityManager(&#064;Disposes EntityManager em)
+ *      {
+ *          if (em.isOpen()) //this check is optional -not needed if #close doesn't get called by the transactional bean
+ *          {
+ *              em.close();
+ *          }
  *      }
  *  }
  * </pre>
  * </p>
  *
+ * <p>
+ * Furthermore, it's possible to use different persistence-units with (simple) qualifiers
+ * (for the producer- and dispose-methods and therefore also at the injection-points).
+ * </p>
+ *
+ * <p>
+ * It's also possible to use &#064;Transactional and &#064;TransactionScoped in an application-server.
+ * Therefore it's only needed to configure one of the {@link org.apache.deltaspike.jpa.spi.PersistenceStrategy}s which
+ * support JTA.
+ * </p>
  *
  * @see Transactional
  */

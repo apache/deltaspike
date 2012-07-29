@@ -32,6 +32,9 @@ import java.lang.annotation.Annotation;
 /**
  * If it isn't possible to use EJBs, this interceptor adds transaction support to methods or a class.
  * The optional qualifier can be used to specify different entity managers.
+ * <p/>
+ * Further details can be found at {@link TransactionScoped} which is an optional scope which can be used together with
+ * &#064;Transactional.
  */
 
 @InterceptorBinding
