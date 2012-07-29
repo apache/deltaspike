@@ -21,6 +21,7 @@ package org.apache.deltaspike.test.jpa.api.transactional.defaultinjection;
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
 import org.apache.deltaspike.jpa.impl.transaction.context.TransactionContextExtension;
+import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.test.jpa.api.shared.TestEntityManager;
 import org.apache.deltaspike.test.jpa.api.shared.TestEntityTransaction;
 import org.apache.deltaspike.test.jpa.api.shared.TestException;
@@ -34,6 +35,7 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
 import javax.enterprise.inject.spi.Extension;
@@ -41,6 +43,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 @RunWith(Arquillian.class)
+@Category(SeCategory.class)
 public class DefaultEntityManagerInjectionTest
 {
     @Inject

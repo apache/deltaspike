@@ -21,6 +21,7 @@ package org.apache.deltaspike.test.jpa.datasource;
 import org.apache.deltaspike.jpa.api.datasource.DataSourceConfig;
 import org.apache.deltaspike.jpa.impl.datasource.ConfigurableDataSource;
 import org.apache.deltaspike.jpa.impl.transaction.context.TransactionContextExtension;
+import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -28,6 +29,7 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.junit.Test;
 import org.junit.Assert;
@@ -37,6 +39,7 @@ import javax.inject.Inject;
 import java.sql.Connection;
 
 @RunWith(Arquillian.class)
+@Category(SeCategory.class)
 public class ConfigurableDataSourceTest
 {
 
