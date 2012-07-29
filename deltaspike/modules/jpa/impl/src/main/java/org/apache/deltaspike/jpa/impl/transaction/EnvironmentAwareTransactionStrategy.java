@@ -43,12 +43,12 @@ import java.util.logging.Logger;
 @Dependent
 @Alternative
 @SuppressWarnings("UnusedDeclaration")
-public class AdvancedEnvironmentAwareTransactionStrategy extends SimpleEnvironmentAwareTransactionStrategy
+public class EnvironmentAwareTransactionStrategy extends SimpleEnvironmentAwareTransactionStrategy
 {
     private static final long serialVersionUID = -4432802805095533499L;
 
     private static final Logger LOGGER =
-        Logger.getLogger(AdvancedEnvironmentAwareTransactionStrategy.class.getName());
+        Logger.getLogger(EnvironmentAwareTransactionStrategy.class.getName());
 
     private static ThreadLocal<Boolean> isJtaModeDetected = new ThreadLocal<Boolean>();
 
