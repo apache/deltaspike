@@ -53,6 +53,11 @@ public class SecurityExtension implements Extension, Deactivatable
 
     private Boolean isActivated = null;
 
+    protected void init(@Observes BeforeBeanDiscovery beforeBeanDiscovery)
+    {
+        isActivated = ClassDeactivationUtils.isActivated(getClass());
+    }
+
     //workaround for OWB
     public static SecurityMetaDataStorage getMetaDataStorage()
     {
@@ -73,11 +78,6 @@ public class SecurityExtension implements Extension, Deactivatable
     {
         ClassLoader classLoader = ClassUtils.getClassLoader(null);
         SECURITY_METADATA_STORAGE_MAPPING.remove(classLoader);
-    }
-
-    protected void init(@Observes BeforeBeanDiscovery afterBeanDiscovery)
-    {
-        initActivation();
     }
 
     /**
@@ -248,13 +248,5 @@ public class SecurityExtension implements Extension, Deactivatable
 
         Authorizer authorizer = new Authorizer(binding, annotatedMethod, beanManager);
         getMetaDataStorage().addAuthorizer(authorizer);
-    }
-
-    public void initActivation()
-    {
-        if (isActivated == null)
-        {
-            isActivated = ClassDeactivationUtils.isActivated(getClass());
-        }
     }
 }

@@ -60,12 +60,12 @@ public class ExceptionControlExtension implements Extension, Deactivatable
     private Map<Type, Collection<HandlerMethod<? extends Throwable>>> allHandlers
         = new HashMap<Type, Collection<HandlerMethod<? extends Throwable>>>();
 
-    private Boolean isActivated = null;
+    private Boolean isActivated = true;
 
     @SuppressWarnings("UnusedDeclaration")
-    protected void init(@Observes BeforeBeanDiscovery afterBeanDiscovery)
+    protected void init(@Observes BeforeBeanDiscovery beforeBeanDiscovery)
     {
-        initActivation();
+        isActivated = ClassDeactivationUtils.isActivated(getClass());
     }
 
     /**
@@ -170,14 +170,6 @@ public class ExceptionControlExtension implements Extension, Deactivatable
         {
             allHandlers.put(handlerMethod.getExceptionType(),
                 new HashSet<HandlerMethod<? extends Throwable>>(Arrays.asList(handlerMethod)));
-        }
-    }
-
-    public void initActivation()
-    {
-        if (isActivated == null)
-        {
-            isActivated = ClassDeactivationUtils.isActivated(getClass());
         }
     }
 }

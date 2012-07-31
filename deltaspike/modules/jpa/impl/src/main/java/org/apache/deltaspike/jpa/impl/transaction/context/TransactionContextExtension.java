@@ -31,11 +31,11 @@ import javax.enterprise.inject.spi.Extension;
  */
 public class TransactionContextExtension implements Extension, Deactivatable
 {
-    private Boolean isActivated = null;
+    private Boolean isActivated = true;
 
-    protected void init(@Observes BeforeBeanDiscovery afterBeanDiscovery)
+    protected void init(@Observes BeforeBeanDiscovery beforeBeanDiscovery)
     {
-        initActivation();
+        isActivated = ClassDeactivationUtils.isActivated(getClass());
     }
 
     /**
@@ -52,13 +52,5 @@ public class TransactionContextExtension implements Extension, Deactivatable
 
         TransactionContext transactionContext = new TransactionContext();
         afterBeanDiscovery.addContext(transactionContext);
-    }
-
-    protected void initActivation()
-    {
-        if (isActivated == null)
-        {
-            isActivated = ClassDeactivationUtils.isActivated(getClass());
-        }
     }
 }

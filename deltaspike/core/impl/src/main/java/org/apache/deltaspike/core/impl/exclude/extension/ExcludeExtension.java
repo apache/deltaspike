@@ -35,6 +35,7 @@ import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Alternative;
 import javax.enterprise.inject.spi.AfterDeploymentValidation;
 import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.BeforeBeanDiscovery;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import javax.enterprise.util.Nonbinding;
@@ -60,9 +61,22 @@ public class ExcludeExtension implements Extension, Deactivatable
 
     private static Boolean isOwbDetected = null;
 
-    private Boolean isActivated = null;
-    private Boolean isGlobalAlternativeActivated = null;
-    private Boolean isCustomProjectStageBeanFilterActivated = null;
+    private Boolean isActivated = true;
+    private Boolean isGlobalAlternativeActivated = true;
+    private Boolean isCustomProjectStageBeanFilterActivated = true;
+
+    @SuppressWarnings("UnusedDeclaration")
+    protected void init(@Observes BeforeBeanDiscovery beforeBeanDiscovery)
+    {
+        isActivated =
+                ClassDeactivationUtils.isActivated(getClass());
+
+        isGlobalAlternativeActivated =
+                ClassDeactivationUtils.isActivated(GlobalAlternative.class);
+
+        isCustomProjectStageBeanFilterActivated =
+                ClassDeactivationUtils.isActivated(CustomProjectStageBeanFilter.class);
+    }
 
     /**
      * triggers initialization in any case
@@ -81,8 +95,6 @@ public class ExcludeExtension implements Extension, Deactivatable
     @SuppressWarnings("UnusedDeclaration")
     protected void vetoBeans(@Observes ProcessAnnotatedType processAnnotatedType, BeanManager beanManager)
     {
-        initActivation();
-
         //we need to do it before the exclude logic to keep the @Exclude support for global alternatives
         if (isGlobalAlternativeActivated)
         {
@@ -508,21 +520,6 @@ public class ExcludeExtension implements Extension, Deactivatable
         processAnnotatedType.veto();
         LOG.finer(vetoType + " based veto for bean with type: " +
                 processAnnotatedType.getAnnotatedType().getJavaClass());
-    }
-
-    public void initActivation()
-    {
-        if (isActivated == null)
-        {
-            isActivated =
-                ClassDeactivationUtils.isActivated(getClass());
-
-            isGlobalAlternativeActivated =
-                ClassDeactivationUtils.isActivated(GlobalAlternative.class);
-
-            isCustomProjectStageBeanFilterActivated =
-                ClassDeactivationUtils.isActivated(CustomProjectStageBeanFilter.class);
-        }
     }
 
     private void detectCdiImplementation()

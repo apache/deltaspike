@@ -43,7 +43,7 @@ public class ConfigurationExtension implements Extension, Deactivatable
     private static final String CANNOT_CREATE_CONFIG_SOURCE_FOR_CUSTOM_PROPERTY_FILE_CONFIG =
         "Cannot create ConfigSource for custom property-file config ";
 
-    private boolean isActivated = false;
+    private boolean isActivated = true;
 
     private List<Class<? extends PropertyFileConfig>> configSourcesClasses
         = new ArrayList<Class<?  extends PropertyFileConfig>>();

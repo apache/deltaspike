@@ -59,12 +59,12 @@ public class MessageBundleExtension implements Extension, Deactivatable
 
     private List<String> deploymentErrors = new ArrayList<String>();
 
-    private Boolean isActivated = null;
+    private Boolean isActivated = true;
 
     @SuppressWarnings("UnusedDeclaration")
     protected void init(@Observes BeforeBeanDiscovery beforeBeanDiscovery)
     {
-        initActivation();
+        isActivated = ClassDeactivationUtils.isActivated(getClass());
     }
 
     @SuppressWarnings("UnusedDeclaration")
@@ -229,13 +229,5 @@ public class MessageBundleExtension implements Extension, Deactivatable
     protected void cleanup(@Observes AfterDeploymentValidation afterDeploymentValidation)
     {
         messageBundleTypes.clear();
-    }
-
-    protected void initActivation()
-    {
-        if (isActivated == null)
-        {
-            isActivated = ClassDeactivationUtils.isActivated(getClass());
-        }
     }
 }
