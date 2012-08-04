@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.jpa.api.transactionscoped.multipleinjection.manual;
 
-import org.apache.deltaspike.jpa.api.Transactional;
+import org.apache.deltaspike.jpa.api.transaction.Transactional;
 import org.apache.deltaspike.test.jpa.api.shared.First;
 import org.apache.deltaspike.test.jpa.api.shared.Second;
 

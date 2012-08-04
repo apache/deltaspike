@@ -19,7 +19,7 @@
 package org.apache.deltaspike.test.jpa.api.transactional.transactionhelper;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
-import org.apache.deltaspike.jpa.api.TransactionHelper;
+import org.apache.deltaspike.jpa.api.transaction.TransactionHelper;
 import org.apache.deltaspike.jpa.impl.transaction.context.TransactionContextExtension;
 import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.test.util.ArchiveUtils;

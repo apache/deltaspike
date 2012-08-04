@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.jpa.impl.transaction;
 
-import org.apache.deltaspike.jpa.api.Transactional;
+import org.apache.deltaspike.jpa.api.transaction.Transactional;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Any;
@@ -36,7 +36,7 @@ import java.util.Set;
 
 /**
  * Helper which provides utility methods for any
- * {@link org.apache.deltaspike.jpa.spi.TransactionStrategy}.
+ * {@link org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy}.
  */
 @Dependent
 public class TransactionStrategyHelper implements Serializable

@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.jpa.api.transactional.exception.uncatched.multipleinjection.flush.nested;
 
-import org.apache.deltaspike.jpa.api.Transactional;
+import org.apache.deltaspike.jpa.api.transaction.Transactional;
 import org.apache.deltaspike.test.jpa.api.shared.Second;
 
 import javax.enterprise.context.ApplicationScoped;

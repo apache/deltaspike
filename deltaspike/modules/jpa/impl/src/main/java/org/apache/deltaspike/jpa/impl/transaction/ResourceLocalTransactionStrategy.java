@@ -20,10 +20,10 @@ package org.apache.deltaspike.jpa.impl.transaction;
 
 
 import org.apache.deltaspike.core.api.literal.AnyLiteral;
-import org.apache.deltaspike.jpa.api.Transactional;
+import org.apache.deltaspike.jpa.api.transaction.Transactional;
 import org.apache.deltaspike.jpa.impl.transaction.context.EntityManagerEntry;
 import org.apache.deltaspike.jpa.impl.transaction.context.TransactionBeanStorage;
-import org.apache.deltaspike.jpa.spi.TransactionStrategy;
+import org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.spi.Bean;

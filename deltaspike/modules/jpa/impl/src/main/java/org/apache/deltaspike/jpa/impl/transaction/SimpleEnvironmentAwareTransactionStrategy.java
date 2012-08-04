@@ -31,7 +31,7 @@ import java.lang.annotation.Annotation;
 import java.util.logging.Logger;
 
 /**
- * This alternative {@link org.apache.deltaspike.jpa.spi.TransactionStrategy} uses a simple auto-detection
+ * This alternative {@link org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy} uses a simple auto-detection
  * based on a failed JNDI lookup (of java:comp/UserTransaction) and
  * can be used if different environments (dev., prod.,...) should use different transaction-types.
  * It requires additional logic in the producer for the {@link EntityManager} to create the {@link EntityManager}
@@ -43,7 +43,7 @@ import java.util.logging.Logger;
  * {@link BeanManagedUserTransactionStrategy}
  * (which would lead to an impl. dependency) only for using
  * {@link org.apache.deltaspike.core.api.exclude.annotation.Exclude} at the custom
- * {@link org.apache.deltaspike.jpa.spi.TransactionStrategy}
+ * {@link org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy}
  * (or doing a custom veto-extension).
  */
 @Dependent

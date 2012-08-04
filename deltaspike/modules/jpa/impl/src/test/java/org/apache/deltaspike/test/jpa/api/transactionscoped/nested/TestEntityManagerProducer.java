@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.jpa.api.transactionscoped.nested;
 
-import org.apache.deltaspike.jpa.api.TransactionScoped;
+import org.apache.deltaspike.jpa.api.transaction.TransactionScoped;
 import org.apache.deltaspike.test.jpa.api.shared.First;
 import org.apache.deltaspike.test.jpa.api.shared.TestEntityManager;
 

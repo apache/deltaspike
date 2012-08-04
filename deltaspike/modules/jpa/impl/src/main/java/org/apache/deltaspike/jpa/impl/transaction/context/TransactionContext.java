@@ -21,8 +21,8 @@ package org.apache.deltaspike.jpa.impl.transaction.context;
 
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
-import org.apache.deltaspike.jpa.api.TransactionScoped;
-import org.apache.deltaspike.jpa.api.Transactional;
+import org.apache.deltaspike.jpa.api.transaction.TransactionScoped;
+import org.apache.deltaspike.jpa.api.transaction.Transactional;
 
 import javax.enterprise.context.ContextNotActiveException;
 import javax.enterprise.context.spi.Context;
@@ -32,7 +32,8 @@ import java.lang.annotation.Annotation;
 import java.util.Map;
 
 /**
- * CDI Context for managing &#064;{@link org.apache.deltaspike.jpa.api.TransactionScoped} contextual instances.
+ * CDI Context for managing &#064;{@link org.apache.deltaspike.jpa.api.transaction.TransactionScoped}
+ * contextual instances.
  */
 public class TransactionContext implements Context
 {

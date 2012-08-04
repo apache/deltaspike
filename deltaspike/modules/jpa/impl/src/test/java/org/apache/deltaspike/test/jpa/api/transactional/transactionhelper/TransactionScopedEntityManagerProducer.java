@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.jpa.api.transactional.transactionhelper;
 
-import org.apache.deltaspike.jpa.api.TransactionScoped;
+import org.apache.deltaspike.jpa.api.transaction.TransactionScoped;
 import org.apache.deltaspike.test.jpa.api.shared.TestEntityManager;
 
 import javax.enterprise.context.Dependent;

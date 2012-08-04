@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.jpa.impl.transaction;
 
-import org.apache.deltaspike.jpa.api.Transactional;
-import org.apache.deltaspike.jpa.spi.TransactionStrategy;
+import org.apache.deltaspike.jpa.api.transaction.Transactional;
+import org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy;
 
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
@@ -31,7 +31,7 @@ import java.io.Serializable;
  * Interceptor for wrapping transactional database requests.
  * This interceptor itself doesn't contain any functionality.
  * Instead the 'real' work is done inside a pluggable
- * {@link org.apache.deltaspike.jpa.spi.TransactionStrategy}.
+ * {@link org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy}.
  */
 @Interceptor
 @Transactional
@@ -44,8 +44,8 @@ public class TransactionalInterceptor implements Serializable
 
     /**
      * Creates a transaction before the intercepted method gets called and commits or reverts it after the invocation.
-     * A {@link org.apache.deltaspike.jpa.spi.TransactionStrategy} is allowed to begin the transaction lazily but
-     * it has to support nested interceptor calls.
+     * A {@link org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy}
+     * is allowed to begin the transaction lazily but it has to support nested interceptor calls.
      *
      * @param invocationContext current invocation-context
      * @return result of the intercepted method

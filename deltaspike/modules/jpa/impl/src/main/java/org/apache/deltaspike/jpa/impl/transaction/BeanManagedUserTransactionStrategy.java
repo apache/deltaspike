@@ -35,7 +35,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * <p>{@link org.apache.deltaspike.jpa.spi.TransactionStrategy} for using JTA (bean-managed-)transactions
+ * <p>{@link org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy} for using JTA (bean-managed-)transactions
  * (including XA transactions with a XA DataSource).
  * The basic features are identical to the {@link ResourceLocalTransactionStrategy} (for
  * persistent-unit-transaction-type 'RESOURCE_LOCAL' only).</p>

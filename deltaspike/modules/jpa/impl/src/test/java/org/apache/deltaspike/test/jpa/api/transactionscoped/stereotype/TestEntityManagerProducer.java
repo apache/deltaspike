@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.jpa.api.transactionscoped.stereotype;
 
-import org.apache.deltaspike.jpa.api.TransactionScoped;
+import org.apache.deltaspike.jpa.api.transaction.TransactionScoped;
 import org.apache.deltaspike.test.jpa.api.shared.TestEntityManager;
 
 import javax.enterprise.context.RequestScoped;

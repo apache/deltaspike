@@ -32,7 +32,7 @@ import java.util.logging.Logger;
 
 /**
  * <p>This class stores information about
- * &#064;{@link org.apache.deltaspike.jpa.api.TransactionScoped}
+ * &#064;{@link org.apache.deltaspike.jpa.api.transaction.TransactionScoped}
  * contextual instances, their {@link javax.enterprise.context.spi.CreationalContext} etc.</p>
  *
  * <p>We use a RequestScoped bean because this way we don't need to take

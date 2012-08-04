@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.jpa.api.transactional.stereotype;
 
-import org.apache.deltaspike.jpa.api.Transactional;
+import org.apache.deltaspike.jpa.api.transaction.Transactional;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Stereotype;

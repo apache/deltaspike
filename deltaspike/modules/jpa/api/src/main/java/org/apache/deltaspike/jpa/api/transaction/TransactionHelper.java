@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.jpa.api;
+package org.apache.deltaspike.jpa.api.transaction;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 

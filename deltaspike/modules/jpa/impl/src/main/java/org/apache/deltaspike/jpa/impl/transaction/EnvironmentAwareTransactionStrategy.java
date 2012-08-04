@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * This alternative {@link org.apache.deltaspike.jpa.spi.TransactionStrategy} uses auto-detection and
+ * This alternative {@link org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy} uses auto-detection and
  * can be used if different environments (dev., prod.,...) should use different transaction-types.
  *
  * This implementation uses a different approach for the auto-detection which can be used for environments

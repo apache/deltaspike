@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.jpa.api;
+package org.apache.deltaspike.jpa.api.transaction;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -86,8 +86,8 @@ import javax.enterprise.context.NormalScope;
  *
  * <p>
  * It's also possible to use &#064;Transactional and &#064;TransactionScoped in an application-server.
- * Therefore it's only needed to configure one of the {@link org.apache.deltaspike.jpa.spi.TransactionStrategy}s which
- * support JTA.
+ * Therefore it's only needed to configure one of the
+ * {@link org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy}s which support JTA.
  * </p>
  *
  * @see Transactional
