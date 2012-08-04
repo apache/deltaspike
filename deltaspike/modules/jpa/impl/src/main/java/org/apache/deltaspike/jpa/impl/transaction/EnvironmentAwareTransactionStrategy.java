@@ -20,7 +20,7 @@ package org.apache.deltaspike.jpa.impl.transaction;
 
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.jpa.impl.transaction.context.EntityManagerEntry;
-import org.apache.deltaspike.jpa.impl.transaction.context.JtaEntityManagerEntry;
+import org.apache.deltaspike.jpa.impl.transaction.context.JtaAwareEntityManagerEntry;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Alternative;
@@ -91,7 +91,7 @@ public class EnvironmentAwareTransactionStrategy extends SimpleEnvironmentAwareT
                     "you could also use the default strategy " + ResourceLocalTransactionStrategy.class.getName());
         }
 
-        return new JtaEntityManagerEntry(entityManager, qualifier, isTransactionTypeJta);
+        return new JtaAwareEntityManagerEntry(entityManager, qualifier, isTransactionTypeJta);
     }
 
     @Override

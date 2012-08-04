@@ -20,7 +20,7 @@ package org.apache.deltaspike.jpa.impl.transaction;
 
 import org.apache.deltaspike.core.impl.util.JndiUtils;
 import org.apache.deltaspike.jpa.impl.transaction.context.EntityManagerEntry;
-import org.apache.deltaspike.jpa.impl.transaction.context.JtaEntityManagerEntry;
+import org.apache.deltaspike.jpa.impl.transaction.context.JtaAwareEntityManagerEntry;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Alternative;
@@ -40,7 +40,7 @@ import java.util.logging.Logger;
  * producer-beans.
  *
  * It's a better alternative than extending
- * {@link BeanManagedUserTransactionTransactionStrategy}
+ * {@link BeanManagedUserTransactionStrategy}
  * (which would lead to an impl. dependency) only for using
  * {@link org.apache.deltaspike.core.api.exclude.annotation.Exclude} at the custom
  * {@link org.apache.deltaspike.jpa.spi.TransactionStrategy}
@@ -49,7 +49,7 @@ import java.util.logging.Logger;
 @Dependent
 @Alternative
 @SuppressWarnings("UnusedDeclaration")
-public class SimpleEnvironmentAwareTransactionStrategy extends BeanManagedUserTransactionTransactionStrategy
+public class SimpleEnvironmentAwareTransactionStrategy extends BeanManagedUserTransactionStrategy
 {
     private static final long serialVersionUID = -3432802805095533499L;
 
@@ -67,7 +67,7 @@ public class SimpleEnvironmentAwareTransactionStrategy extends BeanManagedUserTr
         }
         catch (IllegalStateException e)
         {
-            return new JtaEntityManagerEntry(entityManager, qualifier, false);
+            return new JtaAwareEntityManagerEntry(entityManager, qualifier, false);
         }
         return super.createEntityManagerEntry(entityManager, qualifier);
     }
@@ -79,7 +79,7 @@ public class SimpleEnvironmentAwareTransactionStrategy extends BeanManagedUserTr
     protected void beforeProceed(EntityManagerEntry entityManagerEntry)
     {
         //cast without check is valid, because the entry was created by this class - see #createEntityManagerEntry
-        if (((JtaEntityManagerEntry)entityManagerEntry).isTransactionTypeJta())
+        if (((JtaAwareEntityManagerEntry)entityManagerEntry).isTransactionTypeJta())
         {
             super.beforeProceed(entityManagerEntry);
         }
@@ -88,7 +88,7 @@ public class SimpleEnvironmentAwareTransactionStrategy extends BeanManagedUserTr
     @Override
     protected EntityTransaction getTransaction(EntityManagerEntry entityManagerEntry)
     {
-        if (((JtaEntityManagerEntry)entityManagerEntry).isTransactionTypeJta())
+        if (((JtaAwareEntityManagerEntry)entityManagerEntry).isTransactionTypeJta())
         {
             return super.getTransaction(entityManagerEntry);
         }

@@ -21,7 +21,7 @@ package org.apache.deltaspike.jpa.impl.transaction;
 import org.apache.deltaspike.core.impl.util.JndiUtils;
 import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.jpa.impl.transaction.context.EntityManagerEntry;
-import org.apache.deltaspike.jpa.impl.transaction.context.JtaEntityManagerEntry;
+import org.apache.deltaspike.jpa.impl.transaction.context.JtaAwareEntityManagerEntry;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Alternative;
@@ -42,7 +42,7 @@ import java.lang.annotation.Annotation;
 @Alternative
 @SuppressWarnings("UnusedDeclaration")
 //TODO move to a separated ds-jta module and use @Specializes -> no additional config is needed
-public class BeanManagedUserTransactionTransactionStrategy extends ResourceLocalTransactionStrategy
+public class BeanManagedUserTransactionStrategy extends ResourceLocalTransactionStrategy
 {
     protected static final String USER_TRANSACTION_JNDI_NAME = "java:comp/UserTransaction";
 
@@ -52,7 +52,7 @@ public class BeanManagedUserTransactionTransactionStrategy extends ResourceLocal
     protected EntityManagerEntry createEntityManagerEntry(
         EntityManager entityManager, Class<? extends Annotation> qualifier)
     {
-        return new JtaEntityManagerEntry(entityManager, qualifier);
+        return new JtaAwareEntityManagerEntry(entityManager, qualifier);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class BeanManagedUserTransactionTransactionStrategy extends ResourceLocal
     /**
      * Needed because the {@link EntityManager} might get created outside of the {@link UserTransaction}
      * (e.g. depending on the implementation of the producer).
-     * Can't be in {@link BeanManagedUserTransactionTransactionStrategy.UserTransactionAdapter#begin()}
+     * Can't be in {@link BeanManagedUserTransactionStrategy.UserTransactionAdapter#begin()}
      * because {@link ResourceLocalTransactionStrategy} needs to do
      * <pre>
      * if (!transaction.isActive())
@@ -73,9 +73,9 @@ public class BeanManagedUserTransactionTransactionStrategy extends ResourceLocal
      * }
      * </pre>
      * for the {@link EntityTransaction} of every {@link EntityManager}
-     * and {@link BeanManagedUserTransactionTransactionStrategy.UserTransactionAdapter#isActive()}
+     * and {@link BeanManagedUserTransactionStrategy.UserTransactionAdapter#isActive()}
      * can only use the status information of the {@link UserTransaction} and therefore
-     * {@link BeanManagedUserTransactionTransactionStrategy.UserTransactionAdapter#begin()}
+     * {@link BeanManagedUserTransactionStrategy.UserTransactionAdapter#begin()}
      * will only executed once, but {@link javax.persistence.EntityManager#joinTransaction()}
      * needs to be called for every {@link EntityManager}.
      *

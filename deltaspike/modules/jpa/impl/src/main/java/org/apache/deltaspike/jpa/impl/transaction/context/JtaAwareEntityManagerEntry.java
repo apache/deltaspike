@@ -27,16 +27,16 @@ import java.lang.annotation.Annotation;
  * EntityManagerEntry for transaction-type JTA
  */
 @Typed()
-public class JtaEntityManagerEntry extends EntityManagerEntry
+public class JtaAwareEntityManagerEntry extends EntityManagerEntry
 {
     private final boolean transactionTypeJta;
 
-    public JtaEntityManagerEntry(EntityManager entityManager, Class<? extends Annotation> qualifier)
+    public JtaAwareEntityManagerEntry(EntityManager entityManager, Class<? extends Annotation> qualifier)
     {
         this(entityManager, qualifier, true);
     }
 
-    public JtaEntityManagerEntry(
+    public JtaAwareEntityManagerEntry(
             EntityManager entityManager, Class<? extends Annotation> qualifier, boolean transactionTypeJta)
     {
         super(entityManager, qualifier);
