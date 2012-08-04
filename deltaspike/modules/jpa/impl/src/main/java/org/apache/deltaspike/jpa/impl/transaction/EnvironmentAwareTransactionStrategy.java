@@ -26,24 +26,35 @@ import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Alternative;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import java.lang.annotation.Annotation;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * This alternative {@link org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy} uses auto-detection and
- * can be used if different environments (dev., prod.,...) should use different transaction-types.
+ * <p>This alternative {@link org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy} uses auto-detection and
+ * can be used for different (parallel) persistence-units which use different transaction-types or
+ * if different environments (dev., prod.,...) should use different transaction-types.</p>
  *
- * This implementation uses a different approach for the auto-detection which can be used for environments
- * (or producer-constellations) which allow a mixed usage of JTA and RESOURCE_LOCAL.
- * (Within a transactional call it isn't possible to mix different transaction-types.)
+ * <p>This implementation can be used for environments which allow a mixed usage of JTA and RESOURCE_LOCAL.
+ * (Within a transactional call it isn't possible to mix different transaction-types.)</p>
  *
- * @see SimpleEnvironmentAwareTransactionStrategy
+ * <p>Optional:<br/>
+ * E.g. in case of a project-stage based logic
+ * {@link org.apache.deltaspike.core.api.exclude.annotation.Exclude} can be used to switch between different
+ * producer-beans.</p>
+ *
+ * <p>It's a better alternative than extending
+ * {@link BeanManagedUserTransactionStrategy}
+ * (which would lead to an impl. dependency) only for using
+ * {@link org.apache.deltaspike.core.api.exclude.annotation.Exclude} at the custom
+ * {@link org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy}
+ * (or doing a custom veto-extension).</p>
  */
 @Dependent
 @Alternative
 @SuppressWarnings("UnusedDeclaration")
-public class EnvironmentAwareTransactionStrategy extends SimpleEnvironmentAwareTransactionStrategy
+public class EnvironmentAwareTransactionStrategy extends BeanManagedUserTransactionStrategy
 {
     private static final long serialVersionUID = -4432802805095533499L;
 
@@ -96,6 +107,30 @@ public class EnvironmentAwareTransactionStrategy extends SimpleEnvironmentAwareT
             applyTransactionTimeout(); //needs to be done before UserTransaction#begin - TODO move this call
         }
         return new JtaAwareEntityManagerEntry(entityManager, qualifier, isTransactionTypeJta);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void beforeProceed(EntityManagerEntry entityManagerEntry)
+    {
+        //cast without check is valid, because the entry was created by this class - see #createEntityManagerEntry
+        if (((JtaAwareEntityManagerEntry)entityManagerEntry).isTransactionTypeJta())
+        {
+            super.beforeProceed(entityManagerEntry);
+        }
+    }
+
+    @Override
+    protected EntityTransaction getTransaction(EntityManagerEntry entityManagerEntry)
+    {
+        if (((JtaAwareEntityManagerEntry)entityManagerEntry).isTransactionTypeJta())
+        {
+            return super.getTransaction(entityManagerEntry);
+        }
+
+        return entityManagerEntry.getEntityManager().getTransaction();
     }
 
     @Override
