@@ -31,6 +31,8 @@ import javax.transaction.Status;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 import java.lang.annotation.Annotation;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * <p>{@link org.apache.deltaspike.jpa.spi.TransactionStrategy} for using JTA (bean-managed-)transactions
@@ -48,11 +50,41 @@ public class BeanManagedUserTransactionStrategy extends ResourceLocalTransaction
 
     private static final long serialVersionUID = -2432802805095533499L;
 
+    private static final Logger LOGGER = Logger.getLogger(BeanManagedUserTransactionStrategy.class.getName());
+
     @Override
     protected EntityManagerEntry createEntityManagerEntry(
         EntityManager entityManager, Class<? extends Annotation> qualifier)
     {
+        applyTransactionTimeout(); //needs to be done before UserTransaction#begin - TODO move this call
         return new JtaAwareEntityManagerEntry(entityManager, qualifier);
+    }
+
+    protected void applyTransactionTimeout()
+    {
+        Integer transactionTimeout = getDefaultTransactionTimeoutInSeconds();
+
+        if (transactionTimeout == null)
+        {
+            //the default configured for the container will be used
+            return;
+        }
+
+        try
+        {
+            UserTransaction userTransaction = resolveUserTransaction();
+            userTransaction.setTransactionTimeout(transactionTimeout);
+        }
+        catch (SystemException e)
+        {
+            LOGGER.log(Level.WARNING, "UserTransaction#setTransactionTimeout failed", e);
+        }
+    }
+
+    protected Integer getDefaultTransactionTimeoutInSeconds()
+    {
+        //override it and provide a custom value - if needed - TODO discuss a type-safe module-config for DELTASPIKE-256
+        return null;
     }
 
     @Override
@@ -88,6 +120,11 @@ public class BeanManagedUserTransactionStrategy extends ResourceLocalTransaction
         entityManagerEntry.getEntityManager().joinTransaction();
     }
 
+    protected UserTransaction resolveUserTransaction()
+    {
+        return JndiUtils.lookup(USER_TRANSACTION_JNDI_NAME, UserTransaction.class);
+    }
+
     private class UserTransactionAdapter implements EntityTransaction
     {
         private final UserTransaction userTransaction;
@@ -95,7 +132,7 @@ public class BeanManagedUserTransactionStrategy extends ResourceLocalTransaction
 
         public UserTransactionAdapter(EntityManager entityManager)
         {
-            this.userTransaction = JndiUtils.lookup(USER_TRANSACTION_JNDI_NAME, UserTransaction.class);
+            this.userTransaction = resolveUserTransaction();
             this.entityManager = entityManager;
         }
 

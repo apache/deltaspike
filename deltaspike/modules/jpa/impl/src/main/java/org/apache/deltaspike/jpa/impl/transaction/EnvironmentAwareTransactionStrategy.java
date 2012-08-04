@@ -91,6 +91,10 @@ public class EnvironmentAwareTransactionStrategy extends SimpleEnvironmentAwareT
                     "you could also use the default strategy " + ResourceLocalTransactionStrategy.class.getName());
         }
 
+        if (isTransactionTypeJta)
+        {
+            applyTransactionTimeout(); //needs to be done before UserTransaction#begin - TODO move this call
+        }
         return new JtaAwareEntityManagerEntry(entityManager, qualifier, isTransactionTypeJta);
     }
 
