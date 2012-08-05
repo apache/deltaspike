@@ -52,7 +52,7 @@ public class TransactionBeanStorage
          * This is the actual bean storage.
          * The structure is:
          * <ol>
-         *     <li>transactioKey identifies the 'database qualifier'</li>
+         *     <li>transactionKey identifies the 'database qualifier'</li>
          *     <li>transactionKey -> Stack: we need the Stack because of REQUIRES_NEW, etc</li>
          *     <li>top Element in the Stack -> Context beans for the transactionKey</li>
          * </ol>

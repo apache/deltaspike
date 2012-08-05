@@ -29,14 +29,11 @@ import java.lang.annotation.Annotation;
 public class EntityManagerEntry
 {
     private final EntityManager entityManager;
-    @SuppressWarnings({ "FieldCanBeLocal", "UnusedDeclaration" }) //easier for debugging
     private Class<? extends Annotation> qualifier;
 
     public EntityManagerEntry(EntityManager entityManager, Class<? extends Annotation> qualifier)
     {
         this.entityManager = entityManager;
-        this.qualifier = qualifier;
-
         this.qualifier = qualifier;
     }
 
