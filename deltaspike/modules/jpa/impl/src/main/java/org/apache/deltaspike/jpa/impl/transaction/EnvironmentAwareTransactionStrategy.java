@@ -19,7 +19,6 @@
 package org.apache.deltaspike.jpa.impl.transaction;
 
 import org.apache.deltaspike.jpa.impl.transaction.context.EntityManagerEntry;
-import org.apache.deltaspike.jpa.impl.transaction.context.JtaAwareEntityManagerEntry;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Alternative;
@@ -86,7 +85,7 @@ public class EnvironmentAwareTransactionStrategy extends BeanManagedUserTransact
         {
             applyTransactionTimeout(); //needs to be done before UserTransaction#begin - TODO move this call
         }
-        return new JtaAwareEntityManagerEntry(entityManager, qualifier, isTransactionTypeJta);
+        return new EntityManagerEntry(entityManager, qualifier);
     }
 
     /**
@@ -95,8 +94,7 @@ public class EnvironmentAwareTransactionStrategy extends BeanManagedUserTransact
     @Override
     protected void beforeProceed(EntityManagerEntry entityManagerEntry)
     {
-        //cast without check is valid, because the entry was created by this class - see #createEntityManagerEntry
-        if (((JtaAwareEntityManagerEntry)entityManagerEntry).isTransactionTypeJta())
+        if (this.isJtaModeDetected.get())
         {
             super.beforeProceed(entityManagerEntry);
         }
@@ -105,7 +103,7 @@ public class EnvironmentAwareTransactionStrategy extends BeanManagedUserTransact
     @Override
     protected EntityTransaction getTransaction(EntityManagerEntry entityManagerEntry)
     {
-        if (((JtaAwareEntityManagerEntry)entityManagerEntry).isTransactionTypeJta())
+        if (this.isJtaModeDetected.get())
         {
             return super.getTransaction(entityManagerEntry);
         }

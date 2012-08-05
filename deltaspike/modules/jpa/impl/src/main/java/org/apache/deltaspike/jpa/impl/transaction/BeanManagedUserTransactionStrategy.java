@@ -21,7 +21,6 @@ package org.apache.deltaspike.jpa.impl.transaction;
 import org.apache.deltaspike.core.impl.util.JndiUtils;
 import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.jpa.impl.transaction.context.EntityManagerEntry;
-import org.apache.deltaspike.jpa.impl.transaction.context.JtaAwareEntityManagerEntry;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Alternative;
@@ -57,7 +56,7 @@ public class BeanManagedUserTransactionStrategy extends ResourceLocalTransaction
         EntityManager entityManager, Class<? extends Annotation> qualifier)
     {
         applyTransactionTimeout(); //needs to be done before UserTransaction#begin - TODO move this call
-        return new JtaAwareEntityManagerEntry(entityManager, qualifier);
+        return super.createEntityManagerEntry(entityManager, qualifier);
     }
 
     protected void applyTransactionTimeout()
