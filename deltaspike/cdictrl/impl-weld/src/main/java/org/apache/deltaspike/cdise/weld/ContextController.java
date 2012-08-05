@@ -100,7 +100,38 @@ public class ContextController
                 final BeanStore beanStore = beanStoreHolder.get();
                 originalBeanStore = beanStore;
 
-                beanStoreHolder.set(ProxyUtils.createProxy(BeanStore.class, new BeanStoreFilter(beanStore)));
+                beanStoreHolder.set(new BeanStore()
+                {
+                    @Override
+                    public <T> ContextualInstance<T> get(String id)
+                    {
+                        return beanStore.get(id);
+                    }
+
+                    @Override
+                    public boolean contains(String id)
+                    {
+                        return beanStore.contains(id);
+                    }
+
+                    @Override
+                    public void clear()
+                    {
+                        //do nothing
+                    }
+
+                    @Override
+                    public Iterator<String> iterator()
+                    {
+                        return beanStore.iterator();
+                    }
+
+                    @Override
+                    public <T> void put(String id, ContextualInstance<T> contextualInstance)
+                    {
+                        beanStore.put(id, contextualInstance);
+                    }
+                });
             }
             catch (Exception e)
             {

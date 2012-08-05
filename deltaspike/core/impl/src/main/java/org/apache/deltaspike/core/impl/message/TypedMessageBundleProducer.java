@@ -18,13 +18,15 @@
  */
 package org.apache.deltaspike.core.impl.message;
 
-import org.apache.deltaspike.core.impl.util.ProxyUtils;
+import static org.apache.deltaspike.core.util.ReflectionUtils.getRawType;
+
+import java.io.Serializable;
+import java.lang.reflect.Proxy;
 
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
-import java.io.Serializable;
 
-import static org.apache.deltaspike.core.util.ReflectionUtils.getRawType;
+import org.apache.deltaspike.core.util.ClassUtils;
 
 /**
  * The <code>TypedMessageBundleProducer</code> provides a producer method for
@@ -39,6 +41,12 @@ public class TypedMessageBundleProducer implements Serializable
     @SuppressWarnings("UnusedDeclaration")
     Object produceTypedMessageBundle(InjectionPoint injectionPoint)
     {
-        return ProxyUtils.createProxy(getRawType(injectionPoint.getType()), new MessageBundleInvocationHandler());
+        return createMessageBundleProxy(getRawType(injectionPoint.getType()));
+    }
+
+    private <T> T createMessageBundleProxy(Class<T> type)
+    {
+        return type.cast(Proxy.newProxyInstance(ClassUtils.getClassLoader(null),
+                new Class<?>[]{type}, new MessageBundleInvocationHandler()));
     }
 }
