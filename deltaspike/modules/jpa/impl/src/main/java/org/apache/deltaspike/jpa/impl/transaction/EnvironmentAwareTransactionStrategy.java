@@ -78,7 +78,7 @@ public class EnvironmentAwareTransactionStrategy extends BeanManagedUserTransact
         }
         else
         {
-            isTransactionTypeJta = isJtaModeDetected.get();
+            isTransactionTypeJta = isInJtaTransaction();
         }
 
         if (isTransactionTypeJta)
@@ -94,7 +94,7 @@ public class EnvironmentAwareTransactionStrategy extends BeanManagedUserTransact
     @Override
     protected void beforeProceed(EntityManagerEntry entityManagerEntry)
     {
-        if (this.isJtaModeDetected.get())
+        if (isInJtaTransaction())
         {
             super.beforeProceed(entityManagerEntry);
         }
@@ -103,7 +103,7 @@ public class EnvironmentAwareTransactionStrategy extends BeanManagedUserTransact
     @Override
     protected EntityTransaction getTransaction(EntityManagerEntry entityManagerEntry)
     {
-        if (this.isJtaModeDetected.get())
+        if (isInJtaTransaction())
         {
             return super.getTransaction(entityManagerEntry);
         }
@@ -117,5 +117,10 @@ public class EnvironmentAwareTransactionStrategy extends BeanManagedUserTransact
         super.onCloseTransactionScope();
         isJtaModeDetected.set(null);
         isJtaModeDetected.remove();
+    }
+
+    private static boolean isInJtaTransaction()
+    {
+        return Boolean.TRUE.equals(isJtaModeDetected.get());
     }
 }

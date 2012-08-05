@@ -29,6 +29,7 @@ import java.lang.annotation.Annotation;
 public class EntityManagerEntry
 {
     private final EntityManager entityManager;
+    //TODO DELTASPIKE-259 - use the annotation itself + calculate a key for #hashCode and #equals
     private Class<? extends Annotation> qualifier;
 
     public EntityManagerEntry(EntityManager entityManager, Class<? extends Annotation> qualifier)
