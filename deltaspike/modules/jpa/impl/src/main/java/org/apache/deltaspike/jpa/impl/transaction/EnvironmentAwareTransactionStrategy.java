@@ -32,7 +32,12 @@ import java.lang.annotation.Annotation;
  * if different environments (dev., prod.,...) should use different transaction-types.</p>
  *
  * <p>This implementation can be used for environments which allow a mixed usage of JTA and RESOURCE_LOCAL.
- * (Within a transactional call it isn't possible to mix different transaction-types.)</p>
+ * (Within a transactional call it isn't possible to mix different transaction-types.)<b/>
+ *
+ * E.g.: in an application-server this class allows to use a persistence-unit with
+ * transaction-type="RESOURCE_LOCAL" + non-jta-data-source
+ * in parallel to a persistence-unit with
+ * transaction-type="JTA" + jta-data-source</p>
  *
  * <p>Optional:<br/>
  * E.g. in case of a project-stage based logic
@@ -49,6 +54,11 @@ import java.lang.annotation.Annotation;
 @Dependent
 @Alternative
 @SuppressWarnings("UnusedDeclaration")
+//TODO depending on further discussions about an own JTA module, BeanManagedUserTransactionStrategy
+//could be the default (via @Specializes) in the ds-jta module.
+//Depending on further discussions this class can be merged with BeanManagedUserTransactionStrategy or
+//we keep BeanManagedUserTransactionStrategy separated as a small tweak for applications which only use JTA transactions
+//or as a base implementation for a custom EnvironmentAwareTransactionStrategy.
 public class EnvironmentAwareTransactionStrategy extends BeanManagedUserTransactionStrategy
 {
     private static final long serialVersionUID = -4432802805095533499L;
@@ -88,9 +98,6 @@ public class EnvironmentAwareTransactionStrategy extends BeanManagedUserTransact
         return new EntityManagerEntry(entityManager, qualifier);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void beforeProceed(EntityManagerEntry entityManagerEntry)
     {
