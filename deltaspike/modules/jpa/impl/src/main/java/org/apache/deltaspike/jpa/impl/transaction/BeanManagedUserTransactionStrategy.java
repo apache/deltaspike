@@ -90,7 +90,7 @@ public class BeanManagedUserTransactionStrategy extends ResourceLocalTransaction
     @Override
     protected EntityTransaction getTransaction(EntityManagerEntry entityManagerEntry)
     {
-        return new UserTransactionAdapter(entityManagerEntry.getEntityManager());
+        return new UserTransactionAdapter();
     }
 
     /**
@@ -128,12 +128,10 @@ public class BeanManagedUserTransactionStrategy extends ResourceLocalTransaction
     private class UserTransactionAdapter implements EntityTransaction
     {
         private final UserTransaction userTransaction;
-        private final EntityManager entityManager;
 
-        public UserTransactionAdapter(EntityManager entityManager)
+        public UserTransactionAdapter()
         {
             this.userTransaction = resolveUserTransaction();
-            this.entityManager = entityManager;
         }
 
         /**

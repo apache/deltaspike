@@ -18,18 +18,14 @@
  */
 package org.apache.deltaspike.jpa.impl.transaction;
 
-import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.jpa.impl.transaction.context.EntityManagerEntry;
 import org.apache.deltaspike.jpa.impl.transaction.context.JtaAwareEntityManagerEntry;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Alternative;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.lang.annotation.Annotation;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * <p>This alternative {@link org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy} uses auto-detection and
@@ -58,13 +54,7 @@ public class EnvironmentAwareTransactionStrategy extends BeanManagedUserTransact
 {
     private static final long serialVersionUID = -4432802805095533499L;
 
-    private static final Logger LOGGER =
-        Logger.getLogger(EnvironmentAwareTransactionStrategy.class.getName());
-
     private static ThreadLocal<Boolean> isJtaModeDetected = new ThreadLocal<Boolean>();
-
-    @Inject
-    private ProjectStage projectStage;
 
     @Override
     protected EntityManagerEntry createEntityManagerEntry(
@@ -90,16 +80,6 @@ public class EnvironmentAwareTransactionStrategy extends BeanManagedUserTransact
         else
         {
             isTransactionTypeJta = isJtaModeDetected.get();
-        }
-
-        if (!isTransactionTypeJta && this.projectStage == ProjectStage.Development)
-        {
-            LOGGER.log(Level.INFO, getClass().getName() + " is active and " +
-                    "RESOURCE_LOCAL is configured for persistent-unit-transaction-type in the persistence.xml. " +
-                    "That's valid in case of different transaction-types for different environments " +
-                    "e.g. for development and production. " +
-                    "Please check your setup - if that isn't the intended use-case, " +
-                    "you could also use the default strategy " + ResourceLocalTransactionStrategy.class.getName());
         }
 
         if (isTransactionTypeJta)
