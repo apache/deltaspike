@@ -43,9 +43,9 @@ public class OpenWebBeansContainerControl implements CdiContainer
     @Override
     public BeanManager getBeanManager()
     {
-        if (this.lifecycle == null)
+        if (lifecycle == null)
         {
-            initLifecycle();
+            return null;
         }
         return lifecycle.getBeanManager();
     }
@@ -53,8 +53,15 @@ public class OpenWebBeansContainerControl implements CdiContainer
     @Override
     public synchronized void boot()
     {
-        initLifecycle();
-        lifecycle.startApplication(null);
+        lifecycle = WebBeansContext.currentInstance().getService(ContainerLifecycle.class);
+
+        Object mockServletContextEvent = null;
+        if (OpenWebBeansContextControl.isServletApiAvailable())
+        {
+            mockServletContextEvent = OwbHelper.getMockServletContextEvent();
+        }
+
+        lifecycle.startApplication(mockServletContextEvent);
     }
 
     @Override
@@ -67,8 +74,15 @@ public class OpenWebBeansContainerControl implements CdiContainer
 
         if (lifecycle != null) 
         {
-            lifecycle.stopApplication(null);
+            Object mockServletContextEvent = null;
+            if (OpenWebBeansContextControl.isServletApiAvailable())
+            {
+                mockServletContextEvent = OwbHelper.getMockServletContextEvent();
+            }
+
+            lifecycle.stopApplication(mockServletContextEvent);
         }
+        lifecycle = null;
     }
 
     @Override
@@ -83,10 +97,5 @@ public class OpenWebBeansContainerControl implements CdiContainer
                     getBeanManager().getReference(ctxCtrlBean, ContextControl.class, ctxCtrlCreationalContext);
         }
         return ctxCtrl;
-    }
-
-    private void initLifecycle()
-    {
-        lifecycle = WebBeansContext.getInstance().getService(ContainerLifecycle.class);
     }
 }

@@ -23,14 +23,13 @@ import javax.enterprise.context.ConversationScoped;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.SessionScoped;
-import javax.enterprise.context.spi.Context;
 import javax.inject.Singleton;
 
 import java.lang.annotation.Annotation;
 
 import org.apache.deltaspike.cdise.api.ContextControl;
 import org.apache.webbeans.config.WebBeansContext;
-import org.apache.webbeans.context.ContextFactory;
+import org.apache.webbeans.spi.ContextsService;
 
 /**
  * OWB specific impl of the {@link ContextControl}
@@ -42,24 +41,13 @@ public class OpenWebBeansContextControl implements ContextControl
     @Override
     public void startContexts()
     {
-        ContextFactory contextFactory = getContextFactory();
+        ContextsService contextsService = getContextsService();
 
-        Object mockSession = null;
-        if (isServletApiAvailable())
-        {
-            mockSession = OwbHelper.getMockSession();
-        }
-        Object mockServletContextEvent = null;
-        if (isServletApiAvailable())
-        {
-            mockServletContextEvent = OwbHelper.getMockServletContextEvent();
-        }
-
-        contextFactory.initSingletonContext(mockServletContextEvent);
-        contextFactory.initApplicationContext(mockServletContextEvent);
-        contextFactory.initSessionContext(mockSession);
-        contextFactory.initRequestContext(null);
-        contextFactory.initConversationContext(null);
+        startSingletonScope();
+        startApplicationScope();
+        startSessionScope();
+        startRequestScope();
+        startConversationScope();
     }
 
     public void stopContexts()
@@ -112,7 +100,7 @@ public class OpenWebBeansContextControl implements ContextControl
         }
     }
 
-    private static boolean isServletApiAvailable()
+    static boolean isServletApiAvailable()
     {
         try
         {
@@ -130,41 +118,52 @@ public class OpenWebBeansContextControl implements ContextControl
     * start scopes
     */
 
-    private void startApplicationScope()
+    private void startSingletonScope()
     {
-        ContextFactory contextFactory = getContextFactory();
-        Object mockServletContextEvent = null;
+        ContextsService contextsService = getContextsService();
+        Object mockServletContext = null;
         if (isServletApiAvailable())
         {
-            mockServletContextEvent = OwbHelper.getMockServletContextEvent();
+            mockServletContext = OwbHelper.getMockServletContext();
         }
-        contextFactory.initApplicationContext(mockServletContextEvent);
+        contextsService.startContext(Singleton.class, mockServletContext);
+    }
+
+    private void startApplicationScope()
+    {
+        ContextsService contextsService = getContextsService();
+        Object mockServletContext = null;
+        if (isServletApiAvailable())
+        {
+            mockServletContext = OwbHelper.getMockServletContext();
+        }
+        contextsService.startContext(ApplicationScoped.class, mockServletContext);
     }
 
     private void startSessionScope()
     {
-        ContextFactory contextFactory = getContextFactory();
+        ContextsService contextsService = getContextsService();
 
         Object mockSession = null;
         if (isServletApiAvailable())
         {
             mockSession = OwbHelper.getMockSession();
         }
-        contextFactory.initSessionContext(mockSession);
+        contextsService.startContext(SessionScoped.class, mockSession);
     }
 
     private void startRequestScope()
     {
-        ContextFactory contextFactory = getContextFactory();
+        ContextsService contextsService = getContextsService();
 
-        contextFactory.initRequestContext(null);
+        contextsService.startContext(RequestScoped.class, null);
     }
 
     private void startConversationScope()
     {
-        ContextFactory contextFactory = getContextFactory();
+        ContextsService contextsService = getContextsService();
 
-        contextFactory.initConversationContext(null);
+        contextsService.startContext(ConversationScoped.class, null);
     }
 
     /*
@@ -173,77 +172,57 @@ public class OpenWebBeansContextControl implements ContextControl
 
     private void stopSingletonScope()
     {
-        ContextFactory contextFactory = getContextFactory();
+        ContextsService contextsService = getContextsService();
 
-        Context context = contextFactory.getStandardContext(Singleton.class);
-        if (context != null)
+        Object mockServletContext = null;
+        if (isServletApiAvailable())
         {
-            Object mockServletContextEvent = null;
-            if (isServletApiAvailable())
-            {
-                mockServletContextEvent = OwbHelper.getMockServletContextEvent();
-            }
-            contextFactory.destroySingletonContext(mockServletContextEvent);
+            mockServletContext = OwbHelper.getMockServletContext();
         }
+        contextsService.endContext(Singleton.class, mockServletContext);
     }
 
     private void stopApplicationScope()
     {
-        ContextFactory contextFactory = getContextFactory();
+        ContextsService contextsService = getContextsService();
 
-        Context context = contextFactory.getStandardContext(ApplicationScoped.class);
-        if (context != null)
+        Object mockServletContext = null;
+        if (isServletApiAvailable())
         {
-            Object mockServletContextEvent = null;
-            if (isServletApiAvailable())
-            {
-                mockServletContextEvent = OwbHelper.getMockServletContextEvent();
-            }
-            contextFactory.destroyApplicationContext(mockServletContextEvent);
+            mockServletContext = OwbHelper.getMockServletContext();
         }
+        contextsService.endContext(ApplicationScoped.class, mockServletContext);
     }
 
     private void stopSessionScope()
     {
-        ContextFactory contextFactory = getContextFactory();
+        ContextsService contextsService = getContextsService();
 
-        Context context = contextFactory.getStandardContext(SessionScoped.class);
-        if (context != null)
+        Object mockSession = null;
+        if (isServletApiAvailable())
         {
-            Object mockSession = null;
-            if (isServletApiAvailable())
-            {
-                mockSession = OwbHelper.getMockSession();
-            }
-            contextFactory.destroySessionContext(mockSession);
+            mockSession = OwbHelper.getMockSession();
         }
+        contextsService.endContext(SessionScoped.class, mockSession);
     }
 
     private void stopRequestScope()
     {
-        ContextFactory contextFactory = getContextFactory();
+        ContextsService contextsService = getContextsService();
 
-        Context context = contextFactory.getStandardContext(RequestScoped.class);
-        if (context != null)
-        {
-            contextFactory.destroyRequestContext(null);
-        }
+        contextsService.endContext(RequestScoped.class, null);
     }
 
     private void stopConversationScope()
     {
-        ContextFactory contextFactory = getContextFactory();
+        ContextsService contextsService = getContextsService();
 
-        Context context = contextFactory.getStandardContext(ConversationScoped.class);
-        if (context != null)
-        {
-            contextFactory.destroyConversationContext();
-        }
+        contextsService.endContext(ConversationScoped.class, null);
     }
 
-    private ContextFactory getContextFactory()
+    private ContextsService getContextsService()
     {
-        WebBeansContext webBeansContext = WebBeansContext.getInstance();
-        return webBeansContext.getContextFactory();
+        WebBeansContext webBeansContext = WebBeansContext.currentInstance();
+        return webBeansContext.getContextsService();
     }
 }

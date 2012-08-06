@@ -111,4 +111,23 @@
         </plugins>
     </build>
 
+    <profiles>
+        <profile>
+            <id>owbweb</id>
+            <!-- use this test to check with the web scanner and proxies -->
+
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.openwebbeans</groupId>
+                    <artifactId>openwebbeans-web</artifactId>
+                    <version>${owb.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.geronimo.specs</groupId>
+                    <artifactId>geronimo-el_2.2_spec</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+
 </project>
