@@ -38,6 +38,8 @@ import java.util.ServiceLoader;
  */
 public final class CdiContainerLoader
 {
+    private static CdiContainer cdiContainer = null;
+
     private CdiContainerLoader()
     {
         // private ct to prevent instantiation
@@ -49,31 +51,31 @@ public final class CdiContainerLoader
      * @throws IllegalStateException if none or multiple CdiContainer implementations
      *         are found on the classpath.
      */
-    public static CdiContainer getCdiContainer()
+    public static synchronized CdiContainer getCdiContainer()
     {
-        CdiContainer testContainer;
+        if (cdiContainer == null)
+        {
+            // there is no dependency to any cdi implementation, we do all dynamically
+            ServiceLoader<CdiContainer> cdiContainerLoader = ServiceLoader.load(CdiContainer.class);
+            Iterator<CdiContainer> cdiIt = cdiContainerLoader.iterator();
+            if (cdiIt.hasNext())
+            {
+                cdiContainer = cdiIt.next();
+            }
+            else
+            {
+                throw new IllegalStateException("Could not find an implementation of " + CdiContainer.class.getName() +
+                    " available in the classpath!");
+            }
 
-        //doesn't support the implementation loader (there is no dependency to owb-impl
-        ServiceLoader<CdiContainer> cdiContainerLoader = ServiceLoader.load(CdiContainer.class);
-        Iterator<CdiContainer> cdiIt = cdiContainerLoader.iterator();
-        if (cdiIt.hasNext())
-        {
-            testContainer = cdiIt.next();
+            if (cdiIt.hasNext())
+            {
+                String foundContainers = getContainerDetails();
+                throw new IllegalStateException("Too many implementations of " + CdiContainer.class.getName() +
+                    " found in the classpath! Details: " + foundContainers);
+            }
         }
-        else 
-        {
-            throw new IllegalStateException("Could not find an implementation of " + CdiContainer.class.getName() +
-                " available in the classpath!");
-        }
-        
-        if (cdiIt.hasNext())
-        {
-            String foundContainers = getContainerDetails();
-            throw new IllegalStateException("Too many implementations of " + CdiContainer.class.getName() +
-                " found in the classpath! Details: " + foundContainers);
-        }
-        
-        return testContainer;
+        return cdiContainer;
     }
 
     private static String getContainerDetails()
