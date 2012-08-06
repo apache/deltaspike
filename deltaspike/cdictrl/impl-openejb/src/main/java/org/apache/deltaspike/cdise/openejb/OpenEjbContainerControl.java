@@ -92,6 +92,11 @@ public class OpenEjbContainerControl implements CdiContainer
             openEjbContainer.close();
             openEjbContainer = null;
         }
+
+        ctxCtrl = null;
+        ctxCtrlBean = null;
+        ctxCtrlCreationalContext = null;
+        beanManager = null;
     }
 
     @Override
