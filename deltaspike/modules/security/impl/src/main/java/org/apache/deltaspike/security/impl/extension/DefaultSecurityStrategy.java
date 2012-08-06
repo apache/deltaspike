@@ -21,6 +21,8 @@ package org.apache.deltaspike.security.impl.extension;
 import org.apache.deltaspike.security.spi.authorization.SecurityStrategy;
 
 import javax.enterprise.context.Dependent;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.inject.Inject;
 import javax.interceptor.InvocationContext;
 import java.lang.reflect.Method;
 
@@ -32,6 +34,9 @@ import java.lang.reflect.Method;
 public class DefaultSecurityStrategy implements SecurityStrategy
 {
     private static final long serialVersionUID = 7992336651801599079L;
+
+    @Inject
+    private BeanManager beanManager;
 
     /**
      * {@inheritDoc}
@@ -45,7 +50,7 @@ public class DefaultSecurityStrategy implements SecurityStrategy
 
         for (Authorizer authorizer : metaDataStorage.getAuthorizers(invocationContext.getTarget().getClass(), method))
         {
-            authorizer.authorize(invocationContext);
+            authorizer.authorize(invocationContext, this.beanManager);
         }
 
         return invocationContext.proceed();

@@ -246,7 +246,7 @@ public class SecurityExtension implements Extension, Deactivatable
             }
         }
 
-        Authorizer authorizer = new Authorizer(binding, annotatedMethod, beanManager);
+        Authorizer authorizer = new Authorizer(binding, annotatedMethod);
         getMetaDataStorage().addAuthorizer(authorizer);
     }
 }

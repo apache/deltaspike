@@ -49,8 +49,6 @@ import org.apache.deltaspike.security.impl.util.SecurityUtils;
 @Typed()
 class Authorizer
 {
-    private BeanManager beanManager;
-
     private Annotation bindingAnnotation;
     private Map<Method, Object> bindingSecurityBindingMembers = new HashMap<Method, Object>();
 
@@ -59,11 +57,10 @@ class Authorizer
 
     private InjectableMethod<?> boundAuthorizerMethodProxy;
 
-    Authorizer(Annotation bindingAnnotation, AnnotatedMethod<?> boundAuthorizerMethod, BeanManager beanManager)
+    Authorizer(Annotation bindingAnnotation, AnnotatedMethod<?> boundAuthorizerMethod)
     {
         this.bindingAnnotation = bindingAnnotation;
         this.boundAuthorizerMethod = boundAuthorizerMethod;
-        this.beanManager = beanManager;
 
         try
         {
@@ -86,11 +83,11 @@ class Authorizer
         }
     }
 
-    void authorize(final InvocationContext ic)
+    void authorize(final InvocationContext ic, BeanManager beanManager)
     {
         if (boundAuthorizerBean == null)
         {
-            lazyInitTargetBean();
+            lazyInitTargetBean(beanManager);
         }
 
         final CreationalContext<?> creationalContext = beanManager.createCreationalContext(boundAuthorizerBean);
@@ -120,7 +117,7 @@ class Authorizer
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    private synchronized void lazyInitTargetBean()
+    private synchronized void lazyInitTargetBean(BeanManager beanManager)
     {
         if (boundAuthorizerBean == null)
         {
