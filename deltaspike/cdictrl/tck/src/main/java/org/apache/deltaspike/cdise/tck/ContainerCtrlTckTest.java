@@ -126,7 +126,7 @@ public class ContainerCtrlTckTest
 
         try
         {
-            Assert.assertNotNull(car.getUser());
+            car.getUser();
 
             // accessing the car should have triggered a ContextNotActiveException
             Assert.fail();
