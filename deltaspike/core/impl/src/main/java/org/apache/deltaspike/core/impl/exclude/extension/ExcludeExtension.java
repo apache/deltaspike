@@ -59,11 +59,11 @@ public class ExcludeExtension implements Extension, Deactivatable
 {
     private static final Logger LOG = Logger.getLogger(ExcludeExtension.class.getName());
 
-    private static Boolean isOwbDetected = null;
+    private static Boolean isOwbDetected = false;
 
-    private Boolean isActivated = true;
-    private Boolean isGlobalAlternativeActivated = true;
-    private Boolean isCustomProjectStageBeanFilterActivated = true;
+    private boolean isActivated = true;
+    private boolean isGlobalAlternativeActivated = true;
+    private boolean isCustomProjectStageBeanFilterActivated = true;
 
     @SuppressWarnings("UnusedDeclaration")
     protected void init(@Observes BeforeBeanDiscovery beforeBeanDiscovery)
@@ -76,6 +76,8 @@ public class ExcludeExtension implements Extension, Deactivatable
 
         isCustomProjectStageBeanFilterActivated =
                 ClassDeactivationUtils.isActivated(CustomProjectStageBeanFilter.class);
+
+        isOwbDetected = isOpenWebBeans();
     }
 
     /**
@@ -98,8 +100,6 @@ public class ExcludeExtension implements Extension, Deactivatable
         //we need to do it before the exclude logic to keep the @Exclude support for global alternatives
         if (isGlobalAlternativeActivated)
         {
-            detectCdiImplementation();
-
             if (isOwbDetected)
             {
                 activateGlobalAlternativesOwb(processAnnotatedType, beanManager);
@@ -522,22 +522,18 @@ public class ExcludeExtension implements Extension, Deactivatable
                 processAnnotatedType.getAnnotatedType().getJavaClass());
     }
 
-    private void detectCdiImplementation()
+    private boolean isOpenWebBeans()
     {
-        if (isOwbDetected == null)
+        IllegalStateException runtimeException = new IllegalStateException();
+
+        for (StackTraceElement element : runtimeException.getStackTrace())
         {
-            isOwbDetected = false;
-
-            IllegalStateException runtimeException = new IllegalStateException();
-
-            for (StackTraceElement element : runtimeException.getStackTrace())
+            if (element.toString().contains("org.apache.webbeans."))
             {
-                if (element.toString().contains("org.apache.webbeans."))
-                {
-                    isOwbDetected = true;
-                    break;
-                }
+                return true;
             }
         }
+
+        return false;
     }
 }
