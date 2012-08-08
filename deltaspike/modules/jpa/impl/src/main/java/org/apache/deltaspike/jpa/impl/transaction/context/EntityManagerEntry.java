@@ -24,6 +24,7 @@ import java.lang.annotation.Annotation;
 
 /**
  * Stores a {@link EntityManager} and the qualifier
+ * @deprecated we shall rather introduce an own QualifierMap or a ComparableQualifier which checks Nonbinding
  */
 @Typed()
 public class EntityManagerEntry
