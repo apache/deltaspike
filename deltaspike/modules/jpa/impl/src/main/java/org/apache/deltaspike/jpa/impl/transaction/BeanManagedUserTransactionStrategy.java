@@ -252,14 +252,16 @@ public class BeanManagedUserTransactionStrategy extends ResourceLocalTransaction
             }
         }
 
-        private boolean isTransactionAllowedToRollback() throws SystemException
+        protected boolean isTransactionAllowedToRollback() throws SystemException
         {
-            return isTransactionReadyToCommit() ||
-                    this.userTransaction.getStatus() == Status.STATUS_MARKED_ROLLBACK ||
-                    this.userTransaction.getStatus() == Status.STATUS_COMMITTING;
+            //if the following gets changed, it needs to be tested with different constellations
+            //(normal exception, timeout,...) as well as servers
+            return  this.userTransaction.getStatus() != Status.STATUS_COMMITTED &&
+                    this.userTransaction.getStatus() != Status.STATUS_NO_TRANSACTION &&
+                    this.userTransaction.getStatus() != Status.STATUS_UNKNOWN;
         }
 
-        private boolean isTransactionReadyToCommit() throws SystemException
+        protected boolean isTransactionReadyToCommit() throws SystemException
         {
             return this.userTransaction.getStatus() == Status.STATUS_ACTIVE ||
                     this.userTransaction.getStatus() == Status.STATUS_PREPARING ||
