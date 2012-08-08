@@ -124,20 +124,12 @@ class Authorizer
             Method method = boundAuthorizerMethod.getJavaMember();
 
             Set<Bean<?>> beans = beanManager.getBeans(method.getDeclaringClass());
-            if (beans.size() == 1)
-            {
-                boundAuthorizerBean = beans.iterator().next();
-            }
-            else if (beans.isEmpty())
+            boundAuthorizerBean = beanManager.resolve(beans);
+
+            if (boundAuthorizerBean == null)
             {
                 throw new IllegalStateException("Exception looking up authorizer method bean - " +
                         "no beans found for method [" + method.getDeclaringClass() + "." +
-                        method.getName() + "]");
-            }
-            else if (beans.size() > 1)
-            {
-                throw new IllegalStateException("Exception looking up authorizer method bean - " +
-                        "multiple beans found for method [" + method.getDeclaringClass().getName() + "." +
                         method.getName() + "]");
             }
 

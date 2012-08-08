@@ -118,7 +118,7 @@ public class SecurityExtension implements Extension, Deactivatable
             {
                 if (m.isAnnotationPresent(Secures.class)) 
                 {
-                    registerAuthorizer(m, beanManager);
+                    registerAuthorizer(m);
                     continue;
                 }
 
@@ -219,7 +219,7 @@ public class SecurityExtension implements Extension, Deactivatable
      *
      * @throws SecurityDefinitionException
      */
-    private void registerAuthorizer(AnnotatedMethod<?> annotatedMethod, BeanManager beanManager)
+    private void registerAuthorizer(AnnotatedMethod<?> annotatedMethod)
     {
         if (!annotatedMethod.getJavaMember().getReturnType().equals(Boolean.class) &&
                 !annotatedMethod.getJavaMember().getReturnType().equals(Boolean.TYPE))
