@@ -84,7 +84,7 @@ public class SecurityExtension implements Extension, Deactivatable
      * Handles &#064;Secured beans
      */
     @SuppressWarnings("UnusedDeclaration")
-    public <X> void processAnnotatedType(@Observes ProcessAnnotatedType<X> event, final BeanManager beanManager)
+    public <X> void processAnnotatedType(@Observes ProcessAnnotatedType<X> event)
     {
         if (!isActivated)
         {
