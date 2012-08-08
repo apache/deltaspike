@@ -38,6 +38,9 @@ public class DefaultSecurityStrategy implements SecurityStrategy
     @Inject
     private BeanManager beanManager;
 
+    @Inject
+    private SecurityExtension securityExtension;
+
     /**
      * {@inheritDoc}
      */
@@ -46,7 +49,7 @@ public class DefaultSecurityStrategy implements SecurityStrategy
     {
         Method method = invocationContext.getMethod();
 
-        SecurityMetaDataStorage metaDataStorage = SecurityExtension.getMetaDataStorage();
+        SecurityMetaDataStorage metaDataStorage = securityExtension.getMetaDataStorage();
 
         for (Authorizer authorizer : metaDataStorage.getAuthorizers(invocationContext.getTarget().getClass(), method))
         {

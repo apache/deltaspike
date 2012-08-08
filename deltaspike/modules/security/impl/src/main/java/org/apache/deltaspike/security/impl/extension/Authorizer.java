@@ -116,7 +116,7 @@ class Authorizer
         }
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "unchecked" })
     private synchronized void lazyInitTargetBean(BeanManager beanManager)
     {
         if (boundAuthorizerBean == null)

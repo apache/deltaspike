@@ -21,7 +21,6 @@ package org.apache.deltaspike.security.impl.extension;
 
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
-import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
 import org.apache.deltaspike.security.api.authorization.SecurityDefinitionException;
 import org.apache.deltaspike.security.api.authorization.annotation.Secures;
@@ -33,12 +32,9 @@ import javax.enterprise.inject.spi.AnnotatedMethod;
 import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.BeforeBeanDiscovery;
-import javax.enterprise.inject.spi.BeforeShutdown;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import java.lang.annotation.Annotation;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Extension for processing typesafe security annotations
@@ -47,37 +43,20 @@ public class SecurityExtension implements Extension, Deactivatable
 {
     private static final SecurityInterceptorBinding INTERCEPTOR_BINDING = new SecurityInterceptorBindingLiteral();
 
-    //workaround for OWB
-    private static final Map<ClassLoader, SecurityMetaDataStorage> SECURITY_METADATA_STORAGE_MAPPING
-        = new ConcurrentHashMap<ClassLoader, SecurityMetaDataStorage>();
+    private SecurityMetaDataStorage securityMetaDataStorage;
 
     private Boolean isActivated = null;
 
     protected void init(@Observes BeforeBeanDiscovery beforeBeanDiscovery)
     {
         isActivated = ClassDeactivationUtils.isActivated(getClass());
+        securityMetaDataStorage = new SecurityMetaDataStorage();
     }
 
     //workaround for OWB
-    public static SecurityMetaDataStorage getMetaDataStorage()
+    public SecurityMetaDataStorage getMetaDataStorage()
     {
-        ClassLoader classLoader = ClassUtils.getClassLoader(null);
-
-        SecurityMetaDataStorage securityMetaDataStorage = SECURITY_METADATA_STORAGE_MAPPING.get(classLoader);
-
-        if (securityMetaDataStorage == null)
-        {
-            securityMetaDataStorage = new SecurityMetaDataStorage();
-            SECURITY_METADATA_STORAGE_MAPPING.put(classLoader, securityMetaDataStorage);
-        }
-
         return securityMetaDataStorage;
-    }
-
-    public static void removeMetaDataStorage()
-    {
-        ClassLoader classLoader = ClassUtils.getClassLoader(null);
-        SECURITY_METADATA_STORAGE_MAPPING.remove(classLoader);
     }
 
     /**
@@ -206,11 +185,6 @@ public class SecurityExtension implements Extension, Deactivatable
 
         // Clear securedTypes, we don't require it any more
         metaDataStorage.resetSecuredTypes();
-    }
-
-    protected void cleanup(@Observes BeforeShutdown beforeShutdown)
-    {
-        removeMetaDataStorage();
     }
 
     /**
