@@ -25,7 +25,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 
 @ApplicationScoped
-@SuppressWarnings("UnusedDeclaration")
 public class HandlerMethodStorageProducer
 {
     @Produces

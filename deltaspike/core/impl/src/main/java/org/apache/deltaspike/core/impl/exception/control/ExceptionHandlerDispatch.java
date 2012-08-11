@@ -42,7 +42,6 @@ import java.util.logging.Logger;
  * handler dispatcher. All handlers are invoked from this class.  This class is immutable.
  */
 @ApplicationScoped
-@SuppressWarnings("UnusedDeclaration")
 public class ExceptionHandlerDispatch
 {
     private static final Logger LOG = Logger.getLogger(ExceptionHandlerDispatch.class.getName());
@@ -54,7 +53,6 @@ public class ExceptionHandlerDispatch
      * @param beanManager    active bean manager
      * @throws Throwable If a handler requests the exception to be re-thrown.
      */
-    @SuppressWarnings({ "unchecked", "MethodWithMultipleLoops", "ThrowableResultOfMethodCallIgnored" })
     public void executeHandlers(@Observes @Any ExceptionToCatchEvent exceptionEventEvent,
                                 final BeanManager beanManager) throws Throwable
     {

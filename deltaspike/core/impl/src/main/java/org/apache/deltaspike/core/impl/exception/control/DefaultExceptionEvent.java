@@ -31,7 +31,6 @@ import javax.enterprise.inject.Typed;
  *
  * @param <T> Exception type this event represents
  */
-@SuppressWarnings({ "unchecked", "CdiManagedBeanInconsistencyInspection" })
 @Typed()
 public class DefaultExceptionEvent<T extends Throwable> implements IntrospectiveExceptionEvent<T>
 {
