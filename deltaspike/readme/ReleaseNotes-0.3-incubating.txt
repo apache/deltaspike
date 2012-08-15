@@ -1,0 +1,119 @@
+Apache DeltaSpike-0.3-incubating Release Notes
+
+Sub-task
+
+    [DELTASPIKE-38] - unit and integration tests for DeltaSpikeConfig
+    [DELTASPIKE-54] - review and discuss DefaultAnnotation
+    [DELTASPIKE-55] - review and discuss AnnotationInstanceProvider
+    [DELTASPIKE-62] - Discuss security module
+    [DELTASPIKE-74] - unit and integration tests for @Secured
+    [DELTASPIKE-75] - documentation for @Secured
+    [DELTASPIKE-77] - review and discuss Identity API
+    [DELTASPIKE-78] - review and discuss Authentication API
+    [DELTASPIKE-79] - review and discuss Authorization API
+    [DELTASPIKE-81] - review and discuss Identity Management
+    [DELTASPIKE-82] - review and discuss external authentication
+    [DELTASPIKE-84] - documentation for global alternatives
+    [DELTASPIKE-115] - documentation for @ConfigProperty
+    [DELTASPIKE-139] - documentation for @SecurityBindingType
+    [DELTASPIKE-143] - documentation for SecurityParameterBinding
+    [DELTASPIKE-147] - documentation for @MessageTemplate and @MessageBundle
+    [DELTASPIKE-150] - documentation for @MessageContextConfig - static usage
+    [DELTASPIKE-155] - documentation for Message and MessageContext - dynamic usage
+    [DELTASPIKE-160] - documentation for @ExceptionHandler
+    [DELTASPIKE-170] - documentation for AnnotationInstanceProvider
+    [DELTASPIKE-171] - unit and integration tests for AnnotationInstanceProvider
+    [DELTASPIKE-176] - unit and integration tests for @Transactional
+    [DELTASPIKE-177] - documentation for @Transactional
+    [DELTASPIKE-179] - unit and integration tests for @TransactionScoped
+    [DELTASPIKE-183] - unit and integration tests for TransactionHelper
+    [DELTASPIKE-184] - documentation for TransactionHelper
+    [DELTASPIKE-226] - unit and integration tests for minimal type-safe messages
+
+Bug
+
+    [DELTASPIKE-145] - autom. check of license header in test files
+    [DELTASPIKE-166] - integration test module can't run tests with resources
+    [DELTASPIKE-167] - remove ReflectionUtil security methods
+    [DELTASPIKE-168] - fix build config
+    [DELTASPIKE-173] - @ConfigProperty for string properties
+    [DELTASPIKE-185] - Our @Transactional interceptor also tries to handle @PersistenceContexts
+    [DELTASPIKE-186] - doc is not up to date regarding configsource
+    [DELTASPIKE-189] - cdictrl/impl-openejb breaks the sonar build
+    [DELTASPIKE-191] - get rid of BeanManagerProvider#setTestMode()
+    [DELTASPIKE-196] - review ConfigProperty and Converter logic
+    [DELTASPIKE-199] - MessageBundle must only be used on interfaces
+    [DELTASPIKE-200] - handle configuration issues in MessageBundles as DefinitionErrors
+    [DELTASPIKE-205] - LocaleResolver#getLocale() doesn't get invoked
+    [DELTASPIKE-206] - NPE in OpenWebBeansContainerControl#getBeanManager
+    [DELTASPIKE-209] - ShrinkWrap.create(WebArchive.class,..)..addAsManifestResource(.., "beans.xml") not spec conform
+    [DELTASPIKE-211] - ExcludeExtension uses wrong observed event type
+    [DELTASPIKE-212] - replace ProcessAnnotatedType<Object> with ProcessAnnotatedType without type restriction
+    [DELTASPIKE-213] - move atinject-api, jcdi-api and interceptors-api dependencies to the container configuration
+    [DELTASPIKE-218] - ExceptionHandler observer chain is broken with same ordinal
+    [DELTASPIKE-231] - add multiple Resource Sources in the MessageContext
+    [DELTASPIKE-232] - Messages should be Serializable
+    [DELTASPIKE-233] - ClassUtils does unnecessary doPrivileged
+    [DELTASPIKE-235] - Always package categories to our unit test @Deployments
+    [DELTASPIKE-237] - implement shutdown hook for ConfigResolver
+    [DELTASPIKE-239] - Test failure for ConfigResolver on jdk7
+    [DELTASPIKE-240] - Security test failedLogin fails if executed after failedForcedReLogin
+    [DELTASPIKE-248] - missing check of EntityTransaction#getRollbackOnly in ResourceLocalPersistenceStrategy
+
+Improvement
+
+    [DELTASPIKE-96] - Give names to tests and shrinkwrap archives
+    [DELTASPIKE-161] - veto internal beans annotated with @Typed()
+    [DELTASPIKE-172] - Improve BeanProvider
+    [DELTASPIKE-194] - enable examples build by default
+    [DELTASPIKE-197] - pickup ConfigSources via ServiceLoader as well
+    [DELTASPIKE-204] - AnnotationInstanceProviderTest#assertComplexToString fails on certain JVM's
+    [DELTASPIKE-216] - add the ability to specify other property config source from apache-deltaspike.properties file
+    [DELTASPIKE-221] - Rename README.txt into README or readme.md to allow markodwn syntax to be rendered on GitHub
+    [DELTASPIKE-225] - simplify fluent Message API
+    [DELTASPIKE-251] - SetAccessiblePrivilegedAction isn't needed without a SecurityManager
+    [DELTASPIKE-254] - the de-/activation logic for extensions should be unified
+    [DELTASPIKE-258] - improve the compatibility with new versions of weld
+
+New Feature
+
+    [DELTASPIKE-111] - Add and review Seam Catch as a new DeltaSpike module
+    [DELTASPIKE-169] - AnnotationInstanceProvider
+    [DELTASPIKE-175] - @Transactional for EntityTransaction
+    [DELTASPIKE-178] - @TransactionScoped
+    [DELTASPIKE-182] - import TransactionalHelper from CODI
+    [DELTASPIKE-188] - defaultValue for @ConfigProperty
+    [DELTASPIKE-190] - Create ConfigurableDataSource
+    [DELTASPIKE-192] - BeanManagerProvider should warn User if called before the container got started
+    [DELTASPIKE-195] - create default-value handling for ConfigResolver
+    [DELTASPIKE-201] - move NarrowingBeanBuilder to API utils and rename it
+    [DELTASPIKE-215] - Add a new annotation to override the location of the apache-deltaspike.properties file
+    [DELTASPIKE-219] - @Transactional for JTA UserTransaction
+    [DELTASPIKE-222] - Add possibility to set base path
+    [DELTASPIKE-223] - Add convention for @MessageResource annotated types.
+    [DELTASPIKE-230] - Fallback stragtegy for resource bundles and locales
+    [DELTASPIKE-250] - persistence-strategy which is aware of the environment
+
+Task
+
+    [DELTASPIKE-13] - Choose documentation format and tools
+    [DELTASPIKE-33] - deltaspike website
+    [DELTASPIKE-76] - Discuss and review security features
+    [DELTASPIKE-87] - re-visit packaging issue
+    [DELTASPIKE-102] - review sonar findings
+    [DELTASPIKE-110] - Discuss adding Seam Catch to DeltaSpike
+    [DELTASPIKE-119] - review and discuss i18n module
+    [DELTASPIKE-140] - integration test module for the security module
+    [DELTASPIKE-174] - create jpa module
+    [DELTASPIKE-180] - [build] check for available plugin and version updates
+    [DELTASPIKE-181] - add Test Coverage reporting to our build
+    [DELTASPIKE-220] - update our test and build infrastructure for 0.3-incubating
+    [DELTASPIKE-224] - remove integration-test module and move container profiles to parent-code
+    [DELTASPIKE-236] - integration-test config for all modules
+    [DELTASPIKE-243] - change misleading name of PropertyConfigSource
+    [DELTASPIKE-244] - align naming of base classes
+    [DELTASPIKE-245] - Enable ProjectStage UnitTest for UnitTests
+    [DELTASPIKE-246] - Port Solder BeanBuilder to DeltaSpike
+    [DELTASPIKE-249] - cleanup of the security module
+    [DELTASPIKE-253] - rename PersistenceStrategy to TransactionStrategy
+    [DELTASPIKE-257] - align api/spi and impl package for parts related to transactions
