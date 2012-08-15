@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.apache.deltaspike.examples</groupId>
         <artifactId>examples-project</artifactId>
-        <version>0.3-incubating-SNAPSHOT</version>
+        <version>0.3-incubating</version>
     </parent>
 
     <groupId>org.apache.deltaspike.examples</groupId>
