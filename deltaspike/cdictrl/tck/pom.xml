@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.apache.deltaspike.cdictrl</groupId>
         <artifactId>cdictrl-project</artifactId>
-        <version>0.3-incubating</version>
+        <version>0.4-incubating-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
