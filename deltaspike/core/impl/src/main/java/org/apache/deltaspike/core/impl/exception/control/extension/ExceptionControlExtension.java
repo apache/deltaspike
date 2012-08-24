@@ -125,8 +125,7 @@ public class ExceptionControlExtension implements Extension, Deactivatable
      * @param beanManager  BeanManager instance
      */
     @SuppressWarnings("UnusedDeclaration")
-    public void verifyInjectionPoints(/*@Observes X TODO fails with OWB -> reactivate as soon as we have a workaround*/
-                                      final AfterDeploymentValidation afterDeploymentValidation,
+    public void verifyInjectionPoints(@Observes final AfterDeploymentValidation afterDeploymentValidation,
                                       final BeanManager beanManager)
     {
         if (!isActivated)
