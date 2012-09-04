@@ -41,7 +41,7 @@ public class PropertyConfigSourceTest
     /**
      *X TODO creating a WebArchive is only a workaround because JavaArchive cannot contain other archives.
      */
-    @Deployment
+    @Deployment(name = "tomee")
     public static WebArchive deploy()
     {
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "PropertyConfigSourceTest.jar")

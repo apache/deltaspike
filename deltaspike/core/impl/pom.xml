@@ -29,9 +29,19 @@
 
     <groupId>org.apache.deltaspike.core</groupId>
     <artifactId>deltaspike-core-impl</artifactId>
-    <packaging>jar</packaging>
+    <packaging>bundle</packaging>
 
     <name>Apache DeltaSpike Core-Implementation</name>
+
+    <properties>
+        <deltaspike.osgi.export.pkg>
+            org.apache.deltaspike.core.impl.*
+        </deltaspike.osgi.export.pkg>
+        <deltaspike.osgi.import>
+            !org.apache.deltaspike.core.impl.*,
+            *
+        </deltaspike.osgi.import>
+    </properties>
 
     <dependencies>
         <dependency>

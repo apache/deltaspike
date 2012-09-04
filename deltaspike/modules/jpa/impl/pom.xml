@@ -28,8 +28,19 @@
 
     <groupId>org.apache.deltaspike.modules</groupId>
     <artifactId>deltaspike-jpa-module-impl</artifactId>
+    <packaging>bundle</packaging>
 
     <name>Apache DeltaSpike JPA-Module Impl</name>
+
+    <properties>
+        <deltaspike.osgi.export.pkg>
+            org.apache.deltaspike.jpa.impl.*
+        </deltaspike.osgi.export.pkg>
+        <deltaspike.osgi.import>
+            !org.apache.deltaspike.jpa.impl.*,
+            *
+        </deltaspike.osgi.import>
+    </properties>
 
     <dependencies>
         <dependency>
