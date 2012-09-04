@@ -433,21 +433,21 @@
                 <groupId>org.apache.deltaspike.core</groupId>
                 <artifactId>deltaspike-core-api</artifactId>
                 <version>${project.version}</version>
-                <scope>provided</scope>
+                <scope>compile</scope>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.deltaspike.core</groupId>
                 <artifactId>deltaspike-core-impl</artifactId>
                 <version>${project.version}</version>
-                <scope>provided</scope>
+                <scope>runtime</scope>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.deltaspike.modules</groupId>
                 <artifactId>deltaspike-security-module-api</artifactId>
                 <version>${project.version}</version>
-                <scope>provided</scope>
+                <scope>compile</scope>
             </dependency>
 
             <dependency>
@@ -461,7 +461,7 @@
                 <groupId>org.apache.deltaspike.modules</groupId>
                 <artifactId>deltaspike-jpa-module-api</artifactId>
                 <version>${project.version}</version>
-                <scope>provided</scope>
+                <scope>compile</scope>
             </dependency>
 
             <dependency>
@@ -475,7 +475,7 @@
                 <groupId>org.apache.deltaspike.modules</groupId>
                 <artifactId>deltaspike-jsf-module-api</artifactId>
                 <version>${project.version}</version>
-                <scope>provided</scope>
+                <scope>compile</scope>
             </dependency>
 
             <dependency>
@@ -490,7 +490,7 @@
                 <groupId>org.apache.deltaspike.cdictrl</groupId>
                 <artifactId>deltaspike-cdictrl-api</artifactId>
                 <version>${project.version}</version>
-                <scope>provided</scope>
+                <scope>compile</scope>
             </dependency>
 
             <dependency>
