@@ -41,6 +41,7 @@
             !org.apache.deltaspike.core.impl.*,
             *
         </deltaspike.osgi.import>
+        <cdi.osgi.beans-managed>META-INF/beans.xml</cdi.osgi.beans-managed>
     </properties>
 
     <dependencies>

@@ -198,7 +198,7 @@
         <deltaspike.osgi.dynamic />
         <deltaspike.osgi.symbolic.name>${project.groupId}.${project.artifactId}</deltaspike.osgi.symbolic.name>
         <deltaspike.osgi.exclude.dependencies>false</deltaspike.osgi.exclude.dependencies>
-
+        <cdi.osgi.beans-managed></cdi.osgi.beans-managed>
 
     </properties>
 
@@ -705,6 +705,7 @@
                         <Private-Package>${deltaspike.osgi.private.pkg}</Private-Package>
                         <Implementation-Title>Apache DeltaSpike</Implementation-Title>
                         <Implementation-Version>${project.version}</Implementation-Version>
+                        <Pax-ManagedBeans>${cdi.osgi.beans-managed}</Pax-ManagedBeans>
                         <Karaf-Info>DeltaSpike;${project.artifactId}=${project.version}</Karaf-Info>
                         <_versionpolicy>${deltaspike.osgi.import.default.version}</_versionpolicy>
                         <_failok>${deltaspike.osgi.failok}</_failok>
