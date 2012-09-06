@@ -37,6 +37,7 @@
             org.apache.deltaspike.jpa.*
         </deltaspike.osgi.export.pkg>
         <deltaspike.osgi.import>
+            javax.enterprise.inject,
             !org.apache.deltaspike.jpa.*,
             *
         </deltaspike.osgi.import>
