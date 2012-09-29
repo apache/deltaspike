@@ -42,18 +42,20 @@ public class ContextualInstanceInfo<T> implements Serializable
 
 
 
-    public ContextualInstanceInfo(CreationalContext<T> creationalContext, T contextualInstance)
-    {
-        this.contextualInstance = contextualInstance;
-        this.creationalContext = creationalContext;
-    }
-
     /**
      * @return the CreationalContext of the bean
      */
     public CreationalContext<T> getCreationalContext()
     {
         return creationalContext;
+    }
+
+    /**
+     * @param creationalContext the CreationalContext of the bean
+     */
+    public void setCreationalContext(CreationalContext<T> creationalContext)
+    {
+        this.creationalContext = creationalContext;
     }
 
     /**
@@ -64,6 +66,13 @@ public class ContextualInstanceInfo<T> implements Serializable
         return contextualInstance;
     }
 
+    /**
+     * @param contextualInstance the contextual instance itself
+     */
+    public void setContextualInstance(T contextualInstance)
+    {
+        this.contextualInstance = contextualInstance;
+    }
 
 }
 

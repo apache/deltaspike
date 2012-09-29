@@ -21,6 +21,7 @@ package org.apache.deltaspike.core.util.context;
 
 
 import javax.enterprise.context.spi.Contextual;
+import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.PassivationCapable;
 import java.io.IOException;
@@ -48,6 +49,10 @@ public class ContextualStorage implements Serializable
 
     private boolean concurrent;
 
+    /**
+     * @param beanManager is needed for serialisation
+     * @param concurrent whether the ContextualStorage might get accessed concurrently by different threads
+     */
     public ContextualStorage(BeanManager beanManager, boolean concurrent)
     {
         this.beanManager = beanManager;
@@ -62,9 +67,20 @@ public class ContextualStorage implements Serializable
         }
     }
 
+    /**
+     * @return the underlying storage map.
+     */
     public Map<Contextual<?>, ContextualInstanceInfo<?>> getStorage()
     {
         return contextualInstances;
+    }
+
+    /**
+     * Whether the ContextualStorage might get accessed concurrently by different threads
+     */
+    public boolean isConcurrent()
+    {
+        return concurrent;
     }
 
     /**
@@ -137,4 +153,54 @@ public class ContextualStorage implements Serializable
         }
     }
 
+    /**
+     *
+     * @param bean
+     * @param creationalContext
+     * @param <T>
+     * @return
+     */
+    public <T> T createContextualInstance(Contextual<T> bean, CreationalContext<T> creationalContext)
+    {
+        if (isConcurrent())
+        {
+            // locked approach
+            ContextualInstanceInfo<T> instanceInfo = new ContextualInstanceInfo<T>();
+
+            ConcurrentHashMap<Contextual<?>, ContextualInstanceInfo<?>> concurrentMap
+                = (ConcurrentHashMap<Contextual<?>, ContextualInstanceInfo<?>>) contextualInstances;
+
+            ContextualInstanceInfo<T> oldInstanceInfo
+                = (ContextualInstanceInfo<T>) concurrentMap.putIfAbsent(bean, instanceInfo);
+
+            if (oldInstanceInfo != null)
+            {
+                instanceInfo = oldInstanceInfo;
+            }
+            synchronized (instanceInfo)
+            {
+                T instance = instanceInfo.getContextualInstance();
+                if (instance == null)
+                {
+                    instance = bean.create(creationalContext);
+                    instanceInfo.setContextualInstance(instance);
+                    instanceInfo.setCreationalContext(creationalContext);
+                }
+
+                return instance;
+            }
+
+        }
+        else
+        {
+            // simply create the contextual instance
+            ContextualInstanceInfo<T> instanceInfo = new ContextualInstanceInfo<T>();
+            instanceInfo.setCreationalContext(creationalContext);
+            instanceInfo.setContextualInstance(bean.create(creationalContext));
+
+            contextualInstances.put(bean, instanceInfo);
+
+            return instanceInfo.getContextualInstance();
+        }
+    }
 }

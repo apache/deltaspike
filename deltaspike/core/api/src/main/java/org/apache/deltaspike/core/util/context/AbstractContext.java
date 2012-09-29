@@ -19,10 +19,10 @@
 
 package org.apache.deltaspike.core.util.context;
 
+import javax.enterprise.context.ContextNotActiveException;
 import javax.enterprise.context.spi.Context;
 import javax.enterprise.context.spi.Contextual;
 import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.spi.BeanManager;
 import java.lang.annotation.Annotation;
 import java.util.Map;
 
@@ -32,19 +32,13 @@ import java.util.Map;
 public abstract class AbstractContext implements Context
 {
     /**
-     * We need the BeanManager for serialisation and some checks.
-     */
-    protected BeanManager beanManager;
-
-    /**
      * The Scope the Context handles
      */
     protected Class<? extends Annotation> scope;
 
 
-    protected AbstractContext(BeanManager beanManager, Class<? extends Annotation> scope, boolean concurrent)
+    protected AbstractContext(Class<? extends Annotation> scope)
     {
-        this.beanManager = beanManager;
         this.scope = scope;
     }
 
@@ -53,7 +47,7 @@ public abstract class AbstractContext implements Context
      * contains the items held in the Context.
      * @return the underlying storage
      */
-    protected abstract ContextualStorage getContextStorage();
+    protected abstract ContextualStorage getContextualStorage();
 
 
     @Override
@@ -64,15 +58,48 @@ public abstract class AbstractContext implements Context
 
 
     @Override
-    public <T> T get(Contextual<T> component)
+    public <T> T get(Contextual<T> bean)
     {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        checkActive();
+
+        if (getContextualStorage() == null)
+        {
+            return null;
+        }
+
+        Map<Contextual<?>, ContextualInstanceInfo<?>> contextMap = getContextualStorage().getStorage();
+        ContextualInstanceInfo<?> contextualInstanceInfo = contextMap.get(bean);
+        if (contextualInstanceInfo == null)
+        {
+            return null;
+        }
+
+        return (T) contextualInstanceInfo.getContextualInstance();
     }
 
     @Override
-    public <T> T get(Contextual<T> component, CreationalContext<T> creationalContext)
+    public <T> T get(Contextual<T> bean, CreationalContext<T> creationalContext)
     {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        checkActive();
+
+        ContextualStorage storage = getContextualStorage();
+
+        Map<Contextual<?>, ContextualInstanceInfo<?>> contextMap = storage.getStorage();
+        ContextualInstanceInfo<?> contextualInstanceInfo = contextMap.get(bean);
+
+        T instance = null;
+
+        if (contextualInstanceInfo != null)
+        {
+            instance =  (T) contextualInstanceInfo.getContextualInstance();
+        }
+
+        if (instance != null)
+        {
+            return instance;
+        }
+
+        return storage.createContextualInstance(bean, creationalContext);
     }
 
     /**
@@ -82,7 +109,7 @@ public abstract class AbstractContext implements Context
      */
     public boolean destroy(Contextual bean)
     {
-        ContextualInstanceInfo<?> contextualInstanceInfo = getContextStorage().getStorage().get(bean);
+        ContextualInstanceInfo<?> contextualInstanceInfo = getContextualStorage().getStorage().get(bean);
 
         if (contextualInstanceInfo == null)
         {
@@ -99,15 +126,23 @@ public abstract class AbstractContext implements Context
      */
     public void destroyAll()
     {
-        Map<Contextual<?>, ContextualInstanceInfo<?>> storage = getContextStorage().getStorage();
+        Map<Contextual<?>, ContextualInstanceInfo<?>> storage = getContextualStorage().getStorage();
         for (Map.Entry<Contextual<?>, ContextualInstanceInfo<?>> entry : storage.entrySet())
         {
             Contextual bean = entry.getKey();
             ContextualInstanceInfo<?> contextualInstanceInfo = entry.getValue();
             bean.destroy(contextualInstanceInfo.getContextualInstance(), contextualInstanceInfo.getCreationalContext());
         }
-
-
     }
+
+    protected void checkActive()
+    {
+        if (!isActive())
+        {
+            throw new ContextNotActiveException("CDI context with scope annotation @"
+                + scope.getName() + " is not active with respect to the current thread");
+        }
+    }
+
 
 }
