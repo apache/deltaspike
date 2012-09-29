@@ -19,56 +19,51 @@
 
 package org.apache.deltaspike.core.util.context;
 
-
-import javax.enterprise.context.spi.Contextual;
 import javax.enterprise.context.spi.CreationalContext;
+import java.io.Serializable;
 
 /**
  * This data holder contains all necessary data you need to
  * store a Contextual Instance in a CDI Context.
- *
- * This class is intended for use in Contexts for non-passivating Scopes only!
  */
-public class ContextualBeanBag
+public class ContextualInstanceInfo<T> implements Serializable
 {
     /**
      * The actual Contextual Instance in the context
      */
-    protected Object contextualInstance;
+    private T contextualInstance;
 
     /**
      * We need to store the CreationalContext as we need it for
      * properly destroying the contextual instance via
-     * {@link Contextual#destroy(Object, javax.enterprise.context.spi.CreationalContext)}
+     * {@link javax.enterprise.context.spi.Contextual#destroy(Object, javax.enterprise.context.spi.CreationalContext)}
      */
-    protected CreationalContext<?> creationalContext;
+    private CreationalContext<T> creationalContext;
 
-    /**
-     * The Bean for the contextual instance.
-     * This is not guaranteed to be Serializable in CDI-1.0!.
-     */
-    protected transient Contextual<?> bean;
 
-    public ContextualBeanBag(Object contextualInstance, CreationalContext<?> creationalContext, Contextual<?> bean)
+
+    public ContextualInstanceInfo(CreationalContext<T> creationalContext, T contextualInstance)
     {
         this.contextualInstance = contextualInstance;
         this.creationalContext = creationalContext;
-        this.bean = bean;
     }
 
-
-    public Contextual<?> getBean()
+    /**
+     * @return the CreationalContext of the bean
+     */
+    public CreationalContext<T> getCreationalContext()
     {
-        return bean;
+        return creationalContext;
     }
 
-    public Object getContextualInstance()
+    /**
+     * @return the contextual instance itself
+     */
+    public T getContextualInstance()
     {
         return contextualInstance;
     }
 
-    public CreationalContext<?> getCreationalContext()
-    {
-        return creationalContext;
-    }
+
 }
+
