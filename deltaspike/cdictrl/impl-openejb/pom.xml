@@ -33,7 +33,7 @@
     <name>Apache DeltaSpike CDI OpenEJB-ContainerControl</name>
 
     <properties>
-        <openejb.version>4.0.0-beta-2</openejb.version>
+        <openejb.version>4.5.1-SNAPSHOT</openejb.version>
     </properties>
 
     <dependencies>
