@@ -23,38 +23,34 @@ import javax.enterprise.context.ContextNotActiveException;
 import javax.enterprise.context.spi.Context;
 import javax.enterprise.context.spi.Contextual;
 import javax.enterprise.context.spi.CreationalContext;
-import java.lang.annotation.Annotation;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.PassivationCapable;
 import java.util.Map;
 
 /**
  * A skeleton containing the most important parts of a custom CDI Contexts.
+ * An implementing Context needs to implement the missing methods from the
+ * {@link Context} interface and {@link #getContextualStorage(boolean)}.
  */
 public abstract class AbstractContext implements Context
 {
     /**
-     * The Scope the Context handles
+     * Whether the Context is for a passivating scope.
      */
-    protected Class<? extends Annotation> scope;
+    private boolean isPassivatingScope;
 
-
-    protected AbstractContext(Class<? extends Annotation> scope)
+    protected AbstractContext(BeanManager beanManager)
     {
-        this.scope = scope;
+        isPassivatingScope = beanManager.isPassivatingScope(getScope());
     }
 
     /**
      * An implementation has to return the underlying storage which
      * contains the items held in the Context.
+     * @parm createIfNotExist whether a ContextualStorage shall get created if it doesn't yet exist.
      * @return the underlying storage
      */
-    protected abstract ContextualStorage getContextualStorage();
-
-
-    @Override
-    public Class<? extends Annotation> getScope()
-    {
-        return scope;
-    }
+    protected abstract ContextualStorage getContextualStorage(boolean createIfNotExist);
 
 
     @Override
@@ -62,12 +58,13 @@ public abstract class AbstractContext implements Context
     {
         checkActive();
 
-        if (getContextualStorage() == null)
+        ContextualStorage storage = getContextualStorage(false);
+        if (storage == null)
         {
             return null;
         }
 
-        Map<Contextual<?>, ContextualInstanceInfo<?>> contextMap = getContextualStorage().getStorage();
+        Map<Contextual<?>, ContextualInstanceInfo<?>> contextMap = storage.getStorage();
         ContextualInstanceInfo<?> contextualInstanceInfo = contextMap.get(bean);
         if (contextualInstanceInfo == null)
         {
@@ -82,7 +79,16 @@ public abstract class AbstractContext implements Context
     {
         checkActive();
 
-        ContextualStorage storage = getContextualStorage();
+        if (isPassivatingScope)
+        {
+            if (!(bean instanceof PassivationCapable))
+            {
+                throw new IllegalStateException(bean.toString() +
+                        " doesn't implement " + PassivationCapable.class.getName());
+            }
+        }
+
+        ContextualStorage storage = getContextualStorage(true);
 
         Map<Contextual<?>, ContextualInstanceInfo<?>> contextMap = storage.getStorage();
         ContextualInstanceInfo<?> contextualInstanceInfo = contextMap.get(bean);
@@ -109,7 +115,12 @@ public abstract class AbstractContext implements Context
      */
     public boolean destroy(Contextual bean)
     {
-        ContextualInstanceInfo<?> contextualInstanceInfo = getContextualStorage().getStorage().get(bean);
+        ContextualStorage storage = getContextualStorage(false);
+        if (storage == null)
+        {
+            return false;
+        }
+        ContextualInstanceInfo<?> contextualInstanceInfo = storage.getStorage().get(bean);
 
         if (contextualInstanceInfo == null)
         {
@@ -122,12 +133,19 @@ public abstract class AbstractContext implements Context
     }
 
     /**
-     * destroys all the Contextual Instances in the Context.
+     * destroys all the Contextual Instances in the Storage returned by
+     * {@link #getContextualStorage(boolean)}.
      */
-    public void destroyAll()
+    public void destroyAllActive()
     {
-        Map<Contextual<?>, ContextualInstanceInfo<?>> storage = getContextualStorage().getStorage();
-        for (Map.Entry<Contextual<?>, ContextualInstanceInfo<?>> entry : storage.entrySet())
+        ContextualStorage storage = getContextualStorage(false);
+        if (storage == null)
+        {
+            return;
+        }
+
+        Map<Contextual<?>, ContextualInstanceInfo<?>> contextMap = storage.getStorage();
+        for (Map.Entry<Contextual<?>, ContextualInstanceInfo<?>> entry : contextMap.entrySet())
         {
             Contextual bean = entry.getKey();
             ContextualInstanceInfo<?> contextualInstanceInfo = entry.getValue();
@@ -140,9 +158,8 @@ public abstract class AbstractContext implements Context
         if (!isActive())
         {
             throw new ContextNotActiveException("CDI context with scope annotation @"
-                + scope.getName() + " is not active with respect to the current thread");
+                + getScope().getName() + " is not active with respect to the current thread");
         }
     }
-
 
 }
