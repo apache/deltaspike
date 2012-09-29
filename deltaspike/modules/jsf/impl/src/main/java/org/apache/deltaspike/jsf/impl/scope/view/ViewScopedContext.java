@@ -18,12 +18,9 @@
  */
 package org.apache.deltaspike.jsf.impl.scope.view;
 
-import javax.enterprise.context.ContextNotActiveException;
-import javax.enterprise.context.spi.Context;
 import javax.enterprise.context.spi.Contextual;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.PassivationCapable;
 import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
@@ -32,111 +29,61 @@ import javax.faces.event.SystemEvent;
 import javax.faces.event.SystemEventListener;
 import java.lang.annotation.Annotation;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
+import org.apache.deltaspike.core.util.context.AbstractContext;
+import org.apache.deltaspike.core.util.context.ContextualStorage;
 
 /**
  * This class provides the contexts lifecycle for the
  * new JSF-2 &#064;ViewScoped Context.
  */
-public class ViewScopedContext implements Context, SystemEventListener
+public class ViewScopedContext extends AbstractContext implements SystemEventListener
 {
-    private static final String COMPONENT_ID_MAP_NAME = "deltaspike.componentIdMap";
-    private static final String CREATIONAL_MAP_NAME = "deltaspike.creationalInstanceMap";
-    private static final String UNCHECKED = "unchecked";
+    private static final String CONTEXTUAL_MAP_NAME = "deltaspike.contextualInstanceMap";
 
     private boolean isJsfSubscribed = false;
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public <T> T get(Contextual<T> component)
+    private BeanManager beanManager;
+
+    public ViewScopedContext(BeanManager beanManager)
     {
-        checkActive();
-
-        if (!isJsfSubscribed)
-        {
-            FacesContext.getCurrentInstance().getApplication().subscribeToEvent(PreDestroyViewMapEvent.class, this);
-
-            isJsfSubscribed = true;
-        }
-
-        Map<String, Object> viewMap = getViewMap();
-
-        @SuppressWarnings(UNCHECKED)
-        Map<String, Object> componentIdMap = (Map<String, Object>) viewMap.get(COMPONENT_ID_MAP_NAME);
-
-        if (componentIdMap == null)
-        {
-            return null;
-        }
-
-        @SuppressWarnings(UNCHECKED)
-        T instance = (T)componentIdMap.get(((PassivationCapable)component).getId());
-        return instance;
+        super(beanManager);
+        this.beanManager = beanManager;
     }
 
+    @Override
+    protected ContextualStorage getContextualStorage(boolean createIfNotExists)
+    {
+        Map<String, Object> viewMap = getViewMap();
+        ContextualStorage storage = (ContextualStorage) viewMap.get(CONTEXTUAL_MAP_NAME);
+
+        if (storage == null && createIfNotExists)
+        {
+            storage = new ContextualStorage(beanManager, false);
+            viewMap.put(CONTEXTUAL_MAP_NAME, storage);
+        }
+
+        return storage;
+    }
+
+    @Override
+    public <T> T get(Contextual<T> bean)
+    {
+        subscribeToJsf();
+
+        return super.get(bean);
+    }
+
+
     /**
      * {@inheritDoc}
      */
     @Override
-    public <T> T get(Contextual<T> component, CreationalContext<T> creationalContext)
+    public <T> T get(Contextual<T> bean, CreationalContext<T> creationalContext)
     {
-        if (!(component instanceof PassivationCapable))
-        {
-            throw new IllegalStateException(component.toString() +
-                    " doesn't implement " + PassivationCapable.class.getName());
-        }
+        subscribeToJsf();
 
-        checkActive();
-
-        Map<String, Object> viewMap = getViewMap();
-
-        @SuppressWarnings(UNCHECKED)
-        Map<String, Object> componentIdMap = (Map<String, Object>) viewMap.get(COMPONENT_ID_MAP_NAME);
-
-        if (componentIdMap == null)
-        {
-            // TODO we now need to start being carefull with reentrancy...
-            componentIdMap = new ConcurrentHashMap<String, Object>();
-            viewMap.put(COMPONENT_ID_MAP_NAME, componentIdMap);
-        }
-
-        @SuppressWarnings(UNCHECKED)
-        T instance = (T) componentIdMap.get(((PassivationCapable)component).getId());
-        if (instance != null)
-        {
-            return instance;
-        }
-
-        if (creationalContext == null)
-        {
-            return null;
-        }
-
-        instance = component.create(creationalContext);
-
-        if (instance == null)
-        {
-            return null;
-        }
-
-        Map<String, CreationalContext<?>> creationalContextMap
-            = (Map<String, CreationalContext<?>>) viewMap.get(CREATIONAL_MAP_NAME);
-
-        if (creationalContextMap == null)
-        {
-            creationalContextMap = new ConcurrentHashMap<String, CreationalContext<?>>();
-            viewMap.put(CREATIONAL_MAP_NAME, creationalContextMap);
-        }
-
-        componentIdMap.put(((PassivationCapable)component).getId(), instance);
-        creationalContextMap.put(((PassivationCapable)component).getId(), creationalContext);
-
-        return  instance;
+        return super.get(bean, creationalContext);
     }
 
     /**
@@ -157,14 +104,16 @@ public class ViewScopedContext implements Context, SystemEventListener
         return getViewRoot() != null;
     }
 
-    private void checkActive()
+    private void subscribeToJsf()
     {
-        if (!isActive())
+        if (!isJsfSubscribed)
         {
-            throw new ContextNotActiveException("WebBeans context with scope annotation " +
-                                                "@ViewScoped is not active with respect to the current thread");
+            FacesContext.getCurrentInstance().getApplication().subscribeToEvent(PreDestroyViewMapEvent.class, this);
+
+            isJsfSubscribed = true;
         }
     }
+
 
     /**
      * {@inheritDoc}
@@ -192,33 +141,9 @@ public class ViewScopedContext implements Context, SystemEventListener
     {
         if (event instanceof PreDestroyViewMapEvent)
         {
-            // better use the viewmap we get from the event to prevent concurrent modification problems
-            Map<String, Object> viewMap = ((UIViewRoot) event.getSource()).getViewMap();
-
-            Map<String, Object> componentIdMap
-                = (Map<String, Object>) viewMap.get(COMPONENT_ID_MAP_NAME);
-
-            Map<String, CreationalContext<?>> creationalContextMap
-                = (Map<String, CreationalContext<?>>) viewMap.get(CREATIONAL_MAP_NAME);
-
-            if (componentIdMap != null)
-            {
-                BeanManager beanManager = BeanManagerProvider.getInstance().getBeanManager();
-                for ( Entry<String, Object> componentEntry : componentIdMap.entrySet())
-                {
-                    String beanId = componentEntry.getKey();
-                    // there is no nice way to explain the Java Compiler that we are handling the same type T,
-                    // therefore we need completely drop the type information :(
-                    Contextual contextual = beanManager.getPassivationCapableBean(beanId);
-                    Object instance = componentEntry.getValue();
-                    CreationalContext creational = creationalContextMap.get(beanId);
-
-                    contextual.destroy(instance, creational);
-                }
-            }
+            destroyAllActive();
         }
     }
-
 
     protected UIViewRoot getViewRoot()
     {

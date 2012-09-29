@@ -21,6 +21,7 @@ package org.apache.deltaspike.jsf.impl.scope.view;
 
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AfterBeanDiscovery;
+import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.BeforeBeanDiscovery;
 import javax.enterprise.inject.spi.Extension;
 import javax.faces.bean.ViewScoped;
@@ -67,7 +68,7 @@ public class ViewScopedExtension implements Extension, Deactivatable
         beforeBeanDiscovery.addScope(ViewScoped.class, true, true);
     }
 
-    public void registerViewContext(@Observes AfterBeanDiscovery afterBeanDiscovery)
+    public void registerViewContext(@Observes AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager)
     {
         if (!isActivated)
         {
@@ -85,12 +86,12 @@ public class ViewScopedExtension implements Extension, Deactivatable
         if (projectStage == ProjectStage.UnitTest)
         {
             // for unit tests, we use the mock context
-            afterBeanDiscovery.addContext(new MockViewScopedContext());
+            afterBeanDiscovery.addContext(new MockViewScopedContext(beanManager));
         }
         else
         {
             // otherwise we use the real JSF ViewMap context
-            afterBeanDiscovery.addContext(new ViewScopedContext());
+            afterBeanDiscovery.addContext(new ViewScopedContext(beanManager));
         }
     }
 

@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.jsf.impl.scope.view;
 
+import javax.enterprise.inject.spi.BeanManager;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -40,6 +41,11 @@ public class MockViewScopedContext extends ViewScopedContext
 {
 
     private static Map<String, Object> mockViewMap = new ConcurrentHashMap<String, Object>();
+
+    public MockViewScopedContext(BeanManager beanManager)
+    {
+        super(beanManager);
+    }
 
     /**
      * Simply clear the mock ViewMap.
