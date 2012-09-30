@@ -15,7 +15,6 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.junit.Test;
 import org.junit.Assert;
-import org.junit.Ignore;
 
 /**
  * We test the AbstractContext by implementing a simple dummy context.
@@ -45,11 +44,12 @@ public class AbstractContextTest
     }
 
 
+    // This test is a hack yet due to a bug in the owb-arquillian and weld-arquillian containers
+    // which needs to get fixed first. All tested containers so far do NOT respect the Extensions
+    // from the ShrinkWrap archive but only the ones from the classpath.
+    // Thus we had to add the Extension on the test-classpath. This means it will also
+    // be available for all other tests (but only for 'embedded' containers.
     @Test
-    @Ignore
-    //X Test is disabled out due to a bug in the owb-arquillian and weld-arquillian containers
-    //X which needs to get fixed first. All tested containers so far do NOT respect the Extensions
-    //X from the ShrinkWrap archive but only the ones from the classpath.
     public void testDummyContext()
     {
         DummyBean dummyBean = BeanProvider.getContextualReference(DummyBean.class);
@@ -60,5 +60,6 @@ public class AbstractContextTest
 
         DummyBean dummyBean2 = BeanProvider.getContextualReference(DummyBean.class);
         Assert.assertEquals(4712, dummyBean.getI());
+
     }
 }
