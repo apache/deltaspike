@@ -26,10 +26,8 @@ import javax.enterprise.inject.spi.BeforeBeanDiscovery;
 import javax.enterprise.inject.spi.Extension;
 import javax.faces.bean.ViewScoped;
 
-import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
-import org.apache.deltaspike.core.util.ProjectStageProducer;
 
 
 /**
@@ -47,10 +45,6 @@ import org.apache.deltaspike.core.util.ProjectStageProducer;
  * ViewScoped. The {@link ViewScopedContext} is responsible for actually storing all our
  * &#064;ViewScoped contextual instances in the JSF ViewMap.</li>
  * </ol>
- *
- * <p>The extension automatically detects if we are in the
- * {@link ProjectStage#UnitTest} and uses
- * </p>
  */
 public class ViewScopedExtension implements Extension, Deactivatable
 {
@@ -77,22 +71,7 @@ public class ViewScopedExtension implements Extension, Deactivatable
 
         //X TODO check whether we still need this in EE6: CodiStartupBroadcaster.broadcastStartup();
         
-        // we need to do this manually because there is no dependency injection in place
-        // at this time
-        ProjectStageProducer psp = ProjectStageProducer.getInstance();
-
-        ProjectStage projectStage = psp.getProjectStage();
-
-        if (projectStage == ProjectStage.UnitTest)
-        {
-            // for unit tests, we use the mock context
-            afterBeanDiscovery.addContext(new MockViewScopedContext(beanManager));
-        }
-        else
-        {
-            // otherwise we use the real JSF ViewMap context
-            afterBeanDiscovery.addContext(new ViewScopedContext(beanManager));
-        }
+        afterBeanDiscovery.addContext(new ViewScopedContext(beanManager));
     }
 
 }
