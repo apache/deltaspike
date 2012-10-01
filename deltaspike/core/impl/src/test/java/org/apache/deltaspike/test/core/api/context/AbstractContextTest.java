@@ -51,14 +51,14 @@ public class AbstractContextTest
         JavaArchive testJar = ShrinkWrap
                 .create(JavaArchive.class, "abstractContextTest.jar")
                 .addPackage(AbstractContextTest.class.getPackage())
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
+                .addAsServiceProvider(Extension.class, DummyScopeExtension.class);
 
         return ShrinkWrap
                 .create(WebArchive.class, "abstractContextTest.war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
                 .addAsLibraries(testJar)
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
-                .addAsServiceProvider(Extension.class, DummyScopeExtension.class);
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
 
