@@ -19,6 +19,7 @@
 package org.apache.deltaspike.test.util;
 
 import org.apache.deltaspike.test.jpa.api.shared.TestEntityManager;
+import org.apache.deltaspike.test.utils.ShrinkWrapArchiveUtil;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
@@ -29,7 +30,12 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 public class ArchiveUtils
 {
     public static final String SHARED_PACKAGE = TestEntityManager.class.getPackage().getName();
-    
+
+    private ArchiveUtils()
+    {
+        // private ct
+    }
+
     public static JavaArchive[] getDeltaSpikeCoreAndJpaArchive()
     {
         return ShrinkWrapArchiveUtil.getArchives(

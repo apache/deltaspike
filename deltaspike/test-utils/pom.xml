@@ -36,5 +36,13 @@
         running our tests.
     </description>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.jboss.shrinkwrap</groupId>
+            <artifactId>shrinkwrap-api</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+    </dependencies>
+
 </project>
 

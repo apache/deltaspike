@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.util;
 
-import org.apache.deltaspike.test.core.api.temptestutil.ShrinkWrapArchiveUtil;
+import org.apache.deltaspike.test.utils.ShrinkWrapArchiveUtil;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 
 /**

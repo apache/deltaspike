@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.api.temptestutil;
+package org.apache.deltaspike.test.utils;
 
 
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -45,6 +45,12 @@ import java.util.zip.ZipEntry;
 public class ShrinkWrapArchiveUtil
 {
     private static final Logger LOG = Logger.getLogger(ShrinkWrapArchiveUtil.class.getName());
+
+    private ShrinkWrapArchiveUtil()
+    {
+        // private ct for utility class
+    }
+
     /**
      * Resolve all markerFiles from the current ClassPath and package the root nodes
      * into a JavaArchive.
@@ -59,21 +65,26 @@ public class ShrinkWrapArchiveUtil
                                             String[] includeIfPackageExists,
                                             String[] excludeIfPackageExists)
     {
-        if (classLoader == null) {
+        if (classLoader == null)
+        {
             classLoader = ShrinkWrapArchiveUtil.class.getClassLoader();
         }
 
-        try {
+        try
+        {
             Enumeration<URL> foundFiles = classLoader.getResources(markerFile);
 
             List<JavaArchive> archives = new ArrayList<JavaArchive>();
 
-            while (foundFiles.hasMoreElements()) {
+            while (foundFiles.hasMoreElements())
+            {
                 URL foundFile = foundFiles.nextElement();
                 LOG.fine("Evaluating Java ClassPath URL " + foundFile.toExternalForm());
 
-                JavaArchive archive = createArchive(foundFile, markerFile, includeIfPackageExists, excludeIfPackageExists);
-                if (archive != null) {
+                JavaArchive archive
+                    = createArchive(foundFile, markerFile, includeIfPackageExists, excludeIfPackageExists);
+                if (archive != null)
+                {
                     LOG.info("Adding Java ClassPath URL as JavaArchive " + foundFile.toExternalForm());
                     archives.add(archive);
                 }
@@ -81,7 +92,8 @@ public class ShrinkWrapArchiveUtil
 
             return archives.toArray(new JavaArchive[archives.size()]);
         }
-        catch (IOException ioe) {
+        catch (IOException ioe)
+        {
             throw new RuntimeException(ioe);
         }
 
@@ -89,7 +101,8 @@ public class ShrinkWrapArchiveUtil
 
     private static JavaArchive createArchive(URL foundFile, String markerFile,
                                              String[] includeIfPackageExists, String[] excludeIfPackageExists)
-            throws IOException {
+        throws IOException
+    {
         String urlString = foundFile.toString();
         int idx = urlString.lastIndexOf(markerFile);
         urlString = urlString.substring(0, idx);
@@ -97,13 +110,14 @@ public class ShrinkWrapArchiveUtil
         String jarUrlPath = isJarUrl(urlString);
         if (jarUrlPath != null)
         {
-            final JavaArchive foundJar = ShrinkWrap.createFromZipFile(JavaArchive.class, new File(URI.create(jarUrlPath)));
+            JavaArchive foundJar = ShrinkWrap.createFromZipFile(JavaArchive.class, new File(URI.create(jarUrlPath)));
 
             if (excludeIfPackageExists != null)
             {
                 for (String excludePackage : excludeIfPackageExists)
                 {
-                    if (foundJar.contains(excludePackage.replaceAll("\\.", "\\/"))) {
+                    if (foundJar.contains(excludePackage.replaceAll("\\.", "\\/")))
+                    {
                         return null;
                     }
                 }
@@ -141,47 +155,60 @@ public class ShrinkWrapArchiveUtil
     private static JavaArchive addJarArchive(InputStream inputStream,
                                              String[] includeIfPackageExists,
                                              String[] excludeIfPackageExists)
-            throws IOException {
+        throws IOException
+    {
         JavaArchive ret = null;
         JavaArchive javaArchive = ShrinkWrap.create(JavaArchive.class);
 
-        if (includeIfPackageExists == null) {
+        if (includeIfPackageExists == null)
+        {
             // no include rule, thus add it immediately
             ret = javaArchive;
         }
 
         JarInputStream jar = new JarInputStream(inputStream);
-        try {
-            for (ZipEntry jarEntry = jar.getNextEntry(); jarEntry != null; jarEntry = jar.getNextEntry()) {
+        try
+        {
+            for (ZipEntry jarEntry = jar.getNextEntry(); jarEntry != null; jarEntry = jar.getNextEntry())
+            {
                 String entryName = jarEntry.getName();
 
-                if (jarEntry.isDirectory()) {
+                if (jarEntry.isDirectory())
+                {
                     // exclude rule
-                    if (excludeIfPackageExists(entryName, excludeIfPackageExists)) {
+                    if (excludeIfPackageExists(entryName, excludeIfPackageExists))
+                    {
                         return null;
                     }
 
-                    if (ret == null && includeIfPackageExists(entryName, includeIfPackageExists)) {
+                    if (ret == null && includeIfPackageExists(entryName, includeIfPackageExists))
+                    {
                         ret = javaArchive;
                     }
 
                     continue;
                 }
 
-                if (entryName.endsWith(".class")) {
-                    String className = pathToClassName(entryName.substring(0, entryName.length()-(".class".length())));
+                if (entryName.endsWith(".class"))
+                {
+                    String className
+                        = pathToClassName(entryName.substring(0, entryName.length() - (".class".length())));
                     javaArchive.addClass(className);
                 }
-                else {
+                else
+                {
                     javaArchive.addAsResource(entryName);
                 }
             }
         }
-        finally {
-            try {
+        finally
+        {
+            try
+            {
                 jar.close();
             }
-            catch (IOException ignored) {
+            catch (IOException ignored)
+            {
                 // all fine
             }
         }
@@ -192,40 +219,49 @@ public class ShrinkWrapArchiveUtil
     private static JavaArchive addFileArchive(File archiveBasePath,
                                               String[] includeIfPackageExists,
                                               String[] excludeIfPackageExists)
-            throws IOException {
-        if (!archiveBasePath.exists()) {
+        throws IOException
+    {
+        if (!archiveBasePath.exists())
+        {
             return null;
         }
 
         JavaArchive ret = null;
         JavaArchive javaArchive = ShrinkWrap.create(JavaArchive.class);
 
-        if (includeIfPackageExists == null) {
+        if (includeIfPackageExists == null)
+        {
             // no include rule, thus add it immediately
             ret = javaArchive;
         }
 
         int basePathLength = archiveBasePath.getAbsolutePath().length() + 1;
 
-        for (File archiveEntry : collectArchiveEntries(archiveBasePath) ) {
+        for (File archiveEntry : collectArchiveEntries(archiveBasePath) )
+        {
             String entryName = archiveEntry.getAbsolutePath().substring(basePathLength);
 
             // exclude rule
-            if (excludeIfPackageExists(entryName, excludeIfPackageExists)) {
+            if (excludeIfPackageExists(entryName, excludeIfPackageExists))
+            {
                 continue;
             }
 
             // include rule
-            if (ret == null && includeIfPackageExists(entryName, includeIfPackageExists)) {
+            if (ret == null && includeIfPackageExists(entryName, includeIfPackageExists))
+            {
                 ret = javaArchive;
             }
 
-            if (entryName.endsWith(".class")) {
-                String className = pathToClassName(entryName.substring(0, entryName.length()-(".class".length())));
+            if (entryName.endsWith(".class"))
+            {
+                String className
+                    = pathToClassName(entryName.substring(0, entryName.length() - (".class".length())));
 
                 javaArchive.addClass(className);
             }
-            else {
+            else
+            {
                 javaArchive.addAsResource(entryName.replace('\\', '/'));
             }
         }
@@ -235,15 +271,19 @@ public class ShrinkWrapArchiveUtil
 
     private static List<File> collectArchiveEntries(File archiveBasePath)
     {
-        if (archiveBasePath.isDirectory()) {
+        if (archiveBasePath.isDirectory())
+        {
             List<File> archiveEntries = new ArrayList<File>();
             File[] files = archiveBasePath.listFiles();
 
-            for (File file : files) {
-                if (file.isDirectory()) {
+            for (File file : files)
+            {
+                if (file.isDirectory())
+                {
                     archiveEntries.addAll(collectArchiveEntries(file));
                 }
-                else {
+                else
+                {
                     archiveEntries.add(file);
                 }
             }
@@ -255,12 +295,16 @@ public class ShrinkWrapArchiveUtil
     }
 
 
-    private static boolean excludeIfPackageExists(String jarEntryName, String[] excludeOnPackages) {
-        if (excludeOnPackages != null) {
+    private static boolean excludeIfPackageExists(String jarEntryName, String[] excludeOnPackages)
+    {
+        if (excludeOnPackages != null)
+        {
             String packageName = pathToClassName(jarEntryName);
 
-            for (String excludeOnPackage : excludeOnPackages) {
-                if (packageName.startsWith(excludeOnPackage)) {
+            for (String excludeOnPackage : excludeOnPackages)
+            {
+                if (packageName.startsWith(excludeOnPackage))
+                {
                     return true;
                 }
             }
@@ -269,15 +313,19 @@ public class ShrinkWrapArchiveUtil
         return false;
     }
 
-    private static boolean includeIfPackageExists(String jarEntryName, String[] includeOnPackages) {
-        if (includeOnPackages == null ) {
+    private static boolean includeIfPackageExists(String jarEntryName, String[] includeOnPackages)
+    {
+        if (includeOnPackages == null )
+        {
             return true;
         }
 
         String packageName = pathToClassName(jarEntryName);
 
-        for (String includeOnPackage : includeOnPackages) {
-            if (packageName.startsWith(includeOnPackage)) {
+        for (String includeOnPackage : includeOnPackages)
+        {
+            if (packageName.startsWith(includeOnPackage))
+            {
                 return true;
             }
         }
@@ -289,10 +337,12 @@ public class ShrinkWrapArchiveUtil
      * check if the given url path is a Jar
      * @param urlPath to check
      */
-    private static String isJarUrl(String urlPath) {
+    private static String isJarUrl(String urlPath)
+    {
         // common prefixes of the url are: jar: (tomcat), zip: (weblogic) and wsjar: (websphere)
         final int jarColon = urlPath.indexOf(':');
-        if (urlPath.endsWith("!/") && jarColon > 0) {
+        if (urlPath.endsWith("!/") && jarColon > 0)
+        {
             urlPath = urlPath.substring(jarColon + 1, urlPath.length() - 2);
             return urlPath;
         }
@@ -300,15 +350,18 @@ public class ShrinkWrapArchiveUtil
         return null;
     }
 
-    private static String ensureCorrectUrlFormat(String url) {
+    private static String ensureCorrectUrlFormat(String url)
+    {
         //fix for wls
-        if(!url.startsWith("file:/")) {
+        if (!url.startsWith("file:/"))
+        {
             url = "file:/" + url;
         }
         return url;
     }
 
-    private static String pathToClassName(String pathName) {
+    private static String pathToClassName(String pathName)
+    {
         return pathName.replace('/', '.').replace('\\', '.');   // replace unix and windows separators
     }
 
