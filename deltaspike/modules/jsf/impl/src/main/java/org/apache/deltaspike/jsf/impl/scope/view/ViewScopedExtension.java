@@ -50,6 +50,10 @@ public class ViewScopedExtension implements Extension, Deactivatable
 {
     private boolean isActivated = true;
 
+    /**
+     * javax.faces.bean.ViewScoped is no CDI Scope.
+     * We need to add it programmatically to CDI.
+     */
     public void addViewScoped(@Observes BeforeBeanDiscovery beforeBeanDiscovery)
     {
         isActivated = ClassDeactivationUtils.isActivated(getClass());
@@ -62,6 +66,9 @@ public class ViewScopedExtension implements Extension, Deactivatable
         beforeBeanDiscovery.addScope(ViewScoped.class, true, true);
     }
 
+    /**
+     * Register and start the ViewScopedContext.
+     */
     public void registerViewContext(@Observes AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager)
     {
         if (!isActivated)
