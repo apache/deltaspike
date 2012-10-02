@@ -21,6 +21,7 @@ package org.apache.deltaspike.jsf.impl.test.scope.view;
 
 import java.net.URL;
 
+import org.apache.deltaspike.jsf.impl.test.scope.view.util.ArchiveUtils;
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.jboss.arquillian.ajocado.framework.GrapheneSelenium;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -28,11 +29,10 @@ import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.test.api.ArquillianResource;
-//X import org.jboss.arquillian.warp.WarpTest;
+import org.jboss.arquillian.warp.WarpTest;
 
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -41,7 +41,7 @@ import org.junit.runner.RunWith;
 /**
  * Test for the DeltaSpike ViewScoped context
  */
-//X @WarpTest
+@WarpTest
 @RunWith(Arquillian.class)
 @Category(WebProfileCategory.class)
 public class ViewScopedContextTest
@@ -60,17 +60,10 @@ public class ViewScopedContextTest
     public static WebArchive deploy()
     {
         // JAR with NO beans.xml!
-        JavaArchive testJar = ShrinkWrap
-                .create(JavaArchive.class, "viewScopedContextTest.jar")
-//X                 .addPackage(ViewScopedContextTest.class.getPackage())
-                .addPackage(GrapheneSelenium.class.getPackage())
-                .addPackage(WebProfileCategory.class.getPackage());
 
         return ShrinkWrap
                 .create(WebArchive.class, "viewScopedContextTest.war")
-                .addAsLibrary(testJar)
-
-                //X .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndJsfArchive())
+                .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndJsfArchive())
                 .addAsWebInfResource("viewScopedContextTest/WEB-INF/web.xml", "web.xml")
                 .addAsWebResource("viewScopedContextTest/index.html", "index.html")
                 .addAsWebResource("viewScopedContextTest/page1.xhtml", "page1.xhtml")

@@ -18,7 +18,14 @@
  */
 package org.apache.deltaspike.jsf.impl.test.scope.view.util;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.apache.deltaspike.test.utils.ShrinkWrapArchiveUtil;
+import org.jboss.arquillian.ajocado.framework.GrapheneSelenium;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
@@ -39,10 +46,19 @@ public class ArchiveUtils
 
         excludedFiles = new String[]{"META-INF.apache-deltaspike.properties"};
 
+        // we also need quite some internal Arquillian classes on the client side
+        JavaArchive grapheneJar = ShrinkWrap
+                .create(JavaArchive.class, "graphene.jar")
+                .addPackage(GrapheneSelenium.class.getPackage())
+                .addPackage(WebProfileCategory.class.getPackage());
 
-        return ShrinkWrapArchiveUtil.getArchives(null,
-                "META-INF/beans.xml",
-                new String[]{"org.apache.deltaspike.core", "org.apache.deltaspike.jsf"}, excludedFiles);
+        JavaArchive[] coreArchives = ShrinkWrapArchiveUtil.getArchives(null,
+                 "META-INF/beans.xml",
+                 new String[]{"org.apache.deltaspike.core", "org.apache.deltaspike.jsf"}, excludedFiles);
+
+        List<JavaArchive> archives = new ArrayList<JavaArchive>(Arrays.asList(coreArchives));
+        archives.add(grapheneJar);
+        return archives.toArray(new JavaArchive[archives.size()]);
     }
 
     public static Asset getBeansXml()
