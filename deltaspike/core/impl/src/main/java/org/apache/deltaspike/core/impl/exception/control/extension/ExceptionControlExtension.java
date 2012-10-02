@@ -19,8 +19,8 @@
 
 package org.apache.deltaspike.core.impl.exception.control.extension;
 
-import org.apache.deltaspike.core.api.exception.control.annotation.ExceptionHandler;
 import org.apache.deltaspike.core.api.exception.control.HandlerMethod;
+import org.apache.deltaspike.core.api.exception.control.annotation.ExceptionHandler;
 import org.apache.deltaspike.core.impl.exception.control.HandlerMethodImpl;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
@@ -112,7 +112,7 @@ public class ExceptionControlExtension implements Extension, Deactivatable
                     }
 
                     //beanManager won't be stored in the instance -> no issue with wls12c
-                    registerHandlerMethod(new HandlerMethodImpl(method, beanManager));
+                    registerHandlerMethod(new HandlerMethodImpl(processBean.getBean(), method, beanManager));
                 }
             }
         }
@@ -122,11 +122,11 @@ public class ExceptionControlExtension implements Extension, Deactivatable
      * Verifies all injection points for every handler are valid.
      *
      * @param afterDeploymentValidation Lifecycle event
-     * @param beanManager  BeanManager instance
+     * @param bm  BeanManager instance
      */
     @SuppressWarnings("UnusedDeclaration")
     public void verifyInjectionPoints(@Observes final AfterDeploymentValidation afterDeploymentValidation,
-                                      final BeanManager beanManager)
+                                      final BeanManager bm)
     {
         if (!isActivated)
         {
@@ -137,11 +137,11 @@ public class ExceptionControlExtension implements Extension, Deactivatable
         {
             for (HandlerMethod<? extends Throwable> handler : entry.getValue())
             {
-                for (InjectionPoint ip : ((HandlerMethodImpl<? extends Throwable>) handler).getInjectionPoints())
+                for (InjectionPoint ip : ((HandlerMethodImpl<? extends Throwable>) handler).getInjectionPoints(bm))
                 {
                     try
                     {
-                        beanManager.validate(ip);
+                        bm.validate(ip);
                     }
                     catch (InjectionException e)
                     {

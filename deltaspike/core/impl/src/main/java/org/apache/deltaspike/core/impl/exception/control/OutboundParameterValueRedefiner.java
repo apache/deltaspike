@@ -20,8 +20,8 @@
 package org.apache.deltaspike.core.impl.exception.control;
 
 import org.apache.deltaspike.core.api.exception.control.event.ExceptionEvent;
-import org.apache.deltaspike.core.util.metadata.builder.ParameterValueRedefiner;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
+import org.apache.deltaspike.core.util.metadata.builder.ParameterValueRedefiner;
 
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
@@ -45,7 +45,7 @@ class OutboundParameterValueRedefiner implements ParameterValueRedefiner
     OutboundParameterValueRedefiner(final ExceptionEvent<?> event, final HandlerMethodImpl<?> handlerMethod)
     {
         this.event = event;
-        declaringBean = handlerMethod.getBean();
+        declaringBean = handlerMethod.getDeclaringBean();
         this.handlerMethod = handlerMethod;
     }
 

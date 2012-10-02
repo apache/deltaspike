@@ -19,9 +19,9 @@
 
 package org.apache.deltaspike.core.impl.exception.control;
 
+import org.apache.deltaspike.core.api.exception.control.HandlerMethod;
 import org.apache.deltaspike.core.api.exception.control.event.ExceptionStackEvent;
 import org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent;
-import org.apache.deltaspike.core.api.exception.control.HandlerMethod;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -93,7 +93,7 @@ public class ExceptionHandlerDispatch
                         final DefaultExceptionEvent callbackEvent = new DefaultExceptionEvent(stack, true,
                                 exceptionEventEvent.isHandled());
 
-                        handler.notify(callbackEvent);
+                        handler.notify(callbackEvent, beanManager);
 
                         LOG.fine(String.format("Handler %s returned status %s", handler,
                                 callbackEvent.getCurrentExceptionHandlingFlow().name()));
@@ -149,7 +149,7 @@ public class ExceptionHandlerDispatch
                         @SuppressWarnings("rawtypes")
                         final DefaultExceptionEvent depthFirstEvent = new DefaultExceptionEvent(stack, false,
                                 exceptionEventEvent.isHandled());
-                        handler.notify(depthFirstEvent);
+                        handler.notify(depthFirstEvent, beanManager);
 
                         LOG.fine(String.format("Handler %s returned status %s", handler,
                                 depthFirstEvent.getCurrentExceptionHandlingFlow().name()));

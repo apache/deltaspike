@@ -21,6 +21,7 @@ package org.apache.deltaspike.core.api.exception.control;
 
 import org.apache.deltaspike.core.api.exception.control.event.ExceptionEvent;
 
+import javax.enterprise.inject.spi.BeanManager;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Set;
@@ -53,8 +54,9 @@ public interface HandlerMethod<T extends Throwable>
      * Calls the handler method, passing the given event object.
      *
      * @param event event to pass to the handler.
+     * @param beanManager The BeanManager to use
      */
-    void notify(ExceptionEvent<T> event);
+    void notify(ExceptionEvent<T> event, BeanManager beanManager);
 
     /**
      * Obtains the precedence of the handler, relative to other handlers for the same type.
