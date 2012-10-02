@@ -19,10 +19,17 @@
 package org.apache.deltaspike.jsf.impl.test.scope.view;
 
 
-import org.apache.deltaspike.jsf.impl.test.scope.view.util.ArchiveUtils;
+import java.net.URL;
+
 import org.apache.deltaspike.test.category.WebProfileCategory;
+import org.jboss.arquillian.ajocado.framework.GrapheneSelenium;
 import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.arquillian.container.test.api.RunAsClient;
+import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.arquillian.test.api.ArquillianResource;
+//X import org.jboss.arquillian.warp.WarpTest;
+
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
@@ -34,10 +41,17 @@ import org.junit.runner.RunWith;
 /**
  * Test for the DeltaSpike ViewScoped context
  */
+//X @WarpTest
 @RunWith(Arquillian.class)
 @Category(WebProfileCategory.class)
 public class ViewScopedContextTest
 {
+    @Drone
+    private GrapheneSelenium browser;
+
+    @ArquillianResource
+    private URL contextPath;
+
     /**
      * X TODO creating a WebArchive is only a workaround because JavaArchive
      * cannot contain other archives.
@@ -45,22 +59,30 @@ public class ViewScopedContextTest
     @Deployment
     public static WebArchive deploy()
     {
+        // JAR with NO beans.xml!
         JavaArchive testJar = ShrinkWrap
                 .create(JavaArchive.class, "viewScopedContextTest.jar")
-                .addPackage(ViewScopedContextTest.class.getPackage())
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+//X                 .addPackage(ViewScopedContextTest.class.getPackage())
+                .addPackage(GrapheneSelenium.class.getPackage())
+                .addPackage(WebProfileCategory.class.getPackage());
 
         return ShrinkWrap
                 .create(WebArchive.class, "viewScopedContextTest.war")
-                .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndJsfArchive())
-                .addAsLibraries(testJar)
+                .addAsLibrary(testJar)
+
+                //X .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndJsfArchive())
+                .addAsWebInfResource("viewScopedContextTest/WEB-INF/web.xml", "web.xml")
+                .addAsWebResource("viewScopedContextTest/index.html", "index.html")
+                .addAsWebResource("viewScopedContextTest/page1.xhtml", "page1.xhtml")
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
 
     @Test
+    @RunAsClient
     public void testViewScopedContext()
     {
-        //X TODO how to best test a JSF app?
+        browser.open(contextPath);
     }
+
 }
