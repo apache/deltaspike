@@ -52,15 +52,9 @@ public class ViewScopedContextTest
     @ArquillianResource
     private URL contextPath;
 
-    /**
-     * X TODO creating a WebArchive is only a workaround because JavaArchive
-     * cannot contain other archives.
-     */
     @Deployment
     public static WebArchive deploy()
     {
-        // JAR with NO beans.xml!
-
         return ShrinkWrap
                 .create(WebArchive.class, "viewScopedContextTest.war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndJsfArchive())

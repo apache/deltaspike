@@ -47,6 +47,7 @@ public class ArchiveUtils
         excludedFiles = new String[]{"META-INF.apache-deltaspike.properties"};
 
         // we also need quite some internal Arquillian classes on the client side
+        // this JAR has NO beans.xml to prevent class scanning!
         JavaArchive grapheneJar = ShrinkWrap
                 .create(JavaArchive.class, "graphene.jar")
                 .addPackage(GrapheneSelenium.class.getPackage())
