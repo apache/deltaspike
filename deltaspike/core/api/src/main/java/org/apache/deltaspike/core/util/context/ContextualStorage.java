@@ -24,10 +24,6 @@ import javax.enterprise.context.spi.Contextual;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.PassivationCapable;
-import java.io.IOException;
-import java.io.NotSerializableException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -43,34 +39,38 @@ public class ContextualStorage implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
-    private transient Map<Contextual<?>, ContextualInstanceInfo<?>> contextualInstances;
+    private Map<Object, ContextualInstanceInfo<?>> contextualInstances;
 
     private BeanManager beanManager;
 
     private boolean concurrent;
 
+    private boolean passivationCapable;
+
     /**
      * @param beanManager is needed for serialisation
      * @param concurrent whether the ContextualStorage might get accessed concurrently by different threads
+     * @param passivationCapable whether the storage is for passivation capable Scopes
      */
-    public ContextualStorage(BeanManager beanManager, boolean concurrent)
+    public ContextualStorage(BeanManager beanManager, boolean concurrent, boolean passivationCapable)
     {
         this.beanManager = beanManager;
         this.concurrent = concurrent;
+        this.passivationCapable = passivationCapable;
         if (concurrent)
         {
-            contextualInstances = new ConcurrentHashMap<Contextual<?>, ContextualInstanceInfo<?>>();
+            contextualInstances = new ConcurrentHashMap<Object, ContextualInstanceInfo<?>>();
         }
         else
         {
-            contextualInstances = new HashMap<Contextual<?>, ContextualInstanceInfo<?>>();
+            contextualInstances = new HashMap<Object, ContextualInstanceInfo<?>>();
         }
     }
 
     /**
      * @return the underlying storage map.
      */
-    public Map<Contextual<?>, ContextualInstanceInfo<?>> getStorage()
+    public Map<Object, ContextualInstanceInfo<?>> getStorage()
     {
         return contextualInstances;
     }
@@ -84,76 +84,6 @@ public class ContextualStorage implements Serializable
     }
 
     /**
-     * Write the whole map to the stream.
-     * The beans will be stored via it's passivationId as it is
-     * not guaranteed that a Bean is Serializable in CDI-1.0.
-     */
-    private void writeObject(ObjectOutputStream s) throws IOException
-    {
-        s.writeLong(serialVersionUID);
-        s.writeObject(beanManager);
-        s.writeBoolean(concurrent);
-
-
-        HashMap<String, ContextualInstanceInfo> serializableContextualInstances
-            = new HashMap<String, ContextualInstanceInfo>(contextualInstances.size());
-
-        String passivationId;
-
-        for (Map.Entry<Contextual<?>, ContextualInstanceInfo<?>> entry : contextualInstances.entrySet())
-        {
-            Contextual<?> bean = entry.getKey();
-            if (bean instanceof PassivationCapable)
-            {
-                passivationId = ((PassivationCapable) bean).getId();
-            }
-            else
-            {
-                throw new NotSerializableException("Could not serialize bean because it's not PassivationCapable");
-            }
-
-            serializableContextualInstances.put(passivationId, entry.getValue());
-        }
-
-        s.writeObject(serializableContextualInstances);
-    }
-
-    /**
-     * Restore the bean info from the stream.
-     * The passivationIds will translated back to Beans
-     */
-    private  void readObject(ObjectInputStream s) throws IOException, ClassNotFoundException
-    {
-        if (s.readLong() == serialVersionUID)
-        {
-            beanManager = (BeanManager) s.readObject();
-            concurrent = s.readBoolean();
-
-            if (concurrent)
-            {
-                contextualInstances = new ConcurrentHashMap<Contextual<?>, ContextualInstanceInfo<?>>();
-            }
-            else
-            {
-                contextualInstances = new HashMap<Contextual<?>, ContextualInstanceInfo<?>>();
-            }
-
-            HashMap<String, ContextualInstanceInfo<?>> serializableContextualInstances
-                = (HashMap<String, ContextualInstanceInfo<?>>) s.readObject();
-
-            for (Map.Entry<String, ContextualInstanceInfo<?>> entry : serializableContextualInstances.entrySet())
-            {
-                Contextual<?> bean = beanManager.getPassivationCapableBean(entry.getKey());
-                contextualInstances.put(bean, entry.getValue());
-            }
-        }
-        else
-        {
-            throw new NotSerializableException("Could not deserialize due to wrong serialVersionUID");
-        }
-    }
-
-    /**
      *
      * @param bean
      * @param creationalContext
@@ -162,16 +92,17 @@ public class ContextualStorage implements Serializable
      */
     public <T> T createContextualInstance(Contextual<T> bean, CreationalContext<T> creationalContext)
     {
+        Object beanKey = getBeanKey(bean);
         if (isConcurrent())
         {
             // locked approach
             ContextualInstanceInfo<T> instanceInfo = new ContextualInstanceInfo<T>();
 
-            ConcurrentHashMap<Contextual<?>, ContextualInstanceInfo<?>> concurrentMap
-                = (ConcurrentHashMap<Contextual<?>, ContextualInstanceInfo<?>>) contextualInstances;
+            ConcurrentHashMap<Object, ContextualInstanceInfo<?>> concurrentMap
+                = (ConcurrentHashMap<Object, ContextualInstanceInfo<?>>) contextualInstances;
 
             ContextualInstanceInfo<T> oldInstanceInfo
-                = (ContextualInstanceInfo<T>) concurrentMap.putIfAbsent(bean, instanceInfo);
+                = (ContextualInstanceInfo<T>) concurrentMap.putIfAbsent(beanKey, instanceInfo);
 
             if (oldInstanceInfo != null)
             {
@@ -198,9 +129,42 @@ public class ContextualStorage implements Serializable
             instanceInfo.setCreationalContext(creationalContext);
             instanceInfo.setContextualInstance(bean.create(creationalContext));
 
-            contextualInstances.put(bean, instanceInfo);
+            contextualInstances.put(beanKey, instanceInfo);
 
             return instanceInfo.getContextualInstance();
+        }
+    }
+
+    /**
+     * If the context is a passivating scope then we return
+     * the passivationId of the Bean. Otherwise we use
+     * the Bean directly.
+     * @return the key to use in the context map
+     */
+    public <T> Object getBeanKey(Contextual<T> bean)
+    {
+        if (passivationCapable)
+        {
+            // if the
+            return ((PassivationCapable) bean).getId();
+        }
+
+        return bean;
+    }
+
+    /**
+     * Restores the Bean from it's beanKey.
+     * @see #getBeanKey(javax.enterprise.context.spi.Contextual)
+     */
+    public Contextual<?> getBean(Object beanKey)
+    {
+        if (passivationCapable)
+        {
+            return beanManager.getPassivationCapableBean((String) beanKey);
+        }
+        else
+        {
+            return (Contextual<?>) beanKey;
         }
     }
 }

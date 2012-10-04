@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.jsf.impl.test.scope.view.util;
+package org.apache.deltaspike.test.jsf.impl.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +24,6 @@ import java.util.List;
 
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.apache.deltaspike.test.utils.ShrinkWrapArchiveUtil;
-import org.jboss.arquillian.ajocado.framework.GrapheneSelenium;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
@@ -49,13 +48,17 @@ public class ArchiveUtils
         // we also need quite some internal Arquillian classes on the client side
         // this JAR has NO beans.xml to prevent class scanning!
         JavaArchive grapheneJar = ShrinkWrap
-                .create(JavaArchive.class, "graphene.jar")
-                .addPackage(GrapheneSelenium.class.getPackage())
+                .create(JavaArchive.class, "deltaspikeUtils.jar")
+                .addClass(ArchiveUtils.class)
+                .addPackages(true, "org.jboss.arquillian.graphene")
+                .addPackages(true, "org.jboss.arquillian.ajocado")
                 .addPackage(WebProfileCategory.class.getPackage());
 
-        JavaArchive[] coreArchives = ShrinkWrapArchiveUtil.getArchives(null,
-                 "META-INF/beans.xml",
-                 new String[]{"org.apache.deltaspike.core", "org.apache.deltaspike.jsf"}, excludedFiles);
+        JavaArchive[] coreArchives = ShrinkWrapArchiveUtil.getArchives(null
+                , "META-INF/beans.xml"
+                , new String[]{ "org.apache.deltaspike.core"
+                              , "org.apache.deltaspike.jsf" }
+                , excludedFiles);
 
         List<JavaArchive> archives = new ArrayList<JavaArchive>(Arrays.asList(coreArchives));
         archives.add(grapheneJar);

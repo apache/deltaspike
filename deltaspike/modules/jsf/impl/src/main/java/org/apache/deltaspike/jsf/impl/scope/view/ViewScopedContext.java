@@ -59,7 +59,7 @@ public class ViewScopedContext extends AbstractContext implements SystemEventLis
 
         if (storage == null && createIfNotExists)
         {
-            storage = new ContextualStorage(beanManager, false);
+            storage = new ContextualStorage(beanManager, false, isPassivatingScope());
             viewMap.put(CONTEXTUAL_MAP_NAME, storage);
         }
 

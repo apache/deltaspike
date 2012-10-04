@@ -16,14 +16,17 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-package org.apache.deltaspike.jsf.impl.test.scope.view;
+package org.apache.deltaspike.test.jsf.impl.scope.view;
 
 
 import java.net.URL;
 
-import org.apache.deltaspike.jsf.impl.test.scope.view.util.ArchiveUtils;
+import org.apache.deltaspike.test.jsf.impl.scope.view.beans.BackingBean;
+import org.apache.deltaspike.test.jsf.impl.util.ArchiveUtils;
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.jboss.arquillian.ajocado.framework.GrapheneSelenium;
+import org.jboss.arquillian.ajocado.locator.IdLocator;
+import org.jboss.arquillian.ajocado.Graphene;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
@@ -34,9 +37,13 @@ import org.jboss.arquillian.warp.WarpTest;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+
+import static org.jboss.arquillian.ajocado.Graphene.id;
+import static org.jboss.arquillian.ajocado.Graphene.waitModel;
 
 /**
  * Test for the DeltaSpike ViewScoped context
@@ -57,6 +64,7 @@ public class ViewScopedContextTest
     {
         return ShrinkWrap
                 .create(WebArchive.class, "viewScopedContextTest.war")
+                .addPackage(BackingBean.class.getPackage())
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndJsfArchive())
                 .addAsWebInfResource("viewScopedContextTest/WEB-INF/web.xml", "web.xml")
                 .addAsWebResource("viewScopedContextTest/index.html", "index.html")
@@ -67,9 +75,26 @@ public class ViewScopedContextTest
 
     @Test
     @RunAsClient
-    public void testViewScopedContext()
+    public void testViewScopedContext() throws Exception
     {
-        browser.open(contextPath);
+        browser.open(new URL(contextPath, "page1.xhtml"));
+
+        waitModel.until(Graphene.elementVisible.locator(Graphene.xp("//body")));
+
+        // we have to prefix all ids with "test:" as this is in the 'test' form
+        // this sucks as the algorithm is not well defined in the JSF spec!
+
+        IdLocator inputField = id("test:valueInput");
+        browser.type(inputField, "23");
+
+        IdLocator button = id("test:saveButton");
+        browser.click(button);
+
+        waitModel.until(Graphene.elementVisible.locator(Graphene.xp("//body")));
+
+        IdLocator outputField = id("test:valueOutput");
+        String outputValue = browser.getValue(outputField);
+        Assert.assertEquals("23", outputValue);
     }
 
 }

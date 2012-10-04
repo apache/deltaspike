@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
     Licensed to the Apache Software Foundation (ASF) under one
     or more contributor license agreements.  See the NOTICE file
@@ -18,9 +18,27 @@
     under the License.
 -->
 
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 <body>
-it works!
+<div>
+    it works!
+</div>
+<div>
+    <h:form id="test">
+        <h:outputLabel for="valueInput" value="ViewScoped value:"/>
+        <h:inputText id="valueInput" value="#{viewScopedBean.i}"/>
+        <br/>
+        <h:outputLabel for="valueOutput" value="backing bean value:"/>
+        <h:outputText id="valueOutput" value="#{viewScopedBean.i}"/>
+        <br/>
+        <h:commandButton id="saveButton" action="#{viewScopedBean.someAction}" value="save"/>
+    </h:form>
+</div>
 </body>
 </html>

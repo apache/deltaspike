@@ -25,7 +25,7 @@ import org.apache.deltaspike.core.util.context.AbstractContext;
 import org.apache.deltaspike.core.util.context.ContextualStorage;
 
 /**
- *
+ * Non passivating scoped test context
  */
 public class DummyContext extends AbstractContext
 {
@@ -46,7 +46,7 @@ public class DummyContext extends AbstractContext
     {
         if (storage == null && createIfNotExists)
         {
-            storage = new ContextualStorage(beanManager, true);
+            storage = new ContextualStorage(beanManager, concurrent, isPassivatingScope());
         }
 
         return storage;

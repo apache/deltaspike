@@ -37,11 +37,11 @@ public abstract class AbstractContext implements Context
     /**
      * Whether the Context is for a passivating scope.
      */
-    private boolean isPassivatingScope;
+    private boolean passivatingScope;
 
     protected AbstractContext(BeanManager beanManager)
     {
-        isPassivatingScope = beanManager.isPassivatingScope(getScope());
+        passivatingScope = beanManager.isPassivatingScope(getScope());
     }
 
     /**
@@ -52,6 +52,13 @@ public abstract class AbstractContext implements Context
      */
     protected abstract ContextualStorage getContextualStorage(boolean createIfNotExist);
 
+    /**
+     * @return whether the served scope is a passivating scope
+     */
+    public boolean isPassivatingScope()
+    {
+        return passivatingScope;
+    }
 
     @Override
     public <T> T get(Contextual<T> bean)
@@ -64,8 +71,8 @@ public abstract class AbstractContext implements Context
             return null;
         }
 
-        Map<Contextual<?>, ContextualInstanceInfo<?>> contextMap = storage.getStorage();
-        ContextualInstanceInfo<?> contextualInstanceInfo = contextMap.get(bean);
+        Map<Object, ContextualInstanceInfo<?>> contextMap = storage.getStorage();
+        ContextualInstanceInfo<?> contextualInstanceInfo = contextMap.get(storage.getBeanKey(bean));
         if (contextualInstanceInfo == null)
         {
             return null;
@@ -79,7 +86,7 @@ public abstract class AbstractContext implements Context
     {
         checkActive();
 
-        if (isPassivatingScope)
+        if (passivatingScope)
         {
             if (!(bean instanceof PassivationCapable))
             {
@@ -90,8 +97,8 @@ public abstract class AbstractContext implements Context
 
         ContextualStorage storage = getContextualStorage(true);
 
-        Map<Contextual<?>, ContextualInstanceInfo<?>> contextMap = storage.getStorage();
-        ContextualInstanceInfo<?> contextualInstanceInfo = contextMap.get(bean);
+        Map<Object, ContextualInstanceInfo<?>> contextMap = storage.getStorage();
+        ContextualInstanceInfo<?> contextualInstanceInfo = contextMap.get(storage.getBeanKey(bean));
 
         T instance = null;
 
@@ -120,7 +127,7 @@ public abstract class AbstractContext implements Context
         {
             return false;
         }
-        ContextualInstanceInfo<?> contextualInstanceInfo = storage.getStorage().get(bean);
+        ContextualInstanceInfo<?> contextualInstanceInfo = storage.getStorage().get(storage.getBeanKey(bean));
 
         if (contextualInstanceInfo == null)
         {
@@ -144,10 +151,11 @@ public abstract class AbstractContext implements Context
             return;
         }
 
-        Map<Contextual<?>, ContextualInstanceInfo<?>> contextMap = storage.getStorage();
-        for (Map.Entry<Contextual<?>, ContextualInstanceInfo<?>> entry : contextMap.entrySet())
+        Map<Object, ContextualInstanceInfo<?>> contextMap = storage.getStorage();
+        for (Map.Entry<Object, ContextualInstanceInfo<?>> entry : contextMap.entrySet())
         {
-            Contextual bean = entry.getKey();
+            Contextual bean = storage.getBean(entry.getKey());
+
             ContextualInstanceInfo<?> contextualInstanceInfo = entry.getValue();
             bean.destroy(contextualInstanceInfo.getContextualInstance(), contextualInstanceInfo.getCreationalContext());
         }
