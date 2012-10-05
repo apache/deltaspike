@@ -24,9 +24,9 @@ import java.net.URL;
 import org.apache.deltaspike.test.jsf.impl.scope.view.beans.BackingBean;
 import org.apache.deltaspike.test.jsf.impl.util.ArchiveUtils;
 import org.apache.deltaspike.test.category.WebProfileCategory;
-import org.jboss.arquillian.ajocado.framework.GrapheneSelenium;
-import org.jboss.arquillian.ajocado.locator.IdLocator;
-import org.jboss.arquillian.ajocado.Graphene;
+//X import org.jboss.arquillian.ajocado.framework.GrapheneSelenium;
+//X import org.jboss.arquillian.ajocado.locator.IdLocator;
+//X import org.jboss.arquillian.ajocado.Graphene;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
@@ -41,9 +41,13 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
-import static org.jboss.arquillian.ajocado.Graphene.id;
-import static org.jboss.arquillian.ajocado.Graphene.waitModel;
+//X import static org.jboss.arquillian.ajocado.Graphene.id;
+//X import static org.jboss.arquillian.ajocado.Graphene.waitModel;
 
 /**
  * Test for the DeltaSpike ViewScoped context
@@ -54,7 +58,7 @@ import static org.jboss.arquillian.ajocado.Graphene.waitModel;
 public class ViewScopedContextTest
 {
     @Drone
-    private GrapheneSelenium browser;
+    private WebDriver driver;
 
     @ArquillianResource
     private URL contextPath;
@@ -77,24 +81,15 @@ public class ViewScopedContextTest
     @RunAsClient
     public void testViewScopedContext() throws Exception
     {
-        browser.open(new URL(contextPath, "page1.xhtml"));
+        driver.get(new URL(contextPath, "page1.xhtml").toString());
 
-        waitModel.until(Graphene.elementVisible.locator(Graphene.xp("//body")));
+        WebElement inputField = driver.findElement(By.id("test:valueInput"));
+        inputField.sendKeys("23");
 
-        // we have to prefix all ids with "test:" as this is in the 'test' form
-        // this sucks as the algorithm is not well defined in the JSF spec!
+        WebElement button = driver.findElement(By.id("test:saveButton"));
+        button.click();
 
-        IdLocator inputField = id("test:valueInput");
-        browser.type(inputField, "23");
-
-        IdLocator button = id("test:saveButton");
-        browser.click(button);
-
-        waitModel.until(Graphene.elementVisible.locator(Graphene.xp("//body")));
-
-        IdLocator outputField = id("test:valueOutput");
-        String outputValue = browser.getValue(outputField);
-        Assert.assertEquals("23", outputValue);
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("test:valueOutput"), "23").apply(driver));
     }
 
 }
