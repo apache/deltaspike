@@ -24,9 +24,6 @@ import java.net.URL;
 import org.apache.deltaspike.test.jsf.impl.scope.view.beans.BackingBean;
 import org.apache.deltaspike.test.jsf.impl.util.ArchiveUtils;
 import org.apache.deltaspike.test.category.WebProfileCategory;
-//X import org.jboss.arquillian.ajocado.framework.GrapheneSelenium;
-//X import org.jboss.arquillian.ajocado.locator.IdLocator;
-//X import org.jboss.arquillian.ajocado.Graphene;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
@@ -46,8 +43,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-//X import static org.jboss.arquillian.ajocado.Graphene.id;
-//X import static org.jboss.arquillian.ajocado.Graphene.waitModel;
 
 /**
  * Test for the DeltaSpike ViewScoped context
