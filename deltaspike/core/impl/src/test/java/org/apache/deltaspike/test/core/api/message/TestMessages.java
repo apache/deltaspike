@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.test.core.api.message;
 
+import org.apache.deltaspike.core.api.message.Message;
 import org.apache.deltaspike.core.api.message.MessageContext;
 import org.apache.deltaspike.core.api.message.annotation.MessageTemplate;
 import org.apache.deltaspike.core.api.message.annotation.MessageBundle;
@@ -32,6 +33,10 @@ public interface TestMessages
 {
     @MessageTemplate("Spotted %s jays")
     String numberOfJaysSpotted(int number);
+
+    @MessageTemplate("{categoryMessage}")
+    Message messageWithCategory(String value);
+
 
     @MessageTemplate("{welcome_to_deltaspike}")
     String welcomeToDeltaSpike();

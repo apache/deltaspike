@@ -36,20 +36,29 @@ public class TestMessageResolver implements MessageResolver
     }
 
     @Override
-    public String getMessage(MessageContext messageContext, String messageTemplate)
+    public String getMessage(MessageContext messageContext, String messageTemplate, String category)
     {
         if ( messageTemplate.startsWith("{") && messageTemplate.endsWith("}"))
         {
-            messageTemplate = messageTemplate.substring(1, messageTemplate.length() - 1);
+            String resourceKey = messageTemplate.substring(1, messageTemplate.length() - 1);
             try
             {
-                ResourceBundle resolvedBundle = PropertyFileUtils
+                ResourceBundle messageBundle = PropertyFileUtils
                         .getResourceBundle(TestMessages.class.getName(), messageContext.getLocale());
-                return resolvedBundle.getString(messageTemplate);
+                String value = null;
+                if (category != null && category.length() > 0)
+                {
+                    value = messageBundle.getString(resourceKey + "." + category);
+                }
+                if (value == null)
+                {
+                    value = messageBundle.getString(resourceKey);
+                }
+                return value;
             }
             catch (MissingResourceException e)
             {
-                return messageTemplate;
+                return resourceKey;
             }
         }
 

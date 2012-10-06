@@ -81,6 +81,16 @@ public class MessageContextTest
                 simpleMessage.welcomeTo(messageContext, "DeltaSpike").toString());
     }
 
+    /**
+     * We test that a non-existing category will fallback on the default message
+     */
+    @Test
+    public void testSimpleMessageCategory()
+    {
+        Assert.assertEquals("Welcome to DeltaSpike",
+                simpleMessage.welcomeTo(messageContext, "DeltaSpike").toString("notexisting"));
+    }
+
     @Test
     public void resolveTextTest()
     {

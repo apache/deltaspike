@@ -108,7 +108,8 @@ public class DefaultMessage implements Message
         MessageResolver messageResolver = messageContext.getMessageResolver();
         if (messageResolver != null)
         {
-            String resolvedTemplate = messageResolver.getMessage(messageContext, template);
+            String resolvedTemplate = messageResolver.getMessage(messageContext, template, category);
+
             if (resolvedTemplate == null)
             {
                 // this means an error happened during message resolving

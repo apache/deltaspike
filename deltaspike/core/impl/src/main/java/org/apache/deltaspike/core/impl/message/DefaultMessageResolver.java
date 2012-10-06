@@ -36,7 +36,7 @@ public class DefaultMessageResolver implements MessageResolver
     private static final long serialVersionUID = 5834411208472341006L;
 
     @Override
-    public String getMessage(MessageContext messageContext, String messageTemplate)
+    public String getMessage(MessageContext messageContext, String messageTemplate, String category)
     {
         // we can use {{ as escaping for now
         if (messageTemplate.startsWith("{{"))
@@ -68,6 +68,19 @@ public class DefaultMessageResolver implements MessageResolver
                 {
                     Locale locale = messageContext.getLocale();
                     ResourceBundle messageBundle = PropertyFileUtils.getResourceBundle(currentMessageSource, locale);
+
+                    if (category != null && category.length() > 0)
+                    {
+                        try
+                        {
+                            return messageBundle.getString(resourceKey + "." + category);
+                        }
+                        catch (MissingResourceException e)
+                        {
+                            // we fallback on the version without the category
+                            messageBundle.getString(resourceKey);
+                        }
+                    }
 
                     return messageBundle.getString(resourceKey);
                 }

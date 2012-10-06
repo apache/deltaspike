@@ -84,4 +84,19 @@ public class MessageTest
     {
         assertEquals(TestMessageInterpolator.SPECIALFORMATTED + "Welcome to Apache DeltaSpike", messages.welcomeTo("Apache DeltaSpike"));
     }
+
+    @Test
+    public void testMessageCategory()
+    {
+        assertEquals(TestMessageInterpolator.SPECIALFORMATTED + "Value good was set"
+            , messages.messageWithCategory("good").toString());
+
+        assertEquals(TestMessageInterpolator.SPECIALFORMATTED + "The value of the property has been set to good."
+            , messages.messageWithCategory("good").toString("longText"));
+
+        assertEquals(TestMessageInterpolator.SPECIALFORMATTED + "Value good was set"
+                , messages.messageWithCategory("good").toString("notExistingCategory"));
+    }
+
+
 }
