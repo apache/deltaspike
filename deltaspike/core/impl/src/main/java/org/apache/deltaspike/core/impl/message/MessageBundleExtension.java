@@ -39,7 +39,6 @@ import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import javax.enterprise.inject.spi.ProcessProducerMethod;
 
 import org.apache.deltaspike.core.api.message.Message;
-import org.apache.deltaspike.core.api.message.MessageContext;
 import org.apache.deltaspike.core.api.message.annotation.MessageBundle;
 import org.apache.deltaspike.core.api.message.annotation.MessageTemplate;
 import org.apache.deltaspike.core.util.bean.WrappingBeanBuilder;
@@ -115,34 +114,16 @@ public class MessageBundleExtension implements Extension, Deactivatable
 
             if (Message.class.isAssignableFrom(currentMethod.getReturnType()))
             {
-                ok |= validateMessageContextAwareMethod(currentMethod);
+                continue;
             }
-            else
-            {
-                deploymentErrors.add(currentMethod.getReturnType().getName() + " isn't supported. Details: " +
-                        currentMethod.getDeclaringClass().getName() + "#" + currentMethod.getName() +
-                        " only " + String.class.getName() + " or " + Message.class.getName());
-                ok = false;
-            }
+
+            deploymentErrors.add(currentMethod.getReturnType().getName() + " isn't supported. Details: " +
+                    currentMethod.getDeclaringClass().getName() + "#" + currentMethod.getName() +
+                    " only " + String.class.getName() + " or " + Message.class.getName());
+            ok = false;
         }
 
         return ok;
-    }
-
-    private boolean validateMessageContextAwareMethod(Method currentMethod)
-    {
-        for (Class currentParameterType : currentMethod.getParameterTypes())
-        {
-            if (MessageContext.class.isAssignableFrom(currentParameterType))
-            {
-                return true;
-            }
-        }
-
-        deploymentErrors.add("No " + MessageContext.class.getName() + " parameter found at: " +
-                currentMethod.getDeclaringClass().getName() + "#" + currentMethod.getName() +
-                ". That is required for return-type " + Message.class.getName());
-        return false;
     }
 
     /**
