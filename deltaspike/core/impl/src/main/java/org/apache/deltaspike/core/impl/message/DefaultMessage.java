@@ -84,8 +84,15 @@ public class DefaultMessage implements Message
     }
 
 
+
     @Override
     public String toString()
+    {
+        return toString((String) null);
+    }
+
+    @Override
+    public String toString(String category)
     {
 
         // the string construction happens in 3 phases
@@ -142,10 +149,16 @@ public class DefaultMessage implements Message
     @Override
     public String toString(MessageContext messageContext)
     {
+        return toString(messageContext, null);
+    }
+
+    @Override
+    public String toString(MessageContext messageContext, String category)
+    {
         return messageContext.message()
                 .template(getTemplate())
                 .argument(getArguments())
-                .toString();
+                .toString(category);
     }
 
 
