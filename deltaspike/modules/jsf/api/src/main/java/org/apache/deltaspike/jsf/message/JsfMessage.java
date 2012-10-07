@@ -28,7 +28,7 @@ package org.apache.deltaspike.jsf.message;
  * &#064;Inject
  * JsfMessage&lt;MyMessages&gt; msg;
  * ...
- * msg.addError().userNotLoggedIn();
+ * msg.addError().userNotLoggedIn(user);
  * </pre>
  * <p>MessageBundle methods which are used as JsfMessage can return a
  * {@link org.apache.deltaspike.core.api.message.Message} or a String.
@@ -41,8 +41,28 @@ package org.apache.deltaspike.jsf.message;
  */
 public interface JsfMessage<T>
 {
+    /**
+     * @return the underlying Message which will automatically add a FacesMessage with SEVERITY_ERROR
+     */
     T addError();
+
+    /**
+     * @return the underlying Message which will automatically add a FacesMessage with SEVERITY_FATAL
+     */
     T addFatal();
+
+    /**
+     * @return the underlying Message which will automatically add a FacesMessage with SEVERITY_INFO
+     */
     T addInfo();
+
+    /**
+     * @return the underlying Message which will automatically add a FacesMessage with SEVERITY_WARN
+     */
     T addWarn();
+
+    /**
+     * @return the underlying Message implementation without adding any FacesMessage
+     */
+    T get();
 }
