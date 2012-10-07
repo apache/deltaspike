@@ -18,6 +18,8 @@
 # We need to register the Extension on the classpath
 # as many Arquillian containers do not yet pickup
 # Extensions from a ShrinkWrap archive.
+# This is just PITA and shall get removed once all the
+# used arquillian-containerx connectors implement this properly!
 
 # registers the DummyScope for the AbstractContextTest
 org.apache.deltaspike.test.core.api.context.DummyScopeExtension

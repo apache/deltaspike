@@ -50,7 +50,8 @@ public class AbstractContextTest
     {
         JavaArchive testJar = ShrinkWrap
                 .create(JavaArchive.class, "abstractContextTest.jar")
-                .addPackage(AbstractContextTest.class.getPackage())
+                .addClass(AbstractContextTest.class)
+                .addClass(DummyBean.class)
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsServiceProvider(Extension.class, DummyScopeExtension.class);
 

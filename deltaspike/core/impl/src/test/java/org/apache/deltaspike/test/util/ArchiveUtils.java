@@ -18,7 +18,16 @@
  */
 package org.apache.deltaspike.test.util;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.deltaspike.test.category.WebProfileCategory;
+import org.apache.deltaspike.test.core.api.context.DummyContext;
+import org.apache.deltaspike.test.core.api.context.DummyScopeExtension;
+import org.apache.deltaspike.test.core.api.context.DummyScoped;
 import org.apache.deltaspike.test.utils.ShrinkWrapArchiveUtil;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 
 /**
@@ -33,9 +42,23 @@ public class ArchiveUtils
 
     public static JavaArchive[] getDeltaSpikeCoreArchive(String[] excludedPackagesOrFiles)
     {
-        return ShrinkWrapArchiveUtil.getArchives(null,
+        // we also need quite some internal Arquillian classes on the client side
+        // this JAR has NO beans.xml to prevent class scanning!
+        JavaArchive extensionsJar = ShrinkWrap
+                .create(JavaArchive.class, "testExtensions.jar")
+                .addClass(ArchiveUtils.class)
+                .addClass(DummyScopeExtension.class)
+                .addClass(DummyScoped.class)
+                .addClass(DummyContext.class)
+                .addPackage(WebProfileCategory.class.getPackage());
+
+        JavaArchive[] coreArchives = ShrinkWrapArchiveUtil.getArchives(null,
                 "META-INF/beans.xml",
                 new String[]{"org.apache.deltaspike.core", "org.apache.deltaspike.test.category"},
                 excludedPackagesOrFiles);
+
+        List<JavaArchive> archives = new ArrayList<JavaArchive>(Arrays.asList(coreArchives));
+        archives.add(extensionsJar);
+        return archives.toArray(new JavaArchive[archives.size()]);
     }
 }
