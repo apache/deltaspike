@@ -18,45 +18,82 @@
  */
 package org.apache.deltaspike.jsf.impl.message;
 
+
+import javax.faces.application.FacesMessage;
+
+import java.lang.reflect.Proxy;
+
+import org.apache.deltaspike.core.api.message.annotation.MessageBundle;
+import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.jsf.message.JsfMessage;
 
 /**
  * Default implementation of JsfMessage.
+ * The complexity of setting the FacesMessage is
+ * done in the {@link JsfMessageBundleInvocationHandler}.
  */
 public class DefaultJsfMessage<T> implements JsfMessage<T>
 {
+    private String clientId = null;
+    private Class<T> type;
+
+    /**
+     * The Message type
+     * @param type
+     * @param clientId
+     */
+    public DefaultJsfMessage(Class<T> type, String clientId)
+    {
+        this.type = type;
+        this.clientId = clientId;
+
+        if (! type.isInterface() || type.getAnnotation(MessageBundle.class) == null)
+        {
+            throw new IllegalArgumentException("JsfMessage must only be used for interfaces " +
+                "annotated with @MessageBundle!");
+        }
+    }
+
+    @Override
+    public JsfMessage<T> forClientId(String clientId)
+    {
+        return new DefaultJsfMessage<T>(type, clientId);
+    }
+
     @Override
     public T addError()
     {
-        //X TODO
-        return null;
+        return getMessage(FacesMessage.SEVERITY_ERROR);
     }
 
     @Override
     public T addFatal()
     {
-        //X TODO
-        return null;
+        return getMessage(FacesMessage.SEVERITY_FATAL);
     }
 
     @Override
     public T addInfo()
     {
-        //X TODO
-        return null;
+        return getMessage(FacesMessage.SEVERITY_INFO);
     }
 
     @Override
     public T addWarn()
     {
-        //X TODO
-        return null;
+        return getMessage(FacesMessage.SEVERITY_WARN);
     }
 
     @Override
     public T get()
     {
-        //X TODO
-        return null;
+        return getMessage(null);
     }
+
+    private T getMessage(FacesMessage.Severity severity)
+    {
+        return type.cast(Proxy.newProxyInstance(ClassUtils.getClassLoader(null),
+                new Class<?>[]{type}, new JsfMessageBundleInvocationHandler(severity, clientId)));
+    }
+
 }

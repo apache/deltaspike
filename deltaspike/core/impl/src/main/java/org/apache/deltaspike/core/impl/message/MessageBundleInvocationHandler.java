@@ -36,7 +36,7 @@ import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.ClassUtils;
 
 
-class MessageBundleInvocationHandler implements InvocationHandler
+public class MessageBundleInvocationHandler implements InvocationHandler, Serializable
 {
     /**
      * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object,

@@ -18,6 +18,8 @@
  */
 package org.apache.deltaspike.jsf.message;
 
+import java.io.Serializable;
+
 /**
  * <p>An injectable component for typesafe FacesMessages.
  * T must be a class which is annotated with
@@ -39,8 +41,17 @@ package org.apache.deltaspike.jsf.message;
  * for creating the FacesMessage.</p>
  *
  */
-public interface JsfMessage<T>
+public interface JsfMessage<T> extends Serializable
 {
+    String CATEGORY_DETAIL = "detail";
+    String CATEGORY_SUMMARY = "summary";
+
+    /**
+     * If the JsfMessage is used in a UIComponent we allow to set the clientId
+     * @param clientId
+     */
+    JsfMessage<T> forClientId(String clientId);
+
     /**
      * @return the underlying Message which will automatically add a FacesMessage with SEVERITY_ERROR
      */
