@@ -40,7 +40,7 @@ import java.util.zip.ZipEntry;
  * Lots of neat little helpers to more easily create JavaArchives from marker files on the classpath.
  * This should finally get moved to ShrinkWrap core!
  *
- * @deprecated This class should get moved to ShrinkWrap itself!
+ * TODO This class should get moved to ShrinkWrap itself!
  */
 public class ShrinkWrapArchiveUtil
 {
@@ -262,7 +262,7 @@ public class ShrinkWrapArchiveUtil
             }
             else
             {
-                javaArchive.addAsResource(entryName.replace('\\', '/'));
+                javaArchive.addAsResource(archiveEntry, entryName.replace('\\', '/'));
             }
         }
 
