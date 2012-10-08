@@ -65,9 +65,8 @@ public class ViewScopedContextTest
                 .create(WebArchive.class, "viewScopedContextTest.war")
                 .addPackage(BackingBean.class.getPackage())
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndJsfArchive())
-                .addAsWebInfResource("viewScopedContextTest/WEB-INF/web.xml", "web.xml")
-                .addAsWebResource("viewScopedContextTest/index.html", "index.html")
-                .addAsWebResource("viewScopedContextTest/page1.xhtml", "page1.xhtml")
+                .addAsWebInfResource("default/WEB-INF/web.xml", "web.xml")
+                .addAsWebResource("viewScopedContextTest/page.xhtml", "page.xhtml")
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
@@ -76,7 +75,7 @@ public class ViewScopedContextTest
     @RunAsClient
     public void testViewScopedContext() throws Exception
     {
-        driver.get(new URL(contextPath, "page1.xhtml").toString());
+        driver.get(new URL(contextPath, "page.xhtml").toString());
 
         WebElement inputField = driver.findElement(By.id("test:valueInput"));
         inputField.sendKeys("23");
