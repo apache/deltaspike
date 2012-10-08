@@ -20,6 +20,7 @@ package org.apache.deltaspike.jsf.impl.message;
 
 
 import javax.faces.application.FacesMessage;
+import javax.faces.component.UIComponent;
 
 import java.lang.reflect.Proxy;
 
@@ -58,6 +59,12 @@ public class DefaultJsfMessage<T> implements JsfMessage<T>
     public JsfMessage<T> forClientId(String clientId)
     {
         return new DefaultJsfMessage<T>(type, clientId);
+    }
+
+    @Override
+    public JsfMessage<T> forComponent(UIComponent uiComponent)
+    {
+        return forClientId(uiComponent.getClientId());
     }
 
     @Override

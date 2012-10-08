@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.jsf.message;
 
+import javax.faces.component.UIComponent;
 import java.io.Serializable;
 
 /**
@@ -51,6 +52,11 @@ public interface JsfMessage<T> extends Serializable
      * @param clientId
      */
     JsfMessage<T> forClientId(String clientId);
+
+    /**
+     * @param uiComponent
+     */
+    JsfMessage<T> forComponent(UIComponent uiComponent);
 
     /**
      * @return the underlying Message which will automatically add a FacesMessage with SEVERITY_ERROR
