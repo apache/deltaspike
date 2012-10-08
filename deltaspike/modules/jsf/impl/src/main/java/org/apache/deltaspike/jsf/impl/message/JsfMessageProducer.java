@@ -34,12 +34,12 @@ public class JsfMessageProducer
 {
     @Produces
     @Dependent
-    public JsfMessage<?> createJsfMessage(InjectionPoint injectionPoint)
+    public JsfMessage createJsfMessage(InjectionPoint injectionPoint)
     {
         return createJsfMessageFor(injectionPoint, ReflectionUtils.getRawType(injectionPoint.getType()));
     }
 
-    private JsfMessage<?> createJsfMessageFor(InjectionPoint injectionPoint, Class<Object> rawType)
+    private JsfMessage createJsfMessageFor(InjectionPoint injectionPoint, Class<Object> rawType)
     {
         //X TODO check if the JsfMessage should get injected into a UIComponent and use #getClientId()
 
