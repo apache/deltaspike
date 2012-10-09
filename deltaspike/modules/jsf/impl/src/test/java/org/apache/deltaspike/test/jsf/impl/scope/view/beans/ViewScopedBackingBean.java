@@ -27,7 +27,7 @@ import java.io.Serializable;
  */
 @ViewScoped
 @Named("viewScopedBean")
-public class BackingBean implements Serializable
+public class ViewScopedBackingBean implements Serializable
 {
     private int i = 0;
 

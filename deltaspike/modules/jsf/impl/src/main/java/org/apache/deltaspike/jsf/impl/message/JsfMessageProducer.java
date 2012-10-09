@@ -23,6 +23,9 @@ import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+
 import org.apache.deltaspike.core.util.ReflectionUtils;
 import org.apache.deltaspike.jsf.message.JsfMessage;
 
@@ -36,13 +39,24 @@ public class JsfMessageProducer
     @Dependent
     public JsfMessage createJsfMessage(InjectionPoint injectionPoint)
     {
-        return createJsfMessageFor(injectionPoint, ReflectionUtils.getRawType(injectionPoint.getType()));
+        if (! (injectionPoint.getType() instanceof ParameterizedType))
+        {
+            throw new IllegalArgumentException("JsfMessage must be used as generic type");
+        }
+        ParameterizedType paramType = (ParameterizedType) injectionPoint.getType();
+        Type[] actualTypes = paramType.getActualTypeArguments();
+        if (actualTypes.length != 1)
+        {
+            throw new IllegalArgumentException("JsfMessage must have the MessageBundle as generic type parameter");
+        }
+
+        return createJsfMessageFor(injectionPoint, actualTypes[0]);
     }
 
-    private JsfMessage createJsfMessageFor(InjectionPoint injectionPoint, Class<Object> rawType)
+    private JsfMessage createJsfMessageFor(InjectionPoint injectionPoint, Type rawType)
     {
         //X TODO check if the JsfMessage should get injected into a UIComponent and use #getClientId()
 
-        return new DefaultJsfMessage(rawType, null);
+        return new DefaultJsfMessage((Class) rawType, null);
     }
 }
