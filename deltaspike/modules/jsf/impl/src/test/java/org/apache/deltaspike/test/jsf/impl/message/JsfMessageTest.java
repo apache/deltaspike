@@ -22,7 +22,7 @@ package org.apache.deltaspike.test.jsf.impl.message;
 import java.net.URL;
 
 import org.apache.deltaspike.test.category.WebProfileCategory;
-import org.apache.deltaspike.test.jsf.impl.scope.view.beans.BackingBean;
+import org.apache.deltaspike.test.jsf.impl.message.beans.JsfMessageBackingBean;
 import org.apache.deltaspike.test.jsf.impl.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
@@ -33,14 +33,10 @@ import org.jboss.arquillian.warp.WarpTest;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 
 
 /**
@@ -62,7 +58,8 @@ public class JsfMessageTest
     {
         return ShrinkWrap
                 .create(WebArchive.class, "jsfMessageTest.war")
-                .addPackage(BackingBean.class.getPackage())
+                .addPackage(JsfMessageBackingBean.class.getPackage())
+                .addAsResource("jsfMessageTest/UserMessage.properties")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndJsfArchive())
                 .addAsWebInfResource("default/WEB-INF/web.xml", "web.xml")
                 .addAsWebResource("jsfMessageTest/page.xhtml", "page.xhtml")
@@ -75,6 +72,9 @@ public class JsfMessageTest
     public void testViewScopedContext() throws Exception
     {
         driver.get(new URL(contextPath, "page.xhtml").toString());
+
+        //X TODO remove, it's just for debugging the server side:
+        //X Thread.sleep(600000L);
 
 /*X
         WebElement inputField = driver.findElement(By.id("test:valueInput"));

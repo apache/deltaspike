@@ -21,7 +21,7 @@ package org.apache.deltaspike.test.jsf.impl.scope.view;
 
 import java.net.URL;
 
-import org.apache.deltaspike.test.jsf.impl.scope.view.beans.BackingBean;
+import org.apache.deltaspike.test.jsf.impl.scope.view.beans.ViewScopedBackingBean;
 import org.apache.deltaspike.test.jsf.impl.util.ArchiveUtils;
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -63,7 +63,7 @@ public class ViewScopedContextTest
     {
         return ShrinkWrap
                 .create(WebArchive.class, "viewScopedContextTest.war")
-                .addPackage(BackingBean.class.getPackage())
+                .addPackage(ViewScopedBackingBean.class.getPackage())
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndJsfArchive())
                 .addAsWebInfResource("default/WEB-INF/web.xml", "web.xml")
                 .addAsWebResource("viewScopedContextTest/page.xhtml", "page.xhtml")

@@ -21,19 +21,26 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
-        >
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
 
 <body>
-<div>
+<f:view>
+    <f:metadata>
+        <f:event type="javax.faces.event.PreRenderViewEvent" listener="#{jsfMessageBackingBean.init}"/>
+    </f:metadata>
+    <div>
+
     <h:form id="test">
-        <h:outputLabel for="valueInput" value="ViewScoped value:"/>
-        <h:inputText id="valueInput" value="#{viewScopedBean.i}"/>
+        <div id="messages">
+            <h:messages/>
+        </div>
         <br/>
-        <h:outputLabel for="valueOutput" value="backing bean value:"/>
-        <h:outputText id="valueOutput" value="#{viewScopedBean.i}"/>
+        <h:outputLabel for="valueOutput" value="the message:"/>
+        <h:outputText id="valueOutput" value="#{jsfMessageBackingBean.someMessage}"/>
         <br/>
-        <h:commandButton id="saveButton" action="#{viewScopedBean.someAction}" value="save"/>
     </h:form>
-</div>
+    </div>
+</f:view>
 </body>
 </html>
