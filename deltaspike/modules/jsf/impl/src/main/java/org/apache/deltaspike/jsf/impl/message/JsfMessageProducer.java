@@ -26,7 +26,6 @@ import javax.enterprise.inject.spi.InjectionPoint;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-import org.apache.deltaspike.core.util.ReflectionUtils;
 import org.apache.deltaspike.jsf.message.JsfMessage;
 
 /**

@@ -34,9 +34,13 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
+import org.junit.Assert;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 
 /**
@@ -76,15 +80,27 @@ public class JsfMessageTest
         //X TODO remove, it's just for debugging the server side:
         //X Thread.sleep(600000L);
 
-/*X
-        WebElement inputField = driver.findElement(By.id("test:valueInput"));
-        inputField.sendKeys("23");
 
-        WebElement button = driver.findElement(By.id("test:saveButton"));
-        button.click();
+        // check the JSF FacesMessages
 
-        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("test:valueOutput"), "23").apply(driver));
-*/
+        Assert.assertNotNull(ExpectedConditions.presenceOfElementLocated(By.xpath("id('messages')")).apply(driver));
+
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(
+                By.xpath("id('messages')/ul/li[1]"), "message with details warnInfo!").apply(driver));
+
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(
+                By.xpath("id('messages')/ul/li[2]"), "message without detail but parameter errorInfo.").apply(driver));
+
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(
+                By.xpath("id('messages')/ul/li[3]"), "a simple message without a param.").apply(driver));
+
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(
+                By.xpath("id('messages')/ul/li[4]"), "simple message with a string param fatalInfo.").apply(driver));
+
+        // check the free message usage
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(
+                By.id("test:valueOutput"), "a simple message without a param.").apply(driver));
+
     }
 
 }
