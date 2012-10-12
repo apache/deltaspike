@@ -62,7 +62,8 @@ public class JsfMessageTest
         return ShrinkWrap
                 .create(WebArchive.class, "jsfMessageTest.war")
                 .addPackage(JsfMessageBackingBean.class.getPackage())
-                .addAsResource("jsfMessageTest/UserMessage.properties")
+                .addAsResource("jsfMessageTest/UserMessage_en.properties")
+                .addAsResource("jsfMessageTest/UserMessage_de.properties")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndJsfArchive())
                 .addAsWebInfResource("default/WEB-INF/web.xml", "web.xml")
                 .addAsWebResource("jsfMessageTest/page.xhtml", "page.xhtml")
@@ -72,9 +73,14 @@ public class JsfMessageTest
 
     @Test
     @RunAsClient
-    public void testViewScopedContext() throws Exception
+    public void testEnglishMessages() throws Exception
     {
         driver.get(new URL(contextPath, "page.xhtml").toString());
+
+        //X comment this in if you like to debug the server
+        //X I've already reported ARQGRA-213 for it
+        //X System.out.println("contextpath= " + contextPath);
+        //X Thread.sleep(600000L);
 
         // check the JSF FacesMessages
         Assert.assertNotNull(ExpectedConditions.presenceOfElementLocated(By.xpath("id('messages')")).apply(driver));
@@ -94,6 +100,32 @@ public class JsfMessageTest
         // check the free message usage
         Assert.assertTrue(ExpectedConditions.textToBePresentInElement(
                 By.id("test:valueOutput"), "a simple message without a param.").apply(driver));
+    }
+
+    @Test
+    @RunAsClient
+    public void testGermanMessages() throws Exception
+    {
+        driver.get(new URL(contextPath, "page.xhtml?lang=de").toString());
+
+        // check the JSF FacesMessages
+        Assert.assertNotNull(ExpectedConditions.presenceOfElementLocated(By.xpath("id('messages')")).apply(driver));
+
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(
+                By.xpath("id('messages')/ul/li[1]"), "Nachricht mit Details warnInfo!").apply(driver));
+
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(
+                By.xpath("id('messages')/ul/li[2]"), "Nachricht ohne Details aber mit Parameter errorInfo.").apply(driver));
+
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(
+                By.xpath("id('messages')/ul/li[3]"), "Einfache Nachricht ohne Parameter.").apply(driver));
+
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(
+                By.xpath("id('messages')/ul/li[4]"), "Einfache Nachricht mit String Parameter fatalInfo.").apply(driver));
+
+        // check the free message usage
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(
+                By.id("test:valueOutput"), "Einfache Nachricht ohne Parameter.").apply(driver));
     }
 
 }

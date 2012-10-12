@@ -59,6 +59,8 @@ public class DefaultMessageResolver implements MessageResolver
 
             Iterator<String> messageSourceIterator = messageSources.iterator();
 
+            Locale locale = messageContext.getLocale();
+
             String currentMessageSource;
             while (messageSourceIterator.hasNext())
             {
@@ -66,7 +68,6 @@ public class DefaultMessageResolver implements MessageResolver
 
                 try
                 {
-                    Locale locale = messageContext.getLocale();
                     ResourceBundle messageBundle = PropertyFileUtils.getResourceBundle(currentMessageSource, locale);
 
                     if (category != null && category.length() > 0)
@@ -78,7 +79,7 @@ public class DefaultMessageResolver implements MessageResolver
                         catch (MissingResourceException e)
                         {
                             // we fallback on the version without the category
-                            messageBundle.getString(resourceKey);
+                            return messageBundle.getString(resourceKey);
                         }
                     }
 

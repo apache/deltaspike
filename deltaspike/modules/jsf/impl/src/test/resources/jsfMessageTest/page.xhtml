@@ -25,8 +25,9 @@
       xmlns:ui="http://java.sun.com/jsf/facelets">
 
 <body>
-<f:view>
+<f:view locale="#{jsfMessageBackingBean.locale}">
     <f:metadata>
+        <f:viewParam name="lang" id="lang" value="#{jsfMessageBackingBean.locale}"/>
         <f:event type="javax.faces.event.PreRenderViewEvent" listener="#{jsfMessageBackingBean.init}"/>
     </f:metadata>
     <div>
@@ -39,6 +40,7 @@
         <h:outputLabel for="valueOutput" value="the message:"/>
         <h:outputText id="valueOutput" value="#{jsfMessageBackingBean.someMessage}"/>
         <br/>
+
     </h:form>
     </div>
 </f:view>

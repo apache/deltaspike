@@ -18,12 +18,9 @@
 */
 package org.apache.deltaspike.test.jsf.impl.message.beans;
 
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
-import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.io.Serializable;
 
 import org.apache.deltaspike.jsf.message.JsfMessage;
 
@@ -37,6 +34,8 @@ public class JsfMessageBackingBean
     @Inject
     private JsfMessage<UserMessage> msg;
 
+    private String locale = "en";
+
 
     public void init()
     {
@@ -49,5 +48,15 @@ public class JsfMessageBackingBean
     public String getSomeMessage()
     {
         return msg.get().simpleMessageNoParam();
+    }
+
+    public String getLocale()
+    {
+        return locale;
+    }
+
+    public void setLocale(String locale)
+    {
+        this.locale = locale;
     }
 }
