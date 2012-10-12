@@ -645,6 +645,7 @@
                 <configuration>
                     <configLocation>deltaspike/default-checks.xml</configLocation>
                     <headerLocation>deltaspike/asf-header.txt</headerLocation>
+                    <consoleOutput>true</consoleOutput>
                 </configuration>
                 <dependencies>
                     <dependency>
