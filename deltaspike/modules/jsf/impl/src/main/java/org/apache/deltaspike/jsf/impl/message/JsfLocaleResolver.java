@@ -28,7 +28,8 @@ import java.util.Locale;
 import org.apache.deltaspike.core.impl.message.DefaultLocaleResolver;
 
 /**
- * A LocaleResolver which evaluates the FacesContext.
+ * A {@link org.apache.deltaspike.core.api.message.LocaleResolver} which
+ * evaluates the {@link UIViewRoot} as well as the default locale configured for JSF as a fallback.
  */
 @ApplicationScoped
 @Specializes
@@ -41,14 +42,25 @@ public class JsfLocaleResolver extends DefaultLocaleResolver
         if (facesContext != null)
         {
             UIViewRoot viewRoot = facesContext.getViewRoot();
+            Locale result = null;
             if (viewRoot != null)
             {
                 // if a ViewRoot is present we return the Locale from there
-                return viewRoot.getLocale();
+                result = viewRoot.getLocale();
+            }
+
+            if (result == null)
+            {
+                result = facesContext.getApplication().getDefaultLocale();
+            }
+
+            if (result != null)
+            {
+                return result;
             }
         }
 
-        // if no FacesContext is present we return the default Locale
+        // return the default Locale, if no Locale was found
         return super.getLocale();
     }
 }
