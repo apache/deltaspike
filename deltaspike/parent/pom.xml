@@ -168,7 +168,7 @@
         <jacoco.version>0.5.7.201204190339</jacoco.version>
 
         <arquillian-openwebbeans.version>1.0.0.CR2</arquillian-openwebbeans.version>
-        <arquillian-weld.version>1.0.0.CR3</arquillian-weld.version>
+        <arquillian-weld.version>1.0.0.CR4</arquillian-weld.version>
 
         <!-- OSGi bundles properties -->
         <deltaspike.osgi.import.deltaspike.version>version="[$(version;==;${deltaspike.osgi.version.clean}),$(version;=+;${deltaspike.osgi.version.clean}))"</deltaspike.osgi.import.deltaspike.version>
