@@ -24,7 +24,7 @@ import java.lang.reflect.Method;
 
 import org.apache.deltaspike.core.api.message.Message;
 import org.apache.deltaspike.core.impl.message.MessageBundleInvocationHandler;
-import org.apache.deltaspike.jsf.message.JsfMessage;
+import org.apache.deltaspike.jsf.api.message.JsfMessage;
 
 /**
  * This Proxy InvocationHandler automatically registers the

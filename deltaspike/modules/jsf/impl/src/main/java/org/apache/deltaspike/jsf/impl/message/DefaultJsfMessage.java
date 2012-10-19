@@ -26,7 +26,7 @@ import java.lang.reflect.Proxy;
 
 import org.apache.deltaspike.core.api.message.annotation.MessageBundle;
 import org.apache.deltaspike.core.util.ClassUtils;
-import org.apache.deltaspike.jsf.message.JsfMessage;
+import org.apache.deltaspike.jsf.api.message.JsfMessage;
 
 /**
  * Default implementation of JsfMessage.

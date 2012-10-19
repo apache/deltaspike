@@ -22,7 +22,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.deltaspike.jsf.message.JsfMessage;
+import org.apache.deltaspike.jsf.api.message.JsfMessage;
 
 /**
  * sample backing bean for JsfMessage.

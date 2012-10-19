@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.jsf.message;
+package org.apache.deltaspike.jsf.api.message;
 
 import javax.faces.component.UIComponent;
 import java.io.Serializable;
