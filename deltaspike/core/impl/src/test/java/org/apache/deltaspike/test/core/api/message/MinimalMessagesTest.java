@@ -20,21 +20,20 @@ package org.apache.deltaspike.test.core.api.message;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.impl.message.MessageBundleExtension;
-import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.shrinkwrap.api.Filters;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.enterprise.inject.spi.Extension;
 import javax.inject.Inject;
-
-import org.junit.Assert;
 
 /**
  * Tests for type-safe messages without {@link org.apache.deltaspike.core.api.message.annotation.MessageTemplate}
@@ -57,7 +56,8 @@ public class MinimalMessagesTest
     {
         JavaArchive testJar = ShrinkWrap
                 .create(JavaArchive.class, "minimalMessageTest.jar")
-                .addPackage(MinimalMessagesTest.class.getPackage())
+                .addPackages(false, Filters.exclude(MessageContextTest.class),
+                        MinimalMessagesTest.class.getPackage())
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
         return ShrinkWrap
