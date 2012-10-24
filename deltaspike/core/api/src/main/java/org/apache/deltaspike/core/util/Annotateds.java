@@ -26,6 +26,7 @@ import javax.enterprise.inject.spi.AnnotatedField;
 import javax.enterprise.inject.spi.AnnotatedMethod;
 import javax.enterprise.inject.spi.AnnotatedParameter;
 import javax.enterprise.inject.spi.AnnotatedType;
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -33,6 +34,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -51,14 +53,21 @@ import java.util.Set;
  * <code>Annotated</code> instances.
  * </p>
  */
-public class Annotateds
+public final class Annotateds
 {
+    private static final char SEPARATOR = ';';
+
+    private Annotateds()
+    {
+        // this is a utility class with statics only
+    }
 
     /**
      * Does the first stage of comparing AnnoatedCallables, however it cannot
      * compare the method parameters
      */
-    private static class AnnotatedCallableComparator<T> implements Comparator<AnnotatedCallable<? super T>>
+    private static class AnnotatedCallableComparator<T>
+        implements Comparator<AnnotatedCallable<? super T>>, Serializable
     {
 
         public int compare(AnnotatedCallable<? super T> arg0, AnnotatedCallable<? super T> arg1)
@@ -81,7 +90,8 @@ public class Annotateds
 
     }
 
-    private static class AnnotatedMethodComparator<T> implements Comparator<AnnotatedMethod<? super T>>
+    private static class AnnotatedMethodComparator<T>
+        implements Comparator<AnnotatedMethod<? super T>>, Serializable
     {
 
         private AnnotatedCallableComparator<T> callableComparator = new AnnotatedCallableComparator<T>();
@@ -113,7 +123,8 @@ public class Annotateds
 
     }
 
-    private static class AnnotatedConstructorComparator<T> implements Comparator<AnnotatedConstructor<? super T>>
+    private static class AnnotatedConstructorComparator<T>
+        implements Comparator<AnnotatedConstructor<? super T>>, Serializable
     {
 
         private AnnotatedCallableComparator<T> callableComparator = new AnnotatedCallableComparator<T>();
@@ -145,7 +156,8 @@ public class Annotateds
 
     }
 
-    private static class AnnotatedFieldComparator<T> implements Comparator<AnnotatedField<? super T>>
+    private static class AnnotatedFieldComparator<T>
+        implements Comparator<AnnotatedField<? super T>>, Serializable
     {
 
         public static <T> Comparator<AnnotatedField<? super T>> instance()
@@ -165,7 +177,7 @@ public class Annotateds
 
     }
 
-    private static class AnnotationComparator implements Comparator<Annotation>
+    private static class AnnotationComparator implements Comparator<Annotation>, Serializable
     {
 
         public static final Comparator<Annotation> INSTANCE = new AnnotationComparator();
@@ -185,12 +197,6 @@ public class Annotateds
         {
             return arg0.getName().compareTo(arg1.getName());
         }
-    }
-
-    private static final char SEPERATOR = ';';
-
-    private Annotateds()
-    {
     }
 
     /**
@@ -216,7 +222,7 @@ public class Annotateds
      * <code>annotations</code>, <code>methods</code>, <code>fields</code> and
      * <code>constructors</code> arguments
      *
-     * @param clazz        The java class tyoe
+     * @param clazz        The java class type
      * @param annotations  Annotations present on the java class
      * @param methods      The AnnotatedMethods to include in the signature
      * @param fields       The AnnotatedFields to include in the signature
@@ -243,7 +249,7 @@ public class Annotateds
             if (!field.getAnnotations().isEmpty())
             {
                 builder.append(createFieldId(field));
-                builder.append(SEPERATOR);
+                builder.append(SEPARATOR);
             }
         }
 
@@ -256,7 +262,7 @@ public class Annotateds
             if (!method.getAnnotations().isEmpty() || hasMethodParameters(method))
             {
                 builder.append(createCallableId(method));
-                builder.append(SEPERATOR);
+                builder.append(SEPARATOR);
             }
         }
 
@@ -269,7 +275,7 @@ public class Annotateds
             if (!constructor.getAnnotations().isEmpty() || hasMethodParameters(constructor))
             {
                 builder.append(createCallableId(constructor));
-                builder.append(SEPERATOR);
+                builder.append(SEPARATOR);
             }
         }
         builder.append("}");
@@ -578,10 +584,7 @@ public class Annotateds
             builder.append('(');
             Method[] declaredMethods = a.annotationType().getDeclaredMethods();
             List<Method> methods = new ArrayList<Method>(declaredMethods.length);
-            for (Method m : declaredMethods)
-            {
-                methods.add(m);
-            }
+            methods.addAll(Arrays.asList(declaredMethods));
             Collections.sort(methods, MethodComparator.INSTANCE);
 
             for (int i = 0; i < methods.size(); ++i)
