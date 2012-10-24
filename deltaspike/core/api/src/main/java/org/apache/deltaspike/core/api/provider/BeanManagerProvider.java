@@ -117,15 +117,16 @@ public class BeanManagerProvider implements Extension
      */
     public static BeanManagerProvider getInstance()
     {
+        /*X TODO Java-EE5 support needs to be discussed
         if (bmpSingleton == null)
         {
-            //X TODO Java-EE5 support needs to be discussed
             // workaround for some Java-EE5 environments in combination with a special
             // StartupBroadcaster for bootstrapping CDI
 
             // CodiStartupBroadcaster.broadcastStartup();
             // here bmp might not be null (depends on the broadcasters)
         }
+        */
 
         if (bmpSingleton == null)
         {
