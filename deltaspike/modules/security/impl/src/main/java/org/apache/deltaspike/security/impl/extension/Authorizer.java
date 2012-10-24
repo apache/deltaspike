@@ -53,9 +53,9 @@ class Authorizer
     private Map<Method, Object> bindingSecurityBindingMembers = new HashMap<Method, Object>();
 
     private AnnotatedMethod<?> boundAuthorizerMethod;
-    private Bean<?> boundAuthorizerBean;
+    private volatile Bean<?> boundAuthorizerBean;
 
-    private InjectableMethod<?> boundAuthorizerMethodProxy;
+    private volatile InjectableMethod<?> boundAuthorizerMethodProxy;
 
     Authorizer(Annotation bindingAnnotation, AnnotatedMethod<?> boundAuthorizerMethod)
     {
