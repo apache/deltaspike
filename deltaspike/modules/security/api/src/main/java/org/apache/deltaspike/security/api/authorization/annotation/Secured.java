@@ -18,12 +18,20 @@
  */
 package org.apache.deltaspike.security.api.authorization.annotation;
 
+import org.apache.deltaspike.core.api.config.view.metadata.annotation.DefaultCallback;
+import org.apache.deltaspike.core.api.config.view.metadata.annotation.ViewMetaData;
+import org.apache.deltaspike.core.api.config.view.metadata.CallbackDescriptor;
+import org.apache.deltaspike.core.spi.config.view.ConfigPreProcessor;
+import org.apache.deltaspike.core.spi.config.view.ViewConfigNode;
 import org.apache.deltaspike.security.api.authorization.AccessDecisionVoter;
+import org.apache.deltaspike.security.api.authorization.SecurityViolation;
 
 import javax.enterprise.util.Nonbinding;
+import java.lang.annotation.Annotation;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+import java.util.Set;
 
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.METHOD;
@@ -40,6 +48,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 //cdi annotations
 @SecurityBindingType
+
+@ViewMetaData(preProcessor = Secured.SecuredConfigPreProcessor.class)
 public @interface Secured
 {
     /**
@@ -50,4 +60,24 @@ public @interface Secured
      */
     @Nonbinding
     Class<? extends AccessDecisionVoter>[] value();
+
+    class SecuredConfigPreProcessor implements ConfigPreProcessor<Secured>
+    {
+        @Override
+        public Secured beforeAddToConfig(Secured metaData, ViewConfigNode viewConfigNode)
+        {
+            viewConfigNode.registerCallbackDescriptors(Secured.class,
+                    new SecuredDescriptor(metaData.value(), DefaultCallback.class));
+            return metaData; //no change needed
+        }
+    }
+
+    //can be used from outside to get a typed result
+    static class SecuredDescriptor extends CallbackDescriptor<Set<SecurityViolation>>
+    {
+        public SecuredDescriptor(Class[] beanClasses, Class<? extends Annotation> callbackMarker)
+        {
+            super(beanClasses, callbackMarker);
+        }
+    }
 }

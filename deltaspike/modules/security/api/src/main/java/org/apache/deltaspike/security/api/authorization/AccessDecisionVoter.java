@@ -18,6 +18,8 @@
  */
 package org.apache.deltaspike.security.api.authorization;
 
+import org.apache.deltaspike.core.api.config.view.metadata.annotation.DefaultCallback;
+
 import java.io.Serializable;
 import java.util.Set;
 
@@ -41,5 +43,6 @@ public interface AccessDecisionVoter extends Serializable
      * @param accessDecisionVoterContext current access-decision-voter-context
      * @return a set which contains violations which have been detected
      */
+    @DefaultCallback
     Set<SecurityViolation> checkPermission(AccessDecisionVoterContext accessDecisionVoterContext);
 }
