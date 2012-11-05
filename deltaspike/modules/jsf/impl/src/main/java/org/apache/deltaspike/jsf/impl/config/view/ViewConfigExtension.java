@@ -29,9 +29,7 @@ import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.jsf.impl.util.ViewConfigUtils;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
-import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.AfterDeploymentValidation;
 import javax.enterprise.inject.spi.BeforeBeanDiscovery;
 import javax.enterprise.inject.spi.BeforeShutdown;
@@ -55,22 +53,6 @@ public class ViewConfigExtension implements Extension, Deactivatable
 
     {
         resetRootNode();
-    }
-
-    @Produces
-    @ApplicationScoped
-    public ViewConfigResolver createViewConfigResolver()
-    {
-        if (!this.isActivated)
-        {
-            return new DefaultViewConfigResolver(this.rootViewConfigNode, null, null);
-        }
-
-        if (!this.transformed) //esp. for easier unit-tests
-        {
-            transformMetaDataTree();
-        }
-        return this.viewConfigResolver;
     }
 
     @SuppressWarnings("UnusedDeclaration")
@@ -320,5 +302,20 @@ public class ViewConfigExtension implements Extension, Deactivatable
     private void resetRootNode()
     {
         this.rootViewConfigNode = new FolderConfigNode(null, null, new HashSet<Annotation>());
+    }
+
+    boolean isActivated()
+    {
+        return isActivated;
+    }
+
+    boolean isTransformed()
+    {
+        return transformed;
+    }
+
+    ViewConfigResolver getViewConfigResolver()
+    {
+        return viewConfigResolver;
     }
 }

@@ -27,6 +27,7 @@ import org.apache.deltaspike.jsf.api.config.view.controller.PostRenderView;
 import org.apache.deltaspike.jsf.api.config.view.controller.PrePageAction;
 import org.apache.deltaspike.jsf.api.config.view.controller.PreRenderView;
 import org.apache.deltaspike.jsf.impl.config.view.ViewConfigExtension;
+import org.apache.deltaspike.jsf.impl.config.view.ViewConfigResolverProducer;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -39,10 +40,13 @@ public class ViewConfigTest
 {
     private ViewConfigExtension viewConfigExtension;
 
+    private ViewConfigResolverProducer viewConfigResolverProducer;
+
     @Before
     public void before()
     {
         this.viewConfigExtension = new ViewConfigExtension();
+        this.viewConfigResolverProducer = new ViewConfigResolverProducer(this.viewConfigExtension);
     }
 
     @After
@@ -80,7 +84,7 @@ public class ViewConfigTest
     {
         this.viewConfigExtension.addPageDefinition(SimplePageConfig.class);
 
-        ViewConfigResolver viewConfigResolver = this.viewConfigExtension.createViewConfigResolver();
+        ViewConfigResolver viewConfigResolver = this.viewConfigResolverProducer.createViewConfigResolver();
         ViewConfigDescriptor viewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(SimplePageConfig.class);
 
         Assert.assertNotNull(viewConfigDescriptor);
