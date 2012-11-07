@@ -61,7 +61,7 @@ public interface WindowContext
      * This is necessary when the session gets closed down.
      * @return
      */
-    void closeAllWindowContexts();
+    void destroy();
 
 
 }

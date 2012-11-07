@@ -151,6 +151,15 @@ public abstract class AbstractContext implements Context
             return;
         }
 
+        destroyAllActive(storage);
+    }
+
+    /**
+     * destroys all the Contextual Instances in the Storage returned by
+     * {@link #getContextualStorage(boolean)}.
+     */
+    public void destroyAllActive(ContextualStorage storage)
+    {
         Map<Object, ContextualInstanceInfo<?>> contextMap = storage.getStorage();
         for (Map.Entry<Object, ContextualInstanceInfo<?>> entry : contextMap.entrySet())
         {

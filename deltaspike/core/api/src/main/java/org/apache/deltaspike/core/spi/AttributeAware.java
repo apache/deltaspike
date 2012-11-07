@@ -32,9 +32,9 @@ public interface AttributeAware extends Serializable
      * Sets an attribute
      * @param name name of the attribute
      * @param value value of the attribute (null values aren't allowed)
-     * @return true if it was possible to set the value
+     * @return the old value or <code>null</code> if no previous value did exist
      */
-    boolean setAttribute(String name, Object value);
+    Object setAttribute(String name, Object value);
 
     /**
      * Returns true if there is a value for the given name
