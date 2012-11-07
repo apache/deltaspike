@@ -47,6 +47,11 @@ public class JsfMessageBundleInvocationHandler extends MessageBundleInvocationHa
 
         if (severity == null)
         {
+            if (message instanceof Message)
+            {
+                return message;
+            }
+
             return getMessageCategory(message, JsfMessage.CATEGORY_SUMMARY);
         }
         else
