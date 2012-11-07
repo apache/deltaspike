@@ -68,7 +68,7 @@ public interface Message extends Serializable
      * which created the Message.
      * While resolving the message we will
      * first search for a messageTemplate with the given category by
-     * just adding a dot '.' and the category String to the
+     * just adding a dot '_' and the category String to the
      * {@link #getTemplate()}.
      * If no such a template exists we will fallback to the version
      * without the category String
@@ -80,7 +80,7 @@ public interface Message extends Serializable
      * arbitrary {@link MessageContext}.
      * While resolving the message we will
      * first search for a messageTemplate with the given category by
-     * just adding a dot '.' and the category String to the
+     * just adding a dot '_' and the category String to the
      * {@link #getTemplate()}.
      * If no such a template exists we will fallback to the version
      * without the category String

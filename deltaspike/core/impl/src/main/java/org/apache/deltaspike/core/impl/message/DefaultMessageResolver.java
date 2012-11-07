@@ -74,7 +74,7 @@ public class DefaultMessageResolver implements MessageResolver
                     {
                         try
                         {
-                            return messageBundle.getString(resourceKey + "." + category);
+                            return messageBundle.getString(resourceKey + "_" + category);
                         }
                         catch (MissingResourceException e)
                         {
