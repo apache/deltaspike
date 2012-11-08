@@ -56,10 +56,25 @@ public class ViewConfigTest
     }
 
     @Test
-    public void testSimpleMetaDataTreeWithViewControllerCallback()
+    public void testSimpleMetaDataTreeWithViewControllerCallback1()
     {
         this.viewConfigExtension.addPageDefinition(SimplePageConfig.class);
+        this.viewConfigExtension.addIndirectlyInheritedMetaData(PageBean003.class);
 
+        testMetaDataTree();
+    }
+
+    @Test
+    public void testSimpleMetaDataTreeWithViewControllerCallback2()
+    {
+        this.viewConfigExtension.addIndirectlyInheritedMetaData(PageBean003.class);
+        this.viewConfigExtension.addPageDefinition(SimplePageConfig.class);
+
+        testMetaDataTree();
+    }
+
+    private void testMetaDataTree()
+    {
         ViewConfigNode node = this.viewConfigExtension.findNode(SimplePageConfig.class);
 
         Assert.assertNotNull(node);
@@ -70,10 +85,10 @@ public class ViewConfigTest
         Assert.assertEquals(0, node.getChildren().size());
 
         Assert.assertNotNull(node.getMetaData());
-        Assert.assertEquals(1, node.getMetaData().size());
+        Assert.assertEquals(0, node.getMetaData().size());
 
         Assert.assertNotNull(node.getInheritedMetaData());
-        Assert.assertEquals(0, node.getInheritedMetaData().size());
+        Assert.assertEquals(1, node.getInheritedMetaData().size());
 
         Assert.assertNotNull(node.getCallbackDescriptors());
         Assert.assertEquals(0, node.getCallbackDescriptors().size());
@@ -83,6 +98,7 @@ public class ViewConfigTest
     public void testSimpleViewConfigWithViewControllerCallback()
     {
         this.viewConfigExtension.addPageDefinition(SimplePageConfig.class);
+        this.viewConfigExtension.addIndirectlyInheritedMetaData(PageBean003.class);
 
         ViewConfigResolver viewConfigResolver = this.viewConfigResolverProducer.createViewConfigResolver();
         ViewConfigDescriptor viewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(SimplePageConfig.class);

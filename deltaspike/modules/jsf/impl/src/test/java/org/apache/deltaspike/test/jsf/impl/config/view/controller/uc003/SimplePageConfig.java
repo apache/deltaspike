@@ -21,7 +21,6 @@ package org.apache.deltaspike.test.jsf.impl.config.view.controller.uc003;
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
 import org.apache.deltaspike.jsf.api.config.view.controller.PageBean;
 
-@PageBean(value = PageBean003.class) //TODO remove it once we imported the @View support
 class SimplePageConfig implements ViewConfig
 {
 }

@@ -16,27 +16,38 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.jsf.impl.config.view.controller.uc003;
 
-import org.apache.deltaspike.core.api.config.view.View;
-import org.apache.deltaspike.jsf.api.config.view.controller.InitView;
-import org.apache.deltaspike.jsf.api.config.view.controller.PrePageAction;
-import org.apache.deltaspike.jsf.api.config.view.controller.PreRenderView;
+package org.apache.deltaspike.jsf.api.literal;
 
-import javax.enterprise.inject.Model;
+import org.apache.deltaspike.jsf.api.config.view.controller.PageBean;
 
-@Model
-@View(config = SimplePageConfig.class)
-class PageBean003
+import javax.enterprise.util.AnnotationLiteral;
+
+/**
+ * Literal for {@link PageBean}
+ */
+public class PageBeanLiteral extends AnnotationLiteral<PageBean> implements PageBean
 {
-    @InitView
-    @PrePageAction
-    protected void callbackMethod1()
+    private static final long serialVersionUID = 8582580975876369665L;
+
+    private final Class value;
+    private final String name;
+
+    public PageBeanLiteral(Class value, String name)
     {
+        this.value = value;
+        this.name = name;
     }
 
-    @PreRenderView
-    protected void callbackMethod2()
+    @Override
+    public Class value()
     {
+        return this.value;
+    }
+
+    @Override
+    public String name()
+    {
+        return this.name;
     }
 }

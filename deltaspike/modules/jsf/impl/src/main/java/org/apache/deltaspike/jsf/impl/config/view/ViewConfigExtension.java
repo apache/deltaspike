@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.jsf.impl.config.view;
 
+import org.apache.deltaspike.core.api.config.view.View;
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
@@ -27,6 +28,7 @@ import org.apache.deltaspike.core.spi.config.view.ViewConfigNode;
 import org.apache.deltaspike.core.spi.config.view.ViewConfigRoot;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.core.util.ExceptionUtils;
+import org.apache.deltaspike.jsf.api.literal.PageBeanLiteral;
 import org.apache.deltaspike.jsf.impl.util.ViewConfigUtils;
 
 import javax.enterprise.event.Observes;
@@ -62,15 +64,58 @@ public class ViewConfigExtension implements Extension, Deactivatable
     }
 
     @SuppressWarnings("UnusedDeclaration")
-    protected void buildViewConfigMetaDataTree(@Observes ProcessAnnotatedType<? extends ViewConfig> pat)
+    protected void buildViewConfigMetaDataTree(@Observes ProcessAnnotatedType pat)
     {
         if (!isActivated)
         {
             return;
         }
 
-        addPageDefinition(pat.getAnnotatedType().getJavaClass(), pat.getAnnotatedType().getAnnotations());
-        //TODO pat.veto(); //we can veto all annotated type instances of type ViewConfig
+        if (ViewConfig.class.isAssignableFrom(pat.getAnnotatedType().getJavaClass()))
+        {
+            addPageDefinition(pat.getAnnotatedType().getJavaClass(), pat.getAnnotatedType().getAnnotations());
+            pat.veto();
+        }
+        else
+        {
+            addIndirectlyInheritedMetaData(
+                pat.getAnnotatedType().getJavaClass(), pat.getAnnotatedType().getAnnotations());
+        }
+    }
+
+    public void addIndirectlyInheritedMetaData(Class configClass)
+    {
+        addIndirectlyInheritedMetaData(
+            configClass, new HashSet<Annotation>(Arrays.asList(configClass.getAnnotations())));
+    }
+
+    protected void addIndirectlyInheritedMetaData(Class configClass, Set<Annotation> annotations)
+    {
+        for (Annotation annotation : annotations)
+        {
+            if (annotation.annotationType().equals(View.class))
+            {
+                for (Class<? extends ViewConfig> viewConfigRef : ((View) annotation).config())
+                {
+                    ViewConfigNode viewConfigNode = findNode(viewConfigRef);
+
+                    if (viewConfigNode == null)
+                    {
+                        addPageDefinition(viewConfigRef);
+                        viewConfigNode = findNode(viewConfigRef);
+
+                        if (viewConfigNode == null)
+                        {
+                            throw new IllegalStateException("No node created for: " + viewConfigRef);
+                        }
+                    }
+
+                    viewConfigNode.getInheritedMetaData().add(new PageBeanLiteral(configClass, null));
+                }
+                break;
+            }
+
+        }
     }
 
     public void addPageDefinition(Class<? extends ViewConfig> viewConfigClass)
@@ -87,7 +132,7 @@ public class ViewConfigExtension implements Extension, Deactivatable
                 if (this.rootViewConfigNode.getSource() != null)
                 {
                     throw new IllegalStateException("@" + ViewConfigRoot.class.getName() + " has been found at " +
-                        viewConfigClass.getName() + " and " + this.rootViewConfigNode.getSource().getName());
+                            viewConfigClass.getName() + " and " + this.rootViewConfigNode.getSource().getName());
                 }
                 this.rootViewConfigNode.getMetaData().add(annotation);
                 this.rootViewConfigNode = new FolderConfigNode(this.rootViewConfigNode, viewConfigClass);
@@ -211,7 +256,7 @@ public class ViewConfigExtension implements Extension, Deactivatable
             {
                 if (annotation.annotationType().equals(ViewConfigRoot.class))
                 {
-                    ViewConfigRoot viewConfigRoot = (ViewConfigRoot)annotation;
+                    ViewConfigRoot viewConfigRoot = (ViewConfigRoot) annotation;
 
                     configNodeConverter = createCustomConfigNodeConverter(viewConfigRoot, configNodeConverter);
                     inheritanceStrategy = createCustomInheritanceStrategy(viewConfigRoot, inheritanceStrategy);
@@ -241,8 +286,8 @@ public class ViewConfigExtension implements Extension, Deactivatable
             try
             {
                 Constructor<? extends ViewConfigResolver> viewConfigResolverConstructor = viewConfigResolverClass
-                    .getConstructor(new Class[]{
-                        ViewConfigNode.class, ConfigNodeConverter.class, ViewConfigInheritanceStrategy.class});
+                        .getConstructor(new Class[]{
+                            ViewConfigNode.class, ConfigNodeConverter.class, ViewConfigInheritanceStrategy.class});
 
                 return viewConfigResolverConstructor
                         .newInstance(this.rootViewConfigNode, configNodeConverter, inheritanceStrategy);
