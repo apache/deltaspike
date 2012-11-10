@@ -22,4 +22,4 @@
 # used arquillian-containerx connectors implement this properly!
 
 # registers the DummyScope for the AbstractContextTest
-org.apache.deltaspike.test.core.api.context.DummyScopeExtension
+org.apache.deltaspike.test.core.api.util.context.DummyScopeExtension

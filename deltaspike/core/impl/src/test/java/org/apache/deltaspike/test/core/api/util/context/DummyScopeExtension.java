@@ -16,26 +16,23 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-package org.apache.deltaspike.test.core.api.context;
+package org.apache.deltaspike.test.core.api.util.context;
 
-import java.io.Serializable;
-
-import org.apache.deltaspike.test.core.api.context.DummyScoped;
+import javax.enterprise.event.Observes;
+import javax.enterprise.inject.spi.AfterBeanDiscovery;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.Extension;
 
 /**
+ * Registers the {@link DummyContext}
  */
-@DummyScoped
-public class DummyBean implements Serializable
+public class DummyScopeExtension implements Extension
 {
-    private int i = 4711;
+    private DummyContext context;
 
-    public int getI()
+    public void registerDummyContext(@Observes AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager)
     {
-        return i;
-    }
-
-    public void setI(int i)
-    {
-        this.i = i;
+        context = new DummyContext(beanManager, true);
+        afterBeanDiscovery.addContext(context);
     }
 }

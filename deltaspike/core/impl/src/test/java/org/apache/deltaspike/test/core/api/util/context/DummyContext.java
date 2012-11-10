@@ -16,7 +16,7 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-package org.apache.deltaspike.test.core.api.context;
+package org.apache.deltaspike.test.core.api.util.context;
 
 import javax.enterprise.inject.spi.BeanManager;
 import java.lang.annotation.Annotation;

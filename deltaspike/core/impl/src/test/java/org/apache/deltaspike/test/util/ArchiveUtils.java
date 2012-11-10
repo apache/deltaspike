@@ -23,9 +23,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.deltaspike.test.category.WebProfileCategory;
-import org.apache.deltaspike.test.core.api.context.DummyContext;
-import org.apache.deltaspike.test.core.api.context.DummyScopeExtension;
-import org.apache.deltaspike.test.core.api.context.DummyScoped;
+import org.apache.deltaspike.test.core.api.util.context.DummyContext;
+import org.apache.deltaspike.test.core.api.util.context.DummyScopeExtension;
+import org.apache.deltaspike.test.core.api.util.context.DummyScoped;
 import org.apache.deltaspike.test.utils.ShrinkWrapArchiveUtil;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;

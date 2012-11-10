@@ -27,13 +27,18 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.deltaspike.core.util.context.ContextualStorage;
 
 /**
- * This holder will store the window Ids for the current
+ * This holder will store the window Ids and it's beans for the current
  * Session. We use standard SessionScoped bean to not need
  * to treat async-supported and similar headache.
  */
 @SessionScoped
 public class WindowBeanHolder implements Serializable
 {
+    /**
+     * key: the windowId for the browser tab or window
+     * value: the {@link ContextualStorage} which holds all the
+     * {@link javax.enterprise.inject.spi.Bean}s.
+     */
     private volatile Map<String, ContextualStorage> storageMap = new ConcurrentHashMap<String, ContextualStorage>();
 
     public Map<String, ContextualStorage> getStorageMap()
@@ -44,6 +49,8 @@ public class WindowBeanHolder implements Serializable
     /**
      * This method will return the ContextualStorage or create a new one
      * if no one is yet assigned to the current windowId.
+     * @param beanManager we need the CDI {@link BeanManager} for serialisation.
+     * @param windowId the windowId for the current browser tab or window.
      */
     public ContextualStorage getContextualStorage(BeanManager beanManager, String windowId)
     {
@@ -63,7 +70,17 @@ public class WindowBeanHolder implements Serializable
         return contextualStorage;
     }
 
-    public Map<String, ContextualStorage> newStorageMap()
+    /**
+     *
+     * This method will replace the storageMap and with
+     * a new empty one.
+     * This method can be used to properly destroy the WindowBeanHolder beans
+     * without having to sync heavily. Any
+     * {@link javax.enterprise.inject.spi.Bean#destroy(Object, javax.enterprise.context.spi.CreationalContext)}
+     * should be performed on the returned old storage map.
+     * @return the old storageMap.
+     */
+    public Map<String, ContextualStorage> forceNewStorage()
     {
         Map<String, ContextualStorage> oldStorageMap = storageMap;
         storageMap = new ConcurrentHashMap<String, ContextualStorage>();

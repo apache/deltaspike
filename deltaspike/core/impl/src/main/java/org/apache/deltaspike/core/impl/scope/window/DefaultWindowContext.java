@@ -92,9 +92,11 @@ public class DefaultWindowContext extends AbstractContext implements WindowConte
     @Override
     public synchronized void destroy()
     {
-        Map<String, ContextualStorage> windowContexts = windowBeanHolder.newStorageMap();
+        // we replace the old windowBeanHolder beans with a new storage Map
+        // an afterwards destroy the old Beans without having to care about any syncs.
+        Map<String, ContextualStorage> oldWindowContextStorages = windowBeanHolder.forceNewStorage();
 
-        for (ContextualStorage contextualStorage : windowContexts.values())
+        for (ContextualStorage contextualStorage : oldWindowContextStorages.values())
         {
             destroyAllActive(contextualStorage);
         }

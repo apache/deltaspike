@@ -170,6 +170,11 @@ public abstract class AbstractContext implements Context
         }
     }
 
+    /**
+     * Make sure that the Context is really active.
+     * @throws ContextNotActiveException if there is no active
+     *         Context for the current Thread.
+     */
     protected void checkActive()
     {
         if (!isActive())
