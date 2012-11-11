@@ -18,6 +18,8 @@
  */
 package org.apache.deltaspike.security.api.authorization.annotation;
 
+import org.apache.deltaspike.core.api.config.view.DefaultErrorView;
+import org.apache.deltaspike.core.api.config.view.ViewConfig;
 import org.apache.deltaspike.core.api.config.view.metadata.annotation.DefaultCallback;
 import org.apache.deltaspike.core.api.config.view.metadata.annotation.ViewMetaData;
 import org.apache.deltaspike.core.api.config.view.metadata.CallbackDescriptor;
@@ -60,6 +62,14 @@ public @interface Secured
      */
     @Nonbinding
     Class<? extends AccessDecisionVoter>[] value();
+
+    /**
+     * Optional inline error-view if it is required to show an error-page
+     * which is different from the default error page.
+     * @return type-safe view-config of the page which should be used as error-view
+     */
+    @Nonbinding
+    Class<? extends ViewConfig> errorView() default DefaultErrorView.class;
 
     class SecuredConfigPreProcessor implements ConfigPreProcessor<Secured>
     {
