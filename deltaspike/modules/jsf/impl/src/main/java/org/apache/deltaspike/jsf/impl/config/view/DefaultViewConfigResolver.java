@@ -93,12 +93,18 @@ public class DefaultViewConfigResolver implements ViewConfigResolver
                         currentViewConfigDescriptor.getViewId(), currentViewConfigDescriptor.getViewConfig());
                 }
 
-                if (this.defaultErrorView == null) //TODO
+                if (this.defaultErrorView == null)
                 {
                     if (DefaultErrorView.class.isAssignableFrom(currentViewConfigDescriptor.getViewConfig()))
                     {
                         this.defaultErrorView = currentViewConfigDescriptor;
                     }
+                }
+                else if (DefaultErrorView.class.isAssignableFrom(currentViewConfigDescriptor.getViewConfig()))
+                {
+                    throw new IllegalStateException("It isn't allowed to configure multiple default-error-views. " +
+                        "Found default-error-views: " + this.defaultErrorView.getViewConfig() + " and " +
+                        currentViewConfigDescriptor.getViewConfig().getName());
                 }
 
                 if (!viewConfigs.containsKey(currentViewConfigDescriptor.getViewConfig()))
@@ -210,6 +216,10 @@ public class DefaultViewConfigResolver implements ViewConfigResolver
     @Override
     public ViewConfigDescriptor getViewConfigDescriptor(Class<? extends ViewConfig> viewDefinitionClass)
     {
+        if (DefaultErrorView.class.equals(viewDefinitionClass))
+        {
+            return getDefaultErrorViewConfigDescriptor();
+        }
         return this.viewDefinitionToViewDefinitionEntryMapping.get(viewDefinitionClass);
     }
 

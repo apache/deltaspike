@@ -16,19 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.jsf.impl.config.view.navigation.destination.uc003;
+package org.apache.deltaspike.test.jsf.impl.config.view.navigation.destination.uc004;
 
-import org.apache.deltaspike.core.api.config.view.ViewConfig;
-import org.apache.deltaspike.jsf.api.config.view.Page;
+import org.apache.deltaspike.core.api.config.view.DefaultErrorView;
 
-interface Pages extends ViewConfig
+interface Pages
 {
-    class Index implements Pages
+    class Index extends DefaultErrorView
     {
     }
 
-    @Page(name = "index")
-    class Overview implements Pages
+    class Overview extends DefaultErrorView
     {
     }
 }

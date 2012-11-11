@@ -16,10 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.jsf.impl.config.view.navigation.destination.uc003;
+package org.apache.deltaspike.test.jsf.impl.config.view.navigation.destination.uc004;
 
+import org.apache.deltaspike.core.api.config.view.DefaultErrorView;
+import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
 import org.apache.deltaspike.core.spi.config.view.ViewConfigNode;
-import org.apache.deltaspike.jsf.api.config.view.Page;
 import org.apache.deltaspike.jsf.impl.config.view.ViewConfigExtension;
 import org.apache.deltaspike.jsf.impl.config.view.ViewConfigResolverProducer;
 import org.junit.After;
@@ -47,7 +48,7 @@ public class ViewConfigTest
     }
 
     @Test
-    public void testDuplicatedNavigationTargetsInMetaDataTree()
+    public void testDuplicatedDefaultErrorViewInMetaDataTree()
     {
         this.viewConfigExtension.addPageDefinition(Pages.Index.class);
         this.viewConfigExtension.addPageDefinition(Pages.Overview.class);
@@ -80,19 +81,30 @@ public class ViewConfigTest
         Assert.assertEquals(0, node.getChildren().size());
 
         Assert.assertNotNull(node.getMetaData());
-        Assert.assertEquals(1, node.getMetaData().size());
-        Assert.assertEquals(Page.class, node.getMetaData().iterator().next().annotationType());
+        Assert.assertEquals(0, node.getMetaData().size());
 
         Assert.assertNotNull(node.getInheritedMetaData());
         Assert.assertEquals(0, node.getInheritedMetaData().size());
     }
 
     @Test(expected = IllegalStateException.class)
-    public void testDuplicatedNavigationTargetsDuringPageMetaDataTransformation()
+    public void testDuplicatedDefaultErrorViewDuringPageMetaDataTransformation()
     {
         this.viewConfigExtension.addPageDefinition(Pages.Index.class);
         this.viewConfigExtension.addPageDefinition(Pages.Overview.class);
 
         this.viewConfigResolverProducer.createViewConfigResolver();
+    }
+
+    @Test
+    public void testDefaultErrorViewInViewConfig()
+    {
+        this.viewConfigExtension.addPageDefinition(Pages.Index.class);
+
+        ViewConfigResolver viewConfigResolver = this.viewConfigResolverProducer.createViewConfigResolver();
+
+        Assert.assertNotNull(viewConfigResolver.getDefaultErrorViewConfigDescriptor());
+        Assert.assertEquals(Pages.Index.class, viewConfigResolver.getDefaultErrorViewConfigDescriptor().getViewConfig());
+        Assert.assertEquals(Pages.Index.class, viewConfigResolver.getViewConfigDescriptor(DefaultErrorView.class).getViewConfig());
     }
 }
