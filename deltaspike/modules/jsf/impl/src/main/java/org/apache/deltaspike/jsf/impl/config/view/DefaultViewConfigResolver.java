@@ -61,6 +61,8 @@ public class DefaultViewConfigResolver implements ViewConfigResolver
         Map<Class, ConfigDescriptor> folderConfigs =
             new HashMap<Class, ConfigDescriptor>();
 
+        Map<String, Class<? extends ViewConfig>> foundViewIds = new HashMap<String, Class<? extends ViewConfig>>();
+
         Stack<ViewConfigNode> nodesToConvert = new Stack<ViewConfigNode>();
 
         nodesToConvert.addAll(rootViewConfigNode.getChildren());
@@ -78,6 +80,18 @@ public class DefaultViewConfigResolver implements ViewConfigResolver
             if (currentConfigDescriptor instanceof ViewConfigDescriptor)
             {
                 ViewConfigDescriptor currentViewConfigDescriptor = (ViewConfigDescriptor) currentConfigDescriptor;
+
+                if (foundViewIds.containsKey(currentViewConfigDescriptor.getViewId()))
+                {
+                    throw new IllegalStateException(currentViewConfigDescriptor.getViewId() + " is configured twice. " +
+                        "That isn't allowed - see: " + currentConfigDescriptor.getConfigClass().getName() + " and " +
+                        foundViewIds.get(currentViewConfigDescriptor.getViewId()).getName());
+                }
+                else
+                {
+                    foundViewIds.put(
+                        currentViewConfigDescriptor.getViewId(), currentViewConfigDescriptor.getViewConfig());
+                }
 
                 if (this.defaultErrorView == null) //TODO
                 {
