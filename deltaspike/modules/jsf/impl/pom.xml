@@ -55,7 +55,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- we use Arquilllian Warp to test our JSF apps -->
+        <!-- we use Arquillian Warp to test our JSF apps -->
         <dependency>
             <groupId>org.jboss.arquillian.extension</groupId>
             <artifactId>arquillian-drone-api</artifactId>
