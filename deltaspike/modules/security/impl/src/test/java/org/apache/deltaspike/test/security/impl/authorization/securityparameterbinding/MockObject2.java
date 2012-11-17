@@ -18,26 +18,23 @@
  */
 package org.apache.deltaspike.test.security.impl.authorization.securityparameterbinding;
 
-import org.apache.deltaspike.security.api.authorization.annotation.Secures;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.interceptor.InvocationContext;
-
-@ApplicationScoped
-public class CustomAuthorizer
+public class MockObject2
 {
-    @Secures
-    @CustomSecurityBinding
-    public boolean doSecuredCheck(@MockParamBinding MockObject obj, InvocationContext invocationContext) 
-        throws Exception
+
+    private boolean value;
+
+    public MockObject2(boolean value)
     {
-        return obj.isValue();
+        this.value = value;
     }
-    
-    @Secures
-    @CustomSecurityBinding
-    public boolean doSecuredCheck(@MockParamBinding MockObject2 obj)
+
+    public boolean isValue()
     {
-    	return obj.isValue();
+        return value;
+    }
+
+    public void setValue(boolean value)
+    {
+        this.value = value;
     }
 }
