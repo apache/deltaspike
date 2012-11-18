@@ -19,6 +19,7 @@
 package org.apache.deltaspike.security.impl.util;
 
 import org.apache.deltaspike.security.api.authorization.annotation.SecurityBindingType;
+import org.apache.deltaspike.security.api.authorization.annotation.SecurityParameterBinding;
 
 import javax.enterprise.inject.Stereotype;
 import javax.enterprise.inject.Typed;
@@ -66,6 +67,25 @@ public abstract class SecurityUtils
         }
         throw new IllegalStateException(annotation.annotationType().getName() + " is a " + Stereotype.class.getName() +
                 " but it isn't annotated with " + SecurityBindingType.class.getName());
+    }
+
+    public static boolean isMetaAnnotatedWithSecurityParameterBinding(Annotation annotation)
+    {
+        if (annotation.annotationType().isAnnotationPresent(SecurityParameterBinding.class))
+        {
+            return true;
+        }
+
+        List<Annotation> result = getAllAnnotations(annotation.annotationType().getAnnotations());
+
+        for (Annotation foundAnnotation : result)
+        {
+            if (SecurityParameterBinding.class.isAssignableFrom(foundAnnotation.annotationType()))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static List<Annotation> getAllAnnotations(Annotation[] annotations)

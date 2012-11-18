@@ -33,7 +33,6 @@ import org.junit.runner.RunWith;
 /**
  * Test for {@link org.apache.deltaspike.security.api.authorization.annotation.Secured}
  */
-@Ignore
 @RunWith(Arquillian.class)
 public class SecurityParameterBindingTest
 {
@@ -46,6 +45,7 @@ public class SecurityParameterBindingTest
                 .addAsWebInfResource(ArchiveUtils.getBeansXml(), "beans.xml");
     }
 
+    @Ignore
     @Test
     public void simpleInterceptorThrowsExceptionWhenImproperlyAnnotated()
     {

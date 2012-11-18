@@ -35,6 +35,7 @@ import javax.enterprise.inject.spi.BeforeBeanDiscovery;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import java.lang.annotation.Annotation;
+import java.util.Collections;
 
 /**
  * Extension for processing typesafe security annotations
@@ -153,20 +154,21 @@ public class SecurityExtension implements Extension, Deactivatable
                     // Validate the authorizer
                     for (Authorizer auth : metaDataStorage.getAuthorizers())
                     {
-                        if (auth.matchesBinding(annotation)) 
+                        //TODO
+                        if (auth.matchesBindings(annotation, Collections.<AuthorizationParameter> emptySet())) 
                         {
                             found = true;
                             break;
                         }
                     }
 
-                    if (!found) 
-                    {
-                        event.addDefinitionError(new SecurityDefinitionException("Secured type " +
-                                type.getJavaClass().getName() +
-                                " has no matching authorizer method for security binding @" +
-                                annotation.annotationType().getName()));
-                    }
+//                    if (!found) 
+//                    {
+//                        event.addDefinitionError(new SecurityDefinitionException("Secured type " +
+//                                type.getJavaClass().getName() +
+//                                " has no matching authorizer method for security binding @" +
+//                                annotation.annotationType().getName()));
+//                    }
                 }
             }
 

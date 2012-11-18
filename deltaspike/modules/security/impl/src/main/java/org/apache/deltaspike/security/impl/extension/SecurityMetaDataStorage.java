@@ -112,6 +112,29 @@ class SecurityMetaDataStorage
                 }
             }
 
+            Set<AuthorizationParameter> parameterBindings = new HashSet<AuthorizationParameter>();
+            Class<?>[] parameterTypes = targetMethod.getParameterTypes();
+            Annotation[][] parameterAnnotations = targetMethod.getParameterAnnotations();
+            for (int i = 0; i < parameterTypes.length; i++)
+            {
+                Set<Annotation> securityBindings = null;
+                for (final Annotation parameterAnnotation : parameterAnnotations[i])
+                {
+                    if (SecurityUtils.isMetaAnnotatedWithSecurityParameterBinding(parameterAnnotation))
+                    {
+                        if (securityBindings == null)
+                        {
+                            securityBindings = new HashSet<Annotation>();
+                        }
+                        securityBindings.add(parameterAnnotation);
+                    }
+                }
+                if (securityBindings != null)
+                {
+                    parameterBindings.add(new AuthorizationParameter(parameterTypes[i], securityBindings));
+                }
+            }
+            
             Set<Authorizer> authorizerStack = new HashSet<Authorizer>();
 
             for (Annotation binding : bindings)
@@ -121,7 +144,7 @@ class SecurityMetaDataStorage
                 // For each security binding, find a valid authorizer
                 for (Authorizer authorizer : authorizers)
                 {
-                    if (authorizer.matchesBinding(binding))
+                    if (authorizer.matchesBindings(binding, parameterBindings))
                     {
                         if (found)
                         {
@@ -134,7 +157,7 @@ class SecurityMetaDataStorage
 
                             for (Authorizer a : authorizerStack)
                             {
-                                if (a.matchesBinding(binding))
+                                if (a.matchesBindings(binding, parameterBindings))
                                 {
                                     sb.append(", [");
                                     sb.append(a.getBoundAuthorizerMethod().getDeclaringClass().getName());

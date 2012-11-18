@@ -30,6 +30,7 @@ import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.Stereotype;
 import javax.enterprise.inject.Typed;
 import javax.enterprise.inject.spi.AnnotatedMethod;
+import javax.enterprise.inject.spi.AnnotatedParameter;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.util.Nonbinding;
@@ -51,6 +52,7 @@ class Authorizer
 {
     private Annotation bindingAnnotation;
     private Map<Method, Object> bindingSecurityBindingMembers = new HashMap<Method, Object>();
+    private Set<AuthorizationParameter> authorizationParameters = new HashSet<AuthorizationParameter>();
 
     private AnnotatedMethod<?> boundAuthorizerMethod;
     private volatile Bean<?> boundAuthorizerBean;
@@ -80,6 +82,28 @@ class Authorizer
         catch (IllegalAccessException ex)
         {
             throw new SecurityDefinitionException("Error reading security binding members", ex);
+        }
+        
+        for (AnnotatedParameter<?> annotatedParameter : boundAuthorizerMethod.getParameters())
+        {
+            Set<Annotation> securityParameterBindings = null;
+            for (Annotation annotation : annotatedParameter.getAnnotations())
+            {
+                if (SecurityUtils.isMetaAnnotatedWithSecurityParameterBinding(annotation))
+                {
+                    if (securityParameterBindings == null)
+                    {
+                        securityParameterBindings = new HashSet<Annotation>();
+                    }
+                    securityParameterBindings.add(annotation);
+                }
+            }
+            if (securityParameterBindings != null)
+            {
+                AuthorizationParameter authorizationParameter
+                    = new AuthorizationParameter(annotatedParameter.getBaseType(), securityParameterBindings);
+                authorizationParameters.add(authorizationParameter);
+            }
         }
     }
 
@@ -137,7 +161,7 @@ class Authorizer
         }
     }
 
-    boolean matchesBinding(Annotation annotation)
+    boolean matchesBindings(Annotation annotation, Set<AuthorizationParameter> parameterBindings)
     {
         if (!annotation.annotationType().isAnnotationPresent(SecurityBindingType.class) &&
                 annotation.annotationType().isAnnotationPresent(Stereotype.class))
@@ -180,6 +204,21 @@ class Authorizer
             }
         }
 
+        for (AuthorizationParameter authorizationParameter : authorizationParameters)
+        {
+            boolean found = false;
+            for (AuthorizationParameter parameterBinding : parameterBindings)
+            {
+                if (parameterBinding.matches(authorizationParameter))
+                {
+                    found = true;
+                }
+            }
+            if (!found)
+            {
+                return false;
+            }
+        }
         return true;
     }
 
