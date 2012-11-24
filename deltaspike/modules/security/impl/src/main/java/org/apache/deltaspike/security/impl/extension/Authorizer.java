@@ -219,6 +219,7 @@ class Authorizer
                 return false;
             }
         }
+        
         return true;
     }
 

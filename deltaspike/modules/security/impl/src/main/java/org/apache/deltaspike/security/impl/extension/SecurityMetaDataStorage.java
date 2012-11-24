@@ -21,13 +21,15 @@ package org.apache.deltaspike.security.impl.extension;
 import org.apache.deltaspike.security.api.authorization.SecurityDefinitionException;
 import org.apache.deltaspike.security.impl.util.SecurityUtils;
 
-import javax.enterprise.inject.spi.AnnotatedType;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import javax.enterprise.inject.spi.AnnotatedMethod;
+import javax.enterprise.inject.spi.AnnotatedType;
 
 class SecurityMetaDataStorage
 {
@@ -37,9 +39,9 @@ class SecurityMetaDataStorage
     private Set<Authorizer> authorizers = new HashSet<Authorizer>();
 
     /**
-     * Contains all known secured types
+     * Contains all known secured methods.
      */
-    private Set<AnnotatedType<?>> securedTypes = new HashSet<AnnotatedType<?>>();
+    private Set<AnnotatedMethod<?>> securedMethods = new HashSet<AnnotatedMethod<?>>();
 
     /**
      * A mapping between a secured method of a class and its authorizers
@@ -55,17 +57,25 @@ class SecurityMetaDataStorage
 
     void addSecuredType(AnnotatedType<?> annotatedType)
     {
-        securedTypes.add(annotatedType);
+        for (AnnotatedMethod<?> securedMethod : annotatedType.getMethods())
+        {
+            addSecuredMethod(securedMethod);
+        }
     }
 
-    Set<AnnotatedType<?>> getSecuredTypes()
+    void addSecuredMethod(AnnotatedMethod<?> annotatedMethod)
     {
-        return securedTypes;
+        securedMethods.add(annotatedMethod);
     }
 
-    void resetSecuredTypes()
+    Set<AnnotatedMethod<?>> getSecuredMethods()
     {
-        securedTypes = null;
+        return securedMethods;
+    }
+
+    void resetSecuredMethods()
+    {
+        securedMethods = null;
     }
 
     /**
@@ -82,36 +92,20 @@ class SecurityMetaDataStorage
         return getMethodAuthorizers(targetClass, targetMethod);
     }
 
-    synchronized void registerSecuredMethod(Class<?> targetClass, Method targetMethod)
+    void registerSecuredMethods()
+    {
+        for (AnnotatedMethod<?> method : securedMethods)
+        {
+            registerSecuredMethod(method.getDeclaringType().getJavaClass(), method.getJavaMember());
+        }
+    }
+
+    synchronized <T> void registerSecuredMethod(Class<T> targetClass, Method targetMethod)
     {
         ensureInitializedAuthorizersForClass(targetClass);
 
         if (!containsMethodAuthorizers(targetClass, targetMethod))
         {
-            // Build a list of all security bindings on both the method and its declaring class
-            Set<Annotation> bindings = new HashSet<Annotation>();
-
-            Class<?> cls = targetClass;
-            while (!cls.equals(Object.class))
-            {
-                for (final Annotation annotation : cls.getAnnotations())
-                {
-                    if (SecurityUtils.isMetaAnnotatedWithSecurityBindingType(annotation))
-                    {
-                        bindings.add(annotation);
-                    }
-                }
-                cls = cls.getSuperclass();
-            }
-
-            for (final Annotation annotation : targetMethod.getAnnotations())
-            {
-                if (SecurityUtils.isMetaAnnotatedWithSecurityBindingType(annotation))
-                {
-                    bindings.add(annotation);
-                }
-            }
-
             Set<AuthorizationParameter> parameterBindings = new HashSet<AuthorizationParameter>();
             Class<?>[] parameterTypes = targetMethod.getParameterTypes();
             Annotation[][] parameterAnnotations = targetMethod.getParameterAnnotations();
@@ -137,7 +131,7 @@ class SecurityMetaDataStorage
             
             Set<Authorizer> authorizerStack = new HashSet<Authorizer>();
 
-            for (Annotation binding : bindings)
+            for (Annotation binding : SecurityUtils.getSecurityBindingTypes(targetClass, targetMethod))
             {
                 boolean found = false;
 

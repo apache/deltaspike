@@ -25,17 +25,21 @@ import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
 import org.apache.deltaspike.security.api.authorization.SecurityDefinitionException;
 import org.apache.deltaspike.security.api.authorization.annotation.Secures;
 import org.apache.deltaspike.security.impl.util.SecurityUtils;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AfterBeanDiscovery;
 import javax.enterprise.inject.spi.AnnotatedMethod;
+import javax.enterprise.inject.spi.AnnotatedParameter;
 import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.BeforeBeanDiscovery;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
-import java.lang.annotation.Annotation;
-import java.util.Collections;
 
 /**
  * Extension for processing typesafe security annotations
@@ -63,7 +67,6 @@ public class SecurityExtension implements Extension, Deactivatable
     /**
      * Handles &#064;Secured beans
      */
-    @SuppressWarnings("UnusedDeclaration")
     public <X> void processAnnotatedType(@Observes ProcessAnnotatedType<X> event)
     {
         if (!isActivated)
@@ -84,6 +87,7 @@ public class SecurityExtension implements Extension, Deactivatable
             {
                 builder = new AnnotatedTypeBuilder<X>().readFromType(type);
                 builder.addToClass(INTERCEPTOR_BINDING);
+                getMetaDataStorage().addSecuredType(type);
                 isSecured = true;
                 break;
             }
@@ -111,17 +115,11 @@ public class SecurityExtension implements Extension, Deactivatable
                             builder = new AnnotatedTypeBuilder<X>().readFromType(type);
                         }
                         builder.addToMethod(m, INTERCEPTOR_BINDING);
-                        isSecured = true;
+                        getMetaDataStorage().addSecuredMethod(m);
                         break;
                     }
                 }
             }
-        }
-
-        // If either the bean or any of its methods are secured, register it
-        if (isSecured) 
-        {
-            getMetaDataStorage().addSecuredType(type);
         }
 
         if (builder != null) 
@@ -130,7 +128,6 @@ public class SecurityExtension implements Extension, Deactivatable
         }
     }
 
-    @SuppressWarnings("UnusedDeclaration")
     public void validateBindings(@Observes AfterBeanDiscovery event, BeanManager beanManager)
     {
         if (!isActivated)
@@ -139,54 +136,72 @@ public class SecurityExtension implements Extension, Deactivatable
         }
 
         SecurityMetaDataStorage metaDataStorage = getMetaDataStorage();
+        metaDataStorage.registerSecuredMethods();
 
-        for (final AnnotatedType<?> type : metaDataStorage.getSecuredTypes())
+        for (final AnnotatedMethod<?> method : metaDataStorage.getSecuredMethods())
         {
-            // Here we simply want to validate that each type that is annotated with
+            // Here we simply want to validate that each method that is annotated with
             // one or more security bindings has a valid authorizer for each binding
 
-            for (final Annotation annotation : type.getJavaClass().getAnnotations()) 
+            Class<?> targetClass = method.getDeclaringType().getJavaClass();
+            Method targetMethod = method.getJavaMember();
+            for (final Annotation annotation : SecurityUtils.getSecurityBindingTypes(targetClass, targetMethod)) 
             {
                 boolean found = false;
 
-                if (SecurityUtils.isMetaAnnotatedWithSecurityBindingType(annotation))
+                Set<AuthorizationParameter> authorizationParameters = new HashSet<AuthorizationParameter>();
+                for (AnnotatedParameter<?> parameter : (List<AnnotatedParameter<?>>) (List<?>) method.getParameters())
                 {
-                    // Validate the authorizer
-                    for (Authorizer auth : metaDataStorage.getAuthorizers())
+                    Set<Annotation> securityParameterBindings = null;
+                    for (Annotation a : parameter.getAnnotations())
                     {
-                        //TODO
-                        if (auth.matchesBindings(annotation, Collections.<AuthorizationParameter> emptySet())) 
+                        if (SecurityUtils.isMetaAnnotatedWithSecurityParameterBinding(a))
                         {
-                            found = true;
-                            break;
+                            if (securityParameterBindings == null)
+                            {
+                                securityParameterBindings = new HashSet<Annotation>();
+                            }
+                            securityParameterBindings.add(a);
                         }
                     }
+                    if (securityParameterBindings != null)
+                    {
+                        AuthorizationParameter authorizationParameter
+                            = new AuthorizationParameter(parameter.getBaseType(), securityParameterBindings);
+                        authorizationParameters.add(authorizationParameter);
+                    }
+                }
+                // Validate the authorizer
+                for (Authorizer auth : metaDataStorage.getAuthorizers())
+                {
+                    if (auth.matchesBindings(annotation, authorizationParameters)) 
+                    {
+                        found = true;
+                        break;
+                    }
+                }
 
-//                    if (!found) 
-//                    {
-//                        event.addDefinitionError(new SecurityDefinitionException("Secured type " +
-//                                type.getJavaClass().getName() +
-//                                " has no matching authorizer method for security binding @" +
-//                                annotation.annotationType().getName()));
-//                    }
+                if (!found) 
+                {
+                    event.addDefinitionError(new SecurityDefinitionException("Secured type " +
+                            method.getDeclaringType().getJavaClass().getName() +
+                            " has no matching authorizer method for security binding @" +
+                            annotation.annotationType().getName()));
                 }
             }
 
-            for (final AnnotatedMethod<?> method : type.getMethods()) 
+            for (final Annotation annotation : method.getAnnotations()) 
             {
-                for (final Annotation annotation : method.getAnnotations()) 
+                if (SecurityUtils.isMetaAnnotatedWithSecurityBindingType(annotation))
                 {
-                    if (SecurityUtils.isMetaAnnotatedWithSecurityBindingType(annotation))
-                    {
-                        metaDataStorage.registerSecuredMethod(type.getJavaClass(), method.getJavaMember());
-                        break;
-                    }
+                    metaDataStorage.registerSecuredMethod(targetClass, targetMethod);
+                    break;
                 }
             }
         }
 
         // Clear securedTypes, we don't require it any more
-        metaDataStorage.resetSecuredTypes();
+        metaDataStorage.resetSecuredMethods();
     }
 
     /**

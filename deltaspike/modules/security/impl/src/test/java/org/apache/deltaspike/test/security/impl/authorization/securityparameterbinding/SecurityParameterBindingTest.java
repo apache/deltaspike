@@ -26,7 +26,6 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -45,23 +44,18 @@ public class SecurityParameterBindingTest
                 .addAsWebInfResource(ArchiveUtils.getBeansXml(), "beans.xml");
     }
 
-    @Ignore
     @Test
     public void simpleInterceptorThrowsExceptionWhenImproperlyAnnotated()
     {
         try
         {
             SecuredBean1 testBean = BeanProvider.getContextualReference(SecuredBean1.class, false);
-            testBean.getResult(new MockObject(true));
+            testBean.getResult(new MockObject2(false));
             Assert.fail("Expected exception, IllegalStateException was not thrown");
         }
-        catch (IllegalStateException e)
+        catch (AccessDeniedException e)
         {
             // expected exception
-        }
-        catch (Exception e)
-        {
-            Assert.fail("Unexpected Exception: " + e);
         }
     }
 
@@ -71,7 +65,7 @@ public class SecurityParameterBindingTest
         try
         {
             SecuredBean1 testBean = BeanProvider.getContextualReference(SecuredBean1.class, false);
-            testBean.getBlockedResult(new MockObject(false));
+            testBean.getResult(new MockObject(false));
             Assert.fail("AccessDeniedException expect, but was not thrown");
         }
         catch (AccessDeniedException e)
@@ -88,7 +82,7 @@ public class SecurityParameterBindingTest
     public void simpleInterceptorAllowsTest()
     {
         SecuredBean1 testBean = BeanProvider.getContextualReference(SecuredBean1.class, false);
-        Assert.assertTrue(testBean.getBlockedResult(new MockObject(true)));
+        Assert.assertTrue(testBean.getResult(new MockObject(true)));
     }
 
     @Test

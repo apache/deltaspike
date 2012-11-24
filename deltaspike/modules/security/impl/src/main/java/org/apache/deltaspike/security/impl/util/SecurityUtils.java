@@ -24,8 +24,11 @@ import org.apache.deltaspike.security.api.authorization.annotation.SecurityParam
 import javax.enterprise.inject.Stereotype;
 import javax.enterprise.inject.Typed;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Typed()
 public abstract class SecurityUtils
@@ -33,6 +36,32 @@ public abstract class SecurityUtils
     private SecurityUtils()
     {
         // prevent instantiation
+    }
+
+    public static Set<Annotation> getSecurityBindingTypes(Class<?> targetClass, Method targetMethod)
+    {
+        Set<Annotation> securityBindingTypes = new HashSet<Annotation>();
+        Class<?> cls = targetClass;
+        while (!cls.equals(Object.class))
+        {
+            for (final Annotation annotation : cls.getAnnotations())
+            {
+                if (SecurityUtils.isMetaAnnotatedWithSecurityBindingType(annotation))
+                {
+                    securityBindingTypes.add(annotation);
+                }
+            }
+            cls = cls.getSuperclass();
+        }
+
+        for (final Annotation annotation : targetMethod.getAnnotations())
+        {
+            if (SecurityUtils.isMetaAnnotatedWithSecurityBindingType(annotation))
+            {
+                securityBindingTypes.add(annotation);
+            }
+        }
+        return securityBindingTypes;
     }
 
     public static boolean isMetaAnnotatedWithSecurityBindingType(Annotation annotation)

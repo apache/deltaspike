@@ -24,12 +24,12 @@ import javax.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class SecuredBean1
 {
-    public boolean getBlockedResult(@MockParamBinding MockObject mockObject)
+    public boolean getResult(@MockParamBinding MockObject mockObject)
     {
         return mockObject.isValue();
     }
 
-    public boolean getResult(MockObject mockObject)
+    public boolean getResult(@MockParamBinding MockObject2 mockObject)
     {
         return mockObject.isValue();
     }
