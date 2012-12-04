@@ -276,6 +276,15 @@
             <timezone>+1</timezone>
         </developer>
         <developer>
+            <id>arne</id>
+            <name>Arne Limburg</name>
+            <email>arne@apache.org</email>
+            <roles>
+                <role>PPMC</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+        <developer>
             <id>rdebusscher</id>
             <name>Rudy De Busscher</name>
             <email>rdebusscher@apache.org</email>
