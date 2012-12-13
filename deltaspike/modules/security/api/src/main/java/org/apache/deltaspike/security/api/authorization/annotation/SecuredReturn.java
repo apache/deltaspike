@@ -16,25 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.security.impl.authorization.securityparameterbinding;
 
-import javax.enterprise.context.ApplicationScoped;
+package org.apache.deltaspike.security.api.authorization.annotation;
 
-@CustomSecurityBinding
-@ApplicationScoped
-public class SecuredBean1
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/**
+ * Marks an argument of a {@link Secures} method to be the result of the secured business method invocation.
+ * If present, forces the {@link Secures} check to occure after invocation of the business method.
+ */
+@Target(ElementType.PARAMETER)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface SecuredReturn 
 {
-    public boolean getResult(@MockParamBinding MockObject mockObject)
-    {
-        return mockObject.isValue();
-    }
-
-    public boolean getResult(@MockParamBinding MockObject2 mockObject)
-    {
-        return mockObject.isValue();
-    }
-
-    public MockObject getResult(boolean value) {
-    	return new MockObject(value);
-    }
 }

@@ -117,4 +117,58 @@ public class SecurityParameterBindingTest
         SecuredBean2 testBean = BeanProvider.getContextualReference(SecuredBean2.class, false);
         Assert.assertTrue(testBean.getBlockedResult(new MockObject(true)));
     }
+
+    @Test
+    public void afterInvocationAuthorizerCheckWithAllowedResult()
+    {
+        SecuredBean1 testBean = BeanProvider.getContextualReference(SecuredBean1.class, false);
+        Assert.assertTrue(testBean.getResult(true).isValue());
+    }
+
+    @Test
+    public void afterInvocationAuthorizerCheckWithDeniedResult()
+    {
+        try
+        {
+        	SecuredBean1 testBean = BeanProvider.getContextualReference(SecuredBean1.class, false);
+        	testBean.getResult(false);
+            Assert.fail("AccessDeniedException expect, but was not thrown");
+        }
+        catch (AccessDeniedException e)
+        {
+            // expected
+        }
+    }
+
+    @Test
+    public void afterInvocationAuthorizerWithoutReturnType()
+    {
+        MethodInvocationParameter parameter = new MethodInvocationParameter();
+        try
+        {
+            SecuredBean2 testBean = BeanProvider.getContextualReference(SecuredBean2.class, false);
+            testBean.securityCheckAfterMethodInvocation(parameter);
+            Assert.fail("AccessDeniedException expect, but was not thrown");
+        }
+        catch (AccessDeniedException e)
+        {
+            Assert.assertTrue(parameter.isMethodInvoked());
+        }
+    }
+
+    @Test
+    public void afterInvocationAuthorizerWithVoidReturnType()
+    {
+        MethodInvocationParameter parameter = new MethodInvocationParameter();
+        try
+        {
+            SecuredBean2 testBean = BeanProvider.getContextualReference(SecuredBean2.class, false);
+            testBean.securityCheckAfterMethodInvocationWithVoidResult(parameter);
+            Assert.fail("AccessDeniedException expect, but was not thrown");
+        }
+        catch (AccessDeniedException e)
+        {
+            Assert.assertTrue(parameter.isMethodInvoked());
+        }
+    }
 }

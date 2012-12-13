@@ -30,7 +30,6 @@ import java.lang.reflect.Method;
  * {@inheritDoc}
  */
 @Dependent
-@SuppressWarnings("UnusedDeclaration")
 public class DefaultSecurityStrategy implements SecurityStrategy
 {
     private static final long serialVersionUID = 7992336651801599079L;
@@ -53,9 +52,22 @@ public class DefaultSecurityStrategy implements SecurityStrategy
 
         for (Authorizer authorizer : metaDataStorage.getAuthorizers(invocationContext.getTarget().getClass(), method))
         {
-            authorizer.authorize(invocationContext, this.beanManager);
+            if (authorizer.isBeforeMethodInvocationAuthorizer())
+            {
+                authorizer.authorize(invocationContext, null, this.beanManager);
+            }
         }
 
-        return invocationContext.proceed();
+        Object result = invocationContext.proceed();
+
+        for (Authorizer authorizer : metaDataStorage.getAuthorizers(invocationContext.getTarget().getClass(), method))
+        {
+            if (authorizer.isAfterMethodInvocationAuthorizer())
+            {
+                authorizer.authorize(invocationContext, result, this.beanManager);
+            }
+        }
+        
+        return result;
     }
 }

@@ -19,6 +19,7 @@
 package org.apache.deltaspike.test.security.impl.authorization.securityparameterbinding;
 
 import org.apache.deltaspike.security.api.authorization.annotation.Secures;
+import org.apache.deltaspike.security.api.authorization.annotation.SecuredReturn;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.interceptor.InvocationContext;
@@ -39,5 +40,18 @@ public class CustomAuthorizer
     public boolean doSecuredCheck(@MockParamBinding MockObject2 obj)
     {
     	return obj.isValue();
+    }
+    
+    @Secures
+    @CustomSecurityBinding
+    public boolean doSecuredCheckAfterMethodInvocation(@SecuredReturn MockObject obj)
+    {
+    	return obj.isValue();
+    }
+
+    @Secures
+    @CustomSecurityBinding
+    public boolean doSecuredCheckAfterMethodInvocationWithVoidMethod(@SecuredReturn Void result) {
+        return false;
     }
 }

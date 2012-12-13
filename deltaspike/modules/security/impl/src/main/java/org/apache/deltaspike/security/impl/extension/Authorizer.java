@@ -40,6 +40,7 @@ import org.apache.deltaspike.core.util.metadata.builder.InjectableMethod;
 import org.apache.deltaspike.security.api.authorization.AccessDeniedException;
 import org.apache.deltaspike.security.api.authorization.SecurityDefinitionException;
 import org.apache.deltaspike.security.api.authorization.SecurityViolation;
+import org.apache.deltaspike.security.api.authorization.annotation.SecuredReturn;
 import org.apache.deltaspike.security.api.authorization.annotation.SecurityBindingType;
 import org.apache.deltaspike.security.impl.authorization.SecurityParameterValueRedefiner;
 import org.apache.deltaspike.security.impl.util.SecurityUtils;
@@ -53,8 +54,9 @@ class Authorizer
     private Annotation bindingAnnotation;
     private Map<Method, Object> bindingSecurityBindingMembers = new HashMap<Method, Object>();
     private Set<AuthorizationParameter> authorizationParameters = new HashSet<AuthorizationParameter>();
+    private Class<?> securedReturnType;
 
-    private AnnotatedMethod<?> boundAuthorizerMethod;
+    private volatile AnnotatedMethod<?> boundAuthorizerMethod;
     private volatile Bean<?> boundAuthorizerBean;
 
     private volatile InjectableMethod<?> boundAuthorizerMethodProxy;
@@ -87,6 +89,7 @@ class Authorizer
         for (AnnotatedParameter<?> annotatedParameter : boundAuthorizerMethod.getParameters())
         {
             Set<Annotation> securityParameterBindings = null;
+            Class<?> securedReturnType = null;
             for (Annotation annotation : annotatedParameter.getAnnotations())
             {
                 if (SecurityUtils.isMetaAnnotatedWithSecurityParameterBinding(annotation))
@@ -97,17 +100,73 @@ class Authorizer
                     }
                     securityParameterBindings.add(annotation);
                 }
+                if (annotation.annotationType().equals(SecuredReturn.class))
+                {
+                    securedReturnType
+                        = boundAuthorizerMethod.getJavaMember().getParameterTypes()[annotatedParameter.getPosition()];
+                }
             }
-            if (securityParameterBindings != null)
+            if (securityParameterBindings != null && securedReturnType != null)
+            {
+                StringBuilder errorMessage = new StringBuilder();
+                errorMessage.append("@SecurityParameterBinding annotations must not occure ");
+                errorMessage.append("at the same parameter with @Result annotation, but parameter ");
+                errorMessage.append(annotatedParameter.getPosition()).append(" of method ");
+                errorMessage.append(boundAuthorizerMethod.getJavaMember()).append(" is annotated with @Result and ");
+                boolean first = true;
+                for (Annotation securityParameterBinding : securityParameterBindings)
+                {
+                    if (first)
+                    {
+                        first = false;
+                    }
+                    else
+                    {
+                        errorMessage.append(" and ");
+                    }
+                    errorMessage.append(securityParameterBinding);
+                }
+                if (securityParameterBindings.size() == 1)
+                {
+                    errorMessage.append(", which is a @SecurityParameterBinding annotation");
+                }
+                else
+                {
+                    errorMessage.append(", which are @SecurityParameterBinding annotations");
+                }
+                throw new SecurityDefinitionException(errorMessage.toString());
+            }
+            else if (securityParameterBindings != null)
             {
                 AuthorizationParameter authorizationParameter
                     = new AuthorizationParameter(annotatedParameter.getBaseType(), securityParameterBindings);
                 authorizationParameters.add(authorizationParameter);
             }
+            else if (securedReturnType != null)
+            {
+                if (this.securedReturnType != null
+                    && !this.securedReturnType.equals(securedReturnType))
+                {
+                    throw new SecurityDefinitionException("More than one parameter of "
+                                                          + boundAuthorizerMethod.getJavaMember()
+                                                          + " is annotated with @Result");
+                }
+                this.securedReturnType = securedReturnType;
+            }
         }
     }
 
-    void authorize(final InvocationContext ic, BeanManager beanManager)
+    boolean isBeforeMethodInvocationAuthorizer()
+    {
+        return securedReturnType == null;
+    }
+
+    boolean isAfterMethodInvocationAuthorizer()
+    {
+        return securedReturnType != null;
+    }
+
+    void authorize(final InvocationContext ic, final Object returnValue, BeanManager beanManager)
     {
         if (boundAuthorizerBean == null)
         {
@@ -120,7 +179,7 @@ class Authorizer
             boundAuthorizerMethod.getJavaMember().getDeclaringClass(), creationalContext);
 
         Object result = boundAuthorizerMethodProxy.invoke(reference, creationalContext, 
-                    new SecurityParameterValueRedefiner(creationalContext, ic));
+                    new SecurityParameterValueRedefiner(creationalContext, ic, returnValue));
 
         if (result.equals(Boolean.FALSE))
         {
@@ -161,7 +220,7 @@ class Authorizer
         }
     }
 
-    boolean matchesBindings(Annotation annotation, Set<AuthorizationParameter> parameterBindings)
+    boolean matchesBindings(Annotation annotation, Set<AuthorizationParameter> parameterBindings, Class<?> returnType)
     {
         if (!annotation.annotationType().isAnnotationPresent(SecurityBindingType.class) &&
                 annotation.annotationType().isAnnotationPresent(Stereotype.class))
@@ -220,7 +279,29 @@ class Authorizer
             }
         }
         
+        if (!matches(returnType))
+        {
+            return false;
+        }
+
         return true;
+    }
+
+    private boolean matches(Class<?> returnType)
+    {
+        if (securedReturnType == null)
+        {
+            return true;
+        }
+        if (securedReturnType.isAssignableFrom(returnType))
+        {
+            return true;
+        }
+        if (securedReturnType.equals(Void.class) && returnType.equals(Void.TYPE))
+        {
+            return true;
+        }
+        return false;
     }
 
     Method getBoundAuthorizerMethod()

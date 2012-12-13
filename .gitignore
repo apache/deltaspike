@@ -5,6 +5,7 @@ target
 .project
 .classpath
 .settings
+.metadata
 .svn
 .idea
 .checkstyle

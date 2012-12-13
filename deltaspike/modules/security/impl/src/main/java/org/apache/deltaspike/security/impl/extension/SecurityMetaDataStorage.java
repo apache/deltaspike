@@ -138,7 +138,7 @@ class SecurityMetaDataStorage
                 // For each security binding, find a valid authorizer
                 for (Authorizer authorizer : authorizers)
                 {
-                    if (authorizer.matchesBindings(binding, parameterBindings))
+                    if (authorizer.matchesBindings(binding, parameterBindings, targetMethod.getReturnType()))
                     {
                         if (found)
                         {
@@ -151,7 +151,7 @@ class SecurityMetaDataStorage
 
                             for (Authorizer a : authorizerStack)
                             {
-                                if (a.matchesBindings(binding, parameterBindings))
+                                if (a.matchesBindings(binding, parameterBindings, targetMethod.getReturnType()))
                                 {
                                     sb.append(", [");
                                     sb.append(a.getBoundAuthorizerMethod().getDeclaringClass().getName());

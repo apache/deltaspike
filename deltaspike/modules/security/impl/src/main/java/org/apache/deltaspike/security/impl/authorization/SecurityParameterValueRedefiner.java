@@ -31,6 +31,7 @@ import javax.enterprise.inject.spi.InjectionPoint;
 import javax.interceptor.InvocationContext;
 
 import org.apache.deltaspike.core.util.metadata.builder.ParameterValueRedefiner;
+import org.apache.deltaspike.security.api.authorization.annotation.SecuredReturn;
 import org.apache.deltaspike.security.api.authorization.annotation.SecurityParameterBinding;
 
 /**
@@ -40,11 +41,15 @@ public class SecurityParameterValueRedefiner implements ParameterValueRedefiner
 {
     private CreationalContext<?> creationalContext;
     private InvocationContext invocation;
+    private Object result;
 
-    public SecurityParameterValueRedefiner(CreationalContext<?> creationalContext, InvocationContext invocation)
+    public SecurityParameterValueRedefiner(CreationalContext<?> creationalContext,
+                                           InvocationContext invocation,
+                                           Object result)
     {
-        this.invocation = invocation;
         this.creationalContext = creationalContext;
+        this.invocation = invocation;
+        this.result = result;
     }
 
     @Override
@@ -57,6 +62,10 @@ public class SecurityParameterValueRedefiner implements ParameterValueRedefiner
             if (value.getInjectionPoint().getAnnotated().getBaseType().equals(InvocationContext.class))
             {
                 return invocation;
+            }
+            else if (value.getInjectionPoint().getAnnotated().isAnnotationPresent(SecuredReturn.class))
+            {
+                return result;
             }
             else
             {

@@ -33,4 +33,15 @@ public class SecuredBean2
     {
         return mockObject.isValue();
     }
+    
+    @CustomSecurityBinding
+    public void securityCheckAfterMethodInvocation(MethodInvocationParameter parameter) {
+        parameter.setMethodInvoked(true);
+    }
+    
+    @CustomSecurityBinding
+    public Void securityCheckAfterMethodInvocationWithVoidResult(MethodInvocationParameter parameter) {
+        parameter.setMethodInvoked(true);
+        return null;
+    }
 }

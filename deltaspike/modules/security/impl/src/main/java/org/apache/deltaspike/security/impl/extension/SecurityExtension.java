@@ -174,7 +174,7 @@ public class SecurityExtension implements Extension, Deactivatable
                 // Validate the authorizer
                 for (Authorizer auth : metaDataStorage.getAuthorizers())
                 {
-                    if (auth.matchesBindings(annotation, authorizationParameters)) 
+                    if (auth.matchesBindings(annotation, authorizationParameters, targetMethod.getReturnType())) 
                     {
                         found = true;
                         break;

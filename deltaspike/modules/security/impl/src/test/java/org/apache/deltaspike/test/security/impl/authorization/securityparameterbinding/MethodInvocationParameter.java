@@ -18,23 +18,18 @@
  */
 package org.apache.deltaspike.test.security.impl.authorization.securityparameterbinding;
 
-import javax.enterprise.context.ApplicationScoped;
-
-@CustomSecurityBinding
-@ApplicationScoped
-public class SecuredBean1
+public class MethodInvocationParameter
 {
-    public boolean getResult(@MockParamBinding MockObject mockObject)
+
+    private boolean methodInvoked;
+
+    public boolean isMethodInvoked()
     {
-        return mockObject.isValue();
+        return methodInvoked;
     }
 
-    public boolean getResult(@MockParamBinding MockObject2 mockObject)
+    public void setMethodInvoked(boolean value)
     {
-        return mockObject.isValue();
-    }
-
-    public MockObject getResult(boolean value) {
-    	return new MockObject(value);
+        this.methodInvoked = value;
     }
 }
