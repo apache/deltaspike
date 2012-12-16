@@ -22,7 +22,6 @@ import org.apache.deltaspike.core.api.jmx.annotation.Description;
 import org.apache.deltaspike.core.api.jmx.annotation.ManagedAttribute;
 import org.apache.deltaspike.core.api.jmx.annotation.ManagedOperation;
 import org.apache.deltaspike.core.api.jmx.annotation.NotificationInfo;
-import org.apache.deltaspike.core.api.jmx.annotation.NotificationInfos;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 
@@ -92,7 +91,7 @@ public class DynamicMBeanWrapper implements DynamicMBean
             notificationInfos.add(getNotificationInfo(notification));
         }
 
-        final NotificationInfos notifications = annotatedMBean.getAnnotation(NotificationInfos.class);
+        final NotificationInfo.List notifications = annotatedMBean.getAnnotation(NotificationInfo.List.class);
         if (notifications != null && notifications.value() != null)
         {
             for (NotificationInfo n : notifications.value())

@@ -20,18 +20,26 @@ package org.apache.deltaspike.core.api.jmx.annotation;
 
 import javax.management.Notification;
 import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
 @Documented
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
+@Target(TYPE)
+@Retention(RUNTIME)
 public @interface NotificationInfo
 {
     String[] types() default { };
     Description description() default @Description("");
     Class<? extends Notification> notificationClass() default Notification.class;
     String[] descriptorFields() default { };
+
+    @Target(TYPE)
+    @Retention(RUNTIME)
+    static @interface List
+    {
+        NotificationInfo[] value();
+    }
 }
