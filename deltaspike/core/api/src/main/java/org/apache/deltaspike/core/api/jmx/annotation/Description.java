@@ -35,6 +35,4 @@ import static java.lang.annotation.ElementType.TYPE;
 public @interface Description
 {
     String value() default "";
-    String bundleBaseName() default "";
-    String key() default "";
 }

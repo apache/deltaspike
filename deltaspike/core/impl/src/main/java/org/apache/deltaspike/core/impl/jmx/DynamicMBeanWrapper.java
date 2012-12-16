@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.core.impl.jmx;
 
+import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.jmx.annotation.Description;
 import org.apache.deltaspike.core.api.jmx.annotation.ManagedAttribute;
 import org.apache.deltaspike.core.api.jmx.annotation.ManagedOperation;
@@ -50,7 +51,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -83,41 +83,42 @@ public class DynamicMBeanWrapper implements DynamicMBean
         final List<MBeanNotificationInfo> notificationInfos = new ArrayList<MBeanNotificationInfo>();
 
         // class
-        final String description = getDescription(annotatedMBean.getAnnotation(Description.class), "-");
+        final String description =
+            getDescription(annotatedMBean.getAnnotation(Description.class), annotatedMBean.getName());
 
         final NotificationInfo notification = annotatedMBean.getAnnotation(NotificationInfo.class);
         if (notification != null)
         {
-            notificationInfos.add(getNotificationInfo(notification));
+            notificationInfos.add(getNotificationInfo(notification, annotatedMBean.getName()));
         }
 
         final NotificationInfo.List notifications = annotatedMBean.getAnnotation(NotificationInfo.List.class);
-        if (notifications != null && notifications.value() != null)
+        if (notifications != null)
         {
-            for (NotificationInfo n : notifications.value())
+            for (NotificationInfo notificationInfo : notifications.value())
             {
-                notificationInfos.add(getNotificationInfo(n));
+                notificationInfos.add(getNotificationInfo(notificationInfo, annotatedMBean.getName()));
             }
         }
 
 
         // methods
-        for (Method m : annotatedMBean.getMethods())
+        for (Method method : annotatedMBean.getMethods())
         {
-            final int modifiers = m.getModifiers();
-            if (m.getDeclaringClass().equals(Object.class)
+            final int modifiers = method.getModifiers();
+            if (method.getDeclaringClass().equals(Object.class)
                     || !Modifier.isPublic(modifiers)
                     || Modifier.isAbstract(modifiers))
             {
                 continue;
             }
 
-            if (m.getAnnotation(ManagedAttribute.class) != null)
+            if (method.getAnnotation(ManagedAttribute.class) != null)
             {
-                final String methodName = m.getName();
+                final String methodName = method.getName();
 
                 String attrName = methodName;
-                if (isAccessor(m))
+                if (isAccessor(method))
                 {
                     attrName = attrName.substring(3);
                     if (attrName.length() > 1)
@@ -131,53 +132,45 @@ public class DynamicMBeanWrapper implements DynamicMBean
                 }
                 else
                 {
-                    LOGGER.warning("ignoring attribute " + m.getName() + " for " + annotatedMBean.getName());
+                    LOGGER.warning("ignoring attribute " + method.getName() + " for " + annotatedMBean.getName());
                     continue;
                 }
 
                 if (methodName.startsWith("get"))
                 {
-                    getters.put(attrName, m);
+                    getters.put(attrName, method);
                 }
                 else if (methodName.startsWith("set"))
                 {
-                    setters.put(attrName, m);
+                    setters.put(attrName, method);
                 }
             }
-            else if (m.getAnnotation(ManagedOperation.class) != null)
+            else if (method.getAnnotation(ManagedOperation.class) != null)
             {
-                operations.put(m.getName(), m);
+                operations.put(method.getName(), method);
 
-                String operationDescr = "";
-                final Description descr = m.getAnnotation(Description.class);
-                if (descr != null)
-                {
-                    operationDescr = getDescription(descr, "-");
-                }
+                String operationDescr = getDescription(method.getAnnotation(Description.class),
+                    annotatedMBean.getName() + "#" + method.getName());
 
-                operationInfos.add(new MBeanOperationInfo(operationDescr, m));
+                operationInfos.add(new MBeanOperationInfo(operationDescr, method));
             }
         }
 
-        for (Map.Entry<String, Method> e : getters.entrySet())
+        for (Map.Entry<String, Method> methodEntry : getters.entrySet())
         {
-            final String key = e.getKey();
-            final Method mtd = e.getValue();
+            final String key = methodEntry.getKey();
+            final Method method = methodEntry.getValue();
 
-            String attrDescr = "";
-            final Description descr = mtd.getAnnotation(Description.class);
-            if (descr != null)
-            {
-                attrDescr = getDescription(descr, "-");
-            }
+            String attrDescr = getDescription(method.getAnnotation(Description.class),
+                method.getDeclaringClass().getName() + "#" + method.getName());
 
             try
             {
-                attributeInfos.add(new MBeanAttributeInfo(key, attrDescr, mtd, setters.get(key)));
+                attributeInfos.add(new MBeanAttributeInfo(key, attrDescr, method, setters.get(key)));
             }
             catch (IntrospectionException ex)
             {
-                LOGGER.log(Level.WARNING, "can't manage " + key + " for " + mtd.getName(), ex);
+                LOGGER.log(Level.WARNING, "can't manage " + key + " for " + method.getName(), ex);
             }
         }
 
@@ -197,34 +190,37 @@ public class DynamicMBeanWrapper implements DynamicMBean
                 && name.length() > 3;
     }
 
-    private MBeanNotificationInfo getNotificationInfo(final NotificationInfo n)
+    private MBeanNotificationInfo getNotificationInfo(final NotificationInfo n, String sourceInfo)
     {
         return new MBeanNotificationInfo(n.types(),
-                n.notificationClass().getName(), getDescription(n.description(), "-"),
+                n.notificationClass().getName(), getDescription(n.description(), sourceInfo),
                 new ImmutableDescriptor(n.descriptorFields()));
     }
 
-    private String getDescription(final Description d, final String defaultValue)
+    private String getDescription(final Description description, String defaultDescription)
     {
-        if (d != null)
+        if (description == null)
         {
-            if (d.bundleBaseName() != null && d.key() != null)
-            {
-                try
-                {
-                    return ResourceBundle.getBundle(d.bundleBaseName()).getString(d.key());
-                }
-                catch (RuntimeException re)
-                {
-                    return d.value();
-                }
-            }
-            else
-            {
-                return d.value();
-            }
+            return defaultDescription;
         }
-        return defaultValue;
+
+        String descriptionValue = description.value().trim();
+
+        if (descriptionValue.startsWith("{") && descriptionValue.endsWith("}"))
+        {
+
+            if (description.annotationType().getEnclosingMethod() != null)
+            {
+                defaultDescription = description.annotationType().getEnclosingMethod().getName();
+            }
+            else if (description.annotationType().getEnclosingClass() != null)
+            {
+                defaultDescription = description.annotationType().getEnclosingClass().getName();
+            }
+            return ConfigResolver.getPropertyValue(
+                descriptionValue.substring(1, descriptionValue.length() - 1), defaultDescription);
+        }
+        return description.value();
     }
 
     @Override
