@@ -199,7 +199,7 @@ public class DynamicMBeanWrapper implements DynamicMBean
 
     private String getDescription(final Description description, String defaultDescription)
     {
-        if (description == null)
+        if (description == null || "".equals(description.value()))
         {
             return defaultDescription;
         }
