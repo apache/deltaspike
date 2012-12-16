@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.test.core.impl.jmx;
 
-import org.apache.deltaspike.core.api.jmx.annotation.JmxDescription;
 import org.apache.deltaspike.core.api.jmx.annotation.JmxManaged;
 import org.apache.deltaspike.core.api.jmx.annotation.MBean;
 import org.apache.deltaspike.core.impl.jmx.MBeanExtension;
@@ -80,13 +79,11 @@ public class SimpleRegistrationTest {
         assertEquals(10, myMBean.getCounter());
     }
 
-    @MBean
-    @JmxDescription("my mbean")
     @ApplicationScoped
+    @MBean(description = "my mbean")
     public static class MyMBean
     {
-        @JmxManaged
-        @JmxDescription("get counter")
+        @JmxManaged(description = "get counter")
         private int counter = 0;
 
         public int getCounter()
@@ -104,8 +101,7 @@ public class SimpleRegistrationTest {
             counter = value;
         }
 
-        @JmxManaged
-        @JmxDescription("multiply counter")
+        @JmxManaged(description = "multiply counter")
         public int multiply(final int n)
         {
             return counter * n;

@@ -31,5 +31,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface MBean
 {
     String objectName() default "";
+    String description() default "";
 }
 

@@ -19,8 +19,8 @@
 package org.apache.deltaspike.core.impl.jmx;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
-import org.apache.deltaspike.core.api.jmx.annotation.JmxDescription;
 import org.apache.deltaspike.core.api.jmx.annotation.JmxManaged;
+import org.apache.deltaspike.core.api.jmx.annotation.MBean;
 import org.apache.deltaspike.core.api.jmx.annotation.NotificationInfo;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
@@ -82,7 +82,7 @@ public class DynamicMBeanWrapper implements DynamicMBean
 
         // class
         final String description =
-            getDescription(annotatedMBean.getAnnotation(JmxDescription.class), annotatedMBean.getName());
+            getDescription(annotatedMBean.getAnnotation(MBean.class).description(), annotatedMBean.getName());
 
         final NotificationInfo notification = annotatedMBean.getAnnotation(NotificationInfo.class);
         if (notification != null)
@@ -104,18 +104,19 @@ public class DynamicMBeanWrapper implements DynamicMBean
         for (Method method : annotatedMBean.getMethods())
         {
             final int modifiers = method.getModifiers();
+            final JmxManaged annotation = method.getAnnotation(JmxManaged.class);
             if (method.getDeclaringClass().equals(Object.class)
                     || !Modifier.isPublic(modifiers)
                     || Modifier.isAbstract(modifiers)
                     || Modifier.isStatic(modifiers)
-                    || method.getAnnotation(JmxManaged.class) == null)
+                    || annotation == null)
             {
                 continue;
             }
 
             operations.put(method.getName(), method);
 
-            String operationDescr = getDescription(method.getAnnotation(JmxDescription.class),
+            String operationDescr = getDescription(annotation.description(),
                 annotatedMBean.getName() + "#" + method.getName());
 
             operationInfos.add(new MBeanOperationInfo(operationDescr, method));
@@ -129,7 +130,7 @@ public class DynamicMBeanWrapper implements DynamicMBean
                     field.setAccessible(true);
 
                     final String name = field.getName();
-                    final String fieldDescription = getDescription(field.getAnnotation(JmxDescription.class),
+                    final String fieldDescription = getDescription(annotation.description(),
                             annotatedMBean.getClass() + "#" + name);
                     final Class<?> type = field.getType();
 
@@ -181,30 +182,21 @@ public class DynamicMBeanWrapper implements DynamicMBean
                 new ImmutableDescriptor(n.descriptorFields()));
     }
 
-    private String getDescription(final JmxDescription description, String defaultDescription)
+    private String getDescription(final String description, String defaultDescription)
     {
-        if (description == null || "".equals(description.value()))
+        if (description.isEmpty())
         {
             return defaultDescription;
         }
 
-        String descriptionValue = description.value().trim();
+        String descriptionValue = description.trim();
 
         if (descriptionValue.startsWith("{") && descriptionValue.endsWith("}"))
         {
-
-            if (description.annotationType().getEnclosingMethod() != null)
-            {
-                defaultDescription = description.annotationType().getEnclosingMethod().getName();
-            }
-            else if (description.annotationType().getEnclosingClass() != null)
-            {
-                defaultDescription = description.annotationType().getEnclosingClass().getName();
-            }
             return ConfigResolver.getPropertyValue(
                 descriptionValue.substring(1, descriptionValue.length() - 1), defaultDescription);
         }
-        return description.value();
+        return description;
     }
 
     @Override

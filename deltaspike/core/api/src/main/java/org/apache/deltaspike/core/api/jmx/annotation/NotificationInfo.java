@@ -32,7 +32,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface NotificationInfo
 {
     String[] types() default { };
-    JmxDescription description() default @JmxDescription("");
+    String description() default "";
     Class<? extends Notification> notificationClass() default Notification.class;
     String[] descriptorFields() default { };
 
