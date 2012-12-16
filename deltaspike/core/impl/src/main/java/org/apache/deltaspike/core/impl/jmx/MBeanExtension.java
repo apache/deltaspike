@@ -16,16 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.api.jmx;
+package org.apache.deltaspike.core.impl.jmx;
 
 import org.apache.deltaspike.core.api.jmx.annotation.MBean;
+import org.apache.deltaspike.core.spi.activation.Deactivatable;
+import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 
 import javax.enterprise.event.Observes;
-import javax.enterprise.inject.spi.AnnotatedType;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.BeforeShutdown;
-import javax.enterprise.inject.spi.Extension;
-import javax.enterprise.inject.spi.ProcessManagedBean;
+import javax.enterprise.inject.spi.*;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import java.lang.annotation.Annotation;
@@ -36,14 +34,26 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
 
-public class MBeanExtension implements Extension
+public class MBeanExtension implements Extension, Deactivatable
 {
     private static final Logger LOGGER = Logger.getLogger(MBeanExtension.class.getName());
 
     private final Collection<ObjectName> objectNames = new ArrayList<ObjectName>();
 
-    void processBean(@Observes final ProcessManagedBean<?> bean, final BeanManager bm) throws Exception
+    private Boolean isActivated = true;
+
+    protected void init(@Observes BeforeBeanDiscovery beforeBeanDiscovery)
     {
+        isActivated = ClassDeactivationUtils.isActivated(getClass());
+    }
+
+    protected void processBean(@Observes final ProcessManagedBean<?> bean, final BeanManager bm) throws Exception
+    {
+        if (!isActivated)
+        {
+            return;
+        }
+
         if (bean.getAnnotated().getAnnotation(MBean.class) != null)
         {
             final ObjectName name = register(bean, bm);
@@ -52,8 +62,13 @@ public class MBeanExtension implements Extension
         }
     }
 
-    void shutdown(@Observes final BeforeShutdown shutdown) throws Exception
+    protected void shutdown(@Observes final BeforeShutdown shutdown) throws Exception
     {
+        if (!isActivated)
+        {
+            return;
+        }
+
         final MBeanServer mBeanServer = mBeanServer();
         for (ObjectName objectName : objectNames)
         {

@@ -19,6 +19,3 @@
 
 # DeltaSpike BeanManager provider
 org.apache.deltaspike.core.api.provider.BeanManagerProvider
-
-# MBean extension
-org.apache.deltaspike.core.api.jmx.MBeanExtension

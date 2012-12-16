@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.api.jmx;
+package org.apache.deltaspike.core.impl.jmx;
 
 import org.apache.deltaspike.core.api.jmx.annotation.Description;
 import org.apache.deltaspike.core.api.jmx.annotation.ManagedAttribute;
