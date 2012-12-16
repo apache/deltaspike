@@ -16,13 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.api.jmx;
+package org.apache.deltaspike.test.core.impl.jmx;
 
-import org.apache.deltaspike.core.api.jmx.MBeanExtension;
 import org.apache.deltaspike.core.api.jmx.annotation.Description;
 import org.apache.deltaspike.core.api.jmx.annotation.MBean;
 import org.apache.deltaspike.core.api.jmx.annotation.ManagedAttribute;
 import org.apache.deltaspike.core.api.jmx.annotation.ManagedOperation;
+import org.apache.deltaspike.core.impl.jmx.MBeanExtension;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
