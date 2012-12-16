@@ -20,14 +20,19 @@ package org.apache.deltaspike.core.api.jmx.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import static java.lang.annotation.ElementType.CONSTRUCTOR;
+import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.ElementType.TYPE;
 
-@Retention(RUNTIME)
-@Target(METHOD)
 @Documented
-public @interface ManagedAttribute
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ FIELD, METHOD, TYPE })
+public @interface JmxDescription
 {
+    String value() default "";
 }

@@ -19,9 +19,8 @@
 package org.apache.deltaspike.core.impl.jmx;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
-import org.apache.deltaspike.core.api.jmx.annotation.Description;
-import org.apache.deltaspike.core.api.jmx.annotation.ManagedAttribute;
-import org.apache.deltaspike.core.api.jmx.annotation.ManagedOperation;
+import org.apache.deltaspike.core.api.jmx.annotation.JmxDescription;
+import org.apache.deltaspike.core.api.jmx.annotation.JmxManaged;
 import org.apache.deltaspike.core.api.jmx.annotation.NotificationInfo;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
@@ -34,7 +33,6 @@ import javax.management.AttributeList;
 import javax.management.AttributeNotFoundException;
 import javax.management.DynamicMBean;
 import javax.management.ImmutableDescriptor;
-import javax.management.IntrospectionException;
 import javax.management.InvalidAttributeValueException;
 import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanException;
@@ -43,6 +41,7 @@ import javax.management.MBeanNotificationInfo;
 import javax.management.MBeanOperationInfo;
 import javax.management.ReflectionException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -60,8 +59,7 @@ public class DynamicMBeanWrapper implements DynamicMBean
     public static final Logger LOGGER = Logger.getLogger(DynamicMBeanWrapper.class.getName());
 
     private final MBeanInfo info;
-    private final Map<String, Method> getters = new HashMap<String, Method>();
-    private final Map<String, Method> setters = new HashMap<String, Method>();
+    private final Map<String, FieldInfo> fields = new HashMap<String, FieldInfo>();
     private final Map<String, Method> operations = new HashMap<String, Method>();
     private final ClassLoader classloader;
     private final Class<?> clazz;
@@ -84,7 +82,7 @@ public class DynamicMBeanWrapper implements DynamicMBean
 
         // class
         final String description =
-            getDescription(annotatedMBean.getAnnotation(Description.class), annotatedMBean.getName());
+            getDescription(annotatedMBean.getAnnotation(JmxDescription.class), annotatedMBean.getName());
 
         final NotificationInfo notification = annotatedMBean.getAnnotation(NotificationInfo.class);
         if (notification != null)
@@ -108,70 +106,64 @@ public class DynamicMBeanWrapper implements DynamicMBean
             final int modifiers = method.getModifiers();
             if (method.getDeclaringClass().equals(Object.class)
                     || !Modifier.isPublic(modifiers)
-                    || Modifier.isAbstract(modifiers))
+                    || Modifier.isAbstract(modifiers)
+                    || Modifier.isStatic(modifiers)
+                    || method.getAnnotation(JmxManaged.class) == null)
             {
                 continue;
             }
 
-            if (method.getAnnotation(ManagedAttribute.class) != null)
-            {
-                final String methodName = method.getName();
+            operations.put(method.getName(), method);
 
-                String attrName = methodName;
-                if (isAccessor(method))
-                {
-                    attrName = attrName.substring(3);
-                    if (attrName.length() > 1)
-                    {
-                        attrName = Character.toLowerCase(attrName.charAt(0)) + attrName.substring(1);
-                    }
-                    else
-                    {
-                        attrName = attrName.toLowerCase();
-                    }
-                }
-                else
-                {
-                    LOGGER.warning("ignoring attribute " + method.getName() + " for " + annotatedMBean.getName());
-                    continue;
-                }
+            String operationDescr = getDescription(method.getAnnotation(JmxDescription.class),
+                annotatedMBean.getName() + "#" + method.getName());
 
-                if (methodName.startsWith("get"))
-                {
-                    getters.put(attrName, method);
-                }
-                else if (methodName.startsWith("set"))
-                {
-                    setters.put(attrName, method);
-                }
-            }
-            else if (method.getAnnotation(ManagedOperation.class) != null)
-            {
-                operations.put(method.getName(), method);
-
-                String operationDescr = getDescription(method.getAnnotation(Description.class),
-                    annotatedMBean.getName() + "#" + method.getName());
-
-                operationInfos.add(new MBeanOperationInfo(operationDescr, method));
-            }
+            operationInfos.add(new MBeanOperationInfo(operationDescr, method));
         }
 
-        for (Map.Entry<String, Method> methodEntry : getters.entrySet())
-        {
-            final String key = methodEntry.getKey();
-            final Method method = methodEntry.getValue();
+        Class<?> clazz = annotatedMBean;
+        while (!Object.class.equals(clazz) && clazz != null) {
+            for (Field field : clazz.getDeclaredFields()) {
+                final JmxManaged annotation = field.getAnnotation(JmxManaged.class);
+                if (annotation != null) {
+                    field.setAccessible(true);
 
-            String attrDescr = getDescription(method.getAnnotation(Description.class),
-                method.getDeclaringClass().getName() + "#" + method.getName());
+                    final String name = field.getName();
+                    final String fieldDescription = getDescription(field.getAnnotation(JmxDescription.class),
+                            annotatedMBean.getClass() + "#" + name);
+                    final Class<?> type = field.getType();
 
-            try
-            {
-                attributeInfos.add(new MBeanAttributeInfo(key, attrDescr, method, setters.get(key)));
+                    final String javaMtdName;
+                    if (name.length() > 1) {
+                        javaMtdName = Character.toUpperCase(name.charAt(0)) + name.substring(1);
+                    } else {
+                        javaMtdName = "" + Character.toUpperCase(name.charAt(0));
+                    }
+
+                    Method setter = null;
+                    Method getter = null;
+                    try {
+                        getter = clazz.getMethod("get" + javaMtdName);
+                    } catch (NoSuchMethodException e1) {
+                        try { // since we handle it ourself we treat it as a normal getter
+                            getter = clazz.getMethod("is" + javaMtdName);
+                        } catch (NoSuchMethodException e2) {
+                            // ignored
+                        }
+                    }
+                    try {
+                        setter = clazz.getMethod("set" + javaMtdName, field.getType());
+                    } catch (NoSuchMethodException e) {
+                        // ignored
+                    }
+
+                    attributeInfos.add(new MBeanAttributeInfo(name, type.getName(),
+                            fieldDescription, getter != null, setter != null, false));
+
+                    fields.put(name, new FieldInfo(field, getter, setter));
+                }
             }
-            catch (IntrospectionException ex)
-            {
-                LOGGER.log(Level.WARNING, "can't manage " + key + " for " + method.getName(), ex);
-            }
+            clazz = clazz.getSuperclass();
         }
 
         info = new MBeanInfo(annotatedMBean.getName(),
@@ -182,14 +174,6 @@ public class DynamicMBeanWrapper implements DynamicMBean
                 notificationInfos.toArray(new MBeanNotificationInfo[notificationInfos.size()]));
     }
 
-    private static boolean isAccessor(final Method m)
-    {
-        final String name = m.getName();
-        return ((name.startsWith("get") && m.getParameterTypes().length == 0)
-                || (name.startsWith("set") && m.getParameterTypes().length == 1))
-                && name.length() > 3;
-    }
-
     private MBeanNotificationInfo getNotificationInfo(final NotificationInfo n, String sourceInfo)
     {
         return new MBeanNotificationInfo(n.types(),
@@ -197,7 +181,7 @@ public class DynamicMBeanWrapper implements DynamicMBean
                 new ImmutableDescriptor(n.descriptorFields()));
     }
 
-    private String getDescription(final Description description, String defaultDescription)
+    private String getDescription(final JmxDescription description, String defaultDescription)
     {
         if (description == null || "".equals(description.value()))
         {
@@ -233,13 +217,13 @@ public class DynamicMBeanWrapper implements DynamicMBean
     public Object getAttribute(final String attribute)
         throws AttributeNotFoundException, MBeanException, ReflectionException
     {
-        if (getters.containsKey(attribute))
+        if (fields.containsKey(attribute))
         {
             final ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
             Thread.currentThread().setContextClassLoader(classloader);
             try
             {
-                return getters.get(attribute).invoke(instance());
+                return fields.get(attribute).get(instance());
             }
             catch (IllegalArgumentException e)
             {
@@ -265,13 +249,13 @@ public class DynamicMBeanWrapper implements DynamicMBean
     public void setAttribute(final Attribute attribute)
         throws AttributeNotFoundException, InvalidAttributeValueException, MBeanException, ReflectionException
     {
-        if (setters.containsKey(attribute.getName()))
+        if (fields.containsKey(attribute.getName()))
         {
             final ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
             Thread.currentThread().setContextClassLoader(classloader);
             try
             {
-                setters.get(attribute.getName()).invoke(instance(), attribute.getValue());
+                fields.get(attribute.getName()).set(instance(), attribute.getValue());
             }
             catch (IllegalArgumentException e)
             {
@@ -284,8 +268,7 @@ public class DynamicMBeanWrapper implements DynamicMBean
             catch (InvocationTargetException e)
             {
                 LOGGER.log(Level.SEVERE, "can't set " + attribute + " value", e);
-            }
-            finally
+            } finally
             {
                 Thread.currentThread().setContextClassLoader(oldCl);
             }

@@ -18,10 +18,9 @@
  */
 package org.apache.deltaspike.test.core.impl.jmx;
 
-import org.apache.deltaspike.core.api.jmx.annotation.Description;
+import org.apache.deltaspike.core.api.jmx.annotation.JmxDescription;
+import org.apache.deltaspike.core.api.jmx.annotation.JmxManaged;
 import org.apache.deltaspike.core.api.jmx.annotation.MBean;
-import org.apache.deltaspike.core.api.jmx.annotation.ManagedAttribute;
-import org.apache.deltaspike.core.api.jmx.annotation.ManagedOperation;
 import org.apache.deltaspike.core.impl.jmx.MBeanExtension;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -82,24 +81,22 @@ public class SimpleRegistrationTest {
     }
 
     @MBean
-    @Description("my mbean")
+    @JmxDescription("my mbean")
     @ApplicationScoped
     public static class MyMBean
     {
+        @JmxManaged
+        @JmxDescription("get counter")
         private int counter = 0;
 
-        @ManagedAttribute
-        @Description("get counter")
         public int getCounter()
         {
             return counter;
         }
 
-        @ManagedAttribute
-        @Description("set counter")
-        public void setCounter(final int counter)
+        public void setCounter(final int v)
         {
-            this.counter = counter;
+            counter = v;
         }
 
         public void resetTo(final int value)
@@ -107,8 +104,8 @@ public class SimpleRegistrationTest {
             counter = value;
         }
 
-        @ManagedOperation
-        @Description("multiply counter")
+        @JmxManaged
+        @JmxDescription("multiply counter")
         public int multiply(final int n)
         {
             return counter * n;
