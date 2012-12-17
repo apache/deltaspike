@@ -21,12 +21,12 @@ package org.apache.deltaspike.core.impl.jmx;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class FieldInfo
+public class AttributeAccessor
 {
     private final Method getter;
     private final Method setter;
 
-    public FieldInfo(final Method get, final Method set)
+    public AttributeAccessor(final Method get, final Method set)
     {
         this.setter = set;
         this.getter = get;

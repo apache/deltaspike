@@ -62,7 +62,7 @@ public class DynamicMBeanWrapper extends NotificationBroadcasterSupport implemen
     public static final Logger LOGGER = Logger.getLogger(DynamicMBeanWrapper.class.getName());
 
     private final MBeanInfo info;
-    private final Map<String, FieldInfo> fields = new HashMap<String, FieldInfo>();
+    private final Map<String, AttributeAccessor> fields = new HashMap<String, AttributeAccessor>();
     private final Map<String, Method> operations = new HashMap<String, Method>();
     private final ClassLoader classloader;
     private final Class<?> clazz;
@@ -180,7 +180,7 @@ public class DynamicMBeanWrapper extends NotificationBroadcasterSupport implemen
                     attributeInfos.add(new MBeanAttributeInfo(
                         fieldName, type.getName(), fieldDescription, getter != null, setter != null, false));
 
-                    fields.put(fieldName, new FieldInfo(getter, setter));
+                    fields.put(fieldName, new AttributeAccessor(getter, setter));
                 }
             }
             clazz = clazz.getSuperclass();

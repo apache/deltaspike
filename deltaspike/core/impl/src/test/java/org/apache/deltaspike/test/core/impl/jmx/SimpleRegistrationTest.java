@@ -19,7 +19,6 @@
 package org.apache.deltaspike.test.core.impl.jmx;
 
 import org.apache.deltaspike.core.api.jmx.JmxBroadcaster;
-import org.apache.deltaspike.core.api.jmx.annotation.Jmx;
 import org.apache.deltaspike.core.api.jmx.annotation.JmxManaged;
 import org.apache.deltaspike.core.api.jmx.annotation.MBean;
 import org.apache.deltaspike.core.impl.jmx.MBeanExtension;
@@ -36,11 +35,7 @@ import org.junit.runner.RunWith;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.spi.Extension;
 import javax.inject.Inject;
-import javax.management.Attribute;
-import javax.management.MBeanServer;
-import javax.management.Notification;
-import javax.management.NotificationListener;
-import javax.management.ObjectName;
+import javax.management.*;
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -80,12 +75,12 @@ public class SimpleRegistrationTest {
         assertTrue(server.isRegistered(on));
 
         assertEquals(2, server.getAttribute(on, "counter"));
-        assertEquals(6, server.invoke(on, "multiply", new Object[]{ 3 }, new String[0]));
+        assertEquals(6, server.invoke(on, "multiply", new Object[]{3}, new String[0]));
 
         myMBean.resetTo(5);
 
         assertEquals(5, server.getAttribute(on, "counter"));
-        assertEquals(20, server.invoke(on, "multiply", new Object[]{ 4 }, new String[0]));
+        assertEquals(20, server.invoke(on, "multiply", new Object[]{4}, new String[0]));
 
         server.setAttribute(on, new Attribute("counter", 10));
         assertEquals(10, myMBean.getCounter());
@@ -109,7 +104,6 @@ public class SimpleRegistrationTest {
         @JmxManaged(description = "get counter")
         private int counter = 0;
 
-        @Jmx
         @Inject
         private JmxBroadcaster broadcaster;
 

@@ -19,8 +19,8 @@
 package org.apache.deltaspike.core.impl.jmx;
 
 import org.apache.deltaspike.core.api.jmx.JmxBroadcaster;
-import org.apache.deltaspike.core.api.jmx.annotation.Jmx;
 
+import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
@@ -30,8 +30,8 @@ public class BroadcasterProducer
     @Inject
     private MBeanExtension extension;
 
-    @Jmx
     @Produces
+    @Dependent
     public JmxBroadcaster produces(final InjectionPoint ip)
     {
         final Class<?> declaringClass = ip.getMember().getDeclaringClass();
