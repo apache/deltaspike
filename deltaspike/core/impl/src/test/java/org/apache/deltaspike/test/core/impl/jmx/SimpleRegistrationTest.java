@@ -18,21 +18,17 @@
  */
 package org.apache.deltaspike.test.core.impl.jmx;
 
-import org.apache.deltaspike.core.api.jmx.JmxBroadcaster;
-import org.apache.deltaspike.core.api.jmx.annotation.JmxManaged;
-import org.apache.deltaspike.core.api.jmx.annotation.MBean;
 import org.apache.deltaspike.core.impl.jmx.MBeanExtension;
+import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.spi.Extension;
 import javax.inject.Inject;
 import javax.management.*;
@@ -45,27 +41,23 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
 public class SimpleRegistrationTest {
-    @Deployment
-    public static WebArchive war() {
-        return ShrinkWrap.create(WebArchive.class)
-                    .addClass(MyMBean.class)
-                    .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
-                    .addAsLibraries(ShrinkWrap.create(JavaArchive.class)
-                            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
-                            .addAsServiceProvider(Extension.class, MBeanExtension.class)
-                            .addPackages(true, MBeanExtension.class.getPackage()));
-
-    }
-
-    private static MBeanServer server;
-
-    @BeforeClass
-    public static void initMBeanServer() {
-        server = ManagementFactory.getPlatformMBeanServer();
-    }
+    private static MBeanServer server = ManagementFactory.getPlatformMBeanServer();
 
     @Inject
     private MyMBean myMBean;
+
+    @Deployment
+    public static WebArchive war() {
+        JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "simpleRegistrationTest.jar")
+                .addPackage(SimpleRegistrationTest.class.getPackage())
+                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+
+        return ShrinkWrap.create(WebArchive.class, "simpleRegistrationTest.war")
+                .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
+                .addAsLibraries(testJar)
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+                .addAsServiceProvider(Extension.class, MBeanExtension.class);
+    }
 
     @Test
     public void checkMBean() throws Exception {
@@ -95,41 +87,5 @@ public class SimpleRegistrationTest {
         myMBean.broadcast();
         assertEquals(1, notifications.size());
         assertEquals(10L, notifications.iterator().next().getSequenceNumber());
-    }
-
-    @ApplicationScoped
-    @MBean(description = "my mbean")
-    public static class MyMBean
-    {
-        @JmxManaged(description = "get counter")
-        private int counter = 0;
-
-        @Inject
-        private JmxBroadcaster broadcaster;
-
-        public int getCounter()
-        {
-            return counter;
-        }
-
-        public void setCounter(final int v)
-        {
-            counter = v;
-        }
-
-        public void resetTo(final int value)
-        {
-            counter = value;
-        }
-
-        @JmxManaged(description = "multiply counter")
-        public int multiply(final int n)
-        {
-            return counter * n;
-        }
-
-        public void broadcast() {
-            broadcaster.send(new Notification(String.class.getName(), this, 10L));
-        }
     }
 }
