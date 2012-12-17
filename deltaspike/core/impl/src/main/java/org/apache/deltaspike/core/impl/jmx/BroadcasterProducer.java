@@ -18,35 +18,28 @@
  */
 package org.apache.deltaspike.core.impl.jmx;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import org.apache.deltaspike.core.api.jmx.JmxBroadcaster;
+import org.apache.deltaspike.core.api.jmx.annotation.Jmx;
 
-public class FieldInfo
+import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.spi.InjectionPoint;
+import javax.inject.Inject;
+
+public class BroadcasterProducer
 {
-    private final Method getter;
-    private final Method setter;
+    @Inject
+    private MBeanExtension extension;
 
-    public FieldInfo(final Method get, final Method set)
+    @Jmx
+    @Produces
+    public JmxBroadcaster produces(final InjectionPoint ip)
     {
-        this.setter = set;
-        this.getter = get;
-    }
-
-    public Object get(final Object instance) throws InvocationTargetException, IllegalAccessException
-    {
-        if (getter == null)
+        final Class<?> declaringClass = ip.getMember().getDeclaringClass();
+        final DynamicMBeanWrapper wrapperFor = extension.getWrapperFor(declaringClass);
+        if (wrapperFor == null)
         {
-            throw new IllegalAccessException("This attribute has no getter");
+            throw new IllegalArgumentException("Can't inject a JmxBroadcaster in " + declaringClass.getName());
         }
-        return getter.invoke(instance);
-    }
-
-    public void set(final Object instance, final Object value) throws InvocationTargetException, IllegalAccessException
-    {
-        if (setter == null)
-        {
-            throw new IllegalAccessException("This attribute has no setter");
-        }
-        setter.invoke(instance, value);
+        return wrapperFor;
     }
 }

@@ -20,6 +20,7 @@ package org.apache.deltaspike.core.impl.jmx;
 
 import org.apache.deltaspike.core.api.jmx.annotation.MBean;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
+import org.apache.deltaspike.core.util.BeanUtils;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 
 import javax.enterprise.event.Observes;
@@ -35,13 +36,16 @@ import java.lang.annotation.Annotation;
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 public class MBeanExtension implements Extension, Deactivatable
 {
     private static final Logger LOGGER = Logger.getLogger(MBeanExtension.class.getName());
+
+    private final Map<Class<?>, DynamicMBeanWrapper> wrappers = new ConcurrentHashMap<Class<?>, DynamicMBeanWrapper>();
 
     private final Collection<ObjectName> objectNames = new ArrayList<ObjectName>();
 
@@ -95,25 +99,23 @@ public class MBeanExtension implements Extension, Deactivatable
         }
 
         final ObjectName objectName = new ObjectName(on);
-        boolean normalScoped = isNormalScope(bean.getAnnotated().getAnnotations(), bm);
-        Annotation[] qualifiers = qualifiers(bean.getAnnotatedBeanClass(), bm);
-        mBeanServer().registerMBean(
-            new DynamicMBeanWrapper(clazz, normalScoped, qualifiers, mBeanAnnotation), objectName);
+
+        final boolean normalScoped = isNormalScope(bean.getAnnotated().getAnnotations(), bm);
+        final Annotation[] qualifiers = qualifiers(bean.getAnnotatedBeanClass(), bm);
+        final DynamicMBeanWrapper mbean = new DynamicMBeanWrapper(clazz, normalScoped, qualifiers, mBeanAnnotation);
+        mBeanServer().registerMBean(mbean, objectName);
 
         objectNames.add(objectName);
+        wrappers.put(clazz, mbean);
+
         LOGGER.info("Registered MBean " + objectName.getCanonicalName());
+
+        mBeanServer().registerMBean(mbean, objectName);
     }
 
     private Annotation[] qualifiers(final AnnotatedType<?> annotatedBeanClass, final BeanManager bm)
     {
-        final Set<Annotation> qualifiers = new HashSet<Annotation>();
-        for (Annotation annotation : annotatedBeanClass.getAnnotations())
-        {
-            if (bm.isQualifier(annotation.annotationType()))
-            {
-                qualifiers.add(annotation);
-            }
-        }
+        final Set<Annotation> qualifiers = BeanUtils.getQualifiers(bm, annotatedBeanClass.getAnnotations());
         return qualifiers.toArray(new Annotation[qualifiers.size()]);
     }
 
@@ -129,6 +131,11 @@ public class MBeanExtension implements Extension, Deactivatable
             }
         }
         return false;
+    }
+
+    public DynamicMBeanWrapper getWrapperFor(final Class<?> clazz)
+    {
+        return wrappers.get(clazz);
     }
 
     private MBeanServer mBeanServer()

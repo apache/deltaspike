@@ -18,6 +18,8 @@
  */
 package org.apache.deltaspike.test.core.impl.jmx;
 
+import org.apache.deltaspike.core.api.jmx.JmxBroadcaster;
+import org.apache.deltaspike.core.api.jmx.annotation.Jmx;
 import org.apache.deltaspike.core.api.jmx.annotation.JmxManaged;
 import org.apache.deltaspike.core.api.jmx.annotation.MBean;
 import org.apache.deltaspike.core.impl.jmx.MBeanExtension;
@@ -27,6 +29,7 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -35,8 +38,12 @@ import javax.enterprise.inject.spi.Extension;
 import javax.inject.Inject;
 import javax.management.Attribute;
 import javax.management.MBeanServer;
+import javax.management.Notification;
+import javax.management.NotificationListener;
 import javax.management.ObjectName;
 import java.lang.management.ManagementFactory;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -55,6 +62,13 @@ public class SimpleRegistrationTest {
 
     }
 
+    private static MBeanServer server;
+
+    @BeforeClass
+    public static void initMBeanServer() {
+        server = ManagementFactory.getPlatformMBeanServer();
+    }
+
     @Inject
     private MyMBean myMBean;
 
@@ -62,8 +76,6 @@ public class SimpleRegistrationTest {
     public void checkMBean() throws Exception {
         assertEquals(0, myMBean.getCounter());
         myMBean.resetTo(2);
-
-        final MBeanServer server = ManagementFactory.getPlatformMBeanServer();
         final ObjectName on = new ObjectName("deltaspike:type=MBeans,name=" + MyMBean.class.getName());
         assertTrue(server.isRegistered(on));
 
@@ -77,6 +89,17 @@ public class SimpleRegistrationTest {
 
         server.setAttribute(on, new Attribute("counter", 10));
         assertEquals(10, myMBean.getCounter());
+
+        final Collection<Notification> notifications = new ArrayList<Notification>();
+        server.addNotificationListener(on, new NotificationListener() {
+            @Override
+            public void handleNotification(final Notification notification, final Object handback) {
+                notifications.add(notification);
+            }
+        }, null, null);
+        myMBean.broadcast();
+        assertEquals(1, notifications.size());
+        assertEquals(10L, notifications.iterator().next().getSequenceNumber());
     }
 
     @ApplicationScoped
@@ -85,6 +108,10 @@ public class SimpleRegistrationTest {
     {
         @JmxManaged(description = "get counter")
         private int counter = 0;
+
+        @Jmx
+        @Inject
+        private JmxBroadcaster broadcaster;
 
         public int getCounter()
         {
@@ -105,6 +132,10 @@ public class SimpleRegistrationTest {
         public int multiply(final int n)
         {
             return counter * n;
+        }
+
+        public void broadcast() {
+            broadcaster.send(new Notification(String.class.getName(), this, 10L));
         }
     }
 }

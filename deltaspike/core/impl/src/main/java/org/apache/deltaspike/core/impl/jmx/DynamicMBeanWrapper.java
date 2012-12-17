@@ -19,6 +19,7 @@
 package org.apache.deltaspike.core.impl.jmx;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
+import org.apache.deltaspike.core.api.jmx.JmxBroadcaster;
 import org.apache.deltaspike.core.api.jmx.annotation.JmxManaged;
 import org.apache.deltaspike.core.api.jmx.annotation.MBean;
 import org.apache.deltaspike.core.api.jmx.annotation.NotificationInfo;
@@ -39,6 +40,8 @@ import javax.management.MBeanException;
 import javax.management.MBeanInfo;
 import javax.management.MBeanNotificationInfo;
 import javax.management.MBeanOperationInfo;
+import javax.management.Notification;
+import javax.management.NotificationBroadcasterSupport;
 import javax.management.ReflectionException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -54,7 +57,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class DynamicMBeanWrapper implements DynamicMBean
+public class DynamicMBeanWrapper extends NotificationBroadcasterSupport implements DynamicMBean, JmxBroadcaster
 {
     public static final Logger LOGGER = Logger.getLogger(DynamicMBeanWrapper.class.getName());
 
@@ -179,7 +182,7 @@ public class DynamicMBeanWrapper implements DynamicMBean
                     attributeInfos.add(new MBeanAttributeInfo(name, type.getName(),
                             fieldDescription, getter != null, setter != null, false));
 
-                    fields.put(name, new FieldInfo(field, getter, setter));
+                    fields.put(name, new FieldInfo(getter, setter));
                 }
             }
             clazz = clazz.getSuperclass();
@@ -398,5 +401,11 @@ public class DynamicMBeanWrapper implements DynamicMBean
         {
             Thread.currentThread().setContextClassLoader(oldCl);
         }
+    }
+
+    @Override
+    public void send(final Notification notification)
+    {
+        sendNotification(notification);
     }
 }

@@ -18,35 +18,32 @@
  */
 package org.apache.deltaspike.core.impl.jmx;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import org.apache.deltaspike.core.api.jmx.JmxBroadcaster;
+import org.apache.deltaspike.core.util.metadata.builder.ContextualLifecycle;
 
-public class FieldInfo
+import javax.enterprise.context.spi.CreationalContext;
+import javax.enterprise.inject.spi.Bean;
+
+public class JmxBroadcasterLifecycle implements ContextualLifecycle<JmxBroadcaster>
 {
-    private final Method getter;
-    private final Method setter;
+    private final DynamicMBeanWrapper delegate;
 
-    public FieldInfo(final Method get, final Method set)
+    public JmxBroadcasterLifecycle(final DynamicMBeanWrapper mbean)
     {
-        this.setter = set;
-        this.getter = get;
+        delegate = mbean;
     }
 
-    public Object get(final Object instance) throws InvocationTargetException, IllegalAccessException
+    @Override
+    public JmxBroadcaster create(final Bean<JmxBroadcaster> bean,
+                                 final CreationalContext<JmxBroadcaster> creationalContext)
     {
-        if (getter == null)
-        {
-            throw new IllegalAccessException("This attribute has no getter");
-        }
-        return getter.invoke(instance);
+        return delegate;
     }
 
-    public void set(final Object instance, final Object value) throws InvocationTargetException, IllegalAccessException
+    @Override
+    public void destroy(final Bean<JmxBroadcaster> bean, final JmxBroadcaster instance,
+                        final CreationalContext<JmxBroadcaster> creationalContext)
     {
-        if (setter == null)
-        {
-            throw new IllegalAccessException("This attribute has no setter");
-        }
-        setter.invoke(instance, value);
+        // no-op
     }
 }
