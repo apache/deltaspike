@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.core.impl.jmx;
 
+import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.jmx.JmxBroadcaster;
 import org.apache.deltaspike.core.api.jmx.annotation.MBean;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
@@ -103,7 +104,15 @@ public class MBeanExtension implements Extension, Deactivatable
                 name = clazz.getName();
             }
 
-            objectNameValue = mBeanAnnotation.category() + ":type=MBeans,name=" + name;
+            String category = mBeanAnnotation.category().trim();
+
+            if (category.startsWith("{") && category.endsWith("}"))
+            {
+                category = ConfigResolver.getPropertyValue(
+                    category.substring(1, category.length() - 1), "org.apache.deltaspike");
+            }
+
+            objectNameValue = category + ":type=MBeans,name=" + name;
         }
 
         final ObjectName objectName = new ObjectName(objectNameValue);
