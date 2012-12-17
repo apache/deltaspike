@@ -98,6 +98,16 @@ public class ExtensionExceptionHandler
         // Nothing here, just need to make sure this handler is picked up
     }
 
+    public void npeHandlerNoDefQualifier(@Handles ExceptionEvent<NullPointerException> event)
+    {
+
+    }
+
+    public void npeHandlerDefQualifier(@Handles @CatchQualifier ExceptionEvent<NullPointerException> event)
+    {
+
+    }
+
     public void doNothingMethod()
     {
         // Method to make sure only @Handles methods are found

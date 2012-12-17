@@ -19,20 +19,36 @@
 
 package org.apache.deltaspike.test.core.impl.exception.control.handler;
 
+import org.apache.deltaspike.core.api.exception.control.HandlerMethod;
+import org.apache.deltaspike.core.impl.exception.control.HandlerMethodImpl;
+import org.apache.deltaspike.core.impl.exception.control.HandlerMethodStorage;
+import org.apache.deltaspike.test.core.impl.exception.control.extension.literal.CatchQualifierLiteral;
 import org.apache.deltaspike.test.core.impl.exception.control.extension.Account;
 import org.apache.deltaspike.test.core.impl.exception.control.extension.CatchQualifier;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
+import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 //TODO re-activate
-//@RunWith(Arquillian.class)
+@RunWith(Arquillian.class)
 public class HandlerComparatorTest
 {
     @Deployment(name = "HandlerComparatorTest")
@@ -44,40 +60,53 @@ public class HandlerComparatorTest
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addClasses(ExtensionExceptionHandler.class, Account.class,
                         org.apache.deltaspike.test.core.impl.exception.control.extension.Arquillian.class,
-                        CatchQualifier.class);
+                        CatchQualifier.class, CatchQualifierLiteral.class);
     }
 
     @Inject
     private BeanManager bm;
 
-    //TODO re-activate
-    //@Test
-    public void assertOrderIsCorrectDepthFirst()
+    @Test
+    public void assertOrderIsCorrectDepthFirst(HandlerMethodStorage storage)
     {
-        /*
         List<HandlerMethod<? extends Throwable>> handlers = new ArrayList<HandlerMethod<? extends Throwable>>(
-                ExceptionControlExtension.createStorage().getHandlersForException(
-                        IllegalArgumentException.class, bm, Collections.<Annotation>emptySet(), false));
+                storage.getHandlersForException(IllegalArgumentException.class, bm, Collections.<Annotation>emptySet(),
+                        false));
 
-        System.out.println(handlers);
+//        System.out.println(handlers);
 
-        assertEquals("catchThrowable", ((HandlerMethodImpl<?>) handlers.get(0)).getJavaMethod().getName());
-        assertEquals("catchThrowableP20", ((HandlerMethodImpl<?>) handlers.get(1)).getJavaMethod().getName());
-        assertEquals("catchRuntime", ((HandlerMethodImpl<?>) handlers.get(2)).getJavaMethod().getName());
-        assertEquals("catchIAE", ((HandlerMethodImpl<?>) handlers.get(3)).getJavaMethod().getName());
-        */
+        assertThat(((HandlerMethodImpl<?>) handlers.get(0)).getJavaMethod().getName(), is("catchThrowable"));
+        assertThat(((HandlerMethodImpl<?>) handlers.get(1)).getJavaMethod().getName(), is("catchThrowableP20"));
+        assertThat(((HandlerMethodImpl<?>) handlers.get(2)).getJavaMethod().getName(), is("catchRuntime"));
+        assertThat(((HandlerMethodImpl<?>) handlers.get(3)).getJavaMethod().getName(), is("catchIAE"));
     }
 
-    //TODO re-activate
-    //@Test
-    public void assertOrderIsCorrectBreadthFirst()
+    @Test
+    public void assertOrderIsCorrectWithQualifiers(HandlerMethodStorage storage)
     {
-        /*
+        Set<Annotation> qualifiers = new HashSet<Annotation>();
+        qualifiers.add(new CatchQualifierLiteral());
+
         List<HandlerMethod<? extends Throwable>> handlers = new ArrayList<HandlerMethod<? extends Throwable>>(
-                ExceptionControlExtension.createStorage().getHandlersForException(
-                        Exception.class, bm, Collections.<Annotation>emptySet(), true));
+                storage.getHandlersForException(NullPointerException.class, bm, qualifiers, false));
+
+        assertThat(handlers.size(), is(6));
+
+        assertThat(((HandlerMethodImpl<?>) handlers.get(0)).getJavaMethod().getName(), is("catchThrowable"));
+        assertThat(((HandlerMethodImpl<?>) handlers.get(1)).getJavaMethod().getName(), is("catchThrowableP20"));
+        assertThat(((HandlerMethodImpl<?>) handlers.get(2)).getJavaMethod().getName(), is("qualifiedHandler"));
+        assertThat(((HandlerMethodImpl<?>) handlers.get(3)).getJavaMethod().getName(), is("catchRuntime"));
+        assertThat(((HandlerMethodImpl<?>) handlers.get(4)).getJavaMethod().getName(), is("npeHandlerNoDefQualifier"));
+        assertThat(((HandlerMethodImpl<?>) handlers.get(5)).getJavaMethod().getName(), is("npeHandlerDefQualifier"));
+
+    }
+
+    @Test
+    public void assertOrderIsCorrectBreadthFirst(HandlerMethodStorage storage)
+    {
+        List<HandlerMethod<? extends Throwable>> handlers = new ArrayList<HandlerMethod<? extends Throwable>>(
+                storage.getHandlersForException(Exception.class, bm, Collections.<Annotation>emptySet(), true));
 
         assertThat(handlers.size(), is(4));
-        */
     }
 }

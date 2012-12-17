@@ -20,6 +20,7 @@
 package org.apache.deltaspike.core.impl.exception.control;
 
 import org.apache.deltaspike.core.api.exception.control.HandlerMethod;
+import org.apache.deltaspike.core.api.literal.AnyLiteral;
 import org.apache.deltaspike.core.util.HierarchyDiscovery;
 
 import java.lang.reflect.Type;
@@ -48,23 +49,36 @@ public final class ExceptionHandlerComparator implements Comparator<HandlerMetho
 
         // Really this is so all handlers are returned in the TreeSet (even if they're of the same type, but one is
         // before, the other is not
-        if (lhs.getExceptionType().equals(rhs.getExceptionType()))
+
+        // Make sure both handlers are handling the same type, and also have the same qualifiers, if both of those are
+        // true, then precedence comes into play
+        if (lhs.getExceptionType().equals(rhs.getExceptionType()) && lhs.getQualifiers().equals(rhs.getQualifiers()))
         {
-            final int returnValue = comparePrecedence(lhs.getOrdinal(), rhs.getOrdinal(),
+            final int precedenceReturnValue = comparePrecedence(lhs.getOrdinal(), rhs.getOrdinal(),
                     lhs.isBeforeHandler());
-            // Compare number of qualifiers if they exist so handlers that handle the same type
-            // are both are returned and not thrown out (order doesn't really matter)
-            if (returnValue == 0 && !lhs.getQualifiers().isEmpty())
+
+            // We really shouldn't be running into this case where everything is the same up until now,
+            // but just in case, return both so both handlers are run.
+            if (precedenceReturnValue == 0)
             {
                 return -1;
             }
 
-            // Either precedence is non-zero or lhs doesn't have qualifiers so return the precedence compare
-            // If it's 0 this is essentially the same handler for our purposes
-            return returnValue;
+            // Precedence is different
+            return precedenceReturnValue;
         }
         else
         {
+            // Different qualifiers
+            if (lhs.getExceptionType().equals(rhs.getExceptionType())
+                    && !lhs.getQualifiers().equals(rhs.getQualifiers()))
+            {
+                if (lhs.getQualifiers().contains(new AnyLiteral()))
+                {
+                    return -1; // Make sure @Any is first, as it's less specific
+                }
+                return 1;
+            }
             return compareHierarchies(lhs.getExceptionType(), rhs.getExceptionType());
         }
 
@@ -90,9 +104,9 @@ public final class ExceptionHandlerComparator implements Comparator<HandlerMetho
         return -1;
     }
 
-    private int comparePrecedence(final int lhs, final int rhs, final boolean isBefore)
+    private int comparePrecedence(final int lhs, final int rhs, final boolean isLhsBefore)
     {
-        if (!isBefore)
+        if (!isLhsBefore)
         {
             return (lhs - rhs);
         }

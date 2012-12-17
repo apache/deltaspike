@@ -233,6 +233,11 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
         return handlerParameter;
     }
 
+    public Method getJavaMethod()
+    {
+        return handler.getJavaMember();
+    }
+
     /**
      * Obtain all the injection points for the handler
      *
@@ -299,10 +304,7 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
     @Override
     public String toString()
     {
-        return new StringBuilder("Qualifiers: ").append(qualifiers).append(" ")
-                .append("Handles Type: ").append(exceptionType).append(" ")
-                .append("Before: ").append(before).append(" ")
-                .append("Precedence: ").append(ordinal).append(" ")
-                .append(handler.toString()).toString();
+        return "{Qualifiers: " + qualifiers + ", " + "Handles Type: " + exceptionType + ", " + "Before: " +
+                before + ", " + "Precedence: " + ordinal + ", Method: " + handler.getJavaMember().getName() + "}";
     }
 }

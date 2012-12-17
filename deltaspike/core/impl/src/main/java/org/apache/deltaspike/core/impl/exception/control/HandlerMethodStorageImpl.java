@@ -91,8 +91,7 @@ class HandlerMethodStorageImpl implements HandlerMethodStorage
                         }
                         else
                         {
-                            if (!handlerQualifiers.isEmpty() && containsAny(handler.getQualifiers(),
-                                    handlerQualifiers))
+                            if (!handlerQualifiers.isEmpty() && handlerQualifiers.equals(handler.getQualifiers()))
                             {
                                 returningHandlers.add(handler);
                             }
@@ -106,8 +105,7 @@ class HandlerMethodStorageImpl implements HandlerMethodStorage
                         }
                         else
                         {
-                            if (!handlerQualifiers.isEmpty() && containsAny(handler.getQualifiers(),
-                                    handlerQualifiers))
+                            if (!handlerQualifiers.isEmpty() && handlerQualifiers.equals(handler.getQualifiers()))
                             {
                                 returningHandlers.add(handler);
                             }
@@ -120,18 +118,5 @@ class HandlerMethodStorageImpl implements HandlerMethodStorage
         log.fine(String.format("Found handlers %s for exception type %s, qualifiers %s", returningHandlers,
                 exceptionClass, handlerQualifiers));
         return Collections.unmodifiableCollection(returningHandlers);
-    }
-
-    private boolean containsAny(final Collection<? extends Annotation> haystack,
-                                final Collection<? extends Annotation> needles)
-    {
-        for (Annotation a : needles)
-        {
-            if (haystack.contains(a))
-            {
-                return true;
-            }
-        }
-        return false;
     }
 }
