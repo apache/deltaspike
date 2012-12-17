@@ -71,7 +71,7 @@ public class SimpleRegistrationTest {
     public void checkMBean() throws Exception {
         assertEquals(0, myMBean.getCounter());
         myMBean.resetTo(2);
-        final ObjectName on = new ObjectName("deltaspike:type=MBeans,name=" + MyMBean.class.getName());
+        final ObjectName on = new ObjectName("org.apache.deltaspike:type=MBeans,name=" + MyMBean.class.getName());
         assertTrue(server.isRegistered(on));
 
         assertEquals(2, server.getAttribute(on, "counter"));

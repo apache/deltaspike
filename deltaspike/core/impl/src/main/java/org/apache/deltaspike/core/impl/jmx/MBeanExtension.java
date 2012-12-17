@@ -93,13 +93,20 @@ public class MBeanExtension implements Extension, Deactivatable
     {
         final Class<?> clazz = bean.getAnnotatedBeanClass().getJavaClass();
 
-        String on = mBeanAnnotation.objectName();
-        if (on.isEmpty())
+        String objectNameValue = mBeanAnnotation.objectName();
+        if (objectNameValue.isEmpty())
         {
-            on = "deltaspike:type=MBeans,name=" + clazz.getName();
+            String name = mBeanAnnotation.name();
+
+            if (name.isEmpty())
+            {
+                name = clazz.getName();
+            }
+
+            objectNameValue = mBeanAnnotation.category() + ":type=MBeans,name=" + name;
         }
 
-        final ObjectName objectName = new ObjectName(on);
+        final ObjectName objectName = new ObjectName(objectNameValue);
 
         final boolean normalScoped = isNormalScope(bean.getAnnotated().getAnnotations(), bm);
         final Annotation[] qualifiers = qualifiers(bean.getAnnotatedBeanClass(), bm);

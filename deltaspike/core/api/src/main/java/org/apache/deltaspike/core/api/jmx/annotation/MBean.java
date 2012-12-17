@@ -30,6 +30,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Inherited
 public @interface MBean
 {
+    String category() default "org.apache.deltaspike";
+    String name() default "";
+
     String objectName() default "";
     String description() default "";
 }
