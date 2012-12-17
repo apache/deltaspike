@@ -31,6 +31,7 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.Assume;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -177,13 +178,15 @@ public class MessageContextTest
         Assert.assertFalse(m2.equals(m1));
     }
 
-    //X TODO we should move this test to an own class
-    //X and disable it only for Weld >= 1.1.9
-    //X to reproduce enable the test and type
-    // mvn clean install -PWeld -Dweld.version=1.1.5.Final
-    //X @Test
-    public void testSerialisation()
+    /**
+     * Added check for System Property org.apache.deltaspike.weld.pre_1.1.10=true
+     * If this exists then we will skip this test as it fails on WELD version < 1.1.10.Final
+     * See DELTASPIKE-260
+     */
+    @Test
+    public void testSerialization()
     {
+        Assume.assumeTrue(System.getProperty("org.apache.deltaspike.weld.pre_1.1.10") == null);
         Serializer<Message> messageSerializer = new Serializer<Message>();
 
         LocaleResolver localeResolver = new FixedGermanLocaleResolver();
