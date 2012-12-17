@@ -122,8 +122,7 @@ public class DynamicMBeanWrapper extends NotificationBroadcasterSupport implemen
 
             operations.put(method.getName(), method);
 
-            String operationDescr = getDescription(annotation.description(),
-                annotatedMBean.getName() + "#" + method.getName());
+            String operationDescr = getDescription(annotation.description(), method.getName());
 
             operationInfos.add(new MBeanOperationInfo(operationDescr, method));
         }
@@ -138,32 +137,31 @@ public class DynamicMBeanWrapper extends NotificationBroadcasterSupport implemen
                 {
                     field.setAccessible(true);
 
-                    final String name = field.getName();
-                    final String fieldDescription = getDescription(annotation.description(),
-                            annotatedMBean.getClass() + "#" + name);
+                    final String fieldName = field.getName();
+                    final String fieldDescription = getDescription(annotation.description(), fieldName);
                     final Class<?> type = field.getType();
 
-                    final String javaMtdName;
-                    if (name.length() > 1)
+                    final String methodName;
+                    if (fieldName.length() > 1)
                     {
-                        javaMtdName = Character.toUpperCase(name.charAt(0)) + name.substring(1);
+                        methodName = Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
                     }
                     else
                     {
-                        javaMtdName = "" + Character.toUpperCase(name.charAt(0));
+                        methodName = "" + Character.toUpperCase(fieldName.charAt(0));
                     }
 
                     Method setter = null;
                     Method getter = null;
                     try
                     {
-                        getter = clazz.getMethod("get" + javaMtdName);
+                        getter = clazz.getMethod("get" + methodName);
                     }
                     catch (NoSuchMethodException e1)
                     {
                         try
-                        { // since we handle it ourself we treat it as a normal getter
-                            getter = clazz.getMethod("is" + javaMtdName);
+                        {
+                            getter = clazz.getMethod("is" + methodName);
                         }
                         catch (NoSuchMethodException e2)
                         {
@@ -172,17 +170,17 @@ public class DynamicMBeanWrapper extends NotificationBroadcasterSupport implemen
                     }
                     try
                     {
-                        setter = clazz.getMethod("set" + javaMtdName, field.getType());
+                        setter = clazz.getMethod("set" + methodName, field.getType());
                     }
                     catch (NoSuchMethodException e)
                     {
                         // ignored
                     }
 
-                    attributeInfos.add(new MBeanAttributeInfo(name, type.getName(),
-                            fieldDescription, getter != null, setter != null, false));
+                    attributeInfos.add(new MBeanAttributeInfo(
+                        fieldName, type.getName(), fieldDescription, getter != null, setter != null, false));
 
-                    fields.put(name, new FieldInfo(getter, setter));
+                    fields.put(fieldName, new FieldInfo(getter, setter));
                 }
             }
             clazz = clazz.getSuperclass();

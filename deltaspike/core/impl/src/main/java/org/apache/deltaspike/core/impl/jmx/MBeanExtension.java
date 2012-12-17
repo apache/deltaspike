@@ -109,8 +109,6 @@ public class MBeanExtension implements Extension, Deactivatable
         wrappers.put(clazz, mbean);
 
         LOGGER.info("Registered MBean " + objectName.getCanonicalName());
-
-        mBeanServer().registerMBean(mbean, objectName);
     }
 
     private Annotation[] qualifiers(final AnnotatedType<?> annotatedBeanClass, final BeanManager bm)
