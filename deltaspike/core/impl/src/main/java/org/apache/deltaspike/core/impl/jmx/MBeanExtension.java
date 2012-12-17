@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.core.impl.jmx;
 
+import org.apache.deltaspike.core.api.jmx.JmxBroadcaster;
 import org.apache.deltaspike.core.api.jmx.annotation.MBean;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.BeanUtils;
@@ -131,7 +132,7 @@ public class MBeanExtension implements Extension, Deactivatable
         return false;
     }
 
-    public DynamicMBeanWrapper getWrapperFor(final Class<?> clazz)
+    public JmxBroadcaster getBroadcasterFor(final Class<?> clazz)
     {
         return wrappers.get(clazz);
     }

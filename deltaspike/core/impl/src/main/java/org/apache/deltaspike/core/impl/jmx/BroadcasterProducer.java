@@ -20,11 +20,13 @@ package org.apache.deltaspike.core.impl.jmx;
 
 import org.apache.deltaspike.core.api.jmx.JmxBroadcaster;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 
+@ApplicationScoped
 public class BroadcasterProducer
 {
     @Inject
@@ -32,14 +34,14 @@ public class BroadcasterProducer
 
     @Produces
     @Dependent
-    public JmxBroadcaster produces(final InjectionPoint ip)
+    public JmxBroadcaster jmxBroadcaster(final InjectionPoint ip)
     {
         final Class<?> declaringClass = ip.getMember().getDeclaringClass();
-        final DynamicMBeanWrapper wrapperFor = extension.getWrapperFor(declaringClass);
-        if (wrapperFor == null)
+        final JmxBroadcaster broadcaster = extension.getBroadcasterFor(declaringClass);
+        if (broadcaster == null)
         {
             throw new IllegalArgumentException("Can't inject a JmxBroadcaster in " + declaringClass.getName());
         }
-        return wrapperFor;
+        return broadcaster;
     }
 }
