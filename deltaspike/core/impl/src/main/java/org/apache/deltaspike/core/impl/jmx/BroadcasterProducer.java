@@ -19,6 +19,7 @@
 package org.apache.deltaspike.core.impl.jmx;
 
 import org.apache.deltaspike.core.api.jmx.JmxBroadcaster;
+import org.apache.deltaspike.core.api.jmx.annotation.MBean;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Dependent;
@@ -40,7 +41,10 @@ public class BroadcasterProducer
         final JmxBroadcaster broadcaster = extension.getBroadcasterFor(declaringClass);
         if (broadcaster == null)
         {
-            throw new IllegalArgumentException("Can't inject a JmxBroadcaster in " + declaringClass.getName());
+            //TODO discuss validation during bootstrapping
+            throw new IllegalStateException("Invalid injection of " + JmxBroadcaster.class.getName() +
+                    " in " + declaringClass.getName() + " detected. It is required to annotate the class with @" +
+                    MBean.class.getName());
         }
         return broadcaster;
     }

@@ -132,7 +132,7 @@ public class MBeanExtension implements Extension, Deactivatable
         return false;
     }
 
-    public JmxBroadcaster getBroadcasterFor(final Class<?> clazz)
+    JmxBroadcaster getBroadcasterFor(final Class<?> clazz)
     {
         return wrappers.get(clazz);
     }
