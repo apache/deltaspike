@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.test.core.impl.jmx;
 
-import org.apache.deltaspike.core.impl.jmx.MBeanExtension;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -29,7 +28,6 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import javax.enterprise.inject.spi.Extension;
 import javax.inject.Inject;
 import javax.management.*;
 import java.lang.management.ManagementFactory;
@@ -55,8 +53,7 @@ public class SimpleRegistrationTest {
         return ShrinkWrap.create(WebArchive.class, "simpleRegistrationTest.war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
                 .addAsLibraries(testJar)
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
-                .addAsServiceProvider(Extension.class, MBeanExtension.class);
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
     @Test
