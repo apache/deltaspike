@@ -20,7 +20,15 @@ package org.apache.deltaspike.core.api.jmx;
 
 import javax.management.Notification;
 
+/**
+ * Interface used to send JMX message from "CDI MBeans".
+ * It can only be used from CDI MBeans and should get injected
+ * in other beans.
+ */
 public interface JmxBroadcaster
 {
+    /**
+     * @param notification the notification to send from the current MBean.
+     */
     void send(Notification notification);
 }

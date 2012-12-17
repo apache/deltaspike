@@ -57,6 +57,10 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * This class is the MBean implementation of a CDI bean.
+ * It basically delegates to a CDI instance.
+ */
 public class DynamicMBeanWrapper extends NotificationBroadcasterSupport implements DynamicMBean, JmxBroadcaster
 {
     public static final Logger LOGGER = Logger.getLogger(DynamicMBeanWrapper.class.getName());
@@ -72,10 +76,16 @@ public class DynamicMBeanWrapper extends NotificationBroadcasterSupport implemen
 
     private Object instance = null;
 
+    /**
+     * The constructor is the builder for the MBean. All the MBean parsing logic is done here.
+     *
+     * @param annotatedMBean the class of the CDI managed bean
+     * @param normalScope is the CDI bean @Dependent or not
+     * @param qualifiers qualfiers of the CDI bean (used to retrieve it)
+     */
     public DynamicMBeanWrapper(final Class<?> annotatedMBean,
                                final boolean normalScope,
-                               final Annotation[] qualifiers,
-                               final MBean mBeanAnnotation)
+                               final Annotation[] qualifiers)
     {
         this.clazz = annotatedMBean;
         this.classloader = Thread.currentThread().getContextClassLoader();
@@ -88,7 +98,7 @@ public class DynamicMBeanWrapper extends NotificationBroadcasterSupport implemen
 
         // class
         final String description =
-            getDescription(mBeanAnnotation.description(), annotatedMBean.getName());
+            getDescription(annotatedMBean.getAnnotation(MBean.class).description(), annotatedMBean.getName());
 
         final NotificationInfo notification = annotatedMBean.getAnnotation(NotificationInfo.class);
         if (notification != null)

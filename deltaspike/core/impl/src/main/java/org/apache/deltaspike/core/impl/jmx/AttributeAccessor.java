@@ -21,6 +21,11 @@ package org.apache.deltaspike.core.impl.jmx;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+/**
+ * Just a helper class mapping a JMX attribute.
+ * It make the link between the attribute and its accessors validating
+ * operations (read/write) are possible.
+ */
 public class AttributeAccessor
 {
     private final Method getter;

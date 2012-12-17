@@ -119,7 +119,7 @@ public class MBeanExtension implements Extension, Deactivatable
 
         final boolean normalScoped = isNormalScope(bean.getAnnotated().getAnnotations(), bm);
         final Annotation[] qualifiers = qualifiers(bean.getAnnotatedBeanClass(), bm);
-        final DynamicMBeanWrapper mbean = new DynamicMBeanWrapper(clazz, normalScoped, qualifiers, mBeanAnnotation);
+        final DynamicMBeanWrapper mbean = new DynamicMBeanWrapper(clazz, normalScoped, qualifiers);
         mBeanServer().registerMBean(mbean, objectName);
 
         objectNames.add(objectName);

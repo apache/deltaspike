@@ -26,10 +26,21 @@ import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+/**
+ * This annotation can be used either on a field or a method.
+ *
+ * Used on a method it describes a JMX operation with an optional description.
+ *
+ * Used on a field it describes a JMX attribute. This attribute is readable
+ * if a getter on this field is available and writable is a setter is found.
+ */
 @Retention(RUNTIME)
 @Target({ FIELD, METHOD })
 @Documented
 public @interface JmxManaged
 {
+    /**
+     * @return the description either of the operation or the attribute exported through JMX.
+     */
     String description() default "";
 }
