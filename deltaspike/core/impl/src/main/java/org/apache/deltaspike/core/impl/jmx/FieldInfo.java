@@ -22,7 +22,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class FieldInfo {
+public class FieldInfo
+{
     private final Field field;
     private final Method getter;
     private final Method setter;
@@ -36,7 +37,8 @@ public class FieldInfo {
 
     public Object get(final Object instance) throws InvocationTargetException, IllegalAccessException
     {
-        if (getter == null) {
+        if (getter == null)
+        {
             throw new IllegalAccessException("This attribute has no getter");
         }
         return getter.invoke(instance);
@@ -44,7 +46,8 @@ public class FieldInfo {
 
     public void set(final Object instance, final Object value) throws InvocationTargetException, IllegalAccessException
     {
-        if (setter == null) {
+        if (setter == null)
+        {
             throw new IllegalAccessException("This attribute has no setter");
         }
         setter.invoke(instance, value);

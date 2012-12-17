@@ -69,7 +69,10 @@ public class DynamicMBeanWrapper implements DynamicMBean
 
     private Object instance = null;
 
-    public DynamicMBeanWrapper(final Class<?> annotatedMBean, final boolean normalScope, final Annotation[] qualifiers)
+    public DynamicMBeanWrapper(final Class<?> annotatedMBean,
+                               final boolean normalScope,
+                               final Annotation[] qualifiers,
+                               final MBean mBeanAnnotation)
     {
         this.clazz = annotatedMBean;
         this.classloader = Thread.currentThread().getContextClassLoader();
@@ -82,7 +85,7 @@ public class DynamicMBeanWrapper implements DynamicMBean
 
         // class
         final String description =
-            getDescription(annotatedMBean.getAnnotation(MBean.class).description(), annotatedMBean.getName());
+            getDescription(mBeanAnnotation.description(), annotatedMBean.getName());
 
         final NotificationInfo notification = annotatedMBean.getAnnotation(NotificationInfo.class);
         if (notification != null)
@@ -123,10 +126,13 @@ public class DynamicMBeanWrapper implements DynamicMBean
         }
 
         Class<?> clazz = annotatedMBean;
-        while (!Object.class.equals(clazz) && clazz != null) {
-            for (Field field : clazz.getDeclaredFields()) {
+        while (!Object.class.equals(clazz) && clazz != null)
+        {
+            for (Field field : clazz.getDeclaredFields())
+            {
                 final JmxManaged annotation = field.getAnnotation(JmxManaged.class);
-                if (annotation != null) {
+                if (annotation != null)
+                {
                     field.setAccessible(true);
 
                     final String name = field.getName();
@@ -135,26 +141,38 @@ public class DynamicMBeanWrapper implements DynamicMBean
                     final Class<?> type = field.getType();
 
                     final String javaMtdName;
-                    if (name.length() > 1) {
+                    if (name.length() > 1)
+                    {
                         javaMtdName = Character.toUpperCase(name.charAt(0)) + name.substring(1);
-                    } else {
+                    }
+                    else
+                    {
                         javaMtdName = "" + Character.toUpperCase(name.charAt(0));
                     }
 
                     Method setter = null;
                     Method getter = null;
-                    try {
+                    try
+                    {
                         getter = clazz.getMethod("get" + javaMtdName);
-                    } catch (NoSuchMethodException e1) {
-                        try { // since we handle it ourself we treat it as a normal getter
+                    }
+                    catch (NoSuchMethodException e1)
+                    {
+                        try
+                        { // since we handle it ourself we treat it as a normal getter
                             getter = clazz.getMethod("is" + javaMtdName);
-                        } catch (NoSuchMethodException e2) {
+                        }
+                        catch (NoSuchMethodException e2)
+                        {
                             // ignored
                         }
                     }
-                    try {
+                    try
+                    {
                         setter = clazz.getMethod("set" + javaMtdName, field.getType());
-                    } catch (NoSuchMethodException e) {
+                    }
+                    catch (NoSuchMethodException e)
+                    {
                         // ignored
                     }
 
@@ -175,11 +193,13 @@ public class DynamicMBeanWrapper implements DynamicMBean
                 notificationInfos.toArray(new MBeanNotificationInfo[notificationInfos.size()]));
     }
 
-    private MBeanNotificationInfo getNotificationInfo(final NotificationInfo n, String sourceInfo)
+    private MBeanNotificationInfo getNotificationInfo(final NotificationInfo notificationInfo, String sourceInfo)
     {
-        return new MBeanNotificationInfo(n.types(),
-                n.notificationClass().getName(), getDescription(n.description(), sourceInfo),
-                new ImmutableDescriptor(n.descriptorFields()));
+        return new MBeanNotificationInfo(
+            notificationInfo.types(),
+            notificationInfo.notificationClass().getName(),
+            getDescription(notificationInfo.description(), sourceInfo),
+            new ImmutableDescriptor(notificationInfo.descriptorFields()));
     }
 
     private String getDescription(final String description, String defaultDescription)
@@ -260,7 +280,8 @@ public class DynamicMBeanWrapper implements DynamicMBean
             catch (InvocationTargetException e)
             {
                 LOGGER.log(Level.SEVERE, "can't set " + attribute + " value", e);
-            } finally
+            }
+            finally
             {
                 Thread.currentThread().setContextClassLoader(oldCl);
             }

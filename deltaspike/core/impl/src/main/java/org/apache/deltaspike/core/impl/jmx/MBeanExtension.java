@@ -23,7 +23,12 @@ import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 
 import javax.enterprise.event.Observes;
-import javax.enterprise.inject.spi.*;
+import javax.enterprise.inject.spi.AnnotatedType;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.BeforeBeanDiscovery;
+import javax.enterprise.inject.spi.BeforeShutdown;
+import javax.enterprise.inject.spi.Extension;
+import javax.enterprise.inject.spi.ProcessManagedBean;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import java.lang.annotation.Annotation;
@@ -54,11 +59,10 @@ public class MBeanExtension implements Extension, Deactivatable
             return;
         }
 
-        if (bean.getAnnotated().getAnnotation(MBean.class) != null)
+        MBean mBeanAnnotation = bean.getAnnotated().getAnnotation(MBean.class);
+        if (mBeanAnnotation != null)
         {
-            final ObjectName name = register(bean, bm);
-            objectNames.add(name);
-            LOGGER.info("Registered MBean " + name.getCanonicalName());
+            registerObject(bean, mBeanAnnotation, bm);
         }
     }
 
@@ -78,24 +82,26 @@ public class MBeanExtension implements Extension, Deactivatable
         objectNames.clear();
     }
 
-    private ObjectName register(final ProcessManagedBean<?> bean, final BeanManager bm) throws Exception
+    private void registerObject(final ProcessManagedBean<?> bean,
+                                final MBean mBeanAnnotation,
+                                final BeanManager bm) throws Exception
     {
-        final MBean mBean = bean.getAnnotated().getAnnotation(MBean.class);
         final Class<?> clazz = bean.getAnnotatedBeanClass().getJavaClass();
 
-        String on = mBean.objectName();
+        String on = mBeanAnnotation.objectName();
         if (on.isEmpty())
         {
             on = "deltaspike:type=MBeans,name=" + clazz.getName();
         }
 
         final ObjectName objectName = new ObjectName(on);
-        mBeanServer().registerMBean(new DynamicMBeanWrapper(clazz,
-                isNormalScope(bean.getAnnotatedBeanClass().getJavaClass().getAnnotations(),
-                        bean.getAnnotated().getAnnotations(), bm),
-                        qualifiers(bean.getAnnotatedBeanClass(), bm)),
-                objectName);
-        return objectName;
+        boolean normalScoped = isNormalScope(bean.getAnnotated().getAnnotations(), bm);
+        Annotation[] qualifiers = qualifiers(bean.getAnnotatedBeanClass(), bm);
+        mBeanServer().registerMBean(
+            new DynamicMBeanWrapper(clazz, normalScoped, qualifiers, mBeanAnnotation), objectName);
+
+        objectNames.add(objectName);
+        LOGGER.info("Registered MBean " + objectName.getCanonicalName());
     }
 
     private Annotation[] qualifiers(final AnnotatedType<?> annotatedBeanClass, final BeanManager bm)
@@ -112,19 +118,10 @@ public class MBeanExtension implements Extension, Deactivatable
     }
 
     // annotated doesn't always contain inherited annotations
-    // so test by reflection too
-    private boolean isNormalScope(final Annotation[] annotations,
-                                  final Set<Annotation> annotationSet,
-                                  final BeanManager bm)
+    // TODO we have to check the origin of this issue
+    private boolean isNormalScope(final Set<Annotation> annotations, final BeanManager bm)
     {
         for (Annotation annotation : annotations)
-        {
-            if (bm.isNormalScope(annotation.annotationType()))
-            {
-                return true;
-            }
-        }
-        for (Annotation annotation : annotationSet)
         {
             if (bm.isNormalScope(annotation.annotationType()))
             {
