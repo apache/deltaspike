@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core">
+
+<h:head>
+    <title>Simple JSF Facelets page</title>
+</h:head>
+
+<h:body>
+    <h1>JSF 2/CDI Scope testing</h1>
+    <h2>Page 2</h2>
+    <h:panelGrid columns="2" id="scopedValues">
+        <h:outputLabel value="ApplicationScope : "/>
+        <h:outputText value="#{applicationScopedBean.creationDate}">
+            <f:convertDateTime dateStyle="full" type="both" />
+        </h:outputText>
+
+        <h:outputLabel value="SessionScope : "/>
+        <h:outputText value="#{sessionScopedBean.creationDate}">
+            <f:convertDateTime dateStyle="full" type="both" />
+        </h:outputText>
+
+        <h:outputLabel value="ViewScope : "/>
+        <h:outputText value="#{viewScopedBean.creationDate}">
+            <f:convertDateTime dateStyle="full" type="both" />
+        </h:outputText>
+
+        <h:outputLabel value="RequestScope : "/>
+        <h:outputText value="#{requestScopedBean.creationDate}">
+            <f:convertDateTime dateStyle="full" type="both" />
+        </h:outputText>
+    </h:panelGrid>
+    <h:form>
+        <h:commandButton value="Same page"/>
+        <h:commandButton value="AJAX refresh">
+            <f:ajax render=":scopedValues"/>
+        </h:commandButton>
+        <h:commandButton value="Index" action="/index"/>
+    </h:form>
+</h:body>
+
+</html>

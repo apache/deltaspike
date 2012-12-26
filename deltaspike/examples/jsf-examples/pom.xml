@@ -21,57 +21,60 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.apache.deltaspike</groupId>
-        <artifactId>parent</artifactId>
+        <groupId>org.apache.deltaspike.examples</groupId>
+        <artifactId>examples-project</artifactId>
         <version>0.4-incubating-SNAPSHOT</version>
-        <relativePath>../parent/pom.xml</relativePath>
     </parent>
 
     <groupId>org.apache.deltaspike.examples</groupId>
-    <artifactId>examples-project</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>deltaspike-jsf-example</artifactId>
 
-    <name>Apache DeltaSpike Examples</name>
+    <name>Apache DeltaSpike JSF Examples</name>
 
-    <modules>
-        <module>jse-examples</module>
-		<module>jsf-examples</module>
-    </modules>
+    <packaging>war</packaging>
 
     <properties>
-        <deploy.skip>false</deploy.skip>
+        <deploy.skip>true</deploy.skip>
     </properties>
 
+    <profiles>
+
+    </profiles>
+
     <dependencies>
+
         <dependency>
-            <groupId>org.apache.geronimo.specs</groupId>
-            <artifactId>geronimo-jcdi_1.0_spec</artifactId>
+            <groupId>org.apache.myfaces.core</groupId>
+            <artifactId>myfaces-api</artifactId>
+            <version>${myfaces2.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- DeltaSpike modules -->
+        <dependency>
+            <groupId>org.apache.deltaspike.core</groupId>
+            <artifactId>deltaspike-core-api</artifactId>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
-            <groupId>org.apache.geronimo.specs</groupId>
-            <artifactId>geronimo-atinject_1.0_spec</artifactId>
+            <groupId>org.apache.deltaspike.core</groupId>
+            <artifactId>deltaspike-core-impl</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.deltaspike.modules</groupId>
+            <artifactId>deltaspike-jsf-module-api</artifactId>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
-            <groupId>org.apache.geronimo.specs</groupId>
-            <artifactId>geronimo-interceptor_1.1_spec</artifactId>
-            <scope>compile</scope>
+            <groupId>org.apache.deltaspike.modules</groupId>
+            <artifactId>deltaspike-jsf-module-impl</artifactId>
+            <scope>runtime</scope>
         </dependency>
+
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <configuration>
-                    <skip>${deploy.skip}</skip> <!-- we don't deploy our samples upstream -->
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 </project>
 
