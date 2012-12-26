@@ -530,6 +530,14 @@
                 <version>${tomee.version}</version>
                 <scope>test</scope>
             </dependency>
+
+            <!-- dependency for DELTASPIKE-113 -->
+            <dependency>
+                <groupId>javassist</groupId>
+                <artifactId>javassist</artifactId>
+                <version>3.12.0.GA</version>
+                <scope>provided</scope>
+            </dependency>
         </dependencies>
 
     </dependencyManagement>

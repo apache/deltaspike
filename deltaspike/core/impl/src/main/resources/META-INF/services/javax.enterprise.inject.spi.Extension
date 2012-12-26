@@ -22,3 +22,4 @@ org.apache.deltaspike.core.impl.message.MessageBundleExtension
 org.apache.deltaspike.core.impl.exception.control.extension.ExceptionControlExtension
 org.apache.deltaspike.core.impl.config.ConfigurationExtension
 org.apache.deltaspike.core.impl.jmx.MBeanExtension
+org.apache.deltaspike.core.impl.invocationhandler.InvocationHandlerBindingExtension
