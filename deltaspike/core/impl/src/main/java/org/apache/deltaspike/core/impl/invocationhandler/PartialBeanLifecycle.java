@@ -21,6 +21,7 @@ package org.apache.deltaspike.core.impl.invocationhandler;
 import javassist.util.proxy.MethodFilter;
 import javassist.util.proxy.ProxyFactory;
 import javassist.util.proxy.ProxyObject;
+import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
 import org.apache.deltaspike.core.util.metadata.builder.ContextualLifecycle;
@@ -36,13 +37,12 @@ class PartialBeanLifecycle<T, H extends InvocationHandler> implements Contextual
 {
     private final Class<? extends T> partialBeanProxyClass;
 
-    private final InjectionTarget<H> handlerInjectionTarget;
     private final InjectionTarget<T> partialBeanInjectionTarget;
+    private final Class<H> handlerClass;
 
     PartialBeanLifecycle(Class<T> partialBeanClass, Class<H> handlerClass, BeanManager beanManager)
     {
-        AnnotatedTypeBuilder<H> handlerTypeBuilder = new AnnotatedTypeBuilder<H>().readFromType(handlerClass);
-        this.handlerInjectionTarget = beanManager.createInjectionTarget(handlerTypeBuilder.create());
+        this.handlerClass = handlerClass;
 
         ProxyFactory proxyFactory = new ProxyFactory();
 
@@ -76,9 +76,7 @@ class PartialBeanLifecycle<T, H extends InvocationHandler> implements Contextual
     {
         try
         {
-            H handlerInstance = this.handlerInjectionTarget.produce(creationalContext);
-            this.handlerInjectionTarget.inject(handlerInstance, creationalContext);
-            this.handlerInjectionTarget.postConstruct(handlerInstance);
+            H handlerInstance = BeanProvider.getContextualReference(this.handlerClass);
 
             T instance = this.partialBeanProxyClass.newInstance();
 
@@ -108,7 +106,6 @@ class PartialBeanLifecycle<T, H extends InvocationHandler> implements Contextual
         }
 
         H handlerInstance = (H) ((PartialBeanMethodHandler)((ProxyObject) instance).getHandler()).getHandlerInstance();
-        this.handlerInjectionTarget.preDestroy(handlerInstance);
         //injectionTarget.dispose(handlerInstance); //currently producers aren't supported
         creationalContext.release();
     }

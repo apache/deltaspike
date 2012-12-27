@@ -25,6 +25,7 @@ import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.bean.BeanBuilder;
 import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
 
+import javax.enterprise.context.NormalScope;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AfterBeanDiscovery;
 import javax.enterprise.inject.spi.AnnotatedType;
@@ -38,6 +39,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -69,7 +71,7 @@ public class InvocationHandlerBindingExtension implements Extension, Deactivatab
         }
     }
 
-    public <X> void findInvocationHandlerBindings(@Observes ProcessAnnotatedType<X> pat)
+    public <X> void findInvocationHandlerBindings(@Observes ProcessAnnotatedType<X> pat, BeanManager beanManager)
     {
         if (!this.isActivated || this.definitionError != null)
         {
@@ -90,10 +92,10 @@ public class InvocationHandlerBindingExtension implements Extension, Deactivatab
         }
         else if (InvocationHandler.class.isAssignableFrom(beanClass))
         {
-            validateInvocationHandler(beanClass, bindingAnnotationClass);
+            validateInvocationHandler(
+                    beanClass, bindingAnnotationClass, pat.getAnnotatedType().getAnnotations(), beanManager);
 
             this.partialBeanHandlers.put(bindingAnnotationClass, (Class<? extends InvocationHandler>) beanClass);
-            pat.veto();
         }
         else
         {
@@ -171,7 +173,10 @@ public class InvocationHandlerBindingExtension implements Extension, Deactivatab
         return null;
     }
 
-    protected <X> void validateInvocationHandler(Class<X> beanClass, Class<? extends Annotation> bindingAnnotationClass)
+    protected <X> void validateInvocationHandler(Class<X> beanClass,
+                                                 Class<? extends Annotation> bindingAnnotationClass,
+                                                 Set<Annotation> annotations,
+                                                 BeanManager beanManager)
     {
         Class<? extends InvocationHandler> alreadyFoundHandler = this.partialBeanHandlers.get(bindingAnnotationClass);
         if (alreadyFoundHandler != null)
@@ -180,5 +185,17 @@ public class InvocationHandlerBindingExtension implements Extension, Deactivatab
                     bindingAnnotationClass.getName() + " (" +
                     alreadyFoundHandler.getName() + " and " + beanClass.getName() + ")");
         }
+
+        for (Annotation annotation : annotations)
+        {
+            if (beanManager.isNormalScope(annotation.annotationType()))
+            {
+                return;
+            }
+        }
+
+        //at least we have to restrict dependent-scoped beans (we wouldn't be able to destroy such handlers properly).
+        this.definitionError = new IllegalStateException(beanClass.getName() + " needs to be normal-scoped. " +
+            "(= Scopes annotated with @" + NormalScope.class.getName() + ")");
     }
 }

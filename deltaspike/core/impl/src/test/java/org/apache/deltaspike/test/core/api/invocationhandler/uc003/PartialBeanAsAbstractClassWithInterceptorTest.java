@@ -30,7 +30,6 @@ import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -66,7 +65,6 @@ public class PartialBeanAsAbstractClassWithInterceptorTest
     }
 
     @Test
-    @Ignore //only works with owb -> needs further discussions
     public void testPartialBeanAsAbstractClassWithInterceptor() throws Exception
     {
         String result = this.partialBean.getResult();
