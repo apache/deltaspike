@@ -60,7 +60,7 @@ public class PartialBeanAsInterfaceTest
     {
         String result = this.partialBean.getResult();
 
-        Assert.assertEquals("partial-test", result);
+        Assert.assertEquals("partial-test-false", result);
 
         //TODO test pre-destroy callback
     }

@@ -30,10 +30,10 @@ import javax.inject.Inject;
 @RequestScoped
 public abstract class PartialBean
 {
-    private String value;
-
     @Inject
     private TestBean testBean;
+
+    private String value;
 
     public abstract String getResult();
 

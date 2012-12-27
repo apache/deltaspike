@@ -16,24 +16,28 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.api.invocationhandler.uc002;
+package org.apache.deltaspike.test.core.api.invocationhandler.uc003;
 
+import org.apache.deltaspike.test.core.api.invocationhandler.shared.CustomInterceptorImpl;
 import org.apache.deltaspike.test.core.api.invocationhandler.shared.PartialBeanBinding;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 
 @RunWith(Arquillian.class)
-public class PartialBeanAsAbstractClassTest
+public class PartialBeanAsAbstractClassWithInterceptorTest
 {
     @Inject
     private PartialBean partialBean;
@@ -41,30 +45,38 @@ public class PartialBeanAsAbstractClassTest
     @Deployment
     public static WebArchive war()
     {
-        String simpleName = PartialBeanAsAbstractClassTest.class.getSimpleName();
+        Asset beansXml = new StringAsset(
+            "<beans><interceptors><class>" +
+                    CustomInterceptorImpl.class.getName() +
+            "</class></interceptors></beans>"
+        );
+
+        String simpleName = PartialBeanAsAbstractClassWithInterceptorTest.class.getSimpleName();
         String archiveName = simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1);
 
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, archiveName + ".jar")
-                .addPackage(PartialBeanAsAbstractClassTest.class.getPackage())
+                .addPackage(PartialBeanAsAbstractClassWithInterceptorTest.class.getPackage())
                 .addPackage(PartialBeanBinding.class.getPackage())
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
         return ShrinkWrap.create(WebArchive.class, archiveName + ".war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
                 .addAsLibraries(testJar)
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsWebInfResource(beansXml, "beans.xml");
     }
 
     @Test
-    public void testPartialBeanAsAbstractClass() throws Exception
+    @Ignore //only works with owb -> needs further discussions
+    public void testPartialBeanAsAbstractClassWithInterceptor() throws Exception
     {
         String result = this.partialBean.getResult();
 
-        Assert.assertEquals("partial-test-false", result);
+        Assert.assertEquals("partial-test-true", result);
 
         result = this.partialBean.getManualResult();
 
-        Assert.assertEquals("manual-test", result);
+        //"manual-test-true" would be the goal, but it isn't supported (for now)
+        Assert.assertEquals("manual-test-false", result);
 
         //TODO test pre-destroy callback
     }

@@ -107,9 +107,9 @@ class PartialBeanLifecycle<T, H extends InvocationHandler> implements Contextual
             this.partialBeanInjectionTarget.preDestroy(instance);
         }
 
-        H handerInstance = (H) ((PartialBeanMethodHandler)((ProxyObject) instance).getHandler()).getHandlerInstance();
-        this.handlerInjectionTarget.preDestroy(handerInstance);
-        //injectionTarget.dispose(handerInstance); //currently producers aren't supported
+        H handlerInstance = (H) ((PartialBeanMethodHandler)((ProxyObject) instance).getHandler()).getHandlerInstance();
+        this.handlerInjectionTarget.preDestroy(handlerInstance);
+        //injectionTarget.dispose(handlerInstance); //currently producers aren't supported
         creationalContext.release();
     }
 }

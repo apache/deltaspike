@@ -16,17 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.api.invocationhandler.shared;
+package org.apache.deltaspike.test.core.api.invocationhandler.uc003;
+
+import org.apache.deltaspike.test.core.api.invocationhandler.shared.CustomInterceptor;
+import org.apache.deltaspike.test.core.api.invocationhandler.shared.TestInterceptorAware;
+import org.apache.deltaspike.test.core.api.invocationhandler.shared.PartialBeanBinding;
+import org.apache.deltaspike.test.core.api.invocationhandler.shared.TestBean;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
 
 @PartialBeanBinding
-@CustomInterceptor //for uc003
-public class PartialBeanHandler implements InvocationHandler, /*just needed for testing interceptors: */TestInterceptorAware
+@RequestScoped
+@CustomInterceptor //doesn't work currently
+public abstract class PartialBean implements /*just needed for testing interceptors: */ TestInterceptorAware
 {
     @Inject
     private TestBean testBean;
@@ -34,10 +39,12 @@ public class PartialBeanHandler implements InvocationHandler, /*just needed for 
     private String value;
     private boolean intercepted;
 
+    public abstract String getResult();
+
     @PostConstruct
     protected void onCreate()
     {
-        this.value = "partial";
+        this.value = "manual";
     }
 
     @PreDestroy
@@ -46,11 +53,12 @@ public class PartialBeanHandler implements InvocationHandler, /*just needed for 
         //TODO check in a test
     }
 
-    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
+    public String getManualResult()
     {
         return this.value + "-" + this.testBean.getValue() + "-" + this.intercepted;
     }
 
+    @Override
     public void setIntercepted(boolean intercepted)
     {
         this.intercepted = intercepted;
