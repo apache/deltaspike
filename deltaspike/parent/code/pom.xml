@@ -313,6 +313,9 @@
                         <artifactId>maven-surefire-plugin</artifactId>
                         <version>${maven.surefire.plugin.version}</version>
                         <configuration>
+                            <systemPropertyVariables>
+                                <tomee.version>${tomee.version}</tomee.version>
+                            </systemPropertyVariables>
                             <systemProperties>
                                 <arquillian.launch>tomee</arquillian.launch>
                                 <org.apache.deltaspike.ProjectStage>UnitTest</org.apache.deltaspike.ProjectStage>
