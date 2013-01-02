@@ -28,6 +28,10 @@
         <phase-listener>org.apache.deltaspike.jsf.impl.listener.phase.JsfRequestLifecyclePhaseListener</phase-listener>
     </lifecycle>
 
+    <application>
+        <navigation-handler>org.apache.deltaspike.jsf.impl.navigation.DeltaSpikeNavigationHandler</navigation-handler>
+    </application>
+
     <factory>
         <lifecycle-factory>org.apache.deltaspike.jsf.impl.listener.request.DeltaSpikeLifecycleFactoryWrapper</lifecycle-factory>
         <faces-context-factory>org.apache.deltaspike.jsf.impl.listener.request.DeltaSpikeFacesContextFactory</faces-context-factory>
