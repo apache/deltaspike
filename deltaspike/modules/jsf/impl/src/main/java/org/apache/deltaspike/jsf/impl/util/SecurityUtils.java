@@ -20,6 +20,7 @@ package org.apache.deltaspike.jsf.impl.util;
 
 import org.apache.deltaspike.core.api.config.view.DefaultErrorView;
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
+import org.apache.deltaspike.core.api.config.view.metadata.ConfigDescriptor;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigDescriptor;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
@@ -44,7 +45,7 @@ import java.util.Set;
 public abstract class SecurityUtils
 {
     public static void invokeVoters(EditableAccessDecisionVoterContext accessDecisionVoterContext,
-                                    ViewConfigDescriptor viewConfigDescriptor)
+                                    ConfigDescriptor viewConfigDescriptor)
     {
         if (viewConfigDescriptor == null)
         {

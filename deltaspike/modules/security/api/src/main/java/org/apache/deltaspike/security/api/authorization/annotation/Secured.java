@@ -52,6 +52,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 //cdi annotations
 @SecurityBindingType
 
+//don't use @Aggregated(true) - we need to support different error-pages (per folder/page)
 @ViewMetaData(preProcessor = Secured.SecuredConfigPreProcessor.class)
 public @interface Secured
 {

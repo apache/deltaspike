@@ -52,4 +52,10 @@ class DefaultViewPathConfigDescriptor extends AbstractPathConfigDescriptor imple
     {
         return this.viewConfig;
     }
+
+    @Override
+    public String toString()
+    {
+        return this.viewId;
+    }
 }

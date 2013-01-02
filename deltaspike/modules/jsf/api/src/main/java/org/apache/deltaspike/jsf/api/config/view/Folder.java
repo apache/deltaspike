@@ -48,7 +48,7 @@ public @interface Folder
      *
      * @return name of the folder
      */
-    String name() default "";
+    String name() default ".";
 
     static class FolderConfigPreProcessor implements ConfigPreProcessor<Folder>
     {
@@ -59,13 +59,11 @@ public @interface Folder
 
             String name = folder.name();
 
-            if (name == null) //null used as marker value for dynamically added instances
+            if (name == null /*null used as marker value for dyn. added instances*/ || ".".equals(name) /*default*/)
             {
                 defaultValueReplaced = true;
                 name = NamingConventionUtils.toPath(viewConfigNode);
             }
-
-            //TODO if name.startsWith("./")
 
             if (defaultValueReplaced)
             {

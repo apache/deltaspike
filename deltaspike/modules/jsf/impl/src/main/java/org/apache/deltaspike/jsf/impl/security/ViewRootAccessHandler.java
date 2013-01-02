@@ -19,6 +19,7 @@
 package org.apache.deltaspike.jsf.impl.security;
 
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
+import org.apache.deltaspike.core.api.config.view.metadata.ConfigDescriptor;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
 import org.apache.deltaspike.jsf.impl.util.SecurityUtils;
 import org.apache.deltaspike.security.spi.authorization.EditableAccessDecisionVoterContext;
@@ -26,6 +27,9 @@ import org.apache.deltaspike.security.spi.authorization.EditableAccessDecisionVo
 import javax.enterprise.context.RequestScoped;
 import javax.faces.component.UIViewRoot;
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
 
 @RequestScoped
 public class ViewRootAccessHandler
@@ -53,7 +57,49 @@ public class ViewRootAccessHandler
             return;
         }
 
-        SecurityUtils.invokeVoters(accessDecisionVoterContext, viewConfigResolver.getViewConfigDescriptor(viewId));
+        ConfigDescriptor configDescriptor = this.viewConfigResolver.getViewConfigDescriptor(viewId);
+
+        //topmost nodes get checked first
+        Stack<ConfigDescriptor> configDescriptorStack = new Stack<ConfigDescriptor>();
+
+        if (configDescriptor != null)
+        {
+            configDescriptorStack.push(configDescriptor);
+        }
+
+        List<String> parentPathList = new ArrayList<String>();
+        createPathList(viewId, parentPathList);
+
+        List<ConfigDescriptor> folderConfigDescriptors = this.viewConfigResolver.getConfigDescriptors();
+
+        for (String path : parentPathList)
+        {
+            for (ConfigDescriptor pathDescriptor : folderConfigDescriptors)
+            {
+                if (path.equals(pathDescriptor.toString()))
+                {
+                    configDescriptorStack.push(pathDescriptor);
+                    break;
+                }
+            }
+        }
+
+        for (ConfigDescriptor currentConfigDescriptor : configDescriptorStack)
+        {
+            SecurityUtils.invokeVoters(this.accessDecisionVoterContext, currentConfigDescriptor);
+        }
+    }
+
+    private void createPathList(String currentPath, List<String> pathList)
+    {
+        if (!currentPath.contains("/"))
+        {
+            return;
+        }
+
+        String parentFolder = currentPath.substring(0, currentPath.lastIndexOf("/"));
+        pathList.add(parentFolder + "/");
+        createPathList(parentFolder, pathList);
     }
 
     private boolean checkView(String viewId)
