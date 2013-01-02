@@ -47,7 +47,6 @@ import java.util.Set;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-//TODO re-activate
 @RunWith(Arquillian.class)
 public class HandlerComparatorTest
 {
@@ -66,8 +65,11 @@ public class HandlerComparatorTest
     @Inject
     private BeanManager bm;
 
+    @Inject
+    private HandlerMethodStorage storage;
+
     @Test
-    public void assertOrderIsCorrectDepthFirst(HandlerMethodStorage storage)
+    public void assertOrderIsCorrectDepthFirst()
     {
         List<HandlerMethod<? extends Throwable>> handlers = new ArrayList<HandlerMethod<? extends Throwable>>(
                 storage.getHandlersForException(IllegalArgumentException.class, bm, Collections.<Annotation>emptySet(),
@@ -82,7 +84,7 @@ public class HandlerComparatorTest
     }
 
     @Test
-    public void assertOrderIsCorrectWithQualifiers(HandlerMethodStorage storage)
+    public void assertOrderIsCorrectWithQualifiers()
     {
         Set<Annotation> qualifiers = new HashSet<Annotation>();
         qualifiers.add(new CatchQualifierLiteral());
@@ -102,7 +104,7 @@ public class HandlerComparatorTest
     }
 
     @Test
-    public void assertOrderIsCorrectBreadthFirst(HandlerMethodStorage storage)
+    public void assertOrderIsCorrectBreadthFirst()
     {
         List<HandlerMethod<? extends Throwable>> handlers = new ArrayList<HandlerMethod<? extends Throwable>>(
                 storage.getHandlersForException(Exception.class, bm, Collections.<Annotation>emptySet(), true));
