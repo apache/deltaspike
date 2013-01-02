@@ -20,19 +20,20 @@ package org.apache.deltaspike.security.api.authorization.annotation;
 
 import org.apache.deltaspike.core.api.config.view.DefaultErrorView;
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
+import org.apache.deltaspike.core.api.config.view.metadata.ExecutableCallbackDescriptor;
 import org.apache.deltaspike.core.api.config.view.metadata.annotation.DefaultCallback;
 import org.apache.deltaspike.core.api.config.view.metadata.annotation.ViewMetaData;
-import org.apache.deltaspike.core.api.config.view.metadata.CallbackDescriptor;
 import org.apache.deltaspike.core.spi.config.view.ConfigPreProcessor;
 import org.apache.deltaspike.core.spi.config.view.ViewConfigNode;
 import org.apache.deltaspike.security.api.authorization.AccessDecisionVoter;
+import org.apache.deltaspike.security.api.authorization.AccessDecisionVoterContext;
 import org.apache.deltaspike.security.api.authorization.SecurityViolation;
 
 import javax.enterprise.util.Nonbinding;
-import java.lang.annotation.Annotation;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+import java.util.List;
 import java.util.Set;
 
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
@@ -76,18 +77,22 @@ public @interface Secured
         @Override
         public Secured beforeAddToConfig(Secured metaData, ViewConfigNode viewConfigNode)
         {
-            viewConfigNode.registerCallbackDescriptors(Secured.class,
-                    new SecuredDescriptor(metaData.value(), DefaultCallback.class));
+            viewConfigNode.registerCallbackDescriptors(Secured.class, new SecuredDescriptor(metaData.value()));
             return metaData; //no change needed
         }
     }
 
     //can be used from outside to get a typed result
-    static class SecuredDescriptor extends CallbackDescriptor<Set<SecurityViolation>>
+    static class SecuredDescriptor extends ExecutableCallbackDescriptor<Set<SecurityViolation>>
     {
-        public SecuredDescriptor(Class[] beanClasses, Class<? extends Annotation> callbackMarker)
+        public SecuredDescriptor(Class<? extends AccessDecisionVoter>[] accessDecisionVoterBeanClasses)
         {
-            super(beanClasses, callbackMarker);
+            super(accessDecisionVoterBeanClasses, DefaultCallback.class);
+        }
+
+        public List<Set<SecurityViolation>> execute(AccessDecisionVoterContext accessDecisionVoterContext)
+        {
+            return super.execute(accessDecisionVoterContext);
         }
     }
 }

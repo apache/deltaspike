@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.jsf.impl.config.view;
 
+import org.apache.deltaspike.core.api.config.view.metadata.ExecutableCallbackDescriptor;
 import org.apache.deltaspike.core.api.config.view.metadata.annotation.DefaultCallback;
 import org.apache.deltaspike.core.api.config.view.metadata.CallbackDescriptor;
 import org.apache.deltaspike.core.api.config.view.metadata.ConfigDescriptor;
@@ -71,16 +72,37 @@ abstract class AbstractPathConfigDescriptor implements ConfigDescriptor
     }
 
     @Override
-    public CallbackDescriptor getCallbackDescriptor(Class<? extends Annotation> metaDataType,
-                                                    Class<? extends Annotation> callbackType)
+    public CallbackDescriptor getCallbackDescriptor(Class<? extends Annotation> metaDataType)
     {
-        return getCallbackDescriptor(metaDataType, callbackType, CallbackDescriptor.class);
+        return getCallbackDescriptor(metaDataType, DefaultCallback.class);
     }
 
     @Override
-    public <T extends CallbackDescriptor> T getCallbackDescriptor(Class<? extends Annotation> metaDataType,
-                                                                  Class<? extends Annotation> callbackType,
-                                                                  Class<? extends T> executorType)
+    public CallbackDescriptor getCallbackDescriptor(Class<? extends Annotation> metaDataType,
+                                                    Class<? extends Annotation> callbackType)
+    {
+        return findCallbackDescriptor(metaDataType, callbackType);
+    }
+
+    @Override
+    public <T extends ExecutableCallbackDescriptor> T getExecutableCallbackDescriptor(
+            Class<? extends Annotation> metaDataType,
+            Class<? extends T> executorType)
+    {
+        return getExecutableCallbackDescriptor(metaDataType, DefaultCallback.class, executorType);
+    }
+
+    @Override
+    public <T extends ExecutableCallbackDescriptor> T getExecutableCallbackDescriptor(
+            Class<? extends Annotation> metaDataType,
+            Class<? extends Annotation> callbackType,
+            Class<? extends T> executorType)
+    {
+        return findCallbackDescriptor(metaDataType, callbackType);
+    }
+
+    private <T extends CallbackDescriptor> T findCallbackDescriptor(Class<? extends Annotation> metaDataType,
+                                                                    Class<? extends Annotation> callbackType)
     {
         List<CallbackDescriptor> foundDescriptors = callbackDescriptors.get(metaDataType);
 

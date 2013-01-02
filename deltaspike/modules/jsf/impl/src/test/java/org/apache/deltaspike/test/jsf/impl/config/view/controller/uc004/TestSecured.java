@@ -19,6 +19,7 @@
 package org.apache.deltaspike.test.jsf.impl.config.view.controller.uc004;
 
 import org.apache.deltaspike.core.api.config.view.metadata.CallbackDescriptor;
+import org.apache.deltaspike.core.api.config.view.metadata.ExecutableCallbackDescriptor;
 import org.apache.deltaspike.core.api.config.view.metadata.annotation.DefaultCallback;
 import org.apache.deltaspike.core.api.config.view.metadata.annotation.ViewMetaData;
 import org.apache.deltaspike.core.spi.config.view.ConfigPreProcessor;
@@ -62,11 +63,16 @@ public @interface TestSecured
     }
 
     //can be used from outside to get a typed result
-    static class TestSecuredDescriptor extends CallbackDescriptor<Set<String>>
+    static class TestSecuredDescriptor extends ExecutableCallbackDescriptor<Set<String>>
     {
         public TestSecuredDescriptor(Class[] beanClasses, Class<? extends Annotation> callbackMarker)
         {
             super(beanClasses, callbackMarker);
+        }
+
+        public List<Set<String>> execute(String param1, String param2)
+        {
+            return super.execute(param1, param2);
         }
     }
 }

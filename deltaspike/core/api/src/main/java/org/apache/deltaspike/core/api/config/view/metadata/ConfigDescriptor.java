@@ -46,50 +46,39 @@ public interface ConfigDescriptor
      */
     <T extends Annotation> List<T> getMetaData(Class<T> target);
 
-    //TODO discuss parameter meta-data-type (needed to use @DefaultCallback)
-    //for using only CallbackDescriptor getCallbackDescriptor(Class<? extends Annotation> callbackType)
-    //we would have to drop the support to re-use callback annotations for
-    //different meta-data-types (e.g. @DefaultCallback)
+    /**
+     * Callbacks which are configured for the entry and bound to the given meta-data type.
+     * @param metaDataType type of the meta-data (e.g. PageBean.class)
+     * @return descriptor for the callback or null if there is no callback-method
+     */
+    CallbackDescriptor getCallbackDescriptor(Class<? extends Annotation> metaDataType);
 
-    /*TODO discuss the usage - e.g.:
-    CallbackDescriptor preRenderView =
-      viewConfigDescriptor.getCallbackDescriptor(PageBean.class, PreRenderView.class);
-
-    if (preRenderView != null)
-    {
-        preRenderView.execute();
-    }
-    */
     /**
      * Callbacks which are configured for the entry and bound to the given meta-data type.
      * @param metaDataType type of the meta-data (e.g. PageBean.class)
      * @param callbackType type of the callback (e.g. PreRenderView.class)
-     * @return descriptor for the callback which also allows to invoke it or null if there is no callback-method
+     * @return descriptor for the callback null if there is no callback-method
      */
     CallbackDescriptor getCallbackDescriptor(Class<? extends Annotation> metaDataType,
                                              Class<? extends Annotation> callbackType);
 
-    /*TODO discuss the usage - e.g.:
-    CallbackDescriptor secured =
-      viewConfigDescriptor.getCallbackDescriptor(Secured.class, DefaultCallback.class, Secured.SecuredDescriptor.class);
+    /**
+     * Callbacks which are configured for the entry and bound to the given meta-data type.
+     * @param metaDataType type of the meta-data (e.g. PageBean.class)
+     * @param executorType type of the executor which allows to get a typed result (e.g. Secured.SecuredDescriptor)
+     * @return descriptor for the callback which also allows to invoke it or null if there is no callback-method
+     */
+    <T extends ExecutableCallbackDescriptor> T getExecutableCallbackDescriptor(Class<? extends Annotation> metaDataType,
+                                                                               Class<? extends T> executorType);
 
-    if (secured != null)
-    {
-      List<Set<SecurityViolation>> callbackResult = secured.execute(accessDecisionVoterContext);
-    }
-
-    List ... because there can be 1-n callbacks (in case of @Secured 1-n AccessDecisionVoter/s
-    Set<SecurityViolation> ... return type specified by the callback method
-    */
     /**
      * Callbacks which are configured for the entry and bound to the given meta-data type.
      * @param metaDataType type of the meta-data (e.g. PageBean.class)
      * @param callbackType type of the callback (e.g. PreRenderView.class)
-     * @param executorType type of the executor which allows to get a typed result (e.g. Secured.SecuredDescriptor
+     * @param executorType type of the executor which allows to get a typed result (e.g. Secured.SecuredDescriptor)
      * @return descriptor for the callback which also allows to invoke it or null if there is no callback-method
      */
-    //only needed if the result is needed e.g. in case of @Secured
-    <T extends CallbackDescriptor> T getCallbackDescriptor(Class<? extends Annotation> metaDataType,
-                                                           Class<? extends Annotation> callbackType,
-                                                           Class<? extends T> executorType);
+    <T extends ExecutableCallbackDescriptor> T getExecutableCallbackDescriptor(Class<? extends Annotation> metaDataType,
+                                                                               Class<? extends Annotation> callbackType,
+                                                                               Class<? extends T> executorType);
 }

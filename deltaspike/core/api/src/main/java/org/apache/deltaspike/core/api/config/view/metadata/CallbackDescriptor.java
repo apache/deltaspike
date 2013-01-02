@@ -20,7 +20,6 @@ package org.apache.deltaspike.core.api.config.view.metadata;
 
 import org.apache.deltaspike.core.api.config.view.metadata.annotation.DefaultCallback;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
-import org.apache.deltaspike.core.util.ExceptionUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -30,12 +29,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-//TODO bean-names
-//TODO callback which allows to validate the method signature (during the descriptor creation)
-public abstract class CallbackDescriptor<R>
+public abstract class CallbackDescriptor
 {
-    private List<CallbackEntry> callbacks = new ArrayList<CallbackEntry>();
-    private Class<? extends Annotation> callbackType;
+    protected List<CallbackEntry> callbacks = new ArrayList<CallbackEntry>();
+    protected Class<? extends Annotation> callbackType;
 
     protected CallbackDescriptor(Class beanClass, Class<? extends Annotation> callbackMarker)
     {
@@ -67,33 +64,6 @@ public abstract class CallbackDescriptor<R>
         }
     }
 
-    //TODO discuss if we should keep it here
-    public List<R> execute(Object... optionalParams)
-    {
-        List<R> results = new ArrayList<R>();
-        for (CallbackEntry callbackEntry : this.callbacks)
-        {
-            for (Method callbackMethod : callbackEntry.callbackMethods)
-            {
-                try
-                {
-                    Object bean = getTargetObject(callbackEntry.targetBeanClass);
-                    R result = (R) callbackMethod.invoke(bean, optionalParams);
-
-                    if (result != null)
-                    {
-                        results.add(result);
-                    }
-                }
-                catch (Exception e)
-                {
-                    ExceptionUtils.throwAsRuntimeException(e);
-                }
-            }
-        }
-        return results;
-    }
-
     public Map<Class, List<Method>> getCallbackMethods()
     {
         Map<Class, List<Method>> result = new HashMap<Class, List<Method>>(this.callbacks.size());
@@ -115,7 +85,7 @@ public abstract class CallbackDescriptor<R>
         return this.callbackType.equals(callbackType);
     }
 
-    private static class CallbackEntry
+    protected static class CallbackEntry
     {
         private List<Method> callbackMethods = new ArrayList<Method>();
         private final Class targetBeanClass;
@@ -170,6 +140,16 @@ public abstract class CallbackDescriptor<R>
 
                 currentClass = currentClass.getSuperclass();
             }
+        }
+
+        public List<Method> getCallbackMethods()
+        {
+            return callbackMethods;
+        }
+
+        public Class getTargetBeanClass()
+        {
+            return targetBeanClass;
         }
     }
 }

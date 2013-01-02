@@ -23,8 +23,8 @@ package org.apache.deltaspike.jsf.api.config.view.controller;
  * Such page beans support e.g. the view-controller annotations.
  */
 
+import org.apache.deltaspike.core.api.config.view.metadata.SimpleCallbackDescriptor;
 import org.apache.deltaspike.core.api.config.view.metadata.annotation.ViewMetaData;
-import org.apache.deltaspike.core.api.config.view.metadata.CallbackDescriptor;
 import org.apache.deltaspike.core.spi.config.view.ConfigPreProcessor;
 import org.apache.deltaspike.core.spi.config.view.ViewConfigNode;
 
@@ -76,11 +76,11 @@ public @interface PageBean
         }
 
         //not needed outside
-        private class ViewControllerDescriptor extends CallbackDescriptor<Void>
+        private class ViewControllerDescriptor extends SimpleCallbackDescriptor<Void>
         {
-            protected ViewControllerDescriptor(Class beanClass, Class<? extends Annotation> callbackMarker)
+            protected ViewControllerDescriptor(Class beanClass, Class<? extends Annotation> callbackType)
             {
-                super(beanClass, callbackMarker);
+                super(beanClass, callbackType);
             }
         }
     }

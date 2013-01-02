@@ -108,7 +108,7 @@ public class ViewConfigTest
         Assert.assertNotNull(viewConfigDescriptor);
         Assert.assertNull(viewConfigDescriptor.getCallbackDescriptor(PageBean.class, InitView.class));
         Assert.assertNotNull(viewConfigDescriptor.getCallbackDescriptor(PageBean.class, PreRenderView.class));
-        Assert.assertNotNull(viewConfigDescriptor.getCallbackDescriptor(TestSecured.class, DefaultCallback.class));
+        Assert.assertNotNull(viewConfigDescriptor.getCallbackDescriptor(TestSecured.class));
     }
 
     @Test
@@ -134,9 +134,9 @@ public class ViewConfigTest
         ViewConfigDescriptor viewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(SimplePageConfig.class);
 
         Assert.assertNotNull(viewConfigDescriptor);
-        Assert.assertNotNull(viewConfigDescriptor.getCallbackDescriptor(TestSecured.class, DefaultCallback.class));
+        Assert.assertNotNull(viewConfigDescriptor.getCallbackDescriptor(TestSecured.class));
         List<Set<String> /*return type of one callback*/> callbackResult =
-            viewConfigDescriptor.getCallbackDescriptor(TestSecured.class, DefaultCallback.class, TestSecured.TestSecuredDescriptor.class)
+            viewConfigDescriptor.getExecutableCallbackDescriptor(TestSecured.class, TestSecured.TestSecuredDescriptor.class)
                 .execute("param1", "param2");
         Assert.assertNotNull(callbackResult);
         Assert.assertEquals(1, callbackResult.size());
