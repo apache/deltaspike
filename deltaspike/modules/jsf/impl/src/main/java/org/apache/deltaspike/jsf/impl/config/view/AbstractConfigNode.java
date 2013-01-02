@@ -24,6 +24,7 @@ import org.apache.deltaspike.core.spi.config.view.ViewConfigNode;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -40,7 +41,7 @@ public abstract class AbstractConfigNode implements ViewConfigNode
     protected AbstractConfigNode(ViewConfigNode parent, Set<Annotation> metaData)
     {
         this.parent = parent;
-        this.metaData = metaData;
+        this.metaData = new HashSet<Annotation>(metaData); //might be read-only (from Annotated#getAnnotations)
     }
 
     @Override
