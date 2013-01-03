@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.test.core.api.invocationhandler.uc003;
 
+import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.test.core.api.invocationhandler.shared.CustomInterceptorImpl;
 import org.apache.deltaspike.test.core.api.invocationhandler.shared.PartialBeanBinding;
 import org.apache.deltaspike.test.util.ArchiveUtils;
@@ -31,11 +32,13 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 
 @RunWith(Arquillian.class)
+@Category(SeCategory.class) //TODO use different category (only new versions of weld)
 public class PartialBeanAsAbstractClassWithInterceptorTest
 {
     @Inject
