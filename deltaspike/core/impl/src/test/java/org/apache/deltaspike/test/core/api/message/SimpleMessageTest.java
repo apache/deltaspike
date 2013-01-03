@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.test.core.api.message;
 
+import org.apache.deltaspike.core.api.message.LocaleResolver;
 import org.apache.deltaspike.core.impl.message.MessageBundleExtension;
 import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.test.util.ArchiveUtils;
@@ -34,8 +35,6 @@ import org.junit.runner.RunWith;
 import javax.enterprise.inject.spi.Extension;
 import javax.inject.Inject;
 
-import java.util.Locale;
-
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -47,6 +46,9 @@ public class SimpleMessageTest
 {
     @Inject
     private SimpleMessage simpleMessage;
+
+    @Inject
+    private LocaleResolver localeResolver;
 
     /**
      * X TODO creating a WebArchive is only a workaround because JavaArchive
@@ -85,10 +87,7 @@ public class SimpleMessageTest
     {
         float f = 123.45f;
 
-        // this is what the DefaultLocale uses as well
-        Locale defaultLocale = Locale.getDefault();
-
-        String expectedResult = "Welcome to " + String.format("%f", f);
+        String expectedResult = "Welcome to " + String.format(this.localeResolver.getLocale(), "%f", f);
         String result = simpleMessage.welcomeWithFloatVariable(f);
         assertEquals(expectedResult, result);
     }
