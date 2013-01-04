@@ -50,6 +50,7 @@ public class DefaultViewConfigResolver implements ViewConfigResolver
         new ConcurrentHashMap<String, ViewConfigDescriptor>();
     private Map<Class<? extends ViewConfig>, ViewConfigDescriptor> viewDefinitionToViewDefinitionEntryMapping;
     private Map<Class, ConfigDescriptor> folderDefinitionToViewDefinitionEntryMapping;
+    private Map<String, ConfigDescriptor> folderPathToViewDefinitionEntryMapping;
     private ViewConfigDescriptor defaultErrorView;
 
     public DefaultViewConfigResolver(ViewConfigNode rootViewConfigNode,
@@ -125,6 +126,8 @@ public class DefaultViewConfigResolver implements ViewConfigResolver
 
         this.viewDefinitionToViewDefinitionEntryMapping = Collections.unmodifiableMap(viewConfigs);
         this.folderDefinitionToViewDefinitionEntryMapping = Collections.unmodifiableMap(folderConfigs);
+
+        initCaches();
     }
 
     protected void addOptionalMetaDataToConfig(ViewConfigNode currentNode)
@@ -155,6 +158,24 @@ public class DefaultViewConfigResolver implements ViewConfigResolver
     }
 
     @Override
+    public ConfigDescriptor getConfigDescriptor(String path)
+    {
+        if (path == null)
+        {
+            return null;
+        }
+
+        ConfigDescriptor result = this.folderPathToViewDefinitionEntryMapping.get(path);
+
+        if (result == null)
+        {
+            result = getViewConfigDescriptor(path); //TODO re-visit it
+        }
+
+        return result;
+    }
+
+    @Override
     public ViewConfigDescriptor getViewConfigDescriptor(String viewId)
     {
         if (viewId == null)
@@ -162,29 +183,7 @@ public class DefaultViewConfigResolver implements ViewConfigResolver
             return null;
         }
 
-        ViewConfigDescriptor result = this.viewIdToViewDefinitionEntryMapping.get(viewId);
-
-        if (result == null)
-        {
-            for (ViewConfigDescriptor viewConfigDescriptor : viewDefinitionToViewDefinitionEntryMapping.values())
-            {
-                if (viewId.equals(viewConfigDescriptor.getViewId()))
-                {
-                    this.viewIdToViewDefinitionEntryMapping.put(viewId, viewConfigDescriptor);
-                    return viewConfigDescriptor;
-                }
-            }
-            //not found
-            result = new DefaultViewPathConfigDescriptor(null, null, null, null);
-            this.viewIdToViewDefinitionEntryMapping.put(viewId, result);
-            return result;
-        }
-
-        if (result.getViewId() == null) //in this case it's just a placeholder
-        {
-            return null;
-        }
-        return result;
+        return this.viewIdToViewDefinitionEntryMapping.get(viewId);
     }
 
     @Override
@@ -236,5 +235,36 @@ public class DefaultViewConfigResolver implements ViewConfigResolver
     public ViewConfigDescriptor getDefaultErrorViewConfigDescriptor()
     {
         return this.defaultErrorView;
+    }
+
+    protected void initCaches()
+    {
+        //folders
+        Map<String, ConfigDescriptor> folderPathMapping = new HashMap<String, ConfigDescriptor>();
+        for (ConfigDescriptor configDescriptor : this.folderDefinitionToViewDefinitionEntryMapping.values())
+        {
+            if (folderPathMapping.containsKey(configDescriptor.toString()))
+            {
+                throw new IllegalStateException("Duplicated config for the same folder configured. See: " +
+                    folderPathMapping.get(
+                            configDescriptor.toString()).getConfigClass().getName() +
+                    " and " + configDescriptor.getConfigClass().getName());
+            }
+            folderPathMapping.put(configDescriptor.toString(), configDescriptor);
+        }
+        this.folderPathToViewDefinitionEntryMapping = Collections.unmodifiableMap(folderPathMapping);
+
+        //pages
+        for (ViewConfigDescriptor viewConfigDescriptor : this.viewDefinitionToViewDefinitionEntryMapping.values())
+        {
+            if (viewIdToViewDefinitionEntryMapping.containsKey(viewConfigDescriptor.getViewId()))
+            {
+                throw new IllegalStateException("Duplicated config for the same page configured. See: " +
+                    viewIdToViewDefinitionEntryMapping.get(
+                            viewConfigDescriptor.getViewId()).getConfigClass().getName() +
+                    " and " + viewConfigDescriptor.getConfigClass().getName());
+            }
+            this.viewIdToViewDefinitionEntryMapping.put(viewConfigDescriptor.getViewId(), viewConfigDescriptor);
+        }
     }
 }

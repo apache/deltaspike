@@ -29,7 +29,7 @@ import java.util.List;
 //TODO re-visit name since we also need ConfigDescriptor
 public interface ViewConfigResolver
 {
-    //TODO discuss ConfigDescriptor getConfigDescriptor(String path);
+    ConfigDescriptor getConfigDescriptor(String path);
 
     /**
      * Resolves the {@link ConfigDescriptor} for the given config-class

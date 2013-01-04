@@ -70,17 +70,14 @@ public class ViewRootAccessHandler
         List<String> parentPathList = new ArrayList<String>();
         createPathList(viewId, parentPathList);
 
-        List<ConfigDescriptor> folderConfigDescriptors = this.viewConfigResolver.getConfigDescriptors();
-
+        ConfigDescriptor pathDescriptor;
         for (String path : parentPathList)
         {
-            for (ConfigDescriptor pathDescriptor : folderConfigDescriptors)
+            pathDescriptor = this.viewConfigResolver.getConfigDescriptor(path);
+
+            if (pathDescriptor != null)
             {
-                if (path.equals(pathDescriptor.toString()))
-                {
-                    configDescriptorStack.push(pathDescriptor);
-                    break;
-                }
+                configDescriptorStack.push(pathDescriptor);
             }
         }
 
