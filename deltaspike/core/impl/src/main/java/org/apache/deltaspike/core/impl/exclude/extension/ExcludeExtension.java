@@ -368,7 +368,7 @@ public class ExcludeExtension implements Extension, Deactivatable
             catch (Exception e)
             {
                 throw new IllegalStateException("Can't compare " + currentQualifier.annotationType().getName() +
-                    " with " + qualifierConfiguredBean.annotationType().getName());
+                    " with " + qualifierConfiguredBean.annotationType().getName(), e);
             }
         }
         return true;

@@ -36,7 +36,6 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.util.Nonbinding;
 import javax.interceptor.InvocationContext;
 
-import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.core.util.metadata.builder.InjectableMethod;
 import org.apache.deltaspike.security.api.authorization.AccessDeniedException;
 import org.apache.deltaspike.security.api.authorization.SecurityDefinitionException;
@@ -168,7 +167,7 @@ class Authorizer
     }
 
     void authorize(final InvocationContext ic, final Object returnValue, BeanManager beanManager)
-        throws InvocationTargetException, IllegalAccessException, IllegalArgumentException
+        throws IllegalAccessException, IllegalArgumentException
     {
         if (boundAuthorizerBean == null)
         {
@@ -180,17 +179,8 @@ class Authorizer
         Object reference = beanManager.getReference(boundAuthorizerBean,
             boundAuthorizerMethod.getJavaMember().getDeclaringClass(), creationalContext);
 
-        Object result = null;
-        try
-        {
-            result = boundAuthorizerMethodProxy.invoke(reference, creationalContext,
-                        new SecurityParameterValueRedefiner(creationalContext, ic, returnValue));
-        }
-        catch (InvocationTargetException e)
-        {
-            //see DELTASPIKE-299
-            ExceptionUtils.throwAsRuntimeException(e.getCause());
-        }
+        Object result = boundAuthorizerMethodProxy.invoke(reference, creationalContext,
+                new SecurityParameterValueRedefiner(creationalContext, ic, returnValue));
 
         if (Boolean.FALSE.equals(result))
         {

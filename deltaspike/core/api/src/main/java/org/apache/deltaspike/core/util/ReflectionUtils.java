@@ -170,8 +170,7 @@ public abstract class ReflectionUtils
     public static <T> T invokeMethod(Object instance, 
                                      Method method, Class<T> expectedReturnType,
                                      boolean setAccessible,
-                                     Object... args)
-        throws InvocationTargetException, IllegalAccessException, IllegalArgumentException
+                                     Object... args) throws IllegalAccessException, IllegalArgumentException
     {
         if (setAccessible && !method.isAccessible())
         {
@@ -188,6 +187,13 @@ public abstract class ReflectionUtils
         try
         {
             return expectedReturnType.cast(method.invoke(instance, args));
+        }
+        catch (InvocationTargetException e)
+        {
+            //re-visit DELTASPIKE-299 before changing this part
+            ExceptionUtils.throwAsRuntimeException(e.getCause());
+            //won't happen
+            return null;
         }
         catch (Exception e)
         {
