@@ -32,7 +32,8 @@ public abstract class ExceptionUtils
 
     public static RuntimeException throwAsRuntimeException(Throwable throwable)
     {
-        //Attention: helper which allows to use a trick to throw a cached checked exception without a wrapping exception
+        //Attention: helper which allows to use a trick to throw
+        // a catched checked exception without a wrapping exception
         new ExceptionHelper<RuntimeException>().throwException(throwable);
         return null; //not needed due to the helper trick, but it's easier for using it
     }
