@@ -25,6 +25,7 @@ import javax.enterprise.inject.spi.AnnotatedMethod;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InjectionPoint;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -133,6 +134,7 @@ public class InjectableMethod<X>
      *                                     method fails.
      */
     public <T> T invoke(Object receiver, CreationalContext<T> creationalContext)
+        throws InvocationTargetException, IllegalAccessException, IllegalArgumentException
     {
         return invoke(receiver, creationalContext, null);
     }
@@ -166,6 +168,7 @@ public class InjectableMethod<X>
      *                                     method fails.
      */
     public <T> T invoke(Object receiver, CreationalContext<T> creationalContext, ParameterValueRedefiner redefinition)
+        throws InvocationTargetException, IllegalAccessException, IllegalArgumentException
     {
         List<Object> parameterValues = new ArrayList<Object>();
         for (int i = 0; i < getParameters().size(); i++)

@@ -56,7 +56,7 @@ public interface HandlerMethod<T extends Throwable>
      * @param event event to pass to the handler.
      * @param beanManager The BeanManager to use
      */
-    void notify(ExceptionEvent<T> event, BeanManager beanManager);
+    void notify(ExceptionEvent<T> event, BeanManager beanManager) throws Exception;
 
     /**
      * Obtains the precedence of the handler, relative to other handlers for the same type.

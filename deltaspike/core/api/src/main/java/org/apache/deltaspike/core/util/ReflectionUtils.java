@@ -22,6 +22,7 @@ package org.apache.deltaspike.core.util;
 import javax.enterprise.inject.Typed;
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -170,6 +171,7 @@ public abstract class ReflectionUtils
                                      Method method, Class<T> expectedReturnType,
                                      boolean setAccessible,
                                      Object... args)
+        throws InvocationTargetException, IllegalAccessException, IllegalArgumentException
     {
         if (setAccessible && !method.isAccessible())
         {

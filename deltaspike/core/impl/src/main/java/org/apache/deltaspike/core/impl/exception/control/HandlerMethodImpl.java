@@ -184,7 +184,7 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
      * {@inheritDoc}
      */
     @Override
-    public void notify(final ExceptionEvent<T> event, BeanManager beanManager)
+    public void notify(final ExceptionEvent<T> event, BeanManager beanManager) throws Exception
     {
         CreationalContext<?> ctx = null;
         try
