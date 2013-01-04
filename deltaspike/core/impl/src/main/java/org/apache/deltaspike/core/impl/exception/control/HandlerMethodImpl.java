@@ -280,6 +280,11 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
         {
             return false;
         }
+
+        if (isBeforeHandler() != that.isBeforeHandler())
+        {
+            return false;
+        }
         //noinspection SimplifiableIfStatement
         if (!exceptionType.equals(that.getExceptionType()))
         {
