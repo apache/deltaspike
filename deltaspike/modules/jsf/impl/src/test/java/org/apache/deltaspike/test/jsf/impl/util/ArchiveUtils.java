@@ -18,16 +18,14 @@
  */
 package org.apache.deltaspike.test.jsf.impl.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.apache.deltaspike.test.utils.ShrinkWrapArchiveUtil;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.Asset;
-import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * This class contains helpers for building frequently used archives
@@ -66,13 +64,15 @@ public class ArchiveUtils
         return archives.toArray(new JavaArchive[archives.size()]);
     }
 
-    public static Asset getBeansXml()
+    public static JavaArchive[] getDeltaSpikeSecurityArchive()
     {
-        Asset beansXml = new StringAsset(
-            "<beans>" +
-            "</beans>"
-        );
+        String[] excludedFiles;
 
-        return beansXml;
+        excludedFiles = new String[]{"META-INF.apache-deltaspike.properties"};
+
+
+        return ShrinkWrapArchiveUtil.getArchives(null,
+                "META-INF/beans.xml",
+                new String[]{"org.apache.deltaspike.security"}, excludedFiles);
     }
 }

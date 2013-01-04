@@ -65,6 +65,7 @@ public class JsfMessageTest
                 .addAsResource("jsfMessageTest/UserMessage_en.properties")
                 .addAsResource("jsfMessageTest/UserMessage_de.properties")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndJsfArchive())
+                .addAsLibraries(ArchiveUtils.getDeltaSpikeSecurityArchive())
                 .addAsWebInfResource("default/WEB-INF/web.xml", "web.xml")
                 .addAsWebResource("jsfMessageTest/page.xhtml", "page.xhtml")
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");

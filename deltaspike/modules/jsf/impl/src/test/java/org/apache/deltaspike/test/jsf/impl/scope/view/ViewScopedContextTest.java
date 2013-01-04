@@ -65,6 +65,7 @@ public class ViewScopedContextTest
                 .create(WebArchive.class, "viewScopedContextTest.war")
                 .addPackage(ViewScopedBackingBean.class.getPackage())
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndJsfArchive())
+                .addAsLibraries(ArchiveUtils.getDeltaSpikeSecurityArchive())
                 .addAsWebInfResource("default/WEB-INF/web.xml", "web.xml")
                 .addAsWebResource("viewScopedContextTest/page.xhtml", "page.xhtml")
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");

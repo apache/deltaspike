@@ -63,6 +63,7 @@ public class MappedJsfContextTest
                 .create(WebArchive.class, "mappedJsfContetxtTest.war")
                 .addPackage(JsfApplicationScopedBackingBean.class.getPackage())
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndJsfArchive())
+                .addAsLibraries(ArchiveUtils.getDeltaSpikeSecurityArchive())
                 .addAsWebInfResource("default/WEB-INF/web.xml", "web.xml")
                 .addAsWebResource("mappedJsfContextTest/page.xhtml", "page.xhtml")
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
