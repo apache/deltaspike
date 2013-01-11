@@ -214,7 +214,8 @@ public class ExcludeExtension implements Extension, Deactivatable
                 continue;
             }
 
-            if (isAlternativeBeanImplementation) //current bean is annotated with @Alternative
+            //current bean is annotated with @Alternative and of the same type as the configured bean
+            if (isAlternativeBeanImplementation && alternativeBeanClass.equals(currentBean))
             {
                 if (doQualifiersMatch(qualifiersOfCurrentBean, qualifiersOfConfiguredBean))
                 {
@@ -286,7 +287,8 @@ public class ExcludeExtension implements Extension, Deactivatable
                 continue;
             }
 
-            if (isAlternativeBeanImplementation)
+            //current bean is annotated with @Alternative and of the same type as the configured bean
+            if (isAlternativeBeanImplementation && alternativeBeanClass.equals(currentBean))
             {
                 if (doQualifiersMatch(qualifiersOfCurrentBean, qualifiersOfConfiguredBean))
                 {

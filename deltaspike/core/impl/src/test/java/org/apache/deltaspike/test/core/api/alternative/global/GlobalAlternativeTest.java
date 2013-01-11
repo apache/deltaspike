@@ -87,7 +87,7 @@ public class GlobalAlternativeTest
         List<BaseBean1> testBeans = BeanProvider.getContextualReferences(BaseBean1.class, true);
 
         Assert.assertEquals(1, testBeans.size());
-        Assert.assertEquals(SubBaseBean1.class.getName(), testBeans.get(0).getClass().getName());
+        Assert.assertEquals(SubBaseBean2.class.getName(), testBeans.get(0).getClass().getName());
     }
 
     /**
