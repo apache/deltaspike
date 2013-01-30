@@ -28,7 +28,7 @@ import javax.enterprise.inject.spi.PassivationCapable;
 import java.util.Map;
 
 /**
- * A skeleton containing the most important parts of a custom CDI Contexts.
+ * A skeleton containing the most important parts of a custom CDI Context.
  * An implementing Context needs to implement the missing methods from the
  * {@link Context} interface and {@link #getContextualStorage(boolean)}.
  */
@@ -37,7 +37,7 @@ public abstract class AbstractContext implements Context
     /**
      * Whether the Context is for a passivating scope.
      */
-    private boolean passivatingScope;
+    private final boolean passivatingScope;
 
     protected AbstractContext(BeanManager beanManager)
     {
@@ -47,7 +47,7 @@ public abstract class AbstractContext implements Context
     /**
      * An implementation has to return the underlying storage which
      * contains the items held in the Context.
-     * @parm createIfNotExist whether a ContextualStorage shall get created if it doesn't yet exist.
+     * @param createIfNotExist whether a ContextualStorage shall get created if it doesn't yet exist.
      * @return the underlying storage
      */
     protected abstract ContextualStorage getContextualStorage(boolean createIfNotExist);
