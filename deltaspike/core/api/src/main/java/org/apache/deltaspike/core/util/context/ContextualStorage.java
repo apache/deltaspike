@@ -28,6 +28,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * This Storage holds all information needed for storing
@@ -39,13 +40,13 @@ public class ContextualStorage implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
-    private Map<Object, ContextualInstanceInfo<?>> contextualInstances;
+    private final Map<Object, ContextualInstanceInfo<?>> contextualInstances;
 
-    private BeanManager beanManager;
+    private final BeanManager beanManager;
 
-    private boolean concurrent;
+    private final boolean concurrent;
 
-    private boolean passivationCapable;
+    private final boolean passivationCapable;
 
     /**
      * @param beanManager is needed for serialisation
@@ -98,7 +99,7 @@ public class ContextualStorage implements Serializable
             // locked approach
             ContextualInstanceInfo<T> instanceInfo = new ContextualInstanceInfo<T>();
 
-            ConcurrentHashMap<Object, ContextualInstanceInfo<?>> concurrentMap
+            ConcurrentMap<Object, ContextualInstanceInfo<?>> concurrentMap
                 = (ConcurrentHashMap<Object, ContextualInstanceInfo<?>>) contextualInstances;
 
             ContextualInstanceInfo<T> oldInstanceInfo
