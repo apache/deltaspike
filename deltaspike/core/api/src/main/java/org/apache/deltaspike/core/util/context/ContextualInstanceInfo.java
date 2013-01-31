@@ -40,8 +40,6 @@ public class ContextualInstanceInfo<T> implements Serializable
      */
     private CreationalContext<T> creationalContext;
 
-
-
     /**
      * @return the CreationalContext of the bean
      */
@@ -75,4 +73,3 @@ public class ContextualInstanceInfo<T> implements Serializable
     }
 
 }
-
