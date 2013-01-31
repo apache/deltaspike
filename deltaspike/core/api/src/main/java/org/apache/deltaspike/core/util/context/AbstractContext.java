@@ -100,16 +100,15 @@ public abstract class AbstractContext implements Context
         Map<Object, ContextualInstanceInfo<?>> contextMap = storage.getStorage();
         ContextualInstanceInfo<?> contextualInstanceInfo = contextMap.get(storage.getBeanKey(bean));
 
-        T instance = null;
-
         if (contextualInstanceInfo != null)
         {
-            instance =  (T) contextualInstanceInfo.getContextualInstance();
-        }
+            @SuppressWarnings("unchecked")
+            final T instance =  (T) contextualInstanceInfo.getContextualInstance();
 
-        if (instance != null)
-        {
-            return instance;
+            if (instance != null)
+            {
+                return instance;
+            }
         }
 
         return storage.createContextualInstance(bean, creationalContext);
