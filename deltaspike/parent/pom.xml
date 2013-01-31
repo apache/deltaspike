@@ -267,6 +267,15 @@
             <timezone>+1</timezone>
         </developer>
         <developer>
+            <id>mbenson</id>
+            <name>Matt Benson</name>
+            <email>mbenson@apache.org</email>
+            <roles>
+                <role>PPMC</role>
+            </roles>
+            <timezone>-6</timezone>
+        </developer>
+        <developer>
             <id>matzew</id>
             <name>Matthias Wessendorf</name>
             <email>matzew@apache.org</email>
