@@ -117,7 +117,7 @@ public abstract class AbstractContext implements Context
     /**
      * Destroy the Contextual Instance of the given Bean.
      * @param bean dictates which bean shall get cleaned up
-     * @return <code>true</code> if the bean was destroyed, <code>false</code> if there was no such a bean.
+     * @return <code>true</code> if the bean was destroyed, <code>false</code> if there was no such bean.
      */
     public boolean destroy(Contextual bean)
     {
