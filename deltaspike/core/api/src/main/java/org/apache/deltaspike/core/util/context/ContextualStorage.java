@@ -77,7 +77,7 @@ public class ContextualStorage implements Serializable
     }
 
     /**
-     * Whether the ContextualStorage might get accessed concurrently by different threads
+     * @return whether the ContextualStorage might get accessed concurrently by different threads.
      */
     public boolean isConcurrent()
     {
