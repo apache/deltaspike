@@ -154,8 +154,7 @@ public abstract class AbstractContext implements Context
     }
 
     /**
-     * destroys all the Contextual Instances in the Storage returned by
-     * {@link #getContextualStorage(boolean)}.
+     * destroys all the Contextual Instances in the specified ContextualStorage.
      */
     public void destroyAllActive(ContextualStorage storage)
     {
