@@ -34,6 +34,7 @@
 
     <properties>
         <openejb.version>4.5.0</openejb.version>
+        <openejb.owb.version>${owb.version}</openejb.owb.version>
     </properties>
 
     <dependencies>
@@ -63,25 +64,25 @@
             <dependency>
                 <groupId>org.apache.openwebbeans</groupId>
                 <artifactId>openwebbeans-impl</artifactId>
-                <version>${owb.version}</version>
+                <version>${openejb.owb.version}</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.openwebbeans</groupId>
                 <artifactId>openwebbeans-ejb</artifactId>
-                <version>${owb.version}</version>
+                <version>${openejb.owb.version}</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.openwebbeans</groupId>
                 <artifactId>openwebbeans-ee</artifactId>
-                <version>${owb.version}</version>
+                <version>${openejb.owb.version}</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.openwebbeans</groupId>
                 <artifactId>openwebbeans-ee-common</artifactId>
-                <version>${owb.version}</version>
+                <version>${openejb.owb.version}</version>
                 <scope>provided</scope>
             </dependency>
         </dependencies>
