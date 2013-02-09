@@ -229,6 +229,9 @@ public final class BeanProvider
      *
      * <p><b>Attention:</b> please see the notes on manually resolving &#064;Dependent bean
      * in {@link #getContextualReference(Class, boolean, java.lang.annotation.Annotation...)}!</p>
+     * <p><b>Attention:</b> This will also return instances for beans which where an Alternative
+     * exists for! The &#064;Alternative resolving is only done via {@link BeanManager#resolve(java.util.Set)}
+     * which we cannot use in this case!</p>
      *
      * @param type the type of the bean in question
      * @param optional if <code>true</code> it will return an empty list if no bean could be found or created.
@@ -245,6 +248,11 @@ public final class BeanProvider
      * <p>Get a list of Contextual References by it's type independent of the qualifier.
      *
      * Further details are available at {@link #getContextualReferences(Class, boolean)}
+     * <p><b>Attention:</b> please see the notes on manually resolving &#064;Dependent bean
+     * in {@link #getContextualReference(Class, boolean, java.lang.annotation.Annotation...)}!</p>
+     * <p><b>Attention:</b> This will also return instances for beans which where an Alternative
+     * exists for! The &#064;Alternative resolving is only done via {@link BeanManager#resolve(java.util.Set)}
+     * which we cannot use in this case!</p>
      *
      * @param type the type of the bean in question
      * @param optional if <code>true</code> it will return an empty list if no bean could be found or created.
