@@ -59,7 +59,7 @@ public class ExcludeExtension implements Extension, Deactivatable
 {
     private static final Logger LOG = Logger.getLogger(ExcludeExtension.class.getName());
 
-    private static Boolean isOwbDetected = false;
+    private static Boolean isWeldDetected = false;
 
     private boolean isActivated = true;
     private boolean isGlobalAlternativeActivated = true;
@@ -77,7 +77,7 @@ public class ExcludeExtension implements Extension, Deactivatable
         isCustomProjectStageBeanFilterActivated =
                 ClassDeactivationUtils.isActivated(CustomProjectStageBeanFilter.class);
 
-        isOwbDetected = isOpenWebBeans();
+        isWeldDetected = isWeld();
     }
 
     /**
@@ -100,11 +100,7 @@ public class ExcludeExtension implements Extension, Deactivatable
         //we need to do it before the exclude logic to keep the @Exclude support for global alternatives
         if (isGlobalAlternativeActivated)
         {
-            if (isOwbDetected)
-            {
-                activateGlobalAlternativesOwb(processAnnotatedType, beanManager);
-            }
-            else
+            if (isWeldDetected)
             {
                 activateGlobalAlternativesWeld(processAnnotatedType, beanManager);
             }
@@ -234,84 +230,6 @@ public class ExcludeExtension implements Extension, Deactivatable
                     //veto this original implementation because the alternative will be added
                     processAnnotatedType.veto();
                     return;
-                }
-            }
-        }
-    }
-
-    //see OWB-643
-    //just #veto the original implementation and remove @Alternative from the ProcessAnnotatedType of
-    // the configured alternative doesn't work with OWB (due to OWB-643)
-    private void activateGlobalAlternativesOwb(ProcessAnnotatedType processAnnotatedType,
-        BeanManager beanManager)
-    {
-        //the current bean is the bean with a potential global alternative
-        Class<Object> currentBean = processAnnotatedType.getAnnotatedType().getJavaClass();
-
-        if (currentBean.isInterface())
-        {
-            return;
-        }
-
-        Set<Class> beanBaseTypes = resolveBeanTypes(currentBean);
-
-        boolean isAlternativeBeanImplementation = currentBean.isAnnotationPresent(Alternative.class);
-
-        List<Annotation> qualifiersOfCurrentBean =
-            resolveQualifiers(processAnnotatedType.getAnnotatedType().getAnnotations(), beanManager);
-
-        String configuredBeanName;
-        List<Annotation> qualifiersOfConfiguredBean;
-        Class<Object> alternativeBeanClass;
-        Set<Annotation> alternativeBeanAnnotations;
-
-        for (Class currentType : beanBaseTypes)
-        {
-            alternativeBeanAnnotations = new HashSet<Annotation>();
-
-            configuredBeanName = ConfigResolver.getPropertyValue(currentType.getName());
-            if (configuredBeanName != null && configuredBeanName.length() > 0)
-            {
-                alternativeBeanClass = ClassUtils.tryToLoadClassForName(configuredBeanName);
-
-                if (alternativeBeanClass == null)
-                {
-                    throw new IllegalStateException("Can't find class " + configuredBeanName + " which is configured" +
-                            " for " + currentType.getName());
-                }
-                alternativeBeanAnnotations.addAll(Arrays.asList(alternativeBeanClass.getAnnotations()));
-                qualifiersOfConfiguredBean = resolveQualifiers(alternativeBeanAnnotations, beanManager);
-            }
-            else
-            {
-                continue;
-            }
-
-            //current bean is annotated with @Alternative and of the same type as the configured bean
-            if (isAlternativeBeanImplementation && alternativeBeanClass.equals(currentBean))
-            {
-                if (doQualifiersMatch(qualifiersOfCurrentBean, qualifiersOfConfiguredBean))
-                {
-                    //veto if the current annotated-type is a global alternative - it replaced the original type already
-                    processAnnotatedType.veto();
-                    break;
-                }
-            }
-            else
-            {
-                if (!alternativeBeanClass.isAnnotationPresent(Alternative.class))
-                {
-                    continue;
-                }
-
-                if (doQualifiersMatch(qualifiersOfCurrentBean, qualifiersOfConfiguredBean))
-                {
-                    AnnotatedTypeBuilder<Object> annotatedTypeBuilder
-                        = new AnnotatedTypeBuilder<Object>().readFromType(alternativeBeanClass);
-
-                    //just to avoid issues with switching between app-servers,...
-                    annotatedTypeBuilder.removeFromClass(Alternative.class);
-                    processAnnotatedType.setAnnotatedType(annotatedTypeBuilder.create());
                 }
             }
         }
@@ -524,13 +442,13 @@ public class ExcludeExtension implements Extension, Deactivatable
                 processAnnotatedType.getAnnotatedType().getJavaClass());
     }
 
-    private boolean isOpenWebBeans()
+    private boolean isWeld()
     {
         IllegalStateException runtimeException = new IllegalStateException();
 
         for (StackTraceElement element : runtimeException.getStackTrace())
         {
-            if (element.toString().contains("org.apache.webbeans."))
+            if (element.toString().contains("org.jboss.weld"))
             {
                 return true;
             }

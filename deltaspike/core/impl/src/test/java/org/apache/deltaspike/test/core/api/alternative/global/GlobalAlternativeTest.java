@@ -31,7 +31,9 @@ import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
@@ -40,7 +42,6 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
-import java.util.List;
 
 /**
  * Tests for @Alternative across BDAs
@@ -67,6 +68,14 @@ public class GlobalAlternativeTest
     @Deployment
     public static WebArchive deploy()
     {
+        Asset beansXml = new StringAsset(
+                "<beans><alternatives>" +
+                        "<class>" + BaseInterface1AlternativeImplementation.class.getName() + "</class>" +
+                        "<class>" + SubBaseBean2.class.getName() + "</class>" +
+                        "<class>" + AlternativeBaseBeanB.class.getName() + "</class>" +
+                        "</alternatives></beans>"
+        );
+
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "excludeIntegrationTest.jar")
                 .addPackage(GlobalAlternativeTest.class.getPackage())
                 .addPackage(QualifierA.class.getPackage())
@@ -75,7 +84,7 @@ public class GlobalAlternativeTest
         return ShrinkWrap.create(WebArchive.class, "globalAlternative.war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive(new String[]{"META-INF.config"}))
                 .addAsLibraries(testJar)
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsWebInfResource(beansXml, "beans.xml");
     }
 
     /**
@@ -84,10 +93,9 @@ public class GlobalAlternativeTest
     @Test
     public void alternativeImplementationWithClassAsBaseType()
     {
-        List<BaseBean1> testBeans = BeanProvider.getContextualReferences(BaseBean1.class, true);
+        BaseBean1 testBean = BeanProvider.getContextualReference(BaseBean1.class);
 
-        Assert.assertEquals(1, testBeans.size());
-        Assert.assertEquals(SubBaseBean2.class.getName(), testBeans.get(0).getClass().getName());
+        Assert.assertEquals(SubBaseBean2.class.getName(), testBean.getClass().getName());
     }
 
     /**

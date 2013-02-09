@@ -21,8 +21,6 @@ package org.apache.deltaspike.test.core.api.alternative.global;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Alternative;
 
-/**
- */
 @Alternative
 @Dependent
 public class SubBaseBean2 extends SubBaseBean1
