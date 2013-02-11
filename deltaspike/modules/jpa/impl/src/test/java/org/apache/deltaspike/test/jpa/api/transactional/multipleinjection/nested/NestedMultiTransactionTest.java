@@ -20,6 +20,7 @@ package org.apache.deltaspike.test.jpa.api.transactional.multipleinjection.neste
 
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
+import org.apache.deltaspike.jpa.impl.transaction.context.TransactionBeanStorage;
 import org.apache.deltaspike.jpa.impl.transaction.context.TransactionContextExtension;
 import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.test.jpa.api.shared.TestEntityManager;
@@ -109,5 +110,6 @@ public class NestedMultiTransactionTest
         Assert.assertEquals(true, secondTransaction.isCommitted());
         Assert.assertEquals(false, secondTransaction.isRolledBack());
 
+        Assert.assertEquals(false, TransactionBeanStorage.isOpen());
     }
 }

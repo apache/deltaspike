@@ -20,6 +20,7 @@ package org.apache.deltaspike.test.jpa.api.transactionscoped.multipleinjection.n
 
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
+import org.apache.deltaspike.jpa.impl.transaction.context.TransactionBeanStorage;
 import org.apache.deltaspike.jpa.impl.transaction.context.TransactionContextExtension;
 import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.test.jpa.api.shared.TestEntityManager;
@@ -100,5 +101,6 @@ public class NestedMultiTransactionScopedTransactionTest
         Assert.assertEquals(1, entityManagerProducer.getCloseEntityManagerCountFirstEntityManager());
         Assert.assertEquals(1, entityManagerProducer.getCloseEntityManagerCountSecondEntityManager());
 
+        Assert.assertEquals(false, TransactionBeanStorage.isOpen());
     }
 }

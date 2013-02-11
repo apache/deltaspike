@@ -19,8 +19,6 @@
 package org.apache.deltaspike.jpa.impl.transaction.context;
 
 
-
-import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.jpa.api.transaction.TransactionScoped;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
 
@@ -37,18 +35,15 @@ import java.util.Map;
  */
 public class TransactionContext implements Context
 {
-    // Attention! this is not a normal instance but a PROXY
-    // thus it resolves the correct contextual instance every time
-    // it will lazily initialized at runtime after the container
-    // got started.
-    private TransactionBeanStorage beanStorage;
-
     public <T> T get(Contextual<T> component)
     {
-        Map<Contextual, TransactionBeanEntry> transactionBeanEntryMap = getBeanStorage().getActiveTransactionContext();
+        Map<Contextual, TransactionBeanEntry> transactionBeanEntryMap =
+                TransactionBeanStorage.getInstance().getActiveTransactionContext();
 
         if (transactionBeanEntryMap == null)
         {
+            TransactionBeanStorage.close();
+
             throw new ContextNotActiveException("Not accessed within a transactional method - use @" +
                     Transactional.class.getName());
         }
@@ -64,10 +59,13 @@ public class TransactionContext implements Context
 
     public <T> T get(Contextual<T> component, CreationalContext<T> creationalContext)
     {
-        Map<Contextual, TransactionBeanEntry> transactionBeanEntryMap = getBeanStorage().getActiveTransactionContext();
+        Map<Contextual, TransactionBeanEntry> transactionBeanEntryMap =
+            TransactionBeanStorage.getInstance().getActiveTransactionContext();
 
         if (transactionBeanEntryMap == null)
         {
+            TransactionBeanStorage.close();
+
             throw new ContextNotActiveException("Not accessed within a transactional method - use @" +
                     Transactional.class.getName());
         }
@@ -95,23 +93,12 @@ public class TransactionContext implements Context
     {
         try
         {
-            return getBeanStorage().getActiveTransactionContext() != null;
+            return TransactionBeanStorage.isOpen() &&
+                   TransactionBeanStorage.getInstance().getActiveTransactionContext() != null;
         }
         catch (ContextNotActiveException e)
         {
             return false;
         }
-    }
-
-    private TransactionBeanStorage getBeanStorage()
-    {
-        if (beanStorage == null)
-        {
-            synchronized (this)
-            {
-                beanStorage = BeanProvider.getContextualReference(TransactionBeanStorage.class);
-            }
-        }
-        return beanStorage;
     }
 }

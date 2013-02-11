@@ -18,8 +18,6 @@
  */
 package org.apache.deltaspike.jpa.impl.transaction.context;
 
-import javax.annotation.PreDestroy;
-import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.spi.Contextual;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -41,10 +39,12 @@ import java.util.logging.Logger;
  * but who knows). We also don't need to do any fancy synchronization stuff since
  * we are sure that we are always in the same Thread.</p>
  */
-@RequestScoped
 public class TransactionBeanStorage
 {
     private static final Logger LOGGER = Logger.getLogger(TransactionBeanStorage.class.getName());
+
+    private static ThreadLocal<TransactionBeanStorage> transactionBeanStorage =
+        new ThreadLocal<TransactionBeanStorage>();
 
     private static class TransactionContextInfo
     {
@@ -79,6 +79,40 @@ public class TransactionBeanStorage
      * The TransactionContextInfo which is on top of the stack.
      */
     private TransactionContextInfo currentTci = null;
+
+    private TransactionBeanStorage()
+    {
+    }
+
+    public static TransactionBeanStorage getInstance()
+    {
+        TransactionBeanStorage result = transactionBeanStorage.get();
+
+        if (result == null)
+        {
+            result = new TransactionBeanStorage();
+            transactionBeanStorage.set(result);
+        }
+
+        return result;
+    }
+
+    public static void close()
+    {
+        TransactionBeanStorage currentStorage = transactionBeanStorage.get();
+
+        if (currentStorage != null)
+        {
+            currentStorage.endAllTransactionScopes();
+            transactionBeanStorage.set(null);
+            transactionBeanStorage.remove();
+        }
+    }
+
+    public static boolean isOpen()
+    {
+        return transactionBeanStorage.get() != null;
+    }
 
     /**
      * Increment the ref counter and return the old value.
@@ -187,20 +221,6 @@ public class TransactionBeanStorage
         }
 
         return currentTci.contextualInstances;
-    }
-
-    /**
-     * At the end of the request we will destroy all beans still
-     * stored in the context.
-     */
-    @PreDestroy
-    public void requestEnded()
-    {
-        if (!isEmpty())
-        {
-            LOGGER.warning("the current TransactionContextInfo isn't empty. a fallback cleanup will be performed.");
-        }
-        endAllTransactionScopes();
     }
 
     private void endAllTransactionScopes()

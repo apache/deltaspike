@@ -20,6 +20,7 @@ package org.apache.deltaspike.test.jpa.api.transactional.exception.catched.neste
 
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
+import org.apache.deltaspike.jpa.impl.transaction.context.TransactionBeanStorage;
 import org.apache.deltaspike.jpa.impl.transaction.context.TransactionContextExtension;
 import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.test.jpa.api.shared.TestEntityManager;
@@ -93,5 +94,6 @@ public class NestedTransactionCatchedExceptionTest
         Assert.assertEquals(true, firstTransaction.isCommitted());
         Assert.assertEquals(false, firstTransaction.isRolledBack());
 
+        Assert.assertEquals(false, TransactionBeanStorage.isOpen());
     }
 }

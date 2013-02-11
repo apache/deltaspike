@@ -20,6 +20,7 @@ package org.apache.deltaspike.test.jpa.api.transactional.transactionhelper;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.jpa.api.transaction.TransactionHelper;
+import org.apache.deltaspike.jpa.impl.transaction.context.TransactionBeanStorage;
 import org.apache.deltaspike.jpa.impl.transaction.context.TransactionContextExtension;
 import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.test.util.ArchiveUtils;
@@ -29,10 +30,10 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.Assert;
+import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
-import org.junit.Test;
-import org.junit.Assert;
 
 import javax.enterprise.context.ContextNotActiveException;
 import javax.enterprise.inject.spi.Extension;
@@ -95,7 +96,7 @@ public class TransactionHelperTest
             // this was expected, all is fine!
         }
 
-        //X Assert.assertNull(TransactionBeanStorage.getStorage());
+        Assert.assertEquals(false, TransactionBeanStorage.isOpen());
     }
 
     private void resolveEntityManager()

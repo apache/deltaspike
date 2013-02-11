@@ -66,9 +66,6 @@ public class ResourceLocalTransactionStrategy implements TransactionStrategy
     private BeanManager beanManager;
 
     @Inject
-    private TransactionBeanStorage transactionBeanStorage;
-
-    @Inject
     private TransactionStrategyHelper transactionHelper;
 
     public Object execute(InvocationContext invocationContext) throws Exception
@@ -78,6 +75,8 @@ public class ResourceLocalTransactionStrategy implements TransactionStrategy
         // all the configured qualifier keys
         Set<Class<? extends Annotation>> emQualifiers = transactionHelper.resolveEntityManagerQualifiers(
                     transactionalAnnotation, invocationContext.getTarget().getClass());
+
+        TransactionBeanStorage transactionBeanStorage = TransactionBeanStorage.getInstance();
 
         boolean isOutermostInterceptor = transactionBeanStorage.isEmpty();
 
@@ -297,7 +296,7 @@ public class ResourceLocalTransactionStrategy implements TransactionStrategy
 
     protected void onCloseTransactionScope()
     {
-        //override if needed
+        TransactionBeanStorage.close();
     }
 
     protected Bean<EntityManager> resolveEntityManagerBean(Class<? extends Annotation> qualifierClass)

@@ -20,6 +20,7 @@ package org.apache.deltaspike.test.jpa.api.transactionscoped.stereotype;
 
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
+import org.apache.deltaspike.jpa.impl.transaction.context.TransactionBeanStorage;
 import org.apache.deltaspike.jpa.impl.transaction.context.TransactionContextExtension;
 import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.test.jpa.api.shared.TestEntityTransaction;
@@ -87,5 +88,6 @@ public class StereotypeTransactionScopedTransactionalTest
 
         Assert.assertEquals(1, entityManagerProducer.getCloseEntityManagerCount());
 
+        Assert.assertEquals(false, TransactionBeanStorage.isOpen());
     }
 }
