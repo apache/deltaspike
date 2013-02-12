@@ -38,7 +38,7 @@ class PartialBeanMethodHandler<T extends InvocationHandler> implements MethodHan
         {
             return proceedMethod.invoke(target, arguments);
         }
-        return this.handlerInstance.invoke(this.handlerInstance, method, arguments);
+        return this.handlerInstance.invoke(target, method, arguments);
     }
 
     T getHandlerInstance()
