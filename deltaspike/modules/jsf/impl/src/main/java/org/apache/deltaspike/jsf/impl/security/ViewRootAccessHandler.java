@@ -21,6 +21,7 @@ package org.apache.deltaspike.jsf.impl.security;
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
 import org.apache.deltaspike.core.api.config.view.metadata.ConfigDescriptor;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
+import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.jsf.impl.util.SecurityUtils;
 import org.apache.deltaspike.security.spi.authorization.EditableAccessDecisionVoterContext;
 
@@ -36,9 +37,6 @@ public class ViewRootAccessHandler
 {
     @Inject
     private ViewConfigResolver viewConfigResolver;
-
-    @Inject
-    private EditableAccessDecisionVoterContext accessDecisionVoterContext;
 
     private String checkedViewId = ViewConfig.class.getName();
 
@@ -81,9 +79,12 @@ public class ViewRootAccessHandler
             }
         }
 
+        EditableAccessDecisionVoterContext accessDecisionVoterContext =
+                BeanProvider.getContextualReference(EditableAccessDecisionVoterContext.class, false);
+
         for (ConfigDescriptor currentConfigDescriptor : configDescriptorStack)
         {
-            SecurityUtils.invokeVoters(this.accessDecisionVoterContext, currentConfigDescriptor);
+            SecurityUtils.invokeVoters(accessDecisionVoterContext, currentConfigDescriptor);
         }
     }
 

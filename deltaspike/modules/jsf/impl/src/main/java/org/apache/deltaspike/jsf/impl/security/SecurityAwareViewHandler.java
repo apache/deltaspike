@@ -27,17 +27,20 @@ import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.jsf.api.config.view.Page;
 import org.apache.deltaspike.jsf.impl.util.SecurityUtils;
 import org.apache.deltaspike.security.api.authorization.ErrorViewAwareAccessDeniedException;
+import org.apache.deltaspike.security.spi.authorization.EditableAccessDecisionVoterContext;
 
 import javax.faces.application.ViewHandler;
 import javax.faces.application.ViewHandlerWrapper;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
+import java.util.logging.Logger;
 
 public class SecurityAwareViewHandler extends ViewHandlerWrapper implements Deactivatable
 {
     protected final ViewHandler wrapped;
 
     private final boolean activated;
+    private Boolean securityModuleActivated;
 
     /**
      * Constructor for wrapping the given {@link ViewHandler}
@@ -47,6 +50,7 @@ public class SecurityAwareViewHandler extends ViewHandlerWrapper implements Deac
     public SecurityAwareViewHandler(ViewHandler wrapped)
     {
         this.wrapped = wrapped;
+
         this.activated = ClassDeactivationUtils.isActivated(getClass());
     }
 
@@ -62,6 +66,15 @@ public class SecurityAwareViewHandler extends ViewHandlerWrapper implements Deac
         UIViewRoot result = this.wrapped.createView(context, viewId);
 
         if (!this.activated)
+        {
+            return result;
+        }
+
+        if (this.securityModuleActivated == null)
+        {
+            lazyInit();
+        }
+        if (!this.securityModuleActivated)
         {
             return result;
         }
@@ -109,5 +122,17 @@ public class SecurityAwareViewHandler extends ViewHandlerWrapper implements Deac
         }
 
         return result;
+    }
+
+    private synchronized void lazyInit()
+    {
+        this.securityModuleActivated =
+            BeanProvider.getContextualReference(EditableAccessDecisionVoterContext.class, true) != null;
+
+        if (!this.securityModuleActivated)
+        {
+            Logger.getLogger(getClass().getName()) //it's the only case for which a logger is needed in this class
+                    .info("security-module-impl isn't used -> " + getClass().getName() + " gets deactivated");
+        }
     }
 }

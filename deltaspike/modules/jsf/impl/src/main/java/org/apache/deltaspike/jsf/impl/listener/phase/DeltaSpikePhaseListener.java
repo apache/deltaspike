@@ -24,12 +24,14 @@ import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.jsf.impl.security.ViewRootAccessHandler;
 import org.apache.deltaspike.jsf.impl.util.SecurityUtils;
 import org.apache.deltaspike.security.api.authorization.ErrorViewAwareAccessDeniedException;
+import org.apache.deltaspike.security.spi.authorization.EditableAccessDecisionVoterContext;
 
 import javax.enterprise.inject.Typed;
 import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.PhaseListener;
+import java.util.logging.Logger;
 
 @Typed() //don't use PhaseListener as type - JsfRequestLifecyclePhaseListener would fire to this listener as well
 public class DeltaSpikePhaseListener implements PhaseListener, Deactivatable
@@ -37,6 +39,7 @@ public class DeltaSpikePhaseListener implements PhaseListener, Deactivatable
     private static final long serialVersionUID = -4458288760053069922L;
 
     private final boolean activated;
+    private Boolean securityModuleActivated;
 
     private final PhaseListener jsfRequestLifecyclePhaseListener = new JsfRequestLifecyclePhaseListener();
 
@@ -99,6 +102,15 @@ public class DeltaSpikePhaseListener implements PhaseListener, Deactivatable
 
     private void checkSecuredView(FacesContext facesContext)
     {
+        if (this.securityModuleActivated == null)
+        {
+            lazyInit();
+        }
+        if (!this.securityModuleActivated)
+        {
+            return;
+        }
+
         try
         {
             BeanProvider.getContextualReference(ViewRootAccessHandler.class).checkAccessTo(facesContext.getViewRoot());
@@ -107,6 +119,19 @@ public class DeltaSpikePhaseListener implements PhaseListener, Deactivatable
         {
             SecurityUtils.tryToHandleSecurityViolation(accessDeniedException);
             facesContext.renderResponse();
+        }
+    }
+
+    private synchronized void lazyInit()
+    {
+        this.securityModuleActivated =
+            BeanProvider.getContextualReference(EditableAccessDecisionVoterContext.class, true) != null;
+
+        if (!this.securityModuleActivated)
+        {
+            Logger.getLogger(getClass().getName()) //it's the only case for which a logger is needed in this class
+                    .info("security-module-impl isn't used -> " + getClass().getName() +
+                            "#checkSecuredView gets deactivated");
         }
     }
 }
