@@ -26,7 +26,7 @@ import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.jsf.api.config.view.NavigationParameter;
-import org.apache.deltaspike.jsf.api.config.view.Page;
+import org.apache.deltaspike.jsf.api.config.view.View;
 import org.apache.deltaspike.jsf.api.config.view.event.PreViewConfigNavigateEvent;
 import org.apache.deltaspike.jsf.api.navigation.NavigationParameterContext;
 import org.apache.deltaspike.jsf.impl.util.JsfUtils;
@@ -99,8 +99,8 @@ class ViewConfigAwareNavigationHandler extends NavigationHandler
                     else if (ViewConfig.class.isAssignableFrom(loadedClass))
                     {
                         //a sub-classed page-config for annotating it with different view params
-                        if (loadedClass.getAnnotation(Page.class) == null &&
-                                loadedClass.getSuperclass().getAnnotation(Page.class) != null)
+                        if (loadedClass.getAnnotation(View.class) == null &&
+                                loadedClass.getSuperclass().getAnnotation(View.class) != null)
                         {
                             allowCaching = false;
                             addConfiguredViewParameters(loadedClass);
@@ -175,10 +175,10 @@ class ViewConfigAwareNavigationHandler extends NavigationHandler
 
     private String convertEntryToOutcome(ExternalContext externalContext, ViewConfigDescriptor entry)
     {
-        Page pageMetaData = entry.getMetaData(Page.class).iterator().next();
+        View viewMetaData = entry.getMetaData(View.class).iterator().next();
 
-        boolean performRedirect = Page.NavigationMode.REDIRECT.equals(pageMetaData.navigation());
-        boolean includeViewParameters = Page.ViewParameterMode.INCLUDE.equals(pageMetaData.viewParams());
+        boolean performRedirect = View.NavigationMode.REDIRECT.equals(viewMetaData.navigation());
+        boolean includeViewParameters = View.ViewParameterMode.INCLUDE.equals(viewMetaData.viewParams());
 
         StringBuilder result = new StringBuilder(entry.getViewId());
 

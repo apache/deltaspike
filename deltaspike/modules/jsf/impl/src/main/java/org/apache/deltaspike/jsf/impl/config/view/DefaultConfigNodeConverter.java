@@ -29,7 +29,7 @@ import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.core.util.metadata.AnnotationInstanceProvider;
 import org.apache.deltaspike.jsf.api.config.view.Folder;
-import org.apache.deltaspike.jsf.api.config.view.Page;
+import org.apache.deltaspike.jsf.api.config.view.View;
 import org.apache.deltaspike.jsf.impl.util.ViewConfigUtils;
 
 import java.lang.annotation.Annotation;
@@ -59,8 +59,8 @@ public class DefaultConfigNodeConverter implements ConfigNodeConverter
         }
         else if (ViewConfig.class.isAssignableFrom(sourceClass))
         {
-            Page pageAnnotation = findMetaDataByType(mergedMetaData, Page.class);
-            String viewId = pageAnnotation.basePath() + pageAnnotation.name() + "." + pageAnnotation.extension();
+            View viewAnnotation = findMetaDataByType(mergedMetaData, View.class);
+            String viewId = viewAnnotation.basePath() + viewAnnotation.name() + "." + viewAnnotation.extension();
             return new DefaultViewPathConfigDescriptor(viewId, node.getSource(),
                     mergedMetaData, node.getCallbackDescriptors());
         }

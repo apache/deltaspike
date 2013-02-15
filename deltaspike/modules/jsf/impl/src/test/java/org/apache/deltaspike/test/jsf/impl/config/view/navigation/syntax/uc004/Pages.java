@@ -19,25 +19,26 @@
 package org.apache.deltaspike.test.jsf.impl.config.view.navigation.syntax.uc004;
 
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
-import org.apache.deltaspike.jsf.api.config.view.Page;
+import org.apache.deltaspike.jsf.api.config.view.View;
 
-import static org.apache.deltaspike.jsf.api.config.view.Page.Extension.JSP;
-import static org.apache.deltaspike.jsf.api.config.view.Page.NavigationMode.FORWARD;
-import static org.apache.deltaspike.jsf.api.config.view.Page.NavigationMode.REDIRECT;
-import static org.apache.deltaspike.jsf.api.config.view.Page.ViewParameterMode.INCLUDE;
+import static org.apache.deltaspike.jsf.api.config.view.View.Extension.JSP;
+import static org.apache.deltaspike.jsf.api.config.view.View.NavigationMode.FORWARD;
+import static org.apache.deltaspike.jsf.api.config.view.View.NavigationMode.REDIRECT;
+import static org.apache.deltaspike.jsf.api.config.view.View.ViewParameterMode.INCLUDE;
 
 interface Pages
 {
-    @Page(name = "home", extension = JSP) class Index implements ViewConfig
+    @View(name = "home", extension = JSP) class Index implements ViewConfig
     {
     }
 
-    @Page(navigation = REDIRECT, viewParams = INCLUDE)
+    @View(navigation = REDIRECT, viewParams = INCLUDE)
     interface Admin extends ViewConfig
     {
         interface Statistics
         {
-            @Page class Index implements ViewConfig
+            @View
+            class Index implements ViewConfig
             {
             }
 
@@ -50,7 +51,7 @@ interface Pages
         {
         }
 
-        @Page(navigation = FORWARD)
+        @View(navigation = FORWARD)
         class Home implements Admin //inherit navigation = REDIRECT - but overruled and viewParams = INCLUDE
         {
         }

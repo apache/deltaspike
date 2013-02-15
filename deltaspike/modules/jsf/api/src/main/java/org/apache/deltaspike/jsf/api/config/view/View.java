@@ -21,7 +21,7 @@ package org.apache.deltaspike.jsf.api.config.view;
 import org.apache.deltaspike.core.api.config.view.metadata.annotation.ViewMetaData;
 import org.apache.deltaspike.core.spi.config.view.ConfigPreProcessor;
 import org.apache.deltaspike.core.spi.config.view.ViewConfigNode;
-import org.apache.deltaspike.jsf.api.literal.PageLiteral;
+import org.apache.deltaspike.jsf.api.literal.ViewLiteral;
 import org.apache.deltaspike.jsf.util.NamingConventionUtils;
 
 import java.lang.annotation.Documented;
@@ -31,9 +31,9 @@ import java.lang.reflect.Modifier;
 
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
-import static org.apache.deltaspike.jsf.api.config.view.Page.Extension.XHTML;
-import static org.apache.deltaspike.jsf.api.config.view.Page.NavigationMode.FORWARD;
-import static org.apache.deltaspike.jsf.api.config.view.Page.ViewParameterMode.EXCLUDE;
+import static org.apache.deltaspike.jsf.api.config.view.View.Extension.XHTML;
+import static org.apache.deltaspike.jsf.api.config.view.View.NavigationMode.FORWARD;
+import static org.apache.deltaspike.jsf.api.config.view.View.ViewParameterMode.EXCLUDE;
 
 /**
  * Optional annotation to specify page specific meta-data
@@ -44,8 +44,8 @@ import static org.apache.deltaspike.jsf.api.config.view.Page.ViewParameterMode.E
 @Retention(RUNTIME)
 @Documented
 
-@ViewMetaData(preProcessor = Page.PageConfigPreProcessor.class)
-public @interface Page
+@ViewMetaData(preProcessor = View.ViewConfigPreProcessor.class)
+public @interface View
 {
     /**
      * Allows to specify a custom base-path for the page represented by the view-config
@@ -109,47 +109,47 @@ public @interface Page
         DEFAULT, INCLUDE, EXCLUDE
     }
 
-    static class PageConfigPreProcessor implements ConfigPreProcessor<Page>
+    static class ViewConfigPreProcessor implements ConfigPreProcessor<View>
     {
         @Override
-        public Page beforeAddToConfig(Page page, ViewConfigNode viewConfigNode)
+        public View beforeAddToConfig(View view, ViewConfigNode viewConfigNode)
         {
             boolean defaultValueReplaced = false;
 
-            String basePath = page.basePath();
-            String name = page.name();
-            String extension = page.extension();
-            Page.NavigationMode navigation = page.navigation();
-            Page.ViewParameterMode viewParams = page.viewParams();
+            String basePath = view.basePath();
+            String name = view.name();
+            String extension = view.extension();
+            View.NavigationMode navigation = view.navigation();
+            View.ViewParameterMode viewParams = view.viewParams();
             Class source = viewConfigNode.getSource();
 
-            if (("".equals(basePath) || basePath == null) && isPage(source) /*only calc the path for real pages*/)
+            if (("".equals(basePath) || basePath == null) && isView(source) /*only calc the path for real pages*/)
             {
                 defaultValueReplaced = true;
 
                 basePath = NamingConventionUtils.toPath(viewConfigNode.getParent());
             }
 
-            if (("".equals(name) || name == null) && isPage(source) /*only calc the path for real pages*/)
+            if (("".equals(name) || name == null) && isView(source) /*only calc the path for real pages*/)
             {
                 defaultValueReplaced = true;
                 String className = viewConfigNode.getSource().getSimpleName();
                 name = className.substring(0, 1).toLowerCase() + className.substring(1);
             }
 
-            if (Page.Extension.DEFAULT.equals(extension) || extension == null)
+            if (View.Extension.DEFAULT.equals(extension) || extension == null)
             {
                 defaultValueReplaced = true;
                 extension = XHTML;
             }
 
-            if (Page.NavigationMode.DEFAULT.equals(navigation) || navigation == null)
+            if (View.NavigationMode.DEFAULT.equals(navigation) || navigation == null)
             {
                 defaultValueReplaced = true;
                 navigation = FORWARD;
             }
 
-            if (Page.ViewParameterMode.DEFAULT.equals(viewParams) || viewParams == null)
+            if (View.ViewParameterMode.DEFAULT.equals(viewParams) || viewParams == null)
             {
                 defaultValueReplaced = true;
                 viewParams = EXCLUDE;
@@ -157,14 +157,14 @@ public @interface Page
 
             if (defaultValueReplaced)
             {
-                return new PageLiteral(basePath, name, extension, navigation, viewParams);
+                return new ViewLiteral(basePath, name, extension, navigation, viewParams);
             }
-            return page;
+            return view;
         }
 
         //it's possible that the given source is a folder-node
-        //e.g. @Page(navigation = REDIRECT) specified for a whole folder
-        private boolean isPage(Class source)
+        //e.g. @View(navigation = REDIRECT) specified for a whole folder
+        private boolean isView(Class source)
         {
             return !Modifier.isAbstract(source.getModifiers()) && !Modifier.isInterface(source.getModifiers());
         }

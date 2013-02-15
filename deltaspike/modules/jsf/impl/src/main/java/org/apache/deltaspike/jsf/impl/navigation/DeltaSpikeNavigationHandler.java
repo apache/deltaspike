@@ -25,7 +25,7 @@ import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.core.util.ClassUtils;
-import org.apache.deltaspike.jsf.api.config.view.Page;
+import org.apache.deltaspike.jsf.api.config.view.View;
 import org.apache.deltaspike.jsf.impl.util.JsfUtils;
 
 import javax.faces.application.ConfigurableNavigationHandler;
@@ -130,7 +130,7 @@ public class DeltaSpikeNavigationHandler extends ConfigurableNavigationHandler i
 
                 if (entry != null)
                 {
-                    Page.NavigationMode navigationMode = entry.getMetaData(Page.class).iterator().next().navigation();
+                    View.NavigationMode navigationMode = entry.getMetaData(View.class).iterator().next().navigation();
 
                     navigationCase = new NavigationCase("*",
                             null,
@@ -138,7 +138,7 @@ public class DeltaSpikeNavigationHandler extends ConfigurableNavigationHandler i
                             null,
                             entry.getViewId(),
                             null,
-                            Page.NavigationMode.REDIRECT.equals(navigationMode),
+                            View.NavigationMode.REDIRECT.equals(navigationMode),
                             false);
                     this.viewConfigBasedNavigationCaseCache.put(originalOutcome, navigationCase);
                     return navigationCase;

@@ -27,9 +27,9 @@ import org.apache.deltaspike.core.spi.config.view.ConfigNodeConverter;
 import org.apache.deltaspike.core.spi.config.view.ViewConfigInheritanceStrategy;
 import org.apache.deltaspike.core.spi.config.view.ViewConfigNode;
 import org.apache.deltaspike.jsf.api.config.view.Folder;
-import org.apache.deltaspike.jsf.api.config.view.Page;
+import org.apache.deltaspike.jsf.api.config.view.View;
 import org.apache.deltaspike.jsf.api.literal.FolderLiteral;
-import org.apache.deltaspike.jsf.api.literal.PageLiteral;
+import org.apache.deltaspike.jsf.api.literal.ViewLiteral;
 import org.apache.deltaspike.jsf.impl.util.ViewConfigUtils;
 
 import javax.enterprise.inject.Typed;
@@ -72,7 +72,7 @@ public class DefaultViewConfigResolver implements ViewConfigResolver
         {
             ViewConfigNode currentNode = nodesToConvert.pop();
 
-            //e.g. @Page is optional for users, but required from other parts of DeltaSpike -> ensure that it's in place
+            //e.g. @View is optional for users, but required from other parts of DeltaSpike -> ensure that it's in place
             addOptionalMetaDataToConfig(currentNode);
 
             currentNode.getInheritedMetaData().addAll(inheritanceStrategy.resolveInheritedMetaData(currentNode));
@@ -148,13 +148,13 @@ public class DefaultViewConfigResolver implements ViewConfigResolver
 
         for (Annotation annotation : currentNode.getMetaData())
         {
-            if (annotation.annotationType().equals(Page.class))
+            if (annotation.annotationType().equals(View.class))
             {
                 return;
             }
         }
 
-        currentNode.getMetaData().add(new PageLiteral(true));
+        currentNode.getMetaData().add(new ViewLiteral(true));
     }
 
     @Override

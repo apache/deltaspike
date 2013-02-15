@@ -19,26 +19,26 @@
 package org.apache.deltaspike.test.jsf.impl.config.view.navigation.event.uc001;
 
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
-import org.apache.deltaspike.jsf.api.config.view.Page;
+import org.apache.deltaspike.jsf.api.config.view.View;
 
-import static org.apache.deltaspike.jsf.api.config.view.Page.NavigationMode.FORWARD;
-import static org.apache.deltaspike.jsf.api.config.view.Page.NavigationMode.REDIRECT;
-import static org.apache.deltaspike.jsf.api.config.view.Page.ViewParameterMode.INCLUDE;
+import static org.apache.deltaspike.jsf.api.config.view.View.NavigationMode.FORWARD;
+import static org.apache.deltaspike.jsf.api.config.view.View.NavigationMode.REDIRECT;
+import static org.apache.deltaspike.jsf.api.config.view.View.ViewParameterMode.INCLUDE;
 
-@Page(navigation = REDIRECT)
+@View(navigation = REDIRECT)
 public interface Pages extends ViewConfig
 {
     class Index implements Pages
     {
     }
 
-    @Page(viewParams = INCLUDE)
+    @View(viewParams = INCLUDE)
     class Overview implements Pages
     {
     }
 
     //'navigation' overruled
-    @Page(navigation = FORWARD)
+    @View(navigation = FORWARD)
     class Home implements Pages
     {
     }

@@ -19,7 +19,7 @@
 package org.apache.deltaspike.test.jsf.impl.config.view.navigation.destination.uc003;
 
 import org.apache.deltaspike.core.spi.config.view.ViewConfigNode;
-import org.apache.deltaspike.jsf.api.config.view.Page;
+import org.apache.deltaspike.jsf.api.config.view.View;
 import org.apache.deltaspike.jsf.impl.config.view.ViewConfigExtension;
 import org.apache.deltaspike.jsf.impl.config.view.ViewConfigResolverProducer;
 import org.junit.After;
@@ -81,7 +81,7 @@ public class ViewConfigTest
 
         Assert.assertNotNull(node.getMetaData());
         Assert.assertEquals(1, node.getMetaData().size());
-        Assert.assertEquals(Page.class, node.getMetaData().iterator().next().annotationType());
+        Assert.assertEquals(View.class, node.getMetaData().iterator().next().annotationType());
 
         Assert.assertNotNull(node.getInheritedMetaData());
         Assert.assertEquals(0, node.getInheritedMetaData().size());

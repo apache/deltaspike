@@ -29,6 +29,6 @@ public class PageBean007
     //TODO add test
     public Class<? extends ViewConfig> actionMethod()
     {
-        return PageConfigForIncludeViewParams.class;
+        return ViewConfigForIncludeViewParams.class;
     }
 }

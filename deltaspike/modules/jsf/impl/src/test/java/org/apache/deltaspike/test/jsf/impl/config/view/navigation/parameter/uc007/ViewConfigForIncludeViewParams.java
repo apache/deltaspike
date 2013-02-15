@@ -19,11 +19,11 @@
 package org.apache.deltaspike.test.jsf.impl.config.view.navigation.parameter.uc007;
 
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
-import org.apache.deltaspike.jsf.api.config.view.Page;
+import org.apache.deltaspike.jsf.api.config.view.View;
 
-import static org.apache.deltaspike.jsf.api.config.view.Page.ViewParameterMode.INCLUDE;
+import static org.apache.deltaspike.jsf.api.config.view.View.ViewParameterMode.INCLUDE;
 
-@Page(viewParams = INCLUDE)
-public class PageConfigForIncludeViewParams implements ViewConfig
+@View(viewParams = INCLUDE)
+public class ViewConfigForIncludeViewParams implements ViewConfig
 {
 }

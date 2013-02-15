@@ -19,11 +19,11 @@
 package org.apache.deltaspike.test.jsf.impl.config.view.navigation.parameter.uc006;
 
 import org.apache.deltaspike.core.api.config.view.DefaultErrorView;
-import org.apache.deltaspike.jsf.api.config.view.Page;
+import org.apache.deltaspike.jsf.api.config.view.View;
 
-import static org.apache.deltaspike.jsf.api.config.view.Page.NavigationMode.REDIRECT;
+import static org.apache.deltaspike.jsf.api.config.view.View.NavigationMode.REDIRECT;
 
-@Page(navigation = REDIRECT)
+@View(navigation = REDIRECT)
 public class PageConfigForRedirect extends DefaultErrorView
 {
 }

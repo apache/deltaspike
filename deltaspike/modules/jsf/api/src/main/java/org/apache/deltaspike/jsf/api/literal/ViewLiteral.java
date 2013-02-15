@@ -19,15 +19,15 @@
 
 package org.apache.deltaspike.jsf.api.literal;
 
-import org.apache.deltaspike.jsf.api.config.view.Page;
+import org.apache.deltaspike.jsf.api.config.view.View;
 
 import javax.enterprise.util.AnnotationLiteral;
 
 /**
- * Literal for {@link org.apache.deltaspike.jsf.api.config.view.Page}
+ * Literal for {@link org.apache.deltaspike.jsf.api.config.view.View}
  */
 //TODO remove null trick once we can merge with default values and the tests pass
-public class PageLiteral extends AnnotationLiteral<Page> implements Page
+public class ViewLiteral extends AnnotationLiteral<View> implements View
 {
     private static final long serialVersionUID = 1582580975876369665L;
 
@@ -37,7 +37,7 @@ public class PageLiteral extends AnnotationLiteral<Page> implements Page
     private final NavigationMode navigation;
     private final ViewParameterMode viewParams;
 
-    public PageLiteral(boolean virtual)
+    public ViewLiteral(boolean virtual)
     {
         if (virtual)
         {
@@ -57,7 +57,7 @@ public class PageLiteral extends AnnotationLiteral<Page> implements Page
         }
     }
 
-    public PageLiteral(String basePath,
+    public ViewLiteral(String basePath,
                        String name,
                        String extension,
                        NavigationMode navigation,
@@ -120,7 +120,7 @@ public class PageLiteral extends AnnotationLiteral<Page> implements Page
             return false;
         }
 
-        PageLiteral that = (PageLiteral) o;
+        ViewLiteral that = (ViewLiteral) o;
 
         if (basePath != null ? !basePath.equals(that.basePath) : that.basePath != null)
         {

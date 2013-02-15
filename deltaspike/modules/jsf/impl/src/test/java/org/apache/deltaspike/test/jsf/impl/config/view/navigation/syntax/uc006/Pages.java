@@ -19,16 +19,16 @@
 package org.apache.deltaspike.test.jsf.impl.config.view.navigation.syntax.uc006;
 
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
-import org.apache.deltaspike.jsf.api.config.view.Page;
+import org.apache.deltaspike.jsf.api.config.view.View;
 
-import static org.apache.deltaspike.jsf.api.config.view.Page.Extension.FACES;
-import static org.apache.deltaspike.jsf.api.config.view.Page.Extension.JSF;
-import static org.apache.deltaspike.jsf.api.config.view.Page.Extension.XHTML;
-import static org.apache.deltaspike.jsf.api.config.view.Page.NavigationMode.FORWARD;
-import static org.apache.deltaspike.jsf.api.config.view.Page.NavigationMode.REDIRECT;
-import static org.apache.deltaspike.jsf.api.config.view.Page.ViewParameterMode.INCLUDE;
+import static org.apache.deltaspike.jsf.api.config.view.View.Extension.FACES;
+import static org.apache.deltaspike.jsf.api.config.view.View.Extension.JSF;
+import static org.apache.deltaspike.jsf.api.config.view.View.Extension.XHTML;
+import static org.apache.deltaspike.jsf.api.config.view.View.NavigationMode.FORWARD;
+import static org.apache.deltaspike.jsf.api.config.view.View.NavigationMode.REDIRECT;
+import static org.apache.deltaspike.jsf.api.config.view.View.ViewParameterMode.INCLUDE;
 
-@Page(navigation = REDIRECT, extension = JSF)
+@View(navigation = REDIRECT, extension = JSF)
 interface Pages extends ViewConfig
 {
     //inherits navigation = REDIRECT and extension = JSF
@@ -40,11 +40,12 @@ interface Pages extends ViewConfig
     interface Admin extends Pages
     {
         //inherits navigation = REDIRECT
-        @Page(viewParams = INCLUDE, extension = FACES)
+        @View(viewParams = INCLUDE, extension = FACES)
         interface Statistics extends Admin
         {
             //inherits navigation = REDIRECT and viewParams = INCLUDE and extension = FACES
-            @Page class Index implements Statistics
+            @View
+            class Index implements Statistics
             {
             }
 
@@ -55,12 +56,12 @@ interface Pages extends ViewConfig
         }
 
         //inherits navigation = REDIRECT
-        @Page(extension = XHTML) class Index implements Admin
+        @View(extension = XHTML) class Index implements Admin
         {
         }
 
         //inherits but overrules navigation and extension = JSF
-        @Page(navigation = FORWARD) class Home implements Admin
+        @View(navigation = FORWARD) class Home implements Admin
         {
         }
     }

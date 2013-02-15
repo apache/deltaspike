@@ -19,7 +19,7 @@
 package org.apache.deltaspike.test.jsf.impl.config.view.navigation.destination.uc003;
 
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
-import org.apache.deltaspike.jsf.api.config.view.Page;
+import org.apache.deltaspike.jsf.api.config.view.View;
 
 interface Pages extends ViewConfig
 {
@@ -27,7 +27,7 @@ interface Pages extends ViewConfig
     {
     }
 
-    @Page(name = "index")
+    @View(name = "index")
     class Overview implements Pages
     {
     }

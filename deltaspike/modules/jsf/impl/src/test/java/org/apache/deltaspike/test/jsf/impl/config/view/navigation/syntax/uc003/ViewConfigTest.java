@@ -23,7 +23,7 @@ import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigDescriptor;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
 import org.apache.deltaspike.core.spi.config.view.ViewConfigNode;
 import org.apache.deltaspike.jsf.api.config.view.Folder;
-import org.apache.deltaspike.jsf.api.config.view.Page;
+import org.apache.deltaspike.jsf.api.config.view.View;
 import org.apache.deltaspike.jsf.impl.config.view.ViewConfigExtension;
 import org.apache.deltaspike.jsf.impl.config.view.ViewConfigResolverProducer;
 import org.junit.After;
@@ -119,10 +119,10 @@ public class ViewConfigTest
 
         Assert.assertNotNull(node.getMetaData());
         Assert.assertEquals(1, node.getMetaData().size());
-        Assert.assertEquals(Page.NavigationMode.DEFAULT, ((Page) node.getMetaData().iterator().next()).navigation());
-        Assert.assertEquals(Page.ViewParameterMode.DEFAULT, ((Page) node.getMetaData().iterator().next()).viewParams());
-        Assert.assertEquals("", ((Page) node.getMetaData().iterator().next()).name());
-        Assert.assertEquals(Page.Extension.DEFAULT, ((Page)node.getMetaData().iterator().next()).extension());
+        Assert.assertEquals(View.NavigationMode.DEFAULT, ((View) node.getMetaData().iterator().next()).navigation());
+        Assert.assertEquals(View.ViewParameterMode.DEFAULT, ((View) node.getMetaData().iterator().next()).viewParams());
+        Assert.assertEquals("", ((View) node.getMetaData().iterator().next()).name());
+        Assert.assertEquals(View.Extension.DEFAULT, ((View)node.getMetaData().iterator().next()).extension());
 
         Assert.assertNotNull(node.getInheritedMetaData());
         Assert.assertEquals(0, node.getInheritedMetaData().size());
@@ -184,12 +184,12 @@ public class ViewConfigTest
 
         Assert.assertNotNull(viewConfigDescriptor.getMetaData());
         Assert.assertEquals(1, viewConfigDescriptor.getMetaData().size());
-        Assert.assertEquals(Page.NavigationMode.FORWARD, ((Page) viewConfigDescriptor.getMetaData().iterator().next())
+        Assert.assertEquals(View.NavigationMode.FORWARD, ((View) viewConfigDescriptor.getMetaData().iterator().next())
                 .navigation());
-        Assert.assertEquals(Page.ViewParameterMode.EXCLUDE, (viewConfigDescriptor.getMetaData(Page.class).iterator()
+        Assert.assertEquals(View.ViewParameterMode.EXCLUDE, (viewConfigDescriptor.getMetaData(View.class).iterator()
                 .next()).viewParams());
-        Assert.assertEquals("index", (viewConfigDescriptor.getMetaData(Page.class).iterator().next()).name());
-        Assert.assertEquals(Page.Extension.XHTML, (viewConfigDescriptor.getMetaData(Page.class).iterator().next()).extension());
+        Assert.assertEquals("index", (viewConfigDescriptor.getMetaData(View.class).iterator().next()).name());
+        Assert.assertEquals(View.Extension.XHTML, (viewConfigDescriptor.getMetaData(View.class).iterator().next()).extension());
 
 
         viewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(Pages.Home.class);
@@ -200,11 +200,11 @@ public class ViewConfigTest
 
         Assert.assertNotNull(viewConfigDescriptor.getMetaData());
         Assert.assertEquals(1, viewConfigDescriptor.getMetaData().size());
-        Assert.assertEquals(Page.NavigationMode.FORWARD, ((Page) viewConfigDescriptor.getMetaData().iterator().next())
+        Assert.assertEquals(View.NavigationMode.FORWARD, ((View) viewConfigDescriptor.getMetaData().iterator().next())
                 .navigation());
-        Assert.assertEquals(Page.ViewParameterMode.EXCLUDE, (viewConfigDescriptor.getMetaData(Page.class).iterator().next()).viewParams());
-        Assert.assertEquals("home", (viewConfigDescriptor.getMetaData(Page.class).iterator().next()).name());
-        Assert.assertEquals(Page.Extension.XHTML, (viewConfigDescriptor.getMetaData(Page.class).iterator().next()).extension());
+        Assert.assertEquals(View.ViewParameterMode.EXCLUDE, (viewConfigDescriptor.getMetaData(View.class).iterator().next()).viewParams());
+        Assert.assertEquals("home", (viewConfigDescriptor.getMetaData(View.class).iterator().next()).name());
+        Assert.assertEquals(View.Extension.XHTML, (viewConfigDescriptor.getMetaData(View.class).iterator().next()).extension());
 
 
         viewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(Pages.Admin.Index.class);
@@ -215,10 +215,10 @@ public class ViewConfigTest
 
         Assert.assertNotNull(viewConfigDescriptor.getMetaData());
         Assert.assertEquals(1, viewConfigDescriptor.getMetaData().size());
-        Assert.assertEquals(Page.NavigationMode.FORWARD, ((Page) viewConfigDescriptor.getMetaData().iterator().next())
+        Assert.assertEquals(View.NavigationMode.FORWARD, ((View) viewConfigDescriptor.getMetaData().iterator().next())
                 .navigation());
-        Assert.assertEquals(Page.ViewParameterMode.EXCLUDE, (viewConfigDescriptor.getMetaData(Page.class).iterator().next()).viewParams());
-        Assert.assertEquals("index", (viewConfigDescriptor.getMetaData(Page.class).iterator().next()).name());
-        Assert.assertEquals(Page.Extension.XHTML, (viewConfigDescriptor.getMetaData(Page.class).iterator().next()).extension());
+        Assert.assertEquals(View.ViewParameterMode.EXCLUDE, (viewConfigDescriptor.getMetaData(View.class).iterator().next()).viewParams());
+        Assert.assertEquals("index", (viewConfigDescriptor.getMetaData(View.class).iterator().next()).name());
+        Assert.assertEquals(View.Extension.XHTML, (viewConfigDescriptor.getMetaData(View.class).iterator().next()).extension());
     }
 }

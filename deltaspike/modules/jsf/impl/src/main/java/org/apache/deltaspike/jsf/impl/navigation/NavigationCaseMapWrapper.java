@@ -21,7 +21,7 @@ package org.apache.deltaspike.jsf.impl.navigation;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigDescriptor;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
-import org.apache.deltaspike.jsf.api.config.view.Page;
+import org.apache.deltaspike.jsf.api.config.view.View;
 import org.apache.deltaspike.jsf.impl.util.JsfUtils;
 import org.apache.deltaspike.jsf.impl.util.RequestParameter;
 
@@ -76,9 +76,9 @@ class NavigationCaseMapWrapper implements Map<String, Set<NavigationCase>>
 
             for (ViewConfigDescriptor entry : viewConfigDescriptors)
             {
-                Page pageMetaData = entry.getMetaData(Page.class).iterator().next();
-                includeParameters = Page.ViewParameterMode.INCLUDE
-                        .equals(pageMetaData.viewParams());
+                View viewMetaData = entry.getMetaData(View.class).iterator().next();
+                includeParameters = View.ViewParameterMode.INCLUDE
+                        .equals(viewMetaData.viewParams());
 
                 navigationCase.add(new NavigationCase("*",
                         null,
@@ -86,7 +86,7 @@ class NavigationCaseMapWrapper implements Map<String, Set<NavigationCase>>
                         null,
                         entry.getViewId(),
                         includeParameters ? parameters : null,
-                        Page.NavigationMode.REDIRECT.equals(pageMetaData.navigation()),
+                        View.NavigationMode.REDIRECT.equals(viewMetaData.navigation()),
                         includeParameters));
 
                 result.put(entry.getViewId(), navigationCase);

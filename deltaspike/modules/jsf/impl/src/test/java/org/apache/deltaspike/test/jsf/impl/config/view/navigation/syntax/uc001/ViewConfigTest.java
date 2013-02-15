@@ -21,7 +21,7 @@ package org.apache.deltaspike.test.jsf.impl.config.view.navigation.syntax.uc001;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigDescriptor;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
 import org.apache.deltaspike.core.spi.config.view.ViewConfigNode;
-import org.apache.deltaspike.jsf.api.config.view.Page;
+import org.apache.deltaspike.jsf.api.config.view.View;
 import org.apache.deltaspike.jsf.impl.config.view.ViewConfigExtension;
 import org.apache.deltaspike.jsf.impl.config.view.ViewConfigResolverProducer;
 import org.junit.After;
@@ -82,8 +82,8 @@ public class ViewConfigTest
         Assert.assertEquals(SimplePageConfig001.class, viewConfigDescriptor.getViewConfig());
         Assert.assertNotNull(viewConfigDescriptor.getMetaData());
 
-        //@Page gets added autom. if it isn't provided in-/directly
+        //@View gets added autom. if it isn't provided in-/directly
         Assert.assertEquals(1, viewConfigDescriptor.getMetaData().size());
-        Assert.assertEquals(1, viewConfigDescriptor.getMetaData(Page.class).size());
+        Assert.assertEquals(1, viewConfigDescriptor.getMetaData(View.class).size());
     }
 }

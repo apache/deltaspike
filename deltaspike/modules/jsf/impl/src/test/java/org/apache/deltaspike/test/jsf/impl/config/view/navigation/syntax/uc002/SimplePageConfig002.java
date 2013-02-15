@@ -19,8 +19,9 @@
 package org.apache.deltaspike.test.jsf.impl.config.view.navigation.syntax.uc002;
 
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
-import org.apache.deltaspike.jsf.api.config.view.Page;
+import org.apache.deltaspike.jsf.api.config.view.View;
 
-@Page class SimplePageConfig002 implements ViewConfig
+@View
+class SimplePageConfig002 implements ViewConfig
 {
 }
