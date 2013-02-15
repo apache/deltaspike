@@ -24,7 +24,7 @@ import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
 import org.apache.deltaspike.core.api.config.view.metadata.annotation.DefaultCallback;
 import org.apache.deltaspike.core.spi.config.view.ViewConfigNode;
 import org.apache.deltaspike.jsf.api.config.view.controller.InitView;
-import org.apache.deltaspike.jsf.api.config.view.controller.PageBean;
+import org.apache.deltaspike.jsf.api.config.view.controller.ViewControllerBean;
 import org.apache.deltaspike.jsf.api.config.view.controller.PreRenderView;
 import org.apache.deltaspike.jsf.impl.config.view.ViewConfigExtension;
 import org.apache.deltaspike.jsf.impl.config.view.ViewConfigResolverProducer;
@@ -80,7 +80,7 @@ public class ViewConfigTest
 
         Iterator<Annotation> metaDataIterator = node.getMetaData().iterator();
         List<Class<? extends Annotation>> possibleMetaDataTypes = new ArrayList<Class<? extends Annotation>>();
-        possibleMetaDataTypes.add(PageBean.class);
+        possibleMetaDataTypes.add(ViewControllerBean.class);
         possibleMetaDataTypes.add(TestSecured.class);
         Class<? extends Annotation> foundMetaData = metaDataIterator.next().annotationType();
         possibleMetaDataTypes.remove(foundMetaData);
@@ -106,8 +106,8 @@ public class ViewConfigTest
         ViewConfigDescriptor viewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(SimplePageConfig.class);
 
         Assert.assertNotNull(viewConfigDescriptor);
-        Assert.assertNull(viewConfigDescriptor.getCallbackDescriptor(PageBean.class, InitView.class));
-        Assert.assertNotNull(viewConfigDescriptor.getCallbackDescriptor(PageBean.class, PreRenderView.class));
+        Assert.assertNull(viewConfigDescriptor.getCallbackDescriptor(ViewControllerBean.class, InitView.class));
+        Assert.assertNotNull(viewConfigDescriptor.getCallbackDescriptor(ViewControllerBean.class, PreRenderView.class));
         Assert.assertNotNull(viewConfigDescriptor.getCallbackDescriptor(TestSecured.class));
     }
 

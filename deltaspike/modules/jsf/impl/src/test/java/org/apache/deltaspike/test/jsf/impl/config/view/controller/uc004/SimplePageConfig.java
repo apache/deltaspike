@@ -19,9 +19,9 @@
 package org.apache.deltaspike.test.jsf.impl.config.view.controller.uc004;
 
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
-import org.apache.deltaspike.jsf.api.config.view.controller.PageBean;
+import org.apache.deltaspike.jsf.api.config.view.controller.ViewControllerBean;
 
-@PageBean(PageBean004.class)
+@ViewControllerBean(PageBean004.class)
 @TestSecured(SimpleTestAccessDecisionVoter.class)
 public class SimplePageConfig implements ViewConfig
 {

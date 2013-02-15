@@ -19,9 +19,9 @@
 package org.apache.deltaspike.test.jsf.impl.config.view.controller.uc001;
 
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
-import org.apache.deltaspike.jsf.api.config.view.controller.PageBean;
+import org.apache.deltaspike.jsf.api.config.view.controller.ViewControllerBean;
 
-@PageBean(PageBean001.class)
+@ViewControllerBean(PageBean001.class)
 class SimplePageConfig implements ViewConfig
 {
 }

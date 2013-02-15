@@ -19,9 +19,9 @@
 package org.apache.deltaspike.test.jsf.impl.config.view.controller.uc002;
 
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
-import org.apache.deltaspike.jsf.api.config.view.controller.PageBean;
+import org.apache.deltaspike.jsf.api.config.view.controller.ViewControllerBean;
 
-@PageBean(value = PageBean002.class, name = "pageBean" /*TODO*/) //e.g. in case of producers with different @Named(...)
+@ViewControllerBean(value = PageBean002.class, name = "pageBean" /*TODO*/) //e.g. in case of producers with different @Named(...)
 class SimplePageConfig implements ViewConfig
 {
 }

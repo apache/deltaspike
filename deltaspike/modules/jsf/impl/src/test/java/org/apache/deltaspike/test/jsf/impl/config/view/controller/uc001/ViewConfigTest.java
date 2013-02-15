@@ -21,7 +21,7 @@ package org.apache.deltaspike.test.jsf.impl.config.view.controller.uc001;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigDescriptor;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
 import org.apache.deltaspike.core.spi.config.view.ViewConfigNode;
-import org.apache.deltaspike.jsf.api.config.view.controller.PageBean;
+import org.apache.deltaspike.jsf.api.config.view.controller.ViewControllerBean;
 import org.apache.deltaspike.jsf.api.config.view.controller.PreRenderView;
 import org.apache.deltaspike.jsf.impl.config.view.ViewConfigExtension;
 import org.apache.deltaspike.jsf.impl.config.view.ViewConfigResolverProducer;
@@ -86,8 +86,8 @@ public class ViewConfigTest
         ViewConfigDescriptor viewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(SimplePageConfig.class);
 
         Assert.assertNotNull(viewConfigDescriptor);
-        Assert.assertNotNull(viewConfigDescriptor.getCallbackDescriptor(PageBean.class, PreRenderView.class));
-        Assert.assertEquals(PageBean001.class, viewConfigDescriptor.getCallbackDescriptor(PageBean.class, PreRenderView.class).getCallbackMethods().keySet().iterator().next());
-        Assert.assertEquals("preRenderViewCallbackMethod", ((List<Method>) viewConfigDescriptor.getCallbackDescriptor(PageBean.class, PreRenderView.class).getCallbackMethods().values().iterator().next()).iterator().next().getName());
+        Assert.assertNotNull(viewConfigDescriptor.getCallbackDescriptor(ViewControllerBean.class, PreRenderView.class));
+        Assert.assertEquals(PageBean001.class, viewConfigDescriptor.getCallbackDescriptor(ViewControllerBean.class, PreRenderView.class).getCallbackMethods().keySet().iterator().next());
+        Assert.assertEquals("preRenderViewCallbackMethod", ((List<Method>) viewConfigDescriptor.getCallbackDescriptor(ViewControllerBean.class, PreRenderView.class).getCallbackMethods().values().iterator().next()).iterator().next().getName());
     }
 }

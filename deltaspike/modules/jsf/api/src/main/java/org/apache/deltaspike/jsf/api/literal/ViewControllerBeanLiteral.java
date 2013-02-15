@@ -19,21 +19,21 @@
 
 package org.apache.deltaspike.jsf.api.literal;
 
-import org.apache.deltaspike.jsf.api.config.view.controller.PageBean;
+import org.apache.deltaspike.jsf.api.config.view.controller.ViewControllerBean;
 
 import javax.enterprise.util.AnnotationLiteral;
 
 /**
- * Literal for {@link PageBean}
+ * Literal for {@link org.apache.deltaspike.jsf.api.config.view.controller.ViewControllerBean}
  */
-public class PageBeanLiteral extends AnnotationLiteral<PageBean> implements PageBean
+public class ViewControllerBeanLiteral extends AnnotationLiteral<ViewControllerBean> implements ViewControllerBean
 {
     private static final long serialVersionUID = 8582580975876369665L;
 
     private final Class value;
     private final String name;
 
-    public PageBeanLiteral(Class value, String name)
+    public ViewControllerBeanLiteral(Class value, String name)
     {
         this.value = value;
         this.name = name;

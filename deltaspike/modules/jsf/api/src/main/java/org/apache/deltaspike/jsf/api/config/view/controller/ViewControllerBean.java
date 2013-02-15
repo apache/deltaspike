@@ -41,8 +41,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Documented
 
-@ViewMetaData(preProcessor = PageBean.PageBeanConfigPreProcessor.class)
-public @interface PageBean
+@ViewMetaData(preProcessor = ViewControllerBean.ViewControllerBeanConfigPreProcessor.class)
+public @interface ViewControllerBean
 {
     /**
      * Class of the page-bean
@@ -59,19 +59,19 @@ public @interface PageBean
     //TODO
     String name() default "";
 
-    public class PageBeanConfigPreProcessor implements ConfigPreProcessor<PageBean>
+    public class ViewControllerBeanConfigPreProcessor implements ConfigPreProcessor<ViewControllerBean>
     {
         @Override
-        public PageBean beforeAddToConfig(PageBean metaData, ViewConfigNode viewConfigNode)
+        public ViewControllerBean beforeAddToConfig(ViewControllerBean metaData, ViewConfigNode viewConfigNode)
         {
             viewConfigNode.registerCallbackDescriptors(
-                    PageBean.class, new ViewControllerDescriptor(metaData.value(), InitView.class));
+                    ViewControllerBean.class, new ViewControllerDescriptor(metaData.value(), InitView.class));
             viewConfigNode.registerCallbackDescriptors(
-                    PageBean.class, new ViewControllerDescriptor(metaData.value(), PrePageAction.class));
+                    ViewControllerBean.class, new ViewControllerDescriptor(metaData.value(), PrePageAction.class));
             viewConfigNode.registerCallbackDescriptors(
-                    PageBean.class, new ViewControllerDescriptor(metaData.value(), PreRenderView.class));
+                    ViewControllerBean.class, new ViewControllerDescriptor(metaData.value(), PreRenderView.class));
             viewConfigNode.registerCallbackDescriptors(
-                    PageBean.class, new ViewControllerDescriptor(metaData.value(), PostRenderView.class));
+                    ViewControllerBean.class, new ViewControllerDescriptor(metaData.value(), PostRenderView.class));
             return metaData; //no change needed
         }
 
