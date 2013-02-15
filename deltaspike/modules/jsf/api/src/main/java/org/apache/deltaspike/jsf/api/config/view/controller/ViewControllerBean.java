@@ -67,7 +67,7 @@ public @interface ViewControllerBean
             viewConfigNode.registerCallbackDescriptors(
                     ViewControllerBean.class, new ViewControllerDescriptor(metaData.value(), InitView.class));
             viewConfigNode.registerCallbackDescriptors(
-                    ViewControllerBean.class, new ViewControllerDescriptor(metaData.value(), PrePageAction.class));
+                    ViewControllerBean.class, new ViewControllerDescriptor(metaData.value(), PreViewAction.class));
             viewConfigNode.registerCallbackDescriptors(
                     ViewControllerBean.class, new ViewControllerDescriptor(metaData.value(), PreRenderView.class));
             viewConfigNode.registerCallbackDescriptors(

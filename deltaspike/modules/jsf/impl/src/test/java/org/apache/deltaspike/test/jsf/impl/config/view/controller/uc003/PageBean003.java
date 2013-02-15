@@ -20,7 +20,7 @@ package org.apache.deltaspike.test.jsf.impl.config.view.controller.uc003;
 
 import org.apache.deltaspike.core.api.config.view.ViewRef;
 import org.apache.deltaspike.jsf.api.config.view.controller.InitView;
-import org.apache.deltaspike.jsf.api.config.view.controller.PrePageAction;
+import org.apache.deltaspike.jsf.api.config.view.controller.PreViewAction;
 import org.apache.deltaspike.jsf.api.config.view.controller.PreRenderView;
 
 import javax.enterprise.inject.Model;
@@ -30,7 +30,7 @@ import javax.enterprise.inject.Model;
 class PageBean003
 {
     @InitView
-    @PrePageAction
+    @PreViewAction
     protected void callbackMethod1()
     {
     }
