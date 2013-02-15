@@ -23,7 +23,7 @@ import java.util.Map;
 /**
  * Can be used to add parameters dynamically to the final navigation string
  */
-public interface PageParameterContext
+public interface NavigationParameterContext
 {
     void addPageParameter(String key, Object value);
 

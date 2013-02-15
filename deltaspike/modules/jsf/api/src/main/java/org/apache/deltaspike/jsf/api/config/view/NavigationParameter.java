@@ -32,7 +32,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * This annotation can be used as interceptor for JSF action methods as an alternative for
- * {@link org.apache.deltaspike.jsf.api.navigation.PageParameterContext}.
+ * {@link org.apache.deltaspike.jsf.api.navigation.NavigationParameterContext}.
  */
 @Target({ METHOD, TYPE })
 @Retention(RUNTIME)

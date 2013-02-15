@@ -20,7 +20,7 @@ package org.apache.deltaspike.jsf.impl.util;
 
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
-import org.apache.deltaspike.jsf.api.navigation.PageParameterContext;
+import org.apache.deltaspike.jsf.api.navigation.NavigationParameterContext;
 
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -57,9 +57,10 @@ public abstract class JsfUtils
             return result;
         }
 
-        PageParameterContext pageParameterContext = BeanProvider.getContextualReference(PageParameterContext.class);
+        NavigationParameterContext navigationParameterContext =
+                BeanProvider.getContextualReference(NavigationParameterContext.class);
 
-        for (Map.Entry<String, String> entry : pageParameterContext.getPageParameters().entrySet())
+        for (Map.Entry<String, String> entry : navigationParameterContext.getPageParameters().entrySet())
         {
             //TODO add multi-value support
             result.add(new RequestParameter(entry.getKey(), new String[]{entry.getValue()}));

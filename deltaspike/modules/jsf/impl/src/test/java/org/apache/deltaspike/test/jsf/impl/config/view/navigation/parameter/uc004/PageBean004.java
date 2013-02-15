@@ -19,7 +19,7 @@
 package org.apache.deltaspike.test.jsf.impl.config.view.navigation.parameter.uc004;
 
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
-import org.apache.deltaspike.jsf.api.navigation.PageParameterContext;
+import org.apache.deltaspike.jsf.api.navigation.NavigationParameterContext;
 
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
@@ -32,7 +32,7 @@ public class PageBean004
     private int currentValue = -100;
 
     @Inject
-    private PageParameterContext pageParameterContext;
+    private NavigationParameterContext navigationParameterContext;
 
     //TODO add test
 
@@ -42,7 +42,7 @@ public class PageBean004
 
         if (currentValue >= 0)
         {
-            this.pageParameterContext.addPageParameter("cv", this.currentValue++);
+            this.navigationParameterContext.addPageParameter("cv", this.currentValue++);
         }
         return SimplePageConfig.class;
     }

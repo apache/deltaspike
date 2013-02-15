@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.jsf.impl.navigation;
 
-import org.apache.deltaspike.jsf.api.navigation.PageParameterContext;
+import org.apache.deltaspike.jsf.api.navigation.NavigationParameterContext;
 import org.apache.deltaspike.jsf.impl.util.JsfUtils;
 
 import javax.enterprise.context.RequestScoped;
@@ -31,11 +31,11 @@ import java.util.Map;
  * Can be used to add parameters dynamically to the final navigation string
  */
 @RequestScoped
-public class DefaultPageParameterContext implements PageParameterContext
+public class DefaultNavigationParameterContext implements NavigationParameterContext
 {
     private Map<String, String> parameters = new HashMap<String, String>();
 
-    protected DefaultPageParameterContext()
+    protected DefaultNavigationParameterContext()
     {
     }
 

@@ -28,7 +28,7 @@ import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.jsf.api.config.view.NavigationParameter;
 import org.apache.deltaspike.jsf.api.config.view.Page;
 import org.apache.deltaspike.jsf.api.config.view.event.PreViewConfigNavigateEvent;
-import org.apache.deltaspike.jsf.api.navigation.PageParameterContext;
+import org.apache.deltaspike.jsf.api.navigation.NavigationParameterContext;
 import org.apache.deltaspike.jsf.impl.util.JsfUtils;
 
 import javax.enterprise.inject.spi.BeanManager;
@@ -49,7 +49,7 @@ class ViewConfigAwareNavigationHandler extends NavigationHandler
 
     private BeanManager beanManager;
 
-    private PageParameterContext pageParameterContext;
+    private NavigationParameterContext navigationParameterContext;
 
     /**
      * Constructor which allows to use the given {@link NavigationHandler}
@@ -144,7 +144,7 @@ class ViewConfigAwareNavigationHandler extends NavigationHandler
 
     private void addConfiguredViewParameters(Class<?> viewConfigClass)
     {
-        if (this.pageParameterContext != null)
+        if (this.navigationParameterContext != null)
         {
             NavigationParameter navigationParameter = viewConfigClass.getAnnotation(NavigationParameter.class);
 
@@ -170,7 +170,7 @@ class ViewConfigAwareNavigationHandler extends NavigationHandler
 
     private void addConfiguredPageParameter(NavigationParameter viewParameter)
     {
-        this.pageParameterContext.addPageParameter(viewParameter.key(), viewParameter.value());
+        this.navigationParameterContext.addPageParameter(viewParameter.key(), viewParameter.value());
     }
 
     private String convertEntryToOutcome(ExternalContext externalContext, ViewConfigDescriptor entry)
@@ -248,8 +248,8 @@ class ViewConfigAwareNavigationHandler extends NavigationHandler
         if (this.beanManager == null)
         {
             this.beanManager = BeanManagerProvider.getInstance().getBeanManager();
-            this.pageParameterContext =
-                    BeanProvider.getContextualReference(PageParameterContext.class);
+            this.navigationParameterContext =
+                    BeanProvider.getContextualReference(NavigationParameterContext.class);
         }
     }
 }
