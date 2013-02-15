@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.jsf.impl.config.view.controller.uc003;
 
-import org.apache.deltaspike.core.api.config.view.View;
+import org.apache.deltaspike.core.api.config.view.ViewRef;
 import org.apache.deltaspike.jsf.api.config.view.controller.InitView;
 import org.apache.deltaspike.jsf.api.config.view.controller.PrePageAction;
 import org.apache.deltaspike.jsf.api.config.view.controller.PreRenderView;
@@ -26,7 +26,7 @@ import org.apache.deltaspike.jsf.api.config.view.controller.PreRenderView;
 import javax.enterprise.inject.Model;
 
 @Model
-@View(config = SimplePageConfig.class)
+@ViewRef(config = SimplePageConfig.class)
 class PageBean003
 {
     @InitView

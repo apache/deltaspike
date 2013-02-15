@@ -37,7 +37,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 //cdi annotations
 //TODO discuss and implement it (also discuss @InterceptorBinding)
-public @interface View
+public @interface ViewRef
 {
     abstract class Manual implements ViewConfig
     {

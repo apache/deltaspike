@@ -36,7 +36,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @ViewMetaData
 public @interface Matches
 {
-    Class<? extends ViewConfig>[] value() default View.Manual.class;
+    Class<? extends ViewConfig>[] value() default ViewRef.Manual.class;
 
     //no array or Matches.List needed because it's possible to specify different rules -> only one pattern per rule
     String pattern() default "*";

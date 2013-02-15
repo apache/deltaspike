@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.jsf.impl.config.view;
 
-import org.apache.deltaspike.core.api.config.view.View;
+import org.apache.deltaspike.core.api.config.view.ViewRef;
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
@@ -93,9 +93,9 @@ public class ViewConfigExtension implements Extension, Deactivatable
     {
         for (Annotation annotation : annotations)
         {
-            if (annotation.annotationType().equals(View.class))
+            if (annotation.annotationType().equals(ViewRef.class))
             {
-                for (Class<? extends ViewConfig> viewConfigRef : ((View) annotation).config())
+                for (Class<? extends ViewConfig> viewConfigRef : ((ViewRef) annotation).config())
                 {
                     ViewConfigNode viewConfigNode = findNode(viewConfigRef);
 
