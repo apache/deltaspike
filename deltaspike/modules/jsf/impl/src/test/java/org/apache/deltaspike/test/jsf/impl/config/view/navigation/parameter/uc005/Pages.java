@@ -19,20 +19,20 @@
 package org.apache.deltaspike.test.jsf.impl.config.view.navigation.parameter.uc005;
 
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
-import org.apache.deltaspike.jsf.api.config.view.PageParameter;
+import org.apache.deltaspike.jsf.api.config.view.NavigationParameter;
 
 //TODO add tests
 
 public interface Pages extends ViewConfig
 {
-    @PageParameter(key = "param1", value = "staticValue2")
+    @NavigationParameter(key = "param1", value = "staticValue2")
     class Index implements Pages
     {
     }
 
-    @PageParameter.List({
-            @PageParameter(key = "param1", value = "staticValue2"),
-            @PageParameter(key = "param2", value = "#{pageBean005.currentValue}")
+    @NavigationParameter.List({
+            @NavigationParameter(key = "param1", value = "staticValue2"),
+            @NavigationParameter(key = "param2", value = "#{pageBean005.currentValue}")
     })
     class Overview implements Pages
     {

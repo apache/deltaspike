@@ -41,7 +41,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @ViewMetaData
 @Aggregated(true)
 //TODO @InterceptorBinding
-public @interface PageParameter
+public @interface NavigationParameter
 {
     /**
      * Key of the parameter
@@ -75,6 +75,6 @@ public @interface PageParameter
          *
          * @return parameters
          */
-        @Nonbinding PageParameter[] value();
+        @Nonbinding NavigationParameter[] value();
     }
 }

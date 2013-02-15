@@ -25,8 +25,8 @@ import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.ClassUtils;
+import org.apache.deltaspike.jsf.api.config.view.NavigationParameter;
 import org.apache.deltaspike.jsf.api.config.view.Page;
-import org.apache.deltaspike.jsf.api.config.view.PageParameter;
 import org.apache.deltaspike.jsf.api.config.view.event.PreViewConfigNavigateEvent;
 import org.apache.deltaspike.jsf.api.navigation.PageParameterContext;
 import org.apache.deltaspike.jsf.impl.util.JsfUtils;
@@ -146,28 +146,29 @@ class ViewConfigAwareNavigationHandler extends NavigationHandler
     {
         if (this.pageParameterContext != null)
         {
-            PageParameter pageParameter = viewConfigClass.getAnnotation(PageParameter.class);
+            NavigationParameter navigationParameter = viewConfigClass.getAnnotation(NavigationParameter.class);
 
-            if (pageParameter != null)
+            if (navigationParameter != null)
             {
-                addConfiguredPageParameter(pageParameter);
+                addConfiguredPageParameter(navigationParameter);
             }
             else
             {
-                PageParameter.List pageParameterList = viewConfigClass.getAnnotation(PageParameter.List.class);
+                NavigationParameter.List pageParameterList =
+                        viewConfigClass.getAnnotation(NavigationParameter.List.class);
 
                 if (pageParameterList != null)
                 {
-                    for (PageParameter currentPageParameter : pageParameterList.value())
+                    for (NavigationParameter currentNavigationParameter : pageParameterList.value())
                     {
-                        addConfiguredPageParameter(currentPageParameter);
+                        addConfiguredPageParameter(currentNavigationParameter);
                     }
                 }
             }
         }
     }
 
-    private void addConfiguredPageParameter(PageParameter viewParameter)
+    private void addConfiguredPageParameter(NavigationParameter viewParameter)
     {
         this.pageParameterContext.addPageParameter(viewParameter.key(), viewParameter.value());
     }

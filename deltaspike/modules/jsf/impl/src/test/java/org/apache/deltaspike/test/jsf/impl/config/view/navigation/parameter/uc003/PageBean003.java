@@ -19,7 +19,7 @@
 package org.apache.deltaspike.test.jsf.impl.config.view.navigation.parameter.uc003;
 
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
-import org.apache.deltaspike.jsf.api.config.view.PageParameter;
+import org.apache.deltaspike.jsf.api.config.view.NavigationParameter;
 
 import javax.enterprise.inject.Model;
 
@@ -29,7 +29,7 @@ public class PageBean003
     private int nextValue = 0;
 
     //TODO add test
-    @PageParameter(key = "param1", value = "#{pageBean003.nextValue}")
+    @NavigationParameter(key = "param1", value = "#{pageBean003.nextValue}")
     public Class<? extends ViewConfig> actionMethod()
     {
         this.nextValue++;

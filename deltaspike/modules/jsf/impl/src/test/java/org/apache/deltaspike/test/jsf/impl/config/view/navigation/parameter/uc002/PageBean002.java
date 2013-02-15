@@ -19,7 +19,7 @@
 package org.apache.deltaspike.test.jsf.impl.config.view.navigation.parameter.uc002;
 
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
-import org.apache.deltaspike.jsf.api.config.view.PageParameter;
+import org.apache.deltaspike.jsf.api.config.view.NavigationParameter;
 
 import javax.enterprise.inject.Model;
 
@@ -28,15 +28,15 @@ import javax.enterprise.inject.Model;
 @Model
 public class PageBean002
 {
-    @PageParameter(key = "param1", value = "staticMarker")
+    @NavigationParameter(key = "param1", value = "staticMarker")
     public Class<? extends ViewConfig> actionMethod1()
     {
         return SimplePageConfig.class;
     }
 
-    @PageParameter.List({
-            @PageParameter(key = "param1", value = "staticMarker1"),
-            @PageParameter(key = "param2", value = "staticMarker2")
+    @NavigationParameter.List({
+            @NavigationParameter(key = "param1", value = "staticMarker1"),
+            @NavigationParameter(key = "param2", value = "staticMarker2")
     })
     public Class<? extends ViewConfig> actionMethod2()
     {
