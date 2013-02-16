@@ -51,6 +51,12 @@
           <groupId>org.apache.geronimo.specs</groupId>
           <artifactId>geronimo-jpa_2.0_spec</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 </project>
