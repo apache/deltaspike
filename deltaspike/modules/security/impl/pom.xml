@@ -52,17 +52,4 @@
           <artifactId>geronimo-jpa_2.0_spec</artifactId>
         </dependency>
     </dependencies>
-
-    <profiles>
-        <profile>
-            <id>Weld</id>
-            <dependencies>
-                <dependency>
-                    <groupId>javassist</groupId>
-                    <artifactId>javassist</artifactId>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
-        </profile>
-    </profiles>
 </project>

@@ -258,6 +258,11 @@
                     <artifactId>persistence-api</artifactId>
                     <scope>test</scope>
                 </dependency>
+                <dependency>
+                    <groupId>javassist</groupId>
+                    <artifactId>javassist</artifactId>
+                    <scope>test</scope>
+                </dependency>
 
                 <!-- Test dependencies -->
                 <dependency>
