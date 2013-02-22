@@ -41,7 +41,9 @@
             !org.apache.deltaspike.core.*,
             *
         </deltaspike.osgi.import>
-        <cdi.osgi.beans-managed>META-INF/beans.xml</cdi.osgi.beans-managed>
+        <deltaspike.osgi.provide.capability>
+            org.ops4j.pax.cdi.extension; extension=deltaspike-core-api
+        </deltaspike.osgi.provide.capability>
     </properties>
 
 </project>

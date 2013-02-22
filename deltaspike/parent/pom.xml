@@ -118,6 +118,8 @@
         <deltaspike.osgi.dynamic />
         <deltaspike.osgi.symbolic.name>${project.groupId}.${project.artifactId}</deltaspike.osgi.symbolic.name>
         <deltaspike.osgi.exclude.dependencies>false</deltaspike.osgi.exclude.dependencies>
+        <deltaspike.osgi.provide.capability />
+        <deltaspike.osgi.require.capability />
         <cdi.osgi.beans-managed></cdi.osgi.beans-managed>
 
     </properties>
@@ -736,6 +738,8 @@
                         <Karaf-Info>DeltaSpike;${project.artifactId}=${project.version}</Karaf-Info>
                         <_versionpolicy>${deltaspike.osgi.import.default.version}</_versionpolicy>
                         <_failok>${deltaspike.osgi.failok}</_failok>
+                        <Require-Capability>${deltaspike.osgi.require.capability}</Require-Capability>
+                        <Provide-Capability>${deltaspike.osgi.provide.capability}</Provide-Capability>
                     </instructions>
                 </configuration>
                 <executions>

@@ -41,7 +41,12 @@
             !org.apache.deltaspike.core.impl.*,
             *
         </deltaspike.osgi.import>
-        <cdi.osgi.beans-managed>META-INF/beans.xml</cdi.osgi.beans-managed>
+        <deltaspike.osgi.require.capability>
+            org.ops4j.pax.cdi.extension; filter:="(extension=deltaspike-core-api)"
+        </deltaspike.osgi.require.capability>
+        <deltaspike.osgi.provide.capability>
+            org.ops4j.pax.cdi.extension; extension=deltaspike-core-impl
+        </deltaspike.osgi.provide.capability>
     </properties>
 
     <dependencies>
