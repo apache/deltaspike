@@ -45,6 +45,7 @@ import java.util.zip.ZipEntry;
 public class ShrinkWrapArchiveUtil
 {
     private static final Logger LOG = Logger.getLogger(ShrinkWrapArchiveUtil.class.getName());
+    private static String testName;
 
     private ShrinkWrapArchiveUtil()
     {
@@ -54,8 +55,9 @@ public class ShrinkWrapArchiveUtil
     /**
      * Resolve all markerFiles from the current ClassPath and package the root nodes
      * into a JavaArchive.
-     * @param classLoader to use
-     * @param markerFile finding this marker file will trigger creating the JavaArchive.
+     *
+     * @param classLoader            to use
+     * @param markerFile             finding this marker file will trigger creating the JavaArchive.
      * @param includeIfPackageExists if not null, we will only create JavaArchives if the given package exists
      * @param excludeIfPackageExists if not null, we will <b>not</b> create JavaArchives if the given package exists.
      *                               This has a higher precedence than includeIfPackageExists.
@@ -85,7 +87,8 @@ public class ShrinkWrapArchiveUtil
                     = createArchive(foundFile, markerFile, includeIfPackageExists, excludeIfPackageExists);
                 if (archive != null)
                 {
-                    LOG.info("Adding Java ClassPath URL as JavaArchive " + foundFile.toExternalForm());
+                    LOG.info("Test " + getTestName()
+                            + " Adding Java ClassPath URL as JavaArchive " + foundFile.toExternalForm());
                     archives.add(archive);
                 }
             }
@@ -366,4 +369,19 @@ public class ShrinkWrapArchiveUtil
     }
 
 
+    public static String getTestName()
+    {
+        StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+        String testName = "unknown";
+        for (StackTraceElement ste : stackTraceElements)
+        {
+            if (ste.getClassName().contains("Test"))
+            {
+                testName = ste.getClassName();
+                break;
+            }
+        }
+
+        return testName;
+    }
 }
