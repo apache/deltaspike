@@ -38,6 +38,21 @@ public class TestEntityManager implements EntityManager
 
     private boolean open = true;
     private boolean flushed = false;
+    private String unitName = null;
+
+    public TestEntityManager()
+    {
+    }
+
+    public TestEntityManager(String name)
+    {
+        this.unitName = name;
+    }
+
+    public String getUnitName()
+    {
+        return unitName;
+    }
 
     @Override
     public void persist(Object entity)
@@ -240,7 +255,7 @@ public class TestEntityManager implements EntityManager
     @Override
     public Object getDelegate()
     {
-        throw new IllegalStateException("not implemented");
+        return this;
     }
 
     @Override
