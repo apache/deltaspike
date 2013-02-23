@@ -27,6 +27,7 @@ import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * Weld specific implementation of {@link org.apache.deltaspike.cdise.api.CdiContainer}.
@@ -34,6 +35,8 @@ import java.util.Set;
 @SuppressWarnings("UnusedDeclaration")
 public class WeldContainerControl implements CdiContainer
 {
+    private static final Logger LOG = Logger.getLogger(WeldContainerControl.class.getName());
+
     private Weld weld;
     private WeldContainer weldContainer;
 
@@ -83,7 +86,18 @@ public class WeldContainerControl implements CdiContainer
         if (ctxCtrl == null)
         {
             Set<Bean<?>> beans = getBeanManager().getBeans(ContextControl.class);
-            ctxCtrlBean = (Bean<ContextControl>) getBeanManager().resolve(beans);
+            BeanManager beanManager = getBeanManager();
+
+            if (beanManager == null)
+            {
+                LOG.warning("If the CDI-container was started by the environment, you can't use this helper." +
+                        "Instead you can resolve ContextControl manually " +
+                        "(e.g. via BeanProvider.getContextualReference(ContextControl.class) ). " +
+                        "If the container wasn't started already, you have to use CdiContainer#boot before.");
+
+                return null;
+            }
+            ctxCtrlBean = (Bean<ContextControl>) beanManager.resolve(beans);
 
             ctxCtrlCreationalContext = getBeanManager().createCreationalContext(ctxCtrlBean);
 
