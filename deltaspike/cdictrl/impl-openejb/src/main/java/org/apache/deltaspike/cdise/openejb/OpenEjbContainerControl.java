@@ -18,14 +18,18 @@
  */
 package org.apache.deltaspike.cdise.openejb;
 
+import javax.annotation.ManagedBean;
 import javax.ejb.embeddable.EJBContainer;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.naming.NamingException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
+import org.apache.openejb.OpenEjbContainer;
 import org.apache.webbeans.config.WebBeansContext;
 
 import org.apache.deltaspike.cdise.api.CdiContainer;
@@ -35,6 +39,7 @@ import org.apache.deltaspike.cdise.api.ContextControl;
  * OpenWebBeans specific implementation of {@link org.apache.deltaspike.cdise.api.CdiContainer}.
  */
 @SuppressWarnings("UnusedDeclaration")
+@ManagedBean // we need this annotation to force OpenEJB to pickup this class
 public class OpenEjbContainerControl implements CdiContainer
 {
     private ContextControl ctxCtrl = null;
@@ -58,7 +63,7 @@ public class OpenEjbContainerControl implements CdiContainer
         if (openEjbContainer == null)
         {
             // this immediately boots the container
-            openEjbContainer = EJBContainer.createEJBContainer();
+            openEjbContainer = EJBContainer.createEJBContainer(getConfiguration());
 
             // this magic code performs injection
             try
@@ -76,6 +81,15 @@ public class OpenEjbContainerControl implements CdiContainer
                 beanManager = WebBeansContext.getInstance().getBeanManagerImpl();
             }
         }
+    }
+
+    protected Map<?,?> getConfiguration()
+    {
+        Map<String, String> config = new HashMap<String, String>();
+
+        config.put(OpenEjbContainer.Provider.OPENEJB_ADDITIONNAL_CALLERS_KEY, "");
+
+        return config;
     }
 
     @Override
