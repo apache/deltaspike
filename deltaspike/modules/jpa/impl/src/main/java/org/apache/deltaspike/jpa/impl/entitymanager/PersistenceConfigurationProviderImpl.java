@@ -23,7 +23,7 @@ import javax.enterprise.context.ApplicationScoped;
 
 import java.util.Properties;
 
-import org.apache.deltaspike.test.jpa.api.entitymanager.PersistenceConfigurationProvider;
+import org.apache.deltaspike.jpa.spi.entitymanager.PersistenceConfigurationProvider;
 
 /**
  * Default implementation of the PersistenceConfigurationProvider

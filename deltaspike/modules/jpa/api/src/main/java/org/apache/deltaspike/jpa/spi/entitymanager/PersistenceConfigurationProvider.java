@@ -16,13 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.jpa.api.entitymanager;
+package org.apache.deltaspike.jpa.spi.entitymanager;
 
 import java.util.Properties;
 
 /**
  * Provide the configuration for the EntityManagerFactory
- * which gets produced with a given {@link PersistenceUnitName}.
+ * which gets produced with a given {@link org.apache.deltaspike.jpa.api.entitymanager.PersistenceUnitName}.
  *
  * By default we provide a configuration which con be configured
  * differently depending on the <i>-DdatabaseVendor</i> and the

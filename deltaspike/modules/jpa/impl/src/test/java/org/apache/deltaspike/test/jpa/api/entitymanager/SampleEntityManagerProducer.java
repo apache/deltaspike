@@ -26,6 +26,8 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
+import org.apache.deltaspike.jpa.api.entitymanager.PersistenceUnitName;
+
 /**
  * Sample producer for a &#064;SampleDb EntityManager.
  */

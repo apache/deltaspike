@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.jpa.api.entitymanager;
+package org.apache.deltaspike.jpa.api.entitymanager;
 
 import javax.enterprise.util.Nonbinding;
 import javax.inject.Qualifier;

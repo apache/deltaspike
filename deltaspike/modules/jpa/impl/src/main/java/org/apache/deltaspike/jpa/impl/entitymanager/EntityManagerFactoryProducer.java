@@ -27,8 +27,8 @@ import javax.persistence.Persistence;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import org.apache.deltaspike.test.jpa.api.entitymanager.PersistenceConfigurationProvider;
-import org.apache.deltaspike.test.jpa.api.entitymanager.PersistenceUnitName;
+import org.apache.deltaspike.jpa.spi.entitymanager.PersistenceConfigurationProvider;
+import org.apache.deltaspike.jpa.api.entitymanager.PersistenceUnitName;
 
 
 /**
@@ -64,7 +64,8 @@ public class EntityManagerFactoryProducer
     private static final Logger LOG = Logger.getLogger(EntityManagerFactoryProducer.class.getName());
 
 
-    private @Inject PersistenceConfigurationProvider persistenceConfigurationProvider;
+    @Inject
+    private PersistenceConfigurationProvider persistenceConfigurationProvider;
 
 
     @Produces
