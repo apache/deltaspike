@@ -32,7 +32,32 @@ import org.apache.deltaspike.test.jpa.api.entitymanager.PersistenceUnitName;
 
 
 /**
- *  TODO
+ * <p>Built in support for injecting EntityManagerFactories into own beans.
+ * The injection point must use the Qualifier {@link PersistenceUnitName}
+ * to express the desired persistence unit name.</p>
+ *
+ * <p>The EntityManagerFactory for the given persistence unit will be produced
+ * as &#064;Dependent scoped. It can be used to easily implement own
+ * EntityManagerProviders as shown in the following example which provides
+ * a producer according to the entitymanager-per-request design pattern:</p>
+ * <pre>
+ * &#064;ApplicationScoped
+ * public class SampleEntityManagerProducer {
+ *   &#064;Inject
+ *   &#064;PersistenceUnitName("testPersistenceUnit")
+ *   private EntityManagerFactory emf;
+ *
+ *   &#064;Produces
+ *   &#064;RequestScoped
+ *   public EntityManager createEntityManager() {
+ *     return emf.createEntityManager();
+ *   }
+ *
+ *   public void closeEm(&#064;Disposes EntityManager em) {
+ *     em.close();
+ *   }
+ * }
+ *  </pre>
  */
 public class EntityManagerFactoryProducer
 {
@@ -44,7 +69,7 @@ public class EntityManagerFactoryProducer
 
     @Produces
     @Dependent
-    @PersistenceUnitName("any") // the value is nonbinding, thus this is just a dummy parameter here
+    @PersistenceUnitName("any") // the value is nonbinding, thus 'any' is just a dummy parameter here
     public EntityManagerFactory createEntityManagerFactoryForUnit(InjectionPoint injectionPoint)
     {
         PersistenceUnitName unitNameAnnotation = injectionPoint.getAnnotated().getAnnotation(PersistenceUnitName.class);

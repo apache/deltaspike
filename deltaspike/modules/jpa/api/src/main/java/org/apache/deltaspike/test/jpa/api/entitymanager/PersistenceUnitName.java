@@ -35,7 +35,7 @@ import static java.lang.annotation.ElementType.TYPE;
  * EntityManagerFactoryProducer.
  */
 @Target( { TYPE, METHOD, PARAMETER, FIELD })
-@Retention(value= RetentionPolicy.RUNTIME)
+@Retention(value = RetentionPolicy.RUNTIME)
 @Documented
 @Qualifier
 public @interface PersistenceUnitName
