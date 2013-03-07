@@ -20,14 +20,14 @@ package org.apache.deltaspike.test.core.api.invocationhandler.shared;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
 @PartialBeanBinding
 @CustomInterceptor //for uc003
-@RequestScoped
+@Dependent //normal-scopes are possible as well
 public class PartialBeanHandler implements InvocationHandler, /*just needed for testing interceptors: */TestInterceptorAware
 {
     @Inject

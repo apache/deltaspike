@@ -21,17 +21,20 @@ package org.apache.deltaspike.core.impl.invocationhandler;
 import javassist.util.proxy.MethodFilter;
 import javassist.util.proxy.ProxyFactory;
 import javassist.util.proxy.ProxyObject;
+import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
 import org.apache.deltaspike.core.util.metadata.builder.ContextualLifecycle;
 
+import javax.enterprise.context.Dependent;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InjectionTarget;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.Set;
 
 class PartialBeanLifecycle<T, H extends InvocationHandler> implements ContextualLifecycle<T>
 {
@@ -39,6 +42,7 @@ class PartialBeanLifecycle<T, H extends InvocationHandler> implements Contextual
 
     private final InjectionTarget<T> partialBeanInjectionTarget;
     private final Class<H> handlerClass;
+    private CreationalContext<?> creationalContextOfDependentHandler;
 
     PartialBeanLifecycle(Class<T> partialBeanClass, Class<H> handlerClass, BeanManager beanManager)
     {
@@ -76,7 +80,7 @@ class PartialBeanLifecycle<T, H extends InvocationHandler> implements Contextual
     {
         try
         {
-            H handlerInstance = BeanProvider.getContextualReference(this.handlerClass);
+            H handlerInstance = createHandlerInstance();
 
             T instance = this.partialBeanProxyClass.newInstance();
 
@@ -98,11 +102,39 @@ class PartialBeanLifecycle<T, H extends InvocationHandler> implements Contextual
         return null;
     }
 
+    private H createHandlerInstance()
+    {
+        Set<Bean<H>> handlerBeans = BeanProvider.getBeanDefinitions(this.handlerClass, false, true);
+
+        if (handlerBeans.size() != 1)
+        {
+            throw new IllegalStateException(handlerBeans.size() + " beans found for " + this.handlerClass);
+        }
+
+        Bean<H> handlerBean = handlerBeans.iterator().next();
+
+        BeanManager beanManager = BeanManagerProvider.getInstance().getBeanManager();
+        CreationalContext<?> creationalContextOfHandler = beanManager.createCreationalContext(handlerBean);
+
+        H handlerInstance = (H)beanManager.getReference(handlerBean, this.handlerClass, creationalContextOfHandler);
+
+        if (handlerBean.getScope().equals(Dependent.class))
+        {
+            this.creationalContextOfDependentHandler = creationalContextOfHandler;
+        }
+        return handlerInstance;
+    }
+
     public void destroy(Bean<T> bean, T instance, CreationalContext<T> creationalContext)
     {
         if (this.partialBeanInjectionTarget != null)
         {
             this.partialBeanInjectionTarget.preDestroy(instance);
+        }
+
+        if (this.creationalContextOfDependentHandler != null)
+        {
+            this.creationalContextOfDependentHandler.release();
         }
 
         H handlerInstance = (H) ((PartialBeanMethodHandler)((ProxyObject) instance).getHandler()).getHandlerInstance();

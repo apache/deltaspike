@@ -25,7 +25,6 @@ import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.bean.BeanBuilder;
 import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
 
-import javax.enterprise.context.NormalScope;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AfterBeanDiscovery;
 import javax.enterprise.inject.spi.AnnotatedType;
@@ -185,17 +184,5 @@ public class InvocationHandlerBindingExtension implements Extension, Deactivatab
                     bindingAnnotationClass.getName() + " (" +
                     alreadyFoundHandler.getName() + " and " + beanClass.getName() + ")");
         }
-
-        for (Annotation annotation : annotations)
-        {
-            if (beanManager.isNormalScope(annotation.annotationType()))
-            {
-                return;
-            }
-        }
-
-        //at least we have to restrict dependent-scoped beans (we wouldn't be able to destroy such handlers properly).
-        this.definitionError = new IllegalStateException(beanClass.getName() + " needs to be normal-scoped. " +
-            "(= Scopes annotated with @" + NormalScope.class.getName() + ")");
     }
 }
