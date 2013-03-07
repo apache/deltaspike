@@ -18,15 +18,15 @@
  */
 package org.apache.deltaspike.test.jpa.api.entitymanager;
 
+import org.apache.deltaspike.jpa.api.entitymanager.PersistenceUnitName;
+import org.apache.deltaspike.test.jpa.api.shared.TestEntityManager;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Disposes;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-
-import org.apache.deltaspike.jpa.api.entitymanager.PersistenceUnitName;
 
 /**
  * Sample producer for a &#064;SampleDb EntityManager.
@@ -42,12 +42,12 @@ public class SampleEntityManagerProducer
     @Produces
     @RequestScoped
     @SampleDb
-    public EntityManager createEntityManager()
+    public TestEntityManager /*needed by weld - see DS-315*/ createEntityManager()
     {
-        return emf.createEntityManager();
+        return (TestEntityManager)emf.createEntityManager();
     }
 
-    public void closeEm(@Disposes @SampleDb EntityManager em)
+    public void closeEm(@Disposes @SampleDb TestEntityManager em)
     {
         em.close();
     }
