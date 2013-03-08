@@ -43,7 +43,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 
 /**
- * Test for the DeltaSpike ViewScoped context
+ * Test for the DeltaSpike JsfMessage Producer
  */
 @WarpTest
 @RunWith(Arquillian.class)

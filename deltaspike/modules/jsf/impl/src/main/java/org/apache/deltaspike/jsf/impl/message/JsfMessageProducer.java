@@ -36,9 +36,9 @@ public class JsfMessageProducer
 {
     @Produces
     @Dependent
-    public JsfMessage createJsfMessage(InjectionPoint injectionPoint)
+    public <M> JsfMessage<M> createJsfMessage(InjectionPoint injectionPoint)
     {
-        if (! (injectionPoint.getType() instanceof ParameterizedType))
+        if (!(injectionPoint.getType() instanceof ParameterizedType))
         {
             throw new IllegalArgumentException("JsfMessage must be used as generic type");
         }
@@ -48,14 +48,21 @@ public class JsfMessageProducer
         {
             throw new IllegalArgumentException("JsfMessage must have the MessageBundle as generic type parameter");
         }
-
-        return createJsfMessageFor(injectionPoint, actualTypes[0]);
+        try
+        {
+            @SuppressWarnings("unchecked")
+            Class<M> type = (Class<M>) actualTypes[0];
+            return createJsfMessageFor(injectionPoint, type);
+        }
+        catch (ClassCastException e)
+        {
+            throw new IllegalArgumentException("Incorrect class found when trying to convert to parameterized type",e);
+        }
     }
 
-    private JsfMessage createJsfMessageFor(InjectionPoint injectionPoint, Type rawType)
+    private <M> JsfMessage<M> createJsfMessageFor(InjectionPoint injectionPoint, Class<M> rawType)
     {
-        //X TODO check if the JsfMessage should get injected into a UIComponent and use #getClientId()
-
-        return new DefaultJsfMessage((Class) rawType, null);
+        // X TODO check if the JsfMessage should get injected into a UIComponent and use #getClientId()
+        return new DefaultJsfMessage<M>(rawType, null);
     }
 }
