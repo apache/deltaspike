@@ -41,6 +41,8 @@ import java.util.Set;
 @Dependent
 public class TransactionStrategyHelper implements Serializable
 {
+    private static final long serialVersionUID = -6272327391611428125L;
+
     @Inject
     private BeanManager beanManager;
 
@@ -80,6 +82,11 @@ public class TransactionStrategyHelper implements Serializable
             Collections.addAll(emQualifiers, qualifierClasses);
         }
 
+        //see DELTASPIKE-320
+        if (emQualifiers.isEmpty())
+        {
+            emQualifiers.add(Default.class);
+        }
         return emQualifiers;
     }
 
