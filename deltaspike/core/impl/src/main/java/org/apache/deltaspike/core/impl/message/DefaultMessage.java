@@ -60,7 +60,10 @@ public class DefaultMessage implements Message
     @Override
     public Message argument(Serializable... arguments)
     {
-        Collections.addAll(this.arguments, arguments);
+        if (arguments != null)
+        {
+            Collections.addAll(this.arguments, arguments);
+        }
         return this;
     }
 

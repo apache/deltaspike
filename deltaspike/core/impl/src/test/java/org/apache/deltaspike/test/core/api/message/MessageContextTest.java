@@ -104,6 +104,19 @@ public class MessageContextTest
 
         Assert.assertEquals("test message to hans", messageText);
     }
+    
+    @Test
+    public void ignoreNullArguments()
+    {
+        LocaleResolver localeResolver = new FixedEnglishLocalResolver();
+
+        String messageText = messageContext
+                .localeResolver(localeResolver)
+                .messageResolver(new TestMessageResolver())
+                .message().template("{hello}").argument(null).toString();
+
+        Assert.assertEquals("test message to %s", messageText);
+    }
 
     @Test
     public void resolveGermanMessageTextTest()
