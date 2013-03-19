@@ -18,6 +18,11 @@
  */
 package org.apache.deltaspike.test.core.api.message;
 
+import java.io.Serializable;
+
+import javax.enterprise.inject.spi.Extension;
+import javax.inject.Inject;
+
 import org.apache.deltaspike.core.api.message.LocaleResolver;
 import org.apache.deltaspike.core.api.message.Message;
 import org.apache.deltaspike.core.api.message.MessageContext;
@@ -31,15 +36,11 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
-
-import javax.enterprise.inject.spi.Extension;
-import javax.inject.Inject;
-
-import org.junit.Assert;
 
 /**
  * Tests for {@link MessageContext}
@@ -48,8 +49,9 @@ import org.junit.Assert;
 @Category(SeCategory.class)
 public class MessageContextTest
 {
+
     @Inject
-    private SimpleMessage simpleMessage;
+    private SimpleMessage  simpleMessage;
 
     @Inject
     private MessageContext messageContext;
@@ -61,7 +63,7 @@ public class MessageContextTest
     @Deployment
     public static WebArchive deploy()
     {
-        JavaArchive testJar = ShrinkWrap
+        final JavaArchive testJar = ShrinkWrap
                 .create(JavaArchive.class, "messageContextTest.jar")
                 .addPackage(MessageContextTest.class.getPackage())
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
@@ -79,7 +81,7 @@ public class MessageContextTest
     public void testSimpleMessage()
     {
         Assert.assertEquals("Welcome to DeltaSpike",
-                simpleMessage.welcomeTo(messageContext, "DeltaSpike").toString());
+                this.simpleMessage.welcomeTo(this.messageContext, "DeltaSpike").toString());
     }
 
     /**
@@ -89,31 +91,31 @@ public class MessageContextTest
     public void testSimpleMessageCategory()
     {
         Assert.assertEquals("Welcome to DeltaSpike",
-                simpleMessage.welcomeTo(messageContext, "DeltaSpike").toString("notexisting"));
+                this.simpleMessage.welcomeTo(this.messageContext, "DeltaSpike").toString("notexisting"));
     }
 
     @Test
     public void resolveTextTest()
     {
-        LocaleResolver localeResolver = new FixedEnglishLocalResolver();
+        final LocaleResolver localeResolver = new FixedEnglishLocalResolver();
 
-        String messageText = messageContext
+        final String messageText = this.messageContext
                 .localeResolver(localeResolver)
                 .messageResolver(new TestMessageResolver())
                 .message().template("{hello}").argument("hans").toString();
 
         Assert.assertEquals("test message to hans", messageText);
     }
-    
+
     @Test
     public void ignoreNullArguments()
     {
-        LocaleResolver localeResolver = new FixedEnglishLocalResolver();
+        final LocaleResolver localeResolver = new FixedEnglishLocalResolver();
 
-        String messageText = messageContext
+        final String messageText = this.messageContext
                 .localeResolver(localeResolver)
                 .messageResolver(new TestMessageResolver())
-                .message().template("{hello}").argument(null).toString();
+                .message().template("{hello}").argument((Serializable[])null).toString();
 
         Assert.assertEquals("test message to %s", messageText);
     }
@@ -121,8 +123,8 @@ public class MessageContextTest
     @Test
     public void resolveGermanMessageTextTest()
     {
-        LocaleResolver localeResolver = new FixedGermanLocaleResolver();
-        String messageText = messageContext
+        final LocaleResolver localeResolver = new FixedGermanLocaleResolver();
+        final String messageText = this.messageContext
                 .localeResolver(localeResolver)
                 .messageResolver(new TestMessageResolver())
                 .message().template("{hello}").argument("hans").toString();
@@ -133,24 +135,25 @@ public class MessageContextTest
     @Test
     public void testArbitraryMessageContextRendering()
     {
-        LocaleResolver localeResolver = new FixedGermanLocaleResolver();
-        Message message = messageContext
+        final LocaleResolver localeResolver = new FixedGermanLocaleResolver();
+        final Message message = this.messageContext
                 .localeResolver(localeResolver)
                 .messageResolver(new TestMessageResolver())
                 .message().template("{hello}").argument("hans");
         Assert.assertEquals("Test Nachricht an hans", message.toString());
 
-        MessageContext messageContext2 = messageContext.clone().localeResolver(new FixedEnglishLocalResolver());
+        final MessageContext messageContext2 = this.messageContext.clone().localeResolver(
+                new FixedEnglishLocalResolver());
         Assert.assertEquals("test message to hans", message.toString(messageContext2));
     }
 
     @Test
     public void createInvalidMessageTest()
     {
-        String messageText = messageContext.message().template("{xyz123}").toString();
+        String messageText = this.messageContext.message().template("{xyz123}").toString();
         Assert.assertEquals("???xyz123???", messageText);
 
-        messageText = messageContext
+        messageText = this.messageContext
                 .messageSource("nonexistingbundle.properties")
                 .message()
                 .template("{xyz123}")
@@ -161,7 +164,7 @@ public class MessageContextTest
     @Test
     public void createInvalidMessageWithArgumentsTest()
     {
-        String messageText = messageContext.message().template("{xyz123}").
+        final String messageText = this.messageContext.message().template("{xyz123}").
                 argument("123").argument("456").argument("789").toString();
 
         Assert.assertEquals("???xyz123??? [123, 456, 789]", messageText);
@@ -170,9 +173,9 @@ public class MessageContextTest
     @Test
     public void testMessageEquals()
     {
-        Message m1 = messageContext.message();
-        Message m2 = messageContext.message();
-        Message m3 = messageContext.messageResolver(new TestMessageResolver()).message();
+        final Message m1 = this.messageContext.message();
+        final Message m2 = this.messageContext.message();
+        final Message m3 = this.messageContext.messageResolver(new TestMessageResolver()).message();
 
         Assert.assertEquals(m1, m1);
         Assert.assertEquals(m1, m2);
@@ -200,16 +203,16 @@ public class MessageContextTest
     public void testSerialization()
     {
         Assume.assumeTrue(System.getProperty("org.apache.deltaspike.weld.pre_1.1.10") == null);
-        Serializer<Message> messageSerializer = new Serializer<Message>();
+        final Serializer<Message> messageSerializer = new Serializer<Message>();
 
-        LocaleResolver localeResolver = new FixedGermanLocaleResolver();
-        Message message = messageContext
+        final LocaleResolver localeResolver = new FixedGermanLocaleResolver();
+        final Message message = this.messageContext
                 .localeResolver(localeResolver)
                 .messageResolver(new TestMessageResolver())
                 .message().template("{hello}").argument("hans");
         Assert.assertEquals("Test Nachricht an hans", message.toString());
 
-        Message messageClone = messageSerializer.roundTrip(message);
+        final Message messageClone = messageSerializer.roundTrip(message);
 
         Assert.assertEquals(message, messageClone);
         Assert.assertEquals("Test Nachricht an hans", messageClone.toString());

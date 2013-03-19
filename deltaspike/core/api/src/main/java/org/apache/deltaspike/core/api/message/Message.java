@@ -19,6 +19,7 @@
 package org.apache.deltaspike.core.api.message;
 
 import java.io.Serializable;
+import java.util.Collection;
 
 /**
  * <p>Basic interface for all messages.</p>
@@ -40,6 +41,24 @@ public interface Message extends Serializable
      * @return the current instance of the message builder to allow a fluent api
      */
     Message argument(Serializable... arguments);
+    
+    /**
+     * Argument array.  Similar to argument except it is meant to handle an array being passed in via a chain.
+     * 
+     * @param arguments
+     *            the arguments
+     * @return the message
+     */
+    Message argumentArray(Serializable[] arguments);
+    
+    /**
+     * Argument.  Similar to the other argument methods, exception it handles collections.
+     * 
+     * @param arguments
+     *            the arguments
+     * @return the message
+     */
+    Message argument(Collection<Serializable> arguments);
 
     /**
      * @return the message key (or inline-text) of the current message
