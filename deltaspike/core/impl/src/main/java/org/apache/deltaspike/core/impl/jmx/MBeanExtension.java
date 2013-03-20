@@ -120,7 +120,13 @@ public class MBeanExtension implements Extension, Deactivatable
         final boolean normalScoped = isNormalScope(bean.getAnnotated().getAnnotations(), bm);
         final Annotation[] qualifiers = qualifiers(bean.getAnnotatedBeanClass(), bm);
         final DynamicMBeanWrapper mbean = new DynamicMBeanWrapper(clazz, normalScoped, qualifiers);
-        mBeanServer().registerMBean(mbean, objectName);
+        final MBeanServer server = mBeanServer();
+        if (server.isRegistered(objectName)
+                && "true".equals(ConfigResolver.getPropertyValue("deltaspike.mbean.auto-unregister", "true")))
+        {
+            server.unregisterMBean(objectName);
+        }
+        server.registerMBean(mbean, objectName);
 
         objectNames.add(objectName);
         wrappers.put(clazz, mbean);
