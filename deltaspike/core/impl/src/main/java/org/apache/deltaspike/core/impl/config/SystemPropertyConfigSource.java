@@ -18,28 +18,16 @@
  */
 package org.apache.deltaspike.core.impl.config;
 
-
 /**
  * {@link org.apache.deltaspike.core.spi.config.ConfigSource}
- * which uses System#getProperty
+ * which uses {@link System#getProperties()}
  */
-class SystemPropertyConfigSource extends BaseConfigSource
+class SystemPropertyConfigSource extends PropertiesConfigSource
 {
     SystemPropertyConfigSource()
     {
+        super(System.getProperties());
         initOrdinal(400);
-    }
-
-    /**
-     * The given key gets used for a lookup via System#getProperty
-     *
-     * @param key for the property
-     * @return value for the given key or null if there is no configured value
-     */
-    @Override
-    public String getPropertyValue(String key)
-    {
-        return System.getProperty(key);
     }
 
     /**

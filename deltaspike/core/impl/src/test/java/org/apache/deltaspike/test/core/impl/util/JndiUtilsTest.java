@@ -18,8 +18,13 @@
  */
 package org.apache.deltaspike.test.core.impl.util;
 
+import static org.junit.Assert.assertNotNull;
+
+import java.util.Map;
+
+import javax.enterprise.inject.spi.BeanManager;
+
 import org.apache.deltaspike.core.impl.util.JndiUtils;
-import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -31,10 +36,6 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
-
-import javax.enterprise.inject.spi.BeanManager;
-
-import static org.junit.Assert.assertNotNull;
 
 @RunWith(Arquillian.class)
 @Category(WebProfileCategory.class)
@@ -59,6 +60,16 @@ public class JndiUtilsTest
     public void testLookup()
     {
         BeanManager beanManager = JndiUtils.lookup("java:comp/BeanManager", BeanManager.class);
+        assertNotNull("JNDI lookup failed", beanManager);
+    }
+
+    /**
+     * Tests {@link JndiUtils#list(String, Class)} by digging in java:comp namespace
+     */
+    @Test
+    public void testList()
+    {
+        Map<String, BeanManager> beanManager = JndiUtils.list("java:comp", BeanManager.class);
         assertNotNull("JNDI lookup failed", beanManager);
     }
 }

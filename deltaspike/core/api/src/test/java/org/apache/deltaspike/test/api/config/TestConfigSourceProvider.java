@@ -18,11 +18,13 @@
  */
 package org.apache.deltaspike.test.api.config;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.deltaspike.core.spi.config.ConfigSource;
 import org.apache.deltaspike.core.spi.config.ConfigSourceProvider;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * ConfigSourceProvider for basic unit-test
@@ -32,13 +34,7 @@ public class TestConfigSourceProvider implements ConfigSourceProvider
     @Override
     public List<ConfigSource> getConfigSources()
     {
-        return new ArrayList<ConfigSource>()
-        {
-            {
-                add(new TestConfigSource1());
-                add(new TestConfigSource2());
-            }
-        };
+        return Arrays.asList(new TestConfigSource1(), new TestConfigSource2());
     }
 
     private static class TestConfigSource1 implements ConfigSource
@@ -57,6 +53,14 @@ public class TestConfigSourceProvider implements ConfigSourceProvider
                 return "test1";
             }
             return null;
+        }
+
+        @Override
+        public Map<String, String> getProperties()
+        {
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("test", "test1");
+            return map;
         }
 
         @Override
@@ -82,6 +86,14 @@ public class TestConfigSourceProvider implements ConfigSourceProvider
                 return "test2";
             }
             return null;
+        }
+
+        @Override
+        public Map<String, String> getProperties()
+        {
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("test", "test2");
+            return map;
         }
 
         @Override

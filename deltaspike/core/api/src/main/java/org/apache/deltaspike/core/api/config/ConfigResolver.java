@@ -22,18 +22,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.deltaspike.core.util.ClassUtils;
+import javax.enterprise.inject.Typed;
+
 import org.apache.deltaspike.core.spi.config.ConfigSource;
 import org.apache.deltaspike.core.spi.config.ConfigSourceProvider;
+import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.ServiceUtils;
-
-import javax.enterprise.inject.Typed;
 
 /**
  * <p>Resolve the configuration via their well defined ordinals.</p>
@@ -174,6 +175,20 @@ public final class ConfigResolver
         return result;
     }
 
+    public static Map<String, String> getAllProperties()
+    {
+        List<ConfigSource> appConfigSources =
+                sortAscending(new ArrayList<ConfigSource>(Arrays.asList(getConfigSources())));
+        Map<String, String> result = new HashMap<String, String>();
+
+        for (ConfigSource configSource : appConfigSources)
+        {
+            result.putAll(configSource.getProperties());
+        }
+
+        return Collections.unmodifiableMap(result);
+    }
+
     private static synchronized ConfigSource[] getConfigSources()
     {
         ClassLoader currentClassLoader = ClassUtils.getClassLoader(null);
@@ -245,4 +260,5 @@ public final class ConfigResolver
         });
         return configSources;
     }
+
 }

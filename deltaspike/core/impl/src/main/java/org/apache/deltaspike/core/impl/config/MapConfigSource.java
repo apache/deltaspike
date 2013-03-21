@@ -16,47 +16,33 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.api.config;
+package org.apache.deltaspike.core.impl.config;
 
-import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.deltaspike.core.spi.config.ConfigSource;
-
 /**
- * Test ConfigSource
- *
- * It statically returns 'testvalue' for the key 'testkey'
+ * Base class for configurations based on regular {@link Map}
  */
-public class TestConfigSource implements ConfigSource
+public abstract class MapConfigSource extends BaseConfigSource
 {
 
-    private int ordinal = 700;
+    private final Map<String, String> map;
 
-    @Override
-    public String getConfigName()
+    public MapConfigSource(Map<String, String> map)
     {
-        return "testConfig";
-    }
-
-    @Override
-    public int getOrdinal()
-    {
-        return ordinal;
-    }
-
-    @Override
-    public String getPropertyValue(String key)
-    {
-        return "testkey".equals(key) ? "testvalue" : null;
+        this.map = map;
     }
 
     @Override
     public Map<String, String> getProperties()
     {
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("testkey", "testvalue");
         return map;
+    }
+
+    @Override
+    public String getPropertyValue(String key)
+    {
+        return map.get(key);
     }
 
 }

@@ -18,6 +18,8 @@
  */
 package org.apache.deltaspike.core.spi.config;
 
+import java.util.Map;
+
 /**
  * <p>Implement this interfaces to provide a ConfigSource.
  * A ConfigSource provides properties from a specific place, like
@@ -76,6 +78,12 @@ public interface ConfigSource
     int getOrdinal();
 
     /**
+     * Return properties contained in this config source.
+     * @return Properties available in this config source.
+     */
+    Map<String, String> getProperties();
+
+    /**
      * @param key for the property
      * @return configured value or <code>null</code> if this ConfigSource doesn't provide any value for the given key.
      */
@@ -85,4 +93,5 @@ public interface ConfigSource
      * @return the 'name' of the configuration source, e.g. 'property-file mylocation/myproperty.properties'
      */
     String getConfigName();
+
 }

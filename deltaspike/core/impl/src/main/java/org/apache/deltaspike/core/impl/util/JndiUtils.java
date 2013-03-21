@@ -18,13 +18,20 @@
  */
 package org.apache.deltaspike.core.impl.util;
 
-import org.apache.deltaspike.core.util.ClassUtils;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.enterprise.inject.Typed;
 import javax.naming.InitialContext;
+import javax.naming.Name;
+import javax.naming.NameClassPair;
+import javax.naming.NameParser;
+import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.apache.deltaspike.core.util.ClassUtils;
 
 /**
  * This is the internal helper class for low level access to JNDI
@@ -61,68 +68,128 @@ public abstract class JndiUtils
      * @param <T>        type
      * @return the found instance, null otherwise
      */
-    @SuppressWarnings("unchecked")
-    public static <T> T lookup(String name, Class<? extends T> targetType)
+    public static <T> T lookup(Name name, Class<? extends T> targetType)
     {
         try
         {
-            Object result = initialContext.lookup(name);
-
-            if (result != null)
-            {
-                if (targetType.isAssignableFrom(result.getClass()))
-                {
-                    // we have a value and the type fits
-                    return (T) result;
-                }
-                else if (result instanceof String) //but the target type != String
-                {
-                    // lookedUp might be a class name
-                    try
-                    {
-                        Class<?> classOfResult = ClassUtils.loadClassForName((String) result);
-                        if (targetType.isAssignableFrom(classOfResult))
-                        {
-                            try
-                            {
-                                return (T) classOfResult.newInstance();
-                            }
-                            catch (Exception e)
-                            {
-                                // could not create instance
-                                LOG.log(Level.SEVERE, "Class " + classOfResult + " from JNDI lookup for name "
-                                        + name + " could not be instantiated", e);
-                            }
-                        }
-                        else
-                        {
-                            // lookedUpClass does not extend/implement expectedClass
-                            LOG.log(Level.SEVERE, "JNDI lookup for key " + name
-                                    + " returned class " + classOfResult.getName()
-                                    + " which does not implement/extend the expected class"
-                                    + targetType.getName());
-                        }
-                    }
-                    catch (ClassNotFoundException cnfe)
-                    {
-                        // could not find class
-                        LOG.log(Level.SEVERE, "Could not find Class " + result
-                                + " from JNDI lookup for name " + name, cnfe);
-                    }
-                }
-                else
-                {
-                    // we have a value, but the value does not fit
-                    LOG.log(Level.SEVERE, "JNDI lookup for key " + name + " should return a value of "
-                            + targetType + ", but returned " + result);
-                }
-            }
-
-            return null;
+            return verifyLookupResult(initialContext.lookup(name), name.toString(), targetType);
         }
         catch (NamingException e)
         {
             throw new IllegalStateException("Could not get " + name + " from JNDI", e);
+        }
+    }
+
+    /**
+     * Resolves an instance for the given name.
+     *
+     * @param name       current name
+     * @param targetType target type
+     * @param <T>        type
+     * @return the found instance, null otherwise
+     */
+    public static <T> T lookup(String name, Class<? extends T> targetType)
+    {
+        try
+        {
+            return verifyLookupResult(initialContext.lookup(name), name, targetType);
+        }
+        catch (NamingException e)
+        {
+            throw new IllegalStateException("Could not get " + name + " from JNDI", e);
+        }
+    }
+
+    /**
+     * Does a checks on given instance looked up previously from JNDI.
+     *
+     * @param name       current name
+     * @param targetType target type
+     * @param <T>        type
+     * @return the found instance, null otherwise
+     */
+    @SuppressWarnings("unchecked")
+    private static <T> T verifyLookupResult(Object result, String name, Class<? extends T> targetType)
+    {
+        if (result != null)
+        {
+            if (targetType.isAssignableFrom(result.getClass()))
+            {
+                // we have a value and the type fits
+                return (T) result;
+            }
+            else if (result instanceof String) //but the target type != String
+            {
+                // lookedUp might be a class name
+                try
+                {
+                    Class<?> classOfResult = ClassUtils.loadClassForName((String) result);
+                    if (targetType.isAssignableFrom(classOfResult))
+                    {
+                        try
+                        {
+                            return (T) classOfResult.newInstance();
+                        }
+                        catch (Exception e)
+                        {
+                            // could not create instance
+                            LOG.log(Level.SEVERE, "Class " + classOfResult + " from JNDI lookup for name "
+                                    + name + " could not be instantiated", e);
+                        }
+                    }
+                    else
+                    {
+                        // lookedUpClass does not extend/implement expectedClass
+                        LOG.log(Level.SEVERE, "JNDI lookup for key " + name
+                                + " returned class " + classOfResult.getName()
+                                + " which does not implement/extend the expected class"
+                                + targetType.getName());
+                    }
+                }
+                catch (ClassNotFoundException cnfe)
+                {
+                    // could not find class
+                    LOG.log(Level.SEVERE, "Could not find Class " + result
+                            + " from JNDI lookup for name " + name, cnfe);
+                }
+            }
+            else
+            {
+                // we have a value, but the value does not fit
+                LOG.log(Level.SEVERE, "JNDI lookup for key " + name + " should return a value of "
+                        + targetType + ", but returned " + result);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Resolves an instances for the given naming context.
+     *
+     * @param name       context name
+     * @param targetType target type
+     * @param <T>        type
+     * @return the found instances, null otherwise
+     */
+    public static <T> Map<String, T> list(String name, Class<T> type)
+    {
+        try
+        {
+            Map<String, T> result = new HashMap<String, T>();
+            NameParser nameParser = initialContext.getNameParser(name);
+            NamingEnumeration<NameClassPair> enumeration = initialContext.list(name);
+            while (enumeration.hasMoreElements())
+            {
+                NameClassPair binding = enumeration.nextElement();
+                Name bindingName = nameParser.parse(name).add(binding.getName());
+                result.put(binding.getName(), lookup(bindingName, type));
+            }
+            return result;
+        }
+        catch (NamingException e)
+        {
+            throw new IllegalStateException("Could not list " + name + " from JNDI", e);
         }
     }
 }

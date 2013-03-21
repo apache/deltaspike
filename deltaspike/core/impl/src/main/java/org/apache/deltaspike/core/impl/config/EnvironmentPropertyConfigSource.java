@@ -19,30 +19,21 @@
 package org.apache.deltaspike.core.impl.config;
 
 
+
 /**
  * {@link org.apache.deltaspike.core.spi.config.ConfigSource}
- * which uses System#getenv
+ * which uses {@link System#getenv()}
  */
-class EnvironmentPropertyConfigSource extends BaseConfigSource
+class EnvironmentPropertyConfigSource extends MapConfigSource
 {
 
     public EnvironmentPropertyConfigSource()
     {
+        super(System.getenv());
         initOrdinal(300);
     }
 
-    /**
-     * The given key gets used for a lookup via System#getenv
-     *
-     * @param key for the property
-     * @return value for the given key or null if there is no configured value
-     */
-    @Override
-    public String getPropertyValue(String key)
-    {
-        return System.getenv(key);
-    }
-
+    
     /**
      * {@inheritDoc}
      */

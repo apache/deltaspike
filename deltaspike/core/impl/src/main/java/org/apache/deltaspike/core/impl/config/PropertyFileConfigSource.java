@@ -18,37 +18,23 @@
  */
 package org.apache.deltaspike.core.impl.config;
 
-import org.apache.deltaspike.core.util.PropertyFileUtils;
-
 import java.net.URL;
-import java.util.Properties;
+
+import org.apache.deltaspike.core.util.PropertyFileUtils;
 
 /**
  * {@link org.apache.deltaspike.core.spi.config.ConfigSource} which uses
  * <i>META-INF/apache-deltaspike.properties</i> for the lookup
  */
-class PropertyFileConfigSource extends BaseConfigSource
+class PropertyFileConfigSource extends PropertiesConfigSource
 {
-    private Properties properties;
     private String fileName;
 
     PropertyFileConfigSource(URL propertyFileUrl)
     {
+        super(PropertyFileUtils.loadProperties(propertyFileUrl));
         fileName = propertyFileUrl.toExternalForm();
-        properties = PropertyFileUtils.loadProperties(propertyFileUrl);
         initOrdinal(100);
-    }
-
-    /**
-     * The given key gets used for a lookup via a properties file
-     *
-     * @param key for the property
-     * @return value for the given key or null if there is no configured value
-     */
-    @Override
-    public String getPropertyValue(String key)
-    {
-        return (String) properties.get(key);
     }
 
     /**
