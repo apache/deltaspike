@@ -22,7 +22,9 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 
 /**
- * For callback-methods without (supported) parameters
+ * {@link ExecutableCallbackDescriptor} for simple callback-methods without (supported) parameters,
+ * which exposes #execute without parameters.
+ *
  * @param <R> return type
  */
 public abstract class SimpleCallbackDescriptor<R> extends ExecutableCallbackDescriptor<R>

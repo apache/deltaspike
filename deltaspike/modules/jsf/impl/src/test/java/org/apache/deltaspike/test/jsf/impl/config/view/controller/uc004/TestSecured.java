@@ -39,12 +39,12 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Documented
 
-@ViewMetaData(preProcessor = TestSecured.SecuredConfigPreProcessor.class)
+@ViewMetaData(preProcessor = TestSecured.AnnotationPreProcessor.class)
 public @interface TestSecured
 {
     Class<? extends TestAccessDecisionVoter>[] value();
 
-    class SecuredConfigPreProcessor implements ConfigPreProcessor<TestSecured>
+    class AnnotationPreProcessor implements ConfigPreProcessor<TestSecured>
     {
         //for a real implementation see e.g.:
         //org.apache.deltaspike.security.api.authorization.annotation.Secured
@@ -56,16 +56,16 @@ public @interface TestSecured
 
             if (descriptors.isEmpty()) //just for testing different constellations - usually not needed!
             {
-                descriptors.add(new TestSecuredDescriptor(metaData.value(), DefaultCallback.class));
+                descriptors.add(new Descriptor(metaData.value(), DefaultCallback.class));
             }
             return metaData; //no change needed
         }
     }
 
     //can be used from outside to get a typed result
-    static class TestSecuredDescriptor extends ExecutableCallbackDescriptor<Set<String>>
+    static class Descriptor extends ExecutableCallbackDescriptor<Set<String>>
     {
-        public TestSecuredDescriptor(Class[] beanClasses, Class<? extends Annotation> callbackMarker)
+        public Descriptor(Class[] beanClasses, Class<? extends Annotation> callbackMarker)
         {
             super(beanClasses, callbackMarker);
         }

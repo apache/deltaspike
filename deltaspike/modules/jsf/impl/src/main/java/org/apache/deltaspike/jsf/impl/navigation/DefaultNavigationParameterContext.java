@@ -33,6 +33,8 @@ import java.util.Map;
 @RequestScoped
 public class DefaultNavigationParameterContext implements NavigationParameterContext
 {
+    private static final long serialVersionUID = 6027959542775130265L;
+
     private Map<String, String> parameters = new HashMap<String, String>();
 
     protected DefaultNavigationParameterContext()

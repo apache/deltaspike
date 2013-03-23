@@ -18,12 +18,13 @@
  */
 package org.apache.deltaspike.jsf.api.navigation;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
  * Can be used to add parameters dynamically to the final navigation string
  */
-public interface NavigationParameterContext
+public interface NavigationParameterContext extends Serializable
 {
     void addPageParameter(String key, Object value);
 

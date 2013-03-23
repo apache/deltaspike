@@ -43,6 +43,5 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
     int value1();
 
     //TODO discuss value aggregation for arrays
-    @Aggregated(true)
     int[] value2();
 }

@@ -103,16 +103,16 @@ public class DefaultConfigNodeConverter implements ConfigNodeConverter
 
         List<Annotation> mergedResult = new ArrayList<Annotation>();
 
-        for (Annotation currentAnnotation : inheritedMetaData)
+        for (Annotation inheritedAnnotation : inheritedMetaData)
         {
-            ViewMetaData viewMetaData = currentAnnotation.annotationType().getAnnotation(ViewMetaData.class);
+            ViewMetaData viewMetaData = inheritedAnnotation.annotationType().getAnnotation(ViewMetaData.class);
 
             if (viewMetaData == null)
             {
                 continue;
             }
 
-            Aggregated aggregated = currentAnnotation.annotationType().getAnnotation(Aggregated.class);
+            Aggregated aggregated = inheritedAnnotation.annotationType().getAnnotation(Aggregated.class);
 
             if (aggregated == null)
             {
@@ -121,28 +121,28 @@ public class DefaultConfigNodeConverter implements ConfigNodeConverter
 
             if (aggregated.value()) //aggregation for the whole annotation is allowed
             {
-                mergedResult.add(currentAnnotation);
+                mergedResult.add(inheritedAnnotation);
             }
             else
             {
-                Annotation existingMetaData = findInResult(nodeViewMetaData, currentAnnotation);
-                if (existingMetaData == null)
+                Annotation currentNodeMetaData = findInResult(nodeViewMetaData, inheritedAnnotation);
+                if (currentNodeMetaData == null)
                 {
-                    Annotation mergedMetaData = findInResult(mergedResult, currentAnnotation);
+                    Annotation mergedMetaData = findInResult(mergedResult, inheritedAnnotation);
 
                     if (mergedMetaData == null)
                     {
-                        mergedResult.add(currentAnnotation);
+                        mergedResult.add(inheritedAnnotation);
                     }
                     else
                     {
-                        Annotation mergedAnnotation = mergeAnnotationInstance(mergedMetaData, currentAnnotation);
+                        Annotation mergedAnnotation = mergeAnnotationInstance(mergedMetaData, inheritedAnnotation);
                         mergedResult.add(mergedAnnotation);
                     }
                 }
                 else
                 {
-                    Annotation mergedAnnotation = mergeAnnotationInstance(existingMetaData, currentAnnotation);
+                    Annotation mergedAnnotation = mergeAnnotationInstance(currentNodeMetaData, inheritedAnnotation);
                     mergedResult.add(mergedAnnotation);
                 }
             }

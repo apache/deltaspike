@@ -59,8 +59,8 @@ public abstract class SecurityUtils
             return;
         }
 
-        Secured.SecuredDescriptor securedDescriptor = viewConfigDescriptor
-                .getExecutableCallbackDescriptor(Secured.class, Secured.SecuredDescriptor.class);
+        Secured.Descriptor securedDescriptor = viewConfigDescriptor
+                .getExecutableCallbackDescriptor(Secured.class, Secured.Descriptor.class);
 
         AccessDecisionState voterState = AccessDecisionState.VOTE_IN_PROGRESS;
         try

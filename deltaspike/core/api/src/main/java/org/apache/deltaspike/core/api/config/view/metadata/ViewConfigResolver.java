@@ -24,6 +24,11 @@ import java.util.List;
 
 /**
  * Resolver for view-configs
+ *
+ * A {@link ConfigDescriptor} can be bound to any config-class (without required base-type).
+ * That's needed e.g. for folder-configs. Whereas {@link ViewConfigDescriptor}s only represent config-classes which
+ * inherit from {@link ViewConfig} which is required for all page-configs.
+ *
  * Use {@link org.apache.deltaspike.core.spi.config.view.ViewConfigRoot} to configure a custom resolver.
  */
 //TODO re-visit name since we also need ConfigDescriptor

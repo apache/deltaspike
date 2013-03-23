@@ -22,7 +22,8 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 
 /**
- * Descriptor for type-safe configs
+ * Base descriptor for all type-safe view-configs which represents the
+ * config-class and meta-data, callbacks,... provided by/bound to this class.
  */
 public interface ConfigDescriptor
 {
@@ -65,7 +66,7 @@ public interface ConfigDescriptor
     /**
      * Callbacks which are configured for the entry and bound to the given meta-data type.
      * @param metaDataType type of the meta-data (e.g. PageBean.class)
-     * @param executorType type of the executor which allows to get a typed result (e.g. Secured.SecuredDescriptor)
+     * @param executorType type of the executor which allows to get a typed result (e.g. Secured.Descriptor)
      * @return descriptor for the callback which also allows to invoke it or null if there is no callback-method
      */
     <T extends ExecutableCallbackDescriptor> T getExecutableCallbackDescriptor(Class<? extends Annotation> metaDataType,
@@ -75,7 +76,7 @@ public interface ConfigDescriptor
      * Callbacks which are configured for the entry and bound to the given meta-data type.
      * @param metaDataType type of the meta-data (e.g. PageBean.class)
      * @param callbackType type of the callback (e.g. PreRenderView.class)
-     * @param executorType type of the executor which allows to get a typed result (e.g. Secured.SecuredDescriptor)
+     * @param executorType type of the executor which allows to get a typed result (e.g. Secured.Descriptor)
      * @return descriptor for the callback which also allows to invoke it or null if there is no callback-method
      */
     <T extends ExecutableCallbackDescriptor> T getExecutableCallbackDescriptor(Class<? extends Annotation> metaDataType,

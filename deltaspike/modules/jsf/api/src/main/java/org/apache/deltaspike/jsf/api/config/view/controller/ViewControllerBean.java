@@ -41,7 +41,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Documented
 
-@ViewMetaData(preProcessor = ViewControllerBean.ViewControllerBeanConfigPreProcessor.class)
+@ViewMetaData(preProcessor = ViewControllerBean.AnnotationPreProcessor.class)
 public @interface ViewControllerBean
 {
     /**
@@ -59,29 +59,29 @@ public @interface ViewControllerBean
     //TODO
     String name() default "";
 
-    public class ViewControllerBeanConfigPreProcessor implements ConfigPreProcessor<ViewControllerBean>
+    class AnnotationPreProcessor implements ConfigPreProcessor<ViewControllerBean>
     {
         @Override
         public ViewControllerBean beforeAddToConfig(ViewControllerBean metaData, ViewConfigNode viewConfigNode)
         {
             viewConfigNode.registerCallbackDescriptors(
-                    ViewControllerBean.class, new ViewControllerDescriptor(metaData.value(), InitView.class));
+                    ViewControllerBean.class, new Descriptor(metaData.value(), InitView.class));
             viewConfigNode.registerCallbackDescriptors(
-                    ViewControllerBean.class, new ViewControllerDescriptor(metaData.value(), PreViewAction.class));
+                    ViewControllerBean.class, new Descriptor(metaData.value(), PreViewAction.class));
             viewConfigNode.registerCallbackDescriptors(
-                    ViewControllerBean.class, new ViewControllerDescriptor(metaData.value(), PreRenderView.class));
+                    ViewControllerBean.class, new Descriptor(metaData.value(), PreRenderView.class));
             viewConfigNode.registerCallbackDescriptors(
-                    ViewControllerBean.class, new ViewControllerDescriptor(metaData.value(), PostRenderView.class));
+                    ViewControllerBean.class, new Descriptor(metaData.value(), PostRenderView.class));
             return metaData; //no change needed
         }
+    }
 
-        //not needed outside
-        private class ViewControllerDescriptor extends SimpleCallbackDescriptor<Void>
+    //not needed outside
+    static class Descriptor extends SimpleCallbackDescriptor<Void>
+    {
+        protected Descriptor(Class beanClass, Class<? extends Annotation> callbackType)
         {
-            protected ViewControllerDescriptor(Class beanClass, Class<? extends Annotation> callbackType)
-            {
-                super(beanClass, callbackType);
-            }
+            super(beanClass, callbackType);
         }
     }
 }

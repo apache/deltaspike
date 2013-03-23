@@ -21,7 +21,7 @@ package org.apache.deltaspike.core.api.config.view.metadata;
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
 
 /**
- * Descriptor for view-configs
+ * Descriptor which represents a concrete view (/page).
  */
 public interface ViewConfigDescriptor extends ConfigDescriptor
 {

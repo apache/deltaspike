@@ -23,13 +23,16 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
-import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * Can be used to mark annotations as aggregated meta-data.
+ * This annotation can be used to mark annotations as aggregated meta-data.
+ * Core just provides this annotation, but the concrete behaviour is defined by a concrete ConfigNodeConverter.
+ * E.g. DefaultConfigNodeConverter uses the result stored in ViewConfigNode#getInheritedMetaData to replace
+ * default- (/ null-) values of "higher" levels with custom values of "lower" levels,
+ * if #value is 'true'.
  */
-@Target({ ANNOTATION_TYPE, METHOD })
+@Target({ ANNOTATION_TYPE }) //TODO re-visit and discuss method-level (for annotation-attributes)
 @Retention(RUNTIME)
 @Documented
 public @interface Aggregated

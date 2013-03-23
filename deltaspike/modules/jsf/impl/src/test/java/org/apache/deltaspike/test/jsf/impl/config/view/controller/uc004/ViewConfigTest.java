@@ -121,7 +121,7 @@ public class ViewConfigTest
         ViewConfigNode node = this.viewConfigExtension.findNode(SimplePageConfig.class);
         //add it to avoid in-container test for this simple constellation - usually not needed!
         node.getCallbackDescriptors().put(TestSecured.class, new ArrayList<CallbackDescriptor>() {{
-            add(new TestSecured.TestSecuredDescriptor(new Class[] {SimpleTestAccessDecisionVoter.class}, DefaultCallback.class) {
+            add(new TestSecured.Descriptor(new Class[] {SimpleTestAccessDecisionVoter.class}, DefaultCallback.class) {
                 @Override
                 protected Object getTargetObject(Class targetType)
                 {
@@ -136,7 +136,7 @@ public class ViewConfigTest
         Assert.assertNotNull(viewConfigDescriptor);
         Assert.assertNotNull(viewConfigDescriptor.getCallbackDescriptor(TestSecured.class));
         List<Set<String> /*return type of one callback*/> callbackResult =
-            viewConfigDescriptor.getExecutableCallbackDescriptor(TestSecured.class, TestSecured.TestSecuredDescriptor.class)
+            viewConfigDescriptor.getExecutableCallbackDescriptor(TestSecured.class, TestSecured.Descriptor.class)
                 .execute("param1", "param2");
         Assert.assertNotNull(callbackResult);
         Assert.assertEquals(1, callbackResult.size());

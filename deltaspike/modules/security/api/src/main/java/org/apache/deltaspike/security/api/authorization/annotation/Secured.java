@@ -53,7 +53,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @SecurityBindingType
 
 //don't use @Aggregated(true) - we need to support different error-pages (per folder/page)
-@ViewMetaData(preProcessor = Secured.SecuredConfigPreProcessor.class)
+@ViewMetaData(preProcessor = Secured.AnnotationPreProcessor.class)
 public @interface Secured
 {
     /**
@@ -73,20 +73,20 @@ public @interface Secured
     @Nonbinding
     Class<? extends ViewConfig> errorView() default DefaultErrorView.class;
 
-    class SecuredConfigPreProcessor implements ConfigPreProcessor<Secured>
+    class AnnotationPreProcessor implements ConfigPreProcessor<Secured>
     {
         @Override
         public Secured beforeAddToConfig(Secured metaData, ViewConfigNode viewConfigNode)
         {
-            viewConfigNode.registerCallbackDescriptors(Secured.class, new SecuredDescriptor(metaData.value()));
+            viewConfigNode.registerCallbackDescriptors(Secured.class, new Descriptor(metaData.value()));
             return metaData; //no change needed
         }
     }
 
     //can be used from outside to get a typed result
-    static class SecuredDescriptor extends ExecutableCallbackDescriptor<Set<SecurityViolation>>
+    static class Descriptor extends ExecutableCallbackDescriptor<Set<SecurityViolation>>
     {
-        public SecuredDescriptor(Class<? extends AccessDecisionVoter>[] accessDecisionVoterBeanClasses)
+        public Descriptor(Class<? extends AccessDecisionVoter>[] accessDecisionVoterBeanClasses)
         {
             super(accessDecisionVoterBeanClasses, DefaultCallback.class);
         }
