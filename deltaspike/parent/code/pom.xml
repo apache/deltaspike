@@ -184,9 +184,9 @@
                 </dependency>
 
                 <dependency>
-                    <groupId>org.jboss.arquillian.container</groupId>
-                    <artifactId>arquillian-openwebbeans-embedded-1</artifactId>
-                    <version>${arquillian-openwebbeans.version}</version>
+                    <groupId>org.apache.openwebbeans.arquillian</groupId>
+                    <artifactId>owb-arquillian-standalone</artifactId>
+                    <version>1.1.8</version>
                     <scope>test</scope>
                 </dependency>
             </dependencies>
