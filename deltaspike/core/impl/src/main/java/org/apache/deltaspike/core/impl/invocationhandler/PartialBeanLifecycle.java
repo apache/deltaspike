@@ -137,8 +137,11 @@ class PartialBeanLifecycle<T, H extends InvocationHandler> implements Contextual
             this.creationalContextOfDependentHandler.release();
         }
 
+        /*
         H handlerInstance = (H) ((PartialBeanMethodHandler)((ProxyObject) instance).getHandler()).getHandlerInstance();
-        //injectionTarget.dispose(handlerInstance); //currently producers aren't supported
+        injectionTarget.dispose(handlerInstance); //currently producers aren't supported
+        }
+        */
         creationalContext.release();
     }
 }
