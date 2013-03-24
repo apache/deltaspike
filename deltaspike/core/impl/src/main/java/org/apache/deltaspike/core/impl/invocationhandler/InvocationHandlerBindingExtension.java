@@ -154,6 +154,7 @@ public class InvocationHandlerBindingExtension implements Extension, Deactivatab
 
         BeanBuilder<T> beanBuilder = new BeanBuilder<T>(beanManager)
                 .readFromType(annotatedType)
+                .passivationCapable(true)
                 .beanLifecycle(new PartialBeanLifecycle(beanClass, invocationHandlerClass, beanManager));
 
         return beanBuilder.create();
