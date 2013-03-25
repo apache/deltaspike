@@ -21,41 +21,40 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.apache.deltaspike.core</groupId>
-        <artifactId>core-project</artifactId>
+        <groupId>org.apache.deltaspike.modules</groupId>
+        <artifactId>partial-bean-module-project</artifactId>
         <version>0.4-incubating-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <groupId>org.apache.deltaspike.core</groupId>
-    <artifactId>deltaspike-core-impl</artifactId>
-    <packaging>bundle</packaging>
+    <groupId>org.apache.deltaspike.modules</groupId>
+    <artifactId>deltaspike-partial-bean-module-api</artifactId>
 
-    <name>Apache DeltaSpike Core-Implementation</name>
-
-    <properties>
-        <deltaspike.osgi.export.pkg>
-            org.apache.deltaspike.core.impl.*
-        </deltaspike.osgi.export.pkg>
-        <deltaspike.osgi.import>
-            !org.apache.deltaspike.core.impl.*,
-            *
-        </deltaspike.osgi.import>
-        <deltaspike.osgi.require.capability>
-            org.ops4j.pax.cdi.extension; filter:="(extension=deltaspike-core-api)"
-        </deltaspike.osgi.require.capability>
-        <deltaspike.osgi.provide.capability>
-            org.ops4j.pax.cdi.extension; extension=deltaspike-core-impl
-        </deltaspike.osgi.provide.capability>
-    </properties>
+    <name>Apache DeltaSpike Partial-Bean-Module API</name>
 
     <dependencies>
         <dependency>
             <groupId>org.apache.deltaspike.core</groupId>
             <artifactId>deltaspike-core-api</artifactId>
-            <version>${project.version}</version>
         </dependency>
     </dependencies>
 
-</project>
+    <build>
+        <plugins>
+            <plugin>
+                <inherited>true</inherited>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
 
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
