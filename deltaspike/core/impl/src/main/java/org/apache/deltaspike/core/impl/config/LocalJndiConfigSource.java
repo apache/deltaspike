@@ -85,4 +85,10 @@ class LocalJndiConfigSource extends BaseConfigSource
     {
         return BASE_NAME;
     }
+
+    @Override
+    public boolean isScannable()
+    {
+        return true;
+    }
 }

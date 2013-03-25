@@ -59,4 +59,9 @@ public class TestConfigSource implements ConfigSource
         return map;
     }
 
+	@Override
+	public boolean isScannable() {
+		return true;
+	}
+
 }

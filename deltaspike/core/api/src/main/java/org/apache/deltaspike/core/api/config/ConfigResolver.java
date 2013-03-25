@@ -183,7 +183,10 @@ public final class ConfigResolver
 
         for (ConfigSource configSource : appConfigSources)
         {
-            result.putAll(configSource.getProperties());
+            if (configSource.isScannable())
+            {
+                result.putAll(configSource.getProperties());
+            }
         }
 
         return Collections.unmodifiableMap(result);

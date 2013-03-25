@@ -93,5 +93,14 @@ public interface ConfigSource
      * @return the 'name' of the configuration source, e.g. 'property-file mylocation/myproperty.properties'
      */
     String getConfigName();
-
+    
+    /**
+     * Determines if this config source should be scanned for its list of properties.
+     * 
+     * Generally, slow ConfigSources should return false here. 
+     * 
+     * @return true if this ConfigSource should be scanned for its list of properties, 
+     * false if it should not be scanned.
+     */
+    boolean isScannable(); 
 }

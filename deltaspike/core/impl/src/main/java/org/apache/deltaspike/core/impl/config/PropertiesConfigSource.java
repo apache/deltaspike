@@ -59,4 +59,9 @@ public abstract class PropertiesConfigSource extends BaseConfigSource
         return result;
     }
 
+    @Override
+    public boolean isScannable()
+    {
+        return true;
+    }
 }

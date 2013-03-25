@@ -68,6 +68,11 @@ public class TestConfigSourceProvider implements ConfigSourceProvider
         {
             return TestConfigSourceProvider.class.getName();
         }
+
+		@Override
+		public boolean isScannable() {
+			return true;
+		}
     }
 
     private static class TestConfigSource2 implements ConfigSource
@@ -101,5 +106,10 @@ public class TestConfigSourceProvider implements ConfigSourceProvider
         {
             return TestConfigSourceProvider.class.getName();
         }
+
+		@Override
+		public boolean isScannable() {
+			return false;
+		}
     }
 }

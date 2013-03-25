@@ -45,4 +45,10 @@ public abstract class MapConfigSource extends BaseConfigSource
         return map.get(key);
     }
 
+    @Override
+    public boolean isScannable()
+    {
+        return true;
+    }
+
 }
