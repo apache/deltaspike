@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.cdise.openejb;
 
-import javax.annotation.ManagedBean;
 import javax.ejb.embeddable.EJBContainer;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
@@ -29,7 +28,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.openejb.OpenEjbContainer;
 import org.apache.webbeans.config.WebBeansContext;
 
 import org.apache.deltaspike.cdise.api.CdiContainer;
@@ -39,7 +37,6 @@ import org.apache.deltaspike.cdise.api.ContextControl;
  * OpenWebBeans specific implementation of {@link org.apache.deltaspike.cdise.api.CdiContainer}.
  */
 @SuppressWarnings("UnusedDeclaration")
-@ManagedBean // we need this annotation to force OpenEJB to pickup this class
 public class OpenEjbContainerControl implements CdiContainer
 {
     private ContextControl ctxCtrl = null;
@@ -86,8 +83,6 @@ public class OpenEjbContainerControl implements CdiContainer
     protected Map<?,?> getConfiguration()
     {
         Map<String, String> config = new HashMap<String, String>();
-
-        config.put(OpenEjbContainer.Provider.OPENEJB_ADDITIONNAL_CALLERS_KEY, "");
 
         return config;
     }
