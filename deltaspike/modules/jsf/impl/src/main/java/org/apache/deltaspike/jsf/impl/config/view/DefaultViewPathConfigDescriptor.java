@@ -42,13 +42,13 @@ class DefaultViewPathConfigDescriptor
     }
 
     @Override
-    public String getViewId()
+    public String getPath()
     {
         return this.viewId;
     }
 
     @Override
-    public String toString()
+    public String getViewId()
     {
         return this.viewId;
     }

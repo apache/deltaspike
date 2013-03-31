@@ -132,4 +132,10 @@ abstract class AbstractPathConfigDescriptor<CT> implements ConfigDescriptor<CT>
         }
         return null;
     }
+
+    @Override
+    public String toString()
+    {
+        return getPath();
+    }
 }

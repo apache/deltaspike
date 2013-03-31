@@ -81,4 +81,10 @@ public interface ConfigDescriptor<CT /*config type*/>
     <T extends ExecutableCallbackDescriptor> T getExecutableCallbackDescriptor(Class<? extends Annotation> metaDataType,
                                                                                Class<? extends Annotation> callbackType,
                                                                                Class<? extends T> executorType);
+
+    /**
+     * Returns the string representation of the resource represented by #getConfigClass
+     * @return relative path to the folder or page
+     */
+    String getPath();
 }

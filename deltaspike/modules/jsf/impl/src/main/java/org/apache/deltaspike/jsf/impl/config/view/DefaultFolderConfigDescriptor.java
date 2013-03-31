@@ -38,7 +38,7 @@ class DefaultFolderConfigDescriptor extends AbstractPathConfigDescriptor<Object>
     }
 
     @Override
-    public String toString()
+    public String getPath()
     {
         return this.path;
     }
