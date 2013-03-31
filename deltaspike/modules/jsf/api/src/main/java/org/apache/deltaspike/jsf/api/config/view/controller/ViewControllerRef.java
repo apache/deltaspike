@@ -41,8 +41,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Documented
 
-@ViewMetaData(preProcessor = ViewControllerBean.AnnotationPreProcessor.class)
-public @interface ViewControllerBean
+@ViewMetaData(preProcessor = ViewControllerRef.AnnotationPreProcessor.class)
+public @interface ViewControllerRef
 {
     /**
      * Class of the page-bean
@@ -52,6 +52,9 @@ public @interface ViewControllerBean
     Class value();
 
     /**
+     * Currently not implemented
+     *
+     *
      * Optional name of the page-bean
      *
      * @return name of the page-bean
@@ -59,19 +62,19 @@ public @interface ViewControllerBean
     //TODO
     String name() default "";
 
-    class AnnotationPreProcessor implements ConfigPreProcessor<ViewControllerBean>
+    class AnnotationPreProcessor implements ConfigPreProcessor<ViewControllerRef>
     {
         @Override
-        public ViewControllerBean beforeAddToConfig(ViewControllerBean metaData, ViewConfigNode viewConfigNode)
+        public ViewControllerRef beforeAddToConfig(ViewControllerRef metaData, ViewConfigNode viewConfigNode)
         {
             viewConfigNode.registerCallbackDescriptors(
-                    ViewControllerBean.class, new Descriptor(metaData.value(), InitView.class));
+                    ViewControllerRef.class, new Descriptor(metaData.value(), InitView.class));
             viewConfigNode.registerCallbackDescriptors(
-                    ViewControllerBean.class, new Descriptor(metaData.value(), PreViewAction.class));
+                    ViewControllerRef.class, new Descriptor(metaData.value(), PreViewAction.class));
             viewConfigNode.registerCallbackDescriptors(
-                    ViewControllerBean.class, new Descriptor(metaData.value(), PreRenderView.class));
+                    ViewControllerRef.class, new Descriptor(metaData.value(), PreRenderView.class));
             viewConfigNode.registerCallbackDescriptors(
-                    ViewControllerBean.class, new Descriptor(metaData.value(), PostRenderView.class));
+                    ViewControllerRef.class, new Descriptor(metaData.value(), PostRenderView.class));
             return metaData; //no change needed
         }
     }

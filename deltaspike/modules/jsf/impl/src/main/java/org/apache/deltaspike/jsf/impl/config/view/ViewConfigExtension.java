@@ -28,7 +28,7 @@ import org.apache.deltaspike.core.spi.config.view.ViewConfigNode;
 import org.apache.deltaspike.core.spi.config.view.ViewConfigRoot;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.core.util.ExceptionUtils;
-import org.apache.deltaspike.jsf.api.literal.ViewControllerBeanLiteral;
+import org.apache.deltaspike.jsf.api.literal.ViewControllerRefLiteral;
 import org.apache.deltaspike.jsf.impl.util.ViewConfigUtils;
 
 import javax.enterprise.event.Observes;
@@ -110,7 +110,7 @@ public class ViewConfigExtension implements Extension, Deactivatable
                         }
                     }
 
-                    viewConfigNode.getInheritedMetaData().add(new ViewControllerBeanLiteral(configClass, null));
+                    viewConfigNode.getInheritedMetaData().add(new ViewControllerRefLiteral(configClass, null));
                 }
                 break;
             }

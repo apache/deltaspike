@@ -100,18 +100,18 @@ public class ViewConfigTest
         ViewConfigDescriptor viewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(SimplePageConfig.class);
 
         Assert.assertNotNull(viewConfigDescriptor);
-        Assert.assertNotNull(viewConfigDescriptor.getCallbackDescriptor(ViewControllerBean.class, InitView.class));
-        Assert.assertNotNull(viewConfigDescriptor.getCallbackDescriptor(ViewControllerBean.class, PreViewAction.class));
-        Assert.assertNotNull(viewConfigDescriptor.getCallbackDescriptor(ViewControllerBean.class, PreRenderView.class));
-        Assert.assertNull(viewConfigDescriptor.getCallbackDescriptor(ViewControllerBean.class, PostRenderView.class));
+        Assert.assertNotNull(viewConfigDescriptor.getCallbackDescriptor(ViewControllerRef.class, InitView.class));
+        Assert.assertNotNull(viewConfigDescriptor.getCallbackDescriptor(ViewControllerRef.class, PreViewAction.class));
+        Assert.assertNotNull(viewConfigDescriptor.getCallbackDescriptor(ViewControllerRef.class, PreRenderView.class));
+        Assert.assertNull(viewConfigDescriptor.getCallbackDescriptor(ViewControllerRef.class, PostRenderView.class));
 
-        Assert.assertEquals(PageBean003.class, viewConfigDescriptor.getCallbackDescriptor(ViewControllerBean.class, InitView.class).getCallbackMethods().keySet().iterator().next());
-        Assert.assertEquals("callbackMethod1", ((List<Method>) viewConfigDescriptor.getCallbackDescriptor(ViewControllerBean.class, InitView.class).getCallbackMethods().values().iterator().next()).iterator().next().getName());
+        Assert.assertEquals(PageBean003.class, viewConfigDescriptor.getCallbackDescriptor(ViewControllerRef.class, InitView.class).getCallbackMethods().keySet().iterator().next());
+        Assert.assertEquals("callbackMethod1", ((List<Method>) viewConfigDescriptor.getCallbackDescriptor(ViewControllerRef.class, InitView.class).getCallbackMethods().values().iterator().next()).iterator().next().getName());
 
-        Assert.assertEquals(PageBean003.class, viewConfigDescriptor.getCallbackDescriptor(ViewControllerBean.class, PreViewAction.class).getCallbackMethods().keySet().iterator().next());
-        Assert.assertEquals("callbackMethod1", ((List<Method>) viewConfigDescriptor.getCallbackDescriptor(ViewControllerBean.class, PreViewAction.class).getCallbackMethods().values().iterator().next()).iterator().next().getName());
+        Assert.assertEquals(PageBean003.class, viewConfigDescriptor.getCallbackDescriptor(ViewControllerRef.class, PreViewAction.class).getCallbackMethods().keySet().iterator().next());
+        Assert.assertEquals("callbackMethod1", ((List<Method>) viewConfigDescriptor.getCallbackDescriptor(ViewControllerRef.class, PreViewAction.class).getCallbackMethods().values().iterator().next()).iterator().next().getName());
 
-        Assert.assertEquals(PageBean003.class, viewConfigDescriptor.getCallbackDescriptor(ViewControllerBean.class, PreRenderView.class).getCallbackMethods().keySet().iterator().next());
-        Assert.assertEquals("callbackMethod2", ((List<Method>) viewConfigDescriptor.getCallbackDescriptor(ViewControllerBean.class, PreRenderView.class).getCallbackMethods().values().iterator().next()).iterator().next().getName());
+        Assert.assertEquals(PageBean003.class, viewConfigDescriptor.getCallbackDescriptor(ViewControllerRef.class, PreRenderView.class).getCallbackMethods().keySet().iterator().next());
+        Assert.assertEquals("callbackMethod2", ((List<Method>) viewConfigDescriptor.getCallbackDescriptor(ViewControllerRef.class, PreRenderView.class).getCallbackMethods().values().iterator().next()).iterator().next().getName());
     }
 }

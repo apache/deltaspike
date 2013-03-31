@@ -48,7 +48,7 @@ public @interface TestSecured
     {
         //for a real implementation see e.g.:
         //org.apache.deltaspike.security.api.authorization.annotation.Secured
-        //org.apache.deltaspike.jsf.api.config.view.controller.ViewControllerBean
+        //org.apache.deltaspike.jsf.api.config.view.controller.ViewControllerRef
         @Override
         public TestSecured beforeAddToConfig(TestSecured metaData, ViewConfigNode viewConfigNode)
         {
