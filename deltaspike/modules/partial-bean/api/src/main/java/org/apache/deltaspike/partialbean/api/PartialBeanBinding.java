@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.partialbean.api.annotation;
+package org.apache.deltaspike.partialbean.api;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
