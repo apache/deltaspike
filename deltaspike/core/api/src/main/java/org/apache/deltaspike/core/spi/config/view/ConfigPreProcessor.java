@@ -24,7 +24,7 @@ import java.lang.annotation.Annotation;
  * Allows to change the found meta-data (e.g. replace default values - example:
  * Page.extension needs "" as a default for the meta-data-merging process, but "xhtml" should be the final default)
  * or the {@link ViewConfigNode} itself. E.g. to register callbacks supported by the meta-data
- * (see {@link org.apache.deltaspike.core.api.config.view.metadata.annotation.ViewMetaData#preProcessor()} )
+ * (see {@link org.apache.deltaspike.core.api.config.view.metadata.ViewMetaData#preProcessor()} )
  *
  * @param <T> meta-data type
  */

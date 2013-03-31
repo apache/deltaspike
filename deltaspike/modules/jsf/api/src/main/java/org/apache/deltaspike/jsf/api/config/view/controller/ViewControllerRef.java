@@ -24,7 +24,7 @@ package org.apache.deltaspike.jsf.api.config.view.controller;
  */
 
 import org.apache.deltaspike.core.api.config.view.metadata.SimpleCallbackDescriptor;
-import org.apache.deltaspike.core.api.config.view.metadata.annotation.ViewMetaData;
+import org.apache.deltaspike.core.api.config.view.metadata.ViewMetaData;
 import org.apache.deltaspike.core.spi.config.view.ConfigPreProcessor;
 import org.apache.deltaspike.core.spi.config.view.ViewConfigNode;
 

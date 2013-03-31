@@ -16,9 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.api.config.view.metadata.annotation;
-
-import org.apache.deltaspike.core.spi.config.view.ConfigPreProcessor;
+package org.apache.deltaspike.core.api.config.view.metadata;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -28,16 +26,20 @@ import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * This meta-annotation allows to create custom meta-data which can be used for view-configs.
- * Per default meta-data of a lower level overrides meta-data on a higher level which has the same type.
- * Can be customized via annotating the final annotation as a whole via @Aggregated(true) or only special fields of it.
+ * This annotation can be used to mark annotations as aggregated meta-data.
+ * Core just provides this annotation, but the concrete behaviour is defined by a concrete ConfigNodeConverter.
+ * E.g. DefaultConfigNodeConverter uses the result stored in ViewConfigNode#getInheritedMetaData to replace
+ * default- (/ null-) values of "higher" levels with custom values of "lower" levels,
+ * if #value is 'true'.
  */
-@Target({ ANNOTATION_TYPE })
+@Target({ ANNOTATION_TYPE }) //TODO re-visit and discuss method-level (for annotation-attributes)
 @Retention(RUNTIME)
 @Documented
-
-@Aggregated(false)
-public @interface ViewMetaData
+public @interface Aggregated
 {
-    Class<? extends ConfigPreProcessor> preProcessor() default ConfigPreProcessor.class;
+    /**
+     * @return false to override the same meta-data type of the parent view-config and
+     *         true to allow multiple instances of a meta-data per view
+     */
+    boolean value();
 }

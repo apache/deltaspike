@@ -19,7 +19,7 @@
 package org.apache.deltaspike.jsf.impl.config.view;
 
 import org.apache.deltaspike.core.api.config.view.metadata.ExecutableCallbackDescriptor;
-import org.apache.deltaspike.core.api.config.view.metadata.annotation.DefaultCallback;
+import org.apache.deltaspike.core.api.config.view.metadata.DefaultCallback;
 import org.apache.deltaspike.core.api.config.view.metadata.CallbackDescriptor;
 import org.apache.deltaspike.core.api.config.view.metadata.ConfigDescriptor;
 

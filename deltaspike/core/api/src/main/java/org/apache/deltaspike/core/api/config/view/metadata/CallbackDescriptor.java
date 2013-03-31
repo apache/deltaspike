@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.core.api.config.view.metadata;
 
-import org.apache.deltaspike.core.api.config.view.metadata.annotation.DefaultCallback;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 
 import java.lang.annotation.Annotation;

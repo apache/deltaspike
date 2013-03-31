@@ -21,7 +21,7 @@ package org.apache.deltaspike.test.jsf.impl.config.view.controller.uc004;
 import org.apache.deltaspike.core.api.config.view.metadata.CallbackDescriptor;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigDescriptor;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
-import org.apache.deltaspike.core.api.config.view.metadata.annotation.DefaultCallback;
+import org.apache.deltaspike.core.api.config.view.metadata.DefaultCallback;
 import org.apache.deltaspike.core.spi.config.view.ViewConfigNode;
 import org.apache.deltaspike.jsf.api.config.view.controller.InitView;
 import org.apache.deltaspike.jsf.api.config.view.controller.ViewControllerRef;

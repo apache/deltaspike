@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.core.api.config.view.navigation;
 
-import org.apache.deltaspike.core.api.config.view.metadata.annotation.Aggregated;
-import org.apache.deltaspike.core.api.config.view.metadata.annotation.ViewMetaData;
+import org.apache.deltaspike.core.api.config.view.metadata.Aggregated;
+import org.apache.deltaspike.core.api.config.view.metadata.ViewMetaData;
 
 import javax.enterprise.util.Nonbinding;
 import java.lang.annotation.Documented;

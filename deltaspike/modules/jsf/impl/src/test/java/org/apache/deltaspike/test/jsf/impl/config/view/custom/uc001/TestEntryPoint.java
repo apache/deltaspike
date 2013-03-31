@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.jsf.impl.config.view.custom.uc001;
 
-import org.apache.deltaspike.core.api.config.view.metadata.annotation.ViewMetaData;
+import org.apache.deltaspike.core.api.config.view.metadata.ViewMetaData;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;

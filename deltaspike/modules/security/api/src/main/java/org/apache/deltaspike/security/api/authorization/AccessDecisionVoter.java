@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.security.api.authorization;
 
-import org.apache.deltaspike.core.api.config.view.metadata.annotation.DefaultCallback;
+import org.apache.deltaspike.core.api.config.view.metadata.DefaultCallback;
 
 import java.io.Serializable;
 import java.util.Set;

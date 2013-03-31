@@ -18,9 +18,9 @@
  */
 package org.apache.deltaspike.jsf.impl.config.view;
 
-import org.apache.deltaspike.core.api.config.view.metadata.annotation.Aggregated;
+import org.apache.deltaspike.core.api.config.view.metadata.Aggregated;
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
-import org.apache.deltaspike.core.api.config.view.metadata.annotation.ViewMetaData;
+import org.apache.deltaspike.core.api.config.view.metadata.ViewMetaData;
 import org.apache.deltaspike.core.api.config.view.metadata.ConfigDescriptor;
 import org.apache.deltaspike.core.spi.config.view.ConfigNodeConverter;
 import org.apache.deltaspike.core.spi.config.view.ConfigPreProcessor;

@@ -31,7 +31,7 @@ public interface ConfigDescriptor<CT /*config type*/>
 
     /**
      * Meta-data which is configured for the entry. It allows to provide and resolve meta-data annotated
-     * with {@link org.apache.deltaspike.core.api.config.view.metadata.annotation.ViewMetaData}
+     * with {@link ViewMetaData}
      *
      * @return meta-data of the current entry
      */
@@ -39,7 +39,7 @@ public interface ConfigDescriptor<CT /*config type*/>
 
     /**
      * Meta-data which is configured for the entry. It allows to provide and resolve meta-data annotated
-     * with {@link org.apache.deltaspike.core.api.config.view.metadata.annotation.ViewMetaData}
+     * with {@link ViewMetaData}
      *
      * @param target target type
      * @return custom meta-data for the given type of the current entry

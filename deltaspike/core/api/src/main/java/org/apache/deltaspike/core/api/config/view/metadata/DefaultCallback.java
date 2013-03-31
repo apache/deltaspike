@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.api.config.view.metadata.annotation;
+package org.apache.deltaspike.core.api.config.view.metadata;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;

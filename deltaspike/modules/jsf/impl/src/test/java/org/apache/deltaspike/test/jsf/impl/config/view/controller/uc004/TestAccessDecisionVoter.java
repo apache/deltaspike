@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.jsf.impl.config.view.controller.uc004;
 
-import org.apache.deltaspike.core.api.config.view.metadata.annotation.DefaultCallback;
+import org.apache.deltaspike.core.api.config.view.metadata.DefaultCallback;
 
 import java.util.Set;
 
