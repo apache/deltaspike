@@ -18,9 +18,12 @@
  */
 package org.apache.deltaspike.jsf.impl.listener.request;
 
+import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
+import org.apache.deltaspike.jsf.impl.config.view.DefaultErrorViewAwareExceptionHandlerWrapper;
 
+import javax.faces.context.ExceptionHandler;
 import javax.faces.context.FacesContext;
 import javax.faces.context.FacesContextWrapper;
 
@@ -29,6 +32,8 @@ class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
     private final FacesContext wrappedFacesContext;
 
     private BeforeAfterJsfRequestBroadcaster beforeAfterJsfRequestBroadcaster;
+
+    private boolean defaultErrorViewExceptionHandlerActivated;
 
     DeltaSpikeFacesContextWrapper(FacesContext wrappedFacesContext)
     {
@@ -52,6 +57,20 @@ class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
         wrappedFacesContext.release();
     }
 
+    @Override
+    public ExceptionHandler getExceptionHandler()
+    {
+        lazyInit();
+
+        ExceptionHandler exceptionHandler = this.wrappedFacesContext.getExceptionHandler();
+
+        if (this.defaultErrorViewExceptionHandlerActivated)
+        {
+            exceptionHandler = new DefaultErrorViewAwareExceptionHandlerWrapper(exceptionHandler);
+        }
+        return exceptionHandler;
+    }
+
     private void broadcastAfterJsfRequestEvent()
     {
         lazyInit();
@@ -70,6 +89,13 @@ class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
                 this.beforeAfterJsfRequestBroadcaster =
                         BeanProvider.getContextualReference(BeforeAfterJsfRequestBroadcaster.class, true);
             }
+
+            ViewConfigResolver viewConfigResolver = BeanProvider.getContextualReference(ViewConfigResolver.class);
+
+            //deactivate it, if there is no default-error-view available
+            this.defaultErrorViewExceptionHandlerActivated =
+                    viewConfigResolver.getDefaultErrorViewConfigDescriptor() != null &&
+                            ClassDeactivationUtils.isActivated(DefaultErrorViewAwareExceptionHandlerWrapper.class);
         }
     }
 
