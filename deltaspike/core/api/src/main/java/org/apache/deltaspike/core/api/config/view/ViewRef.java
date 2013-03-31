@@ -35,8 +35,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Documented
 
-//cdi annotations
-//TODO discuss and implement it (also discuss @InterceptorBinding)
+//TODO introduce something like @InlineViewMetaData to replace the current implementation of
+// ViewConfigExtension #addIndirectlyInheritedMetaData
 public @interface ViewRef
 {
     abstract class Manual implements ViewConfig
