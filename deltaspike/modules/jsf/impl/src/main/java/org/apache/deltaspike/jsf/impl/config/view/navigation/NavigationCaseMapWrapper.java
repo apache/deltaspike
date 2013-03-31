@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.jsf.impl.navigation;
+package org.apache.deltaspike.jsf.impl.config.view.navigation;
 
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigDescriptor;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
@@ -38,7 +38,7 @@ import java.util.Collection;
  * Reason: It isn't allowed to remove navigation cases
  * (which are based on {@link org.apache.deltaspike.core.api.config.view.ViewConfig})
  */
-class NavigationCaseMapWrapper implements Map<String, Set<NavigationCase>>
+public class NavigationCaseMapWrapper implements Map<String, Set<NavigationCase>>
 {
     private Map<String, Set<NavigationCase>> wrappedNavigationCaseMap;
     private final Map<String, Set<NavigationCase>> viewConfigBasedNavigationCaseCache;

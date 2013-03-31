@@ -26,6 +26,8 @@ import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.jsf.api.config.view.View;
+import org.apache.deltaspike.jsf.impl.config.view.navigation.NavigationCaseMapWrapper;
+import org.apache.deltaspike.jsf.impl.config.view.navigation.ViewConfigAwareNavigationHandler;
 import org.apache.deltaspike.jsf.impl.util.JsfUtils;
 
 import javax.faces.application.ConfigurableNavigationHandler;

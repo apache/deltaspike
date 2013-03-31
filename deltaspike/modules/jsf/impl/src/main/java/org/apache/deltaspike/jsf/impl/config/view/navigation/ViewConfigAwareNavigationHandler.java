@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.jsf.impl.navigation;
+package org.apache.deltaspike.jsf.impl.config.view.navigation;
 
 import org.apache.deltaspike.core.api.config.view.DefaultErrorView;
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
@@ -40,7 +40,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-class ViewConfigAwareNavigationHandler extends NavigationHandler
+public class ViewConfigAwareNavigationHandler extends NavigationHandler
 {
     private Set<String> otherOutcomes = new CopyOnWriteArraySet<String>();
     private Map<String, ViewConfigDescriptor> viewConfigs = new ConcurrentHashMap<String, ViewConfigDescriptor>();
