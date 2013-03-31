@@ -16,27 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.jsf.impl.config.view.controller.uc003;
+package org.apache.deltaspike.core.api.config.view.controller;
 
-import org.apache.deltaspike.core.api.config.view.ViewRef;
-import org.apache.deltaspike.core.api.config.view.controller.InitView;
-import org.apache.deltaspike.core.api.config.view.controller.PreViewAction;
-import org.apache.deltaspike.core.api.config.view.controller.PreRenderView;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-import javax.enterprise.inject.Model;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-@Model
-@ViewRef(config = SimplePageConfig.class)
-class PageBean003
+/**
+ * View-controller annotation for page-beans.
+ * Methods annotated with this annotation will be invoked after the view gets rendered.
+ */
+@Target(METHOD)
+@Retention(RUNTIME)
+@Documented
+public @interface PostRenderView
 {
-    @InitView
-    @PreViewAction
-    protected void callbackMethod1()
-    {
-    }
-
-    @PreRenderView
-    protected void callbackMethod2()
-    {
-    }
 }

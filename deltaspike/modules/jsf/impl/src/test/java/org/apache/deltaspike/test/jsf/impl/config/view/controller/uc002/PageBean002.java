@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.jsf.impl.config.view.controller.uc002;
 
-import org.apache.deltaspike.jsf.api.config.view.controller.PostRenderView;
+import org.apache.deltaspike.core.api.config.view.controller.PostRenderView;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;

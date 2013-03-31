@@ -16,22 +16,25 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.jsf.api.config.view.controller;
+package org.apache.deltaspike.core.api.config.view.metadata;
+
+import org.apache.deltaspike.core.spi.config.view.InlineMetaDataTransformer;
+import org.apache.deltaspike.core.spi.config.view.TargetViewConfigProvider;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-/**
- * View-controller annotation for page-beans.
- * Methods annotated with this annotation will be invoked before the view gets rendered.
- */
-@Target(METHOD)
+@Target({ ANNOTATION_TYPE })
 @Retention(RUNTIME)
 @Documented
-public @interface PreRenderView
+
+public @interface InlineViewMetaData
 {
+    Class<? extends TargetViewConfigProvider> targetViewConfigProvider();
+
+    Class<? extends InlineMetaDataTransformer> inlineMetaDataTransformer() default InlineMetaDataTransformer.class;
 }

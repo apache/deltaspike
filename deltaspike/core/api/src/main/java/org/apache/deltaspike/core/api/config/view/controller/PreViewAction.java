@@ -16,38 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.deltaspike.core.api.config.view.controller;
 
-package org.apache.deltaspike.jsf.api.literal;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-import org.apache.deltaspike.jsf.api.config.view.controller.ViewControllerRef;
-
-import javax.enterprise.util.AnnotationLiteral;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * Literal for {@link org.apache.deltaspike.jsf.api.config.view.controller.ViewControllerRef}
+ * View-controller annotation for page-beans.
+ * Methods annotated with this annotation will be invoked before the method binding gets invoked.
+ * Usually only used for using a callback in the page-bean in parallel with 3rd party flow-engines
  */
-public class ViewControllerRefLiteral extends AnnotationLiteral<ViewControllerRef> implements ViewControllerRef
+@Target(METHOD)
+@Retention(RUNTIME)
+@Documented
+public @interface PreViewAction
 {
-    private static final long serialVersionUID = 8582580975876369665L;
-
-    private final Class value;
-    private final String name;
-
-    public ViewControllerRefLiteral(Class value, String name)
-    {
-        this.value = value;
-        this.name = name;
-    }
-
-    @Override
-    public Class value()
-    {
-        return this.value;
-    }
-
-    @Override
-    public String name()
-    {
-        return this.name;
-    }
 }

@@ -21,7 +21,7 @@ package org.apache.deltaspike.test.jsf.impl.config.view.controller.uc003;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigDescriptor;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
 import org.apache.deltaspike.core.spi.config.view.ViewConfigNode;
-import org.apache.deltaspike.jsf.api.config.view.controller.*;
+import org.apache.deltaspike.core.api.config.view.controller.*;
 import org.apache.deltaspike.jsf.impl.config.view.ViewConfigExtension;
 import org.apache.deltaspike.jsf.impl.config.view.ViewConfigResolverProducer;
 import org.junit.After;

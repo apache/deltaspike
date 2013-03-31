@@ -16,23 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.jsf.api.config.view.controller;
+package org.apache.deltaspike.core.spi.config.view;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import java.lang.annotation.Annotation;
 
 /**
- * View-controller annotation for page-beans.
- * Methods annotated with this annotation will be invoked before the method binding gets invoked.
- * Usually only used for using a callback in the page-bean in parallel with 3rd party flow-engines
+ * Allows to transform an annotation annotated with @InlineViewMetaData to an annotation annotated with @ViewMetaData.
+ * This transformer is optional and only needed if it should result in the same at runtime, but the inline-meta-data
+ * needs a different syntax via a different annotation (compared to the view-config meta-data).
+ * E.g. see @ViewRef vs. @ViewControllerRef.
+ *
+ * @param <I> type of the inline-meta-data
+ * @param <T> type of the target-meta-data
  */
-@Target(METHOD)
-@Retention(RUNTIME)
-@Documented
-public @interface PreViewAction
+public interface InlineMetaDataTransformer
+        <I extends Annotation /*inline metadata*/, T extends Annotation /*target metadata*/>
 {
+    T convertToViewMetaData(I inlineMetaData, Class<?> sourceClass);
 }

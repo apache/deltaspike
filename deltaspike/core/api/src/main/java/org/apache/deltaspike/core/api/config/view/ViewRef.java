@@ -18,7 +18,14 @@
  */
 package org.apache.deltaspike.core.api.config.view;
 
+import org.apache.deltaspike.core.api.config.view.controller.literal.ViewControllerRefLiteral;
+import org.apache.deltaspike.core.api.config.view.metadata.InlineViewMetaData;
+import org.apache.deltaspike.core.spi.config.view.InlineMetaDataTransformer;
+import org.apache.deltaspike.core.spi.config.view.TargetViewConfigProvider;
+import org.apache.deltaspike.core.api.config.view.controller.ViewControllerRef;
+
 import javax.enterprise.util.Nonbinding;
+import javax.inject.Named;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -35,8 +42,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Documented
 
-//TODO introduce something like @InlineViewMetaData to replace the current implementation of
-// ViewConfigExtension #addIndirectlyInheritedMetaData
+@InlineViewMetaData(
+        targetViewConfigProvider = ViewRef.ViewRefTargetViewConfigProvider.class,
+        inlineMetaDataTransformer = ViewRef.ViewRefInlineMetaDataTransformer.class)
 public @interface ViewRef
 {
     abstract class Manual implements ViewConfig
@@ -49,4 +57,31 @@ public @interface ViewRef
      * @return views which should be aware of the bean or observer
      */
     @Nonbinding Class<? extends ViewConfig>[] config();
+
+    class ViewRefTargetViewConfigProvider implements TargetViewConfigProvider<ViewRef>
+    {
+        @Override
+        public Class<? extends ViewConfig>[] getTarget(ViewRef inlineMetaData)
+        {
+            return inlineMetaData.config();
+        }
+    }
+
+    class ViewRefInlineMetaDataTransformer implements InlineMetaDataTransformer<ViewRef, ViewControllerRef>
+    {
+        @Override
+        public ViewControllerRef convertToViewMetaData(ViewRef inlineMetaData, Class<?> sourceClass)
+        {
+            String beanName = null;
+
+            Named named = sourceClass.getAnnotation(Named.class);
+
+            if (named != null)
+            {
+                beanName = named.value();
+            }
+
+            return new ViewControllerRefLiteral(sourceClass, beanName);
+        }
+    }
 }

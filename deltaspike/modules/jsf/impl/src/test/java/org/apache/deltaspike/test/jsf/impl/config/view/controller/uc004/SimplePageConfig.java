@@ -19,7 +19,7 @@
 package org.apache.deltaspike.test.jsf.impl.config.view.controller.uc004;
 
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
-import org.apache.deltaspike.jsf.api.config.view.controller.ViewControllerRef;
+import org.apache.deltaspike.core.api.config.view.controller.ViewControllerRef;
 
 @ViewControllerRef(PageBean004.class)
 @TestSecured(SimpleTestAccessDecisionVoter.class)

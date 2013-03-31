@@ -18,17 +18,19 @@
  */
 package org.apache.deltaspike.jsf.impl.config.view;
 
-import org.apache.deltaspike.core.api.config.view.ViewRef;
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
+import org.apache.deltaspike.core.api.config.view.metadata.InlineViewMetaData;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.spi.config.view.ConfigNodeConverter;
+import org.apache.deltaspike.core.spi.config.view.InlineMetaDataTransformer;
+import org.apache.deltaspike.core.spi.config.view.TargetViewConfigProvider;
 import org.apache.deltaspike.core.spi.config.view.ViewConfigInheritanceStrategy;
 import org.apache.deltaspike.core.spi.config.view.ViewConfigNode;
 import org.apache.deltaspike.core.spi.config.view.ViewConfigRoot;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
+import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.ExceptionUtils;
-import org.apache.deltaspike.jsf.api.literal.ViewControllerRefLiteral;
 import org.apache.deltaspike.jsf.impl.util.ViewConfigUtils;
 
 import javax.enterprise.event.Observes;
@@ -93,9 +95,15 @@ public class ViewConfigExtension implements Extension, Deactivatable
     {
         for (Annotation annotation : annotations)
         {
-            if (annotation.annotationType().equals(ViewRef.class))
+            InlineViewMetaData inlineViewMetaData = annotation.annotationType().getAnnotation(InlineViewMetaData.class);
+            if (inlineViewMetaData != null)
             {
-                for (Class<? extends ViewConfig> viewConfigRef : ((ViewRef) annotation).config())
+                Class<? extends TargetViewConfigProvider> targetViewConfigProviderClass =
+                        inlineViewMetaData.targetViewConfigProvider();
+                TargetViewConfigProvider targetViewConfigProvider =
+                        ClassUtils.tryToInstantiateClass(targetViewConfigProviderClass);
+
+                for (Class<? extends ViewConfig> viewConfigRef : targetViewConfigProvider.getTarget(annotation))
                 {
                     ViewConfigNode viewConfigNode = findNode(viewConfigRef);
 
@@ -110,11 +118,24 @@ public class ViewConfigExtension implements Extension, Deactivatable
                         }
                     }
 
-                    viewConfigNode.getInheritedMetaData().add(new ViewControllerRefLiteral(configClass, null));
+                    Class<? extends InlineMetaDataTransformer> inlineNodeTransformerClass =
+                            inlineViewMetaData.inlineMetaDataTransformer();
+
+                    if (!InlineMetaDataTransformer.class.equals(inlineNodeTransformerClass))
+                    {
+                        InlineMetaDataTransformer inlineMetaDataTransformer =
+                                ClassUtils.tryToInstantiateClass(inlineNodeTransformerClass);
+
+                        viewConfigNode.getInheritedMetaData().add(
+                                inlineMetaDataTransformer.convertToViewMetaData(annotation, configClass));
+                    }
+                    else //no custom transformer registered -> add the annotation itself
+                    {
+                        viewConfigNode.getInheritedMetaData().add(annotation);
+                    }
                 }
                 break;
             }
-
         }
     }
 

@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.jsf.impl.config.view.controller.uc001;
 
-import org.apache.deltaspike.jsf.api.config.view.controller.PreRenderView;
+import org.apache.deltaspike.core.api.config.view.controller.PreRenderView;
 
 import javax.enterprise.inject.Model;
 

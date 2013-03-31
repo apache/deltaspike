@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.jsf.api.config.view.controller;
+package org.apache.deltaspike.core.api.config.view.controller;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -27,11 +27,11 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * View-controller annotation for page-beans.
- * Methods annotated with this annotation will be invoked as soon as a view has been initialized.
+ * Methods annotated with this annotation will be invoked before the view gets rendered.
  */
 @Target(METHOD)
 @Retention(RUNTIME)
 @Documented
-public @interface InitView
+public @interface PreRenderView
 {
 }

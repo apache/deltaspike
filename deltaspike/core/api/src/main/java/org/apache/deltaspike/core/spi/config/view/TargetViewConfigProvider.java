@@ -16,27 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.jsf.impl.config.view.controller.uc003;
+package org.apache.deltaspike.core.spi.config.view;
 
-import org.apache.deltaspike.core.api.config.view.ViewRef;
-import org.apache.deltaspike.core.api.config.view.controller.InitView;
-import org.apache.deltaspike.core.api.config.view.controller.PreViewAction;
-import org.apache.deltaspike.core.api.config.view.controller.PreRenderView;
+import org.apache.deltaspike.core.api.config.view.ViewConfig;
 
-import javax.enterprise.inject.Model;
+import java.lang.annotation.Annotation;
 
-@Model
-@ViewRef(config = SimplePageConfig.class)
-class PageBean003
+/**
+ * It's restricted to reference {@link ViewConfig} classes to force more solid references.
+ * (This restriction is intended.)
+ * To reference folder-nodes, it's needed that the corresponding config-class implements {@link ViewConfig} as well.
+ *
+ * It's used instead of a marker annotation to be more flexible (e.g. for special cases like conditional references).
+ *
+ * @param <T> type of the annotation which provides the information about the target view-config/s
+ */
+public interface TargetViewConfigProvider<T extends Annotation>
 {
-    @InitView
-    @PreViewAction
-    protected void callbackMethod1()
-    {
-    }
-
-    @PreRenderView
-    protected void callbackMethod2()
-    {
-    }
+    Class<? extends ViewConfig>[] getTarget(T inlineMetaData);
 }
