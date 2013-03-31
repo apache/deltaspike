@@ -20,7 +20,7 @@ package org.apache.deltaspike.test.jsf.impl.config.view.navigation.event.uc001;
 
 import org.apache.deltaspike.core.api.config.view.DefaultErrorView;
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
-import org.apache.deltaspike.jsf.api.config.view.event.PreViewConfigNavigateEvent;
+import org.apache.deltaspike.core.api.config.view.navigation.event.PreViewConfigNavigateEvent;
 
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Model;

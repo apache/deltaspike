@@ -19,15 +19,16 @@
 package org.apache.deltaspike.test.jsf.impl.config.view.navigation.parameter.uc004;
 
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
-import org.apache.deltaspike.jsf.api.navigation.NavigationParameterContext;
+import org.apache.deltaspike.core.api.config.view.navigation.NavigationParameterContext;
 
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.io.Serializable;
 
 @Named
 @SessionScoped
-public class PageBean004
+public class PageBean004 implements Serializable
 {
     private int currentValue = -100;
 

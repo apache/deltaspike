@@ -25,10 +25,10 @@ import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.ClassUtils;
-import org.apache.deltaspike.jsf.api.config.view.NavigationParameter;
+import org.apache.deltaspike.core.api.config.view.navigation.NavigationParameter;
 import org.apache.deltaspike.jsf.api.config.view.View;
-import org.apache.deltaspike.jsf.api.config.view.event.PreViewConfigNavigateEvent;
-import org.apache.deltaspike.jsf.api.navigation.NavigationParameterContext;
+import org.apache.deltaspike.core.api.config.view.navigation.event.PreViewConfigNavigateEvent;
+import org.apache.deltaspike.core.api.config.view.navigation.NavigationParameterContext;
 import org.apache.deltaspike.jsf.impl.util.JsfUtils;
 
 import javax.enterprise.inject.spi.BeanManager;

@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.jsf.impl.navigation;
 
-import org.apache.deltaspike.jsf.api.navigation.NavigationParameterContext;
+import org.apache.deltaspike.core.api.config.view.navigation.NavigationParameterContext;
 import org.apache.deltaspike.jsf.impl.util.JsfUtils;
 
 import javax.enterprise.context.RequestScoped;

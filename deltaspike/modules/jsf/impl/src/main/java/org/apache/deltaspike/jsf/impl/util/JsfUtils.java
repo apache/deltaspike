@@ -20,7 +20,7 @@ package org.apache.deltaspike.jsf.impl.util;
 
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
-import org.apache.deltaspike.jsf.api.navigation.NavigationParameterContext;
+import org.apache.deltaspike.core.api.config.view.navigation.NavigationParameterContext;
 
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;

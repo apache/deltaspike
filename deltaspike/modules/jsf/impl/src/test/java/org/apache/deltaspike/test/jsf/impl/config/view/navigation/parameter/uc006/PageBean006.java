@@ -19,7 +19,7 @@
 package org.apache.deltaspike.test.jsf.impl.config.view.navigation.parameter.uc006;
 
 import org.apache.deltaspike.core.api.config.view.DefaultErrorView;
-import org.apache.deltaspike.jsf.api.navigation.ViewNavigationHandler;
+import org.apache.deltaspike.core.api.config.view.navigation.ViewNavigationHandler;
 
 import javax.enterprise.inject.Model;
 import javax.inject.Inject;

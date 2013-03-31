@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.jsf.api.navigation;
+package org.apache.deltaspike.core.api.config.view.navigation;
 
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
 

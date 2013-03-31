@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.jsf.api.config.view;
+package org.apache.deltaspike.core.api.config.view.navigation;
 
 import org.apache.deltaspike.core.api.config.view.metadata.annotation.Aggregated;
 import org.apache.deltaspike.core.api.config.view.metadata.annotation.ViewMetaData;
@@ -32,7 +32,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * This annotation can be used as interceptor for JSF action methods as an alternative for
- * {@link org.apache.deltaspike.jsf.api.navigation.NavigationParameterContext}.
+ * {@link org.apache.deltaspike.core.api.config.view.navigation.NavigationParameterContext}.
  */
 @Target({ METHOD, TYPE })
 @Retention(RUNTIME)

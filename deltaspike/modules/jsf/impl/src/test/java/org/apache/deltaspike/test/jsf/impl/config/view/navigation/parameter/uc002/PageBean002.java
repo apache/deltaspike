@@ -19,7 +19,7 @@
 package org.apache.deltaspike.test.jsf.impl.config.view.navigation.parameter.uc002;
 
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
-import org.apache.deltaspike.jsf.api.config.view.NavigationParameter;
+import org.apache.deltaspike.core.api.config.view.navigation.NavigationParameter;
 
 import javax.enterprise.inject.Model;
 

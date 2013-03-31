@@ -19,7 +19,7 @@
 package org.apache.deltaspike.jsf.impl.navigation;
 
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
-import org.apache.deltaspike.jsf.api.navigation.ViewNavigationHandler;
+import org.apache.deltaspike.core.api.config.view.navigation.ViewNavigationHandler;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.faces.context.FacesContext;
