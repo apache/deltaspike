@@ -29,7 +29,7 @@ import java.util.Set;
  * {@link SecurityViolation} to the given result-set,
  * if a restriction is detected.<p/>
  * A voter has to be used in combination with
- * {@link org.apache.deltaspike.security.api.authorization.annotation.Secured}.<p/>
+ * {@link Secured}.<p/>
  * A voter can use every scope which is active. It's recommended to use
  * {@link javax.enterprise.context.ApplicationScoped} for stateless voters and e.g.
  * {@link javax.enterprise.context.RequestScoped} otherwise.

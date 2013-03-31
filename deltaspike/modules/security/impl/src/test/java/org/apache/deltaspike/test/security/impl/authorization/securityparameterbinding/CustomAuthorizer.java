@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.test.security.impl.authorization.securityparameterbinding;
 
-import org.apache.deltaspike.security.api.authorization.annotation.Secures;
-import org.apache.deltaspike.security.api.authorization.annotation.SecuredReturn;
+import org.apache.deltaspike.security.api.authorization.SecuredReturn;
+import org.apache.deltaspike.security.api.authorization.Secures;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.interceptor.InvocationContext;

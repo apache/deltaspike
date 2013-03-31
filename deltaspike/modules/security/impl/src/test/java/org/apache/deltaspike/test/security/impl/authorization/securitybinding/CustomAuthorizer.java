@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.security.impl.authorization.securitybinding;
 
-import org.apache.deltaspike.security.api.authorization.annotation.Secures;
+import org.apache.deltaspike.security.api.authorization.Secures;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.interceptor.InvocationContext;

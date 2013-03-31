@@ -47,7 +47,7 @@ public @interface TestSecured
     class AnnotationPreProcessor implements ConfigPreProcessor<TestSecured>
     {
         //for a real implementation see e.g.:
-        //org.apache.deltaspike.security.api.authorization.annotation.Secured
+        //org.apache.deltaspike.security.api.authorization.Secured
         //org.apache.deltaspike.jsf.api.config.view.controller.ViewControllerRef
         @Override
         public TestSecured beforeAddToConfig(TestSecured metaData, ViewConfigNode viewConfigNode)

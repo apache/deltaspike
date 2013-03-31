@@ -38,10 +38,10 @@ import javax.interceptor.InvocationContext;
 
 import org.apache.deltaspike.core.util.metadata.builder.InjectableMethod;
 import org.apache.deltaspike.security.api.authorization.AccessDeniedException;
+import org.apache.deltaspike.security.api.authorization.SecurityBindingType;
 import org.apache.deltaspike.security.api.authorization.SecurityDefinitionException;
 import org.apache.deltaspike.security.api.authorization.SecurityViolation;
-import org.apache.deltaspike.security.api.authorization.annotation.SecuredReturn;
-import org.apache.deltaspike.security.api.authorization.annotation.SecurityBindingType;
+import org.apache.deltaspike.security.api.authorization.SecuredReturn;
 import org.apache.deltaspike.security.impl.authorization.SecurityParameterValueRedefiner;
 import org.apache.deltaspike.security.impl.util.SecurityUtils;
 

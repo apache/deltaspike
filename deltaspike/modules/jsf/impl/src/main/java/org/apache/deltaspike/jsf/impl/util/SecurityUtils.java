@@ -28,8 +28,8 @@ import org.apache.deltaspike.core.api.config.view.navigation.ViewNavigationHandl
 import org.apache.deltaspike.security.api.authorization.AccessDecisionState;
 import org.apache.deltaspike.security.api.authorization.AccessDeniedException;
 import org.apache.deltaspike.security.api.authorization.ErrorViewAwareAccessDeniedException;
+import org.apache.deltaspike.security.api.authorization.Secured;
 import org.apache.deltaspike.security.api.authorization.SecurityViolation;
-import org.apache.deltaspike.security.api.authorization.annotation.Secured;
 import org.apache.deltaspike.security.spi.authorization.EditableAccessDecisionVoterContext;
 import org.apache.deltaspike.security.spi.authorization.SecurityViolationHandler;
 

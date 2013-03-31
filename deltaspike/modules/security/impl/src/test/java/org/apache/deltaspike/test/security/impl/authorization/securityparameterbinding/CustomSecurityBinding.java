@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.security.impl.authorization.securityparameterbinding;
 
-import org.apache.deltaspike.security.api.authorization.annotation.SecurityBindingType;
+import org.apache.deltaspike.security.api.authorization.SecurityBindingType;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;

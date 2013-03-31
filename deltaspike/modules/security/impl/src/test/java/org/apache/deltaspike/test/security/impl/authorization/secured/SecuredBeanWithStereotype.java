@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.security.impl.authorization.secured;
 
-import org.apache.deltaspike.security.api.authorization.annotation.Secured;
+import org.apache.deltaspike.security.api.authorization.Secured;
 
 import javax.enterprise.inject.Stereotype;
 import java.lang.annotation.Retention;

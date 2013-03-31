@@ -30,7 +30,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
- * Test for {@link org.apache.deltaspike.security.api.authorization.annotation.Secured}
+ * Test for {@link org.apache.deltaspike.security.api.authorization.Secured}
  */
 @RunWith(Arquillian.class)
 public class SecurityParameterBindingTest

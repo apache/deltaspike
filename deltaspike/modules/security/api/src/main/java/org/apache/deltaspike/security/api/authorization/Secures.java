@@ -17,21 +17,18 @@
  * under the License.
  */
 
-package org.apache.deltaspike.security.api.authorization.annotation;
+package org.apache.deltaspike.security.api.authorization;
 
-import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Applied to an {@link java.lang.annotation.Annotation} to declare it as a security parameter binding; to use business
- * method invocation values as {@link Secures} method arguments.
+ * This annotation is used to delegate a method as the provider for a specific authorization check
  */
-@Documented
-@Target({ ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
+@Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface SecurityParameterBinding
+public @interface Secures 
 {
 }

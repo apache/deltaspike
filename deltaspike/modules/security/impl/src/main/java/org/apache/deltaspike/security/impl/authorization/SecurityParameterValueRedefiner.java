@@ -31,8 +31,8 @@ import javax.enterprise.inject.spi.InjectionPoint;
 import javax.interceptor.InvocationContext;
 
 import org.apache.deltaspike.core.util.metadata.builder.ParameterValueRedefiner;
-import org.apache.deltaspike.security.api.authorization.annotation.SecuredReturn;
-import org.apache.deltaspike.security.api.authorization.annotation.SecurityParameterBinding;
+import org.apache.deltaspike.security.api.authorization.SecuredReturn;
+import org.apache.deltaspike.security.api.authorization.SecurityParameterBinding;
 
 /**
  * Responsible for supplying requested method invocation values to the security binding method.

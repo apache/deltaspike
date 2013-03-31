@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.deltaspike.security.api.authorization.annotation;
+package org.apache.deltaspike.security.api.authorization;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

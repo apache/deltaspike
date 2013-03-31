@@ -25,7 +25,7 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import org.apache.deltaspike.security.api.authorization.annotation.SecurityParameterBinding;
+import org.apache.deltaspike.security.api.authorization.SecurityParameterBinding;
 
 @Retention(value = RUNTIME)
 @Target({ PARAMETER })

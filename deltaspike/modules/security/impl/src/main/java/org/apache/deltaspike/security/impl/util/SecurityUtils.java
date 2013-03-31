@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.security.impl.util;
 
-import org.apache.deltaspike.security.api.authorization.annotation.SecurityBindingType;
-import org.apache.deltaspike.security.api.authorization.annotation.SecurityParameterBinding;
+import org.apache.deltaspike.security.api.authorization.SecurityBindingType;
+import org.apache.deltaspike.security.api.authorization.SecurityParameterBinding;
 
 import javax.enterprise.inject.Stereotype;
 import javax.enterprise.inject.Typed;

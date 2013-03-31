@@ -22,8 +22,8 @@ package org.apache.deltaspike.security.impl.extension;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
+import org.apache.deltaspike.security.api.authorization.Secures;
 import org.apache.deltaspike.security.api.authorization.SecurityDefinitionException;
-import org.apache.deltaspike.security.api.authorization.annotation.Secures;
 import org.apache.deltaspike.security.impl.util.SecurityUtils;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -100,7 +100,7 @@ public class SecurityExtension implements Extension, Deactivatable
         {
             for (final AnnotatedMethod<? super X> m : type.getMethods()) 
             {
-                if (m.isAnnotationPresent(Secures.class)) 
+                if (m.isAnnotationPresent(Secures.class))
                 {
                     registerAuthorizer(m);
                     continue;

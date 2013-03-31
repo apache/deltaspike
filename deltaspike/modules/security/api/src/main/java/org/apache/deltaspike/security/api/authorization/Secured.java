@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.security.api.authorization.annotation;
+package org.apache.deltaspike.security.api.authorization;
 
 import org.apache.deltaspike.core.api.config.view.DefaultErrorView;
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
@@ -25,9 +25,6 @@ import org.apache.deltaspike.core.api.config.view.metadata.DefaultCallback;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewMetaData;
 import org.apache.deltaspike.core.spi.config.view.ConfigPreProcessor;
 import org.apache.deltaspike.core.spi.config.view.ViewConfigNode;
-import org.apache.deltaspike.security.api.authorization.AccessDecisionVoter;
-import org.apache.deltaspike.security.api.authorization.AccessDecisionVoterContext;
-import org.apache.deltaspike.security.api.authorization.SecurityViolation;
 
 import javax.enterprise.util.Nonbinding;
 import java.lang.annotation.Documented;

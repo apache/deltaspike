@@ -23,9 +23,9 @@ import org.apache.deltaspike.security.api.authorization.AccessDecisionState;
 import org.apache.deltaspike.security.api.authorization.AccessDecisionVoter;
 import org.apache.deltaspike.security.api.authorization.AccessDecisionVoterContext;
 import org.apache.deltaspike.security.api.authorization.AccessDeniedException;
+import org.apache.deltaspike.security.api.authorization.Secured;
+import org.apache.deltaspike.security.api.authorization.Secures;
 import org.apache.deltaspike.security.api.authorization.SecurityViolation;
-import org.apache.deltaspike.security.api.authorization.annotation.Secured;
-import org.apache.deltaspike.security.api.authorization.annotation.Secures;
 import org.apache.deltaspike.security.impl.util.SecurityUtils;
 import org.apache.deltaspike.security.spi.authorization.EditableAccessDecisionVoterContext;
 
@@ -49,7 +49,8 @@ public class SecuredAnnotationAuthorizer
     @Inject
     private AccessDecisionVoterContext voterContext;
 
-    @Secures @Secured({ })
+    @Secures
+    @Secured({ })
     @SuppressWarnings("UnusedDeclaration")
     public boolean doSecuredCheck(InvocationContext invocationContext) throws Exception
     {
