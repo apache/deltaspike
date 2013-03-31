@@ -45,7 +45,7 @@ import java.util.Set;
 public abstract class SecurityUtils
 {
     public static void invokeVoters(EditableAccessDecisionVoterContext accessDecisionVoterContext,
-                                    ConfigDescriptor viewConfigDescriptor)
+                                    ConfigDescriptor<?> viewConfigDescriptor)
     {
         if (viewConfigDescriptor == null)
         {
@@ -156,7 +156,7 @@ public abstract class SecurityUtils
 
             if (errorPageDescriptor != null)
             {
-                errorView = errorPageDescriptor.getViewConfig();
+                errorView = errorPageDescriptor.getConfigClass();
             }
         }
 

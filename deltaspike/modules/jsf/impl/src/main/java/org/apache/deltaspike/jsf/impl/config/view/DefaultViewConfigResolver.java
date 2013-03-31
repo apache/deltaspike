@@ -91,26 +91,26 @@ public class DefaultViewConfigResolver implements ViewConfigResolver
                 else
                 {
                     foundViewIds.put(
-                        currentViewConfigDescriptor.getViewId(), currentViewConfigDescriptor.getViewConfig());
+                        currentViewConfigDescriptor.getViewId(), currentViewConfigDescriptor.getConfigClass());
                 }
 
                 if (this.defaultErrorView == null)
                 {
-                    if (DefaultErrorView.class.isAssignableFrom(currentViewConfigDescriptor.getViewConfig()))
+                    if (DefaultErrorView.class.isAssignableFrom(currentViewConfigDescriptor.getConfigClass()))
                     {
                         this.defaultErrorView = currentViewConfigDescriptor;
                     }
                 }
-                else if (DefaultErrorView.class.isAssignableFrom(currentViewConfigDescriptor.getViewConfig()))
+                else if (DefaultErrorView.class.isAssignableFrom(currentViewConfigDescriptor.getConfigClass()))
                 {
                     throw new IllegalStateException("It isn't allowed to configure multiple default-error-views. " +
-                        "Found default-error-views: " + this.defaultErrorView.getViewConfig() + " and " +
-                        currentViewConfigDescriptor.getViewConfig().getName());
+                        "Found default-error-views: " + this.defaultErrorView.getConfigClass() + " and " +
+                        currentViewConfigDescriptor.getConfigClass().getName());
                 }
 
-                if (!viewConfigs.containsKey(currentViewConfigDescriptor.getViewConfig()))
+                if (!viewConfigs.containsKey(currentViewConfigDescriptor.getConfigClass()))
                 {
-                    viewConfigs.put(currentViewConfigDescriptor.getViewConfig(), currentViewConfigDescriptor);
+                    viewConfigs.put(currentViewConfigDescriptor.getConfigClass(), currentViewConfigDescriptor);
                 }
             }
             else
@@ -158,7 +158,7 @@ public class DefaultViewConfigResolver implements ViewConfigResolver
     }
 
     @Override
-    public ConfigDescriptor getConfigDescriptor(String path)
+    public ConfigDescriptor<?> getConfigDescriptor(String path)
     {
         if (path == null)
         {
@@ -187,7 +187,7 @@ public class DefaultViewConfigResolver implements ViewConfigResolver
     }
 
     @Override
-    public ConfigDescriptor getConfigDescriptor(Class configClass)
+    public ConfigDescriptor<?> getConfigDescriptor(Class configClass)
     {
         ConfigDescriptor result = null;
         if (ViewConfig.class.isAssignableFrom(configClass))
@@ -204,12 +204,12 @@ public class DefaultViewConfigResolver implements ViewConfigResolver
     }
 
     @Override
-    public List<ConfigDescriptor> getConfigDescriptors()
+    public List<ConfigDescriptor<?>> getConfigDescriptors()
     {
-        ConfigDescriptor[] result = this.folderDefinitionToViewDefinitionEntryMapping.values()
-                .toArray(new ConfigDescriptor[this.folderDefinitionToViewDefinitionEntryMapping.size()]);
+        ConfigDescriptor<?>[] result = this.folderDefinitionToViewDefinitionEntryMapping.values()
+                .toArray(new ConfigDescriptor<?>[this.folderDefinitionToViewDefinitionEntryMapping.size()]);
 
-        return new ArrayList<ConfigDescriptor>(Arrays.asList(result));
+        return new ArrayList<ConfigDescriptor<?>>(Arrays.asList(result));
     }
 
     @Override

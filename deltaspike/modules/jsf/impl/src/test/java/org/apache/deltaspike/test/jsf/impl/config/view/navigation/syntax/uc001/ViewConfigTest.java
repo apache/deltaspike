@@ -79,7 +79,7 @@ public class ViewConfigTest
 
         Assert.assertNotNull(viewConfigDescriptor);
         Assert.assertEquals("/simplePageConfig001.xhtml", viewConfigDescriptor.getViewId());
-        Assert.assertEquals(SimplePageConfig001.class, viewConfigDescriptor.getViewConfig());
+        Assert.assertEquals(SimplePageConfig001.class, viewConfigDescriptor.getConfigClass());
         Assert.assertNotNull(viewConfigDescriptor.getMetaData());
 
         //@View gets added autom. if it isn't provided in-/directly

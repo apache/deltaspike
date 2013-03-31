@@ -180,7 +180,7 @@ public class ViewConfigTest
 
         Assert.assertNotNull(viewConfigDescriptor);
         Assert.assertEquals("/pages/index.xhtml", viewConfigDescriptor.getViewId());
-        Assert.assertEquals(Pages.Index.class, viewConfigDescriptor.getViewConfig());
+        Assert.assertEquals(Pages.Index.class, viewConfigDescriptor.getConfigClass());
 
         Assert.assertNotNull(viewConfigDescriptor.getMetaData());
         Assert.assertEquals(1, viewConfigDescriptor.getMetaData().size());
@@ -196,7 +196,7 @@ public class ViewConfigTest
 
         Assert.assertNotNull(viewConfigDescriptor);
         Assert.assertEquals("/pages/home.xhtml", viewConfigDescriptor.getViewId());
-        Assert.assertEquals(Pages.Home.class, viewConfigDescriptor.getViewConfig());
+        Assert.assertEquals(Pages.Home.class, viewConfigDescriptor.getConfigClass());
 
         Assert.assertNotNull(viewConfigDescriptor.getMetaData());
         Assert.assertEquals(1, viewConfigDescriptor.getMetaData().size());
@@ -211,7 +211,7 @@ public class ViewConfigTest
 
         Assert.assertNotNull(viewConfigDescriptor);
         Assert.assertEquals("/pages/admin/index.xhtml", viewConfigDescriptor.getViewId());
-        Assert.assertEquals(Pages.Admin.Index.class, viewConfigDescriptor.getViewConfig());
+        Assert.assertEquals(Pages.Admin.Index.class, viewConfigDescriptor.getConfigClass());
 
         Assert.assertNotNull(viewConfigDescriptor.getMetaData());
         Assert.assertEquals(1, viewConfigDescriptor.getMetaData().size());

@@ -26,10 +26,11 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Map;
 
-class DefaultViewPathConfigDescriptor extends AbstractPathConfigDescriptor implements ViewConfigDescriptor
+class DefaultViewPathConfigDescriptor
+        extends AbstractPathConfigDescriptor<ViewConfig>
+        implements ViewConfigDescriptor
 {
     private final String viewId;
-    private final Class<? extends ViewConfig> viewConfig;
 
     DefaultViewPathConfigDescriptor(String viewId,
                                     Class<? extends ViewConfig> configClass,
@@ -38,19 +39,12 @@ class DefaultViewPathConfigDescriptor extends AbstractPathConfigDescriptor imple
     {
         super(configClass, mergedMetaData, callbackDescriptors);
         this.viewId = viewId;
-        this.viewConfig = configClass;
     }
 
     @Override
     public String getViewId()
     {
         return this.viewId;
-    }
-
-    @Override
-    public Class<? extends ViewConfig> getViewConfig()
-    {
-        return this.viewConfig;
     }
 
     @Override

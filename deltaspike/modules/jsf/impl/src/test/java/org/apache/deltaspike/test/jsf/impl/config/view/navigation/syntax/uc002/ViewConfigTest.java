@@ -79,7 +79,7 @@ public class ViewConfigTest
 
         Assert.assertNotNull(viewConfigDescriptor);
         Assert.assertEquals("/simplePageConfig002.xhtml", viewConfigDescriptor.getViewId());
-        Assert.assertEquals(SimplePageConfig002.class, viewConfigDescriptor.getViewConfig());
+        Assert.assertEquals(SimplePageConfig002.class, viewConfigDescriptor.getConfigClass());
         Assert.assertNotNull(viewConfigDescriptor.getMetaData());
 
         Assert.assertEquals(1, viewConfigDescriptor.getMetaData().size());

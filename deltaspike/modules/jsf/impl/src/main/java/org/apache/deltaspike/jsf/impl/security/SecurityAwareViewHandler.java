@@ -104,7 +104,7 @@ public class SecurityAwareViewHandler extends ViewHandlerWrapper implements Deac
                     errorViewDescriptor.getMetaData(View.class).iterator().next().navigation() /*always available*/)
             {
                 SecurityUtils.tryToHandleSecurityViolation(accessDeniedException);
-                errorView = errorViewDescriptor.getViewConfig();
+                errorView = errorViewDescriptor.getConfigClass();
             }
             else
             {

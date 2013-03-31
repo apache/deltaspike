@@ -114,10 +114,11 @@ public class ViewConfigAwareNavigationHandler extends NavigationHandler
 
                 if (entry != null)
                 {
+                    //in case of false it has been added already
                     if (allowCaching)
                     {
                         this.viewConfigs.put(outcome, entry);
-                        addConfiguredViewParameters(entry.getViewConfig()); //in case of false it has been added already
+                        addConfiguredViewParameters(entry.getConfigClass());
                     }
 
                     String oldViewId = null;
@@ -217,7 +218,7 @@ public class ViewConfigAwareNavigationHandler extends NavigationHandler
             return null;
         }
 
-        if (navigateEvent.getToView().equals(viewConfigDescriptor.getViewConfig()))
+        if (navigateEvent.getToView().equals(viewConfigDescriptor.getConfigClass()))
         {
             return viewConfigDescriptor;
         }
@@ -235,7 +236,7 @@ public class ViewConfigAwareNavigationHandler extends NavigationHandler
         if (oldViewConfigDescriptor != null)
         {
             PreViewConfigNavigateEvent navigateEvent = new PreViewConfigNavigateEvent(
-                    oldViewConfigDescriptor.getViewConfig(), newViewConfigDescriptor.getViewConfig());
+                    oldViewConfigDescriptor.getConfigClass(), newViewConfigDescriptor.getConfigClass());
 
             this.beanManager.fireEvent(navigateEvent);
             return navigateEvent;

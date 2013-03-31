@@ -25,10 +25,9 @@ import java.util.List;
  * Base descriptor for all type-safe view-configs which represents the
  * config-class and meta-data, callbacks,... provided by/bound to this class.
  */
-public interface ConfigDescriptor
+public interface ConfigDescriptor<CT /*config type*/>
 {
-    //needed e.g. for folder nodes which aren't view-configs
-    Class getConfigClass();
+    Class<? extends CT> getConfigClass();
 
     /**
      * Meta-data which is configured for the entry. It allows to provide and resolve meta-data annotated

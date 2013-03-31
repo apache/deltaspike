@@ -23,7 +23,7 @@ import org.apache.deltaspike.core.api.config.view.ViewConfig;
 /**
  * Descriptor which represents a concrete view (/page).
  */
-public interface ViewConfigDescriptor extends ConfigDescriptor
+public interface ViewConfigDescriptor extends ConfigDescriptor<ViewConfig>
 {
     /**
      * View-ID of the current descriptor
@@ -31,11 +31,4 @@ public interface ViewConfigDescriptor extends ConfigDescriptor
      * @return current view-id
      */
     String getViewId();
-
-    /**
-     * Class which was used for creating the current descriptor
-     *
-     * @return view-config class
-     */
-    Class<? extends ViewConfig> getViewConfig();
 }

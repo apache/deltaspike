@@ -104,7 +104,7 @@ public class ViewConfigTest
         ViewConfigResolver viewConfigResolver = this.viewConfigResolverProducer.createViewConfigResolver();
 
         Assert.assertNotNull(viewConfigResolver.getDefaultErrorViewConfigDescriptor());
-        Assert.assertEquals(Pages.Index.class, viewConfigResolver.getDefaultErrorViewConfigDescriptor().getViewConfig());
-        Assert.assertEquals(Pages.Index.class, viewConfigResolver.getViewConfigDescriptor(DefaultErrorView.class).getViewConfig());
+        Assert.assertEquals(Pages.Index.class, viewConfigResolver.getDefaultErrorViewConfigDescriptor().getConfigClass());
+        Assert.assertEquals(Pages.Index.class, viewConfigResolver.getViewConfigDescriptor(DefaultErrorView.class).getConfigClass());
     }
 }

@@ -34,7 +34,7 @@ import java.util.List;
 //TODO re-visit name since we also need ConfigDescriptor
 public interface ViewConfigResolver
 {
-    ConfigDescriptor getConfigDescriptor(String path);
+    ConfigDescriptor<?> getConfigDescriptor(String path);
 
     /**
      * Resolves the {@link ConfigDescriptor} for the given config-class
@@ -42,7 +42,7 @@ public interface ViewConfigResolver
      * @param configClass config-class (which usually represents a folder node)
      * @return config-descriptor which represents the given config-class
      */
-    ConfigDescriptor getConfigDescriptor(Class configClass);
+    ConfigDescriptor<?> getConfigDescriptor(Class configClass);
 
     //TODO re-visit name (depends on other discussions)
     /**
@@ -50,7 +50,7 @@ public interface ViewConfigResolver
      *
      * @return all descriptors for the known view-configs
      */
-    List<ConfigDescriptor> getConfigDescriptors();
+    List<ConfigDescriptor<?>> getConfigDescriptors();
 
     /**
      * Resolves the {@link ViewConfigDescriptor} for the given view-id
