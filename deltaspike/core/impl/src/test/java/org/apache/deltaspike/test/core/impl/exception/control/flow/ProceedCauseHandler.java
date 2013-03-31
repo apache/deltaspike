@@ -19,9 +19,9 @@
 
 package org.apache.deltaspike.test.core.impl.exception.control.flow;
 
-import org.apache.deltaspike.core.api.exception.control.annotation.BeforeHandles;
-import org.apache.deltaspike.core.api.exception.control.annotation.ExceptionHandler;
-import org.apache.deltaspike.core.api.exception.control.annotation.Handles;
+import org.apache.deltaspike.core.api.exception.control.BeforeHandles;
+import org.apache.deltaspike.core.api.exception.control.ExceptionHandler;
+import org.apache.deltaspike.core.api.exception.control.Handles;
 import org.apache.deltaspike.core.api.exception.control.event.ExceptionEvent;
 
 import javax.enterprise.context.ApplicationScoped;

@@ -17,8 +17,7 @@
  * under the License.
  */
 
-package org.apache.deltaspike.core.api.exception.control.annotation;
-
+package org.apache.deltaspike.core.api.exception.control;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -27,18 +26,17 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Marker annotation for a method to be considered an Exception Handler, handles the exception in the BEFORE
- * traversal of the exception chain. Handlers are typically in the form of
- * <code>public void ... (@BeforeHandles ... CaughtException<...> ...)</code> methods.
- * If a method has a return type, it is ignored.
+ * Marker annotation for a method to be considered an Exception Handler. Handlers are typically in the form of
+ * <code>public void ... (@Handles ... CaughtException<...> ...)</code> methods. If a method has a return type, it is
+ * ignored.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
 @Documented
-public @interface BeforeHandles
+public @interface Handles
 {
     /**
-     * Precedence relative to callbacks for the same type
+     * Precedence relative to handlers for the same type
      */
-    int ordinal() default 0;
+    int ordinal() default 0; //TODO discuss Precedence
 }

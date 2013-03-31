@@ -30,7 +30,7 @@ import java.util.Set;
 
 /**
  * Comparator to sort exception handlers according qualifier
- * ({@link org.apache.deltaspike.core.api.exception.control.annotation.BeforeHandles} first), ordinal
+ * ({@link org.apache.deltaspike.core.api.exception.control.BeforeHandles} first), ordinal
  * (highest to lowest) and finally hierarchy (least to most specific).
  */
 @SuppressWarnings({ "MethodWithMoreThanThreeNegations" })

@@ -20,8 +20,8 @@
 package org.apache.deltaspike.core.impl.exception.control;
 
 import org.apache.deltaspike.core.api.exception.control.HandlerMethod;
-import org.apache.deltaspike.core.api.exception.control.annotation.BeforeHandles;
-import org.apache.deltaspike.core.api.exception.control.annotation.Handles;
+import org.apache.deltaspike.core.api.exception.control.BeforeHandles;
+import org.apache.deltaspike.core.api.exception.control.Handles;
 import org.apache.deltaspike.core.api.exception.control.event.ExceptionEvent;
 import org.apache.deltaspike.core.api.literal.AnyLiteral;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
