@@ -24,7 +24,7 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import org.apache.deltaspike.core.api.config.annotation.ConfigProperty;
+import org.apache.deltaspike.core.api.config.ConfigProperty;
 
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.CONSTRUCTOR;

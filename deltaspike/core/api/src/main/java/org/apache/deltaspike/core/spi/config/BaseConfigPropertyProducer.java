@@ -23,7 +23,7 @@ import javax.enterprise.inject.spi.InjectionPoint;
 import java.lang.annotation.Annotation;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
-import org.apache.deltaspike.core.api.config.annotation.ConfigProperty;
+import org.apache.deltaspike.core.api.config.ConfigProperty;
 import org.apache.deltaspike.core.util.BeanUtils;
 
 /**

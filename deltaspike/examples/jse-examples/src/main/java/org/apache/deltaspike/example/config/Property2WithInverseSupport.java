@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.example.config;
 
-import org.apache.deltaspike.core.api.config.annotation.ConfigProperty;
+import org.apache.deltaspike.core.api.config.ConfigProperty;
 
 import javax.enterprise.util.Nonbinding;
 import javax.inject.Qualifier;

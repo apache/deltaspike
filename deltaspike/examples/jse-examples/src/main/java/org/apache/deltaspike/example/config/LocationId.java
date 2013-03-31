@@ -20,7 +20,7 @@ package org.apache.deltaspike.example.config;
 
 /**
  * Enum as an example for a type-safe config with
- * {@link org.apache.deltaspike.core.api.config.annotation.ConfigProperty}
+ * {@link org.apache.deltaspike.core.api.config.ConfigProperty}
  */
 public enum LocationId
 {

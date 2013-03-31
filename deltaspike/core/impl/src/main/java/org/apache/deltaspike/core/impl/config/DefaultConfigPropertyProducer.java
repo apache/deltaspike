@@ -24,7 +24,7 @@ import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
 
 import org.apache.deltaspike.core.spi.config.BaseConfigPropertyProducer;
-import org.apache.deltaspike.core.api.config.annotation.ConfigProperty;
+import org.apache.deltaspike.core.api.config.ConfigProperty;
 
 /**
  * This class contains producer methods for injecting

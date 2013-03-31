@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.api.config.annotation;
+package org.apache.deltaspike.core.api.config;
 
 import javax.enterprise.util.Nonbinding;
 import javax.inject.Qualifier;
