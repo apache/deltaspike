@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.api.jmx.annotation;
+package org.apache.deltaspike.core.api.jmx;
 
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;

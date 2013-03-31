@@ -20,7 +20,7 @@ package org.apache.deltaspike.core.impl.jmx;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.jmx.JmxBroadcaster;
-import org.apache.deltaspike.core.api.jmx.annotation.MBean;
+import org.apache.deltaspike.core.api.jmx.MBean;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.BeanUtils;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;

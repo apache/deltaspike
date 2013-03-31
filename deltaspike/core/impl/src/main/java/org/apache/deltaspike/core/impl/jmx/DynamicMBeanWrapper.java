@@ -20,9 +20,9 @@ package org.apache.deltaspike.core.impl.jmx;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.jmx.JmxBroadcaster;
-import org.apache.deltaspike.core.api.jmx.annotation.JmxManaged;
-import org.apache.deltaspike.core.api.jmx.annotation.MBean;
-import org.apache.deltaspike.core.api.jmx.annotation.NotificationInfo;
+import org.apache.deltaspike.core.api.jmx.JmxManaged;
+import org.apache.deltaspike.core.api.jmx.MBean;
+import org.apache.deltaspike.core.api.jmx.NotificationInfo;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 

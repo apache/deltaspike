@@ -19,7 +19,7 @@
 package org.apache.deltaspike.core.impl.jmx;
 
 import org.apache.deltaspike.core.api.jmx.JmxBroadcaster;
-import org.apache.deltaspike.core.api.jmx.annotation.MBean;
+import org.apache.deltaspike.core.api.jmx.MBean;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Dependent;

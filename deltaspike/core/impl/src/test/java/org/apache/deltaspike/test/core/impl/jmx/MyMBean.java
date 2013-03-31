@@ -19,8 +19,8 @@
 package org.apache.deltaspike.test.core.impl.jmx;
 
 import org.apache.deltaspike.core.api.jmx.JmxBroadcaster;
-import org.apache.deltaspike.core.api.jmx.annotation.JmxManaged;
-import org.apache.deltaspike.core.api.jmx.annotation.MBean;
+import org.apache.deltaspike.core.api.jmx.JmxManaged;
+import org.apache.deltaspike.core.api.jmx.MBean;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
