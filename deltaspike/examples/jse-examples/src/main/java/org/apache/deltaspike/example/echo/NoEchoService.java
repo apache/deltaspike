@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.example.echo;
 
-import org.apache.deltaspike.core.api.exclude.annotation.Exclude;
+import org.apache.deltaspike.core.api.exclude.Exclude;
 
 /**
  * This implementation can't be used as CDI bean

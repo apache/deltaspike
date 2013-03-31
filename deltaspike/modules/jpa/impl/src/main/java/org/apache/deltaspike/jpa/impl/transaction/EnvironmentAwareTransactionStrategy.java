@@ -41,13 +41,13 @@ import java.lang.annotation.Annotation;
  *
  * <p>Optional:<br/>
  * E.g. in case of a project-stage based logic
- * {@link org.apache.deltaspike.core.api.exclude.annotation.Exclude} can be used to switch between different
+ * {@link org.apache.deltaspike.core.api.exclude.Exclude} can be used to switch between different
  * producer-beans.</p>
  *
  * <p>It's a better alternative than extending
  * {@link BeanManagedUserTransactionStrategy}
  * (which would lead to an impl. dependency) only for using
- * {@link org.apache.deltaspike.core.api.exclude.annotation.Exclude} at the custom
+ * {@link org.apache.deltaspike.core.api.exclude.Exclude} at the custom
  * {@link org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy}
  * (or doing a custom veto-extension).</p>
  */

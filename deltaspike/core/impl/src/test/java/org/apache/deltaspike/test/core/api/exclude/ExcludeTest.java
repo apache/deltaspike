@@ -22,7 +22,6 @@ package org.apache.deltaspike.test.core.api.exclude;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.impl.exclude.extension.ExcludeExtension;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
-import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.test.core.impl.activation.TestClassDeactivator;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.apache.deltaspike.test.util.FileUtils;
@@ -40,7 +39,7 @@ import javax.enterprise.inject.spi.Extension;
 import java.net.URL;
 
 /**
- * Tests for {@link org.apache.deltaspike.core.api.exclude.annotation.Exclude}
+ * Tests for {@link org.apache.deltaspike.core.api.exclude.Exclude}
  */
 @RunWith(Arquillian.class)
 public class ExcludeTest

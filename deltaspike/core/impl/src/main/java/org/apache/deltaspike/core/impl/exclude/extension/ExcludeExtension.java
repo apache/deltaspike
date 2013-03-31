@@ -19,7 +19,7 @@
 package org.apache.deltaspike.core.impl.exclude.extension;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
-import org.apache.deltaspike.core.api.exclude.annotation.Exclude;
+import org.apache.deltaspike.core.api.exclude.Exclude;
 import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
 import org.apache.deltaspike.core.impl.exclude.CustomProjectStageBeanFilter;
 import org.apache.deltaspike.core.impl.exclude.GlobalAlternative;
@@ -51,9 +51,9 @@ import java.util.logging.Logger;
 
 /**
  * <p>This class implements the logic for handling
- * {@link org.apache.deltaspike.core.api.exclude.annotation.Exclude} annotations.</p>
+ * {@link org.apache.deltaspike.core.api.exclude.Exclude} annotations.</p>
  * <p/>
- * <p>Further details see {@link org.apache.deltaspike.core.api.exclude.annotation.Exclude}</p>
+ * <p>Further details see {@link org.apache.deltaspike.core.api.exclude.Exclude}</p>
  */
 public class ExcludeExtension implements Extension, Deactivatable
 {

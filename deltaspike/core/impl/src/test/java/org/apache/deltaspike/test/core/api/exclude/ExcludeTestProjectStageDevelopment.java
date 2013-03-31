@@ -33,7 +33,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
- * Tests for {@link org.apache.deltaspike.core.api.exclude.annotation.Exclude}
+ * Tests for {@link org.apache.deltaspike.core.api.exclude.Exclude}
  */
 @RunWith(Arquillian.class)
 public class ExcludeTestProjectStageDevelopment

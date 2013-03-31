@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.api.exclude.annotation;
+package org.apache.deltaspike.core.api.exclude;
 
 import org.apache.deltaspike.core.api.interpreter.ExpressionInterpreter;
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;

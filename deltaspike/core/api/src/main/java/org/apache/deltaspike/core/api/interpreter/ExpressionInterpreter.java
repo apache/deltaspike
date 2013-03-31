@@ -20,7 +20,7 @@ package org.apache.deltaspike.core.api.interpreter;
 
 /**
  * Interface for interpreting an expression e.g. provided by
- * {@link org.apache.deltaspike.core.api.exclude.annotation.Exclude#onExpression()}
+ * {@link org.apache.deltaspike.core.api.exclude.Exclude#onExpression()}
  */
 public interface ExpressionInterpreter<E, R>
 {
