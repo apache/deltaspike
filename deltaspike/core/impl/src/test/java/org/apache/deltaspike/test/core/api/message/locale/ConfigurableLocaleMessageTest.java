@@ -41,7 +41,7 @@ import org.junit.runner.RunWith;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Tests for {@link org.apache.deltaspike.core.api.message.annotation.MessageTemplate}
+ * Tests for {@link org.apache.deltaspike.core.api.message.MessageTemplate}
  */
 @RunWith(Arquillian.class)
 @Category(SeCategory.class)

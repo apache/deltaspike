@@ -24,7 +24,7 @@ import java.io.Serializable;
 /**
  * <p>An injectable component for typesafe FacesMessages.
  * T must be a class which is annotated with
- * {@link org.apache.deltaspike.core.api.message.annotation.MessageBundle}</p>
+ * {@link org.apache.deltaspike.core.api.message.MessageBundle}</p>
  *
  * <p>Usage:
  * <pre>

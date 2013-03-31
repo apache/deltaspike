@@ -39,8 +39,8 @@ import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import javax.enterprise.inject.spi.ProcessProducerMethod;
 
 import org.apache.deltaspike.core.api.message.Message;
-import org.apache.deltaspike.core.api.message.annotation.MessageBundle;
-import org.apache.deltaspike.core.api.message.annotation.MessageTemplate;
+import org.apache.deltaspike.core.api.message.MessageBundle;
+import org.apache.deltaspike.core.api.message.MessageTemplate;
 import org.apache.deltaspike.core.util.bean.WrappingBeanBuilder;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;

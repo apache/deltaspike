@@ -19,14 +19,14 @@
 package org.apache.deltaspike.core.api.literal;
 
 import org.apache.deltaspike.core.api.message.LocaleResolver;
-import org.apache.deltaspike.core.api.message.annotation.MessageContextConfig;
+import org.apache.deltaspike.core.api.message.MessageContextConfig;
 import org.apache.deltaspike.core.api.message.MessageInterpolator;
 import org.apache.deltaspike.core.api.message.MessageResolver;
 
 import javax.enterprise.util.AnnotationLiteral;
 
 /**
- * Literal for {@link org.apache.deltaspike.core.api.message.annotation.MessageContextConfig}
+ * Literal for {@link org.apache.deltaspike.core.api.message.MessageContextConfig}
  */
 public class MessageContextConfigLiteral extends AnnotationLiteral<MessageContextConfig> implements MessageContextConfig
 {

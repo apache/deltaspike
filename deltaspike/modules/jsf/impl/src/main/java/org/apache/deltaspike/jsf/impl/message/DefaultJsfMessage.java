@@ -24,7 +24,7 @@ import javax.faces.component.UIComponent;
 
 import java.lang.reflect.Proxy;
 
-import org.apache.deltaspike.core.api.message.annotation.MessageBundle;
+import org.apache.deltaspike.core.api.message.MessageBundle;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.jsf.api.message.JsfMessage;
 

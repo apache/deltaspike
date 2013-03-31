@@ -20,9 +20,8 @@ package org.apache.deltaspike.test.core.api.message;
 
 import javax.inject.Named;
 
-import org.apache.deltaspike.core.api.message.annotation.MessageBundle;
-import org.apache.deltaspike.core.api.message.annotation.MessageContextConfig;
-import org.apache.deltaspike.test.core.api.message.FixedEnglishLocalResolver;
+import org.apache.deltaspike.core.api.message.MessageBundle;
+import org.apache.deltaspike.core.api.message.MessageContextConfig;
 
 /**
  * This does NOT work atm because we internally

@@ -20,9 +20,9 @@ package org.apache.deltaspike.test.core.api.message;
 
 import org.apache.deltaspike.core.api.message.Message;
 import org.apache.deltaspike.core.api.message.MessageContext;
-import org.apache.deltaspike.core.api.message.annotation.MessageTemplate;
-import org.apache.deltaspike.core.api.message.annotation.MessageBundle;
-import org.apache.deltaspike.core.api.message.annotation.MessageContextConfig;
+import org.apache.deltaspike.core.api.message.MessageTemplate;
+import org.apache.deltaspike.core.api.message.MessageBundle;
+import org.apache.deltaspike.core.api.message.MessageContextConfig;
 
 @MessageBundle
 @MessageContextConfig(

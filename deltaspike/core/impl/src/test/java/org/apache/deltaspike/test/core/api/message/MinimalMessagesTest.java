@@ -36,7 +36,7 @@ import javax.enterprise.inject.spi.Extension;
 import javax.inject.Inject;
 
 /**
- * Tests for type-safe messages without {@link org.apache.deltaspike.core.api.message.annotation.MessageTemplate}
+ * Tests for type-safe messages without {@link org.apache.deltaspike.core.api.message.MessageTemplate}
  */
 @RunWith(Arquillian.class)
 public class MinimalMessagesTest

@@ -30,8 +30,8 @@ import org.apache.deltaspike.core.api.message.Message;
 import org.apache.deltaspike.core.api.message.MessageContext;
 import org.apache.deltaspike.core.api.message.MessageInterpolator;
 import org.apache.deltaspike.core.api.message.MessageResolver;
-import org.apache.deltaspike.core.api.message.annotation.MessageContextConfig;
-import org.apache.deltaspike.core.api.message.annotation.MessageTemplate;
+import org.apache.deltaspike.core.api.message.MessageContextConfig;
+import org.apache.deltaspike.core.api.message.MessageTemplate;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.ClassUtils;
 

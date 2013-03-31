@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.test.core.api.message;
 
-import org.apache.deltaspike.core.api.message.annotation.MessageBundle;
-import org.apache.deltaspike.core.api.message.annotation.MessageContextConfig;
+import org.apache.deltaspike.core.api.message.MessageBundle;
+import org.apache.deltaspike.core.api.message.MessageContextConfig;
 
 @MessageBundle
 @MessageContextConfig(

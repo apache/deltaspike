@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.example.message;
 
-import org.apache.deltaspike.core.api.message.annotation.MessageBundle;
+import org.apache.deltaspike.core.api.message.MessageBundle;
 
 /**
  *

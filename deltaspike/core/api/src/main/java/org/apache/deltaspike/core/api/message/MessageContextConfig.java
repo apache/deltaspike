@@ -16,11 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.api.message.annotation;
-
-import org.apache.deltaspike.core.api.message.LocaleResolver;
-import org.apache.deltaspike.core.api.message.MessageInterpolator;
-import org.apache.deltaspike.core.api.message.MessageResolver;
+package org.apache.deltaspike.core.api.message;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;

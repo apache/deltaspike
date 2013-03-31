@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.api.message.annotation;
+package org.apache.deltaspike.core.api.message;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
