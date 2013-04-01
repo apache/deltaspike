@@ -19,6 +19,9 @@
 package org.apache.deltaspike.jsf.util;
 
 import org.apache.deltaspike.core.spi.config.view.ViewConfigNode;
+import org.apache.deltaspike.jsf.api.config.view.Folder;
+
+import java.lang.annotation.Annotation;
 
 public abstract class NamingConventionUtils
 {
@@ -29,10 +32,35 @@ public abstract class NamingConventionUtils
             return "/";
         }
 
-        //TODO add support for @Folder
-        String folderName = node.getSource().getSimpleName();
-        folderName = folderName.substring(0, 1).toLowerCase() + folderName.substring(1);
+        Folder folderMetaData = null;
 
-        return toPath(node.getParent()) + folderName + "/";
+        for (Annotation nodeMetaData : node.getMetaData())
+        {
+            if (Folder.class.isAssignableFrom(nodeMetaData.annotationType()))
+            {
+                folderMetaData = (Folder)nodeMetaData;
+            }
+        }
+
+
+        String folderName = null;
+
+        if (folderMetaData != null)
+        {
+            folderName = folderMetaData.name();
+        }
+
+        if (folderName == null)
+        {
+            folderName = node.getSource().getSimpleName();
+            folderName = "./" + folderName.substring(0, 1).toLowerCase() + folderName.substring(1) + "/";
+        }
+
+        //@Folder found and no relative path
+        if (folderMetaData != null && !folderName.startsWith("."))
+        {
+            return folderName;
+        }
+        return toPath(node.getParent()) + folderName.substring(1);
     }
 }

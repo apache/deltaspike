@@ -18,9 +18,11 @@
  */
 package org.apache.deltaspike.jsf.api.config.view;
 
+import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewMetaData;
 import org.apache.deltaspike.core.spi.config.view.ConfigPreProcessor;
 import org.apache.deltaspike.core.spi.config.view.ViewConfigNode;
+import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.jsf.api.literal.ViewLiteral;
 import org.apache.deltaspike.jsf.util.NamingConventionUtils;
 
@@ -82,9 +84,30 @@ public @interface View
     ViewParameterMode viewParams() default ViewParameterMode.DEFAULT;
 
     /**
+     * Allows to add a custom inline path-builder
+     * (a custom default implementation can be configured globally via the config mechanism provided by DeltaSpike)
+     * @return path builder which allows to customize the naming conventions for the base-path
+     */
+    Class<? extends NameBuilder> basePathBuilder() default DefaultBasePathBuilder.class;
+
+    /**
+     * Allows to add a custom inline path-builder
+     * (a custom default implementation can be configured globally via the config mechanism provided by DeltaSpike)
+     * @return path builder which allows to customize the naming conventions for the file-name
+     */
+    Class<? extends NameBuilder> fileNameBuilder() default DefaultFileNameBuilder.class;
+
+    /**
+     * Allows to add a custom inline path-builder
+     * (a custom default implementation can be configured globally via the config mechanism provided by DeltaSpike)
+     * @return path builder which allows to customize the naming conventions for the file-extension
+     */
+    Class<? extends NameBuilder> extensionBuilder() default DefaultExtensionBuilder.class;
+
+    /**
      * Extension of the markup file
      */
-    public interface Extension
+    interface Extension
     {
         String DEFAULT = "";
         String XHTML = "xhtml";
@@ -96,7 +119,7 @@ public @interface View
     /**
      * Type of the navigation which should be used by the {@link javax.faces.application.NavigationHandler}
      */
-    public enum NavigationMode
+    enum NavigationMode
     {
         DEFAULT, FORWARD, REDIRECT
     }
@@ -104,7 +127,7 @@ public @interface View
     /**
      * Mode specifies if JSF2 should include view-params
      */
-    public enum ViewParameterMode
+    enum ViewParameterMode
     {
         DEFAULT, INCLUDE, EXCLUDE
     }
@@ -116,33 +139,45 @@ public @interface View
         {
             boolean defaultValueReplaced = false;
 
-            String basePath = view.basePath();
-            String name = view.name();
-            String extension = view.extension();
             View.NavigationMode navigation = view.navigation();
             View.ViewParameterMode viewParams = view.viewParams();
-            Class source = viewConfigNode.getSource();
 
-            if (("".equals(basePath) || basePath == null) && isView(source) /*only calc the path for real pages*/)
+            /*
+             * base path
+             */
+            NameBuilder basePathBuilder = getBasePathBuilder(view);
+            String basePath = basePathBuilder.build(view, viewConfigNode);
+
+            if (basePathBuilder.isDefaultValueReplaced())
             {
                 defaultValueReplaced = true;
-
-                basePath = NamingConventionUtils.toPath(viewConfigNode.getParent());
             }
 
-            if (("".equals(name) || name == null) && isView(source) /*only calc the path for real pages*/)
+            /*
+             * file name
+             */
+            NameBuilder fileNameBuilder = getFileNameBuilder(view);
+            String name = fileNameBuilder.build(view, viewConfigNode);
+
+            if (fileNameBuilder.isDefaultValueReplaced())
             {
                 defaultValueReplaced = true;
-                String className = viewConfigNode.getSource().getSimpleName();
-                name = className.substring(0, 1).toLowerCase() + className.substring(1);
             }
 
-            if (View.Extension.DEFAULT.equals(extension) || extension == null)
+            /*
+             * extension
+             */
+            NameBuilder extensionBuilder = getExtensionBuilder(view);
+            String extension = extensionBuilder.build(view, viewConfigNode);
+
+            if (extensionBuilder.isDefaultValueReplaced())
             {
                 defaultValueReplaced = true;
-                extension = XHTML;
             }
 
+            /*
+             * navigation
+             */
             if (View.NavigationMode.DEFAULT.equals(navigation) || navigation == null)
             {
                 defaultValueReplaced = true;
@@ -157,16 +192,183 @@ public @interface View
 
             if (defaultValueReplaced)
             {
-                return new ViewLiteral(basePath, name, extension, navigation, viewParams);
+                return new ViewLiteral(basePath, name, extension, navigation, viewParams,
+                        view.basePathBuilder(), view.fileNameBuilder(), view.extensionBuilder());
             }
             return view;
         }
 
+        private NameBuilder getBasePathBuilder(View view)
+        {
+            NameBuilder basePathBuilder;
+            if (DefaultBasePathBuilder.class.equals(view.basePathBuilder()))
+            {
+                String customDefaultBasePathBuilderClassName =
+                        ConfigResolver.getPropertyValue(DefaultBasePathBuilder.class.getName(), null);
+
+                if (customDefaultBasePathBuilderClassName != null)
+                {
+                    basePathBuilder =
+                        (NameBuilder)ClassUtils.tryToInstantiateClassForName(customDefaultBasePathBuilderClassName);
+                }
+                else
+                {
+                    basePathBuilder = new DefaultBasePathBuilder();
+                }
+            }
+            else
+            {
+                basePathBuilder = ClassUtils.tryToInstantiateClass(view.basePathBuilder());
+            }
+            return basePathBuilder;
+        }
+
+        private NameBuilder getFileNameBuilder(View view)
+        {
+            NameBuilder fileNameBuilder;
+            if (DefaultFileNameBuilder.class.equals(view.fileNameBuilder()))
+            {
+                String customDefaultFileNameBuilderClassName =
+                        ConfigResolver.getPropertyValue(DefaultFileNameBuilder.class.getName(), null);
+
+                if (customDefaultFileNameBuilderClassName != null)
+                {
+                    fileNameBuilder =
+                        (NameBuilder)ClassUtils.tryToInstantiateClassForName(customDefaultFileNameBuilderClassName);
+                }
+                else
+                {
+                    fileNameBuilder = new DefaultFileNameBuilder();
+                }
+            }
+            else
+            {
+                fileNameBuilder = ClassUtils.tryToInstantiateClass(view.fileNameBuilder());
+            }
+            return fileNameBuilder;
+        }
+
+        private NameBuilder getExtensionBuilder(View view)
+        {
+            NameBuilder extensionBuilder;
+            if (DefaultExtensionBuilder.class.equals(view.extensionBuilder()))
+            {
+                String customDefaultExtensionBuilderClassName =
+                        ConfigResolver.getPropertyValue(DefaultExtensionBuilder.class.getName(), null);
+
+                if (customDefaultExtensionBuilderClassName != null)
+                {
+                    extensionBuilder =
+                        (NameBuilder)ClassUtils.tryToInstantiateClassForName(customDefaultExtensionBuilderClassName);
+                }
+                else
+                {
+                    extensionBuilder = new DefaultExtensionBuilder();
+                }
+            }
+            else
+            {
+                extensionBuilder = ClassUtils.tryToInstantiateClass(view.extensionBuilder());
+            }
+            return extensionBuilder;
+        }
+
         //it's possible that the given source is a folder-node
         //e.g. @View(navigation = REDIRECT) specified for a whole folder
-        private boolean isView(Class source)
+        private static boolean isView(Class source)
         {
             return !Modifier.isAbstract(source.getModifiers()) && !Modifier.isInterface(source.getModifiers());
+        }
+    }
+
+    //TODO discuss if we use a central interface in the spi package
+    //advantage: can be reused
+    //disadvantage: a wrong builder can get assigned more easily, show usages will list more
+    interface NameBuilder
+    {
+        String build(View view, ViewConfigNode viewConfigNode);
+
+        boolean isDefaultValueReplaced();
+    }
+
+    abstract class AbstractNameBuilder implements NameBuilder
+    {
+        protected boolean defaultValueReplaced = false;
+
+        public boolean isDefaultValueReplaced()
+        {
+            return defaultValueReplaced;
+        }
+    }
+
+    class DefaultBasePathBuilder extends AbstractNameBuilder
+    {
+        @Override
+        public String build(View view, ViewConfigNode viewConfigNode)
+        {
+            String basePath = view.basePath();
+            Class source = viewConfigNode.getSource();
+
+            if (("".equals(basePath) || basePath == null) &&
+                    ViewConfigPreProcessor.isView(source) /*only calc the path for real pages*/)
+            {
+                this.defaultValueReplaced = true;
+
+                basePath = NamingConventionUtils.toPath(viewConfigNode.getParent());
+            }
+
+            if (basePath != null && basePath.startsWith("."))
+            {
+                basePath = NamingConventionUtils.toPath(viewConfigNode.getParent()) + basePath.substring(1);
+
+                this.defaultValueReplaced = true;
+            }
+
+            if (basePath != null && basePath.contains("//"))
+            {
+                basePath = basePath.replace("//", "/");
+
+                this.defaultValueReplaced = true;
+            }
+
+            return basePath;
+        }
+    }
+
+    class DefaultFileNameBuilder extends AbstractNameBuilder
+    {
+        @Override
+        public String build(View view, ViewConfigNode viewConfigNode)
+        {
+            String name = view.name();
+            Class source = viewConfigNode.getSource();
+
+            if (("".equals(name) || name == null) &&
+                    ViewConfigPreProcessor.isView(source) /*only calc the path for real pages*/)
+            {
+                this.defaultValueReplaced = true;
+                String className = viewConfigNode.getSource().getSimpleName();
+                name = className.substring(0, 1).toLowerCase() + className.substring(1);
+            }
+
+            return name;
+        }
+    }
+
+    class DefaultExtensionBuilder extends AbstractNameBuilder
+    {
+        @Override
+        public String build(View view, ViewConfigNode viewConfigNode)
+        {
+            String extension = view.extension();
+
+            if (View.Extension.DEFAULT.equals(extension) || extension == null)
+            {
+                defaultValueReplaced = true;
+                extension = XHTML;
+            }
+
+            return extension;
         }
     }
 }

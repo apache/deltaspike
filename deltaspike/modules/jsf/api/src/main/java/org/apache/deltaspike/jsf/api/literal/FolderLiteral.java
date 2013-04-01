@@ -19,6 +19,8 @@
 
 package org.apache.deltaspike.jsf.api.literal;
 
+import org.apache.deltaspike.core.api.config.ConfigResolver;
+import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.jsf.api.config.view.Folder;
 
 import javax.enterprise.util.AnnotationLiteral;
@@ -32,6 +34,7 @@ public class FolderLiteral extends AnnotationLiteral<Folder> implements Folder
     private static final long serialVersionUID = 2582580975876369665L;
 
     private final String name;
+    private final Class<? extends NameBuilder> folderNameBuilder;
 
     public FolderLiteral(boolean virtual)
     {
@@ -43,17 +46,36 @@ public class FolderLiteral extends AnnotationLiteral<Folder> implements Folder
         {
             this.name = "";
         }
+
+        final String customDefaultFolderNameBuilderClassName =
+                ConfigResolver.getPropertyValue(Folder.DefaultFolderNameBuilder.class.getName(), null);
+
+        if (customDefaultFolderNameBuilderClassName != null)
+        {
+            this.folderNameBuilder = ClassUtils.tryToLoadClassForName(customDefaultFolderNameBuilderClassName);
+        }
+        else
+        {
+            this.folderNameBuilder = DefaultFolderNameBuilder.class;
+        }
     }
 
-    public FolderLiteral(String name)
+    public FolderLiteral(String name, Class<? extends NameBuilder> folderNameBuilder)
     {
         this.name = name;
+        this.folderNameBuilder = folderNameBuilder;
     }
 
     @Override
     public String name()
     {
         return this.name;
+    }
+
+    @Override
+    public Class<? extends NameBuilder> folderNameBuilder()
+    {
+        return this.folderNameBuilder;
     }
 
     /*
@@ -71,6 +93,10 @@ public class FolderLiteral extends AnnotationLiteral<Folder> implements Folder
         {
             return false;
         }
+        if (!(o instanceof FolderLiteral))
+        {
+            return false;
+        }
         if (!super.equals(o))
         {
             return false;
@@ -78,6 +104,10 @@ public class FolderLiteral extends AnnotationLiteral<Folder> implements Folder
 
         FolderLiteral that = (FolderLiteral) o;
 
+        if (!folderNameBuilder.equals(that.folderNameBuilder))
+        {
+            return false;
+        }
         if (name != null ? !name.equals(that.name) : that.name != null)
         {
             return false;
@@ -89,6 +119,8 @@ public class FolderLiteral extends AnnotationLiteral<Folder> implements Folder
     @Override
     public int hashCode()
     {
-        return name != null ? name.hashCode() : 0;
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + folderNameBuilder.hashCode();
+        return result;
     }
 }

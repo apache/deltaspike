@@ -18,9 +18,11 @@
  */
 package org.apache.deltaspike.jsf.api.config.view;
 
+import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewMetaData;
 import org.apache.deltaspike.core.spi.config.view.ConfigPreProcessor;
 import org.apache.deltaspike.core.spi.config.view.ViewConfigNode;
+import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.jsf.api.literal.FolderLiteral;
 import org.apache.deltaspike.jsf.util.NamingConventionUtils;
 
@@ -50,6 +52,13 @@ public @interface Folder
      */
     String name() default ".";
 
+    /**
+     * Allows to add a custom inline path-builder
+     * (a custom default implementation can be configured globally via the config mechanism provided by DeltaSpike)
+     * @return path builder which allows to customize the naming conventions for the folder-name
+     */
+    Class<? extends NameBuilder> folderNameBuilder() default DefaultFolderNameBuilder.class;
+
     static class FolderConfigPreProcessor implements ConfigPreProcessor<Folder>
     {
         @Override
@@ -57,19 +66,95 @@ public @interface Folder
         {
             boolean defaultValueReplaced = false;
 
-            String name = folder.name();
+            /*
+             * file name
+             */
+            NameBuilder folderNameBuilder = getFolderNameBuilder(folder);
+            String name = folderNameBuilder.build(folder, viewConfigNode);
 
-            if (name == null /*null used as marker value for dyn. added instances*/ || ".".equals(name) /*default*/)
+            if (folderNameBuilder.isDefaultValueReplaced())
             {
                 defaultValueReplaced = true;
-                name = NamingConventionUtils.toPath(viewConfigNode);
             }
 
             if (defaultValueReplaced)
             {
-                return new FolderLiteral(name);
+                return new FolderLiteral(name, folder.folderNameBuilder());
             }
             return folder;
+        }
+
+        private NameBuilder getFolderNameBuilder(Folder folder)
+        {
+            NameBuilder folderNameBuilder;
+            if (DefaultFolderNameBuilder.class.equals(folder.folderNameBuilder()))
+            {
+                String customDefaultFolderNameBuilderClassName =
+                        ConfigResolver.getPropertyValue(DefaultFolderNameBuilder.class.getName(), null);
+
+                if (customDefaultFolderNameBuilderClassName != null)
+                {
+                    folderNameBuilder =
+                        (NameBuilder) ClassUtils.tryToInstantiateClassForName(customDefaultFolderNameBuilderClassName);
+                }
+                else
+                {
+                    folderNameBuilder = new DefaultFolderNameBuilder();
+                }
+            }
+            else
+            {
+                folderNameBuilder = ClassUtils.tryToInstantiateClass(folder.folderNameBuilder());
+            }
+            return folderNameBuilder;
+        }
+    }
+
+    //TODO discuss if we use a central interface in the spi package
+    //advantage: can be reused
+    //disadvantage: a wrong builder can get assigned more easily, show usages will list more
+    interface NameBuilder
+    {
+        String build(Folder folder, ViewConfigNode viewConfigNode);
+
+        boolean isDefaultValueReplaced();
+    }
+
+    class DefaultFolderNameBuilder implements NameBuilder
+    {
+        private boolean defaultValueReplaced = false;
+
+        @Override
+        public String build(Folder folder, ViewConfigNode viewConfigNode)
+        {
+            String name = folder.name();
+
+            if (name == null /*null used as marker value for dyn. added instances*/ || ".".equals(name) /*default*/)
+            {
+                this.defaultValueReplaced = true;
+                name = NamingConventionUtils.toPath(viewConfigNode);
+            }
+
+            if (name != null && name.startsWith("."))
+            {
+                name = NamingConventionUtils.toPath(viewConfigNode.getParent()) + name.substring(1);
+
+                this.defaultValueReplaced = true;
+            }
+
+            if (name != null && name.contains("//"))
+            {
+                name = name.replace("//", "/");
+
+                this.defaultValueReplaced = true;
+            }
+
+            return name;
+        }
+
+        public boolean isDefaultValueReplaced()
+        {
+            return defaultValueReplaced;
         }
     }
 }

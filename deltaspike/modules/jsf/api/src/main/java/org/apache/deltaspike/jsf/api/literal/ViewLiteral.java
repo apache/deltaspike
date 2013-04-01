@@ -19,6 +19,8 @@
 
 package org.apache.deltaspike.jsf.api.literal;
 
+import org.apache.deltaspike.core.api.config.ConfigResolver;
+import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.jsf.api.config.view.View;
 
 import javax.enterprise.util.AnnotationLiteral;
@@ -36,6 +38,10 @@ public class ViewLiteral extends AnnotationLiteral<View> implements View
     private final String extension;
     private final NavigationMode navigation;
     private final ViewParameterMode viewParams;
+
+    private final Class<? extends NameBuilder> basePathBuilder;
+    private final Class<? extends NameBuilder> fileNameBuilder;
+    private final Class<? extends NameBuilder> extensionBuilder;
 
     public ViewLiteral(boolean virtual)
     {
@@ -55,19 +61,63 @@ public class ViewLiteral extends AnnotationLiteral<View> implements View
             this.navigation = NavigationMode.FORWARD;
             this.viewParams = ViewParameterMode.DEFAULT;
         }
+
+        final String customDefaultBasePathBuilderClassName =
+                ConfigResolver.getPropertyValue(DefaultBasePathBuilder.class.getName(), null);
+
+        if (customDefaultBasePathBuilderClassName != null)
+        {
+            this.basePathBuilder = ClassUtils.tryToLoadClassForName(customDefaultBasePathBuilderClassName);
+        }
+        else
+        {
+            this.basePathBuilder = DefaultBasePathBuilder.class;
+        }
+
+
+        final String customDefaultFileNameBuilderClassName =
+                ConfigResolver.getPropertyValue(DefaultFileNameBuilder.class.getName(), null);
+
+        if (customDefaultFileNameBuilderClassName != null)
+        {
+            this.fileNameBuilder = ClassUtils.tryToLoadClassForName(customDefaultFileNameBuilderClassName);
+        }
+        else
+        {
+            this.fileNameBuilder = DefaultFileNameBuilder.class;
+        }
+
+
+        final String customDefaultExtensionBuilderClassName =
+                ConfigResolver.getPropertyValue(DefaultExtensionBuilder.class.getName(), null);
+
+        if (customDefaultExtensionBuilderClassName != null)
+        {
+            this.extensionBuilder = ClassUtils.tryToLoadClassForName(customDefaultExtensionBuilderClassName);
+        }
+        else
+        {
+            this.extensionBuilder = DefaultExtensionBuilder.class;
+        }
     }
 
     public ViewLiteral(String basePath,
                        String name,
                        String extension,
                        NavigationMode navigation,
-                       ViewParameterMode viewParams)
+                       ViewParameterMode viewParams,
+                       Class<? extends NameBuilder> basePathBuilder,
+                       Class<? extends NameBuilder> fileNameBuilder,
+                       Class<? extends NameBuilder> extensionBuilder)
     {
         this.basePath = basePath;
         this.name = name;
         this.extension = extension;
         this.navigation = navigation;
         this.viewParams = viewParams;
+        this.basePathBuilder = basePathBuilder;
+        this.fileNameBuilder = fileNameBuilder;
+        this.extensionBuilder = extensionBuilder;
     }
 
     @Override
@@ -100,6 +150,24 @@ public class ViewLiteral extends AnnotationLiteral<View> implements View
         return this.viewParams;
     }
 
+    @Override
+    public Class<? extends NameBuilder> basePathBuilder()
+    {
+        return this.basePathBuilder;
+    }
+
+    @Override
+    public Class<? extends NameBuilder> fileNameBuilder()
+    {
+        return this.fileNameBuilder;
+    }
+
+    @Override
+    public Class<? extends NameBuilder> extensionBuilder()
+    {
+        return this.extensionBuilder;
+    }
+
     /*
      * generated
      */
@@ -115,6 +183,10 @@ public class ViewLiteral extends AnnotationLiteral<View> implements View
         {
             return false;
         }
+        if (!(o instanceof ViewLiteral))
+        {
+            return false;
+        }
         if (!super.equals(o))
         {
             return false;
@@ -126,7 +198,19 @@ public class ViewLiteral extends AnnotationLiteral<View> implements View
         {
             return false;
         }
+        if (!basePathBuilder.equals(that.basePathBuilder))
+        {
+            return false;
+        }
         if (extension != null ? !extension.equals(that.extension) : that.extension != null)
+        {
+            return false;
+        }
+        if (!extensionBuilder.equals(that.extensionBuilder))
+        {
+            return false;
+        }
+        if (!fileNameBuilder.equals(that.fileNameBuilder))
         {
             return false;
         }
@@ -154,6 +238,9 @@ public class ViewLiteral extends AnnotationLiteral<View> implements View
         result = 31 * result + (extension != null ? extension.hashCode() : 0);
         result = 31 * result + (navigation != null ? navigation.hashCode() : 0);
         result = 31 * result + (viewParams != null ? viewParams.hashCode() : 0);
+        result = 31 * result + basePathBuilder.hashCode();
+        result = 31 * result + fileNameBuilder.hashCode();
+        result = 31 * result + extensionBuilder.hashCode();
         return result;
     }
 }
