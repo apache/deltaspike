@@ -21,25 +21,22 @@ package org.apache.deltaspike.partialbean.impl;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
-/**
- * At runtime it will be called from {@link MethodHandlerProxy} as instance of javassist.util.proxy.MethodHandler
- */
-class PartialBeanMethodHandler<T extends InvocationHandler>
+//This indirection to create a proxy for javassist.util.proxy.MethodHandler is used as intermediate approach.
+//Further details see comments in PartialBeanLifecycle
+public class MethodHandlerProxy implements InvocationHandler
 {
-    private final T handlerInstance;
+    private PartialBeanMethodHandler partialBeanMethodHandler;
 
-    PartialBeanMethodHandler(T handlerInstance)
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
     {
-        this.handlerInstance = handlerInstance;
+        //hardcoding the following parameters is ok since MethodHandlerProxy is only used for
+        //javassist.util.proxy.MethodHandler which has one method with those parameters.
+        return partialBeanMethodHandler.invoke(args[0], (Method)args[1], (Method)args[2], (Object[])args[3]);
     }
 
-    //Signature given by javassist.util.proxy.MethodHandler#invoke
-    public Object invoke(Object target, Method method, Method proceedMethod, Object[] arguments) throws Throwable
+    void setPartialBeanMethodHandler(PartialBeanMethodHandler partialBeanMethodHandler)
     {
-        if (proceedMethod != null)
-        {
-            return proceedMethod.invoke(target, arguments);
-        }
-        return this.handlerInstance.invoke(target, method, arguments);
+        this.partialBeanMethodHandler = partialBeanMethodHandler;
     }
 }

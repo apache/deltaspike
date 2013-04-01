@@ -18,11 +18,9 @@
  */
 package org.apache.deltaspike.partialbean.impl;
 
-import javassist.util.proxy.MethodFilter;
-import javassist.util.proxy.ProxyFactory;
-import javassist.util.proxy.ProxyObject;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
 import org.apache.deltaspike.core.util.metadata.builder.ContextualLifecycle;
@@ -34,8 +32,14 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InjectionTarget;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.Set;
 
+//The usage of reflection and the indirection for MethodHandler is needed to avoid the hard dependency to javassist.
+//Some users don't like to have it as a required dependency,
+// but they would like to use interfaces for partial beans and don't need abstract classes as partial beans.
+
+//We use these indirections as >intermediate< approach. That way no classpath-scanner can cause issues.
 class PartialBeanLifecycle<T, H extends InvocationHandler> implements ContextualLifecycle<T>
 {
     private final Class<? extends T> partialBeanProxyClass;
@@ -43,28 +47,44 @@ class PartialBeanLifecycle<T, H extends InvocationHandler> implements Contextual
     private final InjectionTarget<T> partialBeanInjectionTarget;
     private final Class<H> handlerClass;
     private CreationalContext<?> creationalContextOfDependentHandler;
+    private final boolean isInterfaceMode;
 
     PartialBeanLifecycle(Class<T> partialBeanClass, Class<H> handlerClass, BeanManager beanManager)
     {
         this.handlerClass = handlerClass;
 
-        ProxyFactory proxyFactory = new ProxyFactory();
-
         if (partialBeanClass.isInterface())
         {
+            this.isInterfaceMode = true;
             this.partialBeanInjectionTarget = null;
-
-            proxyFactory.setInterfaces(new Class[]{partialBeanClass});
+            this.partialBeanProxyClass = partialBeanClass;
         }
         else
         {
+            this.isInterfaceMode = false;
             AnnotatedTypeBuilder<T> partialBeanTypeBuilder =
                 new AnnotatedTypeBuilder<T>().readFromType(partialBeanClass);
             this.partialBeanInjectionTarget = beanManager.createInjectionTarget(partialBeanTypeBuilder.create());
 
-            proxyFactory.setSuperclass(partialBeanClass);
+            try
+            {
+                Object proxyFactory = ClassUtils.tryToInstantiateClassForName("javassist.util.proxy.ProxyFactory");
+
+                Method setSuperclassMethod = proxyFactory.getClass().getDeclaredMethod("setSuperclass", Class.class);
+                setSuperclassMethod.invoke(proxyFactory, partialBeanClass);
+
+                Method createClassMethod = proxyFactory.getClass().getDeclaredMethod("createClass");
+
+                this.partialBeanProxyClass =
+                        ((Class<?>) createClassMethod.invoke(proxyFactory)).asSubclass(partialBeanClass);
+            }
+            catch (Exception e)
+            {
+                throw ExceptionUtils.throwAsRuntimeException(e);
+            }
         }
 
+        /*TODO re-visit the need of MethodFilter - we would need an indirection for it as with MethodHandler
         proxyFactory.setFilter(new MethodFilter()
         {
             public boolean isHandled(Method method)
@@ -72,8 +92,7 @@ class PartialBeanLifecycle<T, H extends InvocationHandler> implements Contextual
                 return !"finalize".equals(method.getName());
             }
         });
-
-        this.partialBeanProxyClass = ((Class<?>) proxyFactory.createClass()).asSubclass(partialBeanClass);
+         */
     }
 
     public T create(Bean bean, CreationalContext creationalContext)
@@ -81,8 +100,7 @@ class PartialBeanLifecycle<T, H extends InvocationHandler> implements Contextual
         try
         {
             H handlerInstance = createHandlerInstance();
-
-            T instance = this.partialBeanProxyClass.newInstance();
+            T instance = createPartialBeanProxyInstance(handlerInstance);
 
             if (this.partialBeanInjectionTarget != null)
             {
@@ -90,8 +108,6 @@ class PartialBeanLifecycle<T, H extends InvocationHandler> implements Contextual
                 this.partialBeanInjectionTarget.postConstruct(instance);
             }
 
-            PartialBeanMethodHandler<H> methodHandler = new PartialBeanMethodHandler<H>(handlerInstance);
-            ((ProxyObject) instance).setHandler(methodHandler);
             return instance;
         }
         catch (Exception e)
@@ -100,6 +116,35 @@ class PartialBeanLifecycle<T, H extends InvocationHandler> implements Contextual
         }
         //can't happen
         return null;
+    }
+
+    private T createPartialBeanProxyInstance(H handlerInstance) throws Exception
+    {
+        T instance;
+
+        if (this.isInterfaceMode)
+        {
+            instance = (T) Proxy.newProxyInstance(
+                    ClassUtils.getClassLoader(this), new Class[]{this.partialBeanProxyClass}, handlerInstance);
+        }
+        else //partial-bean is an interface
+        {
+            instance = this.partialBeanProxyClass.newInstance();
+
+            Class methodHandlerClass = ClassUtils.tryToLoadClassForName("javassist.util.proxy.MethodHandler");
+            Method setHandlerMethod = ClassUtils.tryToLoadClassForName("javassist.util.proxy.ProxyObject")
+                    .getDeclaredMethod("setHandler", methodHandlerClass);
+
+
+            MethodHandlerProxy methodHandlerProxy = new MethodHandlerProxy();
+            methodHandlerProxy.setPartialBeanMethodHandler(new PartialBeanMethodHandler<H>(handlerInstance));
+
+            Object methodHandler = Proxy.newProxyInstance(
+                    ClassUtils.getClassLoader(this), new Class[]{methodHandlerClass}, methodHandlerProxy);
+
+            setHandlerMethod.invoke(instance, methodHandler);
+        }
+        return instance;
     }
 
     private H createHandlerInstance()

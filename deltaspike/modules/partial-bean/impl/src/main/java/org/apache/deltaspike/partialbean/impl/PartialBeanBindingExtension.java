@@ -20,7 +20,6 @@ package org.apache.deltaspike.partialbean.impl;
 
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
-import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.bean.BeanBuilder;
 import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
 import org.apache.deltaspike.partialbean.api.PartialBeanBinding;
@@ -39,7 +38,6 @@ import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class PartialBeanBindingExtension implements Extension, Deactivatable
@@ -57,17 +55,6 @@ public class PartialBeanBindingExtension implements Extension, Deactivatable
     protected void init(@Observes BeforeBeanDiscovery beforeBeanDiscovery)
     {
         this.isActivated = ClassDeactivationUtils.isActivated(getClass());
-
-        if (this.isActivated)
-        {
-            this.isActivated = ClassUtils.tryToLoadClassForName("javassist.util.proxy.ProxyFactory") != null;
-
-            if (!this.isActivated && LOG.isLoggable(Level.WARNING))
-            {
-                LOG.warning("@" + PartialBeanBinding.class.getName() +
-                    " deactivated because Javassist is missing.");
-            }
-        }
     }
 
     public <X> void findInvocationHandlerBindings(@Observes ProcessAnnotatedType<X> pat, BeanManager beanManager)
