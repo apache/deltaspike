@@ -137,7 +137,7 @@ class PartialBeanLifecycle<T, H extends InvocationHandler> implements Contextual
 
 
             MethodHandlerProxy methodHandlerProxy = new MethodHandlerProxy();
-            methodHandlerProxy.setPartialBeanMethodHandler(new PartialBeanMethodHandler<H>(handlerInstance));
+            methodHandlerProxy.setPartialBeanMethodHandler(new PartialBeanAbstractMethodHandler<H>(handlerInstance));
 
             Object methodHandler = Proxy.newProxyInstance(
                     ClassUtils.getClassLoader(this), new Class[]{methodHandlerClass}, methodHandlerProxy);
@@ -183,7 +183,8 @@ class PartialBeanLifecycle<T, H extends InvocationHandler> implements Contextual
         }
 
         /*
-        H handlerInstance = (H) ((PartialBeanMethodHandler)((ProxyObject) instance).getHandler()).getHandlerInstance();
+        H handlerInstance = (H) ((PartialBeanAbstractMethodHandler)((ProxyObject) instance)
+          .getHandler()).getHandlerInstance();
         injectionTarget.dispose(handlerInstance); //currently producers aren't supported
         }
         */

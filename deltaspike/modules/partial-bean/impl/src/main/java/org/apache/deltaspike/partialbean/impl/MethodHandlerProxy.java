@@ -25,7 +25,7 @@ import java.lang.reflect.Method;
 //Further details see comments in PartialBeanLifecycle
 public class MethodHandlerProxy implements InvocationHandler
 {
-    private PartialBeanMethodHandler partialBeanMethodHandler;
+    private PartialBeanAbstractMethodHandler partialBeanMethodHandler;
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
@@ -35,7 +35,7 @@ public class MethodHandlerProxy implements InvocationHandler
         return partialBeanMethodHandler.invoke(args[0], (Method)args[1], (Method)args[2], (Object[])args[3]);
     }
 
-    void setPartialBeanMethodHandler(PartialBeanMethodHandler partialBeanMethodHandler)
+    void setPartialBeanMethodHandler(PartialBeanAbstractMethodHandler partialBeanMethodHandler)
     {
         this.partialBeanMethodHandler = partialBeanMethodHandler;
     }

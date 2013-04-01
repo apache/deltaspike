@@ -22,13 +22,14 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
 /**
+ * Handler used for partial-beans which are abstract-classes.
  * At runtime it will be called from {@link MethodHandlerProxy} as instance of javassist.util.proxy.MethodHandler
  */
-class PartialBeanMethodHandler<T extends InvocationHandler>
+class PartialBeanAbstractMethodHandler<T extends InvocationHandler>
 {
     private final T handlerInstance;
 
-    PartialBeanMethodHandler(T handlerInstance)
+    PartialBeanAbstractMethodHandler(T handlerInstance)
     {
         this.handlerInstance = handlerInstance;
     }
