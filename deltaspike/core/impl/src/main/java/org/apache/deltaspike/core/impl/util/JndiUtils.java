@@ -168,7 +168,7 @@ public abstract class JndiUtils
      * Resolves an instances for the given naming context.
      *
      * @param name       context name
-     * @param targetType target type
+     * @param type target type
      * @param <T>        type
      * @return the found instances, null otherwise
      */
