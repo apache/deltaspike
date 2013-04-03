@@ -18,9 +18,12 @@
  */
 package org.apache.deltaspike.core.impl.scope.window;
 
+import javax.enterprise.context.RequestScoped;
+
 /**
  * Simple class which just provides a @RequestScoped windowId.
  */
+@RequestScoped
 public class WindowIdHolder
 {
     private String windowId;

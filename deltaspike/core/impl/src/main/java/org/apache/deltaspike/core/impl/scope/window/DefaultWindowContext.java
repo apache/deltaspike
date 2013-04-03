@@ -19,7 +19,6 @@
 package org.apache.deltaspike.core.impl.scope.window;
 
 import javax.enterprise.context.ContextNotActiveException;
-import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 
@@ -33,9 +32,8 @@ import org.apache.deltaspike.core.util.context.AbstractContext;
 import org.apache.deltaspike.core.util.context.ContextualStorage;
 
 /**
- *
+ * Context to handle &#064;{@link WindowScoped} beans.
  */
-@SessionScoped
 public class DefaultWindowContext extends AbstractContext implements WindowContext
 {
     /**
