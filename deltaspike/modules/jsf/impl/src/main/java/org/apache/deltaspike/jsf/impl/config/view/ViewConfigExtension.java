@@ -31,6 +31,7 @@ import org.apache.deltaspike.core.spi.config.view.ViewConfigRoot;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.ExceptionUtils;
+import org.apache.deltaspike.jsf.api.config.view.Folder;
 import org.apache.deltaspike.jsf.impl.util.ViewConfigUtils;
 
 import javax.enterprise.event.Observes;
@@ -73,15 +74,24 @@ public class ViewConfigExtension implements Extension, Deactivatable
             return;
         }
 
-        if (ViewConfig.class.isAssignableFrom(pat.getAnnotatedType().getJavaClass()))
+        Class beanClass = pat.getAnnotatedType().getJavaClass();
+        if (ViewConfig.class.isAssignableFrom(beanClass))
         {
             addPageDefinition(pat.getAnnotatedType().getJavaClass(), pat.getAnnotatedType().getAnnotations());
             pat.veto();
         }
         else
         {
-            addIndirectlyInheritedMetaData(
-                pat.getAnnotatedType().getJavaClass(), pat.getAnnotatedType().getAnnotations());
+            if (beanClass.isAnnotationPresent(Folder.class))
+            {
+                addPageDefinition(pat.getAnnotatedType().getJavaClass(), pat.getAnnotatedType().getAnnotations());
+                pat.veto();
+            }
+            else
+            {
+                addIndirectlyInheritedMetaData(
+                        pat.getAnnotatedType().getJavaClass(), pat.getAnnotatedType().getAnnotations());
+            }
         }
     }
 
@@ -159,12 +169,6 @@ public class ViewConfigExtension implements Extension, Deactivatable
                 this.rootViewConfigNode = new FolderConfigNode(this.rootViewConfigNode, viewConfigClass);
                 break;
             }
-        }
-
-        if (ViewConfigUtils.isFolderConfig(viewConfigClass))
-        {
-            //TODO log it
-            return;
         }
 
         List<Class> treePath = ViewConfigUtils.toNodeList(viewConfigClass);
