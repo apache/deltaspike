@@ -77,14 +77,14 @@ public class ViewConfigExtension implements Extension, Deactivatable
         Class beanClass = pat.getAnnotatedType().getJavaClass();
         if (ViewConfig.class.isAssignableFrom(beanClass))
         {
-            addPageDefinition(pat.getAnnotatedType().getJavaClass(), pat.getAnnotatedType().getAnnotations());
+            addConfigClass(pat.getAnnotatedType().getJavaClass(), pat.getAnnotatedType().getAnnotations());
             pat.veto();
         }
         else
         {
-            if (beanClass.isAnnotationPresent(Folder.class))
+            if (ViewConfigUtils.isFolderConfig(beanClass) && beanClass.isAnnotationPresent(Folder.class))
             {
-                addPageDefinition(pat.getAnnotatedType().getJavaClass(), pat.getAnnotatedType().getAnnotations());
+                addConfigClass(pat.getAnnotatedType().getJavaClass(), pat.getAnnotatedType().getAnnotations());
                 pat.veto();
             }
             else
@@ -151,10 +151,23 @@ public class ViewConfigExtension implements Extension, Deactivatable
 
     public void addPageDefinition(Class<? extends ViewConfig> viewConfigClass)
     {
-        addPageDefinition(viewConfigClass, new HashSet<Annotation>(Arrays.asList(viewConfigClass.getAnnotations())));
+        addConfigClass(viewConfigClass, new HashSet<Annotation>(Arrays.asList(viewConfigClass.getAnnotations())));
     }
 
-    protected void addPageDefinition(Class<? extends ViewConfig> viewConfigClass, Set<Annotation> viewConfigAnnotations)
+    public void addFolderDefinition(Class configClass)
+    {
+        if (ViewConfigUtils.isFolderConfig(configClass))
+        {
+            addConfigClass(configClass, new HashSet<Annotation>(Arrays.asList(configClass.getAnnotations())));
+        }
+        else
+        {
+            throw new IllegalArgumentException(configClass != null ? configClass.getName() : "null" +
+                " is an invalid config for folders");
+        }
+    }
+
+    protected void addConfigClass(Class viewConfigClass, Set<Annotation> viewConfigAnnotations)
     {
         for (Annotation annotation : viewConfigAnnotations)
         {

@@ -18,7 +18,9 @@
  */
 package org.apache.deltaspike.jsf.impl.util;
 
+import org.apache.deltaspike.core.api.config.view.ViewConfig;
 import org.apache.deltaspike.core.util.ClassUtils;
+import org.apache.deltaspike.jsf.api.config.view.Folder;
 
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -34,7 +36,12 @@ public abstract class ViewConfigUtils
 
     public static boolean isFolderConfig(Class configClass)
     {
-        return Modifier.isAbstract(configClass.getModifiers()) || Modifier.isInterface(configClass.getModifiers());
+        return configClass != null && (
+                (ViewConfig.class.isAssignableFrom(configClass) &&
+                        Modifier.isAbstract(configClass.getModifiers()) ||
+                        Modifier.isInterface(configClass.getModifiers())
+                ) ||
+                configClass.isAnnotationPresent(Folder.class));
     }
 
     //TODO
