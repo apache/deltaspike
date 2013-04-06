@@ -264,6 +264,11 @@
                     <scope>test</scope>
                 </dependency>
 
+                <dependency>
+                    <groupId>org.apache.geronimo.specs</groupId>
+                    <artifactId>geronimo-interceptor_1.1_spec</artifactId>
+                </dependency>
+
                 <!-- Test dependencies -->
                 <dependency>
                     <groupId>org.slf4j</groupId>

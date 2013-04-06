@@ -26,11 +26,12 @@ interface Pages
     //folder (-only) meta-data would be here or at an interface
     interface AdminArea extends ViewConfig
     {
-        //empty intentionally
+        //empty (intentionally)
     }
 
     @Folder
     interface VipArea
     {
+        //empty (intentionally)
     }
 }
