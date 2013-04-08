@@ -233,15 +233,20 @@ public class ViewConfigAwareNavigationHandler extends NavigationHandler
 
         ViewConfigDescriptor oldViewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(oldViewId);
 
+        PreViewConfigNavigateEvent navigateEvent;
+
         if (oldViewConfigDescriptor != null)
         {
-            PreViewConfigNavigateEvent navigateEvent = new PreViewConfigNavigateEvent(
+            navigateEvent = new PreViewConfigNavigateEvent(
                     oldViewConfigDescriptor.getConfigClass(), newViewConfigDescriptor.getConfigClass());
-
-            this.beanManager.fireEvent(navigateEvent);
-            return navigateEvent;
         }
-        return null;
+        else
+        {
+            navigateEvent = new PreViewConfigNavigateEvent(null, newViewConfigDescriptor.getConfigClass());
+        }
+
+        this.beanManager.fireEvent(navigateEvent);
+        return navigateEvent;
     }
 
     private void initBeanManager()
