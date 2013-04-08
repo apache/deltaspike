@@ -208,11 +208,6 @@ public class ViewConfigAwareNavigationHandler extends NavigationHandler
     private ViewConfigDescriptor tryToUpdateEntry(ViewConfigDescriptor viewConfigDescriptor,
                                                   PreViewConfigNavigateEvent navigateEvent)
     {
-        if (navigateEvent == null)
-        {
-            return viewConfigDescriptor;
-        }
-
         if (navigateEvent.getToView() == null)
         {
             return null;
