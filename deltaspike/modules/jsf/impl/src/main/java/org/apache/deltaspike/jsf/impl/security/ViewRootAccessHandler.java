@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.jsf.impl.security;
 
-import org.apache.deltaspike.core.api.config.view.ViewConfig;
 import org.apache.deltaspike.core.api.config.view.metadata.ConfigDescriptor;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
@@ -38,13 +37,12 @@ public class ViewRootAccessHandler
     @Inject
     private ViewConfigResolver viewConfigResolver;
 
-    private String checkedViewId = ViewConfig.class.getName();
+    private List<String> checkedViewIds = new ArrayList<String>();
 
     public void checkAccessTo(UIViewRoot uiViewRoot)
     {
         if (uiViewRoot == null)
         {
-            this.checkedViewId = null; //forces lazy check
             return;
         }
 
@@ -54,6 +52,8 @@ public class ViewRootAccessHandler
         {
             return;
         }
+
+        this.checkedViewIds.add(viewId);
 
         ConfigDescriptor configDescriptor = this.viewConfigResolver.getViewConfigDescriptor(viewId);
 
@@ -102,8 +102,6 @@ public class ViewRootAccessHandler
 
     private boolean checkView(String viewId)
     {
-        return viewId != null &&
-                (ViewConfig.class.getName().equals(this.checkedViewId) /*no view was checked in this request*/ ||
-                        !viewId.equals(this.checkedViewId)/*the prev. checked view was a different one*/);
+        return viewId != null && !this.checkedViewIds.contains(viewId);
     }
 }

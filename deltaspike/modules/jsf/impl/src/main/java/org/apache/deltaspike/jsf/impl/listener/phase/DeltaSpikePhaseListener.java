@@ -90,7 +90,6 @@ public class DeltaSpikePhaseListener implements PhaseListener, Deactivatable
 
     private void onAfterRestoreView(FacesContext facesContext)
     {
-        checkSecuredView(facesContext);
         //TODO call init-view callbacks
     }
 
