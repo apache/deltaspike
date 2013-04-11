@@ -32,6 +32,7 @@ import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 
 import org.apache.deltaspike.core.util.ClassUtils;
+import org.apache.deltaspike.core.util.ExceptionUtils;
 
 /**
  * This is the internal helper class for low level access to JNDI
@@ -76,7 +77,7 @@ public abstract class JndiUtils
         }
         catch (NamingException e)
         {
-            throw new IllegalStateException("Could not get " + name + " from JNDI", e);
+            throw ExceptionUtils.throwAsRuntimeException(e);
         }
     }
 
@@ -96,7 +97,7 @@ public abstract class JndiUtils
         }
         catch (NamingException e)
         {
-            throw new IllegalStateException("Could not get " + name + " from JNDI", e);
+            throw ExceptionUtils.throwAsRuntimeException(e);
         }
     }
 
@@ -168,15 +169,16 @@ public abstract class JndiUtils
      * Resolves an instances for the given naming context.
      *
      * @param name       context name
-     * @param targetType target type
+     * @param type       target type
      * @param <T>        type
      * @return the found instances, null otherwise
      */
     public static <T> Map<String, T> list(String name, Class<T> type)
     {
+        Map<String, T> result = new HashMap<String, T>();
+
         try
         {
-            Map<String, T> result = new HashMap<String, T>();
             NameParser nameParser = initialContext.getNameParser(name);
             NamingEnumeration<NameClassPair> enumeration = initialContext.list(name);
             while (enumeration.hasMoreElements())
@@ -185,11 +187,11 @@ public abstract class JndiUtils
                 Name bindingName = nameParser.parse(name).add(binding.getName());
                 result.put(binding.getName(), lookup(bindingName, type));
             }
-            return result;
         }
         catch (NamingException e)
         {
-            throw new IllegalStateException("Could not list " + name + " from JNDI", e);
+            LOG.log(Level.SEVERE, "InitialContext#list failed!", e);
         }
+        return result;
     }
 }
