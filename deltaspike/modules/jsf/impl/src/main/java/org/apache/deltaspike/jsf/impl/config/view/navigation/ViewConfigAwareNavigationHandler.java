@@ -20,6 +20,7 @@ package org.apache.deltaspike.jsf.impl.config.view.navigation;
 
 import org.apache.deltaspike.core.api.config.view.DefaultErrorView;
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
+import org.apache.deltaspike.core.api.config.view.ViewRef;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigDescriptor;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
@@ -237,7 +238,8 @@ public class ViewConfigAwareNavigationHandler extends NavigationHandler
         }
         else
         {
-            navigateEvent = new PreViewConfigNavigateEvent(null, newViewConfigDescriptor.getConfigClass());
+            navigateEvent = new PreViewConfigNavigateEvent(
+                    ViewRef.Manual.class, newViewConfigDescriptor.getConfigClass());
         }
 
         this.beanManager.fireEvent(navigateEvent);
