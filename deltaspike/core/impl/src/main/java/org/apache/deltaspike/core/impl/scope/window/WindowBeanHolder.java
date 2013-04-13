@@ -28,7 +28,7 @@ import org.apache.deltaspike.core.util.context.ContextualStorage;
 
 /**
  * This holder will store the window Ids and it's beans for the current
- * Session. We use standard SessionScoped bean to not need
+ * HTTP Session. We use standard SessionScoped bean to not need
  * to treat async-supported and similar headache.
  */
 @SessionScoped
