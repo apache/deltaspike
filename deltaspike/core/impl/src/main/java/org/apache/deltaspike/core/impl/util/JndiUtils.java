@@ -32,6 +32,7 @@ import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 
 import org.apache.deltaspike.core.util.ClassUtils;
+import org.apache.deltaspike.core.util.ExceptionUtils;
 
 /**
  * This is the internal helper class for low level access to JNDI
@@ -76,7 +77,7 @@ public abstract class JndiUtils
         }
         catch (NamingException e)
         {
-            throw new IllegalStateException("Could not get " + name + " from JNDI", e);
+            throw ExceptionUtils.throwAsRuntimeException(e);
         }
     }
 
@@ -96,7 +97,7 @@ public abstract class JndiUtils
         }
         catch (NamingException e)
         {
-            throw new IllegalStateException("Could not get " + name + " from JNDI", e);
+            throw ExceptionUtils.throwAsRuntimeException(e);
         }
     }
 
@@ -167,9 +168,9 @@ public abstract class JndiUtils
     /**
      * Resolves an instances for the given naming context.
      *
-     * @param name context name
-     * @param type target type
-     * @param <T>  type
+     * @param name       context name
+     * @param type       target type
+     * @param <T>        type
      * @return the found instances, null otherwise
      */
     public static <T> Map<String, T> list(String name, Class<T> type)
