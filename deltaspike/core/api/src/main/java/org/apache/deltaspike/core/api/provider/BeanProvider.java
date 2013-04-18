@@ -115,6 +115,29 @@ public final class BeanProvider
     public static <T> T getContextualReference(Class<T> type, boolean optional, Annotation... qualifiers)
     {
         BeanManager beanManager = getBeanManager();
+
+        return getContextualReference(beanManager, type, optional, qualifiers);
+    }
+
+    /**
+     * {@link #getContextualReference(Class, Annotation...)} which returns <code>null</code> if the
+     * 'optional' parameter is set to <code>true</code>.
+     * This method is intended for usage where the BeanManger is known, e.g. in Extensions.
+     *
+     * @param beanManager the BeanManager to use
+     * @param type the type of the bean in question
+     * @param optional if <code>true</code> it will return <code>null</code> if no bean could be found or created.
+     *                 Otherwise it will throw an {@code IllegalStateException}
+     * @param qualifiers additional qualifiers which further distinct the resolved bean
+     * @param <T> target type
+     * @return the resolved Contextual Reference
+     * @see #getContextualReference(Class, Annotation...)
+     */
+    public static <T> T getContextualReference(BeanManager beanManager,
+                                               Class<T> type,
+                                               boolean optional,
+                                               Annotation... qualifiers)
+    {
         Set<Bean<?>> beans = beanManager.getBeans(type, qualifiers);
 
         if (beans == null || beans.isEmpty())
