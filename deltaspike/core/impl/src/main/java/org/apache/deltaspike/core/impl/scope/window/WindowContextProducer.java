@@ -18,34 +18,29 @@
  */
 package org.apache.deltaspike.core.impl.scope.window;
 
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.Dependent;
+import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
+
+import org.apache.deltaspike.core.spi.scope.window.WindowContext;
 
 /**
- * Simple class which just provides a &#064;RequestScoped windowId.
- * This assures that there is maximum one single windowId associated
- * with a single Thread or Request. We use &#064;RequestScoped because
- * this also works in async-supported Servlets without having to
- * take care about moving info between ThreadLocals.
+ * This producer provides access to the internally created
+ * {@link WindowContext} implementation.
+ * It simply wraps through to the instance used in the
+ * {@link DeltaSpikeContextExtension}.
  */
-@RequestScoped
-public class WindowIdHolder
+@ApplicationScoped
+public class WindowContextProducer
 {
-    private String windowId;
+    @Inject
+    private DeltaSpikeContextExtension deltaSpikeContextExtension;
 
-    /**
-     * @return the detected windowId or <code>null</code> if not yet set.
-     */
-    public String getWindowId()
+    @Produces
+    @Dependent
+    public WindowContext getWindowContext()
     {
-        return windowId;
-    }
-
-    /**
-     * Set the windowId for the current thread.
-     * @param windowId
-     */
-    public void setWindowId(String windowId)
-    {
-        this.windowId = windowId;
+        return deltaSpikeContextExtension.getWindowContext();
     }
 }

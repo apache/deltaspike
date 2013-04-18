@@ -58,7 +58,7 @@ public interface WindowContext
 
     /**
      * Close all WindowContexts which are managed by the WindowContextManager.
-     * This is necessary when the session gets closed down.
+     * This is necessary when the session gets closed down or the application closes.
      * @return
      */
     void destroy();

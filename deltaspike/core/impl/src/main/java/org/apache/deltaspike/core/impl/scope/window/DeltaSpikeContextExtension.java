@@ -20,19 +20,44 @@ package org.apache.deltaspike.core.impl.scope.window;
 
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AfterBeanDiscovery;
+import javax.enterprise.inject.spi.AfterDeploymentValidation;
 import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.Extension;
+
+import org.apache.deltaspike.core.api.provider.BeanProvider;
 
 /**
  * Handle all DeltaSpike WindowContext and ConversationContext
  * related features.
  */
-public class DeltaSpikeContextExtension
+public class DeltaSpikeContextExtension implements Extension
 {
-    private DefaultWindowContext windowContext;
+    private WindowContextImpl windowContext;
 
     public void registerDeltaSpikeContexts(@Observes AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager)
     {
-        windowContext = new DefaultWindowContext(beanManager);
+        windowContext = new WindowContextImpl(beanManager);
         afterBeanDiscovery.addContext(windowContext);
+    }
+
+    /**
+     * We can only initialize our contexts in AfterDeploymentValidation because
+     * getBeans must not be invoked earlier than this phase to reduce randomness
+     * caused by Beans no being fully registered yet.
+     */
+    public void initializeDeltaSpikeContexts(@Observes AfterDeploymentValidation adv, BeanManager beanManager)
+    {
+        WindowBeanHolder windowBeanHolder
+            = BeanProvider.getContextualReference(beanManager, WindowBeanHolder.class, false);
+
+        WindowIdHolder windowIdHolder
+            = BeanProvider.getContextualReference(beanManager, WindowIdHolder.class, false);
+
+        windowContext.initWindowContext(windowBeanHolder, windowIdHolder);
+    }
+
+    public WindowContextImpl getWindowContext()
+    {
+        return windowContext;
     }
 }

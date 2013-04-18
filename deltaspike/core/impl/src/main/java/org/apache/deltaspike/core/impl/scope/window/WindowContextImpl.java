@@ -19,8 +19,8 @@
 package org.apache.deltaspike.core.impl.scope.window;
 
 import javax.enterprise.context.ContextNotActiveException;
+import javax.enterprise.inject.Typed;
 import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
 
 import java.lang.annotation.Annotation;
 import java.util.Map;
@@ -34,23 +34,21 @@ import org.apache.deltaspike.core.util.context.ContextualStorage;
 /**
  * Context to handle &#064;{@link WindowScoped} beans.
  */
-public class DefaultWindowContext extends AbstractContext implements WindowContext
+@Typed()
+public class WindowContextImpl extends AbstractContext implements WindowContext
 {
     /**
      * all the {@link WindowContext}s which are active in this very Session.
      */
     private Map<String, WindowContext> windowContexts = new ConcurrentHashMap<String, WindowContext>();
 
-    @Inject
     private WindowIdHolder windowIdHolder;
-
-    @Inject
     private WindowBeanHolder windowBeanHolder;
 
     private BeanManager beanManager;
 
 
-    public DefaultWindowContext(BeanManager beanManager)
+    public WindowContextImpl(BeanManager beanManager)
     {
         super(beanManager);
 
@@ -127,5 +125,11 @@ public class DefaultWindowContext extends AbstractContext implements WindowConte
     {
         String windowId = getCurrentWindowId();
         return windowId != null;
+    }
+
+    void initWindowContext(WindowBeanHolder windowBeanHolder, WindowIdHolder windowIdHolder)
+    {
+        this.windowBeanHolder = windowBeanHolder;
+        this.windowIdHolder = windowIdHolder;
     }
 }
