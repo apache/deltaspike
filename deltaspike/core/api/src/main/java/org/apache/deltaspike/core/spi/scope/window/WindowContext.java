@@ -30,7 +30,8 @@ package org.apache.deltaspike.core.spi.scope.window;
  * session as &#064;SessionScoped bean.
  * </p>
  * <p>Every WindowContext is uniquely identified via a
- * 'windowId'. Each Thread is associated with at most
+ * 'windowId' inside the current Session.
+ * Each Thread is associated with at most
  * one single windowId at a time. The {@link WindowContext}
  * is the interface which allows resolving the current <i>windowId</i>
  * associated with this very Thread.</p>
@@ -47,21 +48,12 @@ public interface WindowContext
      * If no WindowContext exists with the very windowId we will create a new one.
      * @param windowId
      */
-    void activateWindowContext(String windowId);
+    void activateWindow(String windowId);
 
     /**
-     * close the WindowContext with the currently activated windowId for the very Thread.
+     * close the WindowContext with the given windowId.
      * @return <code>true</code> if any did exist, <code>false</code> otherwise
      */
-    boolean closeCurrentWindowContext();
-
-
-    /**
-     * Close all WindowContexts which are managed by the WindowContextManager.
-     * This is necessary when the session gets closed down or the application closes.
-     * @return
-     */
-    void destroy();
-
+    boolean closeWindow(String windowId);
 
 }

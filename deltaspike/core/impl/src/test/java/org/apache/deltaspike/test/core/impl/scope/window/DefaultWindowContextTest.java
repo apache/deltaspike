@@ -68,14 +68,14 @@ public class DefaultWindowContextTest
         Assert.assertNotNull(someWindowScopedBean);
 
         {
-            windowContext.activateWindowContext("window1");
+            windowContext.activateWindow("window1");
             someWindowScopedBean.setValue("Hans");
             Assert.assertEquals("Hans", someWindowScopedBean.getValue());
         }
 
         // now we switch it away to another 'window'
         {
-            windowContext.activateWindowContext("window2");
+            windowContext.activateWindow("window2");
             Assert.assertNull(someWindowScopedBean.getValue());
             someWindowScopedBean.setValue("Karl");
             Assert.assertEquals("Karl", someWindowScopedBean.getValue());
@@ -83,7 +83,7 @@ public class DefaultWindowContextTest
 
         // and now back to the first window
         {
-            windowContext.activateWindowContext("window1");
+            windowContext.activateWindow("window1");
 
             // which must still contain the old value
             Assert.assertEquals("Hans", someWindowScopedBean.getValue());
@@ -91,7 +91,7 @@ public class DefaultWindowContextTest
 
         // and again back to the second window
         {
-            windowContext.activateWindowContext("window2");
+            windowContext.activateWindow("window2");
 
             // which must still contain the old value of the 2nd window
             Assert.assertEquals("Karl", someWindowScopedBean.getValue());

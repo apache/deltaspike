@@ -18,12 +18,14 @@
  */
 package org.apache.deltaspike.core.impl.scope.window;
 
+import javax.annotation.PreDestroy;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.spi.BeanManager;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.deltaspike.core.util.context.AbstractContext;
 import org.apache.deltaspike.core.util.context.ContextualStorage;
 
 /**
@@ -41,6 +43,7 @@ public class WindowBeanHolder implements Serializable
      */
     private volatile Map<String, ContextualStorage> storageMap = new ConcurrentHashMap<String, ContextualStorage>();
 
+    //X TODO review usage
     public Map<String, ContextualStorage> getStorageMap()
     {
         return storageMap;
@@ -85,5 +88,19 @@ public class WindowBeanHolder implements Serializable
         Map<String, ContextualStorage> oldStorageMap = storageMap;
         storageMap = new ConcurrentHashMap<String, ContextualStorage>();
         return oldStorageMap;
+    }
+
+    @PreDestroy
+    public void destroyBeans()
+    {
+        // we replace the old windowBeanHolder beans with a new storage Map
+        // an afterwards destroy the old Beans without having to care about any syncs.
+        Map<String, ContextualStorage> oldWindowContextStorages = forceNewStorage();
+
+        for (ContextualStorage contextualStorage : oldWindowContextStorages.values())
+        {
+            AbstractContext.destroyAllActive(contextualStorage);
+        }
+
     }
 }

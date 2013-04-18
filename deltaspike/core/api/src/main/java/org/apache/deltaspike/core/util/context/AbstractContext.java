@@ -154,9 +154,11 @@ public abstract class AbstractContext implements Context
     }
 
     /**
-     * destroys all the Contextual Instances in the specified ContextualStorage.
+     * Destroys all the Contextual Instances in the specified ContextualStorage.
+     * This is a static method to allow various holder objects to cleanup
+     * properly in &#064;PreDestroy.
      */
-    public void destroyAllActive(ContextualStorage storage)
+    public static void destroyAllActive(ContextualStorage storage)
     {
         Map<Object, ContextualInstanceInfo<?>> contextMap = storage.getStorage();
         for (Map.Entry<Object, ContextualInstanceInfo<?>> entry : contextMap.entrySet())

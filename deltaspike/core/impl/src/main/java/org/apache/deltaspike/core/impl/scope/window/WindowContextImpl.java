@@ -23,8 +23,6 @@ import javax.enterprise.inject.Typed;
 import javax.enterprise.inject.spi.BeanManager;
 
 import java.lang.annotation.Annotation;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.deltaspike.core.api.scope.WindowScoped;
 import org.apache.deltaspike.core.spi.scope.window.WindowContext;
@@ -38,13 +36,18 @@ import org.apache.deltaspike.core.util.context.ContextualStorage;
 public class WindowContextImpl extends AbstractContext implements WindowContext
 {
     /**
-     * all the {@link WindowContext}s which are active in this very Session.
+     * Holds the currently active windowId of each Request
      */
-    private Map<String, WindowContext> windowContexts = new ConcurrentHashMap<String, WindowContext>();
-
     private WindowIdHolder windowIdHolder;
+
+    /**
+     * Contains the stored WindowScoped contextual instances.
+     */
     private WindowBeanHolder windowBeanHolder;
 
+    /**
+     * needed for serialisation and passivationId
+     */
     private BeanManager beanManager;
 
 
@@ -55,8 +58,20 @@ public class WindowContextImpl extends AbstractContext implements WindowContext
         this.beanManager = beanManager;
     }
 
+    /**
+     * We need to pass the session scoped windowbean holder and the
+     * requestscoped windowIdHolder in a later phase because
+     * getBeans is only allowed from AfterDeploymentValidation onwards.
+     */
+    void initWindowContext(WindowBeanHolder windowBeanHolder, WindowIdHolder windowIdHolder)
+    {
+        this.windowBeanHolder = windowBeanHolder;
+        this.windowIdHolder = windowIdHolder;
+    }
+
+
     @Override
-    public void activateWindowContext(String windowId)
+    public void activateWindow(String windowId)
     {
         windowIdHolder.setWindowId(windowId);
     }
@@ -68,34 +83,20 @@ public class WindowContextImpl extends AbstractContext implements WindowContext
     }
 
     @Override
-    public boolean closeCurrentWindowContext()
+    public boolean closeWindow(String windowId)
     {
-        String windowId = windowIdHolder.getWindowId();
         if (windowId == null)
         {
             return false;
         }
 
-        WindowContext windowContext = windowContexts.get(windowId);
-        if (windowContext == null)
+        ContextualStorage windowStorage = windowBeanHolder.getContextualStorage(beanManager, windowId);
+        if (windowStorage == null)
         {
             return false;
         }
 
         return true;
-    }
-
-    @Override
-    public synchronized void destroy()
-    {
-        // we replace the old windowBeanHolder beans with a new storage Map
-        // an afterwards destroy the old Beans without having to care about any syncs.
-        Map<String, ContextualStorage> oldWindowContextStorages = windowBeanHolder.forceNewStorage();
-
-        for (ContextualStorage contextualStorage : oldWindowContextStorages.values())
-        {
-            destroyAllActive(contextualStorage);
-        }
     }
 
     @Override
@@ -127,9 +128,4 @@ public class WindowContextImpl extends AbstractContext implements WindowContext
         return windowId != null;
     }
 
-    void initWindowContext(WindowBeanHolder windowBeanHolder, WindowIdHolder windowIdHolder)
-    {
-        this.windowBeanHolder = windowBeanHolder;
-        this.windowIdHolder = windowIdHolder;
-    }
 }
