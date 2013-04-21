@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.jsf.spi.window;
+package org.apache.deltaspike.jsf.spi.scope.window;
 
 import javax.faces.context.FacesContext;
 
@@ -46,7 +46,12 @@ public interface ClientWindowConfig
          * Render each GET request with the windowId you get during the request
          * and perform a lazy check on the client side via JavaScript or similar.
          */
-        LAZY
+        LAZY,
+
+        /**
+         * If you set this mode, you also need to provide an own {@link ClientWindow} implementation.
+         */
+        CUSTOM
 
     }
 

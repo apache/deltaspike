@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.jsf.spi.window;
+package org.apache.deltaspike.jsf.spi.scope.window;
 
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
@@ -32,8 +32,11 @@ import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.ExceptionUtils;
 
 /**
- * Default implementation of {@link ClientWindowConfig}.
- * It will use the internal <code>windowhandler.html</code>
+ * <p>Default implementation of {@link ClientWindowConfig}.
+ * By default it will use the internal <code>windowhandler.html</code></p>
+ *
+ * <p>You can &#064;Specializes this class to tweak the configuration or
+ * provide a completely new implementation as &#064;Alternative.</p>
  */
 @SessionScoped
 public class DefaultClientWindowConfig implements ClientWindowConfig, Serializable

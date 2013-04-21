@@ -56,7 +56,10 @@ class DeltaSpikeLifecycleWrapper extends Lifecycle
         //TODO broadcastApplicationStartupBroadcaster();
         broadcastBeforeFacesRequestEvent(facesContext);
 
+        //X TODO add ClientWindow handling
         this.wrapped.execute(facesContext);
+
+
     }
 
     @Override
