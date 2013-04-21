@@ -26,7 +26,6 @@
         <version>0.4-incubating-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.apache.deltaspike.examples</groupId>
     <artifactId>deltaspike-jsf-example</artifactId>
 
     <name>Apache DeltaSpike JSF Examples</name>
@@ -38,6 +37,29 @@
     </properties>
 
     <profiles>
+        <profile>
+            <!-- run it with: mvn clean package tomee:run -PtomeeConfig-->
+            <id>tomeeConfig</id>
+            <build>
+                <defaultGoal>install</defaultGoal>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>3.0</version>
+                        <configuration>
+                            <source>1.6</source>
+                            <target>1.6</target>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.openejb.maven</groupId>
+                        <artifactId>tomee-maven-plugin</artifactId>
+                        <version>${tomee.version}</version>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
 
     </profiles>
 
