@@ -18,15 +18,23 @@
  */
 package org.apache.deltaspike.jsf.impl.listener.phase;
 
+import org.apache.deltaspike.core.api.config.view.controller.InitView;
+import org.apache.deltaspike.core.api.config.view.controller.PostRenderView;
+import org.apache.deltaspike.core.api.config.view.controller.PreRenderView;
+import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigDescriptor;
+import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.jsf.impl.security.ViewRootAccessHandler;
 import org.apache.deltaspike.jsf.impl.util.SecurityUtils;
+import org.apache.deltaspike.jsf.impl.util.ViewControllerUtils;
 import org.apache.deltaspike.security.api.authorization.ErrorViewAwareAccessDeniedException;
 import org.apache.deltaspike.security.spi.authorization.EditableAccessDecisionVoterContext;
 
+import javax.enterprise.context.ContextNotActiveException;
 import javax.enterprise.inject.Typed;
+import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseEvent;
 import javax.faces.event.PhaseId;
@@ -43,6 +51,8 @@ public class DeltaSpikePhaseListener implements PhaseListener, Deactivatable
 
     private final PhaseListener jsfRequestLifecyclePhaseListener = new JsfRequestLifecyclePhaseListener();
 
+    private ViewConfigResolver viewConfigResolver;
+
     public DeltaSpikePhaseListener()
     {
         this.activated = ClassDeactivationUtils.isActivated(getClass());
@@ -56,6 +66,13 @@ public class DeltaSpikePhaseListener implements PhaseListener, Deactivatable
             return;
         }
 
+        if (this.viewConfigResolver == null)
+        {
+            lazyInit();
+        }
+
+        processInitView(phaseEvent);
+
         if (PhaseId.RENDER_RESPONSE.equals(phaseEvent.getPhaseId()))
         {
             onBeforeRenderResponse(phaseEvent.getFacesContext());
@@ -68,7 +85,7 @@ public class DeltaSpikePhaseListener implements PhaseListener, Deactivatable
     private void onBeforeRenderResponse(FacesContext facesContext)
     {
         checkSecuredView(facesContext);
-        //TODO call pre-render-view callbacks
+        processPreRenderView(facesContext);
     }
 
     @Override
@@ -79,18 +96,25 @@ public class DeltaSpikePhaseListener implements PhaseListener, Deactivatable
             return;
         }
 
-        if (PhaseId.RESTORE_VIEW.equals(phaseEvent.getPhaseId()))
+        if (this.viewConfigResolver == null)
         {
-            onAfterRestoreView(phaseEvent.getFacesContext());
+            lazyInit();
+        }
+
+        processInitView(phaseEvent);
+
+        if (PhaseId.RENDER_RESPONSE.equals(phaseEvent.getPhaseId()))
+        {
+            onAfterRenderResponse(phaseEvent.getFacesContext());
         }
 
         //delegate to JsfRequestLifecyclePhaseListener as a last step
         this.jsfRequestLifecyclePhaseListener.afterPhase(phaseEvent);
     }
 
-    private void onAfterRestoreView(FacesContext facesContext)
+    private void onAfterRenderResponse(FacesContext facesContext)
     {
-        //TODO call init-view callbacks
+        processPostRenderView(facesContext);
     }
 
     @Override
@@ -101,10 +125,6 @@ public class DeltaSpikePhaseListener implements PhaseListener, Deactivatable
 
     private void checkSecuredView(FacesContext facesContext)
     {
-        if (this.securityModuleActivated == null)
-        {
-            lazyInit();
-        }
         if (!this.securityModuleActivated)
         {
             return;
@@ -126,11 +146,101 @@ public class DeltaSpikePhaseListener implements PhaseListener, Deactivatable
         this.securityModuleActivated =
             BeanProvider.getContextualReference(EditableAccessDecisionVoterContext.class, true) != null;
 
+        this.viewConfigResolver = BeanProvider.getContextualReference(ViewConfigResolver.class);
+
         if (!this.securityModuleActivated)
         {
             Logger.getLogger(getClass().getName()) //it's the only case for which a logger is needed in this class
                     .info("security-module-impl isn't used -> " + getClass().getName() +
                             "#checkSecuredView gets deactivated");
         }
+    }
+
+    private void processInitView(PhaseEvent event)
+    {
+        if (event.getPhaseId().equals(PhaseId.RESTORE_VIEW) && !isRedirectRequest(event.getFacesContext()))
+        {
+            return;
+        }
+
+        //TODO check if we have to restrict the other callbacks as well
+        //leads to a call of @BeforePhase but not the corresponding @AfterPhase call of the corresponding callbacks
+
+        //TODO don't call the callbacks in case of an initial redirct
+        //was:
+        /*
+        if(Boolean.TRUE.equals(event.getFacesContext().getExternalContext().getRequestMap()
+                .get(WindowContextManagerObserver.INITIAL_REDIRECT_PERFORMED_KEY)))
+        {
+            return;
+        }
+        */
+
+        FacesContext facesContext = event.getFacesContext();
+        if (facesContext.getViewRoot() != null && facesContext.getViewRoot().getViewId() != null)
+        {
+            processInitView(event.getFacesContext().getViewRoot().getViewId());
+        }
+    }
+
+    private void processInitView(String viewId)
+    {
+        try
+        {
+            WindowMetaData windowMetaData = BeanProvider.getContextualReference(WindowMetaData.class);
+
+            //view already initialized in this or any prev. request
+            if (viewId.equals(windowMetaData.getInitializedViewId()))
+            {
+                return;
+            }
+
+            //override the view-id if we have a new view
+            windowMetaData.setInitializedViewId(viewId);
+
+            ViewConfigDescriptor viewDefinitionEntry = this.viewConfigResolver.getViewConfigDescriptor(viewId);
+
+            if (viewDefinitionEntry == null)
+            {
+                return;
+            }
+
+            ViewControllerUtils.executeViewControllerCallback(viewDefinitionEntry, InitView.class);
+        }
+        catch (ContextNotActiveException e)
+        {
+            return; //TODO discuss how we handle it
+        }
+    }
+
+    private void processPreRenderView(FacesContext facesContext)
+    {
+        UIViewRoot uiViewRoot = facesContext.getViewRoot();
+
+        if (uiViewRoot != null)
+        {
+            ViewConfigDescriptor viewDefinitionEntry =
+                    this.viewConfigResolver.getViewConfigDescriptor(uiViewRoot.getViewId());
+
+            ViewControllerUtils.executeViewControllerCallback(viewDefinitionEntry, PreRenderView.class);
+        }
+    }
+
+    private void processPostRenderView(FacesContext facesContext)
+    {
+        UIViewRoot uiViewRoot = facesContext.getViewRoot();
+
+        if (uiViewRoot != null)
+        {
+            ViewConfigDescriptor viewDefinitionEntry =
+                    this.viewConfigResolver.getViewConfigDescriptor(uiViewRoot.getViewId());
+
+            ViewControllerUtils.executeViewControllerCallback(viewDefinitionEntry, PostRenderView.class);
+        }
+    }
+
+    private boolean isRedirectRequest(FacesContext facesContext)
+    {
+        return facesContext.getResponseComplete();
     }
 }
