@@ -30,7 +30,9 @@ import org.apache.deltaspike.core.util.context.AbstractContext;
 import org.apache.deltaspike.core.util.context.ContextualStorage;
 
 /**
- * Context to handle &#064;{@link WindowScoped} beans.
+ * CDI Context to handle &#064;{@link WindowScoped} beans.
+ * This also implements the interface to control the id of
+ * the currently active 'window' (e.g. a web browser tab).
  */
 @Typed()
 public class WindowContextImpl extends AbstractContext implements WindowContext

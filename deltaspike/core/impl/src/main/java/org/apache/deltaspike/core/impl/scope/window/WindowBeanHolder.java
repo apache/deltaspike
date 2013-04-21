@@ -43,12 +43,6 @@ public class WindowBeanHolder implements Serializable
      */
     private volatile Map<String, ContextualStorage> storageMap = new ConcurrentHashMap<String, ContextualStorage>();
 
-    //X TODO review usage
-    public Map<String, ContextualStorage> getStorageMap()
-    {
-        return storageMap;
-    }
-
     /**
      * This method will return the ContextualStorage or create a new one
      * if no one is yet assigned to the current windowId.
@@ -90,6 +84,13 @@ public class WindowBeanHolder implements Serializable
         return oldStorageMap;
     }
 
+    /**
+     * This method properly destroys all current &#064;WindowScoped beans
+     * of the active session and also prepares the storage for new beans.
+     * It will automatically get called when the session context closes
+     * but can also get invoked manually, e.g. if a user likes to get rid
+     * of all it's &#064;WindowScoped beans.
+     */
     @PreDestroy
     public void destroyBeans()
     {
