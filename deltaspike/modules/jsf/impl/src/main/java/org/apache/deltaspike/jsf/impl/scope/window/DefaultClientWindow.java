@@ -19,13 +19,20 @@
 package org.apache.deltaspike.jsf.impl.scope.window;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.faces.FacesException;
 import javax.faces.component.UIViewRoot;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.logging.Logger;
 
 import org.apache.deltaspike.core.spi.scope.window.WindowContext;
+import org.apache.deltaspike.jsf.impl.util.JsfUtils;
 import org.apache.deltaspike.jsf.spi.scope.window.ClientWindow;
 import org.apache.deltaspike.jsf.spi.scope.window.ClientWindowConfig;
 
@@ -46,6 +53,24 @@ public class DefaultClientWindow implements ClientWindow
 {
     private static final Logger logger = Logger.getLogger(DefaultClientWindow.class.getName());
 
+    private static final String WINDOW_ID_COOKIE_PREFIX = "dsWindowId-";
+    private static final String DELTASPIKE_REQUEST_TOKEN = "dsRid";
+
+    private static final String UNINITIALIZED_WINDOW_ID_VALUE = "uninitializedWindowId";
+    private static final String WINDOW_ID_REPLACE_PATTERN = "$$windowIdValue$$";
+    private static final String NOSCRIPT_URL_REPLACE_PATTERN = "$$noscriptUrl$$";
+
+    /**
+     * Use this parameter to force a 'direct' request from the clients without any windowId detection
+     * We keep this name for backward compat with CODI.
+     */
+    private static final String NOSCRIPT_PARAMETER = "mfDirect";
+
+    /**
+     * This windowId will be used for all requests with disabled windowId feature
+     */
+    private static final String DEFAULT_WINDOW_ID = "default";
+
 
     @Inject
     private ClientWindowConfig clientWindowConfig;
@@ -59,16 +84,36 @@ public class DefaultClientWindow implements ClientWindow
     {
         if (ClientWindowRenderMode.NONE.equals(clientWindowConfig.getClientWindowRenderMode(facesContext)))
         {
-            return null;
+            // if this request should not get any window detection then we are done
+            return DEFAULT_WINDOW_ID;
         }
-
-        String windowId = null;
 
         if (facesContext.isPostback())
         {
+            // for POST we read the windowId from the WindowIdHolderComponent in our ViewRoot
             return getPostBackWindowId(facesContext);
         }
 
+        ExternalContext externalContext = facesContext.getExternalContext();
+
+        // and now for the GET request stuff
+        if (isNoscriptRequest(externalContext))
+        {
+            // the client has JavaScript disabled
+            clientWindowConfig.setJavaScriptEnabled(false);
+
+            return DEFAULT_WINDOW_ID;
+        }
+
+        String windowId = getVerifiedWindowIdFromCookie(externalContext);
+        if (windowId == null)
+        {
+            // GET request without windowId - send windowhandlerfilter.html to get the windowId
+            sendWindowHandlerHtml(externalContext, null);
+            facesContext.responseComplete();
+        }
+
+        // we have a valid windowId - set it and continue with the request
         return windowId;
     }
 
@@ -92,5 +137,119 @@ public class DefaultClientWindow implements ClientWindow
         return null;
     }
 
+
+    private boolean isNoscriptRequest(ExternalContext externalContext)
+    {
+        String noscript = externalContext.getRequestParameterMap().get(NOSCRIPT_PARAMETER);
+
+        return (noscript != null && "true".equals(noscript));
+    }
+
+
+    private void sendWindowHandlerHtml(ExternalContext externalContext, String windowId)
+    {
+        HttpServletResponse httpResponse = (HttpServletResponse) externalContext.getResponse();
+
+        try
+        {
+            httpResponse.setStatus(HttpServletResponse.SC_OK);
+            httpResponse.setContentType("text/html");
+
+            String windowHandlerHtml = clientWindowConfig.getClientWindowHtml();
+
+            if (windowId == null)
+            {
+                windowId = UNINITIALIZED_WINDOW_ID_VALUE;
+            }
+
+            // set the windowId value in the javascript code
+            windowHandlerHtml = windowHandlerHtml.replace(WINDOW_ID_REPLACE_PATTERN, windowId);
+
+            // set the noscript-URL for users with no JavaScript
+            windowHandlerHtml =
+                    windowHandlerHtml.replace(NOSCRIPT_URL_REPLACE_PATTERN, getNoscriptUrl(externalContext));
+
+            OutputStream os = httpResponse.getOutputStream();
+            try
+            {
+                os.write(windowHandlerHtml.getBytes());
+            }
+            finally
+            {
+                os.close();
+            }
+        }
+        catch (IOException ioe)
+        {
+            throw new FacesException(ioe);
+        }
+    }
+
+    private String getNoscriptUrl(ExternalContext externalContext)
+    {
+        String url = externalContext.getRequestPathInfo();
+        if (url == null)
+        {
+            url = "";
+        }
+
+        // only use the very last part of the url
+        int lastSlash = url.lastIndexOf('/');
+        if (lastSlash != -1)
+        {
+            url = url.substring(lastSlash + 1);
+        }
+
+        // add request parameter
+        url = JsfUtils.addPageParameters(externalContext, url, true);
+
+        // add noscript parameter
+        if (url.contains("?"))
+        {
+            url = url + "&";
+        }
+        else
+        {
+            url = url + "?";
+        }
+        url = url + NOSCRIPT_PARAMETER + "=true";
+
+        // NOTE that the url could contain data for an XSS attack
+        // like e.g. ?"></a><a href%3D"http://hacker.org/attack.html?a
+        // DO NOT REMOVE THE FOLLOWING LINES!
+        url = url.replace("\"", "");
+        url = url.replace("\'", "");
+
+        return url;
+    }
+
+    private String getVerifiedWindowIdFromCookie(ExternalContext externalContext)
+    {
+        String cookieName = WINDOW_ID_COOKIE_PREFIX + getRequestToken(externalContext);
+        Cookie cookie = (Cookie) externalContext.getRequestCookieMap().get(cookieName);
+
+        if (cookie != null)
+        {
+            // manually blast the cookie away, otherwise it pollutes the
+            // cookie storage in some browsers. E.g. Firefox doesn't
+            // cleanup properly, even if the max-age is reached.
+            cookie.setMaxAge(0);
+
+            return cookie.getValue();
+        }
+
+        return null;
+    }
+
+    private String getRequestToken(ExternalContext externalContext)
+    {
+        String requestToken = externalContext.getRequestParameterMap().get(DELTASPIKE_REQUEST_TOKEN);
+        if (requestToken != null)
+        {
+            return requestToken;
+        }
+
+        return "";
+    }
 
 }

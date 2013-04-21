@@ -41,7 +41,7 @@ public class WindowBeanHolder implements Serializable
      * value: the {@link ContextualStorage} which holds all the
      * {@link javax.enterprise.inject.spi.Bean}s.
      */
-    private volatile Map<String, ContextualStorage> storageMap = new ConcurrentHashMap<String, ContextualStorage>();
+    private Map<String, ContextualStorage> storageMap = new ConcurrentHashMap<String, ContextualStorage>();
 
     /**
      * This method will return the ContextualStorage or create a new one
@@ -65,6 +65,11 @@ public class WindowBeanHolder implements Serializable
         }
 
         return contextualStorage;
+    }
+
+    public Map<String, ContextualStorage> getStorageMap()
+    {
+        return storageMap;
     }
 
     /**
