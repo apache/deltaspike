@@ -21,14 +21,20 @@ package org.apache.deltaspike.jsf.impl.util;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.api.config.view.navigation.NavigationParameterContext;
+import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;
+import org.apache.deltaspike.jsf.impl.listener.phase.WindowMetaData;
+import org.apache.deltaspike.jsf.impl.message.FacesMessageEntry;
 
+import javax.enterprise.context.ContextNotActiveException;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class JsfUtils
 {
@@ -143,5 +149,69 @@ public abstract class JsfUtils
     public static ViewConfigResolver getViewConfigResolver()
     {
         return BeanProvider.getContextualReference(ViewConfigResolver.class);
+    }
+
+    public static void saveFacesMessages(ExternalContext externalContext)
+    {
+        JsfModuleConfig jsfModuleConfig = BeanProvider.getContextualReference(JsfModuleConfig.class);
+
+        if (!jsfModuleConfig.isAlwaysKeepMessages())
+        {
+            return;
+        }
+
+        try
+        {
+            WindowMetaData windowMetaData = BeanProvider.getContextualReference(WindowMetaData.class);
+
+            Map<String, Object> requestMap = externalContext.getRequestMap();
+
+            @SuppressWarnings({ "unchecked" })
+            List<FacesMessageEntry> facesMessageEntryList =
+                    (List<FacesMessageEntry>)requestMap.get(FacesMessageEntry.class.getName());
+
+            if (facesMessageEntryList == null)
+            {
+                facesMessageEntryList = new CopyOnWriteArrayList<FacesMessageEntry>();
+            }
+            windowMetaData.setFacesMessageEntryList(facesMessageEntryList);
+        }
+        catch (ContextNotActiveException e)
+        {
+            //TODO log it in case of project-stage development
+            //we can't handle it correctly -> delegate to the jsf-api (which has some restrictions esp. before v2.2)
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+        }
+    }
+
+    public static void tryToRestoreMessages(FacesContext facesContext)
+    {
+        JsfModuleConfig jsfModuleConfig = BeanProvider.getContextualReference(JsfModuleConfig.class);
+
+        if (!jsfModuleConfig.isAlwaysKeepMessages())
+        {
+            return;
+        }
+
+        try
+        {
+            WindowMetaData windowMetaData = BeanProvider.getContextualReference(WindowMetaData.class);
+
+            @SuppressWarnings({ "unchecked" })
+            List<FacesMessageEntry> facesMessageEntryList = windowMetaData.getFacesMessageEntryList();
+
+            if (facesMessageEntryList != null)
+            {
+                for (FacesMessageEntry facesMessageEntry : facesMessageEntryList)
+                {
+                    facesContext.addMessage(facesMessageEntry.getComponentId(), facesMessageEntry.getFacesMessage());
+                }
+                facesMessageEntryList.clear();
+            }
+        }
+        catch (ContextNotActiveException e)
+        {
+            //TODO discuss how we handle it
+        }
     }
 }

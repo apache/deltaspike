@@ -22,10 +22,16 @@ import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.jsf.impl.config.view.DefaultErrorViewAwareExceptionHandlerWrapper;
+import org.apache.deltaspike.jsf.impl.message.FacesMessageEntry;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.context.ExceptionHandler;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.context.FacesContextWrapper;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
 {
@@ -35,9 +41,21 @@ class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
 
     private boolean defaultErrorViewExceptionHandlerActivated;
 
+    private ExternalContext wrappedExternalContext;
+
     DeltaSpikeFacesContextWrapper(FacesContext wrappedFacesContext)
     {
         this.wrappedFacesContext = wrappedFacesContext;
+
+        if (ClassDeactivationUtils.isActivated(DeltaSpikeExternalContextWrapper.class))
+        {
+            this.wrappedExternalContext =
+                    new DeltaSpikeExternalContextWrapper(wrappedFacesContext.getExternalContext());
+        }
+        else
+        {
+            this.wrappedExternalContext = wrappedFacesContext.getExternalContext();
+        }
 
         setCurrentInstance(this);
     }
@@ -97,6 +115,39 @@ class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
                     viewConfigResolver.getDefaultErrorViewConfigDescriptor() != null &&
                             ClassDeactivationUtils.isActivated(DefaultErrorViewAwareExceptionHandlerWrapper.class);
         }
+    }
+
+    /**
+     * Adds the {@link FacesMessage} also to a request scoped list to allow to preserve them later on
+     * (in case of redirects)
+     *
+     * {@inheritDoc}
+     */
+    @Override
+    public void addMessage(String componentId, FacesMessage facesMessage)
+    {
+        this.wrappedFacesContext.addMessage(componentId, facesMessage);
+
+        //don't store it directly in the window context - it would trigger a too early restore (in some cases)
+        Map<String, Object> requestMap = getExternalContext().getRequestMap();
+
+        @SuppressWarnings({ "unchecked" })
+        List<FacesMessageEntry> facesMessageEntryList =
+                (List<FacesMessageEntry>)requestMap.get(FacesMessageEntry.class.getName());
+
+        if (facesMessageEntryList == null)
+        {
+            facesMessageEntryList = new CopyOnWriteArrayList<FacesMessageEntry>();
+            requestMap.put(FacesMessageEntry.class.getName(), facesMessageEntryList);
+        }
+
+        facesMessageEntryList.add(new FacesMessageEntry(componentId, facesMessage));
+    }
+
+    @Override
+    public ExternalContext getExternalContext()
+    {
+        return this.wrappedExternalContext;
     }
 
     @Override

@@ -27,6 +27,7 @@ import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.jsf.impl.security.ViewRootAccessHandler;
+import org.apache.deltaspike.jsf.impl.util.JsfUtils;
 import org.apache.deltaspike.jsf.impl.util.SecurityUtils;
 import org.apache.deltaspike.jsf.impl.util.ViewControllerUtils;
 import org.apache.deltaspike.security.api.authorization.ErrorViewAwareAccessDeniedException;
@@ -103,13 +104,23 @@ public class DeltaSpikePhaseListener implements PhaseListener, Deactivatable
 
         processInitView(phaseEvent);
 
-        if (PhaseId.RENDER_RESPONSE.equals(phaseEvent.getPhaseId()))
+        if (PhaseId.RESTORE_VIEW.equals(phaseEvent.getPhaseId()))
+        {
+            onAfterRestoreView(phaseEvent.getFacesContext());
+
+        }
+        else if (PhaseId.RENDER_RESPONSE.equals(phaseEvent.getPhaseId()))
         {
             onAfterRenderResponse(phaseEvent.getFacesContext());
         }
 
         //delegate to JsfRequestLifecyclePhaseListener as a last step
         this.jsfRequestLifecyclePhaseListener.afterPhase(phaseEvent);
+    }
+
+    private void onAfterRestoreView(FacesContext facesContext)
+    {
+        JsfUtils.tryToRestoreMessages(facesContext);
     }
 
     private void onAfterRenderResponse(FacesContext facesContext)
@@ -209,7 +220,7 @@ public class DeltaSpikePhaseListener implements PhaseListener, Deactivatable
         }
         catch (ContextNotActiveException e)
         {
-            return; //TODO discuss how we handle it
+            //TODO discuss how we handle it
         }
     }
 

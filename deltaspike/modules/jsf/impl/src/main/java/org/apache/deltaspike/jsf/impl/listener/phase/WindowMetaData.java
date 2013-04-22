@@ -19,8 +19,10 @@
 package org.apache.deltaspike.jsf.impl.listener.phase;
 
 import org.apache.deltaspike.core.api.scope.WindowScoped;
+import org.apache.deltaspike.jsf.impl.message.FacesMessageEntry;
 
 import java.io.Serializable;
+import java.util.List;
 
 @WindowScoped
 public class WindowMetaData implements Serializable
@@ -28,6 +30,13 @@ public class WindowMetaData implements Serializable
     private static final long serialVersionUID = -413165700186583037L;
 
     private String initializedViewId;
+
+    /**
+     * used per default instead of Flash#setKeepMessages,
+     * because there are less issues in view of multi-window support esp. before jsf v2.2 and
+     * a custom window-handler might have special requirements.
+     */
+    private List<FacesMessageEntry> facesMessageEntryList;
 
     public String getInitializedViewId()
     {
@@ -37,5 +46,15 @@ public class WindowMetaData implements Serializable
     public void setInitializedViewId(String initializedViewId)
     {
         this.initializedViewId = initializedViewId;
+    }
+
+    public void setFacesMessageEntryList(List<FacesMessageEntry> facesMessageEntryList)
+    {
+        this.facesMessageEntryList = facesMessageEntryList;
+    }
+
+    public List<FacesMessageEntry> getFacesMessageEntryList()
+    {
+        return facesMessageEntryList;
     }
 }
