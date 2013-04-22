@@ -24,6 +24,7 @@ import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
+import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;
 import org.apache.deltaspike.jsf.api.config.view.View;
 import org.apache.deltaspike.jsf.impl.util.SecurityUtils;
 import org.apache.deltaspike.security.api.authorization.ErrorViewAwareAccessDeniedException;
@@ -101,7 +102,9 @@ public class SecurityAwareViewHandler extends ViewHandlerWrapper implements Deac
                     .getViewConfigDescriptor(accessDeniedException.getErrorView());
 
             if (errorViewDescriptor != null && View.NavigationMode.REDIRECT ==
-                    errorViewDescriptor.getMetaData(View.class).iterator().next().navigation() /*always available*/)
+                    errorViewDescriptor.getMetaData(View.class).iterator().next().navigation() /*always available*/ &&
+                    BeanProvider.getContextualReference(JsfModuleConfig.class)
+                            .isAlwaysUseNavigationHandlerOnSecurityViolation())
             {
                 SecurityUtils.tryToHandleSecurityViolation(accessDeniedException);
                 errorView = errorViewDescriptor.getConfigClass();

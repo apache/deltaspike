@@ -22,9 +22,11 @@ import org.apache.deltaspike.core.api.config.view.DefaultErrorView;
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigDescriptor;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
+import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.core.util.ClassUtils;
+import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;
 import org.apache.deltaspike.jsf.api.config.view.View;
 import org.apache.deltaspike.jsf.impl.config.view.navigation.NavigationCaseMapWrapper;
 import org.apache.deltaspike.jsf.impl.config.view.navigation.ViewConfigAwareNavigationHandler;
@@ -49,6 +51,7 @@ public class DeltaSpikeNavigationHandler extends ConfigurableNavigationHandler i
 
     private final NavigationHandler wrapped;
     private final boolean activated;
+    private final boolean addViewConfigsAsNavigationCase;
 
     /**
      * Constructor for wrapping the given {@link NavigationHandler}
@@ -59,6 +62,8 @@ public class DeltaSpikeNavigationHandler extends ConfigurableNavigationHandler i
     {
         this.wrapped = navigationHandler;
         this.activated = ClassDeactivationUtils.isActivated(getClass());
+
+        this.addViewConfigsAsNavigationCase = this.activated && isAddViewConfigsAsNavigationCaseActivated();
     }
 
     @Override
@@ -166,11 +171,18 @@ public class DeltaSpikeNavigationHandler extends ConfigurableNavigationHandler i
             result = new HashMap<String, Set<NavigationCase>>();
         }
 
-        if (!this.activated)
+        if (!this.addViewConfigsAsNavigationCase)
         {
             return result;
         }
 
         return new NavigationCaseMapWrapper(result);
+    }
+
+    private boolean isAddViewConfigsAsNavigationCaseActivated()
+    {
+        JsfModuleConfig config = BeanProvider.getContextualReference(JsfModuleConfig.class);
+
+        return config.isUseViewConfigsAsNavigationCasesEnabled();
     }
 }
