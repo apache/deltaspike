@@ -66,8 +66,10 @@ public class WindowScopedContextTest
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndJsfArchive())
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeSecurityArchive())
                 .addAsWebInfResource("default/WEB-INF/web.xml", "web.xml")
-                .addAsWebResource("META-INF/resources/js/windowhandler.js", "resources/js/windowhandler.js")
+                .addAsWebResource("META-INF/resources/deltaspike/windowhandler.js",
+                                  "resources/deltaspike/windowhandler.js")
                 .addAsWebResource("windowScopedContextTest/page.xhtml", "page.xhtml")
+                .addAsWebResource("windowScopedContextTest/page2.xhtml", "page2.xhtml")
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
@@ -77,7 +79,8 @@ public class WindowScopedContextTest
     public void testWindowId() throws Exception
     {
         System.out.println("contextpath= " + contextPath);
-        //X Thread.sleep(600000L);
+        //X
+        Thread.sleep(600000L);
 
         driver.get(new URL(contextPath, "page.xhtml").toString());
 

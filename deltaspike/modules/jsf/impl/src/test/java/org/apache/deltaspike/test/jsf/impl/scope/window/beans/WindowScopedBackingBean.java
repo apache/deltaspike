@@ -44,7 +44,6 @@ public class WindowScopedBackingBean implements Serializable
 
     public String someAction()
     {
-        // stay on the page.
-        return null;
+        return "page2?faces-redirect=true";
     }
 }

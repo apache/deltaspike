@@ -38,7 +38,7 @@ import org.apache.deltaspike.core.spi.scope.window.WindowContext;
 @FacesRenderer(componentFamily = WindowIdHolderComponent.COMPONENT_FAMILY,
         rendererType = WindowIdHolderComponent.COMPONENT_TYPE)
 @ResourceDependencies( {
-        @ResourceDependency(library = "js", name = "windowhandler.js", target = "head"),
+        @ResourceDependency(library = "deltaspike", name = "windowhandler.js", target = "head"),
         @ResourceDependency(library = "javax.faces", name = "jsf.js", target = "head") } )
 public class WindowIdHolderComponentHtmlRenderer extends Renderer
 {

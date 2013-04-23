@@ -70,7 +70,10 @@ class DeltaSpikeLifecycleWrapper extends Lifecycle
             windowContext.activateWindow(windowId);
         }
 
-        this.wrapped.execute(facesContext);
+        if (!FacesContext.getCurrentInstance().getResponseComplete())
+        {
+            this.wrapped.execute(facesContext);
+        }
     }
 
     @Override

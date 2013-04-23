@@ -33,17 +33,9 @@
 <h:body>
 <ds:windowId/>
 <div>
-    <h:form id="test">
-        <h:outputLabel for="valueInput" value="WindowScoped value:"/>
-        <h:inputText id="valueInput" value="#{windowScopedBean.i}"/>
-        <br/>
-        <h:outputLabel for="valueOutput" value="backing bean value:"/>
-        <h:outputText id="valueOutput" value="#{windowScopedBean.i}"/>
-        <br/>
-        <h:commandButton id="saveButton" action="#{windowScopedBean.someAction}" value="save"/>
-        <br/>
-        <h:link value="forward to page2 via GET" outcome="page2.xhtml"/>
-    </h:form>
+    <h:outputLabel for="valueOutput" value="backing bean value:"/>
+    <h:outputText id="valueOutput" value="#{windowScopedBean.i}"/>
+    <br/>
 </div>
 </h:body>
 </html>
