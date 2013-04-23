@@ -73,27 +73,42 @@ function equalsIgnoreCase(source, destination) {
 }
 
 /** This method will be called onWindowLoad and after AJAX success */
-function applyOnClick() {
-    var links = document.getElementsByTagName("a");
-    for (var i = 0; i < links.length; i++) {
-        if (!links[i].onclick) {
-            links[i].onclick = function() {storeWindowTree(); return true;};
-        } else {
-            // prevent double decoration
-            if (!("" + links[i].onclick).match(".*storeWindowTree().*")) {
-                //the function wrapper is important otherwise the
-                //last onclick handler would be assigned to oldonclick
-                (function storeEvent() {
-                    var oldonclick = links[i].onclick;
-                    links[i].onclick = function(evt) {
-                        //ie handling added
-                        evt = evt || window.event;
+function applyWindowId() {
+    if (isHtml5()) { // onClick handling
+        var links = document.getElementsByTagName("a");
+        for (var i = 0; i < links.length; i++) {
+            if (!links[i].onclick) {
+                links[i].onclick = function() {storeWindowTree(); return true;};
+            } else {
+                // prevent double decoration
+                if (!("" + links[i].onclick).match(".*storeWindowTree().*")) {
+                    //the function wrapper is important otherwise the
+                    //last onclick handler would be assigned to oldonclick
+                    (function storeEvent() {
+                        var oldonclick = links[i].onclick;
+                        links[i].onclick = function(evt) {
+                            //ie handling added
+                            evt = evt || window.event;
 
-                        return storeWindowTree() && oldonclick(evt);
-                    };
-                })();
+                            return storeWindowTree() && oldonclick(evt);
+                        };
+                    })();
+                }
             }
         }
+    }
+    var forms = document.getElementsByTagName("form");
+    for (var i = 0; i < forms.length; i++) {
+        var form = forms[i];
+        var windowIdHolder = form.elements["dsPostWindowId"];
+        if (!windowIdHolder) {
+            windowIdHolder = document.createElement("INPUT");
+            windowIdHolder.name = "dsPostWindowId";
+            windowIdHolder.type = "hidden";
+            form.appendChild(windowIdHolder);
+        }
+
+        windowIdHolder.value = window.deltaspikeJsWindowId;
     }
 }
 
@@ -159,7 +174,7 @@ function eraseRequestCookie() {
 
 var ajaxOnClick = function ajaxDecorateClick(event) {
     if (event.status=="success") {
-        applyOnClick();
+        applyWindowId();
     }
 }
 
@@ -171,10 +186,8 @@ window.onload = function(evt) {
     } finally {
         eraseRequestCookie(); // manually erase the old dsRid cookie because Firefox doesn't do it properly
         assertWindowId();
-        if (isHtml5()) {
-            applyOnClick();
-            jsf.ajax.addOnEvent(ajaxOnClick);
-        }
+        applyWindowId();
+        jsf.ajax.addOnEvent(ajaxOnClick);
     }
 }
 })();

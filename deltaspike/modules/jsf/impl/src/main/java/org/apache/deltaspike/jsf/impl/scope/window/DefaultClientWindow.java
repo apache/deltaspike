@@ -20,7 +20,6 @@ package org.apache.deltaspike.jsf.impl.scope.window;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.faces.FacesException;
-import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
@@ -29,6 +28,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Map;
+import java.util.Random;
 import java.util.logging.Logger;
 
 import org.apache.deltaspike.core.spi.scope.window.WindowContext;
@@ -51,7 +52,25 @@ import static org.apache.deltaspike.jsf.spi.scope.window.ClientWindowConfig.Clie
 @ApplicationScoped
 public class DefaultClientWindow implements ClientWindow
 {
+
+    /**
+     * Value which can be used as "window-id" by external clients which aren't aware of windows.
+     * It deactivates e.g. the redirect for the initial request.
+     */
+    public static final String AUTOMATED_ENTRY_POINT_PARAMETER_KEY = "automatedEntryPoint";
+
+    /**
+     * The parameter for the windowId for GET requests
+     */
+    public static final String DELTASPIKE_WINDOW_ID_PARAM = "windowId";
+
+    /**
+     * The parameter for the windowId for POST requests
+     */
+    public static final String DELTASPIKE_WINDOW_ID_POST_PARAM = "dsPostWindowId";
+
     private static final Logger logger = Logger.getLogger(DefaultClientWindow.class.getName());
+
 
     private static final String WINDOW_ID_COOKIE_PREFIX = "dsWindowId-";
     private static final String DELTASPIKE_REQUEST_TOKEN = "dsRid";
@@ -59,6 +78,7 @@ public class DefaultClientWindow implements ClientWindow
     private static final String UNINITIALIZED_WINDOW_ID_VALUE = "uninitializedWindowId";
     private static final String WINDOW_ID_REPLACE_PATTERN = "$$windowIdValue$$";
     private static final String NOSCRIPT_URL_REPLACE_PATTERN = "$$noscriptUrl$$";
+
 
     /**
      * Use this parameter to force a 'direct' request from the clients without any windowId detection
@@ -106,10 +126,19 @@ public class DefaultClientWindow implements ClientWindow
         }
 
         String windowId = getVerifiedWindowIdFromCookie(externalContext);
-        if (windowId == null)
+
+        boolean newWindowIdRequested = false;
+        if (AUTOMATED_ENTRY_POINT_PARAMETER_KEY.equals(windowId))
+        {
+            // this is a marker for generating a new windowId
+            windowId = generateNewWindowId();
+            newWindowIdRequested = true;
+        }
+
+        if (windowId == null || newWindowIdRequested)
         {
             // GET request without windowId - send windowhandlerfilter.html to get the windowId
-            sendWindowHandlerHtml(externalContext, null);
+            sendWindowHandlerHtml(externalContext, windowId);
             facesContext.responseComplete();
         }
 
@@ -118,23 +147,23 @@ public class DefaultClientWindow implements ClientWindow
     }
 
     /**
+     * Create a unique windowId
+     * @return
+     */
+    private String generateNewWindowId()
+    {
+        //X TODO proper mechanism
+        return "" + (new Random()).nextInt() % 10000;
+    }
+
+    /**
      * Extract the windowId for http POST
      */
     private String getPostBackWindowId(FacesContext facesContext)
     {
-        UIViewRoot uiViewRoot = facesContext.getViewRoot();
-
-        if (uiViewRoot != null)
-        {
-            WindowIdHolderComponent existingWindowIdHolder
-                = WindowIdHolderComponent.getWindowIdHolderComponent(uiViewRoot);
-            if (existingWindowIdHolder != null)
-            {
-                return existingWindowIdHolder.getWindowId();
-            }
-        }
-
-        return null;
+        Map<String, String> requestParams = facesContext.getExternalContext().getRequestParameterMap();
+        String windowId = requestParams.get(DELTASPIKE_WINDOW_ID_POST_PARAM);
+        return windowId;
     }
 
 

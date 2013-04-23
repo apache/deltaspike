@@ -135,29 +135,35 @@ function setUrlParam(baseUrl, paramName, paramValue) {
 replaceContent();
 
 window.onload = function() {
-    loadCss(true);
-    // this will be replaced in the phase listener
-    var windowId = '$$windowIdValue$$';
-    if (windowId == 'uninitializedWindowId') {
-        windowId = window.name
-    }
-    if (!windowId || windowId.length < 1) {
-        // request a new windowId
-        windowId = 'automatedEntryPoint';
-    }
-
-    window.name = windowId;
-
     // uncomment the following line to debug the intermediate page
     // if (!confirm('reload?')) { return true; }
+
+    loadCss(true);
+    // this will be replaced in the phase listener
+    var windowId = window.name;
+    var urlId = windowId;
+    if (!windowId || windowId.length < 1) {
+        var newWindowId = '$$windowIdValue$$';
+        if (newWindowId != 'uninitializedWindowId') {
+            window.name = newWindowId; // set the window.name with our windowId
+            windowId = newWindowId;
+            urlId = windowId;
+        }
+        else {
+            windowId = 'automatedEntryPoint';
+            urlId = null;
+        }
+    }
 
     // 3 seconds expiry time
     var expdt = new Date();
     expdt.setTime(expdt.getTime()+(3*1000));
     var expires = "; expires="+expdt.toGMTString();
 
-    var requestToken = Math.floor(Math.random()*1001);
+    var requestToken = Math.floor(Math.random()*999);
     var newUrl = setUrlParam(window.location.href, "dsRid", requestToken);
+
+    // we still add hte windowId page param to support lazy windowId dropping for some clients
     newUrl = setUrlParam(newUrl, "windowId", windowId);
 
     document.cookie = 'dsWindowId-' + requestToken + '=' + windowId + expires+"; path=/";

@@ -37,6 +37,6 @@
     <factory>
         <lifecycle-factory>org.apache.deltaspike.jsf.impl.listener.request.DeltaSpikeLifecycleFactoryWrapper</lifecycle-factory>
         <faces-context-factory>org.apache.deltaspike.jsf.impl.listener.request.DeltaSpikeFacesContextFactory</faces-context-factory>
-        <render-kit-factory>org.apache.deltaspike.jsf.impl.scope.window.WindowIdRenderKitFactory</render-kit-factory>
     </factory>
+
 </faces-config>

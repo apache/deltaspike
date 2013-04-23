@@ -16,8 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.jsf.impl.scope.window;
+package org.apache.deltaspike.jsf.impl.component.window;
 
+import javax.faces.component.FacesComponent;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIOutput;
 import javax.faces.component.UIViewRoot;
@@ -32,8 +33,11 @@ import java.util.logging.Logger;
  * We store this component as direct child in the ViewRoot
  * and evaluate it's value on postbacks.
  */
+@FacesComponent(WindowIdHolderComponent.COMPONENT_TYPE)
 public class WindowIdHolderComponent extends UIOutput
 {
+    public static final String COMPONENT_TYPE = "org.apache.deltaspike.WindowIdHolder";
+
     private static final Logger logger = Logger.getLogger(WindowIdHolderComponent.class.getName());
 
     private String windowId;
