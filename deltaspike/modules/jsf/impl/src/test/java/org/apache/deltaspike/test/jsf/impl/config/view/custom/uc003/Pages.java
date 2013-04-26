@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.test.jsf.impl.config.view.custom.uc003;
 
-import org.apache.deltaspike.core.api.config.view.Matches;
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
 
 //TODO add tests
@@ -42,12 +41,12 @@ interface Pages
     //TODO discuss inheritance approach - currently meta-data from 'Pages' wouldn't get picked up
     interface ViewQuota //technically not(!) needed (see ZIP) - just for better grouping
     {
-        @Matches(pattern = "*.xml")
+        //TODO @Matches(pattern = "*.xml")
         interface XML
         {
         }
 
-        @Matches(pattern = "*.pdf")
+        //TODO @Matches(pattern = "*.pdf")
         @CustomStaticQuota(perDay = 100) //overrule quota
         interface PDF
         {
@@ -55,7 +54,7 @@ interface Pages
     }
 
     //TODO discuss inheritance approach - currently meta-data from 'Pages' wouldn't get picked up
-    @Matches(pattern = "*.zip")
+    //TODO @Matches(pattern = "*.zip")
     interface ZIP
     {
     }
