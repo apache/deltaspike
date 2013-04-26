@@ -18,14 +18,18 @@
  */
 package org.apache.deltaspike.jsf.api.config;
 
+import org.apache.deltaspike.core.api.config.DeltaSpikeConfig;
+
 import javax.enterprise.context.ApplicationScoped;
 
 /**
  * Config for all JSF specific configurations.
  */
 @ApplicationScoped
-public class JsfModuleConfig
+public class JsfModuleConfig implements DeltaSpikeConfig
 {
+    private static final long serialVersionUID = -487295181899986237L;
+
     protected JsfModuleConfig()
     {
     }
