@@ -41,11 +41,14 @@ import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import javax.enterprise.util.Nonbinding;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -59,14 +62,14 @@ public class ExcludeExtension implements Extension, Deactivatable
 {
     private static final Logger LOG = Logger.getLogger(ExcludeExtension.class.getName());
 
-    private static Boolean isWeldDetected = false;
+    private static Boolean isWeld1Detected = false;
 
     private boolean isActivated = true;
     private boolean isGlobalAlternativeActivated = true;
     private boolean isCustomProjectStageBeanFilterActivated = true;
 
     @SuppressWarnings("UnusedDeclaration")
-    protected void init(@Observes BeforeBeanDiscovery beforeBeanDiscovery)
+    protected void init(@Observes BeforeBeanDiscovery beforeBeanDiscovery, BeanManager beanManager)
     {
         isActivated =
                 ClassDeactivationUtils.isActivated(getClass());
@@ -77,7 +80,7 @@ public class ExcludeExtension implements Extension, Deactivatable
         isCustomProjectStageBeanFilterActivated =
                 ClassDeactivationUtils.isActivated(CustomProjectStageBeanFilter.class);
 
-        isWeldDetected = isWeld();
+        isWeld1Detected = isWeld1(beanManager);
     }
 
     /**
@@ -98,12 +101,9 @@ public class ExcludeExtension implements Extension, Deactivatable
     protected void vetoBeans(@Observes ProcessAnnotatedType processAnnotatedType, BeanManager beanManager)
     {
         //we need to do it before the exclude logic to keep the @Exclude support for global alternatives
-        if (isGlobalAlternativeActivated)
+        if (isGlobalAlternativeActivated && isWeld1Detected)
         {
-            if (isWeldDetected)
-            {
-                activateGlobalAlternativesWeld(processAnnotatedType, beanManager);
-            }
+            activateGlobalAlternativesWeld1(processAnnotatedType, beanManager);
         }
 
         if (isCustomProjectStageBeanFilterActivated)
@@ -158,8 +158,8 @@ public class ExcludeExtension implements Extension, Deactivatable
 
 
 
-    private void activateGlobalAlternativesWeld(ProcessAnnotatedType processAnnotatedType,
-        BeanManager beanManager)
+    private void activateGlobalAlternativesWeld1(ProcessAnnotatedType processAnnotatedType,
+                                                 BeanManager beanManager)
     {
         Class<Object> currentBean = processAnnotatedType.getAnnotatedType().getJavaClass();
 
@@ -442,18 +442,64 @@ public class ExcludeExtension implements Extension, Deactivatable
                 processAnnotatedType.getAnnotatedType().getJavaClass());
     }
 
-    private boolean isWeld()
+    private boolean isWeld1(BeanManager beanManager)
     {
-        IllegalStateException runtimeException = new IllegalStateException();
-
-        for (StackTraceElement element : runtimeException.getStackTrace())
+        if (beanManager.getClass().getName().startsWith("org.apache"))
         {
-            if (element.toString().contains("org.jboss.weld"))
+            return false;
+        }
+
+        if (beanManager.getClass().getName().startsWith("org.jboss.weld"))
+        {
+            String version = getJarVersion(beanManager.getClass());
+
+            if (version != null && version.startsWith("1."))
             {
                 return true;
             }
         }
 
         return false;
+    }
+
+    private static String getJarVersion(Class targetClass)
+    {
+        String manifestFileLocation = getManifestFileLocationOfClass(targetClass);
+
+        try
+        {
+            return new Manifest(new URL(manifestFileLocation).openStream())
+                    //weld doesn't use IMPLEMENTATION_VERSION
+                    .getMainAttributes().getValue(Attributes.Name.SPECIFICATION_VERSION);
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
+    }
+
+    private static String getManifestFileLocationOfClass(Class targetClass)
+    {
+        String manifestFileLocation;
+
+        try
+        {
+            manifestFileLocation = getManifestLocation(targetClass);
+        }
+        catch (Exception e)
+        {
+            //in this case we have a proxy
+            manifestFileLocation = getManifestLocation(targetClass.getSuperclass());
+        }
+        return manifestFileLocation;
+    }
+
+    private static String getManifestLocation(Class targetClass)
+    {
+        String classFilePath = targetClass.getCanonicalName().replace('.', '/') + ".class";
+        String manifestFilePath = "/META-INF/MANIFEST.MF";
+
+        String classLocation = targetClass.getResource(targetClass.getSimpleName() + ".class").toString();
+        return classLocation.substring(0, classLocation.indexOf(classFilePath) - 1) + manifestFilePath;
     }
 }
