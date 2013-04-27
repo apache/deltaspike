@@ -19,13 +19,14 @@
 package org.apache.deltaspike.jsf.impl.config.view;
 
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
+import org.apache.deltaspike.core.api.config.view.metadata.ViewMetaData;
 import org.apache.deltaspike.core.spi.config.view.ViewConfigInheritanceStrategy;
 import org.apache.deltaspike.core.spi.config.view.ViewConfigNode;
 import org.apache.deltaspike.jsf.impl.util.ViewConfigUtils;
 
+import javax.enterprise.inject.Stereotype;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -60,7 +61,7 @@ public class DefaultViewConfigInheritanceStrategy implements ViewConfigInheritan
             //don't add the annotations of the final view-config class itself (we just need the inherited annotations)
             if (ViewConfigUtils.isFolderConfig(currentClass))
             {
-                inheritedAnnotations.addAll(Arrays.asList(currentClass.getAnnotations()));
+                inheritedAnnotations.addAll(addViewMetaData(currentClass));
             }
 
             Class nextClass = currentClass.getSuperclass();
@@ -72,7 +73,42 @@ public class DefaultViewConfigInheritanceStrategy implements ViewConfigInheritan
                 }
             }
         }
+
+        //add meta-data inherited via stereotypes on the node itself
+        inheritedAnnotations.addAll(addViewMetaData(viewConfigNode.getSource()));
+
         return inheritedAnnotations;
+    }
+
+    private List<Annotation> addViewMetaData(Class currentClass)
+    {
+        List<Annotation> result = new ArrayList<Annotation>();
+
+        for (Annotation annotation : currentClass.getAnnotations())
+        {
+            Class<? extends Annotation> annotationClass = annotation.annotationType();
+
+            if (annotationClass.getName().startsWith("java"))
+            {
+                continue;
+            }
+
+            if (annotationClass.isAnnotationPresent(ViewMetaData.class))
+            {
+                result.add(annotation);
+            }
+            else if (annotationClass.isAnnotationPresent(Stereotype.class))
+            {
+                for (Annotation inheritedViaStereotype : annotationClass.getAnnotations())
+                {
+                    if (inheritedViaStereotype.annotationType().isAnnotationPresent(ViewMetaData.class))
+                    {
+                        result.add(inheritedViaStereotype);
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     private void addInterfaces(Set<Class> processedTypes, Stack<Class> classesToAnalyze, Class nextClass)

@@ -16,31 +16,26 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.jsf.impl.config.view.custom.uc004;
+package org.apache.deltaspike.test.jsf.impl.config.view.navigation.syntax.uc007;
 
-import org.apache.deltaspike.core.api.config.view.metadata.ViewMetaData;
+import org.apache.deltaspike.core.api.config.view.ViewConfig;
 import org.apache.deltaspike.jsf.api.config.view.View;
 
-import javax.enterprise.inject.Stereotype;
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+import static org.apache.deltaspike.jsf.api.config.view.View.ViewParameterMode.INCLUDE;
 
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-import static org.apache.deltaspike.jsf.api.config.view.View.NavigationMode.REDIRECT;
-
-/**
- * Custom meta-data
- */
-
-//don't use @Inherited
-@Target({TYPE})
-@Retention(RUNTIME)
-@Documented
-
-@Stereotype
-@View(navigation = REDIRECT)
-@interface TestFacesRedirect
+interface Pages
 {
+    @TestFacesRedirect
+    interface Public extends ViewConfig
+    {
+        class Index implements Public
+        {
+        }
+    }
+
+    @TestFacesRedirect
+    @View(viewParams = INCLUDE)
+    class Home implements ViewConfig
+    {
+    }
 }
