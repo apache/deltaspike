@@ -247,6 +247,7 @@
                 <dependency>
                     <groupId>org.apache.geronimo.specs</groupId>
                     <artifactId>geronimo-jta_1.1_spec</artifactId>
+                    <scope>test</scope>
                 </dependency>
                 <dependency>
                     <groupId>org.jboss.spec.javax.ejb</groupId>
@@ -272,6 +273,7 @@
                 <dependency>
                     <groupId>org.apache.geronimo.specs</groupId>
                     <artifactId>geronimo-interceptor_1.1_spec</artifactId>
+                    <scope>test</scope>
                 </dependency>
 
                 <!-- Test dependencies -->
