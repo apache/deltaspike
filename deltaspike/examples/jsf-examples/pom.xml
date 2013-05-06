@@ -55,7 +55,11 @@
                     <plugin>
                         <groupId>org.apache.openejb.maven</groupId>
                         <artifactId>tomee-maven-plugin</artifactId>
-                        <version>${tomee.version}</version>
+                        <version>1.0.1</version>
+                        <configuration>
+                            <tomeeVersion>${tomee.version}</tomeeVersion>
+                        </configuration>
+
                     </plugin>
                 </plugins>
             </build>
