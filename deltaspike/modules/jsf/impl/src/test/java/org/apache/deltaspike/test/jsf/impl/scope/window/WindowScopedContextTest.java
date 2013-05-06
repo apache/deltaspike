@@ -20,6 +20,7 @@ package org.apache.deltaspike.test.jsf.impl.scope.window;
 
 
 import java.net.URL;
+import java.util.logging.Logger;
 
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.apache.deltaspike.test.jsf.impl.scope.window.beans.WindowScopedBackingBean;
@@ -51,6 +52,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 @Category(WebProfileCategory.class)
 public class WindowScopedContextTest
 {
+    private static final Logger log = Logger.getLogger(WindowScopedContextTest.class.getName());
+
     @Drone
     private WebDriver driver;
 
@@ -79,14 +82,12 @@ public class WindowScopedContextTest
     public void testWindowId() throws Exception
     {
         System.out.println("contextpath= " + contextPath);
-        //X
-        Thread.sleep(600000L);
-
-        driver.get(new URL(contextPath, "page.xhtml").toString());
 
         //X comment this in if you like to debug the server
         //X I've already reported ARQGRA-213 for it
-        //X
+        //X Thread.sleep(600000L);
+
+        driver.get(new URL(contextPath, "page.xhtml").toString());
 
         WebElement inputField = driver.findElement(By.id("test:valueInput"));
         inputField.sendKeys("23");
@@ -94,7 +95,7 @@ public class WindowScopedContextTest
         WebElement button = driver.findElement(By.id("test:saveButton"));
         button.click();
 
-        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("test:valueOutput"), "23").apply(driver));
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("valueOutput"), "23").apply(driver));
 
     }
 
