@@ -22,6 +22,7 @@ package org.apache.deltaspike.core.impl.message;
 import java.io.Serializable;
 import java.lang.reflect.Proxy;
 
+import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
 
@@ -37,16 +38,17 @@ public class TypedMessageBundleProducer implements Serializable
     private static final long serialVersionUID = -5077306523543940760L;
 
     @Produces
+    @Dependent
     @TypedMessageBundle
     @SuppressWarnings("UnusedDeclaration")
-    Object produceTypedMessageBundle(InjectionPoint injectionPoint)
+    Object produceTypedMessageBundle(InjectionPoint injectionPoint, MessageBundleInvocationHandler handler)
     {
-        return createMessageBundleProxy(ReflectionUtils.getRawType(injectionPoint.getType()));
+        return createMessageBundleProxy(ReflectionUtils.getRawType(injectionPoint.getType()), handler);
     }
 
-    private <T> T createMessageBundleProxy(Class<T> type)
+    private <T> T createMessageBundleProxy(Class<T> type, MessageBundleInvocationHandler handler)
     {
         return type.cast(Proxy.newProxyInstance(ClassUtils.getClassLoader(null),
-                new Class<?>[]{type}, new MessageBundleInvocationHandler()));
+                new Class<?>[]{type}, handler));
     }
 }

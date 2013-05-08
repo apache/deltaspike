@@ -18,6 +18,8 @@
  */
 package org.apache.deltaspike.core.impl.message;
 
+import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
 import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -36,8 +38,12 @@ import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.ClassUtils;
 
 
+@Dependent
 public class MessageBundleInvocationHandler implements InvocationHandler, Serializable
 {
+    @Inject
+    private MessageContext baseMessageContext = null;
+
     /**
      * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object,
      *      java.lang.reflect.Method, java.lang.Object[])
@@ -63,7 +69,7 @@ public class MessageBundleInvocationHandler implements InvocationHandler, Serial
 
         if (messageContext == null)
         {
-            messageContext = getDefaultMessageContext().clone();
+            messageContext = baseMessageContext.clone();
 
             MessageContextConfig messageContextConfig =
                 method.getDeclaringClass().getAnnotation(MessageContextConfig.class);
@@ -163,8 +169,4 @@ public class MessageBundleInvocationHandler implements InvocationHandler, Serial
         return null;
     }
 
-    private MessageContext getDefaultMessageContext()
-    {
-        return BeanProvider.getContextualReference(MessageContext.class);
-    }
 }

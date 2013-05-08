@@ -38,7 +38,13 @@
 
     <profiles>
         <profile>
-            <!-- run it with: mvn clean package tomee:run -PtomeeConfig-->
+            <!--
+             * Run it with: mvn clean package tomee:run -PtomeeConfig
+             *
+             * For debugging add: -Dopenejb.server.debug=true
+             *
+             * The application can be browsed under http://localhost:8080/ds
+             -->
             <id>tomeeConfig</id>
             <build>
                 <defaultGoal>install</defaultGoal>
@@ -104,5 +110,9 @@
         </dependency>
 
     </dependencies>
+
+    <build>
+        <finalName>ds</finalName>
+    </build>
 </project>
 

@@ -24,20 +24,30 @@ import org.apache.deltaspike.core.api.message.MessageContext;
 import org.apache.deltaspike.core.api.message.MessageInterpolator;
 import org.apache.deltaspike.core.api.message.MessageResolver;
 
+import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Typed;
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-@Typed()
+@Dependent
+@Typed(MessageContext.class)
 class DefaultMessageContext implements MessageContext
 {
     private static final long serialVersionUID = -110779217295211303L;
 
+
+    @Inject
     private MessageInterpolator messageInterpolator = null;
+
+    @Inject
     private MessageResolver messageResolver = null;
+
+    @Inject
     private LocaleResolver localeResolver = null;
+
     private List<String> messageSources = new ArrayList<String>();
 
     public DefaultMessageContext()
