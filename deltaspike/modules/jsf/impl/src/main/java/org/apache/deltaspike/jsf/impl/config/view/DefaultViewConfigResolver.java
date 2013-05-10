@@ -21,6 +21,7 @@ package org.apache.deltaspike.jsf.impl.config.view;
 import org.apache.deltaspike.core.api.config.view.DefaultErrorView;
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
 import org.apache.deltaspike.core.api.config.view.metadata.ConfigDescriptor;
+import org.apache.deltaspike.core.spi.config.view.ConfigDescriptorValidator;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigDescriptor;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
 import org.apache.deltaspike.core.spi.config.view.ConfigNodeConverter;
@@ -55,7 +56,8 @@ public class DefaultViewConfigResolver implements ViewConfigResolver
 
     public DefaultViewConfigResolver(ViewConfigNode rootViewConfigNode,
                                      ConfigNodeConverter configNodeConverter,
-                                     ViewConfigInheritanceStrategy inheritanceStrategy)
+                                     ViewConfigInheritanceStrategy inheritanceStrategy,
+                                     List<ConfigDescriptorValidator> configDescriptorValidators)
     {
         Map<Class<? extends ViewConfig>, ViewConfigDescriptor> viewConfigs =
             new HashMap<Class<? extends ViewConfig>, ViewConfigDescriptor>();
@@ -77,6 +79,14 @@ public class DefaultViewConfigResolver implements ViewConfigResolver
 
             currentNode.getInheritedMetaData().addAll(inheritanceStrategy.resolveInheritedMetaData(currentNode));
             ConfigDescriptor currentConfigDescriptor = configNodeConverter.convert(currentNode);
+
+            for (ConfigDescriptorValidator validator : configDescriptorValidators)
+            {
+                if (!validator.isValid(currentConfigDescriptor))
+                {
+                    throw new IllegalStateException(currentConfigDescriptor.getConfigClass().getName() + " is invalid");
+                }
+            }
 
             if (currentConfigDescriptor instanceof ViewConfigDescriptor)
             {

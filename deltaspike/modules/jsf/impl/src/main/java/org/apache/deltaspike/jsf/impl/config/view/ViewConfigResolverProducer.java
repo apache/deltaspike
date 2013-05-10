@@ -18,12 +18,14 @@
  */
 package org.apache.deltaspike.jsf.impl.config.view;
 
+import org.apache.deltaspike.core.spi.config.view.ConfigDescriptorValidator;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 @ApplicationScoped
@@ -48,7 +50,8 @@ public class ViewConfigResolverProducer
         if (!viewConfigExtension.isActivated())
         {
             return new DefaultViewConfigResolver(
-                new FolderConfigNode(null, null, new HashSet<Annotation>()), null, null);
+                new FolderConfigNode(
+                    null, null, new HashSet<Annotation>()), null, null, new ArrayList<ConfigDescriptorValidator>());
         }
 
         if (!viewConfigExtension.isTransformed()) //esp. for easier unit-tests

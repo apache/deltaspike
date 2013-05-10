@@ -49,4 +49,7 @@ public @interface ViewConfigRoot
 
     Class<? extends ViewConfigInheritanceStrategy> viewConfigInheritanceStrategy()
         default ViewConfigInheritanceStrategy.class;
+
+    Class<? extends ConfigDescriptorValidator>[] configDescriptorValidators()
+        default { };
 }

@@ -19,6 +19,7 @@
 package org.apache.deltaspike.jsf.impl.config.view;
 
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
+import org.apache.deltaspike.core.spi.config.view.ConfigDescriptorValidator;
 import org.apache.deltaspike.core.api.config.view.metadata.InlineViewMetaData;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
@@ -42,6 +43,7 @@ import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -289,6 +291,7 @@ public class ViewConfigExtension implements Extension, Deactivatable
         {
             ConfigNodeConverter configNodeConverter = new DefaultConfigNodeConverter();
             ViewConfigInheritanceStrategy inheritanceStrategy = new DefaultViewConfigInheritanceStrategy();
+            List<ConfigDescriptorValidator> configDescriptorValidators = new ArrayList<ConfigDescriptorValidator>();
 
             for (Annotation annotation : this.rootViewConfigNode.getMetaData())
             {
@@ -299,8 +302,9 @@ public class ViewConfigExtension implements Extension, Deactivatable
                     configNodeConverter = createCustomConfigNodeConverter(viewConfigRoot, configNodeConverter);
                     inheritanceStrategy = createCustomInheritanceStrategy(viewConfigRoot, inheritanceStrategy);
 
-                    this.viewConfigResolver =
-                            createCustomViewConfigResolver(viewConfigRoot, configNodeConverter, inheritanceStrategy);
+                    configDescriptorValidators = createCustomConfigDescriptorValidators(viewConfigRoot);
+                    this.viewConfigResolver = createCustomViewConfigResolver(
+                            viewConfigRoot, configNodeConverter, inheritanceStrategy, configDescriptorValidators);
                     break;
                 }
             }
@@ -308,7 +312,7 @@ public class ViewConfigExtension implements Extension, Deactivatable
             if (this.viewConfigResolver == null)
             {
                 this.viewConfigResolver = new DefaultViewConfigResolver(
-                        this.rootViewConfigNode, configNodeConverter, inheritanceStrategy);
+                        this.rootViewConfigNode, configNodeConverter, inheritanceStrategy, configDescriptorValidators);
             }
             resetRootNode();
         }
@@ -316,7 +320,8 @@ public class ViewConfigExtension implements Extension, Deactivatable
 
     private ViewConfigResolver createCustomViewConfigResolver(ViewConfigRoot viewConfigRoot,
                                                               ConfigNodeConverter configNodeConverter,
-                                                              ViewConfigInheritanceStrategy inheritanceStrategy)
+                                                              ViewConfigInheritanceStrategy inheritanceStrategy,
+                                                              List<ConfigDescriptorValidator> validators)
     {
         Class<? extends ViewConfigResolver> viewConfigResolverClass = viewConfigRoot.viewConfigResolver();
         if (!ViewConfigResolver.class.equals(viewConfigResolverClass))
@@ -325,14 +330,17 @@ public class ViewConfigExtension implements Extension, Deactivatable
             {
                 Constructor<? extends ViewConfigResolver> viewConfigResolverConstructor = viewConfigResolverClass
                         .getConstructor(new Class[]{
-                            ViewConfigNode.class, ConfigNodeConverter.class, ViewConfigInheritanceStrategy.class});
+                            ViewConfigNode.class,
+                            ConfigNodeConverter.class,
+                            ViewConfigInheritanceStrategy.class,
+                            List.class});
 
                 return viewConfigResolverConstructor
-                        .newInstance(this.rootViewConfigNode, configNodeConverter, inheritanceStrategy);
+                        .newInstance(this.rootViewConfigNode, configNodeConverter, inheritanceStrategy, validators);
             }
             catch (Exception e)
             {
-                ExceptionUtils.throwAsRuntimeException(e);
+                throw ExceptionUtils.throwAsRuntimeException(e);
             }
         }
         return null;
@@ -351,7 +359,7 @@ public class ViewConfigExtension implements Extension, Deactivatable
             }
             catch (Exception e)
             {
-                ExceptionUtils.throwAsRuntimeException(e);
+                throw ExceptionUtils.throwAsRuntimeException(e);
             }
         }
         return defaultConverter;
@@ -370,10 +378,30 @@ public class ViewConfigExtension implements Extension, Deactivatable
             }
             catch (Exception e)
             {
-                ExceptionUtils.throwAsRuntimeException(e);
+                throw ExceptionUtils.throwAsRuntimeException(e);
             }
         }
         return defaultStrategy;
+    }
+
+    private List<ConfigDescriptorValidator> createCustomConfigDescriptorValidators(ViewConfigRoot viewConfigRoot)
+    {
+        List<ConfigDescriptorValidator> result = new ArrayList<ConfigDescriptorValidator>();
+
+        for (Class<? extends ConfigDescriptorValidator> validatorClass : viewConfigRoot.configDescriptorValidators())
+        {
+            try
+            {
+                ConfigDescriptorValidator validator = validatorClass.newInstance();
+                result.add(validator);
+            }
+            catch (Exception e)
+            {
+                throw ExceptionUtils.throwAsRuntimeException(e);
+            }
+        }
+
+        return result;
     }
 
     public void freeViewConfigCache(@Observes BeforeShutdown bs)
