@@ -234,6 +234,12 @@ public class BeanManagerProvider implements Extension
      */
     public void cleanupStoredBeanManagerOnShutdown(@Observes BeforeShutdown beforeShutdown)
     {
+        if (bmpSingleton == null)
+        {
+            // this happens if there has been a failure at startup
+            return;
+        }
+
         ClassLoader classLoader = ClassUtils.getClassLoader(null);
         bmpSingleton.bmInfos.remove(classLoader);
 
