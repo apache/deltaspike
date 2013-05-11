@@ -37,7 +37,10 @@ import org.apache.deltaspike.core.api.message.MessageTemplate;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.ClassUtils;
 
-
+/**
+ * This Proxy InvocationHandler implements the handling for all our
+ * {@link org.apache.deltaspike.core.api.message.MessageBundle}s.
+ */
 @Dependent
 public class MessageBundleInvocationHandler implements InvocationHandler, Serializable
 {

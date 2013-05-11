@@ -18,8 +18,10 @@
  */
 package org.apache.deltaspike.jsf.impl.message;
 
+import javax.enterprise.inject.Typed;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
 import org.apache.deltaspike.core.api.message.Message;
@@ -30,20 +32,24 @@ import org.apache.deltaspike.jsf.api.message.JsfMessage;
  * This Proxy InvocationHandler automatically registers the
  * returned messages in the FacesContext if a severity is set.
  */
-public class JsfMessageBundleInvocationHandler extends MessageBundleInvocationHandler
+@Typed()
+public class JsfMessageBundleInvocationHandler implements InvocationHandler
 {
-    private FacesMessage.Severity severity;
-    private String clientId;
+    private final FacesMessage.Severity severity;
+    private final String clientId;
+    private final MessageBundleInvocationHandler invocationHandler;
 
-    public JsfMessageBundleInvocationHandler(FacesMessage.Severity severity, String clientId)
+    public JsfMessageBundleInvocationHandler(FacesMessage.Severity severity, String clientId,
+                                             MessageBundleInvocationHandler invocationHandler)
     {
         this.severity = severity;
         this.clientId = clientId;
+        this.invocationHandler = invocationHandler;
     }
 
     public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable
     {
-        Object message = super.invoke(proxy, method, args);
+        Object message = invocationHandler.invoke(proxy, method, args);
 
         if (severity == null)
         {

@@ -26,6 +26,7 @@ import javax.enterprise.inject.spi.InjectionPoint;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
+import org.apache.deltaspike.core.impl.message.MessageBundleInvocationHandler;
 import org.apache.deltaspike.jsf.api.message.JsfMessage;
 
 /**
@@ -36,7 +37,8 @@ public class JsfMessageProducer
 {
     @Produces
     @Dependent
-    public <M> JsfMessage<M> createJsfMessage(InjectionPoint injectionPoint)
+    public <M> JsfMessage<M> createJsfMessage(InjectionPoint injectionPoint,
+                                              MessageBundleInvocationHandler invocationHandler)
     {
         if (!(injectionPoint.getType() instanceof ParameterizedType))
         {
@@ -52,7 +54,7 @@ public class JsfMessageProducer
         {
             @SuppressWarnings("unchecked")
             Class<M> type = (Class<M>) actualTypes[0];
-            return createJsfMessageFor(injectionPoint, type);
+            return createJsfMessageFor(injectionPoint, type, invocationHandler);
         }
         catch (ClassCastException e)
         {
@@ -60,9 +62,10 @@ public class JsfMessageProducer
         }
     }
 
-    private <M> JsfMessage<M> createJsfMessageFor(InjectionPoint injectionPoint, Class<M> rawType)
+    private <M> JsfMessage<M> createJsfMessageFor(InjectionPoint injectionPoint, Class<M> rawType,
+                                                  MessageBundleInvocationHandler invocationHandler)
     {
         // X TODO check if the JsfMessage should get injected into a UIComponent and use #getClientId()
-        return new DefaultJsfMessage<M>(rawType, null);
+        return new DefaultJsfMessage<M>(rawType, null, invocationHandler);
     }
 }

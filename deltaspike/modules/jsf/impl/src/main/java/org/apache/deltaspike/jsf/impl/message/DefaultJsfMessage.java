@@ -25,6 +25,7 @@ import javax.faces.component.UIComponent;
 import java.lang.reflect.Proxy;
 
 import org.apache.deltaspike.core.api.message.MessageBundle;
+import org.apache.deltaspike.core.impl.message.MessageBundleInvocationHandler;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.jsf.api.message.JsfMessage;
 
@@ -35,18 +36,20 @@ import org.apache.deltaspike.jsf.api.message.JsfMessage;
  */
 public class DefaultJsfMessage<T> implements JsfMessage<T>
 {
-    private String clientId = null;
-    private Class<T> type;
+    private final String clientId;
+    private final Class<T> type;
+    private final MessageBundleInvocationHandler invocationHandler;
 
     /**
      * The Message type
      * @param type
      * @param clientId
      */
-    public DefaultJsfMessage(Class<T> type, String clientId)
+    public DefaultJsfMessage(Class<T> type, String clientId, MessageBundleInvocationHandler invocationHandler)
     {
         this.type = type;
         this.clientId = clientId;
+        this.invocationHandler = invocationHandler;
 
         if (! type.isInterface() || type.getAnnotation(MessageBundle.class) == null)
         {
@@ -58,7 +61,7 @@ public class DefaultJsfMessage<T> implements JsfMessage<T>
     @Override
     public JsfMessage<T> forClientId(String clientId)
     {
-        return new DefaultJsfMessage<T>(type, clientId);
+        return new DefaultJsfMessage<T>(type, clientId, invocationHandler);
     }
 
     @Override
@@ -100,7 +103,7 @@ public class DefaultJsfMessage<T> implements JsfMessage<T>
     private T getMessage(FacesMessage.Severity severity)
     {
         return type.cast(Proxy.newProxyInstance(ClassUtils.getClassLoader(null),
-                new Class<?>[]{type}, new JsfMessageBundleInvocationHandler(severity, clientId)));
+                new Class<?>[]{type}, new JsfMessageBundleInvocationHandler(severity, clientId, invocationHandler)));
     }
 
 }
