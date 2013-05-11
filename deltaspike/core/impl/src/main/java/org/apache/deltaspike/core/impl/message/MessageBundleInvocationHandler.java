@@ -138,12 +138,16 @@ public class MessageBundleInvocationHandler implements InvocationHandler, Serial
             {
                 Object arg = args[i];
 
-                if (i == 0 && MessageContext.class.isAssignableFrom(args[0].getClass()))
+                if (i == 0 && arg != null && MessageContext.class.isAssignableFrom(arg.getClass()))
                 {
                     continue;
                 }
 
-                if (arg instanceof Serializable)
+                if (arg == null)
+                {
+                    arguments.add("'null'");
+                }
+                else if (arg instanceof Serializable)
                 {
                     arguments.add((Serializable) arg);
                 }
@@ -160,7 +164,7 @@ public class MessageBundleInvocationHandler implements InvocationHandler, Serial
 
     private MessageContext resolveMessageContextFromArguments(Object[] args)
     {
-        if (args != null && args.length > 0 &&
+        if (args != null && args.length > 0 &&  args[0] != null &&
             MessageContext.class.isAssignableFrom(args[0].getClass()))
         {
             return (MessageContext) args[0];

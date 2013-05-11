@@ -91,4 +91,12 @@ public class SimpleMessageTest
         String result = simpleMessage.welcomeWithFloatVariable(f);
         assertEquals(expectedResult, result);
     }
+
+    @Test
+    public void testNullMessage()
+    {
+        String expectedResult = "Welcome to 'null'";
+        String result = simpleMessage.welcomeWithStringVariable(null);
+        assertEquals(expectedResult, result);
+    }
 }
