@@ -18,34 +18,55 @@
  */
 package org.apache.deltaspike.cdise.openejb;
 
-import javax.ejb.embeddable.EJBContainer;
+import org.apache.deltaspike.cdise.api.CdiContainer;
+import org.apache.deltaspike.cdise.api.ContextControl;
+import org.apache.openejb.OpenEjbContainer;
+import org.apache.openejb.core.LocalInitialContext;
+import org.apache.openejb.core.LocalInitialContextFactory;
+import org.apache.webbeans.config.WebBeansContext;
+
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
-import org.apache.webbeans.config.WebBeansContext;
-
-import org.apache.deltaspike.cdise.api.CdiContainer;
-import org.apache.deltaspike.cdise.api.ContextControl;
-
 /**
- * OpenWebBeans specific implementation of {@link org.apache.deltaspike.cdise.api.CdiContainer}.
+ * OpenEJB specific implementation of {@link org.apache.deltaspike.cdise.api.CdiContainer}.
  */
 @SuppressWarnings("UnusedDeclaration")
 public class OpenEjbContainerControl implements CdiContainer
 {
+    // global container config
+    private static final Properties PROPERTIES = new Properties();
+
+    static
+    {
+        // global properties
+        PROPERTIES.setProperty(Context.INITIAL_CONTEXT_FACTORY, LocalInitialContextFactory.class.getName());
+        PROPERTIES.setProperty(LocalInitialContext.ON_CLOSE, LocalInitialContext.Close.DESTROY.name());
+        try
+        {
+            OpenEjbContainerControl.class.getClassLoader().loadClass("org.apache.openejb.server.ServiceManager");
+            PROPERTIES.setProperty(OpenEjbContainer.OPENEJB_EMBEDDED_REMOTABLE, "true");
+        }
+        catch (final Exception e)
+        {
+            // ignored
+        }
+    }
+
+
     private ContextControl ctxCtrl = null;
     private Bean<ContextControl> ctxCtrlBean = null;
     private CreationalContext<ContextControl> ctxCtrlCreationalContext = null;
 
-    private EJBContainer openEjbContainer = null;
+    private Context context = null;
     
-    @Inject
     private BeanManager beanManager;
 
     @Override
@@ -63,34 +84,27 @@ public class OpenEjbContainerControl implements CdiContainer
     @Override
     public synchronized void boot(Map<?, ?> properties)
     {
-        if (openEjbContainer == null)
+        if (context == null)
         {
             // this immediately boots the container
-            openEjbContainer = EJBContainer.createEJBContainer(properties);
+            final Properties p = new Properties();
+            p.putAll(PROPERTIES);
+            if (properties != null) // override with user config
+            {
+                p.putAll(properties);
+            }
 
-            // this magic code performs injection
             try
             {
-                openEjbContainer.getContext().bind("inject", this);
+                context = new InitialContext(p);
             }
-            catch (NamingException e)
+            catch (final NamingException e)
             {
-                throw new RuntimeException("Could not perform OpenEJB injection", e);
+                throw new RuntimeException(e);
             }
 
-            if (beanManager == null)
-            {
-                // this happens if the OpenEJB injection didnt work
-                beanManager = WebBeansContext.getInstance().getBeanManagerImpl();
-            }
+            beanManager = WebBeansContext.currentInstance().getBeanManagerImpl();
         }
-    }
-
-    protected Map<?,?> getConfiguration()
-    {
-        Map<String, String> config = new HashMap<String, String>();
-
-        return config;
     }
 
     @Override
@@ -102,10 +116,17 @@ public class OpenEjbContainerControl implements CdiContainer
 
         }
 
-        if (openEjbContainer != null)
+        if (context != null)
         {
-            openEjbContainer.close();
-            openEjbContainer = null;
+            try
+            {
+                context.close();
+            }
+            catch (final NamingException e)
+            {
+                // no-op
+            }
+            context = null;
         }
 
         ctxCtrl = null;
