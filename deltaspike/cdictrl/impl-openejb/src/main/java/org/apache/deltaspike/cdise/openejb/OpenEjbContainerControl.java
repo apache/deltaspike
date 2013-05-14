@@ -57,10 +57,16 @@ public class OpenEjbContainerControl implements CdiContainer
     @Override
     public synchronized void boot()
     {
+        boot(null);
+    }
+
+    @Override
+    public synchronized void boot(Map<?, ?> properties)
+    {
         if (openEjbContainer == null)
         {
             // this immediately boots the container
-            openEjbContainer = EJBContainer.createEJBContainer(getConfiguration());
+            openEjbContainer = EJBContainer.createEJBContainer(properties);
 
             // this magic code performs injection
             try

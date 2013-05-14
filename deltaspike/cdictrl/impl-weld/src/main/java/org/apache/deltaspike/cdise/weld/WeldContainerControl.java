@@ -26,6 +26,7 @@ import org.jboss.weld.environment.se.WeldContainer;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -62,6 +63,14 @@ public class WeldContainerControl implements CdiContainer
     {
         weld = new Weld();
         weldContainer = weld.initialize();
+    }
+
+    @Override
+    public void boot(Map<?, ?> properties)
+    {
+        // no configuration yet. Perform default boot
+
+        boot();
     }
 
     @Override

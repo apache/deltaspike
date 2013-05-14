@@ -20,6 +20,7 @@ package org.apache.deltaspike.cdise.api;
 
 
 import javax.enterprise.inject.spi.BeanManager;
+import java.util.Map;
 
 
 /**
@@ -35,9 +36,9 @@ import javax.enterprise.inject.spi.BeanManager;
 public interface CdiContainer
 {
     /**
-     * <b>Booting the CdiTestContainer will scan the whole classpath
+     * <p>Booting the CdiTestContainer will scan the whole classpath
      * for Beans and extensions available.
-     * The container might throw a DeploymentException or similar on startup.</b>
+     * The container might throw a DeploymentException or similar on startup.</p>
      *
      * <p><b>Note:</b> booting the container does <i>not</i> automatically
      * start all CDI Contexts! Depending on the underlying CDI container you
@@ -46,6 +47,15 @@ public interface CdiContainer
      * {@link ContextControl#startContexts()}</p>
      */
     void boot();
+
+    /**
+     * <p>Like {@link #boot()} but allows to pass in a configuration Map
+     * for the container.</p>
+     * <p>Please note that the configuration is container implementation dependent!</p>
+     *
+     * @param properties
+     */
+    void boot(Map<?,?> properties);
     
     /**
      * This will shutdown the underlying CDI container and stop all contexts.
