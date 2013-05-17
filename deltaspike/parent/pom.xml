@@ -406,12 +406,6 @@
                 <version>${owb.version}</version>
                 <scope>test</scope>
             </dependency>
-            <dependency>
-                <groupId>org.apache.xbean</groupId>
-                <artifactId>xbean-finder-shaded</artifactId>
-                <version>3.13</version>
-                <scope>test</scope>
-            </dependency>
 
             <!--
                 We currently need this for the CDI test container to emulate the @SessionScoped.
@@ -579,11 +573,6 @@
 
     <!-- These dependencies are needed for each and every module in this project -->
     <dependencies>
-        <dependency>
-            <groupId>org.apache.xbean</groupId>
-            <artifactId>xbean-finder-shaded</artifactId>
-        </dependency>
-
         <!-- unit testing stuff -->
         <dependency>
             <groupId>junit</groupId>

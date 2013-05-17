@@ -97,12 +97,6 @@
                 <version>${openejb.owb.version}</version>
                 <scope>provided</scope>
             </dependency>
-            <dependency>
-                 <groupId>org.apache.xbean</groupId>
-                 <artifactId>xbean-finder-shaded</artifactId>
-                 <version>3.14-SNAPSHOT</version>
-                 <scope>test</scope>
-             </dependency>
         </dependencies>
     </dependencyManagement>
 
