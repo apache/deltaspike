@@ -186,7 +186,7 @@
                 <dependency>
                     <groupId>org.apache.openwebbeans.arquillian</groupId>
                     <artifactId>owb-arquillian-standalone</artifactId>
-                    <version>1.1.8</version>
+                    <version>1.2.0-SNAPSHOT</version>
                     <scope>test</scope>
                 </dependency>
             </dependencies>
