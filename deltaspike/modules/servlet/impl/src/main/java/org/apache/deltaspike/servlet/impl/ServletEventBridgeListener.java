@@ -18,55 +18,31 @@
  */
 package org.apache.deltaspike.servlet.impl;
 
-import java.io.IOException;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpSessionEvent;
+import javax.servlet.http.HttpSessionListener;
 
 import org.apache.deltaspike.servlet.api.literal.DestroyedLiteral;
 import org.apache.deltaspike.servlet.api.literal.InitializedLiteral;
 import org.apache.deltaspike.servlet.api.literal.WebLiteral;
 
 /**
+ * This class listens for various servlet events and forwards them to the CDI event bus.
+ * 
  * @author Christian Kaltepoth
  */
-public class ServletEventBridgeFilter extends EventEmitter implements Filter
+public class ServletEventBridgeListener extends EventEmitter implements HttpSessionListener
 {
 
     @Override
-    public void init(FilterConfig config) throws ServletException
+    public void sessionCreated(HttpSessionEvent se)
     {
-        // nothing yet
+        fireEvent(se.getSession(), WebLiteral.INSTANCE, InitializedLiteral.INSTANCE);
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-            ServletException
+    public void sessionDestroyed(HttpSessionEvent se)
     {
-
-        fireEvent(request, WebLiteral.INSTANCE, InitializedLiteral.INSTANCE);
-        fireEvent(response, WebLiteral.INSTANCE, InitializedLiteral.INSTANCE);
-
-        try
-        {
-            chain.doFilter(request, response);
-        }
-        finally
-        {
-            fireEvent(request, WebLiteral.INSTANCE, DestroyedLiteral.INSTANCE);
-            fireEvent(response, WebLiteral.INSTANCE, DestroyedLiteral.INSTANCE);
-        }
-
-    }
-
-    @Override
-    public void destroy()
-    {
-        // nothing yet
+        fireEvent(se.getSession(), WebLiteral.INSTANCE, DestroyedLiteral.INSTANCE);
     }
 
 }

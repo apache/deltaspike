@@ -10,6 +10,11 @@
         </before>
     </ordering>
 
+    <listener>
+        <display-name>ServletEventBridgeListener</display-name>
+        <listener-class>org.apache.deltaspike.servlet.impl.ServletEventBridgeListener</listener-class>
+    </listener>
+
     <filter>
         <display-name>ServletEventBridgeFilter</display-name>
         <filter-name>ServletEventBridgeFilter</filter-name>
