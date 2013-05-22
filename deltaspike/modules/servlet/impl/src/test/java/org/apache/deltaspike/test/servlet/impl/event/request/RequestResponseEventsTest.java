@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.servlet.impl.event;
+package org.apache.deltaspike.test.servlet.impl.event.request;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -43,6 +43,8 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
 /**
+ * Test which validates that CDI events are fired when requests and responses are created or destroyed
+ * 
  * @author Christian Kaltepoth
  */
 @RunWith(Arquillian.class)
@@ -57,13 +59,13 @@ public class RequestResponseEventsTest
                 .addAsLibraries(Deployments.getDeltaSpikeCoreArchives())
                 .addAsLibraries(Deployments.getDeltaSpikeServletArchives())
                 .addAsLibraries(Deployments.getTestSupportArchives())
-                .addClass(ServletEventObserver.class)
+                .addClass(RequestResponseEventsObserver.class)
                 .addAsWebInfResource(new StringAsset("<beans/>"), "beans.xml")
                 .addAsWebResource(new StringAsset("foobar"), "foobar.txt");
     }
 
     @Inject
-    private ServletEventObserver observer;
+    private RequestResponseEventsObserver observer;
 
     @Test
     @RunAsClient

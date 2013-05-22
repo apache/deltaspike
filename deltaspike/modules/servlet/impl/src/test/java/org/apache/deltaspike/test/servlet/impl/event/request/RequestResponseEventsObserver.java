@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.servlet.impl.event;
+package org.apache.deltaspike.test.servlet.impl.event.request;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,10 +32,13 @@ import org.apache.deltaspike.servlet.api.Initialized;
 import org.apache.deltaspike.servlet.api.Web;
 
 /**
+ * Application scoped observer which listens for {@link HttpServletRequest} and {@link HttpServletResponse} events on
+ * the CDI event bus.
+ * 
  * @author Christian Kaltepoth
  */
 @ApplicationScoped
-public class ServletEventObserver
+public class RequestResponseEventsObserver
 {
 
     private final List<String> eventLog = new ArrayList<String>();
