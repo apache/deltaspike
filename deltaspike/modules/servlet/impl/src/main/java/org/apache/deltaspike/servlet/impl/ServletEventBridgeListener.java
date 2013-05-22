@@ -18,6 +18,8 @@
  */
 package org.apache.deltaspike.servlet.impl;
 
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
@@ -30,8 +32,20 @@ import org.apache.deltaspike.servlet.api.literal.WebLiteral;
  * 
  * @author Christian Kaltepoth
  */
-public class ServletEventBridgeListener extends EventEmitter implements HttpSessionListener
+public class ServletEventBridgeListener extends EventEmitter implements ServletContextListener, HttpSessionListener
 {
+
+    @Override
+    public void contextInitialized(ServletContextEvent sce)
+    {
+        fireEvent(sce.getServletContext(), WebLiteral.INSTANCE, InitializedLiteral.INSTANCE);
+    }
+
+    @Override
+    public void contextDestroyed(ServletContextEvent sce)
+    {
+        fireEvent(sce.getServletContext(), WebLiteral.INSTANCE, DestroyedLiteral.INSTANCE);
+    }
 
     @Override
     public void sessionCreated(HttpSessionEvent se)
@@ -44,5 +58,4 @@ public class ServletEventBridgeListener extends EventEmitter implements HttpSess
     {
         fireEvent(se.getSession(), WebLiteral.INSTANCE, DestroyedLiteral.INSTANCE);
     }
-
 }
