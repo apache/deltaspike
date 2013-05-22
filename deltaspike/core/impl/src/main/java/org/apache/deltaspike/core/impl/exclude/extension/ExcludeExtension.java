@@ -44,8 +44,10 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
@@ -60,13 +62,21 @@ import java.util.logging.Logger;
  */
 public class ExcludeExtension implements Extension, Deactivatable
 {
-    private static final Logger LOG = Logger.getLogger(ExcludeExtension.class.getName());
+    private static final String GLOBAL_ALTERNATIVES = "globalAlternatives.";
 
-    private static Boolean isWeld1Detected = false;
+    private static final Logger LOG = Logger.getLogger(ExcludeExtension.class.getName());
 
     private boolean isActivated = true;
     private boolean isGlobalAlternativeActivated = true;
     private boolean isCustomProjectStageBeanFilterActivated = true;
+
+    /**
+     * Contains the globalAlternatives which should get used
+     * KEY=Interface class name
+     * VALUE=Implementation class name
+     */
+    private Map<String, String> globalAlternatives = new HashMap<String, String>();
+
 
     @SuppressWarnings("UnusedDeclaration")
     protected void init(@Observes BeforeBeanDiscovery beforeBeanDiscovery, BeanManager beanManager)
@@ -74,13 +84,34 @@ public class ExcludeExtension implements Extension, Deactivatable
         isActivated =
                 ClassDeactivationUtils.isActivated(getClass());
 
-        isGlobalAlternativeActivated =
-                ClassDeactivationUtils.isActivated(GlobalAlternative.class);
-
         isCustomProjectStageBeanFilterActivated =
                 ClassDeactivationUtils.isActivated(CustomProjectStageBeanFilter.class);
 
-        isWeld1Detected = isWeld1(beanManager);
+        isGlobalAlternativeActivated =
+                ClassDeactivationUtils.isActivated(GlobalAlternative.class);
+        if (isGlobalAlternativeActivated)
+        {
+            Map<String, String> allProperties = ConfigResolver.getAllProperties();
+            for (Map.Entry<String, String> property : allProperties.entrySet())
+            {
+                if (property.getKey().startsWith(GLOBAL_ALTERNATIVES))
+                {
+                    String interfaceName = property.getKey().substring(GLOBAL_ALTERNATIVES.length());
+                    String implementation = property.getValue();
+                    if (LOG.isLoggable(Level.FINE))
+                    {
+                        LOG.fine("Enabling global alternative for interface " + interfaceName + ": " + implementation);
+                    }
+
+                    globalAlternatives.put(interfaceName, implementation);
+                }
+            }
+
+            if (globalAlternatives.isEmpty())
+            {
+                isGlobalAlternativeActivated = false;
+            }
+        }
     }
 
     /**
@@ -101,9 +132,9 @@ public class ExcludeExtension implements Extension, Deactivatable
     protected void vetoBeans(@Observes ProcessAnnotatedType processAnnotatedType, BeanManager beanManager)
     {
         //we need to do it before the exclude logic to keep the @Exclude support for global alternatives
-        if (isGlobalAlternativeActivated && isWeld1Detected)
+        if (isGlobalAlternativeActivated)
         {
-            activateGlobalAlternativesWeld1(processAnnotatedType, beanManager);
+            activateGlobalAlternatives(processAnnotatedType, beanManager);
         }
 
         if (isCustomProjectStageBeanFilterActivated)
@@ -158,8 +189,8 @@ public class ExcludeExtension implements Extension, Deactivatable
 
 
 
-    private void activateGlobalAlternativesWeld1(ProcessAnnotatedType processAnnotatedType,
-                                                 BeanManager beanManager)
+    private void activateGlobalAlternatives(ProcessAnnotatedType processAnnotatedType,
+                                            BeanManager beanManager)
     {
         Class<Object> currentBean = processAnnotatedType.getAnnotatedType().getJavaClass();
 
@@ -184,7 +215,7 @@ public class ExcludeExtension implements Extension, Deactivatable
         {
             alternativeBeanAnnotations = new HashSet<Annotation>();
 
-            configuredBeanName = ConfigResolver.getPropertyValue(currentType.getName());
+            configuredBeanName = globalAlternatives.get(currentType.getName());
             if (configuredBeanName != null && configuredBeanName.length() > 0)
             {
                 alternativeBeanClass = ClassUtils.tryToLoadClassForName(configuredBeanName);
@@ -440,26 +471,6 @@ public class ExcludeExtension implements Extension, Deactivatable
         processAnnotatedType.veto();
         LOG.finer(vetoType + " based veto for bean with type: " +
                 processAnnotatedType.getAnnotatedType().getJavaClass());
-    }
-
-    private boolean isWeld1(BeanManager beanManager)
-    {
-        if (beanManager.getClass().getName().startsWith("org.apache"))
-        {
-            return false;
-        }
-
-        if (beanManager.getClass().getName().startsWith("org.jboss.weld"))
-        {
-            String version = getJarVersion(beanManager.getClass());
-
-            if (version != null && version.startsWith("1."))
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     private static String getJarVersion(Class targetClass)
