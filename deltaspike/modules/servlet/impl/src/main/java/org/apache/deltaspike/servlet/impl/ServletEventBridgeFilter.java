@@ -48,17 +48,32 @@ public class ServletEventBridgeFilter extends EventEmitter implements Filter
             ServletException
     {
 
-        fireEvent(request, WebLiteral.INSTANCE, InitializedLiteral.INSTANCE);
-        fireEvent(response, WebLiteral.INSTANCE, InitializedLiteral.INSTANCE);
-
+        // store the request/response in a holder to access it later
+        RequestResponseHolder.bind(request, response);
         try
         {
-            chain.doFilter(request, response);
+
+            // fire @Initialized events
+            fireEvent(request, WebLiteral.INSTANCE, InitializedLiteral.INSTANCE);
+            fireEvent(response, WebLiteral.INSTANCE, InitializedLiteral.INSTANCE);
+
+            try
+            {
+                chain.doFilter(request, response);
+            }
+            finally
+            {
+                // fire @Destroyed events
+                fireEvent(request, WebLiteral.INSTANCE, DestroyedLiteral.INSTANCE);
+                fireEvent(response, WebLiteral.INSTANCE, DestroyedLiteral.INSTANCE);
+            }
+
         }
+
+        // release in an outer finally block to ensure the ThreadLocal is cleaned correctly
         finally
         {
-            fireEvent(request, WebLiteral.INSTANCE, DestroyedLiteral.INSTANCE);
-            fireEvent(response, WebLiteral.INSTANCE, DestroyedLiteral.INSTANCE);
+            RequestResponseHolder.release();
         }
 
     }
