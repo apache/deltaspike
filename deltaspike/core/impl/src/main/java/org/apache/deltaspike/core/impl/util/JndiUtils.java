@@ -190,7 +190,7 @@ public abstract class JndiUtils
         }
         catch (NamingException e)
         {
-            LOG.log(Level.SEVERE, "InitialContext#list failed!", e);
+            // this is expected if there is no entry in JNDI for the requested name or type
         }
         return result;
     }
