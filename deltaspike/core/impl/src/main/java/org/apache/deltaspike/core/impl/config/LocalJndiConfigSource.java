@@ -89,6 +89,6 @@ class LocalJndiConfigSource extends BaseConfigSource
     @Override
     public boolean isScannable()
     {
-        return true;
+        return false;
     }
 }

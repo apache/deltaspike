@@ -183,14 +183,28 @@ public abstract class JndiUtils
             NamingEnumeration<NameClassPair> enumeration = initialContext.list(name);
             while (enumeration.hasMoreElements())
             {
-                NameClassPair binding = enumeration.nextElement();
-                Name bindingName = nameParser.parse(name).add(binding.getName());
-                result.put(binding.getName(), lookup(bindingName, type));
+                try
+                {
+                    NameClassPair binding = enumeration.nextElement();
+                    Name bindingName = nameParser.parse(name).add(binding.getName());                
+                    result.put(binding.getName(), lookup(bindingName, type));
+                }
+                catch (NamingException e)
+                {
+                    if (LOG.isLoggable(Level.FINEST))
+                    {
+                        // this is expected if there is no entry in JNDI for the requested name or type
+                        // so finest level is ok, if devs want to see it they can enable this logger level.
+                        LOG.log(Level.FINEST, "InitialContext#list failed!", e);
+                    }
+                }
             }
         }
         catch (NamingException e)
         {
-            // this is expected if there is no entry in JNDI for the requested name or type
+            // this is fine at this point, since the individual lines will be caught currently.
+            LOG.log(Level.WARNING,"Problem reading the name of the JNDI location " + name
+                + " or failuring listing pairs.",e);
         }
         return result;
     }
