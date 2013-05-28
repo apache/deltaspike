@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.apache.deltaspike</groupId>
         <artifactId>deltaspike-project</artifactId>
-        <version>0.4-SNAPSHOT</version>
+        <version>0.4</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -120,7 +120,7 @@
         <deltaspike.osgi.exclude.dependencies>false</deltaspike.osgi.exclude.dependencies>
         <deltaspike.osgi.provide.capability />
         <deltaspike.osgi.require.capability />
-        <cdi.osgi.beans-managed></cdi.osgi.beans-managed>
+        <cdi.osgi.beans-managed />
 
     </properties>
 
