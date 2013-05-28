@@ -1,0 +1,127 @@
+Apache DeltaSpike-0.4 Release Notes
+
+
+Sub-task
+
+    [DELTASPIKE-10] - review and discuss "metadata implementations and utils"
+    [DELTASPIKE-80] - review and discuss built in Authorization providers
+    [DELTASPIKE-104] - unit and integration tests for CdiContainer
+    [DELTASPIKE-105] - remove workarounds for weld
+    [DELTASPIKE-113] - Review and Discuss ServiceHandlers
+    [DELTASPIKE-132] - Discuss the concept of the exception chain / stack
+    [DELTASPIKE-328] - Create ClientWindow API
+    [DELTASPIKE-329] - Create a WindowContextManager
+    [DELTASPIKE-330] - Create a new WindowScope to represent beans that are bound to a browser window
+
+Bug
+
+    [DELTASPIKE-202] - DefaultMessageInterpolator/LocaleResolver doesn't get picked up properly
+    [DELTASPIKE-207] - memory leak in OpenWebBeansContextControl
+    [DELTASPIKE-208] - activateGlobalAlternatives is broken
+    [DELTASPIKE-260] - Weld serialization issue
+    [DELTASPIKE-262] - remove useless OWB workaround
+    [DELTASPIKE-264] - Exception handler swallows UnsatisfiedResolutionException
+    [DELTASPIKE-268] - our transitive deltaspike dependencies are all set to 'provided
+    [DELTASPIKE-275] - org.apache.deltaspike.core.impl.exception.control.extension.ExceptionControlExtension#verifyInjectionPoints calls BeanProvider while cdi is not completely started
+    [DELTASPIKE-280] - ShrinkWrapArchiveUtil registers a picked up resource under the wrong absolute file path
+    [DELTASPIKE-284] - Deltaspike CDIControl won't work with Weld EE
+    [DELTASPIKE-286] - Comparators shall always also implement Serializable
+    [DELTASPIKE-290] - JSF message test fails due to localization issue
+    [DELTASPIKE-291] - @SecurityBindings don't respect parameter types of @SecureParameterBinding parameters when determining the authorization method
+    [DELTASPIKE-294] - Weld: Ambiguous dependency with global alternatives when multiple @Alternative classes
+    [DELTASPIKE-295] - JsfMessageProducer createJsfMessage return type should be parametrized
+    [DELTASPIKE-296] - Retrieving owb-CdiControl with BeanProvider causes Warning
+    [DELTASPIKE-297] - Exception handling and multiple qualifiers
+    [DELTASPIKE-299] - InvocationTargetException not unwrapped
+    [DELTASPIKE-300] - Basic MBean API/Extension to link CDI to JMX
+    [DELTASPIKE-303] - Missing cdi-api dependency in jbossas-remote-7 profile
+    [DELTASPIKE-309] - Locale-related test failure
+    [DELTASPIKE-312] - GlobalAlternatives must not get handled for OpenWebBeans
+    [DELTASPIKE-313] - allow cdictrl-openejb to use a different owb version in the build
+    [DELTASPIKE-317] - NPE if CdiContainer#getContextControl gets called without #boot
+    [DELTASPIKE-318] - OpenejbCdiControl tries to scan starting classes
+    [DELTASPIKE-319] - Fail deployment of app with JPA module when EM not found in same class.
+    [DELTASPIKE-320] - moving the entity-manager injection can break the default handling
+    [DELTASPIKE-321] - DefaultMessage.argument(Serializable...) should guard against empty arrays
+    [DELTASPIKE-322] - auto unregister MBeans if already registered
+    [DELTASPIKE-323] - auto unregister MBeans if already registered
+    [DELTASPIKE-327] - InvocationHandlerExtension Bean<?>s are not passivation capable
+    [DELTASPIKE-339] - JndiUtils is broken
+    [DELTASPIKE-343] - NPE in PartialBeanAsAbstractClassTest with Weld 2.0.0
+    [DELTASPIKE-348] - WindowScope stuff breaks ICEfaces
+    [DELTASPIKE-354] - NPE in MessageBundleInvocationHandler on null Argument
+    [DELTASPIKE-356] - MessageContextProducer causes a ton of log output on each request
+    [DELTASPIKE-359] - Websphere 8.0.x javaassist proxy does not reflect instance value
+    [DELTASPIKE-362] - BeanManagerProvider floods log file with warnings on AS7
+    [DELTASPIKE-363] - BeanManagerProvider NPE when shutting down after a failure
+    [DELTASPIKE-367] - upgrade owb-arquillian-container to 1.2.0
+
+Improvement
+
+    [DELTASPIKE-89] - Improve JavaDoc
+    [DELTASPIKE-165] - Exception handlers: support handling unexpected exceptions
+    [DELTASPIKE-234] - Go back through documentation for Exception Handling add in about equality and ordinal
+    [DELTASPIKE-255] - base class for extensions
+    [DELTASPIKE-273] - Provide a way to obtain all property names or map of properties
+    [DELTASPIKE-292] - @SecurityBindings don't respect parameter types of @SecureParameterBinding parameters when determining the authorization method
+    [DELTASPIKE-293] - Improve the ViewScopedContext by observing ServletContext and HttpSession lifecycle events.
+    [DELTASPIKE-298] - Post-Method-Authorizer
+    [DELTASPIKE-301] - Improve site layout to manage nested dirs
+    [DELTASPIKE-302] - Avoid same layout to maintain in different files/templates
+    [DELTASPIKE-310] - Support for TransactionAttributeType REQUIRE_NEW
+    [DELTASPIKE-314] - TransactionBeanStorage shouldn't be request scoped
+    [DELTASPIKE-316] - Upgrade to latest pax-cdi requirements for cdi extensions
+    [DELTASPIKE-326] - Introduce isScannable to ConfigSource
+    [DELTASPIKE-340] - Support PreViewConfigNavigateEvent for "unknown" views as nav-source
+    [DELTASPIKE-344] - BeanProvider should get a getBeans() with the BeanManager as parameter
+    [DELTASPIKE-355] - Create Alternative to DefaultMessageInterpolator using java.text.MessageFormat
+    [DELTASPIKE-365] - extend ContainerControl boot() to pass in config properties
+    [DELTASPIKE-369] - Disable WindowScope by default
+
+New Feature
+
+    [DELTASPIKE-122] - producer for logger
+    [DELTASPIKE-187] - @PersistenceContext with @Transactional outside of application servers
+    [DELTASPIKE-210] - Build OSGi bundles
+    [DELTASPIKE-229] - Add JSFLocaleResolver as an DeaultLocaleResolver
+    [DELTASPIKE-266] - Import @ViewScoped support from CODI
+    [DELTASPIKE-267] - Create JSF module maven structure
+    [DELTASPIKE-274] - Create a common base for writing Contexts
+    [DELTASPIKE-277] - Typesafe Messgaes for JSF: add JsfMessage<?> feature
+    [DELTASPIKE-278] - add 'category' to Message API
+    [DELTASPIKE-279] - import JSF-Scope_to_CDI-Scope mapping from CODI
+    [DELTASPIKE-281] - add JsfLocaleResolver for our typesafe messages
+    [DELTASPIKE-283] - event-broadcasting related to a faces-request
+    [DELTASPIKE-288] - type-safe view-configs
+    [DELTASPIKE-289] - implement WindowContext
+    [DELTASPIKE-307] - integration of @Secured with type-safe view-configs
+    [DELTASPIKE-315] - Provide a producer for EntityManagerFactories
+    [DELTASPIKE-336] - support @Stereotype together with @ViewMetaData
+    [DELTASPIKE-345] - integration of view-controller callbacks with type-safe view-configs
+    [DELTASPIKE-346] - JsfModuleConfig as type-safe config for the jsf-module
+    [DELTASPIKE-347] - keep faces-messages per default in case of a redirect
+
+Task
+
+    [DELTASPIKE-2] - deltaspike java-se feature ranking
+    [DELTASPIKE-41] - add examples for v0.1
+    [DELTASPIKE-59] - review and discuss logging
+    [DELTASPIKE-68] - discuss BeanFilter for BeanProvider
+    [DELTASPIKE-88] - discuss Editable* spi approach
+    [DELTASPIKE-162] - add examples for v0.2
+    [DELTASPIKE-217] - test twitter bootstrap for DS site
+    [DELTASPIKE-242] - add examples for v0.3
+    [DELTASPIKE-276] - upgrade dependencies and plugins before the next release
+    [DELTASPIKE-325] - upgrade to owb-arquillian-standalone and owb 1.1.8
+    [DELTASPIKE-331] - create partial-bean module
+    [DELTASPIKE-333] - replace javassist with commons-proxy
+    [DELTASPIKE-337] - unify package for annotations
+    [DELTASPIKE-338] - remove hard dependency to javassist
+    [DELTASPIKE-351] - re-visit usage of DeltaSpikeConfig
+    [DELTASPIKE-352] - update dependencies for weld2
+    [DELTASPIKE-353] - restrict global alternatives to weld 1.x
+
+Test
+
+    [DELTASPIKE-247] - Create Identity Model
+    [DELTASPIKE-285] - MinimalMessagesTest fails on WLS12c
