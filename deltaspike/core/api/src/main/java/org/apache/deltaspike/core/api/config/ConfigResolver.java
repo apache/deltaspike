@@ -31,9 +31,11 @@ import java.util.logging.Logger;
 
 import javax.enterprise.inject.Typed;
 
+import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.spi.config.ConfigSource;
 import org.apache.deltaspike.core.spi.config.ConfigSourceProvider;
 import org.apache.deltaspike.core.util.ClassUtils;
+import org.apache.deltaspike.core.util.ProjectStageProducer;
 import org.apache.deltaspike.core.util.ServiceUtils;
 
 /**
@@ -55,6 +57,8 @@ public final class ConfigResolver
      */
     private static Map<ClassLoader, ConfigSource[]> configSources
         = new ConcurrentHashMap<ClassLoader, ConfigSource[]>();
+
+    private static volatile ProjectStage projectStage = null;
 
     private ConfigResolver()
     {
@@ -144,6 +148,35 @@ public final class ConfigResolver
         }
 
         return null;
+    }
+
+    /**
+     * <p>Search for the configured value in all {@link ConfigSource}s and take the
+     * current {@link org.apache.deltaspike.core.api.projectstage.ProjectStage}
+     * into account.</p>
+     *
+     * <p>It first will search if there is a configured value of the given key prefixed
+     * with the current ProjectStage (e.g. 'myproject.myconfig.Production') and if this didn't
+     * find anything it will lookup the given key without any prefix.</p>
+     *
+     * <p><b>Attention</b> This method must only be used after all ConfigSources
+     * got registered and it also must not be used to determine the ProjectStage itself.</p>
+     * @param key
+     * @param defaultValue
+     * @return the configured value or if non found the defaultValue
+     *
+     */
+    public static String getProjectStageAwarePropertyValue(String key, String defaultValue)
+    {
+        ProjectStage ps = getProjectStage();
+
+        String value = getPropertyValue(key + '.' + ps, defaultValue);
+        if (value == null)
+        {
+            value = getPropertyValue(key, defaultValue);
+        }
+
+        return value;
     }
 
     /**
@@ -262,6 +295,19 @@ public final class ConfigResolver
             }
         });
         return configSources;
+    }
+
+    private static ProjectStage getProjectStage()
+    {
+        if (projectStage == null)
+        {
+            synchronized (ConfigResolver.class)
+            {
+                projectStage = ProjectStageProducer.getInstance().getProjectStage();
+            }
+        }
+
+        return projectStage;
     }
 
 }

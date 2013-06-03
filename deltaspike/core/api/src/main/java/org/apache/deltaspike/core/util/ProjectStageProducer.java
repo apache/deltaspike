@@ -47,6 +47,7 @@ import java.util.logging.Logger;
  * }
  * </pre>
  *
+ * <p>Please note that there can only be one ProjectStage per EAR.</p>
  */
 @ApplicationScoped
 public class ProjectStageProducer implements Serializable

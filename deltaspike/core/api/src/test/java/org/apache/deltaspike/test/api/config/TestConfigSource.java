@@ -33,6 +33,15 @@ public class TestConfigSource implements ConfigSource
 
     private int ordinal = 700;
 
+    private Map<String, String> props = new HashMap<String, String>();
+
+
+    public TestConfigSource()
+    {
+        props.put("testkey", "testvalue");
+        props.put("testkey.UnitTest", "unittestvalue");
+    }
+
     @Override
     public String getConfigName()
     {
@@ -48,15 +57,13 @@ public class TestConfigSource implements ConfigSource
     @Override
     public String getPropertyValue(String key)
     {
-        return "testkey".equals(key) ? "testvalue" : null;
+        return props.get(key);
     }
 
     @Override
     public Map<String, String> getProperties()
     {
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("testkey", "testvalue");
-        return map;
+        return props;
     }
 
 	@Override

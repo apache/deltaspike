@@ -19,6 +19,8 @@
 package org.apache.deltaspike.test.api.config;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
+import org.apache.deltaspike.core.api.projectstage.ProjectStage;
+import org.apache.deltaspike.core.util.ProjectStageProducer;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -49,5 +51,13 @@ public class ConfigResolverTest
     {
         Assert.assertNull(ConfigResolver.getPropertyValue("notexisting"));
         Assert.assertEquals("testvalue", ConfigResolver.getPropertyValue("testkey"));
+    }
+
+    @Test
+    public void testGetProjectStageAwarePropertyValue()
+    {
+        ProjectStageProducer.setProjectStage(ProjectStage.UnitTest);
+        Assert.assertNull(ConfigResolver.getProjectStageAwarePropertyValue("notexisting", null));
+        Assert.assertEquals("unittestvalue", ConfigResolver.getProjectStageAwarePropertyValue("testkey", null));
     }
 }
