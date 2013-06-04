@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.apache.deltaspike.modules</groupId>
         <artifactId>servlet-module-project</artifactId>
-        <version>0.4-incubating-SNAPSHOT</version>
+        <version>0.5-SNAPSHOT</version>
     </parent>
 
     <artifactId>deltaspike-servlet-module-api</artifactId>
