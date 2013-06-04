@@ -24,6 +24,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.Typed;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -37,6 +38,7 @@ import org.apache.deltaspike.servlet.api.Web;
  * following objects are supported:
  * 
  * <ul>
+ * <li>{@link ServletContext}</li>
  * <li>{@link ServletRequest}</li>
  * <li>{@link HttpServletRequest}</li>
  * <li>{@link ServletResponse}</li>
@@ -49,6 +51,13 @@ import org.apache.deltaspike.servlet.api.Web;
  */
 public class ServletObjectProducer
 {
+
+    @Produces
+    @Web
+    public ServletContext getServletContext()
+    {
+        return ServletContextHolder.get();
+    }
 
     @Produces
     @Web

@@ -38,13 +38,21 @@ public class ServletEventBridgeListener extends EventEmitter implements ServletC
     @Override
     public void contextInitialized(ServletContextEvent sce)
     {
+        ServletContextHolder.bind(sce.getServletContext());
         fireEvent(sce.getServletContext(), WebLiteral.INSTANCE, InitializedLiteral.INSTANCE);
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce)
     {
-        fireEvent(sce.getServletContext(), WebLiteral.INSTANCE, DestroyedLiteral.INSTANCE);
+        try
+        {
+            fireEvent(sce.getServletContext(), WebLiteral.INSTANCE, DestroyedLiteral.INSTANCE);
+        }
+        finally
+        {
+            ServletContextHolder.release();
+        }
     }
 
     @Override
