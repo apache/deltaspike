@@ -38,8 +38,16 @@ public class TestConfigSource implements ConfigSource
 
     public TestConfigSource()
     {
+        // a ProjectStage overloaded value
         props.put("testkey", "testvalue");
         props.put("testkey.UnitTest", "unittestvalue");
+
+        // a value without any overloading
+        props.put("testkey2", "testvalue");
+
+        // a value which got ProjectStage overloaded to an empty value
+        props.put("testkey3", "testvalue");
+        props.put("testkey3.UnitTest", "");
     }
 
     @Override

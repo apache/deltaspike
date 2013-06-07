@@ -58,6 +58,14 @@ public class ConfigResolverTest
     {
         ProjectStageProducer.setProjectStage(ProjectStage.UnitTest);
         Assert.assertNull(ConfigResolver.getProjectStageAwarePropertyValue("notexisting", null));
+
+        Assert.assertEquals("testvalue", ConfigResolver.getPropertyValue("testkey", null));
         Assert.assertEquals("unittestvalue", ConfigResolver.getProjectStageAwarePropertyValue("testkey", null));
+
+        Assert.assertEquals("testvalue", ConfigResolver.getPropertyValue("testkey2", null));
+        Assert.assertEquals("testvalue", ConfigResolver.getProjectStageAwarePropertyValue("testkey2", null));
+
+        Assert.assertEquals("testvalue", ConfigResolver.getPropertyValue("testkey3", null));
+        Assert.assertEquals("", ConfigResolver.getProjectStageAwarePropertyValue("testkey3", null));
     }
 }
