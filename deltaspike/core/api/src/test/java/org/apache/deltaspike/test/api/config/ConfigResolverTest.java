@@ -28,6 +28,7 @@ import java.util.List;
 
 public class ConfigResolverTest
 {
+    private static final String DEFAULT_VALUE = "defaultValue";
     @Test
     public void testOverruledValue()
     {
@@ -60,12 +61,43 @@ public class ConfigResolverTest
         Assert.assertNull(ConfigResolver.getProjectStageAwarePropertyValue("notexisting", null));
 
         Assert.assertEquals("testvalue", ConfigResolver.getPropertyValue("testkey", null));
+        Assert.assertEquals("unittestvalue", ConfigResolver.getProjectStageAwarePropertyValue("testkey"));
         Assert.assertEquals("unittestvalue", ConfigResolver.getProjectStageAwarePropertyValue("testkey", null));
 
         Assert.assertEquals("testvalue", ConfigResolver.getPropertyValue("testkey2", null));
+        Assert.assertEquals("testvalue", ConfigResolver.getProjectStageAwarePropertyValue("testkey2"));
         Assert.assertEquals("testvalue", ConfigResolver.getProjectStageAwarePropertyValue("testkey2", null));
 
         Assert.assertEquals("testvalue", ConfigResolver.getPropertyValue("testkey3", null));
-        Assert.assertEquals("", ConfigResolver.getProjectStageAwarePropertyValue("testkey3", null));
+        Assert.assertEquals("", ConfigResolver.getProjectStageAwarePropertyValue("testkey3"));
+        Assert.assertEquals(DEFAULT_VALUE, ConfigResolver.getProjectStageAwarePropertyValue("testkey3", DEFAULT_VALUE));
+    }
+
+    @Test
+    public void testGetPropertyAwarePropertyValue() {
+        ProjectStageProducer.setProjectStage(ProjectStage.UnitTest);
+
+        Assert.assertNull(ConfigResolver.getPropertyAwarePropertyValue("notexisting", null));
+
+        Assert.assertEquals("testvalue", ConfigResolver.getPropertyValue("testkey", null));
+        Assert.assertEquals("unittestvalue", ConfigResolver.getPropertyAwarePropertyValue("testkey", "dbvendor"));
+        Assert.assertEquals("unittestvalue", ConfigResolver.getPropertyAwarePropertyValue("testkey", "dbvendor", null));
+
+        Assert.assertEquals("testvalue", ConfigResolver.getPropertyValue("testkey2", null));
+        Assert.assertEquals("testvalue", ConfigResolver.getPropertyAwarePropertyValue("testkey2", "dbvendor"));
+        Assert.assertEquals("testvalue", ConfigResolver.getPropertyAwarePropertyValue("testkey2", "dbvendor", null));
+
+        Assert.assertEquals("testvalue", ConfigResolver.getPropertyValue("testkey3", null));
+        Assert.assertEquals("", ConfigResolver.getPropertyAwarePropertyValue("testkey3", "dbvendor"));
+        Assert.assertEquals(DEFAULT_VALUE, ConfigResolver.getPropertyAwarePropertyValue("testkey3", "dbvendor", DEFAULT_VALUE));
+
+        Assert.assertEquals("TestDataSource", ConfigResolver.getPropertyAwarePropertyValue("dataSource", "dbvendor"));
+        Assert.assertEquals("PostgreDataSource", ConfigResolver.getPropertyAwarePropertyValue("dataSource", "dbvendor2"));
+        Assert.assertEquals("DefaultDataSource", ConfigResolver.getPropertyAwarePropertyValue("dataSource", "dbvendorX"));
+
+        Assert.assertEquals("TestDataSource", ConfigResolver.getPropertyAwarePropertyValue("dataSource", "dbvendor", null));
+        Assert.assertEquals("PostgreDataSource", ConfigResolver.getPropertyAwarePropertyValue("dataSource", "dbvendor2", null));
+        Assert.assertEquals("DefaultDataSource", ConfigResolver.getPropertyAwarePropertyValue("dataSource", "dbvendorX", null));
+        Assert.assertEquals(DEFAULT_VALUE, ConfigResolver.getPropertyAwarePropertyValue("dataSourceX", "dbvendorX", DEFAULT_VALUE));
     }
 }

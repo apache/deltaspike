@@ -162,18 +162,110 @@ public final class ConfigResolver
      * <p><b>Attention</b> This method must only be used after all ConfigSources
      * got registered and it also must not be used to determine the ProjectStage itself.</p>
      * @param key
+     * @return the configured value or if non found the defaultValue
+     *
+     */
+    public static String getProjectStageAwarePropertyValue(String key)
+    {
+        ProjectStage ps = getProjectStage();
+
+        String value = getPropertyValue(key + '.' + ps);
+        if (value == null)
+        {
+            value = getPropertyValue(key);
+        }
+
+        return value;
+    }
+    /**
+     * {@link #getProjectStageAwarePropertyValue(String)} which returns the defaultValue
+     * if the property is <code>null</code> or empty.
+     * @param key
      * @param defaultValue
      * @return the configured value or if non found the defaultValue
      *
      */
     public static String getProjectStageAwarePropertyValue(String key, String defaultValue)
     {
-        ProjectStage ps = getProjectStage();
+        String value = getProjectStageAwarePropertyValue(key);
 
-        String value = getPropertyValue(key + '.' + ps, defaultValue);
+        if (value == null || value.length() == 0)
+        {
+            value = defaultValue;
+        }
+
+        return value;
+    }
+
+    /**
+     * <p>Search for the configured value in all {@link ConfigSource}s and take the
+     * current {@link org.apache.deltaspike.core.api.projectstage.ProjectStage}
+     * and the value configured for the given property into account.</p>
+     *
+     * <p>The first step is to resolve the value of the given property. This will
+     * take the current ProjectStage into account. E.g. given the property is 'dbvendor'
+     * and the ProjectStage is 'UnitTest', the first lookup is
+     * <ul><li>'dbvendor.UnitTest'</li></ul>.
+     * If this value is not found then we will do a 2nd lookup for
+     * <ul><li>'dbvendor'</li></ul></p>
+     *
+     * <p>If a value was found for the given property (e.g. dbvendor = 'mysql'
+     * then we will use this value to lookup in the following order until we
+     * found a non-null value. If there was no value found for the property
+     * we will only do the key+ProjectStage and key lookup.
+     * In the following sample 'dataSource' is used as key parameter:
+     *
+     * <ul>
+     *      <li>'datasource.mysql.UnitTest'</li>
+     *      <li>'datasource.mysql'</li>
+     *      <li>'datasource.UnitTest'</li>
+     *      <li>'datasource'</li>
+     * </ul>
+     * </p>
+     *
+     *
+     * <p><b>Attention</b> This method must only be used after all ConfigSources
+     * got registered and it also must not be used to determine the ProjectStage itself.</p>
+     * @param key
+     * @param property the property to look up first
+     * @return the configured value or if non found the defaultValue
+     *
+     */
+    public static String getPropertyAwarePropertyValue(String key, String property)
+    {
+        String propertyValue = getProjectStageAwarePropertyValue(property);
+
+        String value = null;
+
+        if (propertyValue != null && propertyValue.length() > 0)
+        {
+            value = getProjectStageAwarePropertyValue(key + '.' + propertyValue);
+        }
+
         if (value == null)
         {
-            value = getPropertyValue(key, defaultValue);
+            value = getProjectStageAwarePropertyValue(key);
+        }
+
+        return value;
+    }
+
+    /*
+     * <p><b>Attention</b> This method must only be used after all ConfigSources
+     * got registered and it also must not be used to determine the ProjectStage itself.</p>
+     * @param key
+     * @param property the property to look up first
+     * @param defaultValue
+     * @return the configured value or if non found the defaultValue
+     *
+    */
+    public static String getPropertyAwarePropertyValue(String key, String property, String defaultValue)
+    {
+        String value = getPropertyAwarePropertyValue(key, property);
+
+        if (value == null || value.length() == 0)
+        {
+            value = defaultValue;
         }
 
         return value;

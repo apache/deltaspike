@@ -48,6 +48,20 @@ public class TestConfigSource implements ConfigSource
         // a value which got ProjectStage overloaded to an empty value
         props.put("testkey3", "testvalue");
         props.put("testkey3.UnitTest", "");
+
+        // now for the PropertyAware tests
+        props.put("dbvendor.UnitTest", "mysql");
+        props.put("dbvendor", "postgresql");
+
+        props.put("dataSource.mysql.Production", "java:/comp/env/MyDs");
+        props.put("dataSource.mysql.UnitTest", "TestDataSource");
+        props.put("dataSource.postgresql", "PostgreDataSource");
+        props.put("dataSource", "DefaultDataSource");
+
+        // another one
+        props.put("dbvendor2.Production", "mysql");
+        props.put("dbvendor2", "postgresql");
+
     }
 
     @Override
