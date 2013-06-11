@@ -16,50 +16,32 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.servlet.impl;
+package org.apache.deltaspike.servlet.impl.event;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpSessionEvent;
+import javax.servlet.http.HttpSessionListener;
+
+import org.apache.deltaspike.servlet.api.literal.DestroyedLiteral;
+import org.apache.deltaspike.servlet.api.literal.InitializedLiteral;
+import org.apache.deltaspike.servlet.api.literal.WebLiteral;
 
 /**
- * Simple value objects that holds a request/response pair.
+ * This class listens for HTTP session events and forwards them to the CDI event bus.
  * 
  * @author Christian Kaltepoth
  */
-class RequestResponse
+public class EventBridgeSessionListener extends EventEmitter implements HttpSessionListener
 {
 
-    private final ServletRequest request;
-    private final ServletResponse response;
-
-    /**
-     * Creates a new instance of this class.
-     * 
-     * @param request
-     *            the request
-     * @param response
-     *            the response
-     */
-    RequestResponse(ServletRequest request, ServletResponse response)
+    @Override
+    public void sessionCreated(HttpSessionEvent se)
     {
-        this.request = request;
-        this.response = response;
+        fireEvent(se.getSession(), WebLiteral.INSTANCE, InitializedLiteral.INSTANCE);
     }
 
-    /**
-     * Returns the request stored in this object.
-     */
-    ServletRequest getRequest()
+    @Override
+    public void sessionDestroyed(HttpSessionEvent se)
     {
-        return request;
+        fireEvent(se.getSession(), WebLiteral.INSTANCE, DestroyedLiteral.INSTANCE);
     }
-
-    /**
-     * Returns the response stored in this object.
-     */
-    ServletResponse getResponse()
-    {
-        return response;
-    }
-
 }

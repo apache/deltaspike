@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.servlet.impl;
+package org.apache.deltaspike.servlet.impl.produce;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;

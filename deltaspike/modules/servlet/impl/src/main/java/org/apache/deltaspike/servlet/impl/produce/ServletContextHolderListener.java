@@ -16,54 +16,29 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.servlet.impl;
+package org.apache.deltaspike.servlet.impl.produce;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
-
-import org.apache.deltaspike.servlet.api.literal.DestroyedLiteral;
-import org.apache.deltaspike.servlet.api.literal.InitializedLiteral;
-import org.apache.deltaspike.servlet.api.literal.WebLiteral;
 
 /**
- * This class listens for various servlet events and forwards them to the CDI event bus.
+ * This class stores the ServletContext in the {@link ServletContextHolder}.
  * 
  * @author Christian Kaltepoth
  */
-public class ServletEventBridgeListener extends EventEmitter implements ServletContextListener, HttpSessionListener
+public class ServletContextHolderListener implements ServletContextListener
 {
 
     @Override
     public void contextInitialized(ServletContextEvent sce)
     {
         ServletContextHolder.bind(sce.getServletContext());
-        fireEvent(sce.getServletContext(), WebLiteral.INSTANCE, InitializedLiteral.INSTANCE);
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce)
     {
-        try
-        {
-            fireEvent(sce.getServletContext(), WebLiteral.INSTANCE, DestroyedLiteral.INSTANCE);
-        }
-        finally
-        {
-            ServletContextHolder.release();
-        }
+        ServletContextHolder.release();
     }
 
-    @Override
-    public void sessionCreated(HttpSessionEvent se)
-    {
-        fireEvent(se.getSession(), WebLiteral.INSTANCE, InitializedLiteral.INSTANCE);
-    }
-
-    @Override
-    public void sessionDestroyed(HttpSessionEvent se)
-    {
-        fireEvent(se.getSession(), WebLiteral.INSTANCE, DestroyedLiteral.INSTANCE);
-    }
 }

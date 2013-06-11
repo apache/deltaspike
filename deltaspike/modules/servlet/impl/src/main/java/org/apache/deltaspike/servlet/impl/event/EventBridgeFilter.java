@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.servlet.impl;
+package org.apache.deltaspike.servlet.impl.event;
 
 import java.io.IOException;
 
@@ -32,9 +32,11 @@ import org.apache.deltaspike.servlet.api.literal.InitializedLiteral;
 import org.apache.deltaspike.servlet.api.literal.WebLiteral;
 
 /**
+ * This filter sends events to the CDI event bus when requests and responses get created and destroyed.
+ * 
  * @author Christian Kaltepoth
  */
-public class ServletEventBridgeFilter extends EventEmitter implements Filter
+public class EventBridgeFilter extends EventEmitter implements Filter
 {
 
     @Override
@@ -48,32 +50,19 @@ public class ServletEventBridgeFilter extends EventEmitter implements Filter
             ServletException
     {
 
-        // store the request/response in a holder to access it later
-        RequestResponseHolder.bind(request, response);
+        // fire @Initialized events
+        fireEvent(request, WebLiteral.INSTANCE, InitializedLiteral.INSTANCE);
+        fireEvent(response, WebLiteral.INSTANCE, InitializedLiteral.INSTANCE);
+
         try
         {
-
-            // fire @Initialized events
-            fireEvent(request, WebLiteral.INSTANCE, InitializedLiteral.INSTANCE);
-            fireEvent(response, WebLiteral.INSTANCE, InitializedLiteral.INSTANCE);
-
-            try
-            {
-                chain.doFilter(request, response);
-            }
-            finally
-            {
-                // fire @Destroyed events
-                fireEvent(request, WebLiteral.INSTANCE, DestroyedLiteral.INSTANCE);
-                fireEvent(response, WebLiteral.INSTANCE, DestroyedLiteral.INSTANCE);
-            }
-
+            chain.doFilter(request, response);
         }
-
-        // release in an outer finally block to ensure the ThreadLocal is cleaned correctly
         finally
         {
-            RequestResponseHolder.release();
+            // fire @Destroyed events
+            fireEvent(request, WebLiteral.INSTANCE, DestroyedLiteral.INSTANCE);
+            fireEvent(response, WebLiteral.INSTANCE, DestroyedLiteral.INSTANCE);
         }
 
     }
