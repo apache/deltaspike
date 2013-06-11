@@ -29,7 +29,6 @@ import javax.servlet.ServletResponse;
 
 import org.apache.deltaspike.servlet.api.literal.DestroyedLiteral;
 import org.apache.deltaspike.servlet.api.literal.InitializedLiteral;
-import org.apache.deltaspike.servlet.api.literal.WebLiteral;
 
 /**
  * This filter sends events to the CDI event bus when requests and responses get created and destroyed.
@@ -51,8 +50,8 @@ public class EventBridgeFilter extends EventEmitter implements Filter
     {
 
         // fire @Initialized events
-        fireEvent(request, WebLiteral.INSTANCE, InitializedLiteral.INSTANCE);
-        fireEvent(response, WebLiteral.INSTANCE, InitializedLiteral.INSTANCE);
+        fireEvent(request, InitializedLiteral.INSTANCE);
+        fireEvent(response, InitializedLiteral.INSTANCE);
 
         try
         {
@@ -61,8 +60,8 @@ public class EventBridgeFilter extends EventEmitter implements Filter
         finally
         {
             // fire @Destroyed events
-            fireEvent(request, WebLiteral.INSTANCE, DestroyedLiteral.INSTANCE);
-            fireEvent(response, WebLiteral.INSTANCE, DestroyedLiteral.INSTANCE);
+            fireEvent(request, DestroyedLiteral.INSTANCE);
+            fireEvent(response, DestroyedLiteral.INSTANCE);
         }
 
     }

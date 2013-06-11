@@ -23,7 +23,6 @@ import javax.servlet.http.HttpSessionListener;
 
 import org.apache.deltaspike.servlet.api.literal.DestroyedLiteral;
 import org.apache.deltaspike.servlet.api.literal.InitializedLiteral;
-import org.apache.deltaspike.servlet.api.literal.WebLiteral;
 
 /**
  * This class listens for HTTP session events and forwards them to the CDI event bus.
@@ -36,12 +35,12 @@ public class EventBridgeSessionListener extends EventEmitter implements HttpSess
     @Override
     public void sessionCreated(HttpSessionEvent se)
     {
-        fireEvent(se.getSession(), WebLiteral.INSTANCE, InitializedLiteral.INSTANCE);
+        fireEvent(se.getSession(), InitializedLiteral.INSTANCE);
     }
 
     @Override
     public void sessionDestroyed(HttpSessionEvent se)
     {
-        fireEvent(se.getSession(), WebLiteral.INSTANCE, DestroyedLiteral.INSTANCE);
+        fireEvent(se.getSession(), DestroyedLiteral.INSTANCE);
     }
 }

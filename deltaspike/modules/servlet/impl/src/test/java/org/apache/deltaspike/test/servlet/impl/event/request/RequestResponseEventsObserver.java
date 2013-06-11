@@ -29,7 +29,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.deltaspike.servlet.api.Destroyed;
 import org.apache.deltaspike.servlet.api.Initialized;
-import org.apache.deltaspike.servlet.api.Web;
 
 /**
  * Application scoped observer which listens for {@link HttpServletRequest} and {@link HttpServletResponse} events on
@@ -43,22 +42,22 @@ public class RequestResponseEventsObserver
 
     private final List<String> eventLog = new ArrayList<String>();
 
-    public void requestInitialized(@Observes @Web @Initialized HttpServletRequest request)
+    public void requestInitialized(@Observes @Initialized HttpServletRequest request)
     {
         eventLog.add("Initialized HttpServletRequest: " + request.getRequestURI());
     }
 
-    public void responseInitialized(@Observes @Web @Initialized HttpServletResponse response)
+    public void responseInitialized(@Observes @Initialized HttpServletResponse response)
     {
         eventLog.add("Initialized HttpServletResponse");
     }
 
-    public void requestDestroyed(@Observes @Web @Destroyed HttpServletRequest request)
+    public void requestDestroyed(@Observes @Destroyed HttpServletRequest request)
     {
         eventLog.add("Destroyed HttpServletRequest: " + request.getRequestURI());
     }
 
-    public void responseDestroyed(@Observes @Web @Destroyed HttpServletResponse response)
+    public void responseDestroyed(@Observes @Destroyed HttpServletResponse response)
     {
         eventLog.add("Destroyed HttpServletResponse");
     }

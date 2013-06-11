@@ -28,7 +28,6 @@ import javax.servlet.ServletContext;
 
 import org.apache.deltaspike.servlet.api.Destroyed;
 import org.apache.deltaspike.servlet.api.Initialized;
-import org.apache.deltaspike.servlet.api.Web;
 
 /**
  * Application scoped observer which listens for {@link ServletContext} events on the CDI event bus.
@@ -41,12 +40,12 @@ public class ServletContextEventsObserver
 
     private final List<String> eventLog = new ArrayList<String>();
 
-    public void contextInitialized(@Observes @Web @Initialized ServletContext context)
+    public void contextInitialized(@Observes @Initialized ServletContext context)
     {
         eventLog.add("Initialized ServletContext: " + context.getServletContextName());
     }
 
-    public void contextDestroyed(@Observes @Web @Destroyed ServletContext context)
+    public void contextDestroyed(@Observes @Destroyed ServletContext context)
     {
         eventLog.add("Destroyed ServletContext: " + context.getServletContextName());
     }

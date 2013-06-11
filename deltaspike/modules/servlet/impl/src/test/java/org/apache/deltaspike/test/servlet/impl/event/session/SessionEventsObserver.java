@@ -28,7 +28,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.deltaspike.servlet.api.Destroyed;
 import org.apache.deltaspike.servlet.api.Initialized;
-import org.apache.deltaspike.servlet.api.Web;
 
 /**
  * Application scoped observer which listens for {@link HttpSession} events on the CDI event bus.
@@ -41,12 +40,12 @@ public class SessionEventsObserver
 
     private final List<String> eventLog = new ArrayList<String>();
 
-    public void sessionInitialized(@Observes @Web @Initialized HttpSession session)
+    public void sessionInitialized(@Observes @Initialized HttpSession session)
     {
         eventLog.add("Initialized HttpSession");
     }
 
-    public void sessionDestroyed(@Observes @Web @Destroyed HttpSession session)
+    public void sessionDestroyed(@Observes @Destroyed HttpSession session)
     {
         eventLog.add("Destroyed HttpSession");
     }

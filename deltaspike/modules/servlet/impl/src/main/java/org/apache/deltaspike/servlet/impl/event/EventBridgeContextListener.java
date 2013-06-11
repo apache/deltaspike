@@ -23,7 +23,6 @@ import javax.servlet.ServletContextListener;
 
 import org.apache.deltaspike.servlet.api.literal.DestroyedLiteral;
 import org.apache.deltaspike.servlet.api.literal.InitializedLiteral;
-import org.apache.deltaspike.servlet.api.literal.WebLiteral;
 
 /**
  * This class listens for servlet context events and forwards them to the CDI event bus.
@@ -36,13 +35,13 @@ public class EventBridgeContextListener extends EventEmitter implements ServletC
     @Override
     public void contextInitialized(ServletContextEvent sce)
     {
-        fireEvent(sce.getServletContext(), WebLiteral.INSTANCE, InitializedLiteral.INSTANCE);
+        fireEvent(sce.getServletContext(), InitializedLiteral.INSTANCE);
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce)
     {
-        fireEvent(sce.getServletContext(), WebLiteral.INSTANCE, DestroyedLiteral.INSTANCE);
+        fireEvent(sce.getServletContext(), DestroyedLiteral.INSTANCE);
     }
 
 }
