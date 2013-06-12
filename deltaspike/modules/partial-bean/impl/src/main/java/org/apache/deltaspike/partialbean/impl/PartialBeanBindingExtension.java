@@ -37,7 +37,6 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Logger;
 
 public class PartialBeanBindingExtension implements Extension, Deactivatable
@@ -78,8 +77,7 @@ public class PartialBeanBindingExtension implements Extension, Deactivatable
         }
         else if (InvocationHandler.class.isAssignableFrom(beanClass))
         {
-            validateInvocationHandler(
-                    beanClass, bindingAnnotationClass, pat.getAnnotatedType().getAnnotations(), beanManager);
+            validateInvocationHandler(beanClass, bindingAnnotationClass);
 
             this.partialBeanHandlers.put(bindingAnnotationClass, (Class<? extends InvocationHandler>) beanClass);
         }
@@ -106,19 +104,12 @@ public class PartialBeanBindingExtension implements Extension, Deactivatable
 
         for (Map.Entry<Class<?>, Class<? extends Annotation>> partialBeanEntry : this.partialBeans.entrySet())
         {
-            Bean partialBean = createPartialBean(partialBeanEntry.getKey(), partialBeanEntry.getValue(), beanManager);
+            Bean partialBean = createPartialBean(
+                    partialBeanEntry.getKey(), partialBeanEntry.getValue(), afterBeanDiscovery, beanManager);
 
             if (partialBean != null)
             {
                 afterBeanDiscovery.addBean(partialBean);
-            }
-            else
-            {
-                afterBeanDiscovery.addDefinitionError(new IllegalStateException("A class which implements " +
-                        InvocationHandler.class.getName() + " and is annotated with @" +
-                        partialBeanEntry.getValue().getName() + " is needed as a handler for " +
-                        partialBeanEntry.getKey().getName() + ". See the documentation about @" +
-                        PartialBeanBinding.class.getName() + "."));
             }
         }
 
@@ -128,21 +119,35 @@ public class PartialBeanBindingExtension implements Extension, Deactivatable
 
     protected <T> Bean<T> createPartialBean(Class<T> beanClass,
                                             Class<? extends Annotation> bindingAnnotationClass,
-                                            BeanManager beanManager)
+                                            AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager)
     {
         Class<? extends InvocationHandler> invocationHandlerClass = partialBeanHandlers.get(bindingAnnotationClass);
 
         if (invocationHandlerClass == null)
         {
+            afterBeanDiscovery.addDefinitionError(new IllegalStateException("A class which implements " +
+                    InvocationHandler.class.getName() + " and is annotated with @" +
+                    bindingAnnotationClass.getName() + " is needed as a handler for " +
+                    beanClass.getName() + ". See the documentation about @" +
+                    PartialBeanBinding.class.getName() + "."));
+
             return null;
         }
 
         AnnotatedType<T> annotatedType = new AnnotatedTypeBuilder<T>().readFromType(beanClass).create();
 
+        PartialBeanLifecycle beanLifecycle =
+                new PartialBeanLifecycle(beanClass, invocationHandlerClass, afterBeanDiscovery, beanManager);
+
+        if (!beanLifecycle.isValid())
+        {
+            return null;
+        }
+
         BeanBuilder<T> beanBuilder = new BeanBuilder<T>(beanManager)
                 .readFromType(annotatedType)
                 .passivationCapable(true)
-                .beanLifecycle(new PartialBeanLifecycle(beanClass, invocationHandlerClass, beanManager));
+                .beanLifecycle(beanLifecycle);
 
         return beanBuilder.create();
     }
@@ -161,9 +166,7 @@ public class PartialBeanBindingExtension implements Extension, Deactivatable
     }
 
     protected <X> void validateInvocationHandler(Class<X> beanClass,
-                                                 Class<? extends Annotation> bindingAnnotationClass,
-                                                 Set<Annotation> annotations,
-                                                 BeanManager beanManager)
+                                                 Class<? extends Annotation> bindingAnnotationClass)
     {
         Class<? extends InvocationHandler> alreadyFoundHandler = this.partialBeanHandlers.get(bindingAnnotationClass);
         if (alreadyFoundHandler != null)

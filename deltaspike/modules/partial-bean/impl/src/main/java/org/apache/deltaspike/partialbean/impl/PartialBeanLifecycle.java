@@ -27,6 +27,7 @@ import org.apache.deltaspike.core.util.metadata.builder.ContextualLifecycle;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.context.spi.CreationalContext;
+import javax.enterprise.inject.spi.AfterBeanDiscovery;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InjectionTarget;
@@ -48,8 +49,11 @@ class PartialBeanLifecycle<T, H extends InvocationHandler> implements Contextual
     private final Class<H> handlerClass;
     private CreationalContext<?> creationalContextOfDependentHandler;
     private final boolean isInterfaceMode;
+    private final boolean valid;
 
-    PartialBeanLifecycle(Class<T> partialBeanClass, Class<H> handlerClass, BeanManager beanManager)
+
+    PartialBeanLifecycle(Class<T> partialBeanClass, Class<H> handlerClass,
+                         AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager)
     {
         this.handlerClass = handlerClass;
 
@@ -70,6 +74,15 @@ class PartialBeanLifecycle<T, H extends InvocationHandler> implements Contextual
             {
                 Object proxyFactory = ClassUtils.tryToInstantiateClassForName("javassist.util.proxy.ProxyFactory");
 
+                if (proxyFactory == null)
+                {
+                    afterBeanDiscovery.addDefinitionError(new IllegalStateException(
+                        "For using abstract classes as partial beans," +
+                                "it's needed to add the lib 'javassist' to the classpath."));
+                    partialBeanProxyClass = null;
+                    this.valid = false;
+                    return;
+                }
                 Method setSuperclassMethod = proxyFactory.getClass().getDeclaredMethod("setSuperclass", Class.class);
                 setSuperclassMethod.invoke(proxyFactory, partialBeanClass);
 
@@ -93,6 +106,7 @@ class PartialBeanLifecycle<T, H extends InvocationHandler> implements Contextual
             }
         });
          */
+        this.valid = true;
     }
 
     public T create(Bean bean, CreationalContext creationalContext)
@@ -189,5 +203,10 @@ class PartialBeanLifecycle<T, H extends InvocationHandler> implements Contextual
         }
         */
         creationalContext.release();
+    }
+
+    boolean isValid()
+    {
+        return valid;
     }
 }
