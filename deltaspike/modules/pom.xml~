@@ -39,6 +39,5 @@
         <module>jpa</module>
         <module>jsf</module>
         <module>partial-bean</module>
-	<module>beanval</module>
     </modules>
 </project>

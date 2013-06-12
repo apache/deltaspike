@@ -1,0 +1,1041 @@
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] Apache DeltaSpike BeanValidation-Module
+[INFO] Apache DeltaSpike BeanValidation-Module API
+[INFO] Apache DeltaSpike BeanValidation-Module Impl
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Apache DeltaSpike BeanValidation-Module 0.5-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ beanval-module-project ---
+[INFO] Deleting /home/johndament/src/deltaspike/deltaspike/modules/beanval/target
+[INFO] 
+[INFO] --- maven-bundle-plugin:2.3.7:cleanVersions (versions) @ beanval-module-project ---
+[INFO] 
+[INFO] --- maven-antrun-plugin:1.6:run (javadoc.resources) @ beanval-module-project ---
+[WARNING] Parameter tasks is deprecated, use target instead
+[INFO] Executing tasks
+
+main:
+[INFO] Executed tasks
+[INFO] 
+[INFO] --- maven-remote-resources-plugin:1.3:process (process-remote-resources) @ beanval-module-project ---
+[INFO] 
+[INFO] --- maven-remote-resources-plugin:1.3:process (default) @ beanval-module-project ---
+[INFO] 
+[INFO] --- maven-site-plugin:3.1:attach-descriptor (attach-descriptor) @ beanval-module-project ---
+[INFO] 
+[INFO] --- maven-jar-plugin:2.4:test-jar (default) @ beanval-module-project ---
+[WARNING] JAR will be empty - no content was marked for inclusion!
+[INFO] Building jar: /home/johndament/src/deltaspike/deltaspike/modules/beanval/target/beanval-module-project-0.5-SNAPSHOT-tests.jar
+[INFO] 
+[INFO] >>> maven-source-plugin:2.1.2:jar (attach-sources) @ beanval-module-project >>>
+[INFO] 
+[INFO] --- maven-bundle-plugin:2.3.7:cleanVersions (versions) @ beanval-module-project ---
+[INFO] 
+[INFO] --- maven-antrun-plugin:1.6:run (javadoc.resources) @ beanval-module-project ---
+[WARNING] Parameter tasks is deprecated, use target instead
+[INFO] Executing tasks
+
+main:
+[INFO] Executed tasks
+[INFO] 
+[INFO] <<< maven-source-plugin:2.1.2:jar (attach-sources) @ beanval-module-project <<<
+[INFO] 
+[INFO] --- maven-source-plugin:2.1.2:jar (attach-sources) @ beanval-module-project ---
+[INFO] 
+[INFO] --- maven-checkstyle-plugin:2.9.1:check (verify-style) @ beanval-module-project ---
+[INFO] Starting audit...
+Audit done.
+
+[INFO] 
+[INFO] --- maven-install-plugin:2.3.1:install (default-install) @ beanval-module-project ---
+[INFO] Installing /home/johndament/src/deltaspike/deltaspike/modules/beanval/pom.xml to /home/johndament/.m2/repository/org/apache/deltaspike/modules/beanval-module-project/0.5-SNAPSHOT/beanval-module-project-0.5-SNAPSHOT.pom
+[INFO] Installing /home/johndament/src/deltaspike/deltaspike/modules/beanval/target/beanval-module-project-0.5-SNAPSHOT-tests.jar to /home/johndament/.m2/repository/org/apache/deltaspike/modules/beanval-module-project/0.5-SNAPSHOT/beanval-module-project-0.5-SNAPSHOT-tests.jar
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Apache DeltaSpike BeanValidation-Module API 0.5-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ deltaspike-beanval-module-api ---
+[INFO] Deleting /home/johndament/src/deltaspike/deltaspike/modules/beanval/api/target
+[INFO] 
+[INFO] --- maven-bundle-plugin:2.3.7:cleanVersions (versions) @ deltaspike-beanval-module-api ---
+[INFO] 
+[INFO] --- maven-antrun-plugin:1.6:run (javadoc.resources) @ deltaspike-beanval-module-api ---
+[WARNING] Parameter tasks is deprecated, use target instead
+[INFO] Executing tasks
+
+main:
+[INFO] Executed tasks
+[INFO] 
+[INFO] --- maven-remote-resources-plugin:1.3:process (process-remote-resources) @ deltaspike-beanval-module-api ---
+[INFO] 
+[INFO] --- maven-remote-resources-plugin:1.3:process (default) @ deltaspike-beanval-module-api ---
+[INFO] 
+[INFO] --- maven-resources-plugin:2.5:resources (default-resources) @ deltaspike-beanval-module-api ---
+[debug] execute contextualize
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /home/johndament/src/deltaspike/deltaspike/modules/beanval/api/src/main/resources
+[INFO] Copying 4 resources
+[INFO] Copying 4 resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:2.5:compile (default-compile) @ deltaspike-beanval-module-api ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- maven-resources-plugin:2.5:testResources (default-testResources) @ deltaspike-beanval-module-api ---
+[debug] execute contextualize
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /home/johndament/src/deltaspike/deltaspike/modules/beanval/api/src/test/resources
+[INFO] Copying 4 resources
+[INFO] Copying 4 resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:2.5:testCompile (default-testCompile) @ deltaspike-beanval-module-api ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.11:test (default-test) @ deltaspike-beanval-module-api ---
+[INFO] Surefire report directory: /home/johndament/src/deltaspike/deltaspike/modules/beanval/api/target/surefire-reports
+[INFO] Using configured provider org.apache.maven.surefire.junitcore.JUnitCoreProvider
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Concurrency config is parallel='none', perCoreThreadCount=true, threadCount=2, useUnlimitedThreads=false
+
+Results :
+
+Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO] 
+[INFO] --- maven-jar-plugin:2.4:jar (default-jar) @ deltaspike-beanval-module-api ---
+[INFO] Building jar: /home/johndament/src/deltaspike/deltaspike/modules/beanval/api/target/deltaspike-beanval-module-api-0.5-SNAPSHOT.jar
+[INFO] 
+[INFO] --- maven-site-plugin:3.1:attach-descriptor (attach-descriptor) @ deltaspike-beanval-module-api ---
+[INFO] 
+[INFO] --- maven-jar-plugin:2.4:test-jar (default) @ deltaspike-beanval-module-api ---
+[INFO] Building jar: /home/johndament/src/deltaspike/deltaspike/modules/beanval/api/target/deltaspike-beanval-module-api-0.5-SNAPSHOT-tests.jar
+[INFO] 
+[INFO] >>> maven-source-plugin:2.1.2:jar (attach-sources) @ deltaspike-beanval-module-api >>>
+[INFO] 
+[INFO] --- maven-bundle-plugin:2.3.7:cleanVersions (versions) @ deltaspike-beanval-module-api ---
+[INFO] 
+[INFO] --- maven-antrun-plugin:1.6:run (javadoc.resources) @ deltaspike-beanval-module-api ---
+[WARNING] Parameter tasks is deprecated, use target instead
+[INFO] Executing tasks
+
+main:
+[INFO] Executed tasks
+[INFO] 
+[INFO] <<< maven-source-plugin:2.1.2:jar (attach-sources) @ deltaspike-beanval-module-api <<<
+[INFO] 
+[INFO] --- maven-source-plugin:2.1.2:jar (attach-sources) @ deltaspike-beanval-module-api ---
+[INFO] META-INF already added, skipping
+[INFO] META-INF/NOTICE already added, skipping
+[INFO] META-INF/DISCLAIMER already added, skipping
+[INFO] META-INF/DEPENDENCIES already added, skipping
+[INFO] META-INF/LICENSE already added, skipping
+[INFO] META-INF already added, skipping
+[INFO] META-INF/NOTICE already added, skipping
+[INFO] META-INF/DISCLAIMER already added, skipping
+[INFO] META-INF/DEPENDENCIES already added, skipping
+[INFO] META-INF/LICENSE already added, skipping
+[INFO] META-INF already added, skipping
+[INFO] META-INF/NOTICE already added, skipping
+[INFO] META-INF/DISCLAIMER already added, skipping
+[INFO] META-INF/DEPENDENCIES already added, skipping
+[INFO] META-INF/LICENSE already added, skipping
+[INFO] Building jar: /home/johndament/src/deltaspike/deltaspike/modules/beanval/api/target/deltaspike-beanval-module-api-0.5-SNAPSHOT-sources.jar
+[INFO] META-INF already added, skipping
+[INFO] META-INF/NOTICE already added, skipping
+[INFO] META-INF/DISCLAIMER already added, skipping
+[INFO] META-INF/DEPENDENCIES already added, skipping
+[INFO] META-INF/LICENSE already added, skipping
+[INFO] META-INF already added, skipping
+[INFO] META-INF/NOTICE already added, skipping
+[INFO] META-INF/DISCLAIMER already added, skipping
+[INFO] META-INF/DEPENDENCIES already added, skipping
+[INFO] META-INF/LICENSE already added, skipping
+[INFO] META-INF already added, skipping
+[INFO] META-INF/NOTICE already added, skipping
+[INFO] META-INF/DISCLAIMER already added, skipping
+[INFO] META-INF/DEPENDENCIES already added, skipping
+[INFO] META-INF/LICENSE already added, skipping
+[INFO] 
+[INFO] --- maven-checkstyle-plugin:2.9.1:check (verify-style) @ deltaspike-beanval-module-api ---
+[INFO] Starting audit...
+Audit done.
+
+[INFO] 
+[INFO] --- maven-install-plugin:2.3.1:install (default-install) @ deltaspike-beanval-module-api ---
+[INFO] Installing /home/johndament/src/deltaspike/deltaspike/modules/beanval/api/target/deltaspike-beanval-module-api-0.5-SNAPSHOT.jar to /home/johndament/.m2/repository/org/apache/deltaspike/modules/deltaspike-beanval-module-api/0.5-SNAPSHOT/deltaspike-beanval-module-api-0.5-SNAPSHOT.jar
+[INFO] Installing /home/johndament/src/deltaspike/deltaspike/modules/beanval/api/pom.xml to /home/johndament/.m2/repository/org/apache/deltaspike/modules/deltaspike-beanval-module-api/0.5-SNAPSHOT/deltaspike-beanval-module-api-0.5-SNAPSHOT.pom
+[INFO] Installing /home/johndament/src/deltaspike/deltaspike/modules/beanval/api/target/deltaspike-beanval-module-api-0.5-SNAPSHOT-tests.jar to /home/johndament/.m2/repository/org/apache/deltaspike/modules/deltaspike-beanval-module-api/0.5-SNAPSHOT/deltaspike-beanval-module-api-0.5-SNAPSHOT-tests.jar
+[INFO] Installing /home/johndament/src/deltaspike/deltaspike/modules/beanval/api/target/deltaspike-beanval-module-api-0.5-SNAPSHOT-sources.jar to /home/johndament/.m2/repository/org/apache/deltaspike/modules/deltaspike-beanval-module-api/0.5-SNAPSHOT/deltaspike-beanval-module-api-0.5-SNAPSHOT-sources.jar
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Apache DeltaSpike BeanValidation-Module Impl 0.5-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ deltaspike-beanval-module-impl ---
+[INFO] Deleting /home/johndament/src/deltaspike/deltaspike/modules/beanval/impl/target
+[INFO] 
+[INFO] --- maven-bundle-plugin:2.3.7:cleanVersions (versions) @ deltaspike-beanval-module-impl ---
+[INFO] 
+[INFO] --- maven-antrun-plugin:1.6:run (javadoc.resources) @ deltaspike-beanval-module-impl ---
+[WARNING] Parameter tasks is deprecated, use target instead
+[INFO] Executing tasks
+
+main:
+[INFO] Executed tasks
+[INFO] 
+[INFO] --- maven-remote-resources-plugin:1.3:process (process-remote-resources) @ deltaspike-beanval-module-impl ---
+[INFO] 
+[INFO] --- maven-remote-resources-plugin:1.3:process (default) @ deltaspike-beanval-module-impl ---
+[INFO] 
+[INFO] --- maven-resources-plugin:2.5:resources (default-resources) @ deltaspike-beanval-module-impl ---
+[debug] execute contextualize
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /home/johndament/src/deltaspike/deltaspike/modules/beanval/impl/src/main/resources
+[INFO] Copying 4 resources
+[INFO] Copying 4 resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:2.5:compile (default-compile) @ deltaspike-beanval-module-impl ---
+[INFO] Compiling 1 source file to /home/johndament/src/deltaspike/deltaspike/modules/beanval/impl/target/classes
+[INFO] 
+[INFO] --- maven-resources-plugin:2.5:testResources (default-testResources) @ deltaspike-beanval-module-impl ---
+[debug] execute contextualize
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 2 resources
+[INFO] Copying 4 resources
+[INFO] Copying 4 resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:2.5:testCompile (default-testCompile) @ deltaspike-beanval-module-impl ---
+[INFO] Compiling 3 source files to /home/johndament/src/deltaspike/deltaspike/modules/beanval/impl/target/test-classes
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.11:test (default-test) @ deltaspike-beanval-module-impl ---
+[INFO] Surefire report directory: /home/johndament/src/deltaspike/deltaspike/modules/beanval/impl/target/surefire-reports
+[INFO] Using configured provider org.apache.maven.surefire.junitcore.JUnitCoreProvider
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Concurrency config is parallel='none', perCoreThreadCount=true, threadCount=2, useUnlimitedThreads=false
+Bad level value for property: org.jboss.weld.level
+Jun 11, 2013 7:32:25 PM org.apache.openejb.arquillian.common.ConfigurationOverrides setProperty
+INFO: Applying override 'tomee.version=1.5.2'
+Jun 11, 2013 7:32:26 PM org.apache.openejb.arquillian.common.Setup findHome
+INFO: Unable to find home in: /home/johndament/src/deltaspike/deltaspike/modules/beanval/impl/target/tomee
+Jun 11, 2013 7:32:26 PM org.apache.openejb.arquillian.common.MavenCache getArtifact
+INFO: Downloading org.apache.openejb:apache-tomee:1.5.2:zip:webprofile please wait...
+Jun 11, 2013 7:32:26 PM org.apache.openejb.arquillian.common.Zips unzip
+INFO: Extracting '/home/johndament/src/deltaspike/deltaspike/modules/beanval/impl/target/org/apache/openejb/apache-tomee/1.5.2/apache-tomee-1.5.2-webprofile.zip' to '/home/johndament/src/deltaspike/deltaspike/modules/beanval/impl/target/tomee'
+Jun 11, 2013 7:32:27 PM org.apache.tomee.arquillian.remote.RemoteTomEEContainer configure
+INFO: Downloaded container to: /home/johndament/src/deltaspike/deltaspike/modules/beanval/impl/target/tomee/apache-tomee-webprofile-1.5.2
+Jun 11, 2013 7:32:28 PM org.apache.catalina.core.AprLifecycleListener init
+INFO: The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: /usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib
+Jun 11, 2013 7:32:29 PM org.apache.coyote.AbstractProtocol init
+INFO: Initializing ProtocolHandler ["http-bio-8080"]
+Jun 11, 2013 7:32:29 PM org.apache.coyote.AbstractProtocol init
+INFO: Initializing ProtocolHandler ["ajp-bio-8009"]
+Jun 11, 2013 7:32:30 PM org.apache.openejb.util.OptionsLog info
+INFO: Using 'openejb.jdbc.datasource-creator=org.apache.tomee.jdbc.TomEEDataSourceCreator'
+Jun 11, 2013 7:32:30 PM org.apache.tomee.catalina.TomcatLoader optionalService
+INFO: Optional service not installed: org.apache.tomee.webservices.TomeeJaxRsService
+Jun 11, 2013 7:32:30 PM org.apache.tomee.catalina.TomcatLoader optionalService
+INFO: Optional service not installed: org.apache.tomee.webservices.TomeeJaxWsService
+Jun 11, 2013 7:32:30 PM org.apache.openejb.OpenEJB$Instance <init>
+INFO: ********************************************************************************
+Jun 11, 2013 7:32:30 PM org.apache.openejb.OpenEJB$Instance <init>
+INFO: OpenEJB http://openejb.apache.org/
+Jun 11, 2013 7:32:30 PM org.apache.openejb.OpenEJB$Instance <init>
+INFO: Startup: Tue Jun 11 19:32:30 EDT 2013
+Jun 11, 2013 7:32:30 PM org.apache.openejb.OpenEJB$Instance <init>
+INFO: Copyright 1999-2012 (C) Apache OpenEJB Project, All Rights Reserved.
+Jun 11, 2013 7:32:30 PM org.apache.openejb.OpenEJB$Instance <init>
+INFO: Version: 4.5.2
+Jun 11, 2013 7:32:30 PM org.apache.openejb.OpenEJB$Instance <init>
+INFO: Build date: 20130320
+Jun 11, 2013 7:32:30 PM org.apache.openejb.OpenEJB$Instance <init>
+INFO: Build time: 03:56
+Jun 11, 2013 7:32:30 PM org.apache.openejb.OpenEJB$Instance <init>
+INFO: ********************************************************************************
+Jun 11, 2013 7:32:30 PM org.apache.openejb.OpenEJB$Instance <init>
+INFO: openejb.home = /home/johndament/src/deltaspike/deltaspike/modules/beanval/impl/target/tomee/apache-tomee-webprofile-1.5.2
+Jun 11, 2013 7:32:30 PM org.apache.openejb.OpenEJB$Instance <init>
+INFO: openejb.base = /home/johndament/src/deltaspike/deltaspike/modules/beanval/impl/target/tomee/apache-tomee-webprofile-1.5.2
+Jun 11, 2013 7:32:30 PM org.apache.openejb.cdi.CdiBuilder initializeOWB
+INFO: Created new singletonService org.apache.openejb.cdi.ThreadSingletonServiceImpl@a8f85d4
+Jun 11, 2013 7:32:30 PM org.apache.openejb.cdi.CdiBuilder initializeOWB
+INFO: Succeeded in installing singleton service
+Jun 11, 2013 7:32:30 PM org.apache.openejb.config.ConfigurationFactory init
+INFO: openejb configuration file is '/home/johndament/src/deltaspike/deltaspike/modules/beanval/impl/target/tomee/apache-tomee-webprofile-1.5.2/conf/tomee.xml'
+Jun 11, 2013 7:32:30 PM org.apache.openejb.util.OptionsLog info
+INFO: Using 'openejb.provider.default=org.apache.tomee'
+Jun 11, 2013 7:32:30 PM org.apache.openejb.config.ConfigurationFactory configureService
+INFO: Configuring Service(id=Tomcat Security Service, type=SecurityService, provider-id=Tomcat Security Service)
+Jun 11, 2013 7:32:30 PM org.apache.openejb.config.ConfigurationFactory configureService
+INFO: Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+Jun 11, 2013 7:32:30 PM org.apache.openejb.util.OptionsLog info
+INFO: Using 'openejb.system.apps=true'
+Jun 11, 2013 7:32:30 PM org.apache.openejb.config.ConfigurationFactory configureApplication
+INFO: Configuring enterprise application: openejb
+Jun 11, 2013 7:32:30 PM org.apache.openejb.config.InitEjbDeployments deploy
+INFO: Using openejb.deploymentId.format '{ejbName}'
+Jun 11, 2013 7:32:30 PM org.apache.openejb.config.InitEjbDeployments deploy
+INFO: Auto-deploying ejb openejb/User: EjbDeployment(deployment-id=openejb/User)
+Jun 11, 2013 7:32:30 PM org.apache.openejb.config.InitEjbDeployments deploy
+INFO: Auto-deploying ejb openejb/Deployer: EjbDeployment(deployment-id=openejb/Deployer)
+Jun 11, 2013 7:32:30 PM org.apache.openejb.config.InitEjbDeployments deploy
+INFO: Auto-deploying ejb openejb/ConfigurationInfo: EjbDeployment(deployment-id=openejb/ConfigurationInfo)
+Jun 11, 2013 7:32:30 PM org.apache.openejb.config.InitEjbDeployments deploy
+INFO: Auto-deploying ejb MEJB: EjbDeployment(deployment-id=MEJB)
+Jun 11, 2013 7:32:30 PM org.apache.openejb.config.ConfigurationFactory configureService
+INFO: Configuring Service(id=Default Stateless Container, type=Container, provider-id=Default Stateless Container)
+Jun 11, 2013 7:32:30 PM org.apache.openejb.config.AutoConfig createContainer
+INFO: Auto-creating a container for bean openejb/User: Container(type=STATELESS, id=Default Stateless Container)
+Jun 11, 2013 7:32:30 PM org.apache.openejb.config.AppInfoBuilder build
+INFO: Enterprise application "openejb" loaded.
+Jun 11, 2013 7:32:30 PM org.apache.openejb.assembler.classic.Assembler createRecipe
+INFO: Creating TransactionManager(id=Default Transaction Manager)
+Jun 11, 2013 7:32:30 PM org.apache.openejb.assembler.classic.Assembler createRecipe
+INFO: Creating SecurityService(id=Tomcat Security Service)
+Jun 11, 2013 7:32:30 PM org.apache.openejb.assembler.classic.Assembler createRecipe
+INFO: Creating Container(id=Default Stateless Container)
+Jun 11, 2013 7:32:31 PM org.apache.openejb.assembler.classic.Assembler createApplication
+INFO: Assembling app: openejb
+Jun 11, 2013 7:32:31 PM org.apache.openejb.util.OptionsLog info
+INFO: Using 'openejb.jndiname.format={deploymentId}{interfaceType.openejbLegacyName}'
+Jun 11, 2013 7:32:31 PM org.apache.openejb.assembler.classic.JndiBuilder bind
+INFO: Jndi(name=openejb/UserBusinessRemote) --> Ejb(deployment-id=openejb/User)
+Jun 11, 2013 7:32:31 PM org.apache.openejb.assembler.classic.JndiBuilder bind
+INFO: Jndi(name=global/openejb/openejb/User!org.apache.openejb.assembler.util.User) --> Ejb(deployment-id=openejb/User)
+Jun 11, 2013 7:32:31 PM org.apache.openejb.assembler.classic.JndiBuilder bind
+INFO: Jndi(name=global/openejb/openejb/User) --> Ejb(deployment-id=openejb/User)
+Jun 11, 2013 7:32:31 PM org.apache.openejb.assembler.classic.JndiBuilder bind
+INFO: Jndi(name=openejb/DeployerBusinessRemote) --> Ejb(deployment-id=openejb/Deployer)
+Jun 11, 2013 7:32:31 PM org.apache.openejb.assembler.classic.JndiBuilder bind
+INFO: Jndi(name=global/openejb/openejb/Deployer!org.apache.openejb.assembler.Deployer) --> Ejb(deployment-id=openejb/Deployer)
+Jun 11, 2013 7:32:31 PM org.apache.openejb.assembler.classic.JndiBuilder bind
+INFO: Jndi(name=global/openejb/openejb/Deployer) --> Ejb(deployment-id=openejb/Deployer)
+Jun 11, 2013 7:32:31 PM org.apache.openejb.assembler.classic.JndiBuilder bind
+INFO: Jndi(name=openejb/ConfigurationInfoBusinessRemote) --> Ejb(deployment-id=openejb/ConfigurationInfo)
+Jun 11, 2013 7:32:31 PM org.apache.openejb.assembler.classic.JndiBuilder bind
+INFO: Jndi(name=global/openejb/openejb/ConfigurationInfo!org.apache.openejb.assembler.classic.cmd.ConfigurationInfo) --> Ejb(deployment-id=openejb/ConfigurationInfo)
+Jun 11, 2013 7:32:31 PM org.apache.openejb.assembler.classic.JndiBuilder bind
+INFO: Jndi(name=global/openejb/openejb/ConfigurationInfo) --> Ejb(deployment-id=openejb/ConfigurationInfo)
+Jun 11, 2013 7:32:31 PM org.apache.openejb.assembler.classic.JndiBuilder bind
+INFO: Jndi(name=MEJB) --> Ejb(deployment-id=MEJB)
+Jun 11, 2013 7:32:31 PM org.apache.openejb.assembler.classic.JndiBuilder bind
+INFO: Jndi(name=global/openejb/MEJB!javax.management.j2ee.ManagementHome) --> Ejb(deployment-id=MEJB)
+Jun 11, 2013 7:32:31 PM org.apache.openejb.assembler.classic.JndiBuilder bind
+INFO: Jndi(name=global/openejb/MEJB) --> Ejb(deployment-id=MEJB)
+Jun 11, 2013 7:32:31 PM org.apache.openejb.cdi.CdiBuilder initSingleton
+INFO: Existing thread singleton service in SystemInstance(): org.apache.openejb.cdi.ThreadSingletonServiceImpl@a8f85d4
+Jun 11, 2013 7:32:31 PM org.apache.openejb.cdi.OpenEJBLifecycle startApplication
+INFO: OpenWebBeans Container is starting...
+Jun 11, 2013 7:32:31 PM org.apache.webbeans.plugins.PluginLoader startUp
+INFO: Adding OpenWebBeansPlugin : [CdiPlugin]
+Jun 11, 2013 7:32:31 PM org.apache.webbeans.plugins.PluginLoader startUp
+INFO: Adding OpenWebBeansPlugin : [OpenWebBeansJsfPlugin]
+Jun 11, 2013 7:32:31 PM org.apache.openejb.cdi.BeansDeployer validateInjectionPoints
+INFO: All injection points are validated successfully.
+Jun 11, 2013 7:32:31 PM org.apache.openejb.cdi.OpenEJBLifecycle startApplication
+INFO: OpenWebBeans Container has started, it took 123 ms.
+Jun 11, 2013 7:32:31 PM org.apache.openejb.assembler.classic.Assembler startEjbs
+INFO: Created Ejb(deployment-id=openejb/Deployer, ejb-name=openejb/Deployer, container=Default Stateless Container)
+Jun 11, 2013 7:32:31 PM org.apache.openejb.assembler.classic.Assembler startEjbs
+INFO: Created Ejb(deployment-id=MEJB, ejb-name=MEJB, container=Default Stateless Container)
+Jun 11, 2013 7:32:31 PM org.apache.openejb.assembler.classic.Assembler startEjbs
+INFO: Created Ejb(deployment-id=openejb/ConfigurationInfo, ejb-name=openejb/ConfigurationInfo, container=Default Stateless Container)
+Jun 11, 2013 7:32:31 PM org.apache.openejb.assembler.classic.Assembler startEjbs
+INFO: Created Ejb(deployment-id=openejb/User, ejb-name=openejb/User, container=Default Stateless Container)
+Jun 11, 2013 7:32:31 PM org.apache.openejb.assembler.classic.Assembler startEjbs
+INFO: Started Ejb(deployment-id=openejb/Deployer, ejb-name=openejb/Deployer, container=Default Stateless Container)
+Jun 11, 2013 7:32:31 PM org.apache.openejb.assembler.classic.Assembler startEjbs
+INFO: Started Ejb(deployment-id=MEJB, ejb-name=MEJB, container=Default Stateless Container)
+Jun 11, 2013 7:32:31 PM org.apache.openejb.assembler.classic.Assembler startEjbs
+INFO: Started Ejb(deployment-id=openejb/ConfigurationInfo, ejb-name=openejb/ConfigurationInfo, container=Default Stateless Container)
+Jun 11, 2013 7:32:31 PM org.apache.openejb.assembler.classic.Assembler startEjbs
+INFO: Started Ejb(deployment-id=openejb/User, ejb-name=openejb/User, container=Default Stateless Container)
+Jun 11, 2013 7:32:31 PM org.apache.openejb.assembler.classic.Assembler deployMBean
+INFO: Deployed MBean(openejb.user.mbeans:application=openejb,group=org.apache.openejb.assembler.monitoring,name=JMXDeployer)
+Jun 11, 2013 7:32:31 PM org.apache.openejb.assembler.classic.Assembler createApplication
+INFO: Deployed Application(path=openejb)
+Jun 11, 2013 7:32:31 PM org.apache.openejb.server.SimpleServiceManager start
+INFO:   ** Bound Services **
+Jun 11, 2013 7:32:31 PM org.apache.openejb.server.SimpleServiceManager printRow
+INFO:   NAME                 IP              PORT  
+Jun 11, 2013 7:32:31 PM org.apache.openejb.server.SimpleServiceManager start
+INFO: -------
+Jun 11, 2013 7:32:31 PM org.apache.openejb.server.SimpleServiceManager start
+INFO: Ready!
+Jun 11, 2013 7:32:31 PM org.apache.catalina.startup.Catalina load
+INFO: Initialization processed in 3397 ms
+Jun 11, 2013 7:32:31 PM org.apache.tomee.catalina.OpenEJBNamingContextListener bindResource
+INFO: Importing a Tomcat Resource with id 'UserDatabase' of type 'org.apache.catalina.UserDatabase'.
+Jun 11, 2013 7:32:31 PM org.apache.openejb.assembler.classic.Assembler createRecipe
+INFO: Creating Resource(id=UserDatabase)
+Jun 11, 2013 7:32:31 PM org.apache.catalina.core.StandardService startInternal
+INFO: Starting service Catalina
+Jun 11, 2013 7:32:31 PM org.apache.catalina.core.StandardEngine startInternal
+INFO: Starting Servlet Engine: Apache Tomcat (TomEE)/7.0.37
+Jun 11, 2013 7:32:31 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /home/johndament/src/deltaspike/deltaspike/modules/beanval/impl/target/tomee/apache-tomee-webprofile-1.5.2/webapps/tomee
+Jun 11, 2013 7:32:31 PM org.apache.tomee.catalina.TomcatWebAppBuilder init
+INFO: ------------------------- localhost -> /tomee
+Jun 11, 2013 7:32:31 PM org.apache.openejb.util.OptionsLog info
+INFO: Using 'openejb.session.manager=org.apache.tomee.catalina.session.QuickSessionManager'
+Jun 11, 2013 7:32:32 PM org.apache.openejb.config.ConfigurationFactory configureApplication
+INFO: Configuring enterprise application: /home/johndament/src/deltaspike/deltaspike/modules/beanval/impl/target/tomee/apache-tomee-webprofile-1.5.2/webapps/tomee
+Jun 11, 2013 7:32:32 PM org.apache.openejb.config.AppInfoBuilder build
+INFO: Enterprise application "/home/johndament/src/deltaspike/deltaspike/modules/beanval/impl/target/tomee/apache-tomee-webprofile-1.5.2/webapps/tomee" loaded.
+Jun 11, 2013 7:32:32 PM org.apache.openejb.assembler.classic.Assembler createApplication
+INFO: Assembling app: /home/johndament/src/deltaspike/deltaspike/modules/beanval/impl/target/tomee/apache-tomee-webprofile-1.5.2/webapps/tomee
+Jun 11, 2013 7:32:32 PM org.apache.openejb.cdi.CdiBuilder initSingleton
+INFO: Existing thread singleton service in SystemInstance(): org.apache.openejb.cdi.ThreadSingletonServiceImpl@a8f85d4
+Jun 11, 2013 7:32:32 PM org.apache.openejb.cdi.OpenEJBLifecycle startApplication
+INFO: OpenWebBeans Container is starting...
+Jun 11, 2013 7:32:32 PM org.apache.webbeans.plugins.PluginLoader startUp
+INFO: Adding OpenWebBeansPlugin : [CdiPlugin]
+Jun 11, 2013 7:32:32 PM org.apache.webbeans.plugins.PluginLoader startUp
+INFO: Adding OpenWebBeansPlugin : [OpenWebBeansJsfPlugin]
+Jun 11, 2013 7:32:32 PM org.apache.openejb.cdi.BeansDeployer validateInjectionPoints
+INFO: All injection points are validated successfully.
+Jun 11, 2013 7:32:32 PM org.apache.openejb.cdi.OpenEJBLifecycle startApplication
+INFO: OpenWebBeans Container has started, it took 8 ms.
+Jun 11, 2013 7:32:32 PM org.apache.tomee.catalina.TomcatWebAppBuilder deployWebApps
+INFO: using context file /home/johndament/src/deltaspike/deltaspike/modules/beanval/impl/target/tomee/apache-tomee-webprofile-1.5.2/webapps/tomee/META-INF/context.xml
+Jun 11, 2013 7:32:32 PM org.apache.openejb.assembler.classic.Assembler createApplication
+INFO: Deployed Application(path=/home/johndament/src/deltaspike/deltaspike/modules/beanval/impl/target/tomee/apache-tomee-webprofile-1.5.2/webapps/tomee)
+Jun 11, 2013 7:32:34 PM org.apache.coyote.AbstractProtocol start
+INFO: Starting ProtocolHandler ["http-bio-8080"]
+Jun 11, 2013 7:32:34 PM org.apache.coyote.AbstractProtocol start
+INFO: Starting ProtocolHandler ["ajp-bio-8009"]
+Jun 11, 2013 7:32:34 PM org.apache.catalina.startup.Catalina start
+INFO: Server startup in 2484 ms
+Jun 11, 2013 7:32:35 PM org.apache.catalina.core.StandardServer await
+WARNING: StandardServer.await: Invalid command '' received
+Jun 11, 2013 7:32:37 PM org.apache.openejb.client.EventLogger log
+INFO: RemoteInitialContextCreated{providerUri=http://localhost:8080/tomee/ejb}
+Jun 11, 2013 7:32:37 PM org.apache.openejb.util.JarExtractor extract
+INFO: Extracting jar: /home/johndament/src/deltaspike/deltaspike/modules/beanval/impl/target/arquillian-test-working-dir/0/validator.war
+Jun 11, 2013 7:32:37 PM org.apache.openejb.util.JarExtractor extract
+INFO: Extracted path: /home/johndament/src/deltaspike/deltaspike/modules/beanval/impl/target/arquillian-test-working-dir/0/validator
+Jun 11, 2013 7:32:37 PM org.apache.tomee.catalina.TomcatWebAppBuilder deployWebApps
+INFO: using default host: localhost
+Jun 11, 2013 7:32:37 PM org.apache.tomee.catalina.TomcatWebAppBuilder init
+INFO: ------------------------- localhost -> /validator
+Jun 11, 2013 7:32:37 PM org.apache.openejb.util.OptionsLog info
+INFO: Using 'openejb.session.manager=org.apache.tomee.catalina.session.QuickSessionManager'
+Jun 11, 2013 7:32:37 PM org.apache.openejb.config.ConfigurationFactory configureApplication
+INFO: Configuring enterprise application: /home/johndament/src/deltaspike/deltaspike/modules/beanval/impl/target/arquillian-test-working-dir/0/validator
+Jun 11, 2013 7:32:37 PM org.apache.tomee.catalina.TomcatWebAppBuilder startInternal
+SEVERE: Unable to deploy collapsed ear in war StandardEngine[Catalina].StandardHost[localhost].StandardContext[/validator]
+java.lang.ArrayStoreException: sun.reflect.annotation.TypeNotPresentExceptionProxy
+	at sun.reflect.annotation.AnnotationParser.parseClassArray(AnnotationParser.java:673)
+	at sun.reflect.annotation.AnnotationParser.parseArray(AnnotationParser.java:480)
+	at sun.reflect.annotation.AnnotationParser.parseMemberValue(AnnotationParser.java:306)
+	at sun.reflect.annotation.AnnotationParser.parseAnnotation(AnnotationParser.java:241)
+	at sun.reflect.annotation.AnnotationParser.parseAnnotations2(AnnotationParser.java:88)
+	at sun.reflect.annotation.AnnotationParser.parseAnnotations(AnnotationParser.java:70)
+	at java.lang.Class.initAnnotationsIfNecessary(Class.java:3098)
+	at java.lang.Class.getDeclaredAnnotations(Class.java:3086)
+	at org.apache.xbean.finder.MetaAnnotatedElement.unroll(MetaAnnotatedElement.java:257)
+	at org.apache.xbean.finder.MetaAnnotatedClass.<init>(MetaAnnotatedClass.java:35)
+	at org.apache.openejb.util.proxy.DynamicProxyImplFactory.isKnownDynamicallyImplemented(DynamicProxyImplFactory.java:34)
+	at org.apache.openejb.config.AnnotationDeployer$ProcessAnnotatedBeans.deploy(AnnotationDeployer.java:2166)
+	at org.apache.openejb.config.AnnotationDeployer$ProcessAnnotatedBeans.deploy(AnnotationDeployer.java:1726)
+	at org.apache.openejb.config.AnnotationDeployer.deploy(AnnotationDeployer.java:344)
+	at org.apache.openejb.config.ConfigurationFactory$Chain.deploy(ConfigurationFactory.java:379)
+	at org.apache.openejb.config.ConfigurationFactory.configureApplication(ConfigurationFactory.java:884)
+	at org.apache.tomee.catalina.TomcatWebAppBuilder.startInternal(TomcatWebAppBuilder.java:1111)
+	at org.apache.tomee.catalina.TomcatWebAppBuilder.configureStart(TomcatWebAppBuilder.java:1033)
+	at org.apache.tomee.catalina.GlobalListenerSupport.lifecycleEvent(GlobalListenerSupport.java:124)
+	at org.apache.catalina.util.LifecycleSupport.fireLifecycleEvent(LifecycleSupport.java:119)
+	at org.apache.catalina.util.LifecycleBase.fireLifecycleEvent(LifecycleBase.java:90)
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:5179)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:150)
+	at org.apache.catalina.core.ContainerBase.addChildInternal(ContainerBase.java:901)
+	at org.apache.catalina.core.ContainerBase.addChild(ContainerBase.java:877)
+	at org.apache.catalina.core.StandardHost.addChild(StandardHost.java:633)
+	at org.apache.tomee.catalina.TomcatWebAppBuilder.deployWar(TomcatWebAppBuilder.java:567)
+	at org.apache.tomee.catalina.TomcatWebAppBuilder.deployWebApps(TomcatWebAppBuilder.java:538)
+	at org.apache.tomee.catalina.deployment.TomcatWebappDeployer.deploy(TomcatWebappDeployer.java:44)
+	at org.apache.openejb.assembler.DeployerEjb.deploy(DeployerEjb.java:131)
+	at org.apache.openejb.assembler.DeployerEjb.deploy(DeployerEjb.java:104)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.apache.openejb.core.interceptor.ReflectionInvocationContext$Invocation.invoke(ReflectionInvocationContext.java:181)
+	at org.apache.openejb.core.interceptor.ReflectionInvocationContext.proceed(ReflectionInvocationContext.java:163)
+	at org.apache.openejb.security.internal.InternalSecurityInterceptor.invoke(InternalSecurityInterceptor.java:34)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.apache.openejb.core.interceptor.ReflectionInvocationContext$Invocation.invoke(ReflectionInvocationContext.java:181)
+	at org.apache.openejb.core.interceptor.ReflectionInvocationContext.proceed(ReflectionInvocationContext.java:163)
+	at org.apache.openejb.cdi.CdiInterceptor.invoke(CdiInterceptor.java:126)
+	at org.apache.openejb.cdi.CdiInterceptor.access$000(CdiInterceptor.java:42)
+	at org.apache.openejb.cdi.CdiInterceptor$1.call(CdiInterceptor.java:63)
+	at org.apache.openejb.cdi.CdiInterceptor.aroundInvoke(CdiInterceptor.java:69)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.apache.openejb.core.interceptor.ReflectionInvocationContext$Invocation.invoke(ReflectionInvocationContext.java:181)
+	at org.apache.openejb.core.interceptor.ReflectionInvocationContext.proceed(ReflectionInvocationContext.java:163)
+	at org.apache.openejb.monitoring.StatsInterceptor.record(StatsInterceptor.java:176)
+	at org.apache.openejb.monitoring.StatsInterceptor.invoke(StatsInterceptor.java:95)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.apache.openejb.core.interceptor.ReflectionInvocationContext$Invocation.invoke(ReflectionInvocationContext.java:181)
+	at org.apache.openejb.core.interceptor.ReflectionInvocationContext.proceed(ReflectionInvocationContext.java:163)
+	at org.apache.openejb.core.interceptor.InterceptorStack.invoke(InterceptorStack.java:138)
+	at org.apache.openejb.core.stateless.StatelessContainer._invoke(StatelessContainer.java:239)
+	at org.apache.openejb.core.stateless.StatelessContainer.invoke(StatelessContainer.java:191)
+	at org.apache.openejb.server.ejbd.EjbRequestHandler.doEjbObject_BUSINESS_METHOD(EjbRequestHandler.java:290)
+	at org.apache.openejb.server.ejbd.EjbRequestHandler.processRequest(EjbRequestHandler.java:140)
+	at org.apache.openejb.server.ejbd.EjbDaemon.processEjbRequest(EjbDaemon.java:267)
+	at org.apache.openejb.server.ejbd.EjbDaemon.service(EjbDaemon.java:191)
+	at org.apache.openejb.server.ejbd.EjbServer.service(EjbServer.java:81)
+	at org.apache.openejb.server.httpd.ServerServlet.service(ServerServlet.java:56)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:728)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:305)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:210)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:222)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:123)
+	at org.apache.tomee.catalina.OpenEJBValve.invoke(OpenEJBValve.java:45)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:171)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:99)
+	at org.apache.catalina.valves.AccessLogValve.invoke(AccessLogValve.java:936)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:118)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:407)
+	at org.apache.coyote.http11.AbstractHttp11Processor.process(AbstractHttp11Processor.java:1004)
+	at org.apache.coyote.AbstractProtocol$AbstractConnectionHandler.process(AbstractProtocol.java:589)
+	at org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor.run(JIoEndpoint.java:312)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:722)
+
+Jun 11, 2013 7:32:37 PM org.apache.catalina.core.ContainerBase removeChild
+SEVERE: ContainerBase.removeChild: destroy: 
+org.apache.catalina.LifecycleException: An invalid Lifecycle transition was attempted ([before_destroy]) for component [StandardEngine[Catalina].StandardHost[localhost].StandardContext[/validator]] in state [STARTING_PREP]
+	at org.apache.catalina.util.LifecycleBase.invalidTransition(LifecycleBase.java:409)
+	at org.apache.catalina.util.LifecycleBase.destroy(LifecycleBase.java:299)
+	at org.apache.catalina.core.ContainerBase.removeChild(ContainerBase.java:1041)
+	at org.apache.tomee.catalina.TomcatWebAppBuilder.undeploy(TomcatWebAppBuilder.java:1355)
+	at org.apache.tomee.catalina.TomcatWebAppBuilder.undeploy(TomcatWebAppBuilder.java:1336)
+	at org.apache.tomee.catalina.TomcatWebAppBuilder.startInternal(TomcatWebAppBuilder.java:1132)
+	at org.apache.tomee.catalina.TomcatWebAppBuilder.configureStart(TomcatWebAppBuilder.java:1033)
+	at org.apache.tomee.catalina.GlobalListenerSupport.lifecycleEvent(GlobalListenerSupport.java:124)
+	at org.apache.catalina.util.LifecycleSupport.fireLifecycleEvent(LifecycleSupport.java:119)
+	at org.apache.catalina.util.LifecycleBase.fireLifecycleEvent(LifecycleBase.java:90)
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:5179)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:150)
+	at org.apache.catalina.core.ContainerBase.addChildInternal(ContainerBase.java:901)
+	at org.apache.catalina.core.ContainerBase.addChild(ContainerBase.java:877)
+	at org.apache.catalina.core.StandardHost.addChild(StandardHost.java:633)
+	at org.apache.tomee.catalina.TomcatWebAppBuilder.deployWar(TomcatWebAppBuilder.java:567)
+	at org.apache.tomee.catalina.TomcatWebAppBuilder.deployWebApps(TomcatWebAppBuilder.java:538)
+	at org.apache.tomee.catalina.deployment.TomcatWebappDeployer.deploy(TomcatWebappDeployer.java:44)
+	at org.apache.openejb.assembler.DeployerEjb.deploy(DeployerEjb.java:131)
+	at org.apache.openejb.assembler.DeployerEjb.deploy(DeployerEjb.java:104)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.apache.openejb.core.interceptor.ReflectionInvocationContext$Invocation.invoke(ReflectionInvocationContext.java:181)
+	at org.apache.openejb.core.interceptor.ReflectionInvocationContext.proceed(ReflectionInvocationContext.java:163)
+	at org.apache.openejb.security.internal.InternalSecurityInterceptor.invoke(InternalSecurityInterceptor.java:34)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.apache.openejb.core.interceptor.ReflectionInvocationContext$Invocation.invoke(ReflectionInvocationContext.java:181)
+	at org.apache.openejb.core.interceptor.ReflectionInvocationContext.proceed(ReflectionInvocationContext.java:163)
+	at org.apache.openejb.cdi.CdiInterceptor.invoke(CdiInterceptor.java:126)
+	at org.apache.openejb.cdi.CdiInterceptor.access$000(CdiInterceptor.java:42)
+	at org.apache.openejb.cdi.CdiInterceptor$1.call(CdiInterceptor.java:63)
+	at org.apache.openejb.cdi.CdiInterceptor.aroundInvoke(CdiInterceptor.java:69)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.apache.openejb.core.interceptor.ReflectionInvocationContext$Invocation.invoke(ReflectionInvocationContext.java:181)
+	at org.apache.openejb.core.interceptor.ReflectionInvocationContext.proceed(ReflectionInvocationContext.java:163)
+	at org.apache.openejb.monitoring.StatsInterceptor.record(StatsInterceptor.java:176)
+	at org.apache.openejb.monitoring.StatsInterceptor.invoke(StatsInterceptor.java:95)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.apache.openejb.core.interceptor.ReflectionInvocationContext$Invocation.invoke(ReflectionInvocationContext.java:181)
+	at org.apache.openejb.core.interceptor.ReflectionInvocationContext.proceed(ReflectionInvocationContext.java:163)
+	at org.apache.openejb.core.interceptor.InterceptorStack.invoke(InterceptorStack.java:138)
+	at org.apache.openejb.core.stateless.StatelessContainer._invoke(StatelessContainer.java:239)
+	at org.apache.openejb.core.stateless.StatelessContainer.invoke(StatelessContainer.java:191)
+	at org.apache.openejb.server.ejbd.EjbRequestHandler.doEjbObject_BUSINESS_METHOD(EjbRequestHandler.java:290)
+	at org.apache.openejb.server.ejbd.EjbRequestHandler.processRequest(EjbRequestHandler.java:140)
+	at org.apache.openejb.server.ejbd.EjbDaemon.processEjbRequest(EjbDaemon.java:267)
+	at org.apache.openejb.server.ejbd.EjbDaemon.service(EjbDaemon.java:191)
+	at org.apache.openejb.server.ejbd.EjbServer.service(EjbServer.java:81)
+	at org.apache.openejb.server.httpd.ServerServlet.service(ServerServlet.java:56)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:728)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:305)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:210)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:222)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:123)
+	at org.apache.tomee.catalina.OpenEJBValve.invoke(OpenEJBValve.java:45)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:171)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:99)
+	at org.apache.catalina.valves.AccessLogValve.invoke(AccessLogValve.java:936)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:118)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:407)
+	at org.apache.coyote.http11.AbstractHttp11Processor.process(AbstractHttp11Processor.java:1004)
+	at org.apache.coyote.AbstractProtocol$AbstractConnectionHandler.process(AbstractProtocol.java:589)
+	at org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor.run(JIoEndpoint.java:312)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:722)
+
+Jun 11, 2013 7:32:37 PM org.apache.catalina.core.ContainerBase addChildInternal
+SEVERE: ContainerBase.addChild: start: 
+org.apache.catalina.LifecycleException: Failed to start component [StandardEngine[Catalina].StandardHost[localhost].StandardContext[/validator]]
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:154)
+	at org.apache.catalina.core.ContainerBase.addChildInternal(ContainerBase.java:901)
+	at org.apache.catalina.core.ContainerBase.addChild(ContainerBase.java:877)
+	at org.apache.catalina.core.StandardHost.addChild(StandardHost.java:633)
+	at org.apache.tomee.catalina.TomcatWebAppBuilder.deployWar(TomcatWebAppBuilder.java:567)
+	at org.apache.tomee.catalina.TomcatWebAppBuilder.deployWebApps(TomcatWebAppBuilder.java:538)
+	at org.apache.tomee.catalina.deployment.TomcatWebappDeployer.deploy(TomcatWebappDeployer.java:44)
+	at org.apache.openejb.assembler.DeployerEjb.deploy(DeployerEjb.java:131)
+	at org.apache.openejb.assembler.DeployerEjb.deploy(DeployerEjb.java:104)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.apache.openejb.core.interceptor.ReflectionInvocationContext$Invocation.invoke(ReflectionInvocationContext.java:181)
+	at org.apache.openejb.core.interceptor.ReflectionInvocationContext.proceed(ReflectionInvocationContext.java:163)
+	at org.apache.openejb.security.internal.InternalSecurityInterceptor.invoke(InternalSecurityInterceptor.java:34)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.apache.openejb.core.interceptor.ReflectionInvocationContext$Invocation.invoke(ReflectionInvocationContext.java:181)
+	at org.apache.openejb.core.interceptor.ReflectionInvocationContext.proceed(ReflectionInvocationContext.java:163)
+	at org.apache.openejb.cdi.CdiInterceptor.invoke(CdiInterceptor.java:126)
+	at org.apache.openejb.cdi.CdiInterceptor.access$000(CdiInterceptor.java:42)
+	at org.apache.openejb.cdi.CdiInterceptor$1.call(CdiInterceptor.java:63)
+	at org.apache.openejb.cdi.CdiInterceptor.aroundInvoke(CdiInterceptor.java:69)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.apache.openejb.core.interceptor.ReflectionInvocationContext$Invocation.invoke(ReflectionInvocationContext.java:181)
+	at org.apache.openejb.core.interceptor.ReflectionInvocationContext.proceed(ReflectionInvocationContext.java:163)
+	at org.apache.openejb.monitoring.StatsInterceptor.record(StatsInterceptor.java:176)
+	at org.apache.openejb.monitoring.StatsInterceptor.invoke(StatsInterceptor.java:95)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.apache.openejb.core.interceptor.ReflectionInvocationContext$Invocation.invoke(ReflectionInvocationContext.java:181)
+	at org.apache.openejb.core.interceptor.ReflectionInvocationContext.proceed(ReflectionInvocationContext.java:163)
+	at org.apache.openejb.core.interceptor.InterceptorStack.invoke(InterceptorStack.java:138)
+	at org.apache.openejb.core.stateless.StatelessContainer._invoke(StatelessContainer.java:239)
+	at org.apache.openejb.core.stateless.StatelessContainer.invoke(StatelessContainer.java:191)
+	at org.apache.openejb.server.ejbd.EjbRequestHandler.doEjbObject_BUSINESS_METHOD(EjbRequestHandler.java:290)
+	at org.apache.openejb.server.ejbd.EjbRequestHandler.processRequest(EjbRequestHandler.java:140)
+	at org.apache.openejb.server.ejbd.EjbDaemon.processEjbRequest(EjbDaemon.java:267)
+	at org.apache.openejb.server.ejbd.EjbDaemon.service(EjbDaemon.java:191)
+	at org.apache.openejb.server.ejbd.EjbServer.service(EjbServer.java:81)
+	at org.apache.openejb.server.httpd.ServerServlet.service(ServerServlet.java:56)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:728)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:305)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:210)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:222)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:123)
+	at org.apache.tomee.catalina.OpenEJBValve.invoke(OpenEJBValve.java:45)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:171)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:99)
+	at org.apache.catalina.valves.AccessLogValve.invoke(AccessLogValve.java:936)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:118)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:407)
+	at org.apache.coyote.http11.AbstractHttp11Processor.process(AbstractHttp11Processor.java:1004)
+	at org.apache.coyote.AbstractProtocol$AbstractConnectionHandler.process(AbstractProtocol.java:589)
+	at org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor.run(JIoEndpoint.java:312)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:722)
+Caused by: org.apache.tomee.catalina.TomEERuntimeException: java.lang.ArrayStoreException: sun.reflect.annotation.TypeNotPresentExceptionProxy
+	at org.apache.tomee.catalina.TomcatWebAppBuilder.startInternal(TomcatWebAppBuilder.java:1135)
+	at org.apache.tomee.catalina.TomcatWebAppBuilder.configureStart(TomcatWebAppBuilder.java:1033)
+	at org.apache.tomee.catalina.GlobalListenerSupport.lifecycleEvent(GlobalListenerSupport.java:124)
+	at org.apache.catalina.util.LifecycleSupport.fireLifecycleEvent(LifecycleSupport.java:119)
+	at org.apache.catalina.util.LifecycleBase.fireLifecycleEvent(LifecycleBase.java:90)
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:5179)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:150)
+	... 65 more
+Caused by: java.lang.ArrayStoreException: sun.reflect.annotation.TypeNotPresentExceptionProxy
+	at sun.reflect.annotation.AnnotationParser.parseClassArray(AnnotationParser.java:673)
+	at sun.reflect.annotation.AnnotationParser.parseArray(AnnotationParser.java:480)
+	at sun.reflect.annotation.AnnotationParser.parseMemberValue(AnnotationParser.java:306)
+	at sun.reflect.annotation.AnnotationParser.parseAnnotation(AnnotationParser.java:241)
+	at sun.reflect.annotation.AnnotationParser.parseAnnotations2(AnnotationParser.java:88)
+	at sun.reflect.annotation.AnnotationParser.parseAnnotations(AnnotationParser.java:70)
+	at java.lang.Class.initAnnotationsIfNecessary(Class.java:3098)
+	at java.lang.Class.getDeclaredAnnotations(Class.java:3086)
+	at org.apache.xbean.finder.MetaAnnotatedElement.unroll(MetaAnnotatedElement.java:257)
+	at org.apache.xbean.finder.MetaAnnotatedClass.<init>(MetaAnnotatedClass.java:35)
+	at org.apache.openejb.util.proxy.DynamicProxyImplFactory.isKnownDynamicallyImplemented(DynamicProxyImplFactory.java:34)
+	at org.apache.openejb.config.AnnotationDeployer$ProcessAnnotatedBeans.deploy(AnnotationDeployer.java:2166)
+	at org.apache.openejb.config.AnnotationDeployer$ProcessAnnotatedBeans.deploy(AnnotationDeployer.java:1726)
+	at org.apache.openejb.config.AnnotationDeployer.deploy(AnnotationDeployer.java:344)
+	at org.apache.openejb.config.ConfigurationFactory$Chain.deploy(ConfigurationFactory.java:379)
+	at org.apache.openejb.config.ConfigurationFactory.configureApplication(ConfigurationFactory.java:884)
+	at org.apache.tomee.catalina.TomcatWebAppBuilder.startInternal(TomcatWebAppBuilder.java:1111)
+	... 71 more
+
+javax.ejb.EJBException: The bean encountered a non-application exception; nested exception is: 
+	org.apache.openejb.OpenEJBRuntimeException: java.lang.IllegalStateException: ContainerBase.addChild: start: org.apache.catalina.LifecycleException: Failed to start component [StandardEngine[Catalina].StandardHost[localhost].StandardContext[/validator]]
+	at org.apache.openejb.client.EJBInvocationHandler.convertException(EJBInvocationHandler.java:249)
+	at org.apache.openejb.client.EJBObjectHandler._invoke(EJBObjectHandler.java:269)
+	at org.apache.openejb.client.EJBInvocationHandler.invoke(EJBInvocationHandler.java:127)
+	at org.apache.openejb.client.proxy.Jdk13InvocationHandler.invoke(Jdk13InvocationHandler.java:46)
+	at com.sun.proxy.$Proxy21.deploy(Unknown Source)
+	at org.apache.openejb.arquillian.common.TomEEContainer.deploy(TomEEContainer.java:249)
+	at org.jboss.arquillian.container.impl.client.container.ContainerDeployController$3.call(ContainerDeployController.java:161)
+	at org.jboss.arquillian.container.impl.client.container.ContainerDeployController$3.call(ContainerDeployController.java:128)
+	at org.jboss.arquillian.container.impl.client.container.ContainerDeployController.executeOperation(ContainerDeployController.java:271)
+	at org.jboss.arquillian.container.impl.client.container.ContainerDeployController.deploy(ContainerDeployController.java:127)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:94)
+	at org.jboss.arquillian.core.impl.EventContextImpl.invokeObservers(EventContextImpl.java:99)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:81)
+	at org.jboss.arquillian.container.impl.client.ContainerDeploymentContextHandler.createDeploymentContext(ContainerDeploymentContextHandler.java:78)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:94)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:88)
+	at org.jboss.arquillian.container.impl.client.ContainerDeploymentContextHandler.createContainerContext(ContainerDeploymentContextHandler.java:57)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:94)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:88)
+	at org.jboss.arquillian.container.impl.client.container.DeploymentExceptionHandler.verifyExpectedExceptionDuringDeploy(DeploymentExceptionHandler.java:50)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:94)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:88)
+	at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:135)
+	at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:115)
+	at org.jboss.arquillian.core.impl.EventImpl.fire(EventImpl.java:67)
+	at org.jboss.arquillian.container.impl.client.container.ContainerDeployController$1.perform(ContainerDeployController.java:95)
+	at org.jboss.arquillian.container.impl.client.container.ContainerDeployController$1.perform(ContainerDeployController.java:80)
+	at org.jboss.arquillian.container.impl.client.container.ContainerDeployController.forEachDeployment(ContainerDeployController.java:263)
+	at org.jboss.arquillian.container.impl.client.container.ContainerDeployController.forEachManagedDeployment(ContainerDeployController.java:239)
+	at org.jboss.arquillian.container.impl.client.container.ContainerDeployController.deployManaged(ContainerDeployController.java:79)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:94)
+	at org.jboss.arquillian.core.impl.EventContextImpl.invokeObservers(EventContextImpl.java:99)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:81)
+	at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:135)
+	at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:115)
+	at org.jboss.arquillian.core.impl.EventImpl.fire(EventImpl.java:67)
+	at org.jboss.arquillian.container.test.impl.client.ContainerEventController.execute(ContainerEventController.java:101)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:94)
+	at org.jboss.arquillian.core.impl.EventContextImpl.invokeObservers(EventContextImpl.java:99)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:81)
+	at org.jboss.arquillian.test.impl.TestContextHandler.createSuiteContext(TestContextHandler.java:60)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:94)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:88)
+	at org.jboss.arquillian.test.impl.TestContextHandler.createClassContext(TestContextHandler.java:75)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:94)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:88)
+	at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:135)
+	at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:115)
+	at org.jboss.arquillian.test.impl.EventTestRunnerAdaptor.beforeClass(EventTestRunnerAdaptor.java:80)
+	at org.jboss.arquillian.junit.Arquillian$2.evaluate(Arquillian.java:182)
+	at org.jboss.arquillian.junit.Arquillian.multiExecute(Arquillian.java:314)
+	at org.jboss.arquillian.junit.Arquillian.access$100(Arquillian.java:46)
+	at org.jboss.arquillian.junit.Arquillian$3.evaluate(Arquillian.java:199)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:300)
+	at org.jboss.arquillian.junit.Arquillian.run(Arquillian.java:147)
+	at org.junit.runners.Suite.runChild(Suite.java:128)
+	at org.junit.runners.Suite.runChild(Suite.java:24)
+	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:231)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:60)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:229)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:50)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:222)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:300)
+	at org.junit.runner.JUnitCore.run(JUnitCore.java:157)
+	at org.junit.runner.JUnitCore.run(JUnitCore.java:136)
+	at org.apache.maven.surefire.junitcore.JUnitCoreWrapper.execute(JUnitCoreWrapper.java:61)
+	at org.apache.maven.surefire.junitcore.JUnitCoreProvider.invoke(JUnitCoreProvider.java:140)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.apache.maven.surefire.util.ReflectionUtils.invokeMethodWithArray(ReflectionUtils.java:188)
+	at org.apache.maven.surefire.booter.ProviderFactory$ProviderProxy.invoke(ProviderFactory.java:166)
+	at org.apache.maven.surefire.booter.ProviderFactory.invokeProvider(ProviderFactory.java:86)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:101)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:74)
+Caused by: org.apache.openejb.OpenEJBRuntimeException: java.lang.IllegalStateException: ContainerBase.addChild: start: org.apache.catalina.LifecycleException: Failed to start component [StandardEngine[Catalina].StandardHost[localhost].StandardContext[/validator]]
+	at org.apache.tomee.catalina.deployment.TomcatWebappDeployer.deploy(TomcatWebappDeployer.java:46)
+	at org.apache.openejb.assembler.DeployerEjb.deploy(DeployerEjb.java:131)
+	at org.apache.openejb.assembler.DeployerEjb.deploy(DeployerEjb.java:104)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.apache.openejb.core.interceptor.ReflectionInvocationContext$Invocation.invoke(ReflectionInvocationContext.java:181)
+	at org.apache.openejb.core.interceptor.ReflectionInvocationContext.proceed(ReflectionInvocationContext.java:163)
+	at org.apache.openejb.security.internal.InternalSecurityInterceptor.invoke(InternalSecurityInterceptor.java:34)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.apache.openejb.core.interceptor.ReflectionInvocationContext$Invocation.invoke(ReflectionInvocationContext.java:181)
+	at org.apache.openejb.core.interceptor.ReflectionInvocationContext.proceed(ReflectionInvocationContext.java:163)
+	at org.apache.openejb.cdi.CdiInterceptor.invoke(CdiInterceptor.java:126)
+	at org.apache.openejb.cdi.CdiInterceptor.access$000(CdiInterceptor.java:42)
+	at org.apache.openejb.cdi.CdiInterceptor$1.call(CdiInterceptor.java:63)
+	at org.apache.openejb.cdi.CdiInterceptor.aroundInvoke(CdiInterceptor.java:69)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.apache.openejb.core.interceptor.ReflectionInvocationContext$Invocation.invoke(ReflectionInvocationContext.java:181)
+	at org.apache.openejb.core.interceptor.ReflectionInvocationContext.proceed(ReflectionInvocationContext.java:163)
+	at org.apache.openejb.monitoring.StatsInterceptor.record(StatsInterceptor.java:176)
+	at org.apache.openejb.monitoring.StatsInterceptor.invoke(StatsInterceptor.java:95)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.apache.openejb.core.interceptor.ReflectionInvocationContext$Invocation.invoke(ReflectionInvocationContext.java:181)
+	at org.apache.openejb.core.interceptor.ReflectionInvocationContext.proceed(ReflectionInvocationContext.java:163)
+	at org.apache.openejb.core.interceptor.InterceptorStack.invoke(InterceptorStack.java:138)
+	at org.apache.openejb.core.stateless.StatelessContainer._invoke(StatelessContainer.java:239)
+	at org.apache.openejb.core.stateless.StatelessContainer.invoke(StatelessContainer.java:191)
+	at org.apache.openejb.server.ejbd.EjbRequestHandler.doEjbObject_BUSINESS_METHOD(EjbRequestHandler.java:290)
+	at org.apache.openejb.server.ejbd.EjbRequestHandler.processRequest(EjbRequestHandler.java:140)
+	at org.apache.openejb.server.ejbd.EjbDaemon.processEjbRequest(EjbDaemon.java:267)
+	at org.apache.openejb.server.ejbd.EjbDaemon.service(EjbDaemon.java:191)
+	at org.apache.openejb.server.ejbd.EjbServer.service(EjbServer.java:81)
+	at org.apache.openejb.server.httpd.ServerServlet.service(ServerServlet.java:56)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:728)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:305)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:210)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:222)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:123)
+	at org.apache.tomee.catalina.OpenEJBValve.invoke(OpenEJBValve.java:45)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:171)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:99)
+	at org.apache.catalina.valves.AccessLogValve.invoke(AccessLogValve.java:936)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:118)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:407)
+	at org.apache.coyote.http11.AbstractHttp11Processor.process(AbstractHttp11Processor.java:1004)
+	at org.apache.coyote.AbstractProtocol$AbstractConnectionHandler.process(AbstractProtocol.java:589)
+	at org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor.run(JIoEndpoint.java:312)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:722)
+Caused by: java.lang.IllegalStateException: ContainerBase.addChild: start: org.apache.catalina.LifecycleException: Failed to start component [StandardEngine[Catalina].StandardHost[localhost].StandardContext[/validator]]
+	at org.apache.catalina.core.ContainerBase.addChildInternal(ContainerBase.java:904)
+	at org.apache.catalina.core.ContainerBase.addChild(ContainerBase.java:877)
+	at org.apache.catalina.core.StandardHost.addChild(StandardHost.java:633)
+	at org.apache.tomee.catalina.TomcatWebAppBuilder.deployWar(TomcatWebAppBuilder.java:567)
+	at org.apache.tomee.catalina.TomcatWebAppBuilder.deployWebApps(TomcatWebAppBuilder.java:538)
+	at org.apache.tomee.catalina.deployment.TomcatWebappDeployer.deploy(TomcatWebappDeployer.java:44)
+	... 59 more
+Jun 11, 2013 7:32:37 PM org.apache.openejb.client.EventLogger log
+INFO: RemoteInitialContextCreated{providerUri=http://localhost:8080/tomee/ejb}
+java.lang.NullPointerException
+	at org.apache.openejb.arquillian.common.TomEEContainer.undeploy(TomEEContainer.java:377)
+	at org.jboss.arquillian.container.impl.client.container.ContainerDeployController$4.call(ContainerDeployController.java:205)
+	at org.jboss.arquillian.container.impl.client.container.ContainerDeployController$4.call(ContainerDeployController.java:185)
+	at org.jboss.arquillian.container.impl.client.container.ContainerDeployController.executeOperation(ContainerDeployController.java:271)
+	at org.jboss.arquillian.container.impl.client.container.ContainerDeployController.undeploy(ContainerDeployController.java:184)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:94)
+	at org.jboss.arquillian.core.impl.EventContextImpl.invokeObservers(EventContextImpl.java:99)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:81)
+	at org.jboss.arquillian.container.impl.client.ContainerDeploymentContextHandler.createDeploymentContext(ContainerDeploymentContextHandler.java:78)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:94)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:88)
+	at org.jboss.arquillian.container.impl.client.ContainerDeploymentContextHandler.createContainerContext(ContainerDeploymentContextHandler.java:57)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:94)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:88)
+	at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:135)
+	at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:115)
+	at org.jboss.arquillian.core.impl.EventImpl.fire(EventImpl.java:67)
+	at org.jboss.arquillian.container.impl.client.container.ContainerDeployController$2.perform(ContainerDeployController.java:119)
+	at org.jboss.arquillian.container.impl.client.container.ContainerDeployController$2.perform(ContainerDeployController.java:110)
+	at org.jboss.arquillian.container.impl.client.container.ContainerDeployController.forEachDeployment(ContainerDeployController.java:263)
+	at org.jboss.arquillian.container.impl.client.container.ContainerDeployController.forEachDeployedDeployment(ContainerDeployController.java:249)
+	at org.jboss.arquillian.container.impl.client.container.ContainerDeployController.undeployManaged(ContainerDeployController.java:109)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:94)
+	at org.jboss.arquillian.core.impl.EventContextImpl.invokeObservers(EventContextImpl.java:99)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:81)
+	at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:135)
+	at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:115)
+	at org.jboss.arquillian.core.impl.EventImpl.fire(EventImpl.java:67)
+	at org.jboss.arquillian.container.test.impl.client.ContainerEventController.execute(ContainerEventController.java:108)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:94)
+	at org.jboss.arquillian.core.impl.EventContextImpl.invokeObservers(EventContextImpl.java:99)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:81)
+	at org.jboss.arquillian.test.impl.TestContextHandler.createSuiteContext(TestContextHandler.java:60)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:94)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:88)
+	at org.jboss.arquillian.test.impl.TestContextHandler.createClassContext(TestContextHandler.java:75)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:94)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:88)
+	at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:135)
+	at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:115)
+	at org.jboss.arquillian.test.impl.EventTestRunnerAdaptor.afterClass(EventTestRunnerAdaptor.java:87)
+	at org.jboss.arquillian.junit.Arquillian$3$1.evaluate(Arquillian.java:204)
+	at org.jboss.arquillian.junit.Arquillian.multiExecute(Arquillian.java:314)
+	at org.jboss.arquillian.junit.Arquillian.access$100(Arquillian.java:46)
+	at org.jboss.arquillian.junit.Arquillian$3.evaluate(Arquillian.java:199)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:300)
+	at org.jboss.arquillian.junit.Arquillian.run(Arquillian.java:147)
+	at org.junit.runners.Suite.runChild(Suite.java:128)
+	at org.junit.runners.Suite.runChild(Suite.java:24)
+	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:231)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:60)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:229)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:50)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:222)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:300)
+	at org.junit.runner.JUnitCore.run(JUnitCore.java:157)
+	at org.junit.runner.JUnitCore.run(JUnitCore.java:136)
+	at org.apache.maven.surefire.junitcore.JUnitCoreWrapper.execute(JUnitCoreWrapper.java:61)
+	at org.apache.maven.surefire.junitcore.JUnitCoreProvider.invoke(JUnitCoreProvider.java:140)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.apache.maven.surefire.util.ReflectionUtils.invokeMethodWithArray(ReflectionUtils.java:188)
+	at org.apache.maven.surefire.booter.ProviderFactory$ProviderProxy.invoke(ProviderFactory.java:166)
+	at org.apache.maven.surefire.booter.ProviderFactory.invokeProvider(ProviderFactory.java:86)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:101)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:74)
+Running org.apache.deltaspike.beanval.test.InjectedValidationTest
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0 sec <<< FAILURE!
+Jun 11, 2013 7:32:37 PM org.apache.catalina.core.StandardServer await
+INFO: A valid shutdown command was received via the shutdown port. Stopping the Server instance.
+Jun 11, 2013 7:32:37 PM org.apache.coyote.AbstractProtocol pause
+INFO: Pausing ProtocolHandler ["http-bio-8080"]
+Jun 11, 2013 7:32:37 PM org.apache.coyote.AbstractProtocol pause
+INFO: Pausing ProtocolHandler ["ajp-bio-8009"]
+Jun 11, 2013 7:32:38 PM org.apache.catalina.core.StandardService stopInternal
+INFO: Stopping service Catalina
+Jun 11, 2013 7:32:38 PM org.apache.openejb.assembler.classic.Assembler destroyApplication
+INFO: Undeploying app: /home/johndament/src/deltaspike/deltaspike/modules/beanval/impl/target/tomee/apache-tomee-webprofile-1.5.2/webapps/tomee
+Jun 11, 2013 7:32:38 PM org.apache.coyote.AbstractProtocol stop
+INFO: Stopping ProtocolHandler ["http-bio-8080"]
+Jun 11, 2013 7:32:38 PM org.apache.coyote.AbstractProtocol stop
+INFO: Stopping ProtocolHandler ["ajp-bio-8009"]
+Jun 11, 2013 7:32:38 PM org.apache.openejb.server.SimpleServiceManager stop
+INFO: Stopping server services
+Jun 11, 2013 7:32:38 PM org.apache.openejb.assembler.classic.Assembler destroyApplication
+INFO: Undeploying app: openejb
+Jun 11, 2013 7:32:38 PM org.apache.coyote.AbstractProtocol destroy
+INFO: Destroying ProtocolHandler ["http-bio-8080"]
+Jun 11, 2013 7:32:38 PM org.apache.coyote.AbstractProtocol destroy
+INFO: Destroying ProtocolHandler ["ajp-bio-8009"]
+
+Results :
+
+Tests in error: 
+  org.apache.deltaspike.beanval.test.InjectedValidationTest: Unable to deploy
+
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0
+
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary:
+[INFO] 
+[INFO] Apache DeltaSpike BeanValidation-Module ........... SUCCESS [5.951s]
+[INFO] Apache DeltaSpike BeanValidation-Module API ....... SUCCESS [2.084s]
+[INFO] Apache DeltaSpike BeanValidation-Module Impl ...... FAILURE [18.032s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 26.693s
+[INFO] Finished at: Tue Jun 11 19:32:38 EDT 2013
+[INFO] Final Memory: 52M/1155M
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:2.11:test (default-test) on project deltaspike-beanval-module-impl: There are test failures.
+[ERROR] 
+[ERROR] Please refer to /home/johndament/src/deltaspike/deltaspike/modules/beanval/impl/target/surefire-reports for the individual test results.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
+[ERROR] 
+[ERROR] After correcting the problems, you can resume the build with the command
+[ERROR]   mvn <goals> -rf :deltaspike-beanval-module-impl
