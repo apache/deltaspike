@@ -27,6 +27,11 @@ import javax.validation.Validation;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 
+/**
+ * A factory for creating CDI Aware/Enabled ConstraintValidators.
+ * 
+ * @author John.D.Ament
+ */
 public class CDIAwareConstraintValidatorFactory implements
         ConstraintValidatorFactory
 {
@@ -50,8 +55,7 @@ public class CDIAwareConstraintValidatorFactory implements
     public <T extends ConstraintValidator<?, ?>> T getInstance(Class<T> validatorClass)
     {
         T resolvedInst = null;
-        resolvedInst = BeanProvider.getContextualReference(validatorClass);
-        
+        resolvedInst = BeanProvider.getContextualReference(validatorClass,true);
         if (resolvedInst == null)
         {
             if (log.isLoggable(Level.CONFIG))
@@ -61,7 +65,6 @@ public class CDIAwareConstraintValidatorFactory implements
             }
             resolvedInst = this.delegate.getInstance(validatorClass);
         }
-        
         return resolvedInst;
     }
 
