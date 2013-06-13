@@ -108,15 +108,9 @@ public final class ConfigResolver
      */
     public static String getPropertyValue(String key, String defaultValue)
     {
-        String configuredValue = getPropertyValue(key);
-        if (configuredValue == null)
-        {
-            LOG.log(Level.FINE, "no configured value found for key {0}, using default value {1}.",
-                    new Object[]{key, defaultValue});
+        String value = getPropertyValue(key);
 
-            configuredValue = defaultValue;
-        }
-        return configuredValue;
+        return fallbackToDefaultIfEmpty(key, value, defaultValue);
     }
 
     /**
@@ -189,12 +183,7 @@ public final class ConfigResolver
     {
         String value = getProjectStageAwarePropertyValue(key);
 
-        if (value == null || value.length() == 0)
-        {
-            value = defaultValue;
-        }
-
-        return value;
+        return fallbackToDefaultIfEmpty(key, value, defaultValue);
     }
 
     /**
@@ -263,12 +252,7 @@ public final class ConfigResolver
     {
         String value = getPropertyAwarePropertyValue(key, property);
 
-        if (value == null || value.length() == 0)
-        {
-            value = defaultValue;
-        }
-
-        return value;
+        return fallbackToDefaultIfEmpty(key, value, defaultValue);
     }
 
     /**
@@ -401,5 +385,19 @@ public final class ConfigResolver
 
         return projectStage;
     }
+
+    private static String fallbackToDefaultIfEmpty(String key, String value, String defaultValue)
+    {
+        if (value == null || value.length() == 0)
+        {
+            LOG.log(Level.FINE, "no configured value found for key {0}, using default value {1}.",
+                    new Object[]{key, defaultValue});
+
+            return defaultValue;
+        }
+
+        return value;
+    }
+
 
 }
