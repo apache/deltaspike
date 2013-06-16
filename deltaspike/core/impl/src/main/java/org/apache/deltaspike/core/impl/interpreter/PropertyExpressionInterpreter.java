@@ -32,7 +32,7 @@ public class PropertyExpressionInterpreter extends BasePropertyExpressionInterpr
     @Override
     protected String getConfiguredValue(String key)
     {
-        return ConfigResolver.getPropertyValue(key);
+        return ConfigResolver.getProjectStageAwarePropertyValue(key);
     }
 }
 

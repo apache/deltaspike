@@ -125,11 +125,11 @@ public abstract class BaseConfigPropertyProducer
         if (ConfigProperty.NULL.equals(defaultValue))
         {
             // no special defaultValue has been configured
-            configuredValue = ConfigResolver.getPropertyValue(propertyName);
+            configuredValue = ConfigResolver.getProjectStageAwarePropertyValue(propertyName);
         }
         else
         {
-            configuredValue = ConfigResolver.getPropertyValue(propertyName, defaultValue);
+            configuredValue = ConfigResolver.getProjectStageAwarePropertyValue(propertyName, defaultValue);
         }
         return configuredValue;
     }
