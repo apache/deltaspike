@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.servlet.impl.event;
 
+import javax.enterprise.inject.spi.BeanManager;
 import java.lang.annotation.Annotation;
 
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
@@ -30,14 +31,27 @@ import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
  */
 abstract class EventEmitter
 {
+    private volatile BeanManager beanManager;
 
     protected void fireEvent(Object event, Annotation... qualifier)
     {
-        /*
-         * No need to cache the BeanManager reference because the providers already does this on a context class loader
-         * level.
-         */
-        BeanManagerProvider.getInstance().getBeanManager().fireEvent(event, qualifier);
+        getBeanManager().fireEvent(event, qualifier);
+    }
+
+    protected BeanManager getBeanManager()
+    {
+        if (beanManager == null)
+        {
+            synchronized (this)
+            {
+                if (beanManager == null)
+                {
+                    beanManager = BeanManagerProvider.getInstance().getBeanManager();
+                }
+            }
+        }
+
+        return beanManager;
     }
 
 }

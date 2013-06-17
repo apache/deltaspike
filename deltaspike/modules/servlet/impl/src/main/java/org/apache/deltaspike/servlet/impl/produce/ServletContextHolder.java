@@ -25,6 +25,8 @@ import java.util.logging.Logger;
 
 import javax.servlet.ServletContext;
 
+import org.apache.deltaspike.core.util.ClassUtils;
+
 /**
  * This class holds the {@link ServletContext} for each context class loader.
  * 
@@ -52,7 +54,7 @@ class ServletContextHolder
      */
     static void bind(ServletContext servletContext)
     {
-        ClassLoader classLoader = getContextClassLoader();
+        ClassLoader classLoader = ClassUtils.getClassLoader(null);
         ServletContext existingContext = CONTEXT_BY_CLASSLOADER.put(classLoader, servletContext);
         if (existingContext != null)
         {
@@ -69,7 +71,7 @@ class ServletContextHolder
      */
     static ServletContext get()
     {
-        ClassLoader classLoader = getContextClassLoader();
+        ClassLoader classLoader = ClassUtils.getClassLoader(null);
         ServletContext servletContext = CONTEXT_BY_CLASSLOADER.get(classLoader);
         if (servletContext == null)
         {
@@ -84,22 +86,12 @@ class ServletContextHolder
      */
     static void release()
     {
-        ClassLoader classLoader = getContextClassLoader();
+        ClassLoader classLoader = ClassUtils.getClassLoader(null);
         ServletContext removedContext = CONTEXT_BY_CLASSLOADER.remove(classLoader);
         if (removedContext == null)
         {
             log.warning("Cannot find a ServletContext to release for class loader: " + classLoader);
         }
-    }
-
-    private static ClassLoader getContextClassLoader()
-    {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        if (classLoader == null)
-        {
-            throw new IllegalStateException("Unable to obtain the context class loader for the current thread");
-        }
-        return classLoader;
     }
 
 }
