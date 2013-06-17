@@ -30,7 +30,6 @@ import org.apache.deltaspike.core.api.provider.BeanProvider;
 /**
  * A factory for creating CDI Aware/Enabled ConstraintValidators.
  * 
- * @author John.D.Ament
  */
 public class CDIAwareConstraintValidatorFactory implements
         ConstraintValidatorFactory
