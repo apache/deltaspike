@@ -62,6 +62,9 @@ public class TestConfigSource implements ConfigSource
         props.put("dbvendor2.Production", "mysql");
         props.put("dbvendor2", "postgresql");
 
+        props.put("testkey4.encrypted", "value");
+        props.put("testkey4.password", "mysecretvalue");
+
     }
 
     @Override

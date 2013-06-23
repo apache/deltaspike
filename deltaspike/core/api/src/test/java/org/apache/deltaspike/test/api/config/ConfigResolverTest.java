@@ -20,6 +20,7 @@ package org.apache.deltaspike.test.api.config;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
+import org.apache.deltaspike.core.spi.config.ConfigFilter;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
 import org.junit.Assert;
 import org.junit.Test;
@@ -74,7 +75,8 @@ public class ConfigResolverTest
     }
 
     @Test
-    public void testGetPropertyAwarePropertyValue() {
+    public void testGetPropertyAwarePropertyValue()
+    {
         ProjectStageProducer.setProjectStage(ProjectStage.UnitTest);
 
         Assert.assertNull(ConfigResolver.getPropertyAwarePropertyValue("notexisting", null));
@@ -99,5 +101,52 @@ public class ConfigResolverTest
         Assert.assertEquals("PostgreDataSource", ConfigResolver.getPropertyAwarePropertyValue("dataSource", "dbvendor2", null));
         Assert.assertEquals("DefaultDataSource", ConfigResolver.getPropertyAwarePropertyValue("dataSource", "dbvendorX", null));
         Assert.assertEquals(DEFAULT_VALUE, ConfigResolver.getPropertyAwarePropertyValue("dataSourceX", "dbvendorX", DEFAULT_VALUE));
+    }
+
+    @Test
+    public void testConfigFilter()
+    {
+
+        ConfigFilter configFilter = new TestConfigFilter();
+
+        Assert.assertEquals("shouldGetDecrypted: value", configFilter.filterValue("somekey.encrypted", "value"));
+        Assert.assertEquals("**********", configFilter.filterValueForLog("somekey.password", "value"));
+
+        ConfigResolver.addConfigFilter(configFilter);
+
+        Assert.assertEquals("shouldGetDecrypted: value", ConfigResolver.getPropertyValue("testkey4.encrypted"));
+        Assert.assertEquals("shouldGetDecrypted: value", ConfigResolver.getProjectStageAwarePropertyValue("testkey4.encrypted"));
+        Assert.assertEquals("shouldGetDecrypted: value", ConfigResolver.getProjectStageAwarePropertyValue("testkey4.encrypted", null));
+        Assert.assertEquals("shouldGetDecrypted: value", ConfigResolver.getPropertyAwarePropertyValue("testkey4.encrypted", "dbvendor"));
+        Assert.assertEquals("shouldGetDecrypted: value", ConfigResolver.getPropertyAwarePropertyValue("testkey4.encrypted", "dbvendor", null));
+
+        List<String> allPropertyValues = ConfigResolver.getAllPropertyValues("testkey4.encrypted");
+        Assert.assertNotNull(allPropertyValues);
+        Assert.assertEquals(1, allPropertyValues.size());
+        Assert.assertEquals("shouldGetDecrypted: value", allPropertyValues.get(0));
+
+    }
+
+    public static class TestConfigFilter implements ConfigFilter
+    {
+        @Override
+        public String filterValue(String key, String value)
+        {
+            if (key.contains("encrypted"))
+            {
+                return "shouldGetDecrypted: " + value;
+            }
+            return value;
+        }
+
+        @Override
+        public String filterValueForLog(String key, String value)
+        {
+            if (key.contains("password"))
+            {
+                return "**********";
+            }
+            return value;
+        }
     }
 }

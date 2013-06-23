@@ -32,6 +32,7 @@ import java.util.logging.Logger;
 import javax.enterprise.inject.Typed;
 
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
+import org.apache.deltaspike.core.spi.config.ConfigFilter;
 import org.apache.deltaspike.core.spi.config.ConfigSource;
 import org.apache.deltaspike.core.spi.config.ConfigSourceProvider;
 import org.apache.deltaspike.core.util.ClassUtils;
@@ -57,6 +58,13 @@ public final class ConfigResolver
      */
     private static Map<ClassLoader, ConfigSource[]> configSources
         = new ConcurrentHashMap<ClassLoader, ConfigSource[]>();
+
+    /**
+     * The content of this map will hold the List of ConfigFilters
+     * for each WebApp/EAR, etc (thus the ClassLoader).
+     */
+    private static Map<ClassLoader, List<ConfigFilter>> configFilters
+        = new ConcurrentHashMap<ClassLoader, List<ConfigFilter>>();
 
     private static volatile ProjectStage projectStage = null;
 
@@ -97,6 +105,35 @@ public final class ConfigResolver
     }
 
     /**
+     * Add a {@link ConfigFilter} to the ConfigResolver.
+     * This will only affect the current WebApp
+     * (or more precisely the current ClassLoader and it's children).
+     * @param configFilter
+     */
+    public static void addConfigFilter(ConfigFilter configFilter)
+    {
+
+        List<ConfigFilter> currentConfigFilters = getConfigFilters();
+        currentConfigFilters.add(configFilter);
+    }
+
+    /**
+     * @return the {@link ConfigFilter}s for the current application.
+     */
+    public static List<ConfigFilter> getConfigFilters()
+    {
+        ClassLoader cl = ClassUtils.getClassLoader(null);
+        List<ConfigFilter> currentConfigFilters = configFilters.get(cl);
+        if (currentConfigFilters == null)
+        {
+            currentConfigFilters = new ArrayList<ConfigFilter>();
+            configFilters.put(cl, currentConfigFilters);
+        }
+
+        return currentConfigFilters;
+    }
+
+    /**
      * Resolve the property value by going through the list of configured {@link ConfigSource}s
      * and use the one with the highest priority. If no configured value has been found that
      * way we will use the defaultValue.
@@ -133,8 +170,8 @@ public final class ConfigResolver
             if (value != null)
             {
                 LOG.log(Level.FINE, "found value {0} for key {1} in ConfigSource {2}.",
-                        new Object[]{value, key, configSource.getConfigName()});
-                return value;
+                        new Object[]{filterConfigValueForLog(key, value), key, configSource.getConfigName()});
+                return filterConfigValue(key, value);
             }
 
             LOG.log(Level.FINER, "NO value found for key {0} in ConfigSource {1}.",
@@ -275,9 +312,13 @@ public final class ConfigResolver
         {
             value = configSource.getPropertyValue(key);
 
-            if (value != null && !result.contains(value))
+            if (value != null)
             {
-                result.add(value);
+                value = filterConfigValue(key, value);
+                if (!result.contains(value))
+                {
+                    result.add(value);
+                }
             }
         }
 
@@ -397,6 +438,32 @@ public final class ConfigResolver
         }
 
         return value;
+    }
+
+    private static String filterConfigValue(String key, String value)
+    {
+        List<ConfigFilter> currentConfigFilters = getConfigFilters();
+
+        String filteredValue = value;
+
+        for (ConfigFilter filter : currentConfigFilters)
+        {
+            filteredValue = filter.filterValue(key, filteredValue);
+        }
+        return filteredValue;
+    }
+
+    private static String filterConfigValueForLog(String key, String value)
+    {
+        List<ConfigFilter> currentConfigFilters = getConfigFilters();
+
+        String logValue = value;
+
+        for (ConfigFilter filter : currentConfigFilters)
+        {
+            logValue = filter.filterValueForLog(key, logValue);
+        }
+        return logValue;
     }
 
 
