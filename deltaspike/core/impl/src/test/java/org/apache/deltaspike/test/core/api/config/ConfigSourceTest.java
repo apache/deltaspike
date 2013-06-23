@@ -86,18 +86,5 @@ public class ConfigSourceTest
         Assert.assertEquals(value, configuredValue);
     }
 
-    /*
-    //X TODO discuss marker
-    @Test
-    public void testConfigViaSystemPropertyAndMarker()
-    {
-        String key = "testProperty01";
-        String value = "test_value";
-        System.setProperty("org.apache.deltaspike." + key, value);
 
-        String configuredValue = ConfigResolver.getPropertyValue("@@deltaspike@@" + key);
-
-        Assert.assertEquals(value, configuredValue);
-    }
-    */
 }

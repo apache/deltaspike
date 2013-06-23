@@ -44,8 +44,6 @@ public abstract class ServiceUtils
 
         if (!servicesIterator.hasNext())
         {
-            //X TODO check if we have to do it in any case with different packaging constellations
-            //X and merge the result in any case
             ClassLoader fallbackClassLoader = ServiceUtils.class.getClassLoader();
             servicesIterator = ServiceLoader.load(serviceType, fallbackClassLoader).iterator();
         }
