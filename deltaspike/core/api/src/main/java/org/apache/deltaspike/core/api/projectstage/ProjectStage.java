@@ -65,8 +65,8 @@ import java.util.logging.Logger;
  * members into a registered {@link ProjectStageHolder} as shown in the following
  * sample:</p>
  * <pre>
- * package org.apache.myfaces.extensions.cdi.test.api.projectstage;
- * public class MyProjectStages implements ProjectStageHolder {
+ * package org.apache.deltaspike.test.core.api.projectstage;
+ * public class TestProjectStages implements ProjectStageHolder {
  *     public static final class MyOwnProjectStage extends ProjectStage {};
  *     public static final MyOwnProjectStage MyOwnProjectStage = new MyOwnProjectStage();
  *
@@ -74,15 +74,15 @@ import java.util.logging.Logger;
  *     public static final MyOtherProjectStage MyOtherProjectStage = new MyOtherProjectStage();
  * }
  * </pre>
- * <p>For activating those projectstages, you have to register this ProjectStageHolder class
+ * <p>For activating those ProjectStages, you have to register this ProjectStageHolder class
  * to get picked up via the java.util.ServiceLoader mechanism. Simply create a file
  * <pre>
- * META-INF/services/org.apache.myfaces.extensions.cdi.core.api.projectstage.ProjectStageHolder
+ * META-INF/services/org.apache.deltaspike.core.api.projectstage.ProjectStageHolder
  * </pre>
  * which contains the fully qualified class name of custom ProjectStageHolder implementation:
  * <pre>
  * # this class now gets picked up by java.util.ServiceLoader
- * org.apache.myfaces.extensions.cdi.core.test.api.projectstage.MyProjectStages
+ * org.apache.deltaspike.test.core.api.projectstage.TestProjectStages
  * </pre>
  * </p>
  * <p>You can use your own ProjectStages exactly the same way as all the ones provided
