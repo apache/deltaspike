@@ -163,17 +163,17 @@ public class MockServletContext implements ServletContext
 
     public void log(String msg)
     {
-        // TODO
+        // nothing to do
     }
 
     public void log(Exception exception, String msg)
     {
-        // TODO
+        // nothing to do
     }
 
     public void log(String message, Throwable throwable)
     {
-        // TODO
+        // nothing to do
     }
 
     public void removeAttribute(String name)
