@@ -55,8 +55,6 @@ public class ContextController
 
     private Map<String, Object> requestMap;
 
-    private boolean applicationScopeStarted;
-
     private boolean singletonScopeStarted;
 
     void startApplicationScope()
