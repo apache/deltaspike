@@ -242,9 +242,6 @@ public class BeanManagerProvider implements Extension
 
         ClassLoader classLoader = ClassUtils.getClassLoader(null);
         bmpSingleton.bmInfos.remove(classLoader);
-
-        //X TODO this might not be enough as there might be
-        //X ClassLoaders used during Weld startup which are not the TCCL...
     }
 
     /**
