@@ -90,13 +90,20 @@ public abstract class PropertyFileUtils
         return props;
     }
 
+    /**
+     * @return the ResourceBundle for the current default Locale
+     */
     public static ResourceBundle getResourceBundle(String bundleName)
     {
         return getResourceBundle(bundleName, Locale.getDefault());
     }
 
+    /**
+     * This uses the correct ThreadContextClassLoader if deployed in an Container.
+     * @return the ResourceBundle for the current Locale
+     */
     public static ResourceBundle getResourceBundle(String bundleName, Locale locale)
     {
-        return ResourceBundle.getBundle(bundleName, locale);
+        return ResourceBundle.getBundle(bundleName, locale, ClassUtils.getClassLoader(null));
     }
 }
