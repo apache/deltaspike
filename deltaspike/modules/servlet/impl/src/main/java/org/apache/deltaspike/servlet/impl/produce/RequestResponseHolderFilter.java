@@ -29,8 +29,6 @@ import javax.servlet.ServletResponse;
 
 /**
  * This filter stores the current request and response in the {@link RequestResponseHolder}.
- * 
- * @author Christian Kaltepoth
  */
 public class RequestResponseHolderFilter implements Filter
 {

@@ -26,8 +26,6 @@ import org.apache.deltaspike.servlet.api.literal.InitializedLiteral;
 
 /**
  * This class listens for servlet context events and forwards them to the CDI event bus.
- * 
- * @author Christian Kaltepoth
  */
 public class EventBridgeContextListener extends EventEmitter implements ServletContextListener
 {

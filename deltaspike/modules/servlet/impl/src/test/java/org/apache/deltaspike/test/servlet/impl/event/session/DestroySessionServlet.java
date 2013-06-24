@@ -29,8 +29,6 @@ import javax.servlet.http.HttpSession;
 /**
  * Simple servlet that invalidates an existing session. The servlet will throw an {@link IllegalStateException} if no
  * session exists.
- * 
- * @author Christian Kaltepoth
  */
 public class DestroySessionServlet extends HttpServlet
 {

@@ -23,8 +23,6 @@ import javax.servlet.ServletContextListener;
 
 /**
  * This class stores the ServletContext in the {@link ServletContextHolder}.
- * 
- * @author Christian Kaltepoth
  */
 public class ServletContextHolderListener implements ServletContextListener
 {

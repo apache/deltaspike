@@ -44,8 +44,6 @@ import org.junit.runner.RunWith;
 
 /**
  * Test which validates that CDI events are fired when requests and responses are created or destroyed
- * 
- * @author Christian Kaltepoth
  */
 @RunWith(Arquillian.class)
 @Category(WebProfileCategory.class)

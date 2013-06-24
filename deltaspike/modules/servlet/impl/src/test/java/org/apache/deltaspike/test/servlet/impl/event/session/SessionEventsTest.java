@@ -51,8 +51,6 @@ import org.junit.runner.RunWith;
 
 /**
  * Test which validates that CDI events are fired when sessions are created and destroyed
- * 
- * @author Christian Kaltepoth
  */
 @RunWith(Arquillian.class)
 @Category(WebProfileCategory.class)

@@ -26,8 +26,6 @@ import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 /**
  * Base class for classes which send servlet events to the CDI event bus. This class uses {@link BeanManagerProvider} to
  * obtain the BeanManager.
- * 
- * @author Christian Kaltepoth
  */
 abstract class EventEmitter
 {

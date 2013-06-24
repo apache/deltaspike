@@ -30,8 +30,6 @@ import org.apache.deltaspike.core.api.provider.BeanProvider;
 
 /**
  * Simple servlet that logs details about the servlet objects injected into {@link ServletObjectInjectionBean}.
- * 
- * @author Christian Kaltepoth
  */
 public class ServletObjectInjectionServlet extends HttpServlet
 {

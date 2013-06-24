@@ -46,8 +46,6 @@ import org.apache.deltaspike.servlet.api.Web;
  * <li>{@link HttpSession}</li>
  * <li>{@link Principal}</li>
  * </ul>
- * 
- * @author Christian Kaltepoth
  */
 public class ServletObjectProducer
 {

@@ -41,8 +41,6 @@ import org.junit.runner.RunWith;
 
 /**
  * Test which validates that the {@link ServletContext} can be injected.
- * 
- * @author Christian Kaltepoth
  */
 @RunWith(Arquillian.class)
 @Category(WebProfileCategory.class)

@@ -31,7 +31,7 @@ import java.lang.annotation.Target;
 import javax.inject.Qualifier;
 
 /**
- * @author Christian Kaltepoth
+ * Qualifier for events which are fired when servlet objects are created.
  */
 @Qualifier
 @Target({ TYPE, METHOD, PARAMETER, FIELD })

@@ -23,7 +23,7 @@ import javax.enterprise.util.AnnotationLiteral;
 import org.apache.deltaspike.servlet.api.Destroyed;
 
 /**
- * @author Christian Kaltepoth
+ * Annotation literal for {@link Destroyed}.
  */
 public class DestroyedLiteral extends AnnotationLiteral<Destroyed> implements Destroyed
 {

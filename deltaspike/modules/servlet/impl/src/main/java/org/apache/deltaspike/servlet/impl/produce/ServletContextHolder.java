@@ -29,8 +29,6 @@ import org.apache.deltaspike.core.util.ClassUtils;
 
 /**
  * This class holds the {@link ServletContext} for each context class loader.
- * 
- * @author Christian Kaltepoth
  */
 class ServletContextHolder
 {

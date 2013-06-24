@@ -31,7 +31,7 @@ import java.lang.annotation.Target;
 import javax.inject.Qualifier;
 
 /**
- * @author Christian Kaltepoth
+ * Common qualifier used for injection of servlet objects.
  */
 @Qualifier
 @Target({ TYPE, METHOD, PARAMETER, FIELD })

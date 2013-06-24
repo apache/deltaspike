@@ -31,8 +31,6 @@ import org.apache.deltaspike.servlet.api.Initialized;
 
 /**
  * Application scoped observer which listens for {@link ServletContext} events on the CDI event bus.
- * 
- * @author Christian Kaltepoth
  */
 @ApplicationScoped
 public class ServletContextEventsObserver

@@ -23,7 +23,7 @@ import javax.enterprise.util.AnnotationLiteral;
 import org.apache.deltaspike.servlet.api.Web;
 
 /**
- * @author Christian Kaltepoth
+ * Annotation literal for {@link Web}.
  */
 public class WebLiteral extends AnnotationLiteral<Web> implements Web
 {

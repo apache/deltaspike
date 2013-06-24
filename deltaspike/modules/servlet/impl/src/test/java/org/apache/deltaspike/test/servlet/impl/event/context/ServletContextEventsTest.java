@@ -38,8 +38,6 @@ import org.junit.runner.RunWith;
 
 /**
  * Test which validates that CDI events are fired when the servlet context is created.
- * 
- * @author Christian Kaltepoth
  */
 @RunWith(Arquillian.class)
 @Category(WebProfileCategory.class)

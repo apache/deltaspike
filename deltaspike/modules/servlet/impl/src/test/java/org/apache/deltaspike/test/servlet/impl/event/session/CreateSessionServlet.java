@@ -28,8 +28,6 @@ import javax.servlet.http.HttpSession;
 
 /**
  * Simple servlet that creates a {@link HttpSession}
- * 
- * @author Christian Kaltepoth
  */
 public class CreateSessionServlet extends HttpServlet
 {

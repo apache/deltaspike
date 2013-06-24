@@ -23,7 +23,7 @@ import javax.enterprise.util.AnnotationLiteral;
 import org.apache.deltaspike.servlet.api.Initialized;
 
 /**
- * @author Christian Kaltepoth
+ * Annotation literal for {@link Initialized}.
  */
 public class InitializedLiteral extends AnnotationLiteral<Initialized> implements Initialized
 {

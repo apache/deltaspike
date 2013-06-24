@@ -31,8 +31,6 @@ import org.apache.deltaspike.servlet.api.Web;
 
 /**
  * Simple CDI beans with various injection points for servlet ojbects.
- * 
- * @author Christian Kaltepoth
  */
 public class ServletObjectInjectionBean
 {

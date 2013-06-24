@@ -44,8 +44,6 @@ import org.junit.runner.RunWith;
 
 /**
  * Test which validates that servlet objects are correctly injected.
- * 
- * @author Christian Kaltepoth
  */
 @RunWith(Arquillian.class)
 @Category(WebProfileCategory.class)

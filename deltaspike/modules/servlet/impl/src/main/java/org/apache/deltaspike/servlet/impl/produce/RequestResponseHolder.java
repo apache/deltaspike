@@ -23,8 +23,6 @@ import javax.servlet.ServletResponse;
 
 /**
  * The {@link RequestResponseHolder} holds {@link RequestResponse} objects in a {@link ThreadLocal}.
- * 
- * @author Christian Kaltepoth
  */
 class RequestResponseHolder
 {

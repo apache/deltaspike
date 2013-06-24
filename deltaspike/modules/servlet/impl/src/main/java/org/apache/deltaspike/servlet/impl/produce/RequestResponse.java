@@ -23,8 +23,6 @@ import javax.servlet.ServletResponse;
 
 /**
  * Simple value objects that holds a request/response pair.
- * 
- * @author Christian Kaltepoth
  */
 class RequestResponse
 {
