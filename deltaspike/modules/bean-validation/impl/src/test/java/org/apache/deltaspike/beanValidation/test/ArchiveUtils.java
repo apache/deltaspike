@@ -16,14 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.beanval.test;
+package org.apache.deltaspike.beanValidation.test;
 
-public class ArrayChecker {
-    public boolean checkArray(ArraySize as, String[] data) {
-        if (data.length < as.min() || data.length > as.max()) {
-             return false;
-        } else {
-             return true;
-        }
+import org.apache.deltaspike.test.utils.ShrinkWrapArchiveUtil;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
+
+public class ArchiveUtils {
+    public static JavaArchive[] getDeltaSpikeCore() {
+        JavaArchive[] coreArchives = ShrinkWrapArchiveUtil.getArchives(null,
+                "META-INF/beans.xml",
+                new String[]{"org.apache.deltaspike.core", "org.apache.deltaspike.test.category"},
+                null);
+        return coreArchives;
     }
 }

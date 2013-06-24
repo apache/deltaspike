@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.beanval.test;
+package org.apache.deltaspike.beanValidation.test;
 
 import java.util.Set;
 

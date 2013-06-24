@@ -16,17 +16,30 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.beanval.test;
+package org.apache.deltaspike.beanValidation.test;
 
-import org.apache.deltaspike.test.utils.ShrinkWrapArchiveUtil;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import javax.inject.Inject;
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
 
-public class ArchiveUtils {
-    public static JavaArchive[] getDeltaSpikeCore() {
-        JavaArchive[] coreArchives = ShrinkWrapArchiveUtil.getArchives(null,
-                "META-INF/beans.xml",
-                new String[]{"org.apache.deltaspike.core", "org.apache.deltaspike.test.category"},
-                null);
-        return coreArchives;
+public class InjectableConstraintValidator implements
+        ConstraintValidator<ArraySize, String[]>
+{
+    @Inject
+    private ArrayChecker arrayChecker;
+
+    private ArraySize arraySize;
+
+    @Override
+    public void initialize(ArraySize arraySize)
+    {
+        this.arraySize = arraySize;
     }
+
+    @Override
+    public boolean isValid(String[] values, ConstraintValidatorContext context)
+    {
+       return arrayChecker.checkArray(arraySize, values);
+    }
+
 }

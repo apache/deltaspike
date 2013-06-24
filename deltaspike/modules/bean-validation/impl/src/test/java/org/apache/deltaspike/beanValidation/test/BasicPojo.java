@@ -16,30 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.beanval.test;
+package org.apache.deltaspike.beanValidation.test;
 
-import javax.inject.Inject;
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
-
-public class InjectableConstraintValidator implements
-        ConstraintValidator<ArraySize, String[]>
+public class BasicPojo
 {
-    @Inject
-    private ArrayChecker arrayChecker;
+    @ArraySize(min=1)
+    private String[] value;
 
-    private ArraySize arraySize;
-
-    @Override
-    public void initialize(ArraySize arraySize)
+    public String[] getValue()
     {
-        this.arraySize = arraySize;
+        return value;
     }
 
-    @Override
-    public boolean isValid(String[] values, ConstraintValidatorContext context)
+    public void setValue(String[] value)
     {
-       return arrayChecker.checkArray(arraySize, values);
+        this.value = value;
     }
-
+    
 }
