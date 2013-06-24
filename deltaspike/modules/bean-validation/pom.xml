@@ -27,7 +27,7 @@
     </parent>
 
     <groupId>org.apache.deltaspike.modules</groupId>
-    <artifactId>beanval-module-project</artifactId>
+    <artifactId>bean-validation-module-project</artifactId>
     <version>0.5-SNAPSHOT</version>
     <packaging>pom</packaging>
 

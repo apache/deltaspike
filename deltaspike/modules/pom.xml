@@ -40,6 +40,6 @@
         <module>servlet</module>
         <module>jsf</module>
         <module>partial-bean</module>
-	<module>beanval</module>
+        <module>bean-validation</module>
     </modules>
 </project>

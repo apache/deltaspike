@@ -15,11 +15,11 @@
 
 	<parent>
 		<groupId>org.apache.deltaspike.modules</groupId>
-		<artifactId>beanval-module-project</artifactId>
+		<artifactId>bean-validation-module-project</artifactId>
 		<version>0.5-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>deltaspike-beanval-module-impl</artifactId>
+	<artifactId>deltaspike-bean-validation-module-impl</artifactId>
 
 	<name>Apache DeltaSpike BeanValidation-Module Impl</name>
 
