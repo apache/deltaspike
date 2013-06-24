@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.beanval.impl;
+package org.apache.deltaspike.beanValidation.impl;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

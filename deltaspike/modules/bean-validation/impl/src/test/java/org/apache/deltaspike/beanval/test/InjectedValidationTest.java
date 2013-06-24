@@ -24,7 +24,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 
-import org.apache.deltaspike.beanval.impl.CDIAwareConstraintValidatorFactory;
+import org.apache.deltaspike.beanValidation.impl.CDIAwareConstraintValidatorFactory;
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
