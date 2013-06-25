@@ -41,5 +41,6 @@
         <module>jsf</module>
         <module>partial-bean</module>
         <module>bean-validation</module>
+        <module>data</module>
     </modules>
 </project>
