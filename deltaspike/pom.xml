@@ -43,14 +43,14 @@
     <description>
         Apache DeltaSpike CDI Extensions.
     </description>
-    <url>http://incubator.apache.org/projects/deltaspike.html</url>
+    <url>http://deltaspike.apache.org</url>
 
     <scm>
-        <connection>scm:git:https://git-wip-us.apache.org/repos/asf/incubator-deltaspike.git</connection>
-        <developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/incubator-deltaspike.git</developerConnection>
-        <url>https://git-wip-us.apache.org/repos/asf/incubator-deltaspike.git</url>
-      <tag>HEAD</tag>
-  </scm>
+        <connection>scm:git:https://git-wip-us.apache.org/repos/asf/deltaspike.git</connection>
+        <developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/deltaspike.git</developerConnection>
+        <url>https://git-wip-us.apache.org/repos/asf/deltaspike.git</url>
+        <tag>HEAD</tag>
+    </scm>
 
     <modules>
         <module>checkstyle-rules</module>
