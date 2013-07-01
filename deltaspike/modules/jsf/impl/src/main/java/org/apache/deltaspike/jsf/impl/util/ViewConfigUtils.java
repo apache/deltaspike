@@ -19,7 +19,6 @@
 package org.apache.deltaspike.jsf.impl.util;
 
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
-import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.jsf.api.config.view.Folder;
 
 import java.lang.reflect.Modifier;
@@ -28,12 +27,6 @@ import java.util.List;
 
 public abstract class ViewConfigUtils
 {
-    public static final String NODE_SEPARATOR = "$";
-    private static final String CLASS_PREFIX = "class";
-    private static final String INTERFACE_PREFIX = "interface";
-    private static final int CLASS_PREFIX_LENGTH = CLASS_PREFIX.length();
-    private static final int INTERFACE_PREFIX_LENGTH = INTERFACE_PREFIX.length();
-
     public static boolean isFolderConfig(Class configClass)
     {
         return configClass != null && (
@@ -48,23 +41,10 @@ public abstract class ViewConfigUtils
     public static List<Class> toNodeList(Class nodeClass)
     {
         List<Class> treePath = new ArrayList<Class>();
-        String nodeClassName = nodeClass.toString();
-
-        if (nodeClassName.startsWith(CLASS_PREFIX))
+        while (nodeClass != null)
         {
-            nodeClassName = nodeClassName.substring(CLASS_PREFIX_LENGTH + 1);
-        }
-        else
-        {
-            nodeClassName = nodeClassName.substring(INTERFACE_PREFIX_LENGTH + 1);
-        }
-
-        treePath.add(nodeClass);
-
-        while (nodeClassName.contains(NODE_SEPARATOR))
-        {
-            nodeClassName = nodeClassName.substring(0, nodeClassName.lastIndexOf(NODE_SEPARATOR));
-            treePath.add(0, ClassUtils.tryToLoadClassForName(nodeClassName));
+            treePath.add(0, nodeClass);
+            nodeClass = nodeClass.getEnclosingClass();
         }
         return treePath;
     }
