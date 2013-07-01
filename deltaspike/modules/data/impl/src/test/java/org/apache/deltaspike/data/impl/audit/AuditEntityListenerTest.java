@@ -27,15 +27,17 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.apache.deltaspike.data.api.audit.CurrentUser;
-import org.apache.deltaspike.data.impl.audit.AuditEntityListener;
 import org.apache.deltaspike.data.test.TransactionalTestCase;
 import org.apache.deltaspike.data.test.domain.AuditedEntity;
 import org.apache.deltaspike.data.test.domain.Principal;
+import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
+@Category(WebProfileCategory.class)
 public class AuditEntityListenerTest extends TransactionalTestCase
 {
 

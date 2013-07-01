@@ -38,14 +38,17 @@ import org.apache.deltaspike.data.test.service.ParentRepository;
 import org.apache.deltaspike.data.test.service.SimpleCriteriaRepository;
 import org.apache.deltaspike.data.test.service.Statistics;
 import org.apache.deltaspike.data.test.util.TestDeployments;
+import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 /**
  *
  * @author thomashug
  */
+@Category(WebProfileCategory.class)
 public class CriteriaTest extends TransactionalTestCase
 {
 

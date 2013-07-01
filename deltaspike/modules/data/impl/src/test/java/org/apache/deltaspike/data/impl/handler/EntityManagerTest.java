@@ -31,13 +31,16 @@ import org.apache.deltaspike.data.test.service.SimpleRepositoryWithOverriddenEnt
 import org.apache.deltaspike.data.test.service.Simplistic;
 import org.apache.deltaspike.data.test.service.SimplisticEntityManagerResolver;
 import org.apache.deltaspike.data.test.util.TestDeployments;
+import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
+@Category(WebProfileCategory.class)
 public class EntityManagerTest
 {
 

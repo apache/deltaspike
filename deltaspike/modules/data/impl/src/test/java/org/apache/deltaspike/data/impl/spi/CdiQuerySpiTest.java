@@ -31,10 +31,13 @@ import org.apache.deltaspike.data.test.service.MyEntityRepository;
 import org.apache.deltaspike.data.test.service.MyEntityRepositoryDelegate;
 import org.apache.deltaspike.data.test.service.MySimpleRepository;
 import org.apache.deltaspike.data.test.util.TestDeployments;
+import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
+@Category(WebProfileCategory.class)
 public class CdiQuerySpiTest extends TransactionalTestCase
 {
 

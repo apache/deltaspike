@@ -50,6 +50,7 @@ import org.apache.deltaspike.data.spi.DelegateQueryHandler;
 import org.apache.deltaspike.data.spi.QueryInvocationContext;
 import org.apache.deltaspike.data.test.TransactionalTestCase;
 import org.apache.deltaspike.data.test.domain.AuditedEntity;
+import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
@@ -82,6 +83,7 @@ public abstract class TestDeployments
         WebArchive archive = ShrinkWrap
                 .create(WebArchive.class, "test.war")
                 .addAsLibrary(createApiArchive())
+                .addClass(WebProfileCategory.class)
                 .addClasses(RepositoryExtension.class, RepositoryDefinitionException.class)
                 .addClasses(TransactionalTestCase.class)
                 .addPackages(true, TEST_FILTER, createImplPackages())

@@ -40,11 +40,14 @@ import org.apache.deltaspike.data.test.domain.SimpleBuilder;
 import org.apache.deltaspike.data.test.domain.Simple_;
 import org.apache.deltaspike.data.test.service.SimpleRepository;
 import org.apache.deltaspike.data.test.util.TestDeployments;
+import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
+@Category(WebProfileCategory.class)
 public class QueryResultTest extends TransactionalTestCase
 {
 

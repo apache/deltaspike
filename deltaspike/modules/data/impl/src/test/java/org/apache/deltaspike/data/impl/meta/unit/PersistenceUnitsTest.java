@@ -38,6 +38,7 @@ import org.apache.deltaspike.data.test.domain.mapped.MappedThree;
 import org.apache.deltaspike.data.test.domain.mapped.MappedTwo;
 import org.apache.deltaspike.data.test.service.MappedOneRepository;
 import org.apache.deltaspike.data.test.util.Logging;
+import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
@@ -46,9 +47,11 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
+@Category(WebProfileCategory.class)
 public class PersistenceUnitsTest
 {
 
@@ -58,6 +61,7 @@ public class PersistenceUnitsTest
         Logging.reconfigure();
         return addDependencies(ShrinkWrap
                 .create(WebArchive.class, "test.war")
+                .addClass(WebProfileCategory.class)
                 .addAsLibrary(createApiArchive())
                 .addPackages(true, TEST_FILTER, createImplPackages())
                 .addPackages(true, Parent.class.getPackage())
