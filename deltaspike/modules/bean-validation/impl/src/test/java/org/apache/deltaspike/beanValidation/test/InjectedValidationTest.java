@@ -38,7 +38,6 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-@Category(WebProfileCategory.class)
 public class InjectedValidationTest
 {
     @Deployment
@@ -58,7 +57,9 @@ public class InjectedValidationTest
     @Before
     public void initValidator()
     {
-        this.validator = Validation.buildDefaultValidatorFactory().getValidator();
+        this.validator = Validation.byDefaultProvider().configure()
+                .constraintValidatorFactory(new CDIAwareConstraintValidatorFactory())
+                .buildValidatorFactory().getValidator();
     }
     
     @Test
