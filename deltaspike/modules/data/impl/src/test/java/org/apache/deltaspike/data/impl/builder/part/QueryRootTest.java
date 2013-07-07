@@ -28,10 +28,6 @@ import org.apache.deltaspike.data.test.service.SimpleFetchRepository;
 import org.apache.deltaspike.data.test.service.SimpleRepository;
 import org.junit.Test;
 
-/**
- *
- * @author thomashug
- */
 public class QueryRootTest
 {
 

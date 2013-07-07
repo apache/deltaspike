@@ -31,7 +31,6 @@ import java.lang.reflect.Method;
  * {@link AnnotatedPropertyCriteria}), or you can create a custom query by implementing this interface.
  * </p>
  *
- * @author Shane Bryzak
  * @see PropertyQuery#addCriteria(PropertyCriteria)
  * @see PropertyQueries
  * @see TypedPropertyCriteria

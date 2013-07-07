@@ -22,8 +22,6 @@ import javax.persistence.Query;
 
 /**
  * Base class for parameters.
- *
- * @author thomashug
  */
 public abstract class Parameter
 {

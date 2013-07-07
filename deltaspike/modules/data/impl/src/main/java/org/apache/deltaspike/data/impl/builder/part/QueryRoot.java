@@ -32,8 +32,6 @@ import org.apache.deltaspike.data.impl.meta.RepositoryComponent;
 
 /**
  * Root of the query tree. Also the only exposed class in the package.
- *
- * @author thomashug
  */
 public class QueryRoot extends QueryPart
 {

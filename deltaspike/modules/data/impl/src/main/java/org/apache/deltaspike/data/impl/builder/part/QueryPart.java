@@ -25,9 +25,6 @@ import java.util.Set;
 import org.apache.deltaspike.data.impl.builder.QueryBuilderContext;
 import org.apache.deltaspike.data.impl.meta.RepositoryComponent;
 
-/**
- * @author thomashug
- */
 public abstract class QueryPart
 {
 

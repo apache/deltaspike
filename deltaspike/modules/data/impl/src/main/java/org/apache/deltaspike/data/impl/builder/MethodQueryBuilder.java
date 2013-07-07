@@ -26,9 +26,6 @@ import org.apache.deltaspike.data.impl.meta.MethodType;
 import org.apache.deltaspike.data.impl.meta.QueryInvocation;
 import org.apache.deltaspike.data.impl.param.Parameters;
 
-/**
- * @author thomashug
- */
 @QueryInvocation(MethodType.PARSE)
 public class MethodQueryBuilder extends QueryBuilder
 {

@@ -26,8 +26,6 @@ import org.junit.Test;
 
 /**
  * Verify that only valid properties are permitted, as per the JavaBean specification.
- *
- * @author Vivian Steller
  */
 public class PropertyFromFieldTest
 {

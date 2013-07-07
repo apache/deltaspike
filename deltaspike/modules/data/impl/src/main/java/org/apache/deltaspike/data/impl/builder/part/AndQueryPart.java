@@ -21,10 +21,6 @@ package org.apache.deltaspike.data.impl.builder.part;
 import org.apache.deltaspike.data.impl.builder.QueryBuilderContext;
 import org.apache.deltaspike.data.impl.meta.RepositoryComponent;
 
-/**
- *
- * @author thomashug
- */
 class AndQueryPart extends ConnectingQueryPart
 {
 

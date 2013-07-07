@@ -24,8 +24,6 @@ import java.lang.reflect.Method;
 
 /**
  * A criteria that matches a property based on name
- *
- * @author Shane Bryzak
  * @see PropertyCriteria
  */
 public class NamedPropertyCriteria implements PropertyCriteria

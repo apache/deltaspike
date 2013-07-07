@@ -29,7 +29,6 @@ import javax.persistence.FlushModeType;
 
 /**
  * Configure the EntityManager for a specific repository.
- * @author thomashug
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

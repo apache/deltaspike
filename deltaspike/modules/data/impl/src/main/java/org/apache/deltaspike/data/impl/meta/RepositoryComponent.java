@@ -44,8 +44,6 @@ import org.apache.deltaspike.data.impl.util.EntityUtils;
  * <li>The primary key class</li>
  * <li>All methods of the Repository.</li>
  * </ul>
- *
- * @author thomashug
  */
 public class RepositoryComponent
 {

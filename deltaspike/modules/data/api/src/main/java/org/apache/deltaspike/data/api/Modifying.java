@@ -27,8 +27,6 @@ import java.lang.annotation.Target;
  * Marks a query method to be modifying. This will execute the
  * {@link javax.persistence.Query#executeUpdate()} method instead of
  * {@link javax.persistence.Query#getResultList()} (or the corresponding single result method).
- *
- * @author thomashug
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

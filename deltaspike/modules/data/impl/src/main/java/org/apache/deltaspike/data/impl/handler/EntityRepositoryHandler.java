@@ -46,8 +46,6 @@ import org.apache.deltaspike.data.spi.QueryInvocationContext;
 /**
  * Implement basic functionality from the {@link EntityRepository}.
  *
- * @author thomashug
- *
  * @param <E>   Entity type.
  * @param <PK>  Primary key type, must be a serializable.
  */

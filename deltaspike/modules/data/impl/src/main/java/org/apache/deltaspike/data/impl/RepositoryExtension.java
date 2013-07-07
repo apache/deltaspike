@@ -49,8 +49,6 @@ import org.apache.deltaspike.data.impl.meta.unit.PersistenceUnits;
  * <br/>
  * <b>{@code @Observes AfterBeanDiscovery<X>}</b>:
  *     Raises any definition errors discovered before.
- *
- * @author thomashug
  */
 public class RepositoryExtension implements Extension
 {

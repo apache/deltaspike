@@ -27,8 +27,6 @@ package org.apache.deltaspike.data.impl.meta;
  * <li>Annotated method - the query is defined via a Query annotation.</li>
  * <li>The method defines a query expression by its name.</li>
  * </ul>
- *
- * @author thomashug
  */
 public enum MethodType
 {

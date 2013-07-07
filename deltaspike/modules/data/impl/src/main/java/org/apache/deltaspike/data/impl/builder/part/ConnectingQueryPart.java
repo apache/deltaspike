@@ -18,10 +18,6 @@
  */
 package org.apache.deltaspike.data.impl.builder.part;
 
-/**
- *
- * @author thomashug
- */
 abstract class ConnectingQueryPart extends QueryPart
 {
 

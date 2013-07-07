@@ -28,7 +28,6 @@ import javax.persistence.metamodel.SingularAttribute;
  * Can be used as query result type, which will not execute the query immediately.
  * Allows some post processing like defining query ordering.
  *
- * @author thomashug
  * @param <E> Entity type
  */
 public interface QueryResult<E>

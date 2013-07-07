@@ -31,8 +31,6 @@ import org.apache.deltaspike.data.impl.param.Parameters;
 
 /**
  * Query builder factory. Delegates to concrete implementations.
- *
- * @author thomashug
  */
 public abstract class QueryBuilder
 {

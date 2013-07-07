@@ -33,8 +33,6 @@ import org.apache.deltaspike.data.impl.util.jpa.QueryStringExtractorFactory;
 
 /**
  * Create the query based on method annotations.
- *
- * @author thomashug
  */
 @QueryInvocation(MethodType.ANNOTATED)
 public class AnnotatedQueryBuilder extends QueryBuilder

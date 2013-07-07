@@ -34,7 +34,6 @@ import javax.persistence.QueryHint;
  * <li>Execute native SQL queries</li>
  * <li>Restrict the result size to a static value</li>
  * <li>Provide a lock mode</li></ul>
- * @author thomashug
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

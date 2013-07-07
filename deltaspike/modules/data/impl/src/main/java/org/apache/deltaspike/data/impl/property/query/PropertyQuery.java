@@ -40,7 +40,6 @@ import org.apache.deltaspike.data.impl.property.Property;
  * This class is not thread-safe, however the result returned by the getResultList() method is.
  * </p>
  *
- * @author Shane Bryzak
  * @see PropertyQueries
  * @see PropertyCriteria
  */

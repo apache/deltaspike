@@ -24,7 +24,6 @@ import java.lang.reflect.Method;
 /**
  * A criteria that matches a property based on its type
  *
- * @author Shane Bryzak
  * @see PropertyCriteria
  */
 public class TypedPropertyCriteria implements PropertyCriteria

@@ -32,8 +32,6 @@ import javax.inject.Qualifier;
 
 /**
  * CDI qualifier. Mainly used for producers which create an initialized instance.
- *
- * @author thomashug
  */
 @Qualifier
 @Target({ TYPE, METHOD, PARAMETER, FIELD })

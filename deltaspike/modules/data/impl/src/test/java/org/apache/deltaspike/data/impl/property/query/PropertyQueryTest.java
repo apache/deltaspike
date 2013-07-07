@@ -30,8 +30,6 @@ import org.junit.Test;
 
 /**
  * Validate the property query mechanism.
- *
- * @author Dan Allen
  */
 public class PropertyQueryTest
 {

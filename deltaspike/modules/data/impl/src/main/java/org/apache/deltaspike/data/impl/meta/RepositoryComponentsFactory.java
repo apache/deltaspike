@@ -23,8 +23,6 @@ import javax.enterprise.inject.Produces;
 /**
  * Repository components producer. Exposes a singleton both programmatically as well
  * as over a CDI producer.
- *
- * @author thomashug
  */
 public class RepositoryComponentsFactory
 {

@@ -41,8 +41,6 @@ import org.apache.deltaspike.data.impl.meta.RepositoryMethod;
 
 /**
  * Entry point for query processing.
- *
- * @author thomashug
  */
 @Repository
 @ApplicationScoped

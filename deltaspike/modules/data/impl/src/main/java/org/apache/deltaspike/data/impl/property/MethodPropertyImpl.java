@@ -25,10 +25,6 @@ import java.lang.reflect.Type;
 
 /**
  * A bean property based on the value represented by a getter/setter method pair
- *
- * @author Pete Muir
- * @author Shane Bryzak
- * @author Dan Allen
  */
 class MethodPropertyImpl<V> implements MethodProperty<V>
 {

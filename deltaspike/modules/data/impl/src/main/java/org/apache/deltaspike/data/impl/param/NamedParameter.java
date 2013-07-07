@@ -22,8 +22,6 @@ import javax.persistence.Query;
 
 /**
  * Parameters which have a name (:name).
- *
- * @author thomashug
  */
 public class NamedParameter extends Parameter
 {

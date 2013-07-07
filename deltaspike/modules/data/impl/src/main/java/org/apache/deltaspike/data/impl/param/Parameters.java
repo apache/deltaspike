@@ -34,8 +34,6 @@ import org.apache.deltaspike.data.api.QueryParam;
 
 /**
  * Convenience class to manage method and query parameters.
- *
- * @author thomashug
  */
 public final class Parameters
 {

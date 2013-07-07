@@ -44,10 +44,6 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-/**
- *
- * @author thomashug
- */
 @Category(WebProfileCategory.class)
 public class CriteriaTest extends TransactionalTestCase
 {

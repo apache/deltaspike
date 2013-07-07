@@ -32,8 +32,6 @@ import org.junit.Test;
 
 /**
  * Verify that only valid properties are permitted, as per the JavaBean specification.
- *
- * @author Dan Allen
  * @see http://www.oracle.com/technetwork/java/javase/documentation/spec-136004.html
  */
 public class PropertyFromMethodTest

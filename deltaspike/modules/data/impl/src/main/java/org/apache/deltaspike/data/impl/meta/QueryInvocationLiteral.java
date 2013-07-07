@@ -22,8 +22,6 @@ import javax.enterprise.util.AnnotationLiteral;
 
 /**
  * Utility class to construct a qualifier and resolve a dependency programmatically.
- *
- * @author thomashug
  */
 @SuppressWarnings("all")
 public class QueryInvocationLiteral extends AnnotationLiteral<QueryInvocation>

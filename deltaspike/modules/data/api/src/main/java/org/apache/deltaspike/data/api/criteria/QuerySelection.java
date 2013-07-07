@@ -25,7 +25,6 @@ import javax.persistence.criteria.Selection;
 
 /**
  * Used for selection queries with the simplified Criteria API.
- * @author thomashug
  *
  * @param <P>   Entity type.
  * @param <X>   Result type.

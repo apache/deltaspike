@@ -29,8 +29,6 @@ import org.apache.deltaspike.partialbean.api.PartialBeanBinding;
 /**
  * The Repository annotation needs to be present in order to have the
  * interface or class to be processed by the CDI extension.
- *
- * @author thomashug
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

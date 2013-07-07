@@ -27,10 +27,6 @@ import org.apache.deltaspike.data.impl.builder.QueryBuilderContext;
 import org.apache.deltaspike.data.impl.builder.QueryOperator;
 import org.apache.deltaspike.data.impl.meta.RepositoryComponent;
 
-/**
- *
- * @author thomashug
- */
 class PropertyQueryPart extends BasePropertyQueryPart
 {
 

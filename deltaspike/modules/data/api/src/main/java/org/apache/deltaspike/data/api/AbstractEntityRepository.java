@@ -27,7 +27,6 @@ import javax.persistence.criteria.CriteriaQuery;
 /**
  * Base Repository class to be extended by concrete implementations
  * (abstract classes with implementation methods).
- * @author thomashug
  *
  * @param <E>   Entity type.
  * @param <PK>  Primary key type.

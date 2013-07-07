@@ -21,8 +21,6 @@ package org.apache.deltaspike.data.impl.property.query;
 /**
  * Utilities for working with property queries
  *
- * @author Shane Bryzak
- * @author Pete Muir
  * @see PropertyQuery
  */
 public class PropertyQueries

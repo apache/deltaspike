@@ -37,8 +37,6 @@ import org.apache.deltaspike.data.impl.builder.result.QueryProcessorFactory;
  * <li>A reference to the parent Repository</li>
  * <li>For parsed Repository methods, also the JPQL string is cached</li>
  * </ul>
- *
- * @author thomashug
  */
 public class RepositoryMethod
 {

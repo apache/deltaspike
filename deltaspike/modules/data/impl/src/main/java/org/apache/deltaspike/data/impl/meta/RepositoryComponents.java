@@ -33,8 +33,6 @@ import org.apache.deltaspike.data.impl.meta.extractor.TypeMetadataExtractor;
 /**
  * Convenience class to access Repository and Repository method meta data.
  * Acts as repository for Repository related meta data.
- *
- * @author thomashug
  */
 public class RepositoryComponents implements Serializable
 {

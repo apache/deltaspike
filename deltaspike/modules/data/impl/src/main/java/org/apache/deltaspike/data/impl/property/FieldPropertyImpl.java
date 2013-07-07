@@ -24,9 +24,6 @@ import java.lang.reflect.Type;
 
 /**
  * A bean property based on the value contained in a field
- *
- * @author Pete Muir
- * @author Shane Bryzak
  */
 class FieldPropertyImpl<V> implements FieldProperty<V>
 {

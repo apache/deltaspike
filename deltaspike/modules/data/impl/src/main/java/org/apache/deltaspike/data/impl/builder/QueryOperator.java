@@ -20,8 +20,6 @@ package org.apache.deltaspike.data.impl.builder;
 
 /**
  * Comparison options for queries.
- *
- * @author thomashug
  */
 public enum QueryOperator
 {

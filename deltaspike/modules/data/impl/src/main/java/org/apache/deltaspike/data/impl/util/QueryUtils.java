@@ -22,10 +22,6 @@ import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.Collection;
 
-/**
- *
- * @author thomashug
- */
 public final class QueryUtils
 {
     private static final String KEYWORD_SPLITTER = "({0})(?=[A-Z])";

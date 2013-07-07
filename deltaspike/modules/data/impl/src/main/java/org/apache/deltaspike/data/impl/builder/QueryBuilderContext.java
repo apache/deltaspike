@@ -18,9 +18,6 @@
  */
 package org.apache.deltaspike.data.impl.builder;
 
-/**
- * @author thomashug
- */
 public class QueryBuilderContext
 {
 

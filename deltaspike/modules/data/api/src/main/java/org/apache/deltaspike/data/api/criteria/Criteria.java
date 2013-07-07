@@ -36,8 +36,6 @@ import javax.persistence.metamodel.SingularAttribute;
 /**
  * Criteria API utilities.
  *
- * @author thomashug
- *
  * @param <C> Entity type.
  * @param <R> Result type.
  */

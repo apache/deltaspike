@@ -25,7 +25,6 @@ import java.lang.annotation.Target;
 
 /**
  * Limit the size of the result set. Must be applied to an Integer parameter.
- * @author thomashug
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)

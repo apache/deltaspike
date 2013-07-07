@@ -26,8 +26,6 @@ import java.io.Serializable;
  * <li>Stores the class of the entity</li>
  * <li>Stores the primary key class</li>
  * </ul>
- *
- * @author thomashug
  */
 public class RepositoryEntity
 {

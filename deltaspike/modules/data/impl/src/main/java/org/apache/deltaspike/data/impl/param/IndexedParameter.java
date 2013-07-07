@@ -22,8 +22,6 @@ import javax.persistence.Query;
 
 /**
  * Query parameters which have an index (?1).
- *
- * @author thomashug
  */
 public class IndexedParameter extends Parameter
 {

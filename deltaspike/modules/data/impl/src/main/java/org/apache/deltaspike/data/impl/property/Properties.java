@@ -25,8 +25,6 @@ import java.lang.reflect.Method;
 /**
  * Utility class for working with JavaBean style properties
  *
- * @author Pete Muir
- * @author Shane Bryzak
  * @see Property
  */
 public class Properties

@@ -25,7 +25,6 @@ import java.lang.annotation.Target;
 
 /**
  * Use paging for the query. Must be applied to an Integer parameter.
- * @author thomashug
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)

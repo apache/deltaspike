@@ -25,10 +25,7 @@ import java.lang.reflect.Type;
 /**
  * A representation of a JavaBean style property
  *
- * @param <V>
- *            the type of the properties value
- * @author Pete Muir
- * @author Shane Bryzak
+ * @param <V> the type of the properties value
  * @see Properties
  */
 public interface Property<V>

@@ -25,7 +25,6 @@ import javax.persistence.metamodel.SingularAttribute;
 
 /**
  * Base Repository interface. All methods are implemented by the query extension.
- * @author thomashug
  *
  * @param <E>   Entity type.
  * @param <PK>  Primary key type.

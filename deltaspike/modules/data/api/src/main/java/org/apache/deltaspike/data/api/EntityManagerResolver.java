@@ -23,8 +23,6 @@ import javax.persistence.EntityManager;
 /**
  * Resolve the EntityManager used for a specific repository.
  * Only necessary if there are more than one persistence unit.
- *
- * @author thomashug
  */
 public interface EntityManagerResolver
 {

@@ -26,8 +26,6 @@ import java.lang.annotation.Target;
 /**
  * Mark a method parameter as a query parameter.
  * Can be named by the annotation value.
- *
- * @author thomashug
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)

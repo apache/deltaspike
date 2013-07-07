@@ -23,9 +23,7 @@ import static org.apache.deltaspike.data.impl.util.QueryUtils.splitByKeyword;
 import org.apache.deltaspike.data.impl.builder.QueryBuilderContext;
 import org.apache.deltaspike.data.impl.meta.RepositoryComponent;
 
-/**
- * @author thomashug
- */
+
 class OrQueryPart extends ConnectingQueryPart
 {
 
