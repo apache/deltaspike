@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.jsf.impl.config.view;
 
+import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.config.view.metadata.Aggregated;
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewMetaData;
@@ -207,6 +208,23 @@ public class DefaultConfigNodeConverter implements ConfigNodeConverter
             Class<? extends ConfigPreProcessor> preProcessorClass = viewMetaData.preProcessor();
             if (!ConfigPreProcessor.class.equals(preProcessorClass))
             {
+                String customPreProcessorClassName = ConfigResolver.getPropertyValue(preProcessorClass.getName(), null);
+
+                if (customPreProcessorClassName != null)
+                {
+                    Class<? extends ConfigPreProcessor> customPreProcessorClass =
+                            ClassUtils.tryToLoadClassForName(customPreProcessorClassName, ConfigPreProcessor.class);
+
+                    if (customPreProcessorClass != null)
+                    {
+                        preProcessorClass = customPreProcessorClass;
+                    }
+                    else
+                    {
+                        throw new IllegalStateException(customPreProcessorClassName + " is configured to replace " +
+                            preProcessorClass.getName() + ", but it wasn't possible to load it.");
+                    }
+                }
                 ConfigPreProcessor preProcessor = ClassUtils.tryToInstantiateClass(preProcessorClass);
                 result.add(preProcessor.beforeAddToConfig(annotation, node));
             }
