@@ -159,6 +159,9 @@
             <id>jbossas-build-managed-7</id>
         </profile>
         <profile>
+            <id>jbossas-remote-7</id>
+        </profile>
+        <profile>
             <id>glassfish-remote-3.1</id>
         </profile>
         <profile>
