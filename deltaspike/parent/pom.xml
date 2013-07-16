@@ -228,22 +228,11 @@
             <timezone>+1</timezone>
         </developer>
         <developer>
-            <id>jakobk</id>
-            <name>Jakob Korherr</name>
-            <email>jakobk@apache.org</email>
-            <organization>IRIAN.at, Austria</organization>
-            <organizationUrl>http://www.irian.at/</organizationUrl>
-            <roles>
-                <role>PPMC</role>
-            </roles>
-            <timezone>+1</timezone>
-        </developer>
-        <developer>
             <id>lightguardjp</id>
             <name>Jason Porter</name>
             <email>lightguardjp@apache.org</email>
             <roles>
-                <role>PPMC</role>
+                <role>PMC</role>
             </roles>
             <timezone>-7</timezone>
         </developer>
@@ -252,44 +241,17 @@
             <name>Matt Benson</name>
             <email>mbenson@apache.org</email>
             <roles>
-                <role>PPMC</role>
+                <role>PMC</role>
             </roles>
             <timezone>-6</timezone>
-        </developer>
-        <developer>
-            <id>marius</id>
-            <name>Marius Bogoevici</name>
-            <email>marius@apache.org</email>
-            <roles>
-                <role>PPMC</role>
-            </roles>
-            <timezone>-5</timezone>
         </developer>
         <developer>
             <id>struberg</id>
             <name>Mark Struberg</name>
             <email>struberg@apache.org</email>
             <roles>
-                <role>PPMC</role>
-                <role>Champion</role>
-            </roles>
-            <timezone>+1</timezone>
-        </developer>
-        <developer>
-            <id>mbenson</id>
-            <name>Matt Benson</name>
-            <email>mbenson@apache.org</email>
-            <roles>
-                <role>PPMC</role>
-            </roles>
-            <timezone>-6</timezone>
-        </developer>
-        <developer>
-            <id>matzew</id>
-            <name>Matthias Wessendorf</name>
-            <email>matzew@apache.org</email>
-            <roles>
-                <role>PPMC</role>
+                <role>PMC</role>
+                <role>VP</role>
             </roles>
             <timezone>+1</timezone>
         </developer>
@@ -298,7 +260,7 @@
             <name>Arne Limburg</name>
             <email>arne@apache.org</email>
             <roles>
-                <role>PPMC</role>
+                <role>PMC</role>
             </roles>
             <timezone>+1</timezone>
         </developer>
@@ -308,16 +270,7 @@
             <email>rdebusscher@apache.org</email>
             <organization>C4J, Belgium</organization>
             <roles>
-                <role>Committer</role>
-            </roles>
-            <timezone>+1</timezone>
-        </developer>
-        <developer>
-            <id>lukaszlenart</id>
-            <name>Lukasz Lenart</name>
-            <email>lukaszlenart@apache.org</email>
-            <roles>
-                <role>Committer</role>
+                <role>PMC</role>
             </roles>
             <timezone>+1</timezone>
         </developer>
@@ -326,7 +279,7 @@
             <name>Christian Kaltepoth</name>
             <email>chkal@apache.org</email>
             <roles>
-                <role>Committer</role>
+                <role>PMC</role>
             </roles>
             <timezone>+1</timezone>
         </developer>
@@ -335,7 +288,7 @@
             <name>Charles Moulliard</name>
             <email>cmoulliard@apache.org</email>
             <roles>
-                <role>Committer</role>
+                <role>PMC</role>
             </roles>
             <timezone>+1</timezone>
         </developer>
@@ -347,6 +300,15 @@
                 <role>Committer</role>
             </roles>
             <timezone>+1</timezone>
+        </developer>
+        <developer>
+            <id>johndament</id>
+            <name>John D. Ament</name>
+            <email>johndament@apache.org</email>
+            <roles>
+                <role>PMC</role>
+            </roles>
+            <timezone>-5</timezone>
         </developer>
     </developers>
 
