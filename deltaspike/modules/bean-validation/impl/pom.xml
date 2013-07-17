@@ -20,9 +20,13 @@
 	</parent>
 
 	<artifactId>deltaspike-bean-validation-module-impl</artifactId>
-
+        <packaging>bundle</packaging>
 	<name>Apache DeltaSpike BeanValidation-Module Impl</name>
-
+        <properties>
+            <deltaspike.osgi.export.pkg>org.apache.deltaspike.beanValidation.impl.*</deltaspike.osgi.export.pkg>
+            <deltaspike.osgi.import>!org.apache.deltaspike.beanValidation.impl.*,*</deltaspike.osgi.import>
+            <cdi.osgi.beans-managed>META-INF/beans.xml</cdi.osgi.beans-managed>
+        </properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.deltaspike.core</groupId>
