@@ -30,109 +30,17 @@
     <packaging>pom</packaging>
     <name>Apache DeltaSpike Data-Module</name>
 
-    <developers>
-        <developer>
-            <name>Thomas Hug</name>
-            <email>Thomas.Hug@ctp.com</email>
-        </developer>
-        <developer>
-            <name>Bartosz Majsak</name>
-            <email>Bartosz.Majsak@ctp.com</email>
-        </developer>
-    </developers>
-
     <modules>
         <module>api</module>
         <module>impl</module>
     </modules>
 
     <properties>
-        <jdk.source>1.6</jdk.source>
-        <jdk.target>1.6</jdk.target>
-        <shrinkwrap.version>2.0.0-beta-3</shrinkwrap.version>
+        <shrinkwrap.version>2.0.0</shrinkwrap.version>
     </properties>
-
-    <build>
-        <plugins>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>${jdk.source}</source>
-                    <target>${jdk.target}</target>
-                </configuration>
-            </plugin>
-
-        </plugins>
-    </build>
-    
-    <repositories>
-        <repository>
-            <id>apache.snapshots</id>
-            <url>http://repository.apache.org/snapshots</url>
-        </repository>
-    </repositories>
 
     <dependencyManagement>
         <dependencies>
-
-            <dependency>
-                <groupId>org.apache.deltaspike.modules</groupId>
-                <artifactId>deltaspike-data-module-api</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.deltaspike.modules</groupId>
-                <artifactId>deltaspike-data-module-impl</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            
-            <dependency>
-                <groupId>org.apache.deltaspike.core</groupId>
-                <artifactId>deltaspike-core-api</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-        
-            <dependency>
-                <groupId>org.apache.deltaspike.core</groupId>
-                <artifactId>deltaspike-core-impl</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            
-            <dependency>
-                <groupId>org.apache.deltaspike.modules</groupId>
-                <artifactId>deltaspike-partial-bean-module-api</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            
-            <dependency>
-                <groupId>org.apache.deltaspike.modules</groupId>
-                <artifactId>deltaspike-partial-bean-module-impl</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.hibernate.javax.persistence</groupId>
-                <artifactId>hibernate-jpa-2.0-api</artifactId>
-                <version>1.0.0.Final</version>
-                <scope>provided</scope>
-            </dependency>
-            
-            <dependency>
-                <groupId>javax.enterprise</groupId>
-                <artifactId>cdi-api</artifactId>
-                <version>1.0-SP4</version>
-                <scope>provided</scope>
-            </dependency>
-    
-            <dependency>
-                <groupId>org.jboss.spec.javax.ejb</groupId>
-                <artifactId>jboss-ejb-api_3.1_spec</artifactId>
-                <version>1.0.2.Final</version>
-                <scope>provided</scope>
-            </dependency>
 
             <dependency>
                 <groupId>org.jboss.shrinkwrap.resolver</groupId>
@@ -146,28 +54,11 @@
                 <groupId>org.jboss.shrinkwrap.resolver</groupId>
                 <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
                 <version>${shrinkwrap.version}</version>
+                <scope>test</scope>
             </dependency>
 
         </dependencies>
     </dependencyManagement>
-
-    <profiles>
-        <profile>
-            <id>tomee-build-managed</id>
-        </profile>
-        <profile>
-            <id>jbossas-build-managed-7</id>
-        </profile>
-        <profile>
-            <id>jbossas-remote-7</id>
-        </profile>
-        <profile>
-            <id>glassfish-remote-3.1</id>
-        </profile>
-        <profile>
-            <id>OWB</id>
-        </profile>
-    </profiles>
 
 </project>
 

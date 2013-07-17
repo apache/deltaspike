@@ -32,10 +32,6 @@
 
     <name>Apache DeltaSpike Data-Module Impl</name>
 
-    <prerequisites>
-        <maven>3.0</maven>
-    </prerequisites>
-
     <properties>
         <deltaspike.osgi.export.pkg>
             org.apache.deltaspike.data.impl.*
@@ -48,11 +44,6 @@
     </properties>
 
     <build>
-        <testResources>
-            <testResource>
-                <directory>src/test/resources</directory>
-            </testResource>
-        </testResources>
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -97,38 +88,18 @@
     <dependencies>
 
         <dependency>
-            <groupId>javax.enterprise</groupId>
-            <artifactId>cdi-api</artifactId>
-            <scope>provided</scope>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-jpa_2.0_spec</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.jboss.spec.javax.ejb</groupId>
-            <artifactId>jboss-ejb-api_3.1_spec</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.hibernate.javax.persistence</groupId>
-            <artifactId>hibernate-jpa-2.0-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.geronimo.components</groupId>
-            <artifactId>geronimo-transaction</artifactId>
-            <version>3.1.1</version>
-            <scope>provided</scope>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-jta_1.1_spec</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.apache.deltaspike.modules</groupId>
             <artifactId>deltaspike-data-module-api</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.deltaspike.core</groupId>
-            <artifactId>deltaspike-core-api</artifactId>
         </dependency>
 
         <dependency>
@@ -139,29 +110,11 @@
 
         <dependency>
             <groupId>org.apache.deltaspike.modules</groupId>
-            <artifactId>deltaspike-partial-bean-module-api</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.deltaspike.modules</groupId>
             <artifactId>deltaspike-partial-bean-module-impl</artifactId>
             <scope>runtime</scope>
         </dependency>
 
         <!-- Tests -->
-
-        <dependency>
-            <groupId>org.jboss.arquillian.junit</groupId>
-            <artifactId>arquillian-junit-container</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jboss.arquillian.protocol</groupId>
-            <artifactId>arquillian-protocol-servlet</artifactId>
-            <scope>test</scope>
-        </dependency>
 
         <dependency>
             <groupId>org.jboss.shrinkwrap.resolver</groupId>
@@ -222,50 +175,7 @@
                         <directory>src/test/resources-openejb</directory>
                     </testResource>
                 </testResources>
-                <plugins>
-                    <plugin>
-                        <groupId>org.bsc.maven</groupId>
-                        <artifactId>maven-processor-plugin</artifactId>
-                        <version>2.0.7</version>
-                        <executions>
-                            <execution>
-                                <id>process-test</id>
-                                <goals>
-                                    <goal>process-test</goal>
-                                </goals>
-                                <phase>generate-test-sources</phase>
-                            </execution>
-                        </executions>
-                        <configuration combine.self="override">
-                            <processors>
-                                <processor>org.apache.openjpa.persistence.meta.AnnotationProcessor6</processor>
-                            </processors>
-                            <compilerArguments>-Aopenjpa.metamodel=true -Aopenjpa.log=TRACE</compilerArguments>
-                        </configuration>
-                        <dependencies>
-                            <dependency>
-                                <groupId>org.apache.openjpa</groupId>
-                                <artifactId>openjpa-persistence</artifactId>
-                                <version>2.2.2</version>
-                            </dependency>
-                        </dependencies>
-                    </plugin>
-                </plugins>
             </build>
-            <dependencies>
-                <dependency>
-                    <groupId>org.apache.openjpa</groupId>
-                    <artifactId>openjpa-persistence</artifactId>
-                    <version>2.2.0</version>
-                    <scope>provided</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.apache.httpcomponents</groupId>
-                    <artifactId>httpclient</artifactId>
-                    <version>4.2.5</version>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
         </profile>
     </profiles>
 
