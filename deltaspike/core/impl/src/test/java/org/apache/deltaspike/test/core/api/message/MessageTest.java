@@ -35,6 +35,8 @@ import javax.enterprise.inject.spi.Extension;
 import javax.inject.Inject;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests for {@link org.apache.deltaspike.core.api.message.MessageTemplate}
@@ -98,5 +100,14 @@ public class MessageTest
                 , messages.messageWithCategory("good").toString("notExistingCategory"));
     }
 
+
+    @Test
+    public void testObjectMethods()
+    {
+        messages.hashCode();
+        assertNotNull(messages.toString());
+        assertTrue(messages.equals(messages));
+        assertNotNull(messages.getClass());
+    }
 
 }

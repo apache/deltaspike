@@ -54,6 +54,30 @@ public class MessageBundleInvocationHandler implements InvocationHandler, Serial
     @Override
     public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable
     {
+        if (method.getDeclaringClass().equals(Object.class))
+        {
+            // this sometimes gets invoked directly by the container
+            // there is no perfect solution for those methods,
+            // so we try to use the best info we have atm.
+
+            if ("hashCode".equals(method.getName()))
+            {
+                return proxy.getClass().hashCode();
+            }
+
+            if ("toString".equals(method.getName()))
+            {
+                return proxy.getClass().toString();
+            }
+
+            if ("equals".equals(method.getName()))
+            {
+                return proxy.getClass().equals(args[0].getClass());
+            }
+
+            return null;
+        }
+
         final MessageTemplate messageTemplate = method.getAnnotation(MessageTemplate.class);
 
         String messageTemplateValue;
