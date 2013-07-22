@@ -22,7 +22,6 @@ import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.List;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.LockModeType;
 import javax.persistence.Query;
 import javax.persistence.QueryHint;
@@ -33,7 +32,6 @@ import org.apache.deltaspike.data.impl.param.Parameters;
 /**
  * Query builder factory. Delegates to concrete implementations.
  */
-@ApplicationScoped
 public abstract class QueryBuilder
 {
 

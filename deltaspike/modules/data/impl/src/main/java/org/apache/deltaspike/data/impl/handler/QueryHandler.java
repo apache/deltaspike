@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.apache.deltaspike.data.api.Repository;
@@ -43,7 +42,6 @@ import org.apache.deltaspike.data.impl.meta.RepositoryMethod;
  * Entry point for query processing.
  */
 @Repository
-@ApplicationScoped
 public class QueryHandler implements Serializable, InvocationHandler
 {
 
