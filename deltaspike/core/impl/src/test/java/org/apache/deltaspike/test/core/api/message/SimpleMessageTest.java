@@ -21,6 +21,7 @@ package org.apache.deltaspike.test.core.api.message;
 import org.apache.deltaspike.core.api.message.LocaleResolver;
 import org.apache.deltaspike.core.impl.message.MessageBundleExtension;
 import org.apache.deltaspike.test.category.SeCategory;
+import org.apache.deltaspike.test.category.Serializer;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -36,6 +37,7 @@ import javax.enterprise.inject.spi.Extension;
 import javax.inject.Inject;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Tests for {@link org.apache.deltaspike.core.api.message.MessageTemplate}
@@ -98,5 +100,13 @@ public class SimpleMessageTest
         String expectedResult = "Welcome to 'null'";
         String result = simpleMessage.welcomeWithStringVariable(null);
         assertEquals(expectedResult, result);
+    }
+
+    @Test
+    public void testMessageSerialisation() {
+        Serializer<SimpleMessage> simpleMessageSerializer = new Serializer<SimpleMessage>();
+
+        SimpleMessage sm2 = simpleMessageSerializer.roundTrip(simpleMessage);
+        assertNotNull(sm2);
     }
 }
