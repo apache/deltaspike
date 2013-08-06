@@ -18,12 +18,16 @@
 */
 package org.apache.deltaspike.test.core.api.provider;
 
+import javax.annotation.PreDestroy;
 import javax.enterprise.context.Dependent;
+import javax.inject.Named;
 
 @Dependent
+@Named
 public class DependentTestBean
 {
     private int i = 42;
+    private boolean destroyed = false;
 
     public int getI()
     {
@@ -33,5 +37,15 @@ public class DependentTestBean
     public void setI(int i)
     {
         this.i = i;
+    }
+
+    public boolean isDestroyed()
+    {
+        return destroyed;
+    }
+
+    @PreDestroy
+    public void cleanUp() {
+        destroyed = true;
     }
 }

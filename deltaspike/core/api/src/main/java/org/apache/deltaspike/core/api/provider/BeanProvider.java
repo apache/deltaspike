@@ -302,6 +302,33 @@ public final class BeanProvider
         return result;
     }
 
+    public static <T> DependentProvider<T> getDependent(Class<T> type, Annotation... qualifiers)
+    {
+        BeanManager beanManager = getBeanManager();
+        Set<Bean<?>> beans = beanManager.getBeans(type, qualifiers);
+        Bean<?> bean = beanManager.resolve(beans);
+        return createDependentProvider(beanManager, type, (Bean<T>) bean);
+    }
+
+    public static <T> DependentProvider<T> getDependent(String name)
+    {
+        BeanManager beanManager = getBeanManager();
+        Set<Bean<?>> beans = beanManager.getBeans(name);
+        Bean<?> bean = beanManager.resolve(beans);
+        Class beanClass = bean.getBeanClass();
+
+        return createDependentProvider(beanManager, (Class<T>) beanClass, (Bean<T>) bean);
+    }
+
+    private static <T> DependentProvider<T> createDependentProvider(BeanManager beanManager, Class<T> type,
+                                                                    Bean<T> bean)
+    {
+        CreationalContext<T> cc = beanManager.createCreationalContext(bean);
+        T instance = (T) beanManager.getReference(bean, type, cc);
+
+        return new DependentProvider<T>(bean, cc, instance);
+    }
+
     /**
      * Get a set of {@link Bean} definitions by type independent of the qualifier.
      *

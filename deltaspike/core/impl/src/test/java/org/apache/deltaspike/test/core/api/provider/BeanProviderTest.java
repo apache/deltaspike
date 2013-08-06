@@ -20,6 +20,7 @@ package org.apache.deltaspike.test.core.api.provider;
 
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.core.api.provider.DependentProvider;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -196,10 +197,33 @@ public class BeanProviderTest
     }
 
     @Test
-    public void dependentBeanResolving() throws Exception
+    public void testDependentBeanResolving() throws Exception
     {
-        DependentTestBean dependentTestBean = BeanProvider.getContextualReference(DependentTestBean.class);
-        Assert.assertNotNull(dependentTestBean);
+        DependentProvider<DependentTestBean> dependentTestBeanProvider = BeanProvider.getDependent(DependentTestBean.class);
+        checkDependentProvider(dependentTestBeanProvider);
+    }
+
+    @Test
+    public void testNamedDependentBeanResolving() throws Exception
+    {
+        DependentProvider<DependentTestBean> dependentTestBeanProvider = BeanProvider.getDependent("dependentTestBean");
+        checkDependentProvider(dependentTestBeanProvider);
+    }
+
+    private void checkDependentProvider(DependentProvider<DependentTestBean> dependentTestBeanProvider)
+    {
+        Assert.assertNotNull(dependentTestBeanProvider);
+
+        DependentTestBean instance = dependentTestBeanProvider.get();
+        Assert.assertNotNull(instance);
+
+        Assert.assertEquals(42, instance.getI());
+        instance.setI(21);
+        Assert.assertEquals(21, instance.getI());
+
+        Assert.assertFalse(instance.isDestroyed());
+        dependentTestBeanProvider.destroy();
+        Assert.assertTrue(instance.isDestroyed());
     }
 
 }
