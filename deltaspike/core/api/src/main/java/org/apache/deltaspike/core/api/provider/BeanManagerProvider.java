@@ -167,15 +167,22 @@ public class BeanManagerProvider implements Extension
         // warn the user if he tries to use the BeanManager before container startup
         if (!bmi.booted)
         {
-            LOG.warning("When using the BeanManager to retrieve Beans before the Container is started," +
-                    " non-portable behaviour results!");
+            if (!isParentBeanManagerBooted())
+            {
+                LOG.warning("When using the BeanManager to retrieve Beans before the Container is started," +
+                        " non-portable behaviour results!");
+
+                // reset the flag to only issue the warning once.
+                // this is a workaround for some containers which mess up EAR handling.
+                bmi.booted = true;
+            }
         }
 
         BeanManager result = bmi.finalBm;
 
         if (result == null)
         {
-            synchronized (this)
+            synchronized (bmi)
             {
                 result = bmi.finalBm;
                 if (result == null)
@@ -211,7 +218,13 @@ public class BeanManagerProvider implements Extension
      * container might not be fully setup yet.
      *
      * This might happen if someone uses the BeanManagerProvider during Extension
-     * startup.
+     * startup. This should generally avoided but instead you should just use
+     * an injected BeanManager in your Extension and propagate the BeanManager
+     * via setters.
+     *
+     * In EARs with multiple webapps you might get different Extensions per WAR.
+     * This depends on the container you use. By resetting <i>all</i> known
+     * BeanManagerInfos we try to
      */
     public void cleanupFinalBeanManagers(@Observes AfterDeploymentValidation adv)
     {
@@ -303,4 +316,40 @@ public class BeanManagerProvider implements Extension
 
         return bmpSingleton;
     }
+
+    /**
+     * @return whether a BeanManagerInfo for a parent classloader is available and has the booted flag set.
+     */
+    private boolean isParentBeanManagerBooted()
+    {
+        ClassLoader classLoader = ClassUtils.getClassLoader(null);
+        BeanManagerInfo parentBmi = getParentBeanManagerInfo(classLoader);
+
+        return parentBmi != null && parentBmi.booted;
+    }
+
+    /**
+     * This method recurses into the parent ClassLoaders and will check if a
+     * BeanManagerInfo for it exists.
+     * @return the BeanManagerInfo of the parent ClassLoader hierarchy if any exists,
+     *         or <code>null</code> if there is no {@link BeanManagerInfo} for the ClassLoaders in the hierarchy.
+     */
+    private BeanManagerInfo getParentBeanManagerInfo(ClassLoader classLoader)
+    {
+        ClassLoader parentClassLoader = classLoader.getParent();
+        if (parentClassLoader.equals(ClassLoader.getSystemClassLoader()))
+        {
+            return null;
+        }
+
+        BeanManagerInfo bmi = getBeanManagerInfo(parentClassLoader);
+        if (bmi == null)
+        {
+            bmi = getParentBeanManagerInfo(parentClassLoader);
+        }
+
+        return bmi;
+    }
+
+
 }
