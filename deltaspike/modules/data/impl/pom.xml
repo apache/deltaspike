@@ -75,6 +75,7 @@
                     </processors>
                 </configuration>
                 <dependencies>
+                    <!-- this part of Hibernate is Apache License 2.0, thus O.K. for us. -->
                     <dependency>
                         <groupId>org.hibernate</groupId>
                         <artifactId>hibernate-jpamodelgen</artifactId>
