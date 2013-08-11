@@ -71,6 +71,7 @@
                     <configuration>
                         <systemProperties>
                             <org.apache.deltaspike.ProjectStage>UnitTest</org.apache.deltaspike.ProjectStage>
+                            <cdicontainer.version>${cdicontainer.version}</cdicontainer.version>
                         </systemProperties>
                     </configuration>
                 </plugin>
@@ -140,12 +141,20 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
 
+            <properties>
+                <cdicontainer.version>owb-${owb.version}</cdicontainer.version>
+            </properties>
+
             <build>
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
+                            <systemProperties>
+                                <cdicontainer.version>${cdicontainer.version}</cdicontainer.version>
+                            </systemProperties>
+
                             <!-- Ignore these groups because they don't work with embedded OWB -->
                             <excludedGroups>
                                 org.apache.deltaspike.test.category.WebProfileCategory,
@@ -202,11 +211,19 @@
             <!-- use this profile to compile and test DeltaSpike with JBoss Weld -->
             <id>Weld</id>
 
+            <properties>
+                <cdicontainer.version>weld-${weld.version}</cdicontainer.version>
+            </properties>
+
+
             <build>
                 <plugins>
                     <plugin>
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
+                            <systemProperties>
+                                <cdicontainer.version>${cdicontainer.version}</cdicontainer.version>
+                            </systemProperties>
                             <!-- Ignore these groups because they don't work with embedded Weld -->
                             <excludedGroups>
                                 org.apache.deltaspike.test.category.WebProfileCategory,
@@ -312,6 +329,10 @@
             -->
             <id>tomee-build-managed</id>
 
+            <properties>
+                <cdicontainer.version>owb-${owb.version}</cdicontainer.version>
+            </properties>
+
             <dependencies>
                 <dependency>
                     <groupId>org.apache.openejb</groupId>
@@ -345,6 +366,7 @@
                             <systemProperties>
                                 <arquillian.launch>tomee</arquillian.launch>
                                 <org.apache.deltaspike.ProjectStage>UnitTest</org.apache.deltaspike.ProjectStage>
+                                <cdicontainer.version>${cdicontainer.version}</cdicontainer.version>
                             </systemProperties>
 
                             <!-- we just use groups to mark that a test should be executed only
@@ -372,6 +394,9 @@
              *
              -->
             <id>jbossas-managed-7</id>
+            <properties>
+                <cdicontainer.version>weld-${weld.version}</cdicontainer.version>
+            </properties>
 
             <dependencies>
                 <dependency>
@@ -419,6 +444,7 @@
                             <systemProperties>
                                 <arquillian.launch>jbossas-managed-7</arquillian.launch>
                                 <org.apache.deltaspike.ProjectStage>UnitTest</org.apache.deltaspike.ProjectStage>
+                                <cdicontainer.version>${cdicontainer.version}</cdicontainer.version>
                             </systemProperties>
                             <!-- we just use groups to mark that a test should be executed only
                             with specific environments. even though a java-ee6 application server has to be able to run
@@ -446,6 +472,11 @@
              *
              -->
             <id>jbossas-build-managed-7</id>
+
+            <properties>
+                <cdicontainer.version>weld-${weld.version}</cdicontainer.version>
+            </properties>
+
             <dependencies>
                 <dependency>
                     <groupId>javax.enterprise</groupId>
@@ -485,6 +516,7 @@
                                     ${project.build.directory}/jboss-as-${jboss.as.version}
                                 </arquillian.jboss_home>
                                 <org.apache.deltaspike.ProjectStage>UnitTest</org.apache.deltaspike.ProjectStage>
+                                <cdicontainer.version>${cdicontainer.version}</cdicontainer.version>
                             </systemProperties>
                             <!-- we just use groups to mark that a test should be executed only
                             with specific environments. even though a java-ee6 application server has to be able to run
@@ -531,6 +563,11 @@
         <profile>
             <id>jbossas-remote-7</id>
             <!-- AS7 must be started manually for this work correctly - debug hints see arquillian.xml -->
+
+            <properties>
+                <cdicontainer.version>weld-${weld.version}</cdicontainer.version>
+            </properties>
+
             <dependencies>
 
                 <dependency>
@@ -568,6 +605,7 @@
                             <systemProperties>
                                 <arquillian.launch>jbossas-remote-7</arquillian.launch>
                                 <org.apache.deltaspike.ProjectStage>UnitTest</org.apache.deltaspike.ProjectStage>
+                                <cdicontainer.version>${cdicontainer.version}</cdicontainer.version>
                             </systemProperties>
                             <!-- we just use groups to mark that a test should be executed only
                             with specific environments. even though a java-ee6 application server has to be able to run
@@ -586,6 +624,11 @@
 
         <profile>
             <id>glassfish-remote-3.1</id>
+
+            <properties>
+                <cdicontainer.version>weld-${weld.version}</cdicontainer.version>
+            </properties>
+
             <dependencies>
                 <dependency>
                     <groupId>javax.enterprise</groupId>
@@ -628,6 +671,7 @@
                             <systemProperties>
                                 <arquillian.launch>glassfish-remote-3.1</arquillian.launch>
                                 <org.apache.deltaspike.ProjectStage>UnitTest</org.apache.deltaspike.ProjectStage>
+                                <cdicontainer.version>${cdicontainer.version}</cdicontainer.version>
                             </systemProperties>
                             <!-- we just use groups to mark that a test should be executed only
                             with specific environments. even though a java-ee6 application server has to be able to run
@@ -646,6 +690,11 @@
 
         <profile>
             <id>wls-remote-12c</id>
+
+            <properties>
+                <cdicontainer.version>weld-${weld.version}</cdicontainer.version>
+            </properties>
+
             <dependencies>
 
                 <dependency>
@@ -673,6 +722,7 @@
                             <systemProperties>
                                 <arquillian.launch>wls-remote-12c</arquillian.launch>
                                 <org.apache.deltaspike.ProjectStage>UnitTest</org.apache.deltaspike.ProjectStage>
+                                <cdicontainer.version>${cdicontainer.version}</cdicontainer.version>
                             </systemProperties>
                             <systemPropertyVariables>
                                 <WLS_HOME>${env.WLS_HOME}</WLS_HOME>

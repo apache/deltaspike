@@ -22,6 +22,7 @@ import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.test.core.api.partialbean.shared.CustomInterceptorImpl;
 import org.apache.deltaspike.test.core.api.partialbean.shared.TestPartialBeanBinding;
 import org.apache.deltaspike.test.core.api.partialbean.util.ArchiveUtils;
+import org.apache.deltaspike.test.utils.CdiContainerUnderTest;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -31,22 +32,33 @@ import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
+import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
 @RunWith(Arquillian.class)
 @Category(SeCategory.class) //TODO use different category (only new versions of weld)
 public class PartialBeanAsAbstractClassWithInterceptorTest
 {
+    public static final String CONTAINER_WELD_2_0_0 = "weld-2\\.0\\.0\\..*";
+
+    // we only inject an Instance as the proxy creation for the Bean itself
+    // would trigger a nasty bug in Weld-2.0.0
     @Inject
-    private PartialBean partialBean;
+    private Instance<PartialBean> partialBean;
 
     @Deployment
     public static WebArchive war()
     {
+        if (CdiContainerUnderTest.is(CONTAINER_WELD_2_0_0))
+        {
+            return ShrinkWrap.create(WebArchive.class, "empty.war");
+        }
+
         Asset beansXml = new StringAsset(
             "<beans><interceptors><class>" +
                     CustomInterceptorImpl.class.getName() +
@@ -70,11 +82,14 @@ public class PartialBeanAsAbstractClassWithInterceptorTest
     @Test
     public void testPartialBeanAsAbstractClassWithInterceptor() throws Exception
     {
-        String result = this.partialBean.getResult();
+        // this test is known to not work under weld-2.0.0.Final and weld-2.0.0.SP1
+        Assume.assumeTrue(!CdiContainerUnderTest.is(CONTAINER_WELD_2_0_0));
+
+        String result = this.partialBean.get().getResult();
 
         Assert.assertEquals("partial-test-true", result);
 
-        result = this.partialBean.getManualResult();
+        result = this.partialBean.get().getManualResult();
 
         //"manual-test-true" would be the goal, but it isn't supported (for now)
         Assert.assertEquals("manual-test-false", result);
