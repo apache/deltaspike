@@ -68,13 +68,31 @@ public class GlobalAlternativeTest
     @Deployment
     public static WebArchive deploy()
     {
-        Asset beansXml = new StringAsset(
-                "<beans><alternatives>" +
-                        "<class>" + BaseInterface1AlternativeImplementation.class.getName() + "</class>" +
-                        "<class>" + SubBaseBean2.class.getName() + "</class>" +
-                        "<class>" + AlternativeBaseBeanB.class.getName() + "</class>" +
-                        "</alternatives></beans>"
-        );
+
+        Asset beansXml = EmptyAsset.INSTANCE;
+
+        try
+        {
+            // if this doesn't throw a ClassNotFoundException, then we have OpenWebBeans on the ClassPath.
+            Class.forName("org.apache.webbeans.spi.ContainerLifecycle");
+
+            // Older OWB versions had an error with @Alternatives pickup from AnnotatedType.
+            // But as OWB has global-alternatives behaviour by default, we can simply add them
+            // via beans.xml. From OWB-1.2.1 on we would not need this anymore, but it's still needed
+            // for 1.0.x, 1.1.x and 1.2.0 series
+            beansXml = new StringAsset(
+                    "<beans><alternatives>" +
+                            "<class>" + BaseInterface1AlternativeImplementation.class.getName() + "</class>" +
+                            "<class>" + SubBaseBean2.class.getName() + "</class>" +
+                            "<class>" + AlternativeBaseBeanB.class.getName() + "</class>" +
+                            "</alternatives></beans>"
+            );
+        }
+        catch (ClassNotFoundException cnfe)
+        {
+            // all fine, no OWB here -> Weld handling
+        }
+
 
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "excludeIntegrationTest.jar")
                 .addPackage(GlobalAlternativeTest.class.getPackage())
