@@ -194,14 +194,16 @@ public class MessageBundleExtension implements Extension, Deactivatable
         }
     }
 
-    private static <T> Bean<T> createMessageBundleBean(Bean<Object> delegate,
-                                                       AnnotatedType<T> annotatedType,
-                                                       BeanManager beanManager)
+    private <T> Bean<T> createMessageBundleBean(Bean<Object> delegate,
+                                                AnnotatedType<T> annotatedType,
+                                                BeanManager beanManager)
     {
         WrappingBeanBuilder<T> beanBuilder = new WrappingBeanBuilder<T>(delegate, beanManager)
                 .readFromType(annotatedType);
         //X TODO re-visit type.getBaseType() in combination with #addQualifier
         beanBuilder.types(annotatedType.getJavaClass(), Object.class, Serializable.class);
+        beanBuilder.passivationCapable(true);
+        beanBuilder.id("MessageBundleBean#" + annotatedType.getJavaClass().getName());
 
         return beanBuilder.create();
     }

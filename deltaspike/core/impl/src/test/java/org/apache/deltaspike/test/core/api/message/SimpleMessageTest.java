@@ -52,6 +52,10 @@ public class SimpleMessageTest
     @Inject
     private LocaleResolver localeResolver;
 
+    @Inject
+    private MessageUser messageUser;
+
+
     /**
      * X TODO creating a WebArchive is only a workaround because JavaArchive
      * cannot contain other archives.
@@ -103,10 +107,18 @@ public class SimpleMessageTest
     }
 
     @Test
-    public void testMessageSerialisation() {
+    public void testMessageSerialisation()
+    {
         Serializer<SimpleMessage> simpleMessageSerializer = new Serializer<SimpleMessage>();
 
         SimpleMessage sm2 = simpleMessageSerializer.roundTrip(simpleMessage);
         assertNotNull(sm2);
+    }
+
+    @Test
+    public void testPassivationCapability()
+    {
+        assertEquals("Welcome to DeltaSpike", messageUser.getMsg().welcomeToDeltaSpike());
+        assertEquals("Welcome to DeltaSpike", messageUser.getMsg().welcomeWithStringVariable("DeltaSpike"));
     }
 }
