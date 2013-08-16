@@ -21,10 +21,11 @@ package org.apache.deltaspike.test.core.api.provider;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.Dependent;
 import javax.inject.Named;
+import java.io.Serializable;
 
 @Dependent
 @Named
-public class DependentTestBean
+public class DependentTestBean implements Serializable
 {
     private int i = 42;
     private boolean destroyed = false;

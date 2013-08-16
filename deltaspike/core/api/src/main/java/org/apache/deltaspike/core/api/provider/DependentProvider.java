@@ -20,7 +20,13 @@ package org.apache.deltaspike.core.api.provider;
 
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
+import javax.enterprise.inject.spi.PassivationCapable;
 import javax.inject.Provider;
+import java.io.IOException;
+import java.io.NotSerializableException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 /**
  * A {@link Provider} for &#064;Dependent scoped contextual instances.
@@ -28,12 +34,17 @@ import javax.inject.Provider;
  * needed anymore via the {@link #destroy()} method.
  *
  * Instances of this class can be retrieved using the {@link BeanProvider}.
+ *
+ * Instances of this class are Serializable if the wrapped contextual instance
+ * is Serializable.
  */
-public class DependentProvider<T> implements Provider<T>
+public class DependentProvider<T> implements Provider<T>, Serializable
 {
+    private static final long serialVersionUID = 23423413412001L;
+
     private T instance;
     private CreationalContext<T> creationalContext;
-    private Bean<T> bean;
+    private transient Bean<T> bean;
 
     DependentProvider(Bean<T> bean, CreationalContext<T> creationalContext, T instance)
     {
@@ -52,4 +63,36 @@ public class DependentProvider<T> implements Provider<T>
     {
         bean.destroy(instance, creationalContext);
     }
+
+    private void writeObject(ObjectOutputStream out) throws IOException
+    {
+        if (!(bean instanceof PassivationCapable))
+        {
+            throw new NotSerializableException("Bean is not PassivationCapable: " + bean.toString());
+        }
+        String passivationId = ((PassivationCapable) bean).getId();
+        if (passivationId == null)
+        {
+            throw new NotSerializableException(bean.toString());
+        }
+
+        out.writeLong(serialVersionUID);
+        out.writeObject(passivationId);
+        out.writeObject(instance);
+        out.writeObject(creationalContext);
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+    {
+        long oldSerialId = in.readLong();
+        if (oldSerialId != serialVersionUID)
+        {
+            throw new NotSerializableException(getClass().getName() + " serialVersion does not match");
+        }
+        String passivationId = (String) in.readObject();
+        bean = (Bean<T>) BeanManagerProvider.getInstance().getBeanManager().getPassivationCapableBean(passivationId);
+        instance = (T) in.readObject();
+        creationalContext = (CreationalContext<T>) in.readObject();
+    }
+
 }

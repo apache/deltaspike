@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.category;
+package org.apache.deltaspike.test.utils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

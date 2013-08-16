@@ -22,6 +22,8 @@ package org.apache.deltaspike.test.core.api.provider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.api.provider.DependentProvider;
 import org.apache.deltaspike.test.util.ArchiveUtils;
+import org.apache.deltaspike.test.utils.CdiContainerUnderTest;
+import org.apache.deltaspike.test.utils.Serializer;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -29,6 +31,7 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -38,6 +41,9 @@ import java.util.concurrent.ConcurrentHashMap;
 @RunWith(Arquillian.class)
 public class BeanProviderTest
 {
+    private static final String CONTAINER_OWB_1_1_x = "owb-1\\.1\\..*";
+
+
     /**
      *X TODO creating a WebArchive is only a workaround because JavaArchive cannot contain other archives.
      */
@@ -208,6 +214,19 @@ public class BeanProviderTest
     {
         DependentProvider<DependentTestBean> dependentTestBeanProvider = BeanProvider.getDependent("dependentTestBean");
         checkDependentProvider(dependentTestBeanProvider);
+    }
+
+    @Test
+    public void testDependentBeanSerialization() throws Exception
+    {
+        // this test is known to not work under owb-1.1.x as ManagedBean for Dependent scoped classes did not implement PassivationCapable.
+        Assume.assumeTrue(!CdiContainerUnderTest.is(CONTAINER_OWB_1_1_x));
+
+        DependentProvider<DependentTestBean> dependentTestBeanProvider = BeanProvider.getDependent(DependentTestBean.class);
+
+        Serializer<DependentProvider<DependentTestBean>> serializer = new Serializer<DependentProvider<DependentTestBean>>();
+        DependentProvider<DependentTestBean> provider2 = serializer.roundTrip(dependentTestBeanProvider);
+        Assert.assertNotNull(provider2);
     }
 
     private void checkDependentProvider(DependentProvider<DependentTestBean> dependentTestBeanProvider)
