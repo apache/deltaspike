@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.test.core.api.partialbean.uc003;
 
+import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.test.core.api.partialbean.shared.CustomInterceptorImpl;
 import org.apache.deltaspike.test.core.api.partialbean.shared.TestPartialBeanBinding;
@@ -37,19 +38,12 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
 
 @RunWith(Arquillian.class)
 @Category(SeCategory.class) //TODO use different category (only new versions of weld)
 public class PartialBeanAsAbstractClassWithInterceptorTest
 {
     public static final String CONTAINER_WELD_2_0_0 = "weld-2\\.0\\.0\\..*";
-
-    // we only inject an Instance as the proxy creation for the Bean itself
-    // would trigger a nasty bug in Weld-2.0.0
-    @Inject
-    private Instance<PartialBean> partialBean;
 
     @Deployment
     public static WebArchive war()
@@ -85,11 +79,16 @@ public class PartialBeanAsAbstractClassWithInterceptorTest
         // this test is known to not work under weld-2.0.0.Final and weld-2.0.0.SP1
         Assume.assumeTrue(!CdiContainerUnderTest.is(CONTAINER_WELD_2_0_0));
 
-        String result = this.partialBean.get().getResult();
+        // we only inject an Instance as the proxy creation for the Bean itself
+        // would trigger a nasty bug in Weld-2.0.0
+        PartialBean partialBean = BeanProvider.getContextualReference(PartialBean.class);
+        Assert.assertNotNull(partialBean);
+
+        String result = partialBean.getResult();
 
         Assert.assertEquals("partial-test-true", result);
 
-        result = this.partialBean.get().getManualResult();
+        result = partialBean.getManualResult();
 
         //"manual-test-true" would be the goal, but it isn't supported (for now)
         Assert.assertEquals("manual-test-false", result);
