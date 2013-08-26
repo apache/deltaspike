@@ -330,7 +330,7 @@
             <id>tomee-build-managed</id>
 
             <properties>
-                <cdicontainer.version>owb-${owb.version}</cdicontainer.version>
+                <cdicontainer.version>tomee-${tomee.version}</cdicontainer.version>
             </properties>
 
             <dependencies>

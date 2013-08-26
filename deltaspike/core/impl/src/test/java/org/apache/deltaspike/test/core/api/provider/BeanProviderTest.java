@@ -42,6 +42,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class BeanProviderTest
 {
     private static final String CONTAINER_OWB_1_1_x = "owb-1\\.1\\..*";
+    private static final String CONTAINER_TOMEE_1_5_x = "tomee-1\\.5\\..*";
 
 
     /**
@@ -221,6 +222,7 @@ public class BeanProviderTest
     {
         // this test is known to not work under owb-1.1.x as ManagedBean for Dependent scoped classes did not implement PassivationCapable.
         Assume.assumeTrue(!CdiContainerUnderTest.is(CONTAINER_OWB_1_1_x));
+        Assume.assumeTrue(!CdiContainerUnderTest.is(CONTAINER_TOMEE_1_5_x));
 
         DependentProvider<DependentTestBean> dependentTestBeanProvider = BeanProvider.getDependent(DependentTestBean.class);
 
