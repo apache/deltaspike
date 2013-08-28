@@ -19,6 +19,7 @@
 package org.apache.deltaspike.jsf.impl.message;
 
 
+import javax.enterprise.inject.Typed;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 
@@ -34,6 +35,7 @@ import org.apache.deltaspike.jsf.api.message.JsfMessage;
  * The complexity of setting the FacesMessage is
  * done in the {@link JsfMessageBundleInvocationHandler}.
  */
+@Typed
 public class DefaultJsfMessage<T> implements JsfMessage<T>
 {
     private final String clientId;
