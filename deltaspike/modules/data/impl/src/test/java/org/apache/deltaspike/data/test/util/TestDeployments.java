@@ -51,6 +51,7 @@ import org.apache.deltaspike.data.spi.QueryInvocationContext;
 import org.apache.deltaspike.data.test.TransactionalTestCase;
 import org.apache.deltaspike.data.test.domain.AuditedEntity;
 import org.apache.deltaspike.test.category.WebProfileCategory;
+import org.apache.deltaspike.test.utils.CdiContainerUnderTest;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
@@ -126,7 +127,7 @@ public abstract class TestDeployments
 
     public static WebArchive addDependencies(WebArchive archive)
     {
-        return archive.addAsLibraries(
+        WebArchive webArchive= archive.addAsLibraries(
                 Maven.resolver().loadPomFromFile("pom.xml").resolve(
                         "org.apache.deltaspike.core:deltaspike-core-api",
                         "org.apache.deltaspike.core:deltaspike-core-impl",
@@ -134,6 +135,15 @@ public abstract class TestDeployments
                         "org.apache.deltaspike.modules:deltaspike-partial-bean-module-impl")
                         .withTransitivity()
                         .asFile());
+        if (CdiContainerUnderTest.is("owb-.*") ||
+            CdiContainerUnderTest.is("tomee-.*"))
+        {
+            JavaArchive javassistJar = ShrinkWrap.create(JavaArchive.class, "dsjavassist.jar")
+                    .addPackages(true, "javassist");
+            webArchive.addAsLibrary(javassistJar);
+        }
+
+        return webArchive;
     }
 
 }
