@@ -21,24 +21,39 @@ package org.apache.deltaspike.servlet.impl.event;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
+import org.apache.deltaspike.core.spi.activation.Deactivatable;
+import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.servlet.api.literal.DestroyedLiteral;
 import org.apache.deltaspike.servlet.api.literal.InitializedLiteral;
 
 /**
  * This class listens for HTTP session events and forwards them to the CDI event bus.
  */
-public class EventBridgeSessionListener extends EventEmitter implements HttpSessionListener
+public class EventBridgeSessionListener extends EventEmitter implements HttpSessionListener, Deactivatable
 {
+
+    private final boolean activated;
+
+    public EventBridgeSessionListener()
+    {
+        this.activated = ClassDeactivationUtils.isActivated(getClass());
+    }
 
     @Override
     public void sessionCreated(HttpSessionEvent se)
     {
-        fireEvent(se.getSession(), InitializedLiteral.INSTANCE);
+        if (activated)
+        {
+            fireEvent(se.getSession(), InitializedLiteral.INSTANCE);
+        }
     }
 
     @Override
     public void sessionDestroyed(HttpSessionEvent se)
     {
-        fireEvent(se.getSession(), DestroyedLiteral.INSTANCE);
+        if (activated)
+        {
+            fireEvent(se.getSession(), DestroyedLiteral.INSTANCE);
+        }
     }
 }
