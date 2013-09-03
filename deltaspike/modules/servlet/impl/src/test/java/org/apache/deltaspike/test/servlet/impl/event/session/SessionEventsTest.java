@@ -65,6 +65,8 @@ public class SessionEventsTest
                 .addAsLibraries(Deployments.getDeltaSpikeServletArchives())
                 .addAsLibraries(Deployments.getTestSupportArchives())
                 .addClass(SessionEventsObserver.class)
+                .addClass(CreateSessionServlet.class)
+                .addClass(DestroySessionServlet.class)
                 .addAsWebInfResource(new StringAsset("<beans/>"), "beans.xml")
                 .addAsWebResource(new StringAsset("foobar"), "foobar.txt")
                 .setWebXML(new StringAsset(

@@ -69,7 +69,7 @@ public class Deployments
     {
         return ShrinkWrap.create(JavaArchive.class, "utils.jar")
                 .addPackages(true, "org.apache.http")  
-                .addPackages(true, "org.apache.deltaspike.test")
+                .addPackages(true, "org.apache.deltaspike.test.category")
                 ;
     }
 
