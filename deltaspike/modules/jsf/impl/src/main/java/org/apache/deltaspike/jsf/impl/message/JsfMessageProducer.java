@@ -37,7 +37,7 @@ public class JsfMessageProducer
 {
     @Produces
     @Dependent
-    public JsfMessage createJsfMessage(InjectionPoint injectionPoint,
+    public <M> JsfMessage<M> createJsfMessage(InjectionPoint injectionPoint,
                                        MessageBundleInvocationHandler invocationHandler)
     {
         if (!(injectionPoint.getType() instanceof ParameterizedType))
@@ -53,7 +53,7 @@ public class JsfMessageProducer
         try
         {
             @SuppressWarnings("unchecked")
-            Class<?> type = (Class<?>) actualTypes[0];
+            Class<M> type = (Class<M>) actualTypes[0];
             return createJsfMessageFor(injectionPoint, type, invocationHandler);
         }
         catch (ClassCastException e)
