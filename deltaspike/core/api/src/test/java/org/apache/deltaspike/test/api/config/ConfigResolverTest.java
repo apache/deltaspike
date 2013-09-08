@@ -23,6 +23,7 @@ import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.spi.config.ConfigFilter;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
@@ -30,6 +31,13 @@ import java.util.List;
 public class ConfigResolverTest
 {
     private static final String DEFAULT_VALUE = "defaultValue";
+
+    @Before
+    public void init()
+    {
+        ProjectStageProducer.setProjectStage(ProjectStage.UnitTest);
+    }
+
     @Test
     public void testOverruledValue()
     {
