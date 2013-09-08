@@ -31,3 +31,6 @@ mvn clean install  -Ptomee-build-managed -Dtomee.version=1.6.0-SNAPSHOT -Dopenej
 mvn clean install  -Ptomee-build-managed -Dtomee.version=1.5.2 -Dopenejb.version=4.5.2 -Dopenejb.owb.version=1.1.8 | tee mvn-tomee_1_5_2.log
 mvn clean install -Pjbossas-build-managed-7 | tee mvn-jbossas_7.log
 
+
+# and now for the result check
+tail mvn-*.log | less
