@@ -21,28 +21,19 @@ package org.apache.deltaspike.servlet.impl.event;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import org.apache.deltaspike.core.spi.activation.Deactivatable;
-import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.servlet.api.literal.DestroyedLiteral;
 import org.apache.deltaspike.servlet.api.literal.InitializedLiteral;
 
 /**
  * This class listens for servlet context events and forwards them to the CDI event bus.
  */
-public class EventBridgeContextListener extends EventEmitter implements ServletContextListener, Deactivatable
+public class EventBridgeContextListener extends EventEmitter implements ServletContextListener
 {
-
-    private final boolean activated;
-
-    public EventBridgeContextListener()
-    {
-        this.activated = ClassDeactivationUtils.isActivated(getClass());
-    }
 
     @Override
     public void contextInitialized(ServletContextEvent sce)
     {
-        if (activated)
+        if (isActivated())
         {
             fireEvent(sce.getServletContext(), InitializedLiteral.INSTANCE);
         }
@@ -51,7 +42,7 @@ public class EventBridgeContextListener extends EventEmitter implements ServletC
     @Override
     public void contextDestroyed(ServletContextEvent sce)
     {
-        if (activated)
+        if (isActivated())
         {
             fireEvent(sce.getServletContext(), DestroyedLiteral.INSTANCE);
         }

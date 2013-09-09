@@ -27,23 +27,14 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
-import org.apache.deltaspike.core.spi.activation.Deactivatable;
-import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.servlet.api.literal.DestroyedLiteral;
 import org.apache.deltaspike.servlet.api.literal.InitializedLiteral;
 
 /**
  * This filter sends events to the CDI event bus when requests and responses get created and destroyed.
  */
-public class EventBridgeFilter extends EventEmitter implements Filter, Deactivatable
+public class EventBridgeFilter extends EventEmitter implements Filter
 {
-
-    private final boolean activated;
-
-    public EventBridgeFilter()
-    {
-        this.activated = ClassDeactivationUtils.isActivated(getClass());
-    }
 
     @Override
     public void init(FilterConfig config) throws ServletException
@@ -57,7 +48,7 @@ public class EventBridgeFilter extends EventEmitter implements Filter, Deactivat
     {
 
         // fire @Initialized events
-        if (activated)
+        if (isActivated())
         {
             fireEvent(request, InitializedLiteral.INSTANCE);
             fireEvent(response, InitializedLiteral.INSTANCE);
@@ -70,7 +61,7 @@ public class EventBridgeFilter extends EventEmitter implements Filter, Deactivat
         finally
         {
             // fire @Destroyed events
-            if (activated)
+            if (isActivated())
             {
                 fireEvent(request, DestroyedLiteral.INSTANCE);
                 fireEvent(response, DestroyedLiteral.INSTANCE);

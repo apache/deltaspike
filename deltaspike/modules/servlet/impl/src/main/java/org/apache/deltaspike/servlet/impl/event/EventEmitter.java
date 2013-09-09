@@ -18,18 +18,29 @@
  */
 package org.apache.deltaspike.servlet.impl.event;
 
-import javax.enterprise.inject.spi.BeanManager;
 import java.lang.annotation.Annotation;
 
+import javax.enterprise.inject.spi.BeanManager;
+
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
+import org.apache.deltaspike.core.spi.activation.Deactivatable;
+import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 
 /**
  * Base class for classes which send servlet events to the CDI event bus. This class uses {@link BeanManagerProvider} to
  * obtain the BeanManager.
  */
-abstract class EventEmitter
+abstract class EventEmitter implements Deactivatable
 {
+
     private volatile BeanManager beanManager;
+
+    private final boolean activated;
+
+    public EventEmitter()
+    {
+        this.activated = ClassDeactivationUtils.isActivated(getClass());
+    }
 
     protected void fireEvent(Object event, Annotation... qualifier)
     {
@@ -50,6 +61,11 @@ abstract class EventEmitter
         }
 
         return beanManager;
+    }
+
+    protected boolean isActivated()
+    {
+        return activated;
     }
 
 }
