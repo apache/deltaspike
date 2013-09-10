@@ -1,0 +1,30 @@
+Apache DeltaSpike-0.5 Release Notes
+
+
+The following modules and big features got added in the DeltaSpike-0.5 release:
+
+* DeltaSpike-Data
+
+The DeltaSpike Data module enhances JPA experience with declarative
+queries, reducing boilerplate to a minimum. DeltaSpike Data repositories
+can derive queries by simple method names, or by method annotations
+defining JPQL, named queries or even plain SQL - beside result pagination
+and sorting. The module also features auditing of entities and a simplified
+alternative to the Criteria API.
+
+
+* DeltaSpike-Servlet
+
+The DeltaSpike Servlet module provides integration with the Java Servlet
+API. It adds support for injection of common servlet objects
+and propagates servlet events to the CDI event bus.
+
+
+* DeltaSpike-BeanValidation
+
+The main feature of the Bean Validation module is to provide
+CDI integration in to ConstraintValidators. This allows you to
+inject CDI objects, EJBs etc in to your validators.
+
+
+
