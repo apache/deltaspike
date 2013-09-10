@@ -45,15 +45,6 @@ public class JsfModuleConfig implements DeltaSpikeConfig
     }
 
     /**
-     * @return true for creating additional navigation-cases based on view configs for
-     * ConfigurableNavigationHandler#getNavigationCases
-     */
-    public boolean isUseViewConfigsAsNavigationCasesEnabled()
-    {
-        return true;
-    }
-
-    /**
      * Per default all faces-messages are preserved for the next rendering process
      * @return true if the messages should be preserved automatically, false otherwise
      */
