@@ -85,6 +85,7 @@
                     <configuration>
                         <pushChanges>false</pushChanges>
                         <localCheckout>true</localCheckout>
+                        <autoVersionSubmodules>true</autoVersionSubmodules>
                     </configuration>
                 </plugin>
 
