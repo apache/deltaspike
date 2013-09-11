@@ -27,4 +27,50 @@ CDI integration in to ConstraintValidators. This allows you to
 inject CDI objects, EJBs etc in to your validators.
 
 
+* The following issues got resolved in this release:
+
+
+Sub-task
+
+    [DELTASPIKE-16] - review and discuss builders (metadata implementations)
+    [DELTASPIKE-387] - Create new bean-validation module
+    [DELTASPIKE-388] - Add support for a ConstraintValidatorFactory that creates CDI enabled constraint validators
+
+Bug
+
+    [DELTASPIKE-380] - NPE in PartialBeanLifecycle if javassist not on classpath
+    [DELTASPIKE-381] - missing optional bean-lookup
+    [DELTASPIKE-384] - ViewConfigUtils.toNodeList() fails in EAR
+    [DELTASPIKE-385] - Spurious BeanManagerProvider warnings when used in EAR
+    [DELTASPIKE-394] - pom.xml files of the data-module aren't aligned with other modules
+    [DELTASPIKE-397] - MessageBundleInvocationHandler should ignore methods like hashCode() etc from Object.class
+    [DELTASPIKE-403] - MessageBundles are not PassivationCapable
+    [DELTASPIKE-405] - producer for JsfMessage<T> does not match CDI-1.1 rules
+    [DELTASPIKE-407] - Tests for Servlet module incorrectly packaged
+
+Improvement
+
+    [DELTASPIKE-332] - Discuss introducing BeanValidation support
+    [DELTASPIKE-360] - alternative LocaleResolver which is aware of supported locales
+    [DELTASPIKE-366] - basic test of properties usage in cdictrl openejb container
+    [DELTASPIKE-383] - use getProjectStageAwarePropertyValue in @ConfigProperty and other configuration places
+    [DELTASPIKE-390] - optional custom ConfigPreProcessor for @ViewMetaData
+    [DELTASPIKE-409] - Servlet module events should be deactivatable
+    [DELTASPIKE-410] - improve compatibility with mojarra
+
+New Feature
+
+    [DELTASPIKE-375] - Create servlet module maven structure
+    [DELTASPIKE-376] - Propagation of basic servlet events to the CDI event bus
+    [DELTASPIKE-377] - Supporting injection of basic servlet objects
+    [DELTASPIKE-378] - ProjectStage-aware and Property-aware configuration
+    [DELTASPIKE-382] - mask out passwords and other credentials in our Configuration logs
+    [DELTASPIKE-398] - BeanProvider handling for @Dependent scoped beans
+
+Task
+
+    [DELTASPIKE-60] - Review and discuss a generic DAO API
+    [DELTASPIKE-401] - change GlobalAlternativeTest to work on Weld-2, Weld-1 and OWB
+    [DELTASPIKE-402] - Provide a way to skip tests depending on the CDI Container being used.
+    [DELTASPIKE-408] - WildFly test profile
 
