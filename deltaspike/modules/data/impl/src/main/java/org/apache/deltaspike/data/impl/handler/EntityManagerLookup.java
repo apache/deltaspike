@@ -23,6 +23,8 @@ import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.core.api.provider.DependentProvider;
 import org.apache.deltaspike.data.api.EntityManagerResolver;
 import org.apache.deltaspike.data.impl.meta.RepositoryComponent;
 
@@ -33,27 +35,26 @@ public class EntityManagerLookup
     @Any
     private Instance<EntityManager> entityManager;
 
-    @Inject
-    @Any
-    private Instance<EntityManagerResolver> entityManagerResolver;
-
     public EntityManager lookupFor(RepositoryComponent repository)
     {
         if (repository.hasEntityManagerResolver())
         {
-            EntityManagerResolver resolver = lookupResolver(repository.getEntityManagerResolverClass());
-            EntityManager result = resolver.resolveEntityManager();
+            DependentProvider<? extends EntityManagerResolver> resolver =
+                    lookupResolver(repository.getEntityManagerResolverClass());
+            EntityManager result = resolver.get().resolveEntityManager();
             if (repository.getEntityManagerFlushMode() != null)
             {
                 result.setFlushMode(repository.getEntityManagerFlushMode());
             }
+            resolver.destroy();
         }
         return entityManager.get();
     }
 
-    private EntityManagerResolver lookupResolver(
+    private DependentProvider<? extends EntityManagerResolver> lookupResolver(
             Class<? extends EntityManagerResolver> resolverClass)
     {
-        return entityManagerResolver.select(resolverClass).get();
+        DependentProvider<? extends EntityManagerResolver> resolver = BeanProvider.getDependent(resolverClass);
+        return resolver;
     }
 }

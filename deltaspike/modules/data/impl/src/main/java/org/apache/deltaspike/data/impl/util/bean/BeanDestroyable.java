@@ -16,32 +16,29 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.data.impl.handler;
+package org.apache.deltaspike.data.impl.util.bean;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
+import javax.enterprise.context.spi.CreationalContext;
+import javax.enterprise.inject.spi.Bean;
 
-@ApplicationScoped
-public class CdiQueryContextHolder
+public class BeanDestroyable<T> implements Destroyable
 {
 
-    private final ThreadLocal<CdiQueryInvocationContext> context = new ThreadLocal<CdiQueryInvocationContext>();
+    private final Bean<T> bean;
+    private final T instance;
+    private final CreationalContext<T> creationalContext;
 
-    public void set(CdiQueryInvocationContext context)
+    public BeanDestroyable(Bean<T> bean, T instance, CreationalContext<T> creationalContext)
     {
-        this.context.set(context);
+        this.bean = bean;
+        this.instance = instance;
+        this.creationalContext = creationalContext;
     }
 
-    @Produces
-    public CdiQueryInvocationContext get()
+    @Override
+    public void destroy()
     {
-        return context.get();
-    }
-
-    public void dispose()
-    {
-        context.get().cleanup();
-        context.remove();
+        bean.destroy(instance, creationalContext);
     }
 
 }

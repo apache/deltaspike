@@ -20,31 +20,34 @@ package org.apache.deltaspike.data.impl.builder;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Set;
 
-import javax.enterprise.inject.Any;
-import javax.enterprise.inject.Instance;
+import javax.enterprise.context.Dependent;
+import javax.enterprise.context.spi.CreationalContext;
+import javax.enterprise.inject.spi.Bean;
+import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 
+import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.data.impl.handler.CdiQueryInvocationContext;
 import org.apache.deltaspike.data.impl.handler.QueryInvocationException;
 import org.apache.deltaspike.data.impl.meta.MethodType;
 import org.apache.deltaspike.data.impl.meta.QueryInvocation;
+import org.apache.deltaspike.data.impl.util.bean.BeanDestroyable;
 import org.apache.deltaspike.data.spi.DelegateQueryHandler;
 
 @QueryInvocation(MethodType.DELEGATE)
 public class DelegateQueryBuilder extends QueryBuilder
 {
-
     @Inject
-    @Any
-    private Instance<DelegateQueryHandler> delegates;
+    private BeanManager beanManager;
 
     @Override
     public Object execute(CdiQueryInvocationContext context)
     {
         try
         {
-            DelegateQueryHandler delegate = selectDelegate(context.getMethod());
+            DelegateQueryHandler delegate = selectDelegate(context);
             if (delegate != null)
             {
                 return invoke(delegate, context);
@@ -57,29 +60,39 @@ public class DelegateQueryBuilder extends QueryBuilder
         throw new QueryInvocationException("No DelegateQueryHandler found", context);
     }
 
-    private DelegateQueryHandler selectDelegate(Method method)
+    private DelegateQueryHandler selectDelegate(CdiQueryInvocationContext context)
     {
-        for (DelegateQueryHandler delegate : delegates)
+        Set<Bean<DelegateQueryHandler>> beans = BeanProvider
+                .getBeanDefinitions(DelegateQueryHandler.class, true, true);
+        for (Bean<DelegateQueryHandler> bean : beans)
         {
-            if (contains(delegate, method))
+            if (contains(bean.getBeanClass(), context.getMethod()))
             {
-                return delegate;
+                if (bean.getScope().equals(Dependent.class))
+                {
+                    CreationalContext<DelegateQueryHandler> cc = beanManager.createCreationalContext(bean);
+                    DelegateQueryHandler instance = (DelegateQueryHandler) beanManager.getReference(
+                            bean, DelegateQueryHandler.class, cc);
+                    context.addDestroyable(new BeanDestroyable<DelegateQueryHandler>(bean, instance, cc));
+                    return instance;
+                }
+                return (DelegateQueryHandler) BeanProvider.getContextualReference(bean.getBeanClass());
             }
         }
         return null;
     }
 
-    private boolean contains(Object obj, Method method)
+    private boolean contains(Class<?> obj, Method method)
     {
         return extract(obj, method) != null;
     }
 
-    private Method extract(Object obj, Method method)
+    private Method extract(Class<?> obj, Method method)
     {
         try
         {
             String name = method.getName();
-            return obj != null ? obj.getClass().getMethod(name, method.getParameterTypes()) : null;
+            return obj != null ? obj.getMethod(name, method.getParameterTypes()) : null;
         }
         catch (NoSuchMethodException e)
         {
@@ -106,7 +119,7 @@ public class DelegateQueryBuilder extends QueryBuilder
     protected Object invoke(Object target, Method method, Object[] args) throws InvocationTargetException,
             IllegalAccessException
     {
-        Method extract = extract(target, method);
+        Method extract = extract(target.getClass(), method);
         return extract.invoke(target, args);
     }
 

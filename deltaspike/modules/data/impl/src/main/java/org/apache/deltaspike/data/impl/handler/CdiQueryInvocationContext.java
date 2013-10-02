@@ -27,6 +27,7 @@ import javax.persistence.Query;
 
 import org.apache.deltaspike.data.impl.meta.RepositoryMethod;
 import org.apache.deltaspike.data.impl.param.Parameters;
+import org.apache.deltaspike.data.impl.util.bean.Destroyable;
 import org.apache.deltaspike.data.spi.QueryInvocationContext;
 
 public class CdiQueryInvocationContext implements QueryInvocationContext
@@ -41,6 +42,7 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
     private final RepositoryMethod repoMethod;
     private final List<QueryStringPostProcessor> queryPostProcessors;
     private final List<JpaQueryPostProcessor> jpaPostProcessors;
+    private final List<Destroyable> cleanup;
 
     private String queryString;
 
@@ -56,6 +58,7 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
         this.entityClass = repoMethod.getRepository().getEntityClass();
         this.queryPostProcessors = new LinkedList<QueryStringPostProcessor>();
         this.jpaPostProcessors = new LinkedList<JpaQueryPostProcessor>();
+        this.cleanup = new LinkedList<Destroyable>();
     }
 
     @Override
@@ -137,6 +140,20 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
             result = processor.postProcess(this, result);
         }
         return result;
+    }
+
+    public void addDestroyable(Destroyable destroyable)
+    {
+        cleanup.add(destroyable);
+    }
+
+    public void cleanup()
+    {
+        for (Destroyable destroy : cleanup)
+        {
+            destroy.destroy();
+        }
+        cleanup.clear();
     }
 
     public Object executeQuery(Query jpaQuery)

@@ -18,33 +18,48 @@
  */
 package org.apache.deltaspike.data.impl.builder;
 
+import static org.apache.deltaspike.data.impl.meta.MethodType.ANNOTATED;
+import static org.apache.deltaspike.data.impl.meta.MethodType.DELEGATE;
+import static org.apache.deltaspike.data.impl.meta.MethodType.PARSE;
+
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.enterprise.inject.Any;
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
-
+import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.core.api.provider.DependentProvider;
 import org.apache.deltaspike.data.api.QueryResult;
-import org.apache.deltaspike.data.impl.meta.RepositoryMethod;
+import org.apache.deltaspike.data.impl.handler.CdiQueryInvocationContext;
+import org.apache.deltaspike.data.impl.meta.MethodType;
 import org.apache.deltaspike.data.impl.meta.QueryInvocationLiteral;
+import org.apache.deltaspike.data.impl.meta.RepositoryMethod;
+import org.apache.deltaspike.data.impl.util.bean.DependentProviderDestroyable;
 
 public class QueryBuilderFactory implements Serializable
 {
 
     private static final long serialVersionUID = 1L;
 
-    @Inject
-    @Any
-    private Instance<QueryBuilder> queryBuilder;
+    private static final Map<MethodType, QueryInvocationLiteral> LITERALS =
+            new HashMap<MethodType, QueryInvocationLiteral>()
+            {
+                {
+                    put(ANNOTATED, new QueryInvocationLiteral(ANNOTATED));
+                    put(DELEGATE, new QueryInvocationLiteral(DELEGATE));
+                    put(PARSE, new QueryInvocationLiteral(PARSE));
+                }
+            };
 
-    public QueryBuilder build(RepositoryMethod method)
+    public QueryBuilder build(RepositoryMethod method, CdiQueryInvocationContext context)
     {
-        QueryBuilder builder = queryBuilder.select(new QueryInvocationLiteral(method.getMethodType())).get();
+        DependentProvider<QueryBuilder> builder = BeanProvider.getDependent(
+                QueryBuilder.class, LITERALS.get(method.getMethodType()));
+        context.addDestroyable(new DependentProviderDestroyable(builder));
         if (method.returns(QueryResult.class))
         {
-            return new WrappedQueryBuilder(builder);
+            return new WrappedQueryBuilder(builder.get());
         }
-        return builder;
+        return builder.get();
     }
 
 }

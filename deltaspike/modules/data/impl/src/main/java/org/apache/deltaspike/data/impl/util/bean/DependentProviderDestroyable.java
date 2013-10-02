@@ -16,32 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.data.impl.handler;
+package org.apache.deltaspike.data.impl.util.bean;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
+import org.apache.deltaspike.core.api.provider.DependentProvider;
 
-@ApplicationScoped
-public class CdiQueryContextHolder
+public class DependentProviderDestroyable implements Destroyable
 {
 
-    private final ThreadLocal<CdiQueryInvocationContext> context = new ThreadLocal<CdiQueryInvocationContext>();
+    private final DependentProvider<?> dependent;
 
-    public void set(CdiQueryInvocationContext context)
+    public DependentProviderDestroyable(DependentProvider<?> dependent)
     {
-        this.context.set(context);
+        this.dependent = dependent;
     }
 
-    @Produces
-    public CdiQueryInvocationContext get()
+    @Override
+    public void destroy()
     {
-        return context.get();
-    }
-
-    public void dispose()
-    {
-        context.get().cleanup();
-        context.remove();
+        dependent.destroy();
     }
 
 }

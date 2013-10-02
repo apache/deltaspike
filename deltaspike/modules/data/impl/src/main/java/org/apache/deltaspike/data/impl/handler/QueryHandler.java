@@ -72,7 +72,7 @@ public class QueryHandler implements Serializable, InvocationHandler
             RepositoryComponent repo = components.lookupComponent(candidates);
             RepositoryMethod repoMethod = components.lookupMethod(repo.getRepositoryClass(), method);
             queryContext = createContext(proxy, method, args, repo, repoMethod);
-            QueryBuilder builder = queryBuilder.build(repoMethod);
+            QueryBuilder builder = queryBuilder.build(repoMethod, queryContext);
             Object result = builder.execute(queryContext);
             return result;
         }
