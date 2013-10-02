@@ -77,6 +77,11 @@ to your application manually.
 Also note that in order to use abstract classes as repositories, this currently requires the presence
 of the http://www.javassist.org[javassist] library in your classpath.
 
+[CAUTION]
+===============================
+Using DeltaSpike data in an EAR deployment is currently restricted to annotation-based entities.
+===============================
+
 ==== Maven Dependency Configuration
 
 If you are using Maven as your build tool, you can add the following dependencies to your +pom.xml+
