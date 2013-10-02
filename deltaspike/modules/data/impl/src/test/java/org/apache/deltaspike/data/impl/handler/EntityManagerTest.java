@@ -20,6 +20,7 @@ package org.apache.deltaspike.data.impl.handler;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import java.util.List;
 
@@ -27,7 +28,7 @@ import javax.inject.Inject;
 
 import org.apache.deltaspike.data.test.domain.Simple;
 import org.apache.deltaspike.data.test.service.SimpleRepositoryWithEntityManager;
-import org.apache.deltaspike.data.test.service.SimpleRepositoryWithOverriddenEntityManager;
+import org.apache.deltaspike.data.test.service.SimpleRepositoryWithEntityManagerResolver;
 import org.apache.deltaspike.data.test.service.Simplistic;
 import org.apache.deltaspike.data.test.service.SimplisticEntityManagerResolver;
 import org.apache.deltaspike.data.test.util.TestDeployments;
@@ -49,48 +50,41 @@ public class EntityManagerTest
     {
         return TestDeployments.initDeployment()
                 .addClasses(SimpleRepositoryWithEntityManager.class,
-                        SimpleRepositoryWithOverriddenEntityManager.class,
-                        EntityManagerTestProducer.class,
+                        SimpleRepositoryWithEntityManagerResolver.class,
+                        QualifiedEntityManagerTestProducer.class,
+                        NonQualifiedEntityManagerTestProducer.class,
                         Simplistic.class, SimplisticEntityManagerResolver.class);
     }
 
     @Inject
-    private SimpleRepositoryWithEntityManager repoWithAnnotation;
+    private SimpleRepositoryWithEntityManager repoWithDefaultEm;
 
     @Inject
-    private SimpleRepositoryWithOverriddenEntityManager repoWithInjection;
+    private SimpleRepositoryWithEntityManagerResolver repoWithInjection;
 
     @Test
-    public void should_use_qualified_entity_manager()
+    public void should_use_default_entity_manager()
     {
         // when
-        List<Simple> result = repoWithAnnotation.findByName("testUseQualifiedEntityManager");
+        List<Simple> result = repoWithDefaultEm.findByName("testUseQualifiedEntityManager");
 
         // then
         assertNotNull(result);
         assertEquals(0, result.size());
     }
 
-    @Test
-    public void should_use_injected_entity_manager()
+    /*
+     * Injected EM throws UnsupportedOperationException on all methods.
+     * Shortcutting the creation of multiple PUs (lazy guy...)
+     */
+    @Test(expected = QueryInvocationException.class)
+    public void should_use_entity_manager_from_resolver()
     {
         // when
-        List<Simple> result = repoWithInjection.findByName("testUseInjectedEntityManager");
+        repoWithInjection.findByName("testUseQualifiedEntityManager");
 
         // then
-        assertNotNull(result);
-        assertEquals(0, result.size());
-    }
-
-    @Test
-    public void should_inject_entity_manager()
-    {
-        // when
-        List<Simple> result = repoWithInjection.findWithEm("testInjectEntityManager");
-
-        // then
-        assertNotNull(result);
-        assertEquals(0, result.size());
+        fail("Fake EM should have thrown Exception");
     }
 
 }

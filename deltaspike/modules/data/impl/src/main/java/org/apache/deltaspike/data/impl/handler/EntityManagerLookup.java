@@ -23,6 +23,7 @@ import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import org.apache.deltaspike.core.api.literal.DefaultLiteral;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.api.provider.DependentProvider;
 import org.apache.deltaspike.data.api.EntityManagerResolver;
@@ -47,7 +48,7 @@ public class EntityManagerLookup
         }
         else
         {
-            result = entityManager.get();
+            result = entityManager.select(new DefaultLiteral()).get();
         }
         if (repository.hasEntityManagerFlushMode())
         {

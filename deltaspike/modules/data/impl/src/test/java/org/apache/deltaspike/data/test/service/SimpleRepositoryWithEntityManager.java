@@ -20,13 +20,11 @@ package org.apache.deltaspike.data.test.service;
 
 import java.util.List;
 
-import org.apache.deltaspike.data.api.EntityManagerConfig;
 import org.apache.deltaspike.data.api.EntityRepository;
 import org.apache.deltaspike.data.api.Repository;
 import org.apache.deltaspike.data.test.domain.Simple;
 
 @Repository
-@EntityManagerConfig(entityManagerResolver = SimplisticEntityManagerResolver.class)
 public interface SimpleRepositoryWithEntityManager extends EntityRepository<Simple, Long>
 {
 

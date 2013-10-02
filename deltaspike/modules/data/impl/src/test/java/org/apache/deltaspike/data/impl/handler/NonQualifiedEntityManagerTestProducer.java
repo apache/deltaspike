@@ -22,13 +22,10 @@ import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import org.apache.deltaspike.data.test.service.Simplistic;
-
-public class EntityManagerTestProducer
+public class NonQualifiedEntityManagerTestProducer
 {
 
     @Produces
-    @Simplistic
     @PersistenceContext
     private EntityManager entityManager;
 

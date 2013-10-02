@@ -40,7 +40,11 @@ public class CdiQueryContextHolder
 
     public void dispose()
     {
-        context.get().cleanup();
+        CdiQueryInvocationContext ctx = context.get();
+        if (ctx != null)
+        {
+            ctx.cleanup();
+        }
         context.remove();
     }
 

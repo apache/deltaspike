@@ -25,18 +25,11 @@ import org.apache.deltaspike.data.api.EntityManagerConfig;
 import org.apache.deltaspike.data.api.Repository;
 import org.apache.deltaspike.data.test.domain.Simple;
 
-@EntityManagerConfig(entityManagerResolver = SimplisticEntityManagerResolver.class)
 @Repository
-public abstract class SimpleRepositoryWithOverriddenEntityManager extends AbstractEntityRepository<Simple, Long>
+@EntityManagerConfig(entityManagerResolver = SimplisticEntityManagerResolver.class)
+public abstract class SimpleRepositoryWithEntityManagerResolver extends AbstractEntityRepository<Simple, Long>
 {
 
     public abstract List<Simple> findByName(String name);
-
-    public List<Simple> findWithEm(String name)
-    {
-        return entityManager().createQuery("select s from Simple s where s.name = ?1", Simple.class)
-                .setParameter(1, name)
-                .getResultList();
-    }
 
 }
