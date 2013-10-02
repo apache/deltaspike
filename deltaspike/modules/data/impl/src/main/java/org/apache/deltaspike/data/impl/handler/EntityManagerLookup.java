@@ -37,18 +37,23 @@ public class EntityManagerLookup
 
     public EntityManager lookupFor(RepositoryComponent repository)
     {
+        EntityManager result = null;
         if (repository.hasEntityManagerResolver())
         {
             DependentProvider<? extends EntityManagerResolver> resolver =
                     lookupResolver(repository.getEntityManagerResolverClass());
-            EntityManager result = resolver.get().resolveEntityManager();
-            if (repository.getEntityManagerFlushMode() != null)
-            {
-                result.setFlushMode(repository.getEntityManagerFlushMode());
-            }
+            result = resolver.get().resolveEntityManager();
             resolver.destroy();
         }
-        return entityManager.get();
+        else
+        {
+            result = entityManager.get();
+        }
+        if (repository.hasEntityManagerFlushMode())
+        {
+            result.setFlushMode(repository.getEntityManagerFlushMode());
+        }
+        return result;
     }
 
     private DependentProvider<? extends EntityManagerResolver> lookupResolver(

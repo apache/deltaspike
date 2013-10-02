@@ -142,6 +142,11 @@ public class RepositoryComponent
         return entityManagerResolver;
     }
 
+    public boolean hasEntityManagerFlushMode()
+    {
+        return entityManagerFlushMode != null;
+    }
+
     public FlushModeType getEntityManagerFlushMode()
     {
         return entityManagerFlushMode;
