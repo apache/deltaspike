@@ -39,6 +39,7 @@ public abstract class NamingConventionUtils
             if (Folder.class.isAssignableFrom(nodeMetaData.annotationType()))
             {
                 folderMetaData = (Folder)nodeMetaData;
+                break;
             }
         }
 
@@ -48,6 +49,11 @@ public abstract class NamingConventionUtils
         if (folderMetaData != null)
         {
             folderName = folderMetaData.name();
+        }
+
+        if (".".equals(folderName))
+        {
+            folderName = null; //default value -> fallback to the default naming
         }
 
         if (folderName == null)
