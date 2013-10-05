@@ -207,6 +207,17 @@ public class ViewConfigTest
         Assert.assertEquals(View.Extension.XHTML, (viewConfigDescriptor.getMetaData(View.class).iterator().next()).extension());
 
 
+        ConfigDescriptor folderDescriptor = viewConfigResolver.getConfigDescriptor(Pages.Admin.class);
+
+        Assert.assertNotNull(folderDescriptor);
+        Assert.assertEquals("/pages/admin/", folderDescriptor.getPath());
+        Assert.assertEquals(Pages.Admin.class, folderDescriptor.getConfigClass());
+
+        Assert.assertNotNull(folderDescriptor.getMetaData());
+        Assert.assertEquals(1, folderDescriptor.getMetaData().size());
+        Assert.assertEquals("/pages/admin/", ((Folder)folderDescriptor.getMetaData().iterator().next()).name());
+
+
         viewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(Pages.Admin.Index.class);
 
         Assert.assertNotNull(viewConfigDescriptor);

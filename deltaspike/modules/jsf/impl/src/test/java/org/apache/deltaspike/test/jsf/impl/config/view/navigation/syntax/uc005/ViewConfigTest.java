@@ -162,6 +162,23 @@ public class ViewConfigTest
         Assert.assertEquals(0, node.getInheritedMetaData().size());
 
 
+        node = this.viewConfigExtension.findNode(Pages.Admin.class);
+
+        Assert.assertNotNull(node);
+        Assert.assertNotNull(node.getParent()); //Pages
+        Assert.assertNotNull(node.getParent().getParent()); //Root
+        Assert.assertNull(node.getParent().getParent().getParent());
+
+        Assert.assertNotNull(node.getChildren());
+        Assert.assertEquals(3, node.getChildren().size());
+
+        Assert.assertNotNull(node.getMetaData());
+        Assert.assertEquals(0, node.getMetaData().size());
+
+        Assert.assertNotNull(node.getInheritedMetaData());
+        Assert.assertEquals(0, node.getInheritedMetaData().size());
+
+
         node = this.viewConfigExtension.findNode(Pages.Admin.Statistics.Home.class);
 
         Assert.assertNotNull(node);

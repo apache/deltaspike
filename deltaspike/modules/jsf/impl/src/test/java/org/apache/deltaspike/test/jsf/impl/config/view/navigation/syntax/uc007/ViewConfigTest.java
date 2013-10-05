@@ -96,6 +96,27 @@ public class ViewConfigTest
         Assert.assertEquals(0, node.getCallbackDescriptors().size());
 
 
+        node = this.viewConfigExtension.findNode(Pages.Public.class);
+
+        Assert.assertNotNull(node);
+        Assert.assertNotNull(node.getParent());
+        Assert.assertNotNull(node.getParent().getParent());
+        Assert.assertNull(node.getParent().getParent().getParent());
+
+        Assert.assertNotNull(node.getChildren());
+        Assert.assertEquals(1, node.getChildren().size());
+
+        Assert.assertNotNull(node.getMetaData());
+        Assert.assertEquals(1, node.getMetaData().size());
+        Assert.assertEquals(TestFacesRedirect.class, node.getMetaData().iterator().next().annotationType());
+
+        Assert.assertNotNull(node.getInheritedMetaData());
+        Assert.assertEquals(0, node.getInheritedMetaData().size());
+
+        Assert.assertNotNull(node.getCallbackDescriptors());
+        Assert.assertEquals(0, node.getCallbackDescriptors().size());
+
+
         node = this.viewConfigExtension.findNode(Pages.Public.Index.class);
 
         Assert.assertNotNull(node);

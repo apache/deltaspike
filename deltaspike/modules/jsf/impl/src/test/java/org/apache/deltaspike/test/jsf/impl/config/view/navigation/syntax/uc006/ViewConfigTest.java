@@ -230,6 +230,7 @@ public class ViewConfigTest
     public void testMetaDataInheritanceInViewConfig()
     {
         this.viewConfigExtension.addPageDefinition(Pages.Index.class);
+        this.viewConfigExtension.addPageDefinition(Pages.Admin.class);
         this.viewConfigExtension.addPageDefinition(Pages.Admin.Index.class);
         this.viewConfigExtension.addPageDefinition(Pages.Admin.Home.class);
         this.viewConfigExtension.addPageDefinition(Pages.Admin.Statistics.Index.class);

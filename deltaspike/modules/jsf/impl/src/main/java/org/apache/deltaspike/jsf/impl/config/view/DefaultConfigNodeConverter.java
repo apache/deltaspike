@@ -63,7 +63,7 @@ public class DefaultConfigNodeConverter implements ConfigNodeConverter
             View viewAnnotation = findMetaDataByType(mergedMetaData, View.class);
             String viewId = viewAnnotation.basePath() + viewAnnotation.name() + "." + viewAnnotation.extension();
             return new DefaultViewPathConfigDescriptor(viewId, node.getSource(),
-                    mergedMetaData, node.getCallbackDescriptors());
+                    filterInheritedFolderMetaData(mergedMetaData), node.getCallbackDescriptors());
         }
         else
         {
@@ -248,5 +248,20 @@ public class DefaultConfigNodeConverter implements ConfigNodeConverter
             }
         }
         return null;
+    }
+
+    private List<Annotation> filterInheritedFolderMetaData(List<Annotation> mergedMetaData)
+    {
+        List<Annotation> result = new ArrayList<Annotation>();
+
+        for (Annotation metaData : mergedMetaData)
+        {
+            if (!Folder.class.equals(metaData.annotationType()))
+            {
+                result.add(metaData);
+            }
+        }
+
+        return result;
     }
 }

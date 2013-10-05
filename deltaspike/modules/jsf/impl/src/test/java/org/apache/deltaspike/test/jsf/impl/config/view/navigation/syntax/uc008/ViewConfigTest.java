@@ -157,9 +157,11 @@ public class ViewConfigTest
         Assert.assertEquals(Pages.Admin.Index.class, viewConfigDescriptor.getConfigClass());
 
         Assert.assertNotNull(viewConfigDescriptor.getMetaData());
+        Assert.assertEquals(1, viewConfigDescriptor.getMetaData().size());
         Assert.assertEquals(View.NavigationMode.FORWARD, viewConfigDescriptor.getMetaData(View.class).iterator().next().navigation());
         Assert.assertEquals(View.ViewParameterMode.EXCLUDE, viewConfigDescriptor.getMetaData(View.class).iterator().next().viewParams());
         Assert.assertEquals("index", viewConfigDescriptor.getMetaData(View.class).iterator().next().name());
         Assert.assertEquals("xhtml", viewConfigDescriptor.getMetaData(View.class).iterator().next().extension());
+        Assert.assertEquals("/pages/admin/", viewConfigDescriptor.getMetaData(View.class).iterator().next().basePath());
     }
 }
