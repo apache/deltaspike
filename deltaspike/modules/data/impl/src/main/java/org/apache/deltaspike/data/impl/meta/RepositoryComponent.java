@@ -19,6 +19,7 @@
 package org.apache.deltaspike.data.impl.meta;
 
 import java.io.Serializable;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
@@ -29,6 +30,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.enterprise.inject.spi.Bean;
+import javax.enterprise.inject.spi.BeanManager;
 import javax.persistence.FlushModeType;
 
 import org.apache.deltaspike.data.api.EntityManagerConfig;
@@ -53,11 +56,12 @@ public class RepositoryComponent
     private final Class<?> repoClass;
     private final RepositoryEntity entityClass;
     private final Class<? extends EntityManagerResolver> entityManagerResolver;
+    private final boolean entityManagerResolverIsNormalScope;
     private final FlushModeType entityManagerFlushMode;
 
     private final Map<Method, RepositoryMethod> methods = new HashMap<Method, RepositoryMethod>();
 
-    public RepositoryComponent(Class<?> repoClass, RepositoryEntity entityClass)
+    public RepositoryComponent(Class<?> repoClass, RepositoryEntity entityClass, BeanManager beanManager)
     {
         if (entityClass == null)
         {
@@ -67,7 +71,24 @@ public class RepositoryComponent
         this.entityClass = entityClass;
         this.entityManagerResolver = extractEntityManagerResolver(repoClass);
         this.entityManagerFlushMode = extractEntityManagerFlushMode(repoClass);
+
+        if (entityManagerResolver != null && beanManager != null)
+        {
+            final Set<Bean<?>> beans = beanManager.getBeans(entityManagerResolver);
+            final Class<? extends Annotation> scope = beanManager.resolve(beans).getScope();
+            entityManagerResolverIsNormalScope = beanManager.isNormalScope(scope);
+        }
+        else
+        {
+            entityManagerResolverIsNormalScope = false;
+        }
+
         initialize();
+    }
+
+    public boolean isEntityManagerResolverIsNormalScope()
+    {
+        return entityManagerResolverIsNormalScope;
     }
 
     public String getEntityName()

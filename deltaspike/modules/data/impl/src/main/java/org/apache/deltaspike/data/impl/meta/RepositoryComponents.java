@@ -18,17 +18,18 @@
  */
 package org.apache.deltaspike.data.impl.meta;
 
+import org.apache.deltaspike.data.impl.RepositoryDefinitionException;
+import org.apache.deltaspike.data.impl.meta.extractor.AnnotationMetadataExtractor;
+import org.apache.deltaspike.data.impl.meta.extractor.MetadataExtractor;
+import org.apache.deltaspike.data.impl.meta.extractor.TypeMetadataExtractor;
+
+import javax.enterprise.inject.spi.BeanManager;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.deltaspike.data.impl.RepositoryDefinitionException;
-import org.apache.deltaspike.data.impl.meta.extractor.AnnotationMetadataExtractor;
-import org.apache.deltaspike.data.impl.meta.extractor.MetadataExtractor;
-import org.apache.deltaspike.data.impl.meta.extractor.TypeMetadataExtractor;
 
 /**
  * Convenience class to access Repository and Repository method meta data.
@@ -47,13 +48,14 @@ public class RepositoryComponents implements Serializable
     /**
      * Add a Repository class to the meta data repository.
      *
+     *
      * @param repoClass  The repo class.
      * @return {@code true} if Repository class has been added, {@code false} otherwise.
      */
-    public void add(Class<?> repoClass)
+    public void add(Class<?> repoClass, BeanManager bm)
     {
         RepositoryEntity entityClass = extractEntityMetaData(repoClass);
-        RepositoryComponent repo = new RepositoryComponent(repoClass, entityClass);
+        RepositoryComponent repo = new RepositoryComponent(repoClass, entityClass, bm);
         repos.put(repoClass, repo);
     }
 

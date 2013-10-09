@@ -36,15 +36,22 @@ public class EntityManagerLookup
     @Any
     private Instance<EntityManager> entityManager;
 
-    public EntityManager lookupFor(RepositoryComponent repository)
+    public EntityManager lookupFor(final RepositoryComponent repository)
     {
         EntityManager result = null;
         if (repository.hasEntityManagerResolver())
         {
-            DependentProvider<? extends EntityManagerResolver> resolver =
-                    lookupResolver(repository.getEntityManagerResolverClass());
-            result = resolver.get().resolveEntityManager();
-            resolver.destroy();
+            final Class<? extends EntityManagerResolver> emrc = repository.getEntityManagerResolverClass();
+            if (!repository.isEntityManagerResolverIsNormalScope())
+            {
+                final DependentProvider<? extends EntityManagerResolver> resolver = lookupResolver(emrc);
+                result = resolver.get().resolveEntityManager();
+                resolver.destroy();
+            }
+            else
+            {
+                result = BeanProvider.getContextualReference(emrc).resolveEntityManager();
+            }
         }
         else
         {
@@ -60,7 +67,6 @@ public class EntityManagerLookup
     private DependentProvider<? extends EntityManagerResolver> lookupResolver(
             Class<? extends EntityManagerResolver> resolverClass)
     {
-        DependentProvider<? extends EntityManagerResolver> resolver = BeanProvider.getDependent(resolverClass);
-        return resolver;
+        return BeanProvider.getDependent(resolverClass);
     }
 }
