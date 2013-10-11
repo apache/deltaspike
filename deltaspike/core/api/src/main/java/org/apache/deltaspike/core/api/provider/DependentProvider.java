@@ -59,9 +59,17 @@ public class DependentProvider<T> implements Provider<T>, Serializable
         return instance;
     }
 
+    /**
+     * This method will properly destroy the &#064;Dependent scoped instance.
+     * It will have no effect if the bean is NormalScoped as those have their
+     * own lifecycle which we must not disrupt.
+     */
     public void destroy()
     {
-        bean.destroy(instance, creationalContext);
+        if (!BeanManagerProvider.getInstance().getBeanManager().isNormalScope(bean.getScope()))
+        {
+            bean.destroy(instance, creationalContext);
+        }
     }
 
     private void writeObject(ObjectOutputStream out) throws IOException
