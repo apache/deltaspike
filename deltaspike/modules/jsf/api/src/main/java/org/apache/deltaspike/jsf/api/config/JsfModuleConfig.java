@@ -63,4 +63,22 @@ public class JsfModuleConfig implements DeltaSpikeConfig
     {
         return false;
     }
+
+    /**
+     * Per default converters get wrapped to restore them properly during a postback (significant without overhead).
+     * @return true if converters should be handled as std. CDI beans, false otherwise
+     */
+    public boolean isContainerManagedConvertersEnabled()
+    {
+        return true;
+    }
+
+    /**
+     * Per default validators get wrapped to restore them properly during a postback (significant without overhead).
+     * @return true if validators should be handled as std. CDI beans, false otherwise
+     */
+    public boolean isContainerManagedValidatorsEnabled()
+    {
+        return true;
+    }
 }

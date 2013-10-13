@@ -21,9 +21,12 @@ package org.apache.deltaspike.jsf.impl.listener.request;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
+import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;
 import org.apache.deltaspike.jsf.impl.config.view.DefaultErrorViewAwareExceptionHandlerWrapper;
+import org.apache.deltaspike.jsf.impl.injection.InjectionAwareApplicationWrapper;
 import org.apache.deltaspike.jsf.impl.message.FacesMessageEntry;
 
+import javax.faces.application.Application;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExceptionHandler;
 import javax.faces.context.ExternalContext;
@@ -42,6 +45,8 @@ class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
     private boolean defaultErrorViewExceptionHandlerActivated;
 
     private ExternalContext wrappedExternalContext;
+
+    private JsfModuleConfig jsfModuleConfig;
 
     DeltaSpikeFacesContextWrapper(FacesContext wrappedFacesContext)
     {
@@ -148,6 +153,17 @@ class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
     public ExternalContext getExternalContext()
     {
         return this.wrappedExternalContext;
+    }
+
+    @Override
+    public Application getApplication()
+    {
+        if (this.jsfModuleConfig == null)
+        {
+            this.jsfModuleConfig = BeanProvider.getContextualReference(JsfModuleConfig.class);
+        }
+
+        return new InjectionAwareApplicationWrapper(this.wrappedFacesContext.getApplication(), this.jsfModuleConfig);
     }
 
     @Override
