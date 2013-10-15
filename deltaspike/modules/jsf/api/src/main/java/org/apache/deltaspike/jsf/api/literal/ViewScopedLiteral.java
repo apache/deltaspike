@@ -16,13 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.jsf.impl.injection;
+package org.apache.deltaspike.jsf.api.literal;
 
+import javax.enterprise.util.AnnotationLiteral;
 import javax.faces.bean.ViewScoped;
-import java.io.Serializable;
 
-@ViewScoped
-public class ViewDependentBeanStorage extends AbstractBeanStorage implements Serializable
+public class ViewScopedLiteral extends AnnotationLiteral<ViewScoped> implements ViewScoped
 {
-    private static final long serialVersionUID = 4500399024267716556L;
+    private static final long serialVersionUID = -6260027440277811767L;
 }

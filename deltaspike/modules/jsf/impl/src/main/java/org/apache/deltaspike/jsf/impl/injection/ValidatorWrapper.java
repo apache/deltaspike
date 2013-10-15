@@ -18,11 +18,13 @@
  */
 package org.apache.deltaspike.jsf.impl.injection;
 
+import javax.enterprise.inject.Typed;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 
+@Typed()
 public class ValidatorWrapper extends AbstractContextualReferenceWrapper<Validator> implements Validator
 {
     public ValidatorWrapper(Validator wrapped)

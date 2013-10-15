@@ -18,11 +18,13 @@
  */
 package org.apache.deltaspike.jsf.impl.injection;
 
+import javax.enterprise.inject.Typed;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 
+@Typed()
 public class ConverterWrapper extends AbstractContextualReferenceWrapper<Converter> implements Converter
 {
     public ConverterWrapper(Converter wrapped)
