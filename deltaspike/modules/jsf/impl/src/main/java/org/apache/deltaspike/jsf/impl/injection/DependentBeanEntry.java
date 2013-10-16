@@ -18,27 +18,37 @@
  */
 package org.apache.deltaspike.jsf.impl.injection;
 
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-import javax.faces.convert.Converter;
-import javax.faces.convert.ConverterException;
+import javax.enterprise.context.spi.CreationalContext;
+import javax.enterprise.inject.spi.Bean;
+import java.io.Serializable;
 
-public class ConverterWrapper extends AbstractContextualReferenceWrapper<Converter> implements Converter
+class DependentBeanEntry<T> implements Serializable
 {
-    public ConverterWrapper(Converter wrapped)
+    private static final long serialVersionUID = 7148484695430831322L;
+
+    private final T instance;
+    private final Bean<?> bean;
+    private final CreationalContext<T> creationalContext;
+
+    DependentBeanEntry(T instance, Bean<?> bean, CreationalContext<T> creationalContext)
     {
-        super(wrapped);
+        this.instance = instance;
+        this.bean = bean;
+        this.creationalContext = creationalContext;
     }
 
-    @Override
-    public Object getAsObject(FacesContext facesContext, UIComponent component, String value) throws ConverterException
+    T getInstance()
     {
-        return getWrapped().getAsObject(facesContext, component, value);
+        return instance;
     }
 
-    @Override
-    public String getAsString(FacesContext facesContext, UIComponent component, Object value) throws ConverterException
+    Bean<?> getBean()
     {
-        return getWrapped().getAsString(facesContext, component, value);
+        return bean;
+    }
+
+    CreationalContext<T> getCreationalContext()
+    {
+        return creationalContext;
     }
 }

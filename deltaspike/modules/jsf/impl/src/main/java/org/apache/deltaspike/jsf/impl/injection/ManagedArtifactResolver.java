@@ -18,11 +18,18 @@
  */
 package org.apache.deltaspike.jsf.impl.injection;
 
+import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 
+import javax.enterprise.context.Dependent;
+import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.Typed;
+import javax.enterprise.inject.spi.Bean;
+import javax.enterprise.inject.spi.BeanManager;
 import javax.faces.convert.Converter;
 import javax.faces.validator.Validator;
+import java.io.Serializable;
+import java.util.Set;
 
 @Typed()
 public abstract class ManagedArtifactResolver
@@ -44,7 +51,7 @@ public abstract class ManagedArtifactResolver
             return null;
         }
 
-        return BeanProvider.getContextualReference(converterClass);
+        return getContextualReference(BeanManagerProvider.getInstance().getBeanManager(), converterClass);
     }
 
     public static Validator resolveManagedValidator(Class<? extends Validator> validatorClass)
@@ -54,6 +61,42 @@ public abstract class ManagedArtifactResolver
             return null;
         }
 
-        return BeanProvider.getContextualReference(validatorClass);
+        return getContextualReference(BeanManagerProvider.getInstance().getBeanManager(), validatorClass);
+    }
+
+    private static <T> T getContextualReference(BeanManager beanManager, Class<T> type)
+    {
+        Set<Bean<?>> beans = beanManager.getBeans(type);
+
+        if (beans == null || beans.isEmpty())
+        {
+            return null;
+        }
+
+        Bean<?> bean = beanManager.resolve(beans);
+
+        CreationalContext<?> creationalContext = beanManager.createCreationalContext(bean);
+
+        @SuppressWarnings({ "unchecked", "UnnecessaryLocalVariable" })
+        T result = (T) beanManager.getReference(bean, type, creationalContext);
+
+        if (bean.getScope().equals(Dependent.class))
+        {
+            AbstractBeanStorage beanStorage;
+
+            if (Serializable.class.isAssignableFrom(bean.getBeanClass()))
+            {
+                beanStorage = BeanProvider.getContextualReference(ViewDependentBeanStorage.class);
+            }
+            else
+            {
+                beanStorage = BeanProvider.getContextualReference(RequestDependentBeanStorage.class);
+            }
+
+            //noinspection unchecked
+            beanStorage.add(new DependentBeanEntry(result, bean, creationalContext));
+        }
+
+        return result;
     }
 }

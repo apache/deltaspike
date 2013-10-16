@@ -18,27 +18,9 @@
  */
 package org.apache.deltaspike.jsf.impl.injection;
 
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-import javax.faces.convert.Converter;
-import javax.faces.convert.ConverterException;
+import javax.enterprise.context.RequestScoped;
 
-public class ConverterWrapper extends AbstractContextualReferenceWrapper<Converter> implements Converter
+@RequestScoped
+public class RequestDependentBeanStorage extends AbstractBeanStorage
 {
-    public ConverterWrapper(Converter wrapped)
-    {
-        super(wrapped);
-    }
-
-    @Override
-    public Object getAsObject(FacesContext facesContext, UIComponent component, String value) throws ConverterException
-    {
-        return getWrapped().getAsObject(facesContext, component, value);
-    }
-
-    @Override
-    public String getAsString(FacesContext facesContext, UIComponent component, Object value) throws ConverterException
-    {
-        return getWrapped().getAsString(facesContext, component, value);
-    }
 }
