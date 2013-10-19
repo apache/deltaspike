@@ -28,7 +28,6 @@ import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.faces.convert.Converter;
 import javax.faces.validator.Validator;
-import java.io.Serializable;
 import java.util.Set;
 
 @Typed()
@@ -82,16 +81,7 @@ public abstract class ManagedArtifactResolver
 
         if (bean.getScope().equals(Dependent.class))
         {
-            AbstractBeanStorage beanStorage;
-
-            if (Serializable.class.isAssignableFrom(bean.getBeanClass()))
-            {
-                beanStorage = BeanProvider.getContextualReference(ViewDependentBeanStorage.class);
-            }
-            else
-            {
-                beanStorage = BeanProvider.getContextualReference(RequestDependentBeanStorage.class);
-            }
+            AbstractBeanStorage beanStorage = BeanProvider.getContextualReference(RequestDependentBeanStorage.class);
 
             //noinspection unchecked
             beanStorage.add(new DependentBeanEntry(result, bean, creationalContext));
