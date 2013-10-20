@@ -88,7 +88,6 @@
 
         <jacoco.version>0.5.7.201204190339</jacoco.version>
 
-        <arquillian-openwebbeans.version>1.0.0.CR2</arquillian-openwebbeans.version>
         <arquillian-weld.version>1.0.0.CR5</arquillian-weld.version>
 
         <!-- OSGi bundles properties -->
