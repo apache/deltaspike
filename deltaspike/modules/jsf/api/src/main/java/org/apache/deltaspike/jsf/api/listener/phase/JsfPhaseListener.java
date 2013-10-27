@@ -31,8 +31,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * Annotation for implementations of {@link javax.faces.event.PhaseListener}.
  */
 
-//TODO CODI supports @InvocationOrder - re-visit the discussion
-
 @Target(TYPE)
 @Retention(RUNTIME)
 @Inherited
@@ -41,4 +39,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Stereotype
 public @interface JsfPhaseListener
 {
+    /**
+     * @return ordinal for invocation-order - higher ordinals first
+     */
+    int ordinal() default 1000; //aligned with value in BaseConfigSource
 }

@@ -32,6 +32,8 @@ import javax.faces.event.PhaseListener;
 import javax.inject.Inject;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -68,6 +70,22 @@ public class JsfRequestLifecycleBroadcaster
                 this.phaseListeners.add(currentPhaseListener);
             }
         }
+
+        //higher ordinals first
+        sortDescending(this.phaseListeners);
+    }
+
+    private static void sortDescending(List<PhaseListener> phaseListeners)
+    {
+        Collections.sort(phaseListeners, new Comparator<PhaseListener>()
+        {
+            @Override
+            public int compare(PhaseListener phaseListener1, PhaseListener phaseListener2)
+            {
+                return (phaseListener1.getClass().getAnnotation(JsfPhaseListener.class).ordinal() >
+                        phaseListener2.getClass().getAnnotation(JsfPhaseListener.class).ordinal()) ? -1 : 1;
+            }
+        });
     }
 
     protected void broadcastBeforeEvent(PhaseEvent phaseEvent)
