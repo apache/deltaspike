@@ -63,7 +63,7 @@ public class RepositoryExtension implements Extension
         PersistenceUnits.instance().init();
     }
 
-    <X> void processAnnotatedType(@Observes ProcessAnnotatedType<X> event, BeanManager beanManager)
+    <X> void processAnnotatedType(@Observes ProcessAnnotatedType<X> event)
     {
         if (isRepository(event.getAnnotatedType()))
         {
@@ -72,7 +72,7 @@ public class RepositoryExtension implements Extension
             {
                 log.log(Level.FINER, "getHandlerClass: Repository annotation detected on {0}",
                         event.getAnnotatedType());
-                RepositoryComponentsFactory.instance().add(repoClass, beanManager);
+                RepositoryComponentsFactory.instance().add(repoClass);
             }
             catch (RepositoryDefinitionException e)
             {

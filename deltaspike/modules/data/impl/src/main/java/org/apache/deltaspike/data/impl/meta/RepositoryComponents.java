@@ -23,7 +23,6 @@ import org.apache.deltaspike.data.impl.meta.extractor.AnnotationMetadataExtracto
 import org.apache.deltaspike.data.impl.meta.extractor.MetadataExtractor;
 import org.apache.deltaspike.data.impl.meta.extractor.TypeMetadataExtractor;
 
-import javax.enterprise.inject.spi.BeanManager;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -52,10 +51,10 @@ public class RepositoryComponents implements Serializable
      * @param repoClass  The repo class.
      * @return {@code true} if Repository class has been added, {@code false} otherwise.
      */
-    public void add(Class<?> repoClass, BeanManager bm)
+    public void add(Class<?> repoClass)
     {
         RepositoryEntity entityClass = extractEntityMetaData(repoClass);
-        RepositoryComponent repo = new RepositoryComponent(repoClass, entityClass, bm);
+        RepositoryComponent repo = new RepositoryComponent(repoClass, entityClass);
         repos.put(repoClass, repo);
     }
 

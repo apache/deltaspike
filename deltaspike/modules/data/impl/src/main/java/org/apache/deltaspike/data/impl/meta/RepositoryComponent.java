@@ -34,6 +34,7 @@ import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.persistence.FlushModeType;
 
+import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.data.api.EntityManagerConfig;
 import org.apache.deltaspike.data.api.EntityManagerResolver;
 import org.apache.deltaspike.data.api.Repository;
@@ -53,15 +54,16 @@ public class RepositoryComponent
 
     private static final Logger log = Logger.getLogger(RepositoryComponent.class.getName());
 
+    private volatile Boolean entityManagerResolverIsNormalScope;
+
     private final Class<?> repoClass;
     private final RepositoryEntity entityClass;
     private final Class<? extends EntityManagerResolver> entityManagerResolver;
-    private final boolean entityManagerResolverIsNormalScope;
     private final FlushModeType entityManagerFlushMode;
 
     private final Map<Method, RepositoryMethod> methods = new HashMap<Method, RepositoryMethod>();
 
-    public RepositoryComponent(Class<?> repoClass, RepositoryEntity entityClass, BeanManager beanManager)
+    public RepositoryComponent(Class<?> repoClass, RepositoryEntity entityClass)
     {
         if (entityClass == null)
         {
@@ -71,6 +73,23 @@ public class RepositoryComponent
         this.entityClass = entityClass;
         this.entityManagerResolver = extractEntityManagerResolver(repoClass);
         this.entityManagerFlushMode = extractEntityManagerFlushMode(repoClass);
+    }
+
+    //don't trigger this lookup during ProcessAnnotatedType
+    private void lazyInit()
+    {
+        if (entityManagerResolverIsNormalScope == null)
+        {
+            init(BeanManagerProvider.getInstance().getBeanManager());
+        }
+    }
+
+    private synchronized void init(BeanManager beanManager)
+    {
+        if (entityManagerResolverIsNormalScope != null)
+        {
+            return;
+        }
 
         if (entityManagerResolver != null && beanManager != null)
         {
@@ -88,6 +107,7 @@ public class RepositoryComponent
 
     public boolean isEntityManagerResolverIsNormalScope()
     {
+        lazyInit();
         return entityManagerResolverIsNormalScope;
     }
 
@@ -104,6 +124,7 @@ public class RepositoryComponent
      */
     public RepositoryMethod lookupMethod(Method method)
     {
+        lazyInit();
         return methods.get(method);
     }
 
