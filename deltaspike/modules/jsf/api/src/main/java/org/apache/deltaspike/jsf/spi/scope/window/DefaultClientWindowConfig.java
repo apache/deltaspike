@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.jsf.spi.scope.window;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
@@ -30,6 +31,7 @@ import java.util.Map;
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.ExceptionUtils;
+import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;
 
 /**
  * <p>Default implementation of {@link ClientWindowConfig}.
@@ -45,6 +47,8 @@ public class DefaultClientWindowConfig implements ClientWindowConfig, Serializab
      * We will set a cookie with this very name if a noscript link got clicked by the user
      */
     public static final String COOKIE_NAME_NOSCRIPT_ENABLED = "deltaspikeNoScriptEnabled";
+
+    private static final long serialVersionUID = -708423418378550210L;
 
     /**
      * The location of the default windowhandler resource
@@ -65,8 +69,18 @@ public class DefaultClientWindowConfig implements ClientWindowConfig, Serializab
     private String clientWindowtml;
 
     @Inject
+    private JsfModuleConfig jsfModuleConfig;
+
+    @Inject
     private ProjectStage projectStage;
 
+    private boolean useDelegatedWindowHandling;
+
+    @PostConstruct
+    protected void init()
+    {
+        this.useDelegatedWindowHandling = this.jsfModuleConfig.isDelegatedWindowHandlingEnabled();
+    }
 
     @Override
     public boolean isJavaScriptEnabled()
@@ -117,6 +131,10 @@ public class DefaultClientWindowConfig implements ClientWindowConfig, Serializab
     {
         if (!isJavaScriptEnabled())
         {
+            if (this.useDelegatedWindowHandling)
+            {
+                return ClientWindowRenderMode.DELEGATED;
+            }
             return ClientWindowRenderMode.NONE;
         }
 
@@ -130,6 +148,11 @@ public class DefaultClientWindowConfig implements ClientWindowConfig, Serializab
             ) )
         {
             return ClientWindowRenderMode.NONE;
+        }
+
+        if (this.useDelegatedWindowHandling)
+        {
+            return ClientWindowRenderMode.DELEGATED;
         }
 
         return ClientWindowRenderMode.CLIENTWINDOW;

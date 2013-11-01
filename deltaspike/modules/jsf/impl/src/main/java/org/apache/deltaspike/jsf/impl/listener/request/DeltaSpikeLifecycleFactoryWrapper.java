@@ -21,6 +21,9 @@ package org.apache.deltaspike.jsf.impl.listener.request;
 
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
+import org.apache.deltaspike.core.util.ClassUtils;
+import org.apache.deltaspike.core.util.ExceptionUtils;
+import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;
 
 import javax.faces.lifecycle.Lifecycle;
 import javax.faces.lifecycle.LifecycleFactory;
@@ -32,6 +35,8 @@ public class DeltaSpikeLifecycleFactoryWrapper extends LifecycleFactory implemen
 
     private final boolean deactivated;
 
+    private final boolean jsfVersionWithClientWindowDetected;
+
     /**
      * Constructor for wrapping the given {@link LifecycleFactory}
      *
@@ -41,6 +46,8 @@ public class DeltaSpikeLifecycleFactoryWrapper extends LifecycleFactory implemen
     {
         this.wrapped = wrapped;
         this.deactivated = !ClassDeactivationUtils.isActivated(getClass());
+        this.jsfVersionWithClientWindowDetected =
+                ClassUtils.tryToLoadClassForName(JsfModuleConfig.CLIENT_WINDOW_CLASS_NAME) != null;
     }
 
     @Override
@@ -57,6 +64,21 @@ public class DeltaSpikeLifecycleFactoryWrapper extends LifecycleFactory implemen
         if (this.deactivated)
         {
             return result;
+        }
+
+        if (this.jsfVersionWithClientWindowDetected)
+        {
+            Class<? extends Lifecycle> lifecycleWrapperClass = ClassUtils.tryToLoadClassForName(
+                    "org.apache.deltaspike.jsf.impl.listener.request.JsfClientWindowAwareLifecycleWrapper");
+            try
+            {
+                return lifecycleWrapperClass.getConstructor(new Class[] { Lifecycle.class })
+                        .newInstance(new DeltaSpikeLifecycleWrapper(result));
+            }
+            catch (Exception e)
+            {
+                throw ExceptionUtils.throwAsRuntimeException(e);
+            }
         }
         return new DeltaSpikeLifecycleWrapper(result);
     }

@@ -55,6 +55,9 @@
         <dependency>
             <groupId>org.apache.myfaces.core</groupId>
             <artifactId>myfaces-api</artifactId>
+            <!-- just needed for compiling >optional< classes for jsf 2.2
+                 jsf 2.0 and 2.1 compatibility is ensured via test-cases -->
+            <version>${myfaces22.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

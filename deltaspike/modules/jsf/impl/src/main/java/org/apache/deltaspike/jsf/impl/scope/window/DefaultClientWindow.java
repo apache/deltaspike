@@ -60,14 +60,10 @@ public class DefaultClientWindow implements ClientWindow
     public static final String AUTOMATED_ENTRY_POINT_PARAMETER_KEY = "automatedEntryPoint";
 
     /**
-     * The parameter for the windowId for GET requests
-     */
-    public static final String DELTASPIKE_WINDOW_ID_PARAM = "windowId";
-
-    /**
      * The parameter for the windowId for POST requests
      */
     public static final String DELTASPIKE_WINDOW_ID_POST_PARAM = "dsPostWindowId";
+    public static final String JSF_WINDOW_ID_POST_PARAM = "javax.faces.ClientWindow";
 
     private static final Logger logger = Logger.getLogger(DefaultClientWindow.class.getName());
 
@@ -102,10 +98,16 @@ public class DefaultClientWindow implements ClientWindow
     @Override
     public String getWindowId(FacesContext facesContext)
     {
-        if (ClientWindowRenderMode.NONE.equals(clientWindowConfig.getClientWindowRenderMode(facesContext)))
+        ClientWindowRenderMode clientWindowRenderMode = clientWindowConfig.getClientWindowRenderMode(facesContext);
+        if (ClientWindowRenderMode.NONE.equals(clientWindowRenderMode))
         {
             // if this request should not get any window detection then we are done
             return DEFAULT_WINDOW_ID;
+        }
+
+        if (ClientWindowRenderMode.DELEGATED.equals(clientWindowRenderMode))
+        {
+            return ClientWindowAdapter.getWindowIdFromJsf(facesContext);
         }
 
         if (facesContext.isPostback())
@@ -163,6 +165,11 @@ public class DefaultClientWindow implements ClientWindow
     {
         Map<String, String> requestParams = facesContext.getExternalContext().getRequestParameterMap();
         String windowId = requestParams.get(DELTASPIKE_WINDOW_ID_POST_PARAM);
+
+        if (windowId == null)
+        {
+            windowId = requestParams.get(JSF_WINDOW_ID_POST_PARAM);
+        }
         return windowId;
     }
 

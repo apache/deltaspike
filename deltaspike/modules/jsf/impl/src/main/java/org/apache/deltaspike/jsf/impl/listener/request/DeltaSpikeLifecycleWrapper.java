@@ -43,6 +43,11 @@ class DeltaSpikeLifecycleWrapper extends Lifecycle
         this.wrapped = wrapped;
     }
 
+    Lifecycle getWrapped()
+    {
+        return wrapped;
+    }
+
     @Override
     public void addPhaseListener(PhaseListener phaseListener)
     {
@@ -58,6 +63,12 @@ class DeltaSpikeLifecycleWrapper extends Lifecycle
     @Override
     public void execute(FacesContext facesContext)
     {
+        //can happen due to the window-handling of deltaspike
+        if (facesContext.getResponseComplete())
+        {
+            return;
+        }
+
         lazyInit();
 
         //TODO broadcastApplicationStartupBroadcaster();

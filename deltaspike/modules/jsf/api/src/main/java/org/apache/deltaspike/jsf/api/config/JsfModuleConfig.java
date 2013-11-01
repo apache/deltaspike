@@ -19,8 +19,10 @@
 package org.apache.deltaspike.jsf.api.config;
 
 import org.apache.deltaspike.core.api.config.DeltaSpikeConfig;
+import org.apache.deltaspike.core.util.ClassUtils;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.faces.context.FacesContext;
 
 /**
  * Config for all JSF specific configurations.
@@ -28,6 +30,9 @@ import javax.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class JsfModuleConfig implements DeltaSpikeConfig
 {
+    public static final String CLIENT_WINDOW_CONFIG_KEY = "javax.faces.CLIENT_WINDOW_MODE";
+    public static final String CLIENT_WINDOW_CLASS_NAME = "javax.faces.lifecycle.ClientWindow";
+
     private static final long serialVersionUID = -487295181899986237L;
 
     protected JsfModuleConfig()
@@ -80,5 +85,18 @@ public class JsfModuleConfig implements DeltaSpikeConfig
     public boolean isContainerManagedValidatorsEnabled()
     {
         return true;
+    }
+
+    public boolean isDelegatedWindowHandlingEnabled()
+    {
+        if (ClassUtils.tryToLoadClassForName(CLIENT_WINDOW_CLASS_NAME) == null)
+        {
+            return false;
+        }
+
+        String configuredWindowHandling = FacesContext.getCurrentInstance().getExternalContext()
+                                .getInitParameter(CLIENT_WINDOW_CONFIG_KEY);
+
+        return !(configuredWindowHandling == null || "none".equalsIgnoreCase(configuredWindowHandling.trim()));
     }
 }
