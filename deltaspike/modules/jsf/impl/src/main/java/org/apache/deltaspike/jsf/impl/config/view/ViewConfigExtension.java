@@ -171,6 +171,17 @@ public class ViewConfigExtension implements Extension, Deactivatable
 
     protected void addConfigClass(Class viewConfigClass, Set<Annotation> viewConfigAnnotations)
     {
+        String className = viewConfigClass.getName();
+        if (!className.contains("."))
+        {
+            if (className.contains("$"))
+            {
+                className = className.substring(0, className.indexOf("$"));
+            }
+
+            throw new IllegalStateException("Please move the class '" + className + "' to a package!");
+        }
+
         for (Annotation annotation : viewConfigAnnotations)
         {
             if (annotation.annotationType().equals(ViewConfigRoot.class))
