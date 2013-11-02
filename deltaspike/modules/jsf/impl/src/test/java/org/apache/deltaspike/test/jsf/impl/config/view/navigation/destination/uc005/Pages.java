@@ -55,6 +55,11 @@ interface Pages
         class Step6 implements ViewConfig
         {
         }
+
+        @View(basePath = "w1b")
+        class Step7 implements ViewConfig
+        {
+        }
     }
 
     @View(basePath = "w2") //gets ignored because @Folder should be used instead
@@ -89,6 +94,11 @@ interface Pages
         class Step6 implements ViewConfig
         {
         }
+
+        @View(basePath = "w2b")
+        class Step7 implements ViewConfig
+        {
+        }
     }
 
     @View(basePath = "/w3") //gets ignored because @Folder should be used instead
@@ -98,6 +108,11 @@ interface Pages
         class Step1 implements ViewConfig
         {
         }
+
+        @View(basePath = "/")
+        class Step2 implements ViewConfig
+        {
+        }
     }
 
     @View(basePath = "./w4b") //gets ignored because @Folder should be used instead
@@ -105,6 +120,11 @@ interface Pages
     {
         @View(basePath = "")
         class Step1 implements ViewConfig
+        {
+        }
+
+        @View(basePath = "/")
+        class Step2 implements ViewConfig
         {
         }
     }
@@ -189,6 +209,11 @@ interface Pages
         class Step6 implements ViewConfig
         {
         }
+
+        @View(basePath = "w11b")
+        class Step7 implements ViewConfig
+        {
+        }
     }
 
     @Folder(name = "/w12/")
@@ -223,6 +248,11 @@ interface Pages
         class Step6 implements ViewConfig
         {
         }
+
+        @View(basePath = "w12b")
+        class Step7 implements ViewConfig
+        {
+        }
     }
 
     @Folder(name = "./w13a/")
@@ -255,6 +285,11 @@ interface Pages
 
         @View(basePath = "./w13b/")
         class Step6 implements ViewConfig
+        {
+        }
+
+        @View(basePath = "w13b")
+        class Step7 implements ViewConfig
         {
         }
     }

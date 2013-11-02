@@ -269,7 +269,7 @@ public class ViewConfigTest
         Assert.assertEquals(View.ViewParameterMode.EXCLUDE, configDescriptor.getMetaData(View.class).iterator().next().viewParams());
         //the following is correct because it's @View at the folder level:
         Assert.assertEquals("", configDescriptor.getMetaData(View.class).iterator().next().name());
-        Assert.assertEquals("", configDescriptor.getMetaData(View.class).iterator().next().basePath());
+        Assert.assertEquals("/pages/", configDescriptor.getMetaData(View.class).iterator().next().basePath());
         Assert.assertEquals("jsf", configDescriptor.getMetaData(View.class).iterator().next().extension());
 
 
@@ -288,7 +288,7 @@ public class ViewConfigTest
         Assert.assertEquals(View.ViewParameterMode.INCLUDE, configDescriptor.getMetaData(View.class).iterator().next().viewParams());
         //the following is correct because it's @View at the folder level:
         Assert.assertEquals("", configDescriptor.getMetaData(View.class).iterator().next().name());
-        Assert.assertEquals("", configDescriptor.getMetaData(View.class).iterator().next().basePath());
+        Assert.assertEquals("/pages/admin/", configDescriptor.getMetaData(View.class).iterator().next().basePath());
         Assert.assertEquals("faces", configDescriptor.getMetaData(View.class).iterator().next().extension());
 
 

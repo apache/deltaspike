@@ -55,6 +55,7 @@ public class ViewConfigPathTest
         this.viewConfigExtension.addPageDefinition(Pages.Wizard1.Step4.class);
         this.viewConfigExtension.addPageDefinition(Pages.Wizard1.Step5.class);
         this.viewConfigExtension.addPageDefinition(Pages.Wizard1.Step6.class);
+        this.viewConfigExtension.addPageDefinition(Pages.Wizard1.Step7.class);
 
         ViewConfigResolver viewConfigResolver = this.viewConfigResolverProducer.createViewConfigResolver();
 
@@ -75,7 +76,7 @@ public class ViewConfigPathTest
 
         viewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(Pages.Wizard1.Step4.class);
         Assert.assertNotNull(viewConfigDescriptor);
-        Assert.assertEquals("w1/step4.xhtml", viewConfigDescriptor.getViewId());
+        Assert.assertEquals("/pages/wizard1/w1/step4.xhtml", viewConfigDescriptor.getViewId());
 
         viewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(Pages.Wizard1.Step5.class);
         Assert.assertNotNull(viewConfigDescriptor);
@@ -84,6 +85,10 @@ public class ViewConfigPathTest
         viewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(Pages.Wizard1.Step6.class);
         Assert.assertNotNull(viewConfigDescriptor);
         Assert.assertEquals("/pages/wizard1/w1b/step6.xhtml", viewConfigDescriptor.getViewId());
+
+        viewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(Pages.Wizard1.Step7.class);
+        Assert.assertNotNull(viewConfigDescriptor);
+        Assert.assertEquals("/pages/wizard1/w1b/step7.xhtml", viewConfigDescriptor.getViewId());
     }
 
     @Test
@@ -95,6 +100,7 @@ public class ViewConfigPathTest
         this.viewConfigExtension.addPageDefinition(Pages.Wizard2.Step4.class);
         this.viewConfigExtension.addPageDefinition(Pages.Wizard2.Step5.class);
         this.viewConfigExtension.addPageDefinition(Pages.Wizard2.Step6.class);
+        this.viewConfigExtension.addPageDefinition(Pages.Wizard2.Step7.class);
 
         ViewConfigResolver viewConfigResolver = this.viewConfigResolverProducer.createViewConfigResolver();
 
@@ -115,7 +121,7 @@ public class ViewConfigPathTest
 
         viewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(Pages.Wizard2.Step4.class);
         Assert.assertNotNull(viewConfigDescriptor);
-        Assert.assertEquals("w2/step4.xhtml", viewConfigDescriptor.getViewId());
+        Assert.assertEquals("/pages/wizard2/w2/step4.xhtml", viewConfigDescriptor.getViewId());
 
         viewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(Pages.Wizard2.Step5.class);
         Assert.assertNotNull(viewConfigDescriptor);
@@ -124,12 +130,17 @@ public class ViewConfigPathTest
         viewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(Pages.Wizard2.Step6.class);
         Assert.assertNotNull(viewConfigDescriptor);
         Assert.assertEquals("/pages/wizard2/w2b/step6.xhtml", viewConfigDescriptor.getViewId());
+
+        viewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(Pages.Wizard2.Step7.class);
+        Assert.assertNotNull(viewConfigDescriptor);
+        Assert.assertEquals("/pages/wizard2/w2b/step7.xhtml", viewConfigDescriptor.getViewId());
     }
 
     @Test
     public void testNamesWizard3()
     {
         this.viewConfigExtension.addPageDefinition(Pages.Wizard3.Step1.class);
+        this.viewConfigExtension.addPageDefinition(Pages.Wizard3.Step2.class);
 
         ViewConfigResolver viewConfigResolver = this.viewConfigResolverProducer.createViewConfigResolver();
 
@@ -139,12 +150,17 @@ public class ViewConfigPathTest
         viewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(Pages.Wizard3.Step1.class);
         Assert.assertNotNull(viewConfigDescriptor);
         Assert.assertEquals("/pages/wizard3/step1.xhtml", viewConfigDescriptor.getViewId());
+
+        viewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(Pages.Wizard3.Step2.class);
+        Assert.assertNotNull(viewConfigDescriptor);
+        Assert.assertEquals("/step2.xhtml", viewConfigDescriptor.getViewId());
     }
 
     @Test
     public void testNamesWizard4()
     {
         this.viewConfigExtension.addPageDefinition(Pages.Wizard4.Step1.class);
+        this.viewConfigExtension.addPageDefinition(Pages.Wizard4.Step2.class);
 
         ViewConfigResolver viewConfigResolver = this.viewConfigResolverProducer.createViewConfigResolver();
 
@@ -154,6 +170,10 @@ public class ViewConfigPathTest
         viewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(Pages.Wizard4.Step1.class);
         Assert.assertNotNull(viewConfigDescriptor);
         Assert.assertEquals("/pages/wizard4/step1.xhtml", viewConfigDescriptor.getViewId());
+
+        viewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(Pages.Wizard4.Step2.class);
+        Assert.assertNotNull(viewConfigDescriptor);
+        Assert.assertEquals("/step2.xhtml", viewConfigDescriptor.getViewId());
     }
 
     @Test
@@ -213,7 +233,7 @@ public class ViewConfigPathTest
 
         viewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(Pages.Wizard8.Step1.class);
         Assert.assertNotNull(viewConfigDescriptor);
-        Assert.assertEquals("w8/step1.xhtml", viewConfigDescriptor.getViewId());
+        Assert.assertEquals("/pages/w8/step1.xhtml", viewConfigDescriptor.getViewId());
     }
 
     @Test
@@ -255,6 +275,7 @@ public class ViewConfigPathTest
         this.viewConfigExtension.addPageDefinition(Pages.Wizard11.Step4.class);
         this.viewConfigExtension.addPageDefinition(Pages.Wizard11.Step5.class);
         this.viewConfigExtension.addPageDefinition(Pages.Wizard11.Step6.class);
+        this.viewConfigExtension.addPageDefinition(Pages.Wizard11.Step7.class);
 
         ViewConfigResolver viewConfigResolver = this.viewConfigResolverProducer.createViewConfigResolver();
 
@@ -263,7 +284,7 @@ public class ViewConfigPathTest
 
         viewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(Pages.Wizard11.Step1.class);
         Assert.assertNotNull(viewConfigDescriptor);
-        Assert.assertEquals("w11/step1.xhtml", viewConfigDescriptor.getViewId());
+        Assert.assertEquals("/pages/w11/step1.xhtml", viewConfigDescriptor.getViewId());
 
         viewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(Pages.Wizard11.Step2.class);
         Assert.assertNotNull(viewConfigDescriptor);
@@ -271,11 +292,11 @@ public class ViewConfigPathTest
 
         viewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(Pages.Wizard11.Step3.class);
         Assert.assertNotNull(viewConfigDescriptor);
-        Assert.assertEquals("w11/step3.xhtml", viewConfigDescriptor.getViewId());
+        Assert.assertEquals("/pages/w11/step3.xhtml", viewConfigDescriptor.getViewId());
 
         viewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(Pages.Wizard11.Step4.class);
         Assert.assertNotNull(viewConfigDescriptor);
-        Assert.assertEquals("w11b/step4.xhtml", viewConfigDescriptor.getViewId());
+        Assert.assertEquals("/pages/w11/w11b/step4.xhtml", viewConfigDescriptor.getViewId());
 
         viewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(Pages.Wizard11.Step5.class);
         Assert.assertNotNull(viewConfigDescriptor);
@@ -283,7 +304,11 @@ public class ViewConfigPathTest
 
         viewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(Pages.Wizard11.Step6.class);
         Assert.assertNotNull(viewConfigDescriptor);
-        Assert.assertEquals("w11/w11b/step6.xhtml", viewConfigDescriptor.getViewId());
+        Assert.assertEquals("/pages/w11/w11b/step6.xhtml", viewConfigDescriptor.getViewId());
+
+        viewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(Pages.Wizard11.Step7.class);
+        Assert.assertNotNull(viewConfigDescriptor);
+        Assert.assertEquals("/pages/w11/w11b/step7.xhtml", viewConfigDescriptor.getViewId());
     }
 
     @Test
@@ -295,6 +320,7 @@ public class ViewConfigPathTest
         this.viewConfigExtension.addPageDefinition(Pages.Wizard12.Step4.class);
         this.viewConfigExtension.addPageDefinition(Pages.Wizard12.Step5.class);
         this.viewConfigExtension.addPageDefinition(Pages.Wizard12.Step6.class);
+        this.viewConfigExtension.addPageDefinition(Pages.Wizard12.Step7.class);
 
         ViewConfigResolver viewConfigResolver = this.viewConfigResolverProducer.createViewConfigResolver();
 
@@ -315,7 +341,7 @@ public class ViewConfigPathTest
 
         viewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(Pages.Wizard12.Step4.class);
         Assert.assertNotNull(viewConfigDescriptor);
-        Assert.assertEquals("w12b/step4.xhtml", viewConfigDescriptor.getViewId());
+        Assert.assertEquals("/w12/w12b/step4.xhtml", viewConfigDescriptor.getViewId());
 
         viewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(Pages.Wizard12.Step5.class);
         Assert.assertNotNull(viewConfigDescriptor);
@@ -324,6 +350,10 @@ public class ViewConfigPathTest
         viewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(Pages.Wizard12.Step6.class);
         Assert.assertNotNull(viewConfigDescriptor);
         Assert.assertEquals("/w12/w12b/step6.xhtml", viewConfigDescriptor.getViewId());
+
+        viewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(Pages.Wizard12.Step7.class);
+        Assert.assertNotNull(viewConfigDescriptor);
+        Assert.assertEquals("/w12/w12b/step7.xhtml", viewConfigDescriptor.getViewId());
     }
 
     @Test
@@ -335,6 +365,7 @@ public class ViewConfigPathTest
         this.viewConfigExtension.addPageDefinition(Pages.Wizard13.Step4.class);
         this.viewConfigExtension.addPageDefinition(Pages.Wizard13.Step5.class);
         this.viewConfigExtension.addPageDefinition(Pages.Wizard13.Step6.class);
+        this.viewConfigExtension.addPageDefinition(Pages.Wizard13.Step7.class);
 
         ViewConfigResolver viewConfigResolver = this.viewConfigResolverProducer.createViewConfigResolver();
 
@@ -355,7 +386,7 @@ public class ViewConfigPathTest
 
         viewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(Pages.Wizard13.Step4.class);
         Assert.assertNotNull(viewConfigDescriptor);
-        Assert.assertEquals("w13b/step4.xhtml", viewConfigDescriptor.getViewId());
+        Assert.assertEquals("/pages/w13a/w13b/step4.xhtml", viewConfigDescriptor.getViewId());
 
         viewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(Pages.Wizard13.Step5.class);
         Assert.assertNotNull(viewConfigDescriptor);
@@ -364,6 +395,10 @@ public class ViewConfigPathTest
         viewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(Pages.Wizard13.Step6.class);
         Assert.assertNotNull(viewConfigDescriptor);
         Assert.assertEquals("/pages/w13a/w13b/step6.xhtml", viewConfigDescriptor.getViewId());
+
+        viewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(Pages.Wizard13.Step7.class);
+        Assert.assertNotNull(viewConfigDescriptor);
+        Assert.assertEquals("/pages/w13a/w13b/step7.xhtml", viewConfigDescriptor.getViewId());
     }
 
     @Test(expected = IllegalStateException.class)

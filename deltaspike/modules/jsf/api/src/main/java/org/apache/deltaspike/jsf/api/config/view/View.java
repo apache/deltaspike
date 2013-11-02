@@ -26,10 +26,13 @@ import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.jsf.api.literal.ViewLiteral;
 import org.apache.deltaspike.jsf.util.NamingConventionUtils;
 
+import java.lang.annotation.Annotation;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.lang.reflect.Modifier;
+import java.util.Iterator;
+import java.util.Set;
 
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
@@ -192,10 +195,29 @@ public @interface View
 
             if (defaultValueReplaced)
             {
-                return new ViewLiteral(basePath, name, extension, navigation, viewParams,
+                View result = new ViewLiteral(basePath, name, extension, navigation, viewParams,
                         view.basePathBuilder(), view.fileNameBuilder(), view.extensionBuilder());
+                updateNodeMetaData(viewConfigNode, result);
+                return result;
             }
             return view;
+        }
+
+        private void updateNodeMetaData(ViewConfigNode viewConfigNode, View view)
+        {
+            Set<Annotation> metaData = viewConfigNode.getMetaData();
+
+            Iterator<? extends Annotation> metaDataIterator = metaData.iterator();
+
+            while (metaDataIterator.hasNext())
+            {
+                if (View.class.equals(metaDataIterator.next().annotationType()))
+                {
+                    metaDataIterator.remove();
+                    break;
+                }
+            }
+            metaData.add(view);
         }
 
         private NameBuilder getBasePathBuilder(View view)
@@ -320,6 +342,20 @@ public @interface View
             if (basePath != null && basePath.startsWith("."))
             {
                 basePath = NamingConventionUtils.toPath(viewConfigNode.getParent()) + basePath.substring(1);
+
+                this.defaultValueReplaced = true;
+            }
+
+            if (basePath != null && !basePath.startsWith(".") && !basePath.startsWith("/"))
+            {
+                basePath = NamingConventionUtils.toPath(viewConfigNode.getParent()) + basePath;
+
+                this.defaultValueReplaced = true;
+            }
+
+            if (basePath != null && !basePath.endsWith("/"))
+            {
+                basePath = basePath + "/";
 
                 this.defaultValueReplaced = true;
             }

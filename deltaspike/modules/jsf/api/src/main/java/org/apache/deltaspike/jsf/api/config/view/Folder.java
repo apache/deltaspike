@@ -26,9 +26,12 @@ import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.jsf.api.literal.FolderLiteral;
 import org.apache.deltaspike.jsf.util.NamingConventionUtils;
 
+import java.lang.annotation.Annotation;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+import java.util.Iterator;
+import java.util.Set;
 
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
@@ -79,9 +82,28 @@ public @interface Folder
 
             if (defaultValueReplaced)
             {
-                return new FolderLiteral(name, folder.folderNameBuilder());
+                Folder result = new FolderLiteral(name, folder.folderNameBuilder());
+                updateNodeMetaData(viewConfigNode, result);
+                return result;
             }
             return folder;
+        }
+
+        private void updateNodeMetaData(ViewConfigNode viewConfigNode, Folder folder)
+        {
+            Set<Annotation> metaData = viewConfigNode.getMetaData();
+
+            Iterator<? extends Annotation> metaDataIterator = metaData.iterator();
+
+            while (metaDataIterator.hasNext())
+            {
+                if (Folder.class.equals(metaDataIterator.next().annotationType()))
+                {
+                    metaDataIterator.remove();
+                    break;
+                }
+            }
+            metaData.add(folder);
         }
 
         private NameBuilder getFolderNameBuilder(Folder folder)
@@ -131,13 +153,28 @@ public @interface Folder
 
             if (name == null /*null used as marker value for dyn. added instances*/ || ".".equals(name) /*default*/)
             {
-                this.defaultValueReplaced = true;
                 name = NamingConventionUtils.toPath(viewConfigNode);
+
+                this.defaultValueReplaced = true;
             }
 
             if (name != null && name.startsWith("."))
             {
                 name = NamingConventionUtils.toPath(viewConfigNode.getParent()) + name.substring(1);
+
+                this.defaultValueReplaced = true;
+            }
+
+            if (name != null && !name.startsWith(".") && !name.startsWith("/"))
+            {
+                name = NamingConventionUtils.toPath(viewConfigNode.getParent()) + name;
+
+                this.defaultValueReplaced = true;
+            }
+
+            if (name != null && !name.endsWith("/"))
+            {
+                name = name + "/";
 
                 this.defaultValueReplaced = true;
             }
