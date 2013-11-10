@@ -19,21 +19,22 @@
 package org.apache.deltaspike.security.api.authorization;
 
 /**
- * Simple implementation of a SecurityViolation.
- * It will only store the string it gets via the constructor.
+ * Base class for decision-voters
  */
-public class DefaultSecurityViolation implements SecurityViolation
+//can be used also for similar parts
+//e.g. for custom scopes. like it was done in CODI (see AbstractBeanCreationDecisionVoter)
+public abstract class AbstractDecisionVoter
 {
-    private String reason;
-
-    public DefaultSecurityViolation(String reason)
+    /**
+     * Creates an instance of {@link SecurityViolation} for a given
+     * string which will be used as reason to describe the violation.
+     *
+     * @param reason description of the violation
+     * @return A new instance of {@link SecurityViolation}
+     * which provides details about the found restriction.
+     */
+    protected SecurityViolation newSecurityViolation(String reason)
     {
-        this.reason = reason;
-    }
-
-    @Override
-    public String getReason()
-    {
-        return reason;
+        return new SimpleSecurityViolation(reason);
     }
 }
