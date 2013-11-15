@@ -1,5 +1,4 @@
 = DeltaSpike Data
-Thomas Hug <thug@apache.org>
 
 ///////////
 Licensed to the Apache Software Foundation (ASF) under one
@@ -694,6 +693,89 @@ like accessing the current +EntityManager+ and entity class.
 
 Note that, if you define multiple extensions with equivalent method signatures, there is no specific
 order in which the implementation is selected.
+
+=== Mapping
+
+While repositories are primarily intended to work with Entities, it might be preferable in some
+cases to have an additional mapping layer on top of them, e.g. because the Entities are quite complex
+but the service layer needs only a limited view on it, or because the Entities are exposed over a
+remote interface and there should not be a 1:1 view on the domain model.
+
+DeltaSpike Data allows to directly plugin in such a mapping mechanism without the need to specify additional
+mapping methods:
+
+[source,java]
+----
+@Repository(forEntity = Person.class)
+@MappingConfig(PersonDtoMapper.class)
+public interface PersonRepository
+{
+
+    PersonDto findBySsn(String ssn);
+    
+    List<PersonDto> findByLastName(String lastName);
+
+}
+----
+
+The +PersonDtoMapper+ class has to implement the +QueryInOutMapper+ interface:
+
+[source,java]
+----
+public class PersonDtoMapper implements QueryInOutMapper<Person>
+{
+
+    @Override
+    public Object mapResult(Person result)
+    {
+        ... // converts Person into a PersonDto
+    }
+    ...
+    
+    @Override
+    public Object mapResultList(List<Simple> result)
+    {
+        ... // result lists can also be mapped into something different
+            // than a collection.
+    }
+    
+    @Override
+    public boolean mapsParameter(Object parameter)
+    {
+        return parameter != null && (
+                parameter instanceof PersonDto || parameter instanceof PersonId);
+    }
+    
+    @Override
+    public Object mapParameter(Object parameter)
+    {
+        ... // converts query parameters if required
+    }
+}
+----
+
+The mapper can also be used to transform query parameters. Parameters are converted before
+executing queries and calling repository extensions.
+
+Note that those mapper classes are treated as CDI Beans, so it is possible to use injection
+in those beans (you might e.g. inject an +EntityManager+ or other mappers). As the +@MappingConfig+
+refers to the mapper class directly, the mapper must be uniquely identifiable by its class.
+
+It's also possible to combine mappings with the base Repository classes:
+
+[source,java]
+----
+@Repository(forEntity = Person.class)
+@MappingConfig(PersonDtoMapper.class)
+public interface PersonRepository extends EntityRepository<PersonDto, PersonId>
+{
+    ...
+}
+----
+
+In this case, the +forEntity+ attribute in the +@Repository+ annotation is mandatory. Also it is up
+to the mapper to convert parameters correctly (in this example, a conversion from a +PersonDto+
+parameter to +Person+ entity and from +PersonId+ to +Long+ is necessary).
 
 === JPA Criteria API Support
 

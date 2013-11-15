@@ -16,28 +16,25 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.data.impl.param;
+package org.apache.deltaspike.data.api.mapping;
 
-import javax.persistence.Query;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Query parameters which have an index (?1).
+ * Defines mapping configuration for query result and input parameters.
  */
-public class IndexedParameter extends Parameter
+@Target({ ElementType.TYPE, ElementType.METHOD })
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Inherited
+public @interface MappingConfig
 {
 
-    private final int index;
-
-    public IndexedParameter(int index, Object value, int argIndex)
-    {
-        super(value, argIndex);
-        this.index = index;
-    }
-
-    @Override
-    public void apply(Query query)
-    {
-        query.setParameter(index, queryValue());
-    }
+    Class<? extends QueryInOutMapper<?>> value();
 
 }

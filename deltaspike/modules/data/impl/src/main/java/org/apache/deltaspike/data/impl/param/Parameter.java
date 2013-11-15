@@ -18,16 +18,24 @@
  */
 package org.apache.deltaspike.data.impl.param;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.persistence.Query;
+
+import org.apache.deltaspike.data.api.mapping.QueryInOutMapper;
 
 /**
  * Base class for parameters.
  */
 public abstract class Parameter
 {
+    private static final Logger LOG = Logger.getLogger(Parameter.class.getName());
 
     protected final Object value;
     protected final int argIndex;
+
+    protected Object mappedValue = null;
 
     public Parameter(Object value, int argIndex)
     {
@@ -36,5 +44,19 @@ public abstract class Parameter
     }
 
     public abstract void apply(Query query);
+
+    public void applyMapper(QueryInOutMapper<?> mapper)
+    {
+        if (mapper.mapsParameter(value))
+        {
+            mappedValue = mapper.mapParameter(value);
+            LOG.log(Level.FINE, "Converting param {0} to {1}", new Object[] { value, mappedValue });
+        }
+    }
+
+    protected Object queryValue()
+    {
+        return mappedValue != null ? mappedValue : value;
+    }
 
 }

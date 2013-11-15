@@ -31,6 +31,7 @@ import javax.persistence.Query;
 import org.apache.deltaspike.data.api.FirstResult;
 import org.apache.deltaspike.data.api.MaxResults;
 import org.apache.deltaspike.data.api.QueryParam;
+import org.apache.deltaspike.data.api.mapping.QueryInOutMapper;
 
 /**
  * Convenience class to manage method and query parameters.
@@ -88,6 +89,14 @@ public final class Parameters
             }
         }
         return new Parameters(result, max, first);
+    }
+
+    public void applyMapper(QueryInOutMapper<?> mapper)
+    {
+        for (Parameter param : parameterList)
+        {
+            param.applyMapper(mapper);
+        }
     }
 
     public Query applyTo(Query query)

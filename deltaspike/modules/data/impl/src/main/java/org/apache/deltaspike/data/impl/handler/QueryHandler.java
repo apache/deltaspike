@@ -73,7 +73,7 @@ public class QueryHandler implements Serializable, InvocationHandler
             RepositoryMethod repoMethod = components.lookupMethod(repo.getRepositoryClass(), method);
             queryContext = createContext(proxy, method, args, repo, repoMethod);
             QueryBuilder builder = queryBuilder.build(repoMethod, queryContext);
-            Object result = builder.execute(queryContext);
+            Object result = builder.executeQuery(queryContext);
             return result;
         }
         catch (Exception e)
@@ -96,6 +96,7 @@ public class QueryHandler implements Serializable, InvocationHandler
     {
         CdiQueryInvocationContext queryContext = new CdiQueryInvocationContext(proxy, method, args, repoMethod,
                 entityManagerLookup.lookupFor(repo));
+        queryContext.init();
         context.set(queryContext);
         return queryContext;
     }

@@ -25,6 +25,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import org.apache.deltaspike.data.api.mapping.QueryInOutMapper;
 import org.apache.deltaspike.data.impl.meta.RepositoryMethod;
 import org.apache.deltaspike.data.impl.param.Parameters;
 import org.apache.deltaspike.data.impl.util.bean.Destroyable;
@@ -59,6 +60,22 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
         this.queryPostProcessors = new LinkedList<QueryStringPostProcessor>();
         this.jpaPostProcessors = new LinkedList<JpaQueryPostProcessor>();
         this.cleanup = new LinkedList<Destroyable>();
+    }
+
+    public void init()
+    {
+        if (hasQueryInOutMapper())
+        {
+            QueryInOutMapper<?> mapper = getQueryInOutMapper();
+            params.applyMapper(mapper);
+            for (int i = 0; i < args.length; i++)
+            {
+                if (mapper.mapsParameter(args[i]))
+                {
+                    args[i] = mapper.mapParameter(args[i]);
+                }
+            }
+        }
     }
 
     @Override
@@ -184,6 +201,16 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
     public List<QueryStringPostProcessor> getQueryStringPostProcessors()
     {
         return queryPostProcessors;
+    }
+
+    public boolean hasQueryInOutMapper()
+    {
+        return repoMethod.hasQueryInOutMapper();
+    }
+
+    public QueryInOutMapper<?> getQueryInOutMapper()
+    {
+        return repoMethod.getQueryInOutMapperInstance(this);
     }
 
 }

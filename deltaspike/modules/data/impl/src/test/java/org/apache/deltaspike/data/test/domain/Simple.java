@@ -137,4 +137,11 @@ public class Simple
         this.embedded = embedded;
     }
 
+    @Override
+    public String toString()
+    {
+        return "Simple [id=" + id + ", name=" + name + ", camelCase=" + camelCase + ", enabled=" + enabled
+                + ", counter=" + counter + ", temporal=" + temporal + ", embedded=" + embedded + "]";
+    }
+
 }

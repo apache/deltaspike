@@ -175,14 +175,14 @@ public class DefaultQueryResult<T> implements QueryResult<T>
     @SuppressWarnings("unchecked")
     public List<T> getResultList()
     {
-        return ((Query) builder.execute(context)).getResultList();
+        return ((Query) builder.executeQuery(context)).getResultList();
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public T getSingleResult()
     {
-        return (T) ((Query) builder.execute(context)).getSingleResult();
+        return (T) ((Query) builder.executeQuery(context)).getSingleResult();
     }
 
     @Override
@@ -192,7 +192,7 @@ public class DefaultQueryResult<T> implements QueryResult<T>
         context.addJpaQueryPostProcessor(counter);
         try
         {
-            Long result = (Long) ((Query) builder.execute(context)).getSingleResult();
+            Long result = (Long) ((Query) builder.executeQuery(context)).getSingleResult();
             return result.intValue();
         }
         catch (RuntimeException e)

@@ -16,28 +16,30 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.data.impl.param;
+package org.apache.deltaspike.data.test.domain.dto;
 
-import javax.persistence.Query;
+import java.io.Serializable;
 
-/**
- * Query parameters which have an index (?1).
- */
-public class IndexedParameter extends Parameter
+public class SimpleId implements Serializable
 {
 
-    private final int index;
+    private static final long serialVersionUID = 1L;
 
-    public IndexedParameter(int index, Object value, int argIndex)
+    private Long id;
+
+    public SimpleId(Long id)
     {
-        super(value, argIndex);
-        this.index = index;
+        this.id = id;
     }
 
-    @Override
-    public void apply(Query query)
+    public Long getId()
     {
-        query.setParameter(index, queryValue());
+        return id;
+    }
+
+    public void setId(Long id)
+    {
+        this.id = id;
     }
 
 }

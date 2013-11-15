@@ -16,28 +16,25 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.data.impl.param;
+package org.apache.deltaspike.data.test.domain.dto;
 
-import javax.persistence.Query;
-
-/**
- * Query parameters which have an index (?1).
- */
-public class IndexedParameter extends Parameter
+public class BooleanWrapper
 {
+    private Boolean wrapped;
 
-    private final int index;
-
-    public IndexedParameter(int index, Object value, int argIndex)
+    public BooleanWrapper(Boolean wrapped)
     {
-        super(value, argIndex);
-        this.index = index;
+        this.wrapped = wrapped;
     }
 
-    @Override
-    public void apply(Query query)
+    public Boolean getWrapped()
     {
-        query.setParameter(index, queryValue());
+        return wrapped;
+    }
+
+    public void setWrapped(Boolean wrapped)
+    {
+        this.wrapped = wrapped;
     }
 
 }

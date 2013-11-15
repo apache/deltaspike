@@ -37,7 +37,7 @@ public class NamedParameter extends Parameter
     @Override
     public void apply(Query query)
     {
-        query.setParameter(name, value);
+        query.setParameter(name, queryValue());
     }
 
 }

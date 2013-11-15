@@ -26,6 +26,8 @@ import javax.persistence.LockModeType;
 import javax.persistence.Query;
 import javax.persistence.QueryHint;
 
+import org.apache.deltaspike.data.api.QueryResult;
+import org.apache.deltaspike.data.api.mapping.QueryInOutMapper;
 import org.apache.deltaspike.data.impl.handler.CdiQueryInvocationContext;
 import org.apache.deltaspike.data.impl.param.Parameters;
 
@@ -49,7 +51,24 @@ public abstract class QueryBuilder
         return MessageFormat.format(QUERY_COUNT, entityName);
     }
 
-    public abstract Object execute(CdiQueryInvocationContext ctx);
+    @SuppressWarnings("unchecked")
+    public Object executeQuery(CdiQueryInvocationContext context)
+    {
+        Object result = execute(context);
+        if (!isUnmappableResult(result) && context.hasQueryInOutMapper())
+        {
+            QueryInOutMapper<Object> mapper = (QueryInOutMapper<Object>)
+                    context.getQueryInOutMapper();
+            if (result instanceof List)
+            {
+                return mapper.mapResultList((List<Object>) result);
+            }
+            return mapper.mapResult(result);
+        }
+        return result;
+    }
+
+    protected abstract Object execute(CdiQueryInvocationContext ctx);
 
     protected boolean returnsList(Method method)
     {
@@ -114,6 +133,12 @@ public abstract class QueryBuilder
         }
         query = context.applyJpaQueryPostProcessors(query);
         return query;
+    }
+
+    private boolean isUnmappableResult(Object result)
+    {
+        return result instanceof QueryResult ||
+                result instanceof Query;
     }
 
 }

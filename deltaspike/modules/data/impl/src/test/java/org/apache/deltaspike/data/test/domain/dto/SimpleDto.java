@@ -16,28 +16,42 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.data.impl.param;
+package org.apache.deltaspike.data.test.domain.dto;
 
-import javax.persistence.Query;
-
-/**
- * Query parameters which have an index (?1).
- */
-public class IndexedParameter extends Parameter
+public class SimpleDto
 {
+    private SimpleId id;
+    private String name;
+    private Boolean enabled;
 
-    private final int index;
-
-    public IndexedParameter(int index, Object value, int argIndex)
+    public SimpleId getId()
     {
-        super(value, argIndex);
-        this.index = index;
+        return id;
     }
 
-    @Override
-    public void apply(Query query)
+    public void setId(SimpleId id)
     {
-        query.setParameter(index, queryValue());
+        this.id = id;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
+    public Boolean getEnabled()
+    {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled)
+    {
+        this.enabled = enabled;
     }
 
 }
