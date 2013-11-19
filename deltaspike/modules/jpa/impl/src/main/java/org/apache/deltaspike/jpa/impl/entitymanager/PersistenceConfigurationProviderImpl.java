@@ -23,10 +23,12 @@ import javax.enterprise.context.ApplicationScoped;
 
 import java.util.Properties;
 
+import org.apache.deltaspike.core.api.config.PropertyLoader;
 import org.apache.deltaspike.jpa.spi.entitymanager.PersistenceConfigurationProvider;
 
 /**
- * Default implementation of the PersistenceConfigurationProvider
+ * Default implementation of the PersistenceConfigurationProvider.
+ *
  */
 @ApplicationScoped
 public class PersistenceConfigurationProviderImpl implements PersistenceConfigurationProvider
@@ -34,9 +36,12 @@ public class PersistenceConfigurationProviderImpl implements PersistenceConfigur
     @Override
     public Properties getEntityManagerFactoryConfiguration(String persistenceUnitName)
     {
-        Properties unitProperties = new Properties();
+        Properties unitProperties = PropertyLoader.getProperties("persistence-" + persistenceUnitName);
 
-        //X TODO fill properties
+        if (unitProperties == null)
+        {
+            unitProperties = new Properties();
+        }
 
         return unitProperties;
     }
