@@ -21,6 +21,7 @@ package org.apache.deltaspike.data.impl.builder.part;
 import static org.junit.Assert.assertEquals;
 
 import org.apache.deltaspike.data.impl.builder.MethodExpressionException;
+import org.apache.deltaspike.data.impl.meta.MethodPrefix;
 import org.apache.deltaspike.data.impl.meta.RepositoryComponent;
 import org.apache.deltaspike.data.impl.meta.RepositoryEntity;
 import org.apache.deltaspike.data.test.domain.Simple;
@@ -43,7 +44,7 @@ public class QueryRootTest
                         "where e.name = ?1";
 
         // when
-        String result = QueryRoot.create(name, repo).getJpqlQuery().trim();
+        String result = QueryRoot.create(name, repo, prefix(name)).getJpqlQuery().trim();
 
         // then
         assertEquals(expected, result);
@@ -65,7 +66,7 @@ public class QueryRootTest
                         "order by e.embedded.embedd desc";
 
         // when
-        String result = QueryRoot.create(name, repo).getJpqlQuery().trim();
+        String result = QueryRoot.create(name, repo, prefix(name)).getJpqlQuery().trim();
 
         // then
         assertEquals(expected, result);
@@ -81,7 +82,7 @@ public class QueryRootTest
                         "order by e.id asc";
 
         // when
-        String result = QueryRoot.create(name, repo).getJpqlQuery().trim();
+        String result = QueryRoot.create(name, repo, prefix(name)).getJpqlQuery().trim();
 
         // then
         assertEquals(expected, result);
@@ -94,7 +95,7 @@ public class QueryRootTest
         final String name = "findByInvalid";
 
         // when
-        QueryRoot.create(name, repo);
+        QueryRoot.create(name, repo, prefix(name));
     }
 
     @Test(expected = MethodExpressionException.class)
@@ -104,7 +105,7 @@ public class QueryRootTest
         final String name = "findBy";
 
         // when
-        QueryRoot.create(name, repo);
+        QueryRoot.create(name, repo, prefix(name));
     }
 
     @Test(expected = MethodExpressionException.class)
@@ -114,7 +115,7 @@ public class QueryRootTest
         final String name = "findByNameOrderByInvalidDesc";
 
         // when
-        QueryRoot.create(name, repo);
+        QueryRoot.create(name, repo, prefix(name));
     }
 
     @Test
@@ -127,10 +128,15 @@ public class QueryRootTest
                         "where e.name = ?1";
 
         // when
-        String result = QueryRoot.create(name, repoFetchBy).getJpqlQuery().trim();
+        String result = QueryRoot.create(name, repoFetchBy, new MethodPrefix("fetchBy", name)).getJpqlQuery().trim();
 
         // then
         assertEquals(expected, result);
+    }
+
+    private MethodPrefix prefix(final String name)
+    {
+        return new MethodPrefix("", name);
     }
 
 }

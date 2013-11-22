@@ -21,6 +21,7 @@ package org.apache.deltaspike.data.impl.handler;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -272,6 +273,100 @@ public class QueryHandlerTest extends TransactionalTestCase
 
         // then
         assertEquals(1, count);
+    }
+
+    @Test
+    public void should_create_optinal_query_by_name()
+    {
+        // given
+        final String name = "should_create_optinal_query_by_name";
+        builder.createSimple(name);
+
+        // when
+        Simple result1 = repo.findOptionalByName(name);
+        Simple result2 = repo.findOptionalByName(name + "_doesnt_exist");
+
+        // then
+        assertNotNull(result1);
+        assertEquals(name, result1.getName());
+        assertNull(result2);
+    }
+
+    @Test
+    public void should_create_optinal_query_by_annotation()
+    {
+        // given
+        final String name = "should_create_optinal_query_by_annotation";
+        builder.createSimple(name);
+
+        // when
+        Simple result1 = repo.findByNameOptional(name);
+        Simple result2 = repo.findByNameOptional(name + "_doesnt_exist");
+
+        // then
+        assertNotNull(result1);
+        assertEquals(name, result1.getName());
+        assertNull(result2);
+    }
+
+    @Test(expected = QueryInvocationException.class)
+    public void should_fail_optinal_query_by_name_with_nonunique()
+    {
+        // given
+        final String name = "should_fail_optinal_query_by_name_with_nonunique";
+        builder.createSimple(name);
+        builder.createSimple(name);
+
+        // when
+        repo.findOptionalByName(name);
+    }
+
+    @Test(expected = QueryInvocationException.class)
+    public void should_fail_optinal_query_by_annotation_with_nonunique()
+    {
+        // given
+        final String name = "should_fail_optinal_query_by_annotation_with_nonunique";
+        builder.createSimple(name);
+        builder.createSimple(name);
+
+        // when
+        repo.findByNameOptional(name);
+    }
+
+    @Test
+    public void should_create_any_query_by_name()
+    {
+        // given
+        final String name = "should_create_any_query_by_name";
+        builder.createSimple(name);
+        builder.createSimple(name);
+
+        // when
+        Simple result1 = repo.findAnyByName(name);
+        Simple result2 = repo.findAnyByName(name + "_doesnt_exist");
+
+        // then
+        assertNotNull(result1);
+        assertEquals(name, result1.getName());
+        assertNull(result2);
+    }
+
+    @Test
+    public void should_create_any_query_by_annotation()
+    {
+        // given
+        final String name = "should_create_any_query_by_annotation";
+        builder.createSimple(name);
+        builder.createSimple(name);
+
+        // when
+        Simple result1 = repo.findByNameAny(name);
+        Simple result2 = repo.findByNameAny(name + "_doesnt_exist");
+
+        // then
+        assertNotNull(result1);
+        assertEquals(name, result1.getName());
+        assertNull(result2);
     }
 
     @Before

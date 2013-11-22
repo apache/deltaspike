@@ -32,6 +32,7 @@ import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.api.provider.DependentProvider;
 import org.apache.deltaspike.data.api.Query;
+import org.apache.deltaspike.data.api.SingleResultType;
 import org.apache.deltaspike.data.api.mapping.MappingConfig;
 import org.apache.deltaspike.data.api.mapping.QueryInOutMapper;
 import org.apache.deltaspike.data.impl.builder.MethodExpressionException;
@@ -55,6 +56,7 @@ public class RepositoryMethod
 
     private final Method method;
     private final MethodType methodType;
+    private final MethodPrefix methodPrefix;
     private final RepositoryComponent repo;
     private final QueryRoot queryRoot;
     private final QueryProcessor queryProcessor;
@@ -66,6 +68,7 @@ public class RepositoryMethod
     {
         this.method = method;
         this.repo = repo;
+        this.methodPrefix = new MethodPrefix(repo.getCustomMethodPrefix(), method.getName());
         this.methodType = extractMethodType();
         this.queryRoot = initQueryRoot();
         this.queryProcessor = QueryProcessorFactory.newInstance(method).build();
@@ -115,7 +118,7 @@ public class RepositoryMethod
     {
         if (methodType == MethodType.PARSE)
         {
-            return QueryRoot.create(method.getName(), repo);
+            return QueryRoot.create(method.getName(), repo, methodPrefix);
         }
         return QueryRoot.UNKNOWN_ROOT;
     }
@@ -143,7 +146,7 @@ public class RepositoryMethod
         }
         try
         {
-            QueryRoot.create(method.getName(), repo);
+            QueryRoot.create(method.getName(), repo, methodPrefix);
             return true;
         }
         catch (MethodExpressionException e)
@@ -216,6 +219,15 @@ public class RepositoryMethod
     public boolean hasQueryInOutMapper()
     {
         return mapper != null;
+    }
+
+    public SingleResultType getSingleResultStyle()
+    {
+        if (method.isAnnotationPresent(Query.class))
+        {
+            return method.getAnnotation(Query.class).singleResult();
+        }
+        return methodPrefix.getSingleResultStyle();
     }
 
 }

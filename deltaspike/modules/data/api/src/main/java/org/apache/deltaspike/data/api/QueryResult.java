@@ -149,6 +149,21 @@ public interface QueryResult<E>
     E getSingleResult();
 
     /**
+     * Fetch a single result entity. Returns {@code null} if no result is found.
+     *
+     * @return                  Entity retrieved by the query, or {@code null} if no result.
+     */
+    E getOptionalResult();
+
+    /**
+     * Fetch a single result entity. Returns {@code null} if no result is found. If the
+     * query finds multiple results, it simply returns the first one found.
+     *
+     * @return                  First Entity retrieved by the query, or {@code null} if no result.
+     */
+    E getAnyResult();
+
+    /**
      * Count the result set.
      * @return                  Result count.
      */

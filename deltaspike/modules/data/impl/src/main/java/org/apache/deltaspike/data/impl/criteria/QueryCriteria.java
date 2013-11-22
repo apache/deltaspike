@@ -27,6 +27,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -109,6 +110,26 @@ public class QueryCriteria<C, R> implements Criteria<C, R>
     public R getSingleResult()
     {
         return createQuery().getSingleResult();
+    }
+
+    @Override
+    public R getOptionalResult()
+    {
+        try
+        {
+            return getSingleResult();
+        }
+        catch (NoResultException e)
+        {
+            return null;
+        }
+    }
+
+    @Override
+    public R getAnyResult()
+    {
+        List<R> queryResult = getResultList();
+        return queryResult.size() > 0 ? queryResult.get(0) : null;
     }
 
     @Override

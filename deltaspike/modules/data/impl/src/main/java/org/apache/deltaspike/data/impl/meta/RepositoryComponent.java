@@ -169,11 +169,6 @@ public class RepositoryComponent
         return repoClass;
     }
 
-    public String getMethodPrefix()
-    {
-        return repoClass.getAnnotation(Repository.class).methodPrefix();
-    }
-
     public boolean hasEntityManagerResolver()
     {
         return getEntityManagerResolverClass() != null;
@@ -253,6 +248,11 @@ public class RepositoryComponent
             return clazz.getAnnotation(EntityManagerConfig.class);
         }
         return null;
+    }
+
+    public String getCustomMethodPrefix()
+    {
+        return repoClass.getAnnotation(Repository.class).methodPrefix();
     }
 
 }

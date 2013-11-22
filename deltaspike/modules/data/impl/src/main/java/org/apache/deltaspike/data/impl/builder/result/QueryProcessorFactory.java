@@ -21,10 +21,13 @@ package org.apache.deltaspike.data.impl.builder.result;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import org.apache.deltaspike.data.api.Modifying;
 import org.apache.deltaspike.data.api.QueryResult;
+import org.apache.deltaspike.data.api.SingleResultType;
+import org.apache.deltaspike.data.impl.handler.CdiQueryInvocationContext;
 
 public final class QueryProcessorFactory
 {
@@ -74,7 +77,7 @@ public final class QueryProcessorFactory
     private static final class ListQueryProcessor implements QueryProcessor
     {
         @Override
-        public Object executeQuery(Query query)
+        public Object executeQuery(Query query, CdiQueryInvocationContext context)
         {
             return query.getResultList();
         }
@@ -83,7 +86,7 @@ public final class QueryProcessorFactory
     private static final class NoOpQueryProcessor implements QueryProcessor
     {
         @Override
-        public Object executeQuery(Query query)
+        public Object executeQuery(Query query, CdiQueryInvocationContext context)
         {
             return query;
         }
@@ -92,9 +95,26 @@ public final class QueryProcessorFactory
     private static final class SingleResultQueryProcessor implements QueryProcessor
     {
         @Override
-        public Object executeQuery(Query query)
+        public Object executeQuery(Query query, CdiQueryInvocationContext context)
         {
-            return query.getSingleResult();
+            SingleResultType style = context.getSingleResultStyle();
+            switch (style)
+            {
+                case JPA:
+                    return query.getSingleResult();
+                case OPTIONAL:
+                    try
+                    {
+                        return query.getSingleResult();
+                    }
+                    catch (NoResultException e)
+                    {
+                        return null;
+                    }
+                default:
+                    List<Object> queryResult = query.getResultList();
+                    return queryResult.size() > 0 ? queryResult.get(0) : null;
+            }
         }
     }
 
@@ -109,7 +129,7 @@ public final class QueryProcessorFactory
         }
 
         @Override
-        public Object executeQuery(Query query)
+        public Object executeQuery(Query query, CdiQueryInvocationContext context)
         {
             int result = query.executeUpdate();
             if (!returnsVoid)

@@ -47,6 +47,6 @@ public @interface Repository
      * The method prefix for method expressions. Can be adapted to
      * domain specific conventions.
      */
-    String methodPrefix() default "findBy";
+    String methodPrefix() default "";
 
 }

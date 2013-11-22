@@ -55,6 +55,20 @@ public interface Criteria<C, R>
     R getSingleResult();
 
     /**
+     * Executes the query which has a single result. Returns {@code null}
+     * if there is no result.
+     * @return Entity matching the search query, or {@code null} if there is none.
+     */
+    R getOptionalResult();
+
+    /**
+     * Executes the query and returns a single result. If there are
+     * multiple results, the first received is returned.
+     * @return Entity matching the search query.
+     */
+    R getAnyResult();
+
+    /**
      * Creates a JPA query object to be executed.
      * @return A {@link TypedQuery} object ready to return results.
      */

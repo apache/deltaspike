@@ -28,6 +28,7 @@ import java.util.logging.Logger;
 import org.apache.deltaspike.data.impl.builder.MethodExpressionException;
 import org.apache.deltaspike.data.impl.builder.QueryBuilder;
 import org.apache.deltaspike.data.impl.builder.QueryBuilderContext;
+import org.apache.deltaspike.data.impl.meta.MethodPrefix;
 import org.apache.deltaspike.data.impl.meta.RepositoryComponent;
 
 /**
@@ -36,24 +37,24 @@ import org.apache.deltaspike.data.impl.meta.RepositoryComponent;
 public class QueryRoot extends QueryPart
 {
 
-    public static final QueryRoot UNKNOWN_ROOT = new QueryRoot("null-object", "");
+    public static final QueryRoot UNKNOWN_ROOT = new QueryRoot("null-object", new MethodPrefix("", null));
 
     private static final Logger log = Logger.getLogger(QueryRoot.class.getName());
 
     private final String entityName;
-    private final String queryPrefix;
+    private final MethodPrefix methodPrefix;
 
     private String jpqlQuery;
 
-    protected QueryRoot(String entityName, String queryPrefix)
+    protected QueryRoot(String entityName, MethodPrefix methodPrefix)
     {
         this.entityName = entityName;
-        this.queryPrefix = queryPrefix;
+        this.methodPrefix = methodPrefix;
     }
 
-    public static QueryRoot create(String method, RepositoryComponent repo)
+    public static QueryRoot create(String method, RepositoryComponent repo, MethodPrefix prefix)
     {
-        QueryRoot root = new QueryRoot(repo.getEntityName(), repo.getMethodPrefix());
+        QueryRoot root = new QueryRoot(repo.getEntityName(), prefix);
         root.build(method, method, repo);
         root.createJpql();
         return root;
@@ -121,16 +122,12 @@ public class QueryRoot extends QueryPart
 
     private boolean hasQueryConditions(String[] orderByParts)
     {
-        return !queryPrefix.equals(orderByParts[0]);
+        return !methodPrefix.getPrefix().equals(orderByParts[0]);
     }
 
     private String removePrefix(String queryPart)
     {
-        if (queryPart.startsWith(queryPrefix))
-        {
-            return queryPart.substring(queryPrefix.length());
-        }
-        return queryPart;
+        return methodPrefix.removePrefix(queryPart);
     }
 
 }

@@ -23,6 +23,7 @@ import java.util.List;
 
 import javax.persistence.FlushModeType;
 import javax.persistence.LockModeType;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.metamodel.SingularAttribute;
 
@@ -183,6 +184,26 @@ public class DefaultQueryResult<T> implements QueryResult<T>
     public T getSingleResult()
     {
         return (T) ((Query) builder.executeQuery(context)).getSingleResult();
+    }
+
+    @Override
+    public T getOptionalResult()
+    {
+        try
+        {
+            return getSingleResult();
+        }
+        catch (NoResultException e)
+        {
+            return null;
+        }
+    }
+
+    @Override
+    public T getAnyResult()
+    {
+        List<T> queryResult = getResultList();
+        return queryResult.size() > 0 ? queryResult.get(0) : null;
     }
 
     @Override

@@ -21,6 +21,7 @@ package org.apache.deltaspike.data.impl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -31,6 +32,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.FlushModeType;
 import javax.persistence.LockModeType;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 
 import org.apache.deltaspike.data.api.QueryResult;
@@ -278,6 +280,53 @@ public class QueryResultTest extends TransactionalTestCase
 
         // then
         assertEquals(2L, result);
+    }
+
+    @Test
+    public void should_query_optional()
+    {
+        // given
+        final String name = "should_query_optional";
+        builder.createSimple(name);
+
+        // when
+        Simple result1 = repo.queryResultWithNamed(name).getOptionalResult();
+        Simple result2 = repo.queryResultWithNamed("this_does_not_exist").getOptionalResult();
+
+        // then
+        assertNotNull(result1);
+        assertEquals(name, result1.getName());
+        assertNull(result2);
+    }
+
+    @Test(expected = NonUniqueResultException.class)
+    public void should_fail_query_optional_with_nonunique()
+    {
+        // given
+        final String name = "should_fail_query_optional_with_nonunique";
+        builder.createSimple(name);
+        builder.createSimple(name);
+
+        // when
+        repo.queryResultWithNamed(name).getOptionalResult();
+    }
+
+    @Test
+    public void should_query_any()
+    {
+        // given
+        final String name = "should_query_any";
+        builder.createSimple(name);
+        builder.createSimple(name);
+
+        // when
+        Simple result1 = repo.queryResultWithNamed(name).getAnyResult();
+        Simple result2 = repo.queryResultWithNamed("this_does_not_exist").getAnyResult();
+
+        // then
+        assertNotNull(result1);
+        assertEquals(name, result1.getName());
+        assertNull(result2);
     }
 
     @Before

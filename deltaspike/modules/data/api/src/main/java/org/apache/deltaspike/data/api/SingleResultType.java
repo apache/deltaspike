@@ -16,15 +16,31 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.data.impl.builder.result;
+package org.apache.deltaspike.data.api;
 
-import javax.persistence.Query;
-
-import org.apache.deltaspike.data.impl.handler.CdiQueryInvocationContext;
-
-public interface QueryProcessor
+/**
+ * Defines the way a single result query is fetched.
+ */
+public enum SingleResultType
 {
 
-    Object executeQuery(Query query, CdiQueryInvocationContext context);
+    /**
+     * Expects a single result, throws a {@link javax.persistence.NoResultException} or
+     * {@link javax.persistence.NonUniqueResultException} otherwise. This is the JPA
+     * default behavior.
+     */
+    JPA,
+
+    /**
+     * Expects a single result. Other than {@link SingleResultStyle#SINGLE} it returns {@code null}
+     * if no result is found.
+     */
+    OPTIONAL,
+
+    /**
+     * Returns any result, or {@code null} if nothing is found. If more than one result is found,
+     * it returns the first one from the result list.
+     */
+    ANY
 
 }

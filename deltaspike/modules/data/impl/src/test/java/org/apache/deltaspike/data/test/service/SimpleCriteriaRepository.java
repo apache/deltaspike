@@ -40,6 +40,20 @@ public abstract class SimpleCriteriaRepository extends AbstractEntityRepository<
                 .getResultList();
     }
 
+    public Simple queryOptional(String name)
+    {
+        return criteria()
+                .eq(Simple_.name, name)
+                .getOptionalResult();
+    }
+
+    public Simple queryAny(String name)
+    {
+        return criteria()
+                .eq(Simple_.name, name)
+                .getAnyResult();
+    }
+
     @SuppressWarnings("unchecked")
     public Statistics queryWithSelect(String name)
     {

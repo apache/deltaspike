@@ -72,4 +72,10 @@ public @interface Query
     QueryHint[] hints() default {
     };
 
+    /**
+     * Defines how a single result query is fetched. Defaults to the JPA way with
+     * Exceptions thrown on non-single result queries.
+     */
+    SingleResultType singleResult() default SingleResultType.JPA;
+
 }

@@ -29,7 +29,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
+import javax.persistence.PersistenceException;
 
+import org.apache.deltaspike.data.api.QueryInvocationException;
 import org.apache.deltaspike.data.api.Repository;
 import org.apache.deltaspike.data.impl.builder.QueryBuilder;
 import org.apache.deltaspike.data.impl.builder.QueryBuilderFactory;
@@ -76,9 +78,13 @@ public class QueryHandler implements Serializable, InvocationHandler
             Object result = builder.executeQuery(queryContext);
             return result;
         }
+        catch (PersistenceException e)
+        {
+            throw e;
+        }
         catch (Exception e)
         {
-            log.log(Level.SEVERE, "Query execution error", e);
+            log.log(Level.FINEST, "Query execution error", e);
             if (queryContext != null)
             {
                 throw new QueryInvocationException(e, queryContext);

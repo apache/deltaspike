@@ -18,10 +18,13 @@
  */
 package org.apache.deltaspike.data.test.service;
 
+import static javax.persistence.LockModeType.PESSIMISTIC_WRITE;
+import static org.apache.deltaspike.data.api.SingleResultType.ANY;
+import static org.apache.deltaspike.data.api.SingleResultType.OPTIONAL;
+
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
 
 import org.apache.deltaspike.data.api.AbstractEntityRepository;
 import org.apache.deltaspike.data.api.FirstResult;
@@ -48,11 +51,17 @@ public abstract class SimpleRepository extends AbstractEntityRepository<Simple, 
     @Query(named = Simple.BY_NAME_ENABLED, max = 1)
     public abstract List<Simple> findByNamedQueryIndexed(String name, Boolean enabled);
 
+    @Query(named = Simple.BY_NAME_LIKE, singleResult = OPTIONAL)
+    public abstract Simple findByNameOptional(String name);
+
+    @Query(named = Simple.BY_NAME_LIKE, singleResult = ANY)
+    public abstract Simple findByNameAny(String name);
+
     @Query(named = Simple.BY_NAME_ENABLED)
     public abstract List<Simple> findByNamedQueryRestricted(String name, Boolean enabled,
             @MaxResults int max, @FirstResult Integer first);
 
-    @Query(named = Simple.BY_ID, lock = LockModeType.PESSIMISTIC_WRITE)
+    @Query(named = Simple.BY_ID, lock = PESSIMISTIC_WRITE)
     public abstract Simple findByNamedQueryNamed(
             @QueryParam("id") Long id, @QueryParam("enabled") Boolean enabled);
 
@@ -63,6 +72,10 @@ public abstract class SimpleRepository extends AbstractEntityRepository<Simple, 
     public abstract Long findCountByQuery(String name);
 
     public abstract Simple findByNameAndEnabled(String name, Boolean enabled);
+
+    public abstract Simple findOptionalByName(String name);
+
+    public abstract Simple findAnyByName(String name);
 
     public abstract List<Simple> findByOrderByCounterAscIdDesc();
 

@@ -20,8 +20,10 @@ package org.apache.deltaspike.data.impl.criteria;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import javax.enterprise.inject.Produces;
@@ -287,6 +289,54 @@ public class CriteriaTest extends TransactionalTestCase
             assertEquals(name.substring(1), result[3]);
             assertEquals(name.substring(1, 1 + 2), result[4]);
         }
+    }
+
+    @Test
+    public void should_create_select_criteria_with_optional_result()
+    {
+        // given
+        final String name = "should_create_select_criteria_with_optional_result";
+        createSimple(name, 10);
+
+        // when
+        Simple result1 = repo.queryOptional(name);
+        Simple result2 = repo.queryOptional(name + "_doesnt exist");
+
+        // then
+        assertNotNull(result1);
+        assertEquals(name, result1.getName());
+        assertNull(result2);
+    }
+
+    @Test(expected = InvocationTargetException.class)
+    public void should_fail_with_optional_nonunique_result()
+    {
+        // given
+        final String name = "should_fail_with_optional_nonunique_result";
+        createSimple(name, 10);
+        createSimple(name, 10);
+
+        // when
+        repo.queryOptional(name);
+
+    }
+
+    @Test
+    public void should_create_select_criteria_with_any_result()
+    {
+        // given
+        final String name = "should_create_select_criteria_with_any_result";
+        createSimple(name, 10);
+        createSimple(name, 10);
+
+        // when
+        Simple result1 = repo.queryAny(name);
+        Simple result2 = repo.queryAny(name + "_doesnt exist");
+
+        // then
+        assertNotNull(result1);
+        assertEquals(name, result1.getName());
+        assertNull(result2);
     }
 
     @Override

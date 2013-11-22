@@ -25,6 +25,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import org.apache.deltaspike.data.api.SingleResultType;
 import org.apache.deltaspike.data.api.mapping.QueryInOutMapper;
 import org.apache.deltaspike.data.impl.meta.RepositoryMethod;
 import org.apache.deltaspike.data.impl.param.Parameters;
@@ -175,7 +176,7 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
 
     public Object executeQuery(Query jpaQuery)
     {
-        return repoMethod.getQueryProcessor().executeQuery(jpaQuery);
+        return repoMethod.getQueryProcessor().executeQuery(jpaQuery, this);
     }
 
     public Parameters getParams()
@@ -211,6 +212,11 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
     public QueryInOutMapper<?> getQueryInOutMapper()
     {
         return repoMethod.getQueryInOutMapperInstance(this);
+    }
+
+    public SingleResultType getSingleResultStyle()
+    {
+        return repoMethod.getSingleResultStyle();
     }
 
 }
