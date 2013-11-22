@@ -52,9 +52,21 @@ import java.util.logging.Logger;
 @ApplicationScoped
 public class ProjectStageProducer implements Serializable
 {
+    /**
+     * These config keys will get used to detect the ProjectStage.
+     * We iterate through them until we find the first non-empty value.
+     */
+    public static final String[] CONFIG_SETTING_KEYS =
+            {
+                    "org.apache.deltaspike.ProjectStage",
+                    "javax.faces.PROJECT_STAGE",
+                    "faces.PROJECT_STAGE"
+            };
+
     protected static final Logger LOG = Logger.getLogger(ProjectStageProducer.class.getName());
 
     private static final long serialVersionUID = -2987762608635612074L;
+
 
     /**
      * The detected ProjectStage
@@ -132,11 +144,15 @@ public class ProjectStageProducer implements Serializable
      */
     protected ProjectStage resolveProjectStage()
     {
-        String stageName = ConfigResolver.getPropertyValue("org.apache.deltaspike.ProjectStage");
-
-        if (stageName != null)
+        for (String configLocation : CONFIG_SETTING_KEYS)
         {
-            return ProjectStage.valueOf(stageName);
+            String stageName = ConfigResolver.getPropertyValue(configLocation);
+
+            if (stageName != null && !stageName.isEmpty())
+            {
+                return ProjectStage.valueOf(stageName);
+            }
+
         }
 
         return null;

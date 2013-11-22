@@ -34,33 +34,52 @@ public class ProjectStageProducerTest
     @Test
     public void testProjectStageSetByEnvironment()
     {
-        String envName = "org.apache.deltaspike.ProjectStage";
-        String oldEnvVal = "" + System.getProperty(envName);
+        String[] oldEnvVals = new String[ProjectStageProducer.CONFIG_SETTING_KEYS.length];
+        for (int i = 0; i < ProjectStageProducer.CONFIG_SETTING_KEYS.length; i++)
+        {
+            String envName = ProjectStageProducer.CONFIG_SETTING_KEYS[i];
+            oldEnvVals[i] = "" + System.getProperty(envName);
+
+            // and also clean them now
+            System.setProperty(ProjectStageProducer.CONFIG_SETTING_KEYS[i], "");
+        }
+
         try
         {
-            System.setProperty(envName, "SystemTest");
+            for (int i = 0; i < ProjectStageProducer.CONFIG_SETTING_KEYS.length; i++)
+            {
+                String envName = ProjectStageProducer.CONFIG_SETTING_KEYS[i];
 
-            ProjectStageProducer psp = ProjectStageProducer.getInstance();
-            Assert.assertNotNull(psp);
+                System.setProperty(envName, "SystemTest");
 
-            ProjectStageProducer.setProjectStage(null);
+                ProjectStageProducer psp = ProjectStageProducer.getInstance();
+                Assert.assertNotNull(psp);
 
-            ProjectStage ps = psp.getProjectStage();
-            Assert.assertNotNull(ps);
-            Assert.assertEquals(ps, ProjectStage.SystemTest);
-            Assert.assertTrue(ps == ProjectStage.SystemTest);
+                ProjectStageProducer.setProjectStage(null);
 
-            ProjectStageProducer.setProjectStage(null);
-            System.setProperty(envName, "IntegrationTest");
+                ProjectStage ps = psp.getProjectStage();
+                Assert.assertNotNull(ps);
+                Assert.assertEquals(ps, ProjectStage.SystemTest);
+                Assert.assertTrue(ps == ProjectStage.SystemTest);
 
-            ps = psp.getProjectStage();
-            Assert.assertNotNull(ps);
-            Assert.assertEquals(ps, ProjectStage.IntegrationTest);
-            Assert.assertTrue(ps == ProjectStage.IntegrationTest);
+                ProjectStageProducer.setProjectStage(null);
+                System.setProperty(envName, "IntegrationTest");
+
+                ps = psp.getProjectStage();
+                Assert.assertNotNull(ps);
+                Assert.assertEquals(ps, ProjectStage.IntegrationTest);
+                Assert.assertTrue(ps == ProjectStage.IntegrationTest);
+
+                System.setProperty(envName, "");
+            }
         }
         finally
         {
-            System.setProperty(envName, oldEnvVal);
+            // restore the old env values
+            for (int i = 0; i < ProjectStageProducer.CONFIG_SETTING_KEYS.length; i++)
+            {
+                System.setProperty(ProjectStageProducer.CONFIG_SETTING_KEYS[i], oldEnvVals[i]);
+            }
         }
     }
 }
