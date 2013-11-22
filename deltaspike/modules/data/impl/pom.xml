@@ -215,6 +215,14 @@
                     </testResource>
                 </testResources>
             </build>
+            <dependencies>
+                <dependency>
+                    <groupId>org.javassist</groupId>
+                    <artifactId>javassist</artifactId>
+                    <version>3.17.1-GA</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
         </profile>
     </profiles>
 

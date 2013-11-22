@@ -333,18 +333,30 @@
 
             <properties>
                 <cdicontainer.version>tomee-${tomee.version}</cdicontainer.version>
+                <arquillian.version>1.1.1.Final</arquillian.version>
+                <shrinkwrap.version>1.1.2</shrinkwrap.version>
             </properties>
 
             <dependencies>
                 <dependency>
                     <groupId>org.apache.openejb</groupId>
-                    <artifactId>tomee-embedded</artifactId>
+                    <artifactId>javaee-api</artifactId>
+                    <version>6.0-5</version>
+                    <scope>provided</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.openejb</groupId>
+                    <artifactId>apache-tomee</artifactId>
+                    <classifier>webprofile</classifier>
                     <version>${tomee.version}</version>
+                    <scope>test</scope>
+                    <type>zip</type>
                 </dependency>
                 <dependency>
                     <groupId>org.apache.openejb</groupId>
                     <artifactId>arquillian-tomee-remote</artifactId>
                 </dependency>
+
 
                 <!-- needed by arquillian-tomee-remote -->
                 <dependency>

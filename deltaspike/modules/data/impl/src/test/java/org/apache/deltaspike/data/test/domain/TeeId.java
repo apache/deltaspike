@@ -29,10 +29,10 @@ public class TeeId implements Serializable
 {
 
     @Column(nullable = false)
-    private long teeSetId;
+    private Long teeSetId;
 
     @Column(nullable = false)
-    private long holeId;
+    private Long holeId;
 
     public TeeId()
     {

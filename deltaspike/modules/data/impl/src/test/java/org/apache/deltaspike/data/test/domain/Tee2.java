@@ -29,11 +29,11 @@ public class Tee2
 {
     @Column(nullable = false)
     @Id
-    private long teeSetId;
+    private Long teeSetId;
 
     @Column(nullable = false)
     @Id
-    private long holeId;
+    private Long holeId;
 
     public long getTeeSetId()
     {

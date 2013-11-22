@@ -143,7 +143,10 @@ public abstract class TestDeployments
         {
             JavaArchive javassistJar = ShrinkWrap.create(JavaArchive.class, "dsjavassist.jar")
                     .addPackages(true, "javassist");
-            webArchive.addAsLibrary(javassistJar);
+            if (!javassistJar.getContent().isEmpty())
+            {
+                webArchive.addAsLibrary(javassistJar);
+            }
         }
 
         return webArchive;

@@ -40,9 +40,12 @@
         <dependency>
             <groupId>org.jboss.shrinkwrap</groupId>
             <artifactId>shrinkwrap-api</artifactId>
-            <version>1.0.1</version>
+            <version>${shrinkwrap.version}</version>
         </dependency>
     </dependencies>
 
+    <properties>
+        <shrinkwrap.version>1.0.1</shrinkwrap.version>
+    </properties>
 </project>
 
