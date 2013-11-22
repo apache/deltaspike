@@ -26,6 +26,7 @@ import org.apache.deltaspike.data.api.FirstResult;
 import org.apache.deltaspike.data.api.MaxResults;
 import org.apache.deltaspike.data.api.Modifying;
 import org.apache.deltaspike.data.api.Query;
+import org.apache.deltaspike.data.api.QueryInvocationException;
 import org.apache.deltaspike.data.api.QueryParam;
 import org.apache.deltaspike.data.api.QueryResult;
 import org.apache.deltaspike.data.api.Repository;
@@ -122,7 +123,8 @@ public abstract class TestDeployments
                 .addClasses(AbstractEntityRepository.class, Repository.class, EntityRepository.class,
                         FirstResult.class, MaxResults.class, Modifying.class,
                         Query.class, QueryParam.class, QueryResult.class,
-                        EntityManagerConfig.class, EntityManagerResolver.class, SingleResultType.class)
+                        EntityManagerConfig.class, EntityManagerResolver.class, SingleResultType.class,
+                        QueryInvocationException.class)
                 .addClasses(Criteria.class, QuerySelection.class, CriteriaSupport.class)
                 .addClasses(CreatedOn.class, CurrentUser.class, ModifiedBy.class, ModifiedOn.class)
                 .addClasses(MappingConfig.class, QueryInOutMapper.class)

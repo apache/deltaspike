@@ -29,6 +29,7 @@ import java.util.List;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 
 import org.apache.deltaspike.data.test.TransactionalTestCase;
@@ -309,7 +310,7 @@ public class QueryHandlerTest extends TransactionalTestCase
         assertNull(result2);
     }
 
-    @Test(expected = QueryInvocationException.class)
+    @Test(expected = NonUniqueResultException.class)
     public void should_fail_optinal_query_by_name_with_nonunique()
     {
         // given
@@ -321,7 +322,7 @@ public class QueryHandlerTest extends TransactionalTestCase
         repo.findOptionalByName(name);
     }
 
-    @Test(expected = QueryInvocationException.class)
+    @Test(expected = NonUniqueResultException.class)
     public void should_fail_optinal_query_by_annotation_with_nonunique()
     {
         // given

@@ -27,10 +27,11 @@ import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
+import javax.persistence.PersistenceException;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.data.api.QueryInvocationException;
 import org.apache.deltaspike.data.impl.handler.CdiQueryInvocationContext;
-import org.apache.deltaspike.data.impl.handler.QueryInvocationException;
 import org.apache.deltaspike.data.impl.meta.MethodType;
 import org.apache.deltaspike.data.impl.meta.QueryInvocation;
 import org.apache.deltaspike.data.impl.util.bean.BeanDestroyable;
@@ -52,6 +53,10 @@ public class DelegateQueryBuilder extends QueryBuilder
             {
                 return invoke(delegate, context);
             }
+        }
+        catch (PersistenceException e)
+        {
+            throw e;
         }
         catch (Exception e)
         {
@@ -108,7 +113,11 @@ public class DelegateQueryBuilder extends QueryBuilder
         }
         catch (InvocationTargetException e)
         {
-            throw new RuntimeException(e);
+            if (e.getCause() != null && e.getCause() instanceof PersistenceException)
+            {
+                throw (PersistenceException) e.getCause();
+            }
+            throw new QueryInvocationException(e, context);
         }
         catch (IllegalAccessException e)
         {

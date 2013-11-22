@@ -105,11 +105,18 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
         return entityClass;
     }
 
+    @Override
+    public Class<?> getRepositoryClass()
+    {
+        return repoMethod.getRepository().getRepositoryClass();
+    }
+
     public Object proceed() throws Exception
     {
         return method.invoke(proxy, args);
     }
 
+    @Override
     public Method getMethod()
     {
         return method;

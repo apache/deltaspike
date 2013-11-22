@@ -26,6 +26,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.deltaspike.data.api.QueryInvocationException;
 import org.apache.deltaspike.data.test.domain.Simple;
 import org.apache.deltaspike.data.test.service.SimpleRepositoryWithEntityManager;
 import org.apache.deltaspike.data.test.service.SimpleRepositoryWithEntityManagerResolver;

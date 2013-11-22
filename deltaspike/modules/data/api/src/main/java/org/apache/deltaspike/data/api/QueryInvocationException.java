@@ -16,21 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.data.impl.handler;
+package org.apache.deltaspike.data.api;
 
 import java.lang.reflect.Method;
+
+import org.apache.deltaspike.data.spi.QueryInvocationContext;
 
 public class QueryInvocationException extends RuntimeException
 {
 
     private static final long serialVersionUID = 1L;
 
-    public QueryInvocationException(Throwable t, CdiQueryInvocationContext context)
+    public QueryInvocationException(Throwable t, QueryInvocationContext context)
     {
         super(createMessage(context, t), t);
     }
 
-    public QueryInvocationException(String message, CdiQueryInvocationContext context)
+    public QueryInvocationException(String message, QueryInvocationContext context)
     {
         super(createMessage(context));
     }
@@ -40,33 +42,30 @@ public class QueryInvocationException extends RuntimeException
         super(createMessage(proxy, method, t), t);
     }
 
-    private static String createMessage(CdiQueryInvocationContext context)
+    private static String createMessage(QueryInvocationContext context)
     {
         StringBuilder builder = new StringBuilder();
         builder.append("Failed calling Repository: [");
-        builder.append("Repository=").append(context.getRepositoryMethod()
-                .getRepository().getRepositoryClass().getName()).append(",");
+        builder.append("Repository=").append(context.getRepositoryClass().getName()).append(",");
         builder.append("entity=").append(context.getEntityClass().getName()).append(",");
         builder.append("method=").append(context.getMethod().getName()).append(",");
-        builder.append("query=").append(context.getQueryString()).append("],");
         return builder.toString();
     }
 
-    private static String createMessage(CdiQueryInvocationContext context, Throwable t)
+    private static String createMessage(QueryInvocationContext context, Throwable t)
     {
         StringBuilder builder = new StringBuilder(createMessage(context));
         builder.append("exception=").append(t.getClass()).append(",message=").append(t.getMessage());
         return builder.toString();
     }
 
-    private static String createMessage(Class<?> proxy, Method method, Throwable t)
+    private static String createMessage(Class<?> repoClass, Method method, Throwable t)
     {
         StringBuilder builder = new StringBuilder();
         builder.append("Exception calling Repository: [");
-        builder.append("Repository=").append(proxy).append(",");
+        builder.append("Repository=").append(repoClass).append(",");
         builder.append("method=").append(method.getName()).append("],");
         builder.append("exception=").append(t.getClass()).append(",message=").append(t.getMessage());
         return builder.toString();
     }
-
 }
