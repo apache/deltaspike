@@ -57,11 +57,12 @@ public class ProjectStageProducer implements Serializable
      * We iterate through them until we find the first non-empty value.
      */
     public static final String[] CONFIG_SETTING_KEYS =
-            {
-                    "org.apache.deltaspike.ProjectStage",
-                    "javax.faces.PROJECT_STAGE",
-                    "faces.PROJECT_STAGE"
-            };
+    {
+        //TODO discuss it
+        "org.apache.deltaspike.ProjectStage",
+        "javax.faces.PROJECT_STAGE",
+        "faces.PROJECT_STAGE"
+    };
 
     protected static final Logger LOG = Logger.getLogger(ProjectStageProducer.class.getName());
 
