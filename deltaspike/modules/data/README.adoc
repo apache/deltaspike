@@ -627,6 +627,56 @@ public interface PersonRepository extends EntityRepository<Person, Long>
 Bulk operation query methods can either return void or int, which counts the number of entities affected
 by the bulk operation. 
 
+=== Optional Query Results
+
+The JPA spec requires to throw exceptions in case the +getSingleResult()+ method does either return no or more than one result. This can result in tedious handling with try-catch blocks or have potential impact on your transaction (as the +RuntimeException+ might roll it back).
+
+DeltaSpike Data gives the option to change this to the way it makes most sense for the current usecase. While the default behavior is still fully aligned with JPA, it's also possible to request optional query results.
+
+==== Zero or One Result
+
+With this option, the query returns +null+ instead of throwing a +NoResultException+ when there is no result returned. It's usable with method expressions, +Query+ annotations and +QueryResult<E>+ calls.
+
+[source,java]
+----
+@Repository(forEntity = Person.class)
+public interface PersonRepository
+{
+
+    Person findOptionalBySsn(String ssn);
+
+    @Query(named = Person.BY_NAME, singleResult = SingleResultType.OPTIONAL)
+    Person findByName(String firstName, String lastName);
+
+}
+----
+
+For method expressions, the +findOptionalBy+ prefix can be used. For +@Query+ annotations, the +singleResult+ attribute can be overridden with the +SingleResultType.OPTIONAL+ enum.
+
+In case the query returns more than one result, a +NonUniqueResultException+ is still thrown.
+
+==== Any Result
+
+If the caller does not really mind what kind if result is returned, it's also possible to request any result from the query. If there is no result, same as for optional queries +null+ is returned. In case there is more than one result, any result is returned, or more concretely the first result out of the result list.
+
+[source,java]
+----
+@Repository(forEntity = Person.class)
+public interface PersonRepository
+{
+
+    Person findAnyByLastName(String lastName);
+
+    @Query(named = Person.BY_NAME, singleResult = SingleResultType.ANY)
+    Person findByName(String firstName, String lastName);
+
+}
+----
+
+For method expressions, the +findAnyBy+ prefix can be used. For +@Query+ annotations, the +singleResult+ attribute can be overridden with the +SingleResultType.ANY+ enum.
+
+This option will not throw an exception.
+
 === Extensions
 
 ==== Query Delegates
@@ -776,6 +826,27 @@ public interface PersonRepository extends EntityRepository<PersonDto, PersonId>
 In this case, the +forEntity+ attribute in the +@Repository+ annotation is mandatory. Also it is up
 to the mapper to convert parameters correctly (in this example, a conversion from a +PersonDto+
 parameter to +Person+ entity and from +PersonId+ to +Long+ is necessary).
+
+==== Simple Mappings
+
+In many cases it's just required to map a DTO object back and forth. For this case, the +SimpleQueryInOutMapperBase+ class can be subclassed, which only requires to override two methods:
+
+[source,java]
+----
+public class PersonMapper extends SimpleQueryInOutMapperBase<Person, PersonDto>
+{
+    @Override
+    protected PersonDto toDto(Person entity)
+    {
+        ...
+    }
+
+    @Override
+    protected Person toEntity(PersonDto dto) {
+        ...
+    }
+}
+----
 
 === JPA Criteria API Support
 
