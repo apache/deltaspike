@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.core.api.config.view;
 
-import org.apache.deltaspike.core.api.config.view.controller.literal.ViewControllerRefLiteral;
+import org.apache.deltaspike.core.api.literal.ViewControllerRefLiteral;
 import org.apache.deltaspike.core.api.config.view.metadata.InlineViewMetaData;
 import org.apache.deltaspike.core.spi.config.view.InlineMetaDataTransformer;
 import org.apache.deltaspike.core.spi.config.view.TargetViewConfigProvider;

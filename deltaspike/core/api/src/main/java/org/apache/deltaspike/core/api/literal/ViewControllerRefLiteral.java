@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.deltaspike.core.api.config.view.controller.literal;
+package org.apache.deltaspike.core.api.literal;
 
 import org.apache.deltaspike.core.api.config.view.controller.ViewControllerRef;
 
