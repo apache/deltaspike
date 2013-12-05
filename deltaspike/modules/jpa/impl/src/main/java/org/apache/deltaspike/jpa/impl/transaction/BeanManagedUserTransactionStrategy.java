@@ -24,6 +24,7 @@ import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.jpa.api.transaction.TransactionConfig;
 import org.apache.deltaspike.jpa.impl.transaction.context.EntityManagerEntry;
 
+import javax.annotation.Resource;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Alternative;
 import javax.persistence.EntityManager;
@@ -54,6 +55,9 @@ public class BeanManagedUserTransactionStrategy extends ResourceLocalTransaction
     private static final Logger LOGGER = Logger.getLogger(BeanManagedUserTransactionStrategy.class.getName());
 
     private transient TransactionConfig transactionConfig;
+
+    @Resource
+    private UserTransaction userTransaction;
 
     @Override
     protected EntityManagerEntry createEntityManagerEntry(
@@ -158,6 +162,11 @@ public class BeanManagedUserTransactionStrategy extends ResourceLocalTransaction
 
     protected UserTransaction resolveUserTransaction()
     {
+        if (userTransaction != null)
+        {
+            return userTransaction;
+        }
+
         return JndiUtils.lookup(USER_TRANSACTION_JNDI_NAME, UserTransaction.class);
     }
 
