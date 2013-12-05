@@ -36,6 +36,7 @@ import org.apache.deltaspike.security.spi.authorization.SecurityViolationHandler
 import javax.enterprise.inject.Typed;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import java.lang.annotation.Annotation;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -57,6 +58,15 @@ public abstract class SecurityUtils
         if (securedMetaData.isEmpty())
         {
             return;
+        }
+
+        accessDecisionVoterContext.addMetaData(ViewConfig.class.getName(), viewConfigDescriptor.getConfigClass());
+        for (Annotation viewMetaData : viewConfigDescriptor.getMetaData())
+        {
+            if (!viewMetaData.annotationType().equals(Secured.class))
+            {
+                accessDecisionVoterContext.addMetaData(viewMetaData.annotationType().getName(), viewMetaData);
+            }
         }
 
         Secured.Descriptor securedDescriptor = viewConfigDescriptor
