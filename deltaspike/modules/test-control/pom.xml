@@ -21,27 +21,20 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.apache.deltaspike</groupId>
-        <artifactId>parent-code</artifactId>
+        <groupId>org.apache.deltaspike.modules</groupId>
+        <artifactId>modules-project</artifactId>
         <version>0.6-SNAPSHOT</version>
-        <relativePath>../parent/code/pom.xml</relativePath>
     </parent>
 
     <groupId>org.apache.deltaspike.modules</groupId>
-    <artifactId>modules-project</artifactId>
+    <artifactId>test-control-module-project</artifactId>
     <version>0.6-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Apache DeltaSpike Modules</name>
+    <name>Apache DeltaSpike Test-Control-Module</name>
 
     <modules>
-        <module>security</module>
-        <module>jpa</module>
-        <module>servlet</module>
-        <module>jsf</module>
-        <module>partial-bean</module>
-        <module>bean-validation</module>
-        <module>data</module>
-        <module>test-control</module>
+        <module>api</module>
+        <module>impl</module>
     </modules>
 </project>
