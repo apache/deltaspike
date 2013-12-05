@@ -21,6 +21,7 @@ package org.apache.deltaspike.jsf.impl.config.view;
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.config.view.metadata.Aggregated;
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
+import org.apache.deltaspike.core.api.config.view.metadata.SkipMetaDataMerge;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewMetaData;
 import org.apache.deltaspike.core.api.config.view.metadata.ConfigDescriptor;
 import org.apache.deltaspike.core.spi.config.view.ConfigNodeConverter;
@@ -160,7 +161,6 @@ public class DefaultConfigNodeConverter implements ConfigNodeConverter
 
         for (Method annotationMethod : existingMetaData.annotationType().getDeclaredMethods())
         {
-            //TODO discuss @ExcludeMethod
             annotationMethod.setAccessible(true); //TODO
 
             Annotation defaultAnnotation = AnnotationInstanceProvider.of(existingMetaData.annotationType());
@@ -175,7 +175,8 @@ public class DefaultConfigNodeConverter implements ConfigNodeConverter
                     Object inheritedValue = annotationMethod.invoke(inheritedMetaData);
 
                     if (inheritedValue == null /*possible with literal instances*/ ||
-                            inheritedValue.equals(defaultValue))
+                            inheritedValue.equals(defaultValue) ||
+                            annotationMethod.isAnnotationPresent(SkipMetaDataMerge.class))
                     {
                         values.put(annotationMethod.getName(), defaultValue);
                     }

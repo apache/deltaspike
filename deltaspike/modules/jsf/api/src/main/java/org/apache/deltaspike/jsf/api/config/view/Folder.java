@@ -19,6 +19,7 @@
 package org.apache.deltaspike.jsf.api.config.view;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
+import org.apache.deltaspike.core.api.config.view.metadata.SkipMetaDataMerge;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewMetaData;
 import org.apache.deltaspike.core.spi.config.view.ConfigPreProcessor;
 import org.apache.deltaspike.core.spi.config.view.ViewConfigNode;
@@ -53,6 +54,7 @@ public @interface Folder
      *
      * @return name of the folder
      */
+    @SkipMetaDataMerge
     String name() default ".";
 
     /**

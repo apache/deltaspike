@@ -19,6 +19,7 @@
 package org.apache.deltaspike.jsf.api.config.view;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
+import org.apache.deltaspike.core.api.config.view.metadata.SkipMetaDataMerge;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewMetaData;
 import org.apache.deltaspike.core.spi.config.view.ConfigPreProcessor;
 import org.apache.deltaspike.core.spi.config.view.ViewConfigNode;
@@ -56,6 +57,7 @@ public @interface View
      * Allows to specify a custom base-path for the page represented by the view-config
      * @return base-path
      */
+    @SkipMetaDataMerge
     String basePath() default "";
 
     /**
@@ -63,6 +65,7 @@ public @interface View
      *
      * @return name of the page
      */
+    @SkipMetaDataMerge
     String name() default "";
 
     /**
