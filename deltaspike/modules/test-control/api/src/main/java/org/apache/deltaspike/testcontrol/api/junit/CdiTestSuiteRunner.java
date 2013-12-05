@@ -20,6 +20,7 @@ package org.apache.deltaspike.testcontrol.api.junit;
 
 import org.apache.deltaspike.cdise.api.CdiContainer;
 import org.apache.deltaspike.cdise.api.CdiContainerLoader;
+import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.Failure;
@@ -36,9 +37,16 @@ import java.util.logging.Logger;
 @SuppressWarnings("UnusedDeclaration")
 public class CdiTestSuiteRunner extends Suite
 {
+    private static final boolean STOP_CONTAINER;
     private static boolean containerStarted; //TODO
 
     private final Class<?> testSuiteClass;
+
+    static
+    {
+        String stopContainerConfigValue = ConfigResolver.getPropertyValue("testcontrol.stop_container", "true");
+        STOP_CONTAINER = Boolean.parseBoolean(stopContainerConfigValue.trim());
+    }
 
     public CdiTestSuiteRunner(Class<?> klass, RunnerBuilder builder) throws InitializationError
     {
@@ -75,8 +83,11 @@ public class CdiTestSuiteRunner extends Suite
 
         CdiContainer container = CdiContainerLoader.getCdiContainer();
 
-        container.boot();
-        containerStarted = true;
+        if (!containerStarted)
+        {
+            container.boot();
+            containerStarted = true;
+        }
 
         notifier.addListener(new LogRunListener());
 
@@ -86,14 +97,27 @@ public class CdiTestSuiteRunner extends Suite
         }
         finally
         {
-            container.shutdown();
-            containerStarted = false;
+            if (STOP_CONTAINER)
+            {
+                container.shutdown();
+                containerStarted = false;
+            }
         }
     }
 
     public static boolean isContainerStarted()
     {
         return containerStarted;
+    }
+
+    static Boolean isStopContainerAllowed()
+    {
+        return STOP_CONTAINER;
+    }
+
+    static void setContainerStarted(boolean containerStarted)
+    {
+        CdiTestSuiteRunner.containerStarted = containerStarted;
     }
 
     static class LogRunListener extends RunListener

@@ -400,8 +400,11 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
 
             if (!isContainerStarted())
             {
-                container.boot();
-                setContainerStarted();
+                if (!CdiTestSuiteRunner.isContainerStarted())
+                {
+                    container.boot();
+                    setContainerStarted();
+                }
             }
 
             List<Class<? extends Annotation>> restrictedScopes = new ArrayList<Class<? extends Annotation>>();
@@ -428,7 +431,11 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
 
             if (this.containerStarted)
             {
-                container.shutdown(); //stop the container on the same level which started it
+                if (CdiTestSuiteRunner.isStopContainerAllowed())
+                {
+                    container.shutdown(); //stop the container on the same level which started it
+                    CdiTestSuiteRunner.setContainerStarted(false);
+                }
             }
         }
 
@@ -456,6 +463,7 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
         void setContainerStarted()
         {
             this.containerStarted = true;
+            CdiTestSuiteRunner.setContainerStarted(true);
         }
 
         private void startContexts(CdiContainer container, Class<? extends Annotation>... restrictedScopes)
