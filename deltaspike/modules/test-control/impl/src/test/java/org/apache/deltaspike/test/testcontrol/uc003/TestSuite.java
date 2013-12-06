@@ -18,12 +18,19 @@
  */
 package org.apache.deltaspike.test.testcontrol.uc003;
 
+import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.testcontrol.api.junit.CdiTestSuiteRunner;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.apache.deltaspike.test.testcontrol.shared.ApplicationScopedBean;
+
+//Usually NOT needed! Currently only needed due to our arquillian-setup
+@Category(SeCategory.class)
+
+
 
 @RunWith(CdiTestSuiteRunner.class) //starts container once (for the whole suite)
 @Suite.SuiteClasses({

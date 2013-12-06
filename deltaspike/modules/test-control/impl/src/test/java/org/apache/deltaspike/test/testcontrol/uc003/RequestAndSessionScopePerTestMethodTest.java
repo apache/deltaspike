@@ -18,15 +18,22 @@
  */
 package org.apache.deltaspike.test.testcontrol.uc003;
 
+import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.testcontrol.api.junit.CdiTestRunner;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.apache.deltaspike.test.testcontrol.shared.ApplicationScopedBean;
 import org.apache.deltaspike.test.testcontrol.shared.RequestScopedBean;
 import org.apache.deltaspike.test.testcontrol.shared.SessionScopedBean;
 
 import javax.inject.Inject;
+
+//Usually NOT needed! Currently only needed due to our arquillian-setup
+@Category(SeCategory.class)
+
+
 
 @RunWith(CdiTestRunner.class) //starts container once and one session + request per test-method
 //implicitly annotated with @TestControl without the default-scope settings

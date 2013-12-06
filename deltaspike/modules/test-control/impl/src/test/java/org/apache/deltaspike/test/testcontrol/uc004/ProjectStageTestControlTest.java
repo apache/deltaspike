@@ -19,15 +19,22 @@
 package org.apache.deltaspike.test.testcontrol.uc004;
 
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
+import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.test.testcontrol.uc001.RequestAndSessionScopePerTestMethodTest;
 import org.apache.deltaspike.testcontrol.api.TestControl;
 import org.apache.deltaspike.testcontrol.api.junit.CdiTestRunner;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
 import javax.enterprise.inject.Typed;
 import javax.inject.Inject;
+
+//Usually NOT needed! Currently only needed due to our arquillian-setup
+@Category(SeCategory.class)
+
+
 
 @RunWith(CdiTestRunner.class)
 @TestControl(projectStage = ProjectStage.Development.class) //can be a custom stage
