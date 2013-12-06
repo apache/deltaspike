@@ -79,6 +79,7 @@ public class ResourceLocalTransactionStrategy implements TransactionStrategy
         TransactionBeanStorage transactionBeanStorage = TransactionBeanStorage.getInstance();
 
         boolean isOutermostInterceptor = transactionBeanStorage.isEmpty();
+        boolean outermostTransactionAlreadyExisted = false;
 
         if (isOutermostInterceptor)
         {
@@ -107,6 +108,10 @@ public class ResourceLocalTransactionStrategy implements TransactionStrategy
                 {
                     transaction.begin();
                 }
+                else if (isOutermostInterceptor)
+                {
+                    outermostTransactionAlreadyExisted = true;
+                }
 
                 //don't move it before EntityTransaction#begin() and invoke it in any case
                 beforeProceed(entityManagerEntry);
@@ -125,25 +130,15 @@ public class ResourceLocalTransactionStrategy implements TransactionStrategy
                 Set<EntityManagerEntry> entityManagerEntryList =
                     transactionBeanStorage.getUsedEntityManagerEntries();
 
-                for (EntityManagerEntry currentEntityManagerEntry : entityManagerEntryList)
+                if (!outermostTransactionAlreadyExisted)
                 {
-                    EntityTransaction transaction = getTransaction(currentEntityManagerEntry);
-                    if (transaction != null && transaction.isActive())
-                    {
-                        try
-                        {
-                            transaction.rollback();
-                        }
-                        catch (Exception eRollback)
-                        {
-                            if (LOGGER.isLoggable(Level.SEVERE))
-                            {
-                                LOGGER.log(Level.SEVERE,
-                                        "Got additional Exception while subsequently " +
-                                                "rolling back other SQL transactions", eRollback);
-                            }
-                        }
-                    }
+                    // We only commit transactions we opened ourselfs.
+                    // If the transaction got opened outside of our interceptor chain
+                    // we must not handle it.
+                    // This e.g. happens if a Stateless EJB invokes a Transactional CDI bean
+                    // which uses the BeanManagedUserTransactionStrategy.
+
+                    rollbackAllTransactions(entityManagerEntryList);
                 }
 
                 // drop all EntityManagers from the request-context cache
@@ -163,72 +158,84 @@ public class ResourceLocalTransactionStrategy implements TransactionStrategy
             boolean commitFailed = false;
 
             // commit all open transactions in the outermost interceptor!
-            // this is a 'JTA for poor men' only, and will not guaranty
+            // For Resource-local this is a 'JTA for poor men' only, and will not guaranty
             // commit stability over various databases!
+            // In case of JTA we will just commit the UserTransaction.
             if (isOutermostInterceptor)
             {
-                // only commit all transactions if we didn't rollback
-                // them already
-                if (firstException == null)
+                if (!outermostTransactionAlreadyExisted)
                 {
-                    Set<EntityManagerEntry> entityManagerEntryList =
-                        transactionBeanStorage.getUsedEntityManagerEntries();
+                    // We only commit transactions we opened ourselfs.
+                    // If the transaction got opened outside of our interceptor chain
+                    // we must not handle it.
+                    // This e.g. happens if a Stateless EJB invokes a Transactional CDI bean
+                    // which uses the BeanManagedUserTransactionStrategy.
 
-                    boolean rollbackOnly = false;
-                    // but first try to flush all the transactions and write the updates to the database
-                    for (EntityManagerEntry currentEntityManagerEntry : entityManagerEntryList)
+                    if (firstException == null)
                     {
-                        EntityTransaction transaction = getTransaction(currentEntityManagerEntry);
-                        if (transaction != null && transaction.isActive())
-                        {
-                            try
-                            {
-                                if (!commitFailed)
-                                {
-                                    currentEntityManagerEntry.getEntityManager().flush();
+                        // only commit all transactions if we didn't rollback
+                        // them already
+                        Set<EntityManagerEntry> entityManagerEntryList =
+                            transactionBeanStorage.getUsedEntityManagerEntries();
 
-                                    if (!rollbackOnly && transaction.getRollbackOnly())
+                        boolean rollbackOnly = false;
+                        // but first try to flush all the transactions and write the updates to the database
+                        for (EntityManagerEntry currentEntityManagerEntry : entityManagerEntryList)
+                        {
+                            EntityTransaction transaction = getTransaction(currentEntityManagerEntry);
+                            if (transaction != null && transaction.isActive())
+                            {
+                                try
+                                {
+                                    if (!commitFailed)
                                     {
-                                        //don't set commitFailed to true directly
-                                        //(the order of the entity-managers isn't deterministic -> tests would break)
-                                        rollbackOnly = true;
+                                        currentEntityManagerEntry.getEntityManager().flush();
+
+                                        if (!rollbackOnly && transaction.getRollbackOnly())
+                                        {
+                                            // don't set commitFailed to true directly
+                                            // (the order of the entity-managers isn't deterministic
+                                            //  -> tests would break)
+                                            rollbackOnly = true;
+                                        }
                                     }
                                 }
-                            }
-                            catch (Exception e)
-                            {
-                                firstException = e;
-                                commitFailed = true;
-                                break;
+                                catch (Exception e)
+                                {
+                                    firstException = e;
+                                    commitFailed = true;
+                                    break;
+                                }
                             }
                         }
-                    }
-                    if (rollbackOnly)
-                    {
-                        commitFailed = true;
-                    }
-
-                    // and now either commit or rollback all transactions
-                    for (EntityManagerEntry currentEntityManagerEntry : entityManagerEntryList)
-                    {
-                        EntityTransaction transaction = getTransaction(currentEntityManagerEntry);
-                        if (transaction != null && transaction.isActive())
+                        if (rollbackOnly)
                         {
-                            try
+                            commitFailed = true;
+                        }
+
+                        // and now either commit or rollback all transactions
+                        for (EntityManagerEntry currentEntityManagerEntry : entityManagerEntryList)
+                        {
+                            EntityTransaction transaction = getTransaction(currentEntityManagerEntry);
+                            if (transaction != null && transaction.isActive())
                             {
-                                if (commitFailed || transaction.getRollbackOnly() /*last chance to check it (again)*/)
+                                try
                                 {
-                                    transaction.rollback();
+                                    // last chance to check it (again)
+                                    if (commitFailed || transaction.getRollbackOnly())
+                                    {
+                                        transaction.rollback();
+                                    }
+                                    else
+                                    {
+                                        transaction.commit();
+                                    }
                                 }
-                                else
+                                catch (Exception e)
                                 {
-                                    transaction.commit();
+                                    firstException = e;
+                                    commitFailed = true;
                                 }
-                            }
-                            catch (Exception e)
-                            {
-                                firstException = e;
-                                commitFailed = true;
                             }
                         }
                     }
@@ -244,6 +251,30 @@ public class ResourceLocalTransactionStrategy implements TransactionStrategy
             {
                 //noinspection ThrowFromFinallyBlock
                 throw firstException;
+            }
+        }
+    }
+
+    private void rollbackAllTransactions(Set<EntityManagerEntry> entityManagerEntryList)
+    {
+        for (EntityManagerEntry currentEntityManagerEntry : entityManagerEntryList)
+        {
+            EntityTransaction transaction = getTransaction(currentEntityManagerEntry);
+            if (transaction != null && transaction.isActive())
+            {
+                try
+                {
+                    transaction.rollback();
+                }
+                catch (Exception eRollback)
+                {
+                    if (LOGGER.isLoggable(Level.SEVERE))
+                    {
+                        LOGGER.log(Level.SEVERE,
+                                "Got additional Exception while subsequently " +
+                                "rolling back other SQL transactions", eRollback);
+                    }
+                }
             }
         }
     }
