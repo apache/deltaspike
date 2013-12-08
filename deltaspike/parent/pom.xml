@@ -562,6 +562,20 @@
             </dependency>
 
             <dependency>
+                <groupId>org.apache.deltaspike.modules</groupId>
+                <artifactId>deltaspike-bean-validation-module-api</artifactId>
+                <version>${project.version}</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.deltaspike.modules</groupId>
+                <artifactId>deltaspike-bean-validation-module-impl</artifactId>
+                <version>${project.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+
+            <dependency>
                 <groupId>org.apache.geronimo.specs</groupId>
                 <artifactId>geronimo-servlet_2.5_spec</artifactId>
                 <version>${geronimo-servlet-2.5-spec.version}</version>
