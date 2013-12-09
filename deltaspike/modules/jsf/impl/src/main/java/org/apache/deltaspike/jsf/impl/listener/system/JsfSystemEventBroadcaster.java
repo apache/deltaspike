@@ -29,11 +29,11 @@ import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 /**
  * Broadcasts JSF events to CDI observers.
  */
-public class JsfToCdiSystemEventBroadcaster implements SystemEventListener, Deactivatable
+public class JsfSystemEventBroadcaster implements SystemEventListener, Deactivatable
 {
     private boolean isActivated = true;
 
-    public JsfToCdiSystemEventBroadcaster()
+    public JsfSystemEventBroadcaster()
     {
         this.isActivated = ClassDeactivationUtils.isActivated(getClass());
     }
