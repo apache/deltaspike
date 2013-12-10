@@ -80,7 +80,7 @@ public class DefaultViewConfigInheritanceStrategy implements ViewConfigInheritan
         return inheritedAnnotations;
     }
 
-    private List<Annotation> addViewMetaData(Class currentClass)
+    protected List<Annotation> addViewMetaData(Class currentClass)
     {
         List<Annotation> result = new ArrayList<Annotation>();
 
@@ -93,25 +93,32 @@ public class DefaultViewConfigInheritanceStrategy implements ViewConfigInheritan
                 continue;
             }
 
-            if (annotationClass.isAnnotationPresent(ViewMetaData.class))
-            {
-                result.add(annotation);
-            }
-            else if (annotationClass.isAnnotationPresent(Stereotype.class))
-            {
-                for (Annotation inheritedViaStereotype : annotationClass.getAnnotations())
-                {
-                    if (inheritedViaStereotype.annotationType().isAnnotationPresent(ViewMetaData.class))
-                    {
-                        result.add(inheritedViaStereotype);
-                    }
-                }
-            }
+            addViewMetaData(annotation, result);
         }
         return result;
     }
 
-    private void addInterfaces(Set<Class> processedTypes, Stack<Class> classesToAnalyze, Class nextClass)
+    protected void addViewMetaData(Annotation currentAnnotation, List<Annotation> metaDataList)
+    {
+        Class<? extends Annotation> annotationClass = currentAnnotation.annotationType();
+
+        if (annotationClass.isAnnotationPresent(ViewMetaData.class))
+        {
+            metaDataList.add(currentAnnotation);
+        }
+        else if (annotationClass.isAnnotationPresent(Stereotype.class))
+        {
+            for (Annotation inheritedViaStereotype : annotationClass.getAnnotations())
+            {
+                if (inheritedViaStereotype.annotationType().isAnnotationPresent(ViewMetaData.class))
+                {
+                    metaDataList.add(inheritedViaStereotype);
+                }
+            }
+        }
+    }
+
+    protected void addInterfaces(Set<Class> processedTypes, Stack<Class> classesToAnalyze, Class nextClass)
     {
         for (Class<?> interfaceToAdd : nextClass.getInterfaces())
         {
