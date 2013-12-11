@@ -29,6 +29,7 @@ import org.apache.deltaspike.core.util.ProjectStageProducer;
 import org.apache.deltaspike.core.util.ServiceUtils;
 import org.apache.deltaspike.testcontrol.api.TestControl;
 import org.apache.deltaspike.testcontrol.api.literal.TestControlLiteral;
+import org.apache.deltaspike.testcontrol.spi.ExternalContainer;
 import org.apache.deltaspike.testcontrol.spi.junit.TestStatementDecoratorFactory;
 import org.junit.Test;
 import org.junit.internal.runners.statements.FailOnTimeout;
@@ -358,6 +359,8 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
 
         private Stack<Class<? extends Annotation>> startedScopes = new Stack<Class<? extends Annotation>>();
 
+        private List<ExternalContainer> externalContainers;
+
         ContainerAwareTestContext(TestControl testControl, ContainerAwareTestContext parent)
         {
             this.parent = parent;
@@ -404,6 +407,8 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
                 {
                     container.boot();
                     setContainerStarted();
+
+                    bootExternalContainers();
                 }
             }
 
@@ -423,6 +428,40 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
             startContexts(container, restrictedScopes.toArray(new Class[restrictedScopes.size()]));
         }
 
+        private void bootExternalContainers()
+        {
+            if (!this.testControl.startExternalContainers())
+            {
+                return;
+            }
+
+            if (this.externalContainers == null)
+            {
+                this.externalContainers = ServiceUtils.loadServiceImplementations(ExternalContainer.class);
+                Collections.sort(this.externalContainers, new Comparator<ExternalContainer>()
+                {
+                    @Override
+                    public int compare(ExternalContainer ec1, ExternalContainer ec2)
+                    {
+                        return ec1.getOrdinal() > ec2.getOrdinal() ? 1 : -1;
+                    }
+                });
+
+                for (ExternalContainer externalContainer : this.externalContainers)
+                {
+                    try
+                    {
+                        externalContainer.boot();
+                    }
+                    catch (RuntimeException e)
+                    {
+                        Logger.getLogger(CdiTestRunner.class.getName()).log(Level.WARNING,
+                                "booting " + externalContainer.getClass().getName() + " failed", e);
+                    }
+                }
+            }
+        }
+
         void applyAfterClassConfig()
         {
             CdiContainer container = CdiContainerLoader.getCdiContainer();
@@ -433,8 +472,31 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
             {
                 if (CdiTestSuiteRunner.isStopContainerAllowed())
                 {
+                    shutdownExternalContainers();
+
                     container.shutdown(); //stop the container on the same level which started it
                     CdiTestSuiteRunner.setContainerStarted(false);
+                }
+            }
+        }
+
+        private void shutdownExternalContainers()
+        {
+            if (this.externalContainers == null)
+            {
+                return;
+            }
+
+            for (ExternalContainer externalContainer : this.externalContainers)
+            {
+                try
+                {
+                    externalContainer.shutdown();
+                }
+                catch (RuntimeException e)
+                {
+                    Logger.getLogger(CdiTestRunner.class.getName()).log(Level.WARNING,
+                            "shutting down " + externalContainer.getClass().getName() + " failed", e);
                 }
             }
         }

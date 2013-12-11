@@ -54,4 +54,10 @@ public class TestControlLiteral extends AnnotationLiteral<TestControl> implement
     {
         return defaultInstance.logHandler();
     }
+
+    @Override
+    public boolean startExternalContainers()
+    {
+        return defaultInstance.startExternalContainers();
+    }
 }

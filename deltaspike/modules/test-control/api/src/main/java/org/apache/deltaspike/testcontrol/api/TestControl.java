@@ -52,4 +52,9 @@ public @interface TestControl
      * only supported on test-class-level
      */
     Class<? extends Handler> logHandler() default ConsoleHandler.class;
+
+    /**
+     * Requires additional service-loader config
+     */
+    boolean startExternalContainers() default true;
 }
