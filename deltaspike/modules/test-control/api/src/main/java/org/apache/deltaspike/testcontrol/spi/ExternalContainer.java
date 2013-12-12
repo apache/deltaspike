@@ -18,6 +18,8 @@
  */
 package org.apache.deltaspike.testcontrol.spi;
 
+import java.lang.annotation.Annotation;
+
 public interface ExternalContainer
 {
     /**
@@ -31,4 +33,16 @@ public interface ExternalContainer
     void shutdown();
 
     int getOrdinal();
+
+    /**
+     * Signals a started scope
+     * @param scopeClass annotation-class of the scope
+     */
+    void startScope(Class<? extends Annotation> scopeClass);
+
+    /**
+     * Signals a stopped scope
+     * @param scopeClass annotation-class of the scope
+     */
+    void stopScope(Class<? extends Annotation> scopeClass);
 }
