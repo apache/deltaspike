@@ -27,7 +27,7 @@ import org.apache.deltaspike.servlet.api.literal.InitializedLiteral;
 /**
  * This class listens for HTTP session events and forwards them to the CDI event bus.
  */
-public class EventBridgeSessionListener extends EventEmitter implements HttpSessionListener
+public class EventBridgeSessionListener extends EventBroadcaster implements HttpSessionListener
 {
 
     @Override

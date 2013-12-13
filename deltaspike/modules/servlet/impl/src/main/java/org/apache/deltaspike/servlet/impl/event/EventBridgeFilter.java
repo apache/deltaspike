@@ -33,7 +33,7 @@ import org.apache.deltaspike.servlet.api.literal.InitializedLiteral;
 /**
  * This filter sends events to the CDI event bus when requests and responses get created and destroyed.
  */
-public class EventBridgeFilter extends EventEmitter implements Filter
+public class EventBridgeFilter extends EventBroadcaster implements Filter
 {
 
     @Override

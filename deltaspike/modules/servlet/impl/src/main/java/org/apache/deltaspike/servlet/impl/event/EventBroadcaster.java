@@ -30,14 +30,14 @@ import org.apache.deltaspike.core.util.ClassDeactivationUtils;
  * Base class for classes which send servlet events to the CDI event bus. This class uses {@link BeanManagerProvider} to
  * obtain the BeanManager.
  */
-abstract class EventEmitter implements Deactivatable
+abstract class EventBroadcaster implements Deactivatable
 {
 
     private volatile BeanManager beanManager;
 
     private final boolean activated;
 
-    public EventEmitter()
+    public EventBroadcaster()
     {
         this.activated = ClassDeactivationUtils.isActivated(getClass());
     }
