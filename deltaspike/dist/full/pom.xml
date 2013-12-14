@@ -52,7 +52,7 @@
             </goals>
         <configuration>
           <descriptors>
-            <descriptor>assembly.xml</descriptor>
+            <descriptor>src/main/distribution/assembly.xml</descriptor>
           </descriptors>
           <appendAssemblyId>false</appendAssemblyId>
           <finalName>deltaspike-full-${project.version}</finalName>

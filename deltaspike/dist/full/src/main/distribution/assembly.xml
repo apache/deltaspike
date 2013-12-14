@@ -60,4 +60,24 @@
             <outputDirectory>cdictrl</outputDirectory>
         </dependencySet>
     </dependencySets>
+    <files>
+        <file>
+            <source>src/main/distribution/core-module.xml</source>
+            <outputDirectory>core</outputDirectory>
+            <destName>module.xml</destName>
+            <filtered>true</filtered>
+        </file>
+        <file>
+            <source>src/main/distribution/cdictrl-module.xml</source>
+            <outputDirectory>cdictrl</outputDirectory>
+            <destName>module.xml</destName>
+            <filtered>true</filtered>
+        </file>
+        <file>
+            <source>src/main/distribution/modules-module.xml</source>
+            <outputDirectory>modules</outputDirectory>
+            <destName>module.xml</destName>
+            <filtered>true</filtered>
+        </file>
+    </files>
 </assembly>
