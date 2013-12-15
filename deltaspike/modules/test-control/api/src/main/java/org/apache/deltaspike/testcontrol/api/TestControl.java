@@ -55,6 +55,7 @@ public @interface TestControl
 
     /**
      * Requires additional service-loader config
+     * Currently only supported on class-level
      */
     boolean startExternalContainers() default true;
 }

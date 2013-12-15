@@ -632,24 +632,38 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
 
         private void onScopeStarted(Class<? extends Annotation> scopeClass)
         {
-            if (this.externalContainers != null)
+            List<ExternalContainer> externalContainerList = collectExternalContainers(this);
+
+            for (ExternalContainer externalContainer : externalContainerList)
             {
-                for (ExternalContainer externalContainer : this.externalContainers)
-                {
-                    externalContainer.startScope(scopeClass);
-                }
+                externalContainer.startScope(scopeClass);
             }
         }
 
         private void onScopeStopped(Class<? extends Annotation> scopeClass)
         {
-            if (this.externalContainers != null)
+            List<ExternalContainer> externalContainerList = collectExternalContainers(this);
+
+            for (ExternalContainer externalContainer : externalContainerList)
             {
-                for (ExternalContainer externalContainer : this.externalContainers)
-                {
-                    externalContainer.stopScope(scopeClass);
-                }
+                externalContainer.stopScope(scopeClass);
             }
+        }
+
+        private static List<ExternalContainer> collectExternalContainers(ContainerAwareTestContext testContext)
+        {
+            List<ExternalContainer> result = new ArrayList<ExternalContainer>();
+
+            if (testContext.externalContainers != null)
+            {
+                result.addAll(testContext.externalContainers);
+            }
+
+            if (testContext.parent != null)
+            {
+                result.addAll(collectExternalContainers(testContext.parent));
+            }
+            return result;
         }
     }
 }
