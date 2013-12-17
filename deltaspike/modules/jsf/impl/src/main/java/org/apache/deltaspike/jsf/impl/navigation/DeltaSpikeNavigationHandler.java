@@ -166,6 +166,6 @@ public class DeltaSpikeNavigationHandler extends ConfigurableNavigationHandler i
             result = new HashMap<String, Set<NavigationCase>>();
         }
 
-        return new NavigationCaseMapWrapper(result);
+        return new NavigationCaseMapWrapper(result, this.wrapped);
     }
 }

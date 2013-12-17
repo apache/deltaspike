@@ -25,13 +25,16 @@ import org.apache.deltaspike.jsf.api.config.view.View;
 import org.apache.deltaspike.jsf.impl.util.JsfUtils;
 import org.apache.deltaspike.jsf.impl.util.RequestParameter;
 
+import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.application.NavigationCase;
+import javax.faces.application.NavigationHandler;
 import java.util.List;
 import java.util.Set;
 import java.util.Map;
 import java.util.HashSet;
 import java.util.HashMap;
 import java.util.Collection;
+import java.util.logging.Logger;
 
 /**
  * Destructive operations aren't supported (compared to the SubKeyMap used in MyFaces).
@@ -40,23 +43,40 @@ import java.util.Collection;
  */
 public class NavigationCaseMapWrapper implements Map<String, Set<NavigationCase>>
 {
+    private static final Logger LOG = Logger.getLogger(NavigationCaseMapWrapper.class.getName());
+
     private Map<String, Set<NavigationCase>> wrappedNavigationCaseMap;
+    private final NavigationHandler wrapped;
     private final Map<String, Set<NavigationCase>> viewConfigBasedNavigationCaseCache;
 
     /**
      * Constructor for wrapping the given navigation-cases
      *
      * @param navigationCases current navigation-cases
+     * @param wrapped wrapped navigation-handler
      */
-    public NavigationCaseMapWrapper(Map<String, Set<NavigationCase>> navigationCases)
+    public NavigationCaseMapWrapper(Map<String, Set<NavigationCase>> navigationCases, NavigationHandler wrapped)
     {
         this.wrappedNavigationCaseMap = navigationCases;
+        this.wrapped = wrapped;
         this.viewConfigBasedNavigationCaseCache = createViewConfigBasedNavigationCases(false);
     }
 
     private Map<String, Set<NavigationCase>> createViewConfigBasedNavigationCases(boolean allowParameters)
     {
-        Map<String, Set<NavigationCase>> result = new HashMap<String, Set<NavigationCase>>();
+        Map<String, Set<NavigationCase>> result;
+
+        if (this.wrapped instanceof ConfigurableNavigationHandler)
+        {
+            result = new DelegatingMap((ConfigurableNavigationHandler)this.wrapped);
+        }
+        else
+        {
+            LOG.warning("the wrapped navigation-handler doesn't extend " +
+                ConfigurableNavigationHandler.class.getName() +
+                    ". therefore std. navigation-rules might not work correctly with mojarra");
+            result = new HashMap<String, Set<NavigationCase>>();
+        }
 
         Collection<ViewConfigDescriptor> viewConfigDescriptors =
                 BeanProvider.getContextualReference(ViewConfigResolver.class).getViewConfigDescriptors();
@@ -216,5 +236,71 @@ public class NavigationCaseMapWrapper implements Map<String, Set<NavigationCase>
         result.addAll(this.wrappedNavigationCaseMap.entrySet());
         result.addAll(createViewConfigBasedNavigationCases(true).entrySet());
         return result;
+    }
+
+    //currently not a complete handling, but enough to fix the issues with mojarra
+    private class DelegatingMap extends HashMap<String, Set<NavigationCase>>
+    {
+        private static final long serialVersionUID = -955468874397821639L;
+        private final ConfigurableNavigationHandler wrapped;
+
+        private DelegatingMap(ConfigurableNavigationHandler wrapped)
+        {
+            this.wrapped = wrapped;
+        }
+
+        @Override
+        public Set<NavigationCase> put(String key, Set<NavigationCase> value)
+        {
+            //delegate to the wrapped instance -> the innermost handler needs to receive it
+            //(because mojarra uses ConfigurableNavigationHandler#getNavigationCases
+            // to add cases for std. nav.rules from the outside)
+            return this.wrapped.getNavigationCases().put(key, value);
+        }
+
+        @Override
+        public Set<NavigationCase> get(Object key)
+        {
+            Set<NavigationCase> navigationCases = super.get(key);
+            if (navigationCases == null)
+            {
+                navigationCases = new HashSet<NavigationCase>();
+                put((String)key, navigationCases);
+            }
+
+            return new DelegatingSet(navigationCases, this.wrapped, (String)key);
+        }
+    }
+
+    //currently not a complete handling, but enough to fix the issues with mojarra
+    private class DelegatingSet extends HashSet<NavigationCase>
+    {
+        private static final long serialVersionUID = -7040572530963900394L;
+
+        private final ConfigurableNavigationHandler wrapped;
+        private String navigationCaseKey;
+
+        private DelegatingSet(Collection<? extends NavigationCase> c,
+                              ConfigurableNavigationHandler wrapped,
+                              String navigationCaseKey)
+        {
+            super(c);
+            this.wrapped = wrapped;
+            this.navigationCaseKey = navigationCaseKey;
+        }
+
+        @Override
+        public boolean add(NavigationCase navigationCase)
+        {
+            Set<NavigationCase> navigationCases = this.wrapped.getNavigationCases().get(this.navigationCaseKey);
+
+            if (navigationCases == null)
+            {
+                navigationCases = new HashSet<NavigationCase>();
+                this.wrapped.getNavigationCases().put(this.navigationCaseKey, navigationCases);
+            }
+
+            return navigationCases.add(navigationCase);
+        }
     }
 }
