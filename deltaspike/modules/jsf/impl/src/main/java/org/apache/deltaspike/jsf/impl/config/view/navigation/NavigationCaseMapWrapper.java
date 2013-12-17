@@ -252,10 +252,26 @@ public class NavigationCaseMapWrapper implements Map<String, Set<NavigationCase>
         @Override
         public Set<NavigationCase> put(String key, Set<NavigationCase> value)
         {
+            if (value == null)
+            {
+                return null;
+            }
+
+            Set<NavigationCase> result = new HashSet<NavigationCase>();
+
+            //filter entries created by createViewConfigBasedNavigationCases
+            for (NavigationCase navigationCase : value)
+            {
+                if (!(navigationCase.getFromOutcome() == null && navigationCase.getFromAction() == null))
+                {
+                    result.add(navigationCase);
+                }
+            }
+
             //delegate to the wrapped instance -> the innermost handler needs to receive it
             //(because mojarra uses ConfigurableNavigationHandler#getNavigationCases
             // to add cases for std. nav.rules from the outside)
-            return this.wrapped.getNavigationCases().put(key, value);
+            return this.wrapped.getNavigationCases().put(key, result);
         }
 
         @Override
