@@ -17,20 +17,17 @@
  * under the License.
  */
 
-package org.apache.deltaspike.test.core.impl.resourceLoader;
+package org.apache.deltaspike.test.core.impl.resourceloader;
 
 
-import org.apache.deltaspike.core.api.resoureLoader.ExternalResource;
-import org.apache.deltaspike.core.impl.resourceLoader.ClasspathResourceProvider;
-import org.apache.deltaspike.core.impl.resourceLoader.ExternalResourceProducer;
-import org.apache.deltaspike.core.impl.resourceLoader.FileResourceProvider;
+import org.apache.deltaspike.core.api.resoureloader.ExternalResource;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,13 +42,9 @@ public class InjectResourceTest {
     @Deployment
     public static Archive<?> createResourceLoaderArchive()
     {
-        Archive<?> arch = ShrinkWrap.create(JavaArchive.class, "resourceLoader.jar")
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
-                .addClasses(ExternalResourceProducer.class, FileResourceProvider.class, ClasspathResourceProvider.class);
-        for(JavaArchive ja : ArchiveUtils.getDeltaSpikeCoreArchive())
-        {
-            arch.merge(ja);
-        }
+        Archive<?> arch = ShrinkWrap.create(WebArchive.class, "resourceloader.war")
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+                .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive());
         return arch;
     }
 

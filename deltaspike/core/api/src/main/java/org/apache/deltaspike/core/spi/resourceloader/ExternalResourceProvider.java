@@ -16,26 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.api.resoureLoader;
+package org.apache.deltaspike.core.spi.resourceloader;
 
-import javax.enterprise.util.Nonbinding;
-import javax.inject.Qualifier;
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.apache.deltaspike.core.api.resoureloader.ExternalResource;
 
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.ElementType.METHOD;
+import javax.enterprise.inject.spi.InjectionPoint;
+import java.io.InputStream;
 
-@Target( { TYPE, METHOD, PARAMETER, FIELD })
-@Retention(value = RetentionPolicy.RUNTIME)
-@Documented
-@Qualifier
-public @interface ExternalResource
+/**
+ * Provides lookup capability to find a resource.
+ *
+ * @author johndament
+ */
+public interface ExternalResourceProvider
 {
-    @Nonbinding
-    String value();
+
+    InputStream readStream(final ExternalResource externalResource, final InjectionPoint injectionPoint);
+
+    int getPriority();
+
 }

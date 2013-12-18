@@ -16,20 +16,26 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.impl.resourceLoader;
+package org.apache.deltaspike.core.api.resoureloader;
 
-import org.apache.deltaspike.core.spi.resourceLoader.ExternalResourceProvider;
+import javax.enterprise.util.Nonbinding;
+import javax.inject.Qualifier;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import java.util.Comparator;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.ElementType.METHOD;
 
-/**
- * Compares two external resources.
- */
-public class ExternalResourceProviderComparator implements Comparator<ExternalResourceProvider>
+@Target( { TYPE, METHOD, PARAMETER, FIELD })
+@Retention(value = RetentionPolicy.RUNTIME)
+@Documented
+@Qualifier
+public @interface ExternalResource
 {
-    @Override
-    public int compare(ExternalResourceProvider o1, ExternalResourceProvider o2)
-    {
-        return o1.getPriority() - o2.getPriority();
-    }
+    @Nonbinding
+    String value();
 }

@@ -16,11 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.impl.resourceLoader;
+package org.apache.deltaspike.core.impl.resourceloader;
 
-import org.apache.deltaspike.core.api.resoureLoader.ExternalResource;
-import org.apache.deltaspike.core.api.resoureLoader.XMLProperties;
-import org.apache.deltaspike.core.spi.resourceLoader.ExternalResourceProvider;
+import org.apache.deltaspike.core.api.resoureloader.ExternalResource;
+import org.apache.deltaspike.core.api.resoureloader.XMLProperties;
+import org.apache.deltaspike.core.spi.resourceloader.ExternalResourceProvider;
 import org.apache.deltaspike.core.util.BeanUtils;
 
 import javax.enterprise.context.ApplicationScoped;

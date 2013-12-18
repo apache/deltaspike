@@ -16,23 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.spi.resourceLoader;
+package org.apache.deltaspike.core.impl.resourceloader;
 
-import org.apache.deltaspike.core.api.resoureLoader.ExternalResource;
+import org.apache.deltaspike.core.spi.resourceloader.ExternalResourceProvider;
 
-import javax.enterprise.inject.spi.InjectionPoint;
-import java.io.InputStream;
+import java.util.Comparator;
 
 /**
- * Provides lookup capability to find a resource.
- *
- * @author johndament
+ * Compares two external resources.
  */
-public interface ExternalResourceProvider
+public class ExternalResourceProviderComparator implements Comparator<ExternalResourceProvider>
 {
-
-    InputStream readStream(final ExternalResource externalResource, final InjectionPoint injectionPoint);
-
-    int getPriority();
-
+    @Override
+    public int compare(ExternalResourceProvider o1, ExternalResourceProvider o2)
+    {
+        return o1.getPriority() - o2.getPriority();
+    }
 }

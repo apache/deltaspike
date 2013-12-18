@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.api.resoureLoader;
+package org.apache.deltaspike.core.api.resoureloader;
 
 import javax.enterprise.util.AnnotationLiteral;
 
