@@ -26,7 +26,6 @@ import java.io.InputStream;
 /**
  * Provides lookup capability to find a resource.
  *
- * @author johndament
  */
 public interface ExternalResourceProvider
 {
