@@ -248,20 +248,23 @@ public class QuartzScheduler implements Scheduler<Job>
         }
 
         @Override
-        public void jobToBeExecuted(JobExecutionContext context)
+        public void jobToBeExecuted(JobExecutionContext jobExecutionContext)
         {
-            Scheduled scheduled = context.getJobInstance().getClass().getAnnotation(Scheduled.class);
+            Scheduled scheduled = jobExecutionContext.getJobInstance().getClass().getAnnotation(Scheduled.class);
 
             Collections.addAll(this.scopes, scheduled.startScopes());
 
-            this.contextControl = BeanProvider.getContextualReference(ContextControl.class);
-
-            for (Class<? extends Annotation> scopeAnnotation : this.scopes)
+            if (!this.scopes.isEmpty())
             {
-                contextControl.startContext(scopeAnnotation);
+                this.contextControl = BeanProvider.getContextualReference(ContextControl.class);
+
+                for (Class<? extends Annotation> scopeAnnotation : this.scopes)
+                {
+                    contextControl.startContext(scopeAnnotation);
+                }
             }
 
-            BeanProvider.injectFields(context.getJobInstance());
+            BeanProvider.injectFields(jobExecutionContext.getJobInstance());
         }
 
         @Override
