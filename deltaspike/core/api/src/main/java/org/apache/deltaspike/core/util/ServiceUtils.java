@@ -18,11 +18,14 @@
  */
 package org.apache.deltaspike.core.util;
 
+import org.apache.deltaspike.core.spi.activation.Deactivatable;
+
 import javax.enterprise.inject.Typed;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceLoader;
+import java.util.logging.Logger;
 
 /**
  * Allows handling the lookup (with fallbacks) in a central place.
@@ -31,12 +34,20 @@ import java.util.ServiceLoader;
 @Typed()
 public abstract class ServiceUtils
 {
+    private static final Logger LOG = Logger.getLogger(ServiceUtils.class.getName());
+
     private ServiceUtils()
     {
         // prevent instantiation
     }
 
     public static <T> List<T> loadServiceImplementations(Class<T> serviceType)
+    {
+        return loadServiceImplementations(serviceType, false);
+    }
+
+    public static <T> List<T> loadServiceImplementations(Class<T> serviceType,
+                                                         boolean ignoreServicesWithMissingDependencies)
     {
         List<T> result = new ArrayList<T>();
 
@@ -50,7 +61,30 @@ public abstract class ServiceUtils
 
         while (servicesIterator.hasNext())
         {
-            result.add(servicesIterator.next());
+            try
+            {
+                T service = servicesIterator.next();
+
+                if (service instanceof Deactivatable &&
+                        !ClassDeactivationUtils.isActivated((Class<? extends Deactivatable>) service.getClass()))
+                {
+                    LOG.info("deactivated service: " + service.getClass().getName());
+
+                    continue;
+                }
+                result.add(service);
+            }
+            catch (Throwable t)
+            {
+                if (!ignoreServicesWithMissingDependencies)
+                {
+                    throw ExceptionUtils.throwAsRuntimeException(t);
+                }
+                else
+                {
+                    LOG.info("service filtered - caused by " + t.getMessage());
+                }
+            }
         }
         return result;
     }
