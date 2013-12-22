@@ -45,7 +45,7 @@ import java.util.logging.Logger;
 @ApplicationScoped
 public class ExternalResourceProducer
 {
-    private static final Logger logger = Logger.getLogger(ExternalResourceProducer.class.getCanonicalName());
+    private static final Logger logger = Logger.getLogger(ExternalResourceProducer.class.getName());
 
     @Inject
     @Any

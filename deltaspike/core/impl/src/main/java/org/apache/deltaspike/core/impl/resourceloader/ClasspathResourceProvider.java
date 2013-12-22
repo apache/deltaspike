@@ -37,7 +37,7 @@ import java.util.logging.Logger;
 @ApplicationScoped
 public class ClasspathResourceProvider implements ExternalResourceProvider
 {
-    private static final Logger logger = Logger.getLogger(ClasspathResourceProvider.class.getCanonicalName());
+    private static final Logger logger = Logger.getLogger(ClasspathResourceProvider.class.getName());
 
     @Override
     public InputStream readStream(final ExternalResource externalResource, final InjectionPoint injectionPoint)
