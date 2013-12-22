@@ -34,6 +34,8 @@
         <resource-root path="deltaspike-security-module-impl-${project.version}.jar"/>
         <resource-root path="deltaspike-servlet-module-api-${project.version}.jar"/>
         <resource-root path="deltaspike-servlet-module-impl-${project.version}.jar"/>
+        <resource-root path="deltaspike-scheduler-module-api-${project.version}.jar"/>
+        <resource-root path="deltaspike-scheduler-module-impl-${project.version}.jar"/>
     </resources>
 
     <dependencies>
