@@ -27,6 +27,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
 import org.junit.Test;
@@ -44,6 +45,7 @@ public class InjectResourceTest {
     {
         Archive<?> arch = ShrinkWrap.create(WebArchive.class, "resourceloader.war")
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+                .add(new StringAsset("some.propertykey = somevalue"),"WEB-INF/classes/myconfig.properties")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive());
         return arch;
     }
