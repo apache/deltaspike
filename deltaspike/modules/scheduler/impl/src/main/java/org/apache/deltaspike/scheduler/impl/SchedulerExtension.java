@@ -41,6 +41,7 @@ import java.util.logging.Logger;
 
 public class SchedulerExtension implements Extension, Deactivatable
 {
+    public static final String JOB_CLASS_CONFIG_KEY = "deltaspike.scheduler.job-class";
     private static final Logger LOG = Logger.getLogger(SchedulerExtension.class.getName());
 
     private Boolean isActivated = true;
@@ -57,7 +58,7 @@ public class SchedulerExtension implements Extension, Deactivatable
 
         if (this.isActivated)
         {
-            String jobClassName = ConfigResolver.getPropertyValue("deltaspike.scheduler.job-class", "org.quartz.Job");
+            String jobClassName = ConfigResolver.getPropertyValue(JOB_CLASS_CONFIG_KEY, "org.quartz.Job");
 
             this.jobClass = ClassUtils.tryToLoadClassForName(jobClassName);
 

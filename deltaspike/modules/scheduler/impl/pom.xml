@@ -78,6 +78,12 @@
             <artifactId>commons-logging</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.deltaspike.core</groupId>
+            <artifactId>deltaspike-core-impl</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
