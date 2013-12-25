@@ -18,41 +18,16 @@
  */
 package org.apache.deltaspike.test.core.impl.util;
 
-import static org.junit.Assert.assertNotNull;
-
-import java.util.Map;
+import org.apache.deltaspike.core.impl.util.JndiUtils;
+import org.junit.Test;
 
 import javax.enterprise.inject.spi.BeanManager;
+import java.util.Map;
 
-import org.apache.deltaspike.core.impl.util.JndiUtils;
-import org.apache.deltaspike.test.category.WebProfileCategory;
-import org.apache.deltaspike.test.util.ArchiveUtils;
-import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
-import org.junit.runner.RunWith;
+import static org.junit.Assert.assertNotNull;
 
-@RunWith(Arquillian.class)
-@Category(WebProfileCategory.class)
-public class JndiUtilsTest
+public abstract class JndiUtilsTest
 {
-    @Deployment
-    public static WebArchive deploy()
-    {
-        JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "jndiTest.jar")
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
-
-        return ShrinkWrap.create(WebArchive.class, "jndiUtils.war")
-                .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
-                .addAsLibraries(testJar)
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
-    }
-
     /**
      * Tests {@link JndiUtils#lookup(String, Class)} by looking up the {@link BeanManager}
      */
