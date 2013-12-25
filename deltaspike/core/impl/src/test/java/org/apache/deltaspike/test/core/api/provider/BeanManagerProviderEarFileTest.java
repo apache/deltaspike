@@ -36,7 +36,8 @@ public class BeanManagerProviderEarFileTest extends BeanManagerProviderTest
     @Deployment
     public static EnterpriseArchive deployEar()
     {
-        String simpleName = BeanManagerProviderEarFileTest.class.getSimpleName();
+        //workaround for tomee - the ear-file needs to have the same name as the war-file
+        String simpleName = BeanManagerProviderWarFileTest.class.getSimpleName();
         String archiveName = simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1);
 
         return ShrinkWrap.create(EnterpriseArchive.class, archiveName + ".ear")

@@ -33,7 +33,8 @@ public class PartialBeanAsInterfaceEarFileTest extends PartialBeanAsInterfaceTes
     @Deployment
     public static EnterpriseArchive deployEar()
     {
-        String simpleName = PartialBeanAsInterfaceEarFileTest.class.getSimpleName();
+        //workaround for tomee - the ear-file needs to have the same name as the war-file
+        String simpleName = PartialBeanAsInterfaceWarFileTest.class.getSimpleName();
         String archiveName = simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1);
 
         return ShrinkWrap.create(EnterpriseArchive.class, archiveName + ".ear")

@@ -33,7 +33,8 @@ public class CustomSchedulerEarFileTest extends CustomSchedulerTest
     @Deployment
     public static EnterpriseArchive deployEar()
     {
-        String simpleName = CustomSchedulerEarFileTest.class.getSimpleName();
+        //workaround for tomee - the ear-file needs to have the same name as the war-file
+        String simpleName = CustomSchedulerWarFileTest.class.getSimpleName();
         String archiveName = simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1);
 
         return ShrinkWrap.create(EnterpriseArchive.class, archiveName + ".ear")

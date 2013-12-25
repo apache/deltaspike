@@ -390,10 +390,8 @@
                             all tests in theory, we have to exclude some tests because there are e.g. packaging issues or
                             there are currently issues with arquillian. if a test isn't restricted to an environment,
                             no category is used for the test-class. -->
-                            <!-- TODO remove EnterpriseArchiveProfileCategory asap-->
                             <excludedGroups>
-                                org.apache.deltaspike.test.category.SeCategory,
-                                org.apache.deltaspike.test.category.EnterpriseArchiveProfileCategory
+                                org.apache.deltaspike.test.category.SeCategory
                             </excludedGroups>
                         </configuration>
                     </plugin>
