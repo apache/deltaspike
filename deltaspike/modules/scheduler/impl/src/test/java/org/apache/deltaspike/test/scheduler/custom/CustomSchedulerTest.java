@@ -28,6 +28,16 @@ public abstract class CustomSchedulerTest
 {
     @Inject
     private Scheduler scheduler;
+    //workaround for weld-se - as an alternative it's possible to use:
+    /*
+    private Scheduler<CustomJob> scheduler;
+
+    @Before
+    public void init()
+    {
+        this.scheduler = BeanProvider.getContextualReference(Scheduler.class);
+    }
+    */
 
     @Inject
     private TestJobManager testJobManager;
