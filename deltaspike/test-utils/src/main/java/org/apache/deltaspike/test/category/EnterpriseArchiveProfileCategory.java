@@ -16,28 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.util;
 
-import org.apache.deltaspike.test.utils.ShrinkWrapArchiveUtil;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
+package org.apache.deltaspike.test.category;
 
 /**
- * This class contains helpers for building frequently used archives
+ * Category marker interface. Tests which are packaged as ear-file.
  */
-public class ArchiveUtils
+public interface EnterpriseArchiveProfileCategory
 {
-    private ArchiveUtils()
-    {
-    }
-
-    public static JavaArchive[] getDeltaSpikeCoreAndSchedulerArchive()
-    {
-        return ShrinkWrapArchiveUtil.getArchives(
-                null,
-                "META-INF/beans.xml",
-                new String[]{"org.apache.deltaspike.core",
-                        "org.apache.deltaspike.test.category",
-                        "org.apache.deltaspike.scheduler"},
-                null);
-    }
 }

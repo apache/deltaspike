@@ -19,44 +19,15 @@
 package org.apache.deltaspike.test.scheduler.custom;
 
 import junit.framework.Assert;
-import org.apache.deltaspike.core.spi.config.ConfigSource;
 import org.apache.deltaspike.scheduler.spi.Scheduler;
-import org.apache.deltaspike.test.util.ArchiveUtils;
-import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.asset.StringAsset;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
+import javax.enterprise.inject.Typed;
 import javax.inject.Inject;
 
-@RunWith(Arquillian.class)
-public class CustomSchedulerTest
+@Typed()
+public abstract class CustomSchedulerTest
 {
-    @Deployment
-    public static WebArchive deploy()
-    {
-        String simpleName = CustomSchedulerTest.class.getSimpleName();
-        String archiveName = simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1);
-
-        JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "customSchedulerTest.jar")
-                .addPackage(CustomSchedulerTest.class.getPackage().getName())
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
-                .addAsResource(new StringAsset(MockedScheduler.class.getName()),
-                        "META-INF/services/" + Scheduler.class.getName())
-                .addAsResource(new StringAsset(CustomConfigSource.class.getName()),
-                        "META-INF/services/" + ConfigSource.class.getName());
-
-        return ShrinkWrap.create(WebArchive.class, archiveName + ".war")
-                .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndSchedulerArchive())
-                .addAsLibraries(testJar)
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
-    }
-
     @Inject
     private Scheduler<CustomJob> scheduler;
 
