@@ -42,7 +42,9 @@ public class ArchiveUtils
 
         return ShrinkWrapArchiveUtil.getArchives(null,
                 "META-INF/beans.xml",
-                new String[]{"org.apache.deltaspike.core", "org.apache.deltaspike.security"}, excludedFiles);
+                new String[]{"org.apache.deltaspike.core",
+                        "org.apache.deltaspike.test.category",
+                        "org.apache.deltaspike.security"}, excludedFiles);
     }
 
     public static Asset getBeansXml()

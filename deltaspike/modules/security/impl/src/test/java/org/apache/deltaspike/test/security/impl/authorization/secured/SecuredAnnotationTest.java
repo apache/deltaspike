@@ -20,32 +20,15 @@ package org.apache.deltaspike.test.security.impl.authorization.secured;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.security.api.authorization.AccessDeniedException;
-import org.apache.deltaspike.test.util.ArchiveUtils;
-import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 
 /**
  * Test for {@link org.apache.deltaspike.security.api.authorization.Secured}
  */
-@RunWith(Arquillian.class)
-public class SecuredAnnotationTest
+public abstract class SecuredAnnotationTest
 {
-    @Deployment
-    public static WebArchive deploy()
-    {
-        return ShrinkWrap.create(WebArchive.class, "secured-annotation-test.war")
-
-                .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndSecurityArchive())
-                .addPackage("org.apache.deltaspike.test.security.impl.authorization.secured")
-                .addAsWebInfResource(ArchiveUtils.getBeansXml(), "beans.xml");
-    }
-
     @Test
     public void simpleInterceptorTest()
     {
