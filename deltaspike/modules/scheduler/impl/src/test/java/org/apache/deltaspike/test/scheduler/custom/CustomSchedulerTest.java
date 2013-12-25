@@ -22,14 +22,12 @@ import junit.framework.Assert;
 import org.apache.deltaspike.scheduler.spi.Scheduler;
 import org.junit.Test;
 
-import javax.enterprise.inject.Typed;
 import javax.inject.Inject;
 
-@Typed()
 public abstract class CustomSchedulerTest
 {
     @Inject
-    private Scheduler<CustomJob> scheduler;
+    private Scheduler scheduler;
 
     @Inject
     private TestJobManager testJobManager;
