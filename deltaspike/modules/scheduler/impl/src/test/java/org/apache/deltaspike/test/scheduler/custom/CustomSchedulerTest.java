@@ -19,20 +19,26 @@
 package org.apache.deltaspike.test.scheduler.custom;
 
 import junit.framework.Assert;
+import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.scheduler.spi.Scheduler;
+import org.junit.Before;
 import org.junit.Test;
 
-import javax.enterprise.inject.Typed;
 import javax.inject.Inject;
 
-@Typed()
 public abstract class CustomSchedulerTest
 {
-    @Inject
+    //don't use @Inject here - due to an issue with old versions of weld
     private Scheduler<CustomJob> scheduler;
 
     @Inject
     private TestJobManager testJobManager;
+
+    @Before
+    public void init()
+    {
+        this.scheduler = BeanProvider.getContextualReference(Scheduler.class);
+    }
 
     @Test
     public void checkAutoRegisteredSchedulerJob()
