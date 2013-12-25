@@ -18,15 +18,7 @@
  */
 package org.apache.deltaspike.test.core.impl.jmx;
 
-import org.apache.deltaspike.test.util.ArchiveUtils;
-import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 import javax.management.*;
@@ -37,24 +29,11 @@ import java.util.Collection;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-@RunWith(Arquillian.class)
-public class SimpleRegistrationTest {
+public abstract class SimpleRegistrationTest {
     private static MBeanServer server = ManagementFactory.getPlatformMBeanServer();
 
     @Inject
     private MyMBean myMBean;
-
-    @Deployment
-    public static WebArchive war() {
-        JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "simpleRegistrationTest.jar")
-                .addPackage(SimpleRegistrationTest.class.getPackage())
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
-
-        return ShrinkWrap.create(WebArchive.class, "simpleRegistrationTest.war")
-                .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
-                .addAsLibraries(testJar)
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
-    }
 
     @Test
     public void checkMBean() throws Exception {
