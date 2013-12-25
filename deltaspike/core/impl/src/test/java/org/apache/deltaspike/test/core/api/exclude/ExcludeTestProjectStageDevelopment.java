@@ -20,15 +20,12 @@ package org.apache.deltaspike.test.core.api.exclude;
 
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
-import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 /**
  * Tests for {@link org.apache.deltaspike.core.api.exclude.Exclude}
  */
-@RunWith(Arquillian.class)
 public abstract class ExcludeTestProjectStageDevelopment
 {
     /**

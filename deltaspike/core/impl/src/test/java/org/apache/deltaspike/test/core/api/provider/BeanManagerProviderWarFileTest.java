@@ -39,8 +39,8 @@ public class BeanManagerProviderWarFileTest extends BeanManagerProviderTest
         String archiveName = simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1);
 
         return ShrinkWrap.create(WebArchive.class, archiveName + ".war")
-                .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
                 .addPackage(BeanManagerProviderWarFileTest.class.getPackage())
+                .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 }

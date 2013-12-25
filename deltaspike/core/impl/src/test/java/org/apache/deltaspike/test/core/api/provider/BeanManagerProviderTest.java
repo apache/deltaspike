@@ -19,14 +19,11 @@
 package org.apache.deltaspike.test.core.api.provider;
 
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
-import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import javax.enterprise.inject.spi.BeanManager;
 
-@RunWith(Arquillian.class)
 public abstract class BeanManagerProviderTest
 {
     @Test

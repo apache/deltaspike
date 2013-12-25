@@ -18,42 +18,15 @@
  */
 package org.apache.deltaspike.test.core.api.partialbean.uc001;
 
-import org.apache.deltaspike.test.core.api.partialbean.shared.TestPartialBeanBinding;
-import org.apache.deltaspike.test.core.api.partialbean.util.ArchiveUtils;
-import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 
-@RunWith(Arquillian.class)
-public class PartialBeanAsInterfaceTest
+public abstract class PartialBeanAsInterfaceTest
 {
     @Inject
     private PartialBean partialBean;
-
-    @Deployment
-    public static WebArchive war()
-    {
-        String simpleName = PartialBeanAsInterfaceTest.class.getSimpleName();
-        String archiveName = simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1);
-
-        JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, archiveName + ".jar")
-                .addPackage(PartialBeanAsInterfaceTest.class.getPackage())
-                .addPackage(TestPartialBeanBinding.class.getPackage())
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
-
-        return ShrinkWrap.create(WebArchive.class, archiveName + ".war")
-                .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndPartialBeanArchive())
-                .addAsLibraries(testJar)
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
-    }
 
     @Test
     public void testPartialBeanAsInterface() throws Exception

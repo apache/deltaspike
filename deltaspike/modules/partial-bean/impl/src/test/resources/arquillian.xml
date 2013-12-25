@@ -21,9 +21,9 @@
             xsi:schemaLocation="http://jboss.org/schema/arquillian http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
 
     <!--Uncomment to have test archives exported to the file system for inspection -->
-    <engine>
+    <!--engine>
         <property name="deploymentExportPath">target/</property>
-    </engine>
+    </engine-->
 
     <container qualifier="jbossas-managed-7">
         <configuration>
