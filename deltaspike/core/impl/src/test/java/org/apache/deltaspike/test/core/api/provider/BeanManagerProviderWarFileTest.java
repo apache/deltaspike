@@ -16,36 +16,31 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-package org.apache.deltaspike.test.core.api.exclude;
+package org.apache.deltaspike.test.core.api.provider;
 
-
-import org.apache.deltaspike.core.util.ProjectStageProducer;
-import org.apache.deltaspike.test.category.EnterpriseArchiveProfileCategory;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
-/**
- * Tests for {@link org.apache.deltaspike.core.api.exclude.Exclude}
- */
 @RunWith(Arquillian.class)
-@Category(EnterpriseArchiveProfileCategory.class)
-public class ExcludeTestProjectStageEarFileDevelopment extends ExcludeTestProjectStageDevelopment
+public class BeanManagerProviderWarFileTest extends BeanManagerProviderTest
 {
+    /**
+     *X TODO creating a WebArchive is only a workaround because JavaArchive cannot contain other archives.
+     */
     @Deployment
-    public static EnterpriseArchive deployEar()
+    public static WebArchive deploy()
     {
-        String simpleName = ExcludeTestProjectStageEarFileDevelopment.class.getSimpleName();
+        String simpleName = BeanManagerProviderWarFileTest.class.getSimpleName();
         String archiveName = simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1);
 
-        return ShrinkWrap.create(EnterpriseArchive.class, archiveName + ".ear")
-                .addAsModule(ExcludeTestProjectStageWarFileDevelopment.deploy());
+        return ShrinkWrap.create(WebArchive.class, archiveName + ".war")
+                .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
+                .addPackage(BeanManagerProviderWarFileTest.class.getPackage())
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 }

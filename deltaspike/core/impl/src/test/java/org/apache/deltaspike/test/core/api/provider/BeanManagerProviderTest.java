@@ -18,14 +18,8 @@
 */
 package org.apache.deltaspike.test.core.api.provider;
 
-
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
-import org.apache.deltaspike.test.util.ArchiveUtils;
-import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,26 +27,15 @@ import org.junit.runner.RunWith;
 import javax.enterprise.inject.spi.BeanManager;
 
 @RunWith(Arquillian.class)
-public class BeanManagerProviderTest
+public abstract class BeanManagerProviderTest
 {
-    /**
-     *X TODO creating a WebArchive is only a workaround because JavaArchive cannot contain other archives.
-     */
-    @Deployment
-    public static WebArchive deploy()
-    {
-        return ShrinkWrap.create(WebArchive.class, "beanManagerProvider.war")
-                .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
-    }
-    
     @Test
     public void testBeanManagerProvider() throws Exception
     {
-            BeanManagerProvider bmp = BeanManagerProvider.getInstance();
-            Assert.assertNotNull(bmp);
+        BeanManagerProvider bmp = BeanManagerProvider.getInstance();
+        Assert.assertNotNull(bmp);
 
-            BeanManager bm = bmp.getBeanManager();
-            Assert.assertNotNull(bm);
+        BeanManager bm = bmp.getBeanManager();
+        Assert.assertNotNull(bm);
     }
 }

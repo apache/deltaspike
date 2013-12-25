@@ -36,7 +36,7 @@ import org.junit.runner.RunWith;
  * Tests for {@link org.apache.deltaspike.core.api.exclude.Exclude}
  */
 @RunWith(Arquillian.class)
-public abstract class ExcludeTestProjectStageWarFileDevelopment extends ExcludeTestProjectStageDevelopment
+public class ExcludeTestProjectStageWarFileDevelopment extends ExcludeTestProjectStageDevelopment
 {
     /**
      * X TODO creating a WebArchive is only a workaround because JavaArchive cannot contain other archives.
