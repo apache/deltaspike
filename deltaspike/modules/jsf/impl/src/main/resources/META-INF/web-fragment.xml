@@ -25,7 +25,7 @@
     <distributable/>
 
     <listener>
-        <listener-class>org.apache.deltaspike.jsf.impl.config.view.ViewConfigValidator</listener-class>
+        <listener-class>org.apache.deltaspike.jsf.impl.config.view.ViewConfigPathValidator</listener-class>
     </listener>
 
     <ordering>
