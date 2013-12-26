@@ -18,7 +18,9 @@
  */
 package org.apache.deltaspike.jsf.impl.config.view;
 
+import org.apache.deltaspike.core.api.config.view.DefaultErrorView;
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
+import org.apache.deltaspike.core.api.config.view.ViewRef;
 import org.apache.deltaspike.core.spi.config.view.ConfigDescriptorValidator;
 import org.apache.deltaspike.core.api.config.view.metadata.InlineViewMetaData;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
@@ -171,6 +173,11 @@ public class ViewConfigExtension implements Extension, Deactivatable
 
     protected void addConfigClass(Class viewConfigClass, Set<Annotation> viewConfigAnnotations)
     {
+        if (isInternal(viewConfigClass))
+        {
+            return;
+        }
+
         String className = viewConfigClass.getName();
         if (!className.contains("."))
         {
@@ -220,6 +227,13 @@ public class ViewConfigExtension implements Extension, Deactivatable
                 previousRootNode = baseNode;
             }
         }
+    }
+
+    private boolean isInternal(Class configClass)
+    {
+        return ViewConfig.class.equals(configClass) ||
+                DefaultErrorView.class.equals(configClass) ||
+                ViewRef.Manual.class.equals(configClass);
     }
 
     private ViewConfigNode addNode(ViewConfigNode parentNode, Class idOfNewNode, Set<Annotation> viewConfigAnnotations)
