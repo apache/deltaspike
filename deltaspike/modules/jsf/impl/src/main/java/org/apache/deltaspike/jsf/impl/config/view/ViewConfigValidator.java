@@ -27,7 +27,6 @@ import org.apache.deltaspike.core.util.ExceptionUtils;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import java.net.MalformedURLException;
 
 public class ViewConfigValidator implements ServletContextListener, Deactivatable
 {
@@ -40,6 +39,7 @@ public class ViewConfigValidator implements ServletContextListener, Deactivatabl
         }
     }
 
+    //allows to re-use it in a custom listener (if this one is deactivated e.g. to change the order)
     protected void checkViewConfig(ServletContextEvent sce)
     {
         ViewConfigResolver viewConfigResolver = BeanProvider.getContextualReference(ViewConfigResolver.class);
@@ -54,8 +54,9 @@ public class ViewConfigValidator implements ServletContextListener, Deactivatabl
                         "' is missing, but mapped by: " + configDescriptor.getConfigClass().getName());
                 }
             }
-            catch (MalformedURLException e)
+            catch (Exception e)
             {
+                e.printStackTrace(); //for easier analysis (in combination with several servers)
                 throw ExceptionUtils.throwAsRuntimeException(e);
             }
         }
