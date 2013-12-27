@@ -20,8 +20,8 @@ package org.apache.deltaspike.core.spi.resourceloader;
 
 import org.apache.deltaspike.core.api.resoureloader.ExternalResource;
 
-import javax.enterprise.inject.spi.InjectionPoint;
 import java.io.InputStream;
+import java.util.Properties;
 
 /**
  * Provides lookup capability to find a resource.
@@ -30,8 +30,8 @@ import java.io.InputStream;
 public interface ExternalResourceProvider
 {
 
-    InputStream readStream(final ExternalResource externalResource, final InjectionPoint injectionPoint);
+    InputStream readStream(final ExternalResource externalResource);
 
-    int getPriority();
+    Properties readProperties(final ExternalResource externalResource);
 
 }

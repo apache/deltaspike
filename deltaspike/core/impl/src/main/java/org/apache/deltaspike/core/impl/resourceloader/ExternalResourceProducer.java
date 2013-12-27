@@ -19,9 +19,9 @@
 package org.apache.deltaspike.core.impl.resourceloader;
 
 import org.apache.deltaspike.core.api.resoureloader.ExternalResource;
-import org.apache.deltaspike.core.api.resoureloader.XMLProperties;
+import org.apache.deltaspike.core.spi.literal.StorageTypeLiteral;
 import org.apache.deltaspike.core.spi.resourceloader.ExternalResourceProvider;
-import org.apache.deltaspike.core.util.BeanUtils;
+import org.apache.deltaspike.core.spi.resourceloader.StorageType;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Any;
@@ -32,9 +32,7 @@ import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.lang.annotation.Annotation;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -51,41 +49,34 @@ public class ExternalResourceProducer
     @Any
     private Instance<ExternalResourceProvider> resourceProviders;
 
+    private ExternalResourceProvider getProvider(String storageTypeName)
+    {
+        StorageType storageType = new StorageTypeLiteral(storageTypeName);
+        ExternalResourceProvider provider = resourceProviders.select(storageType).get();
+        return provider;
+    }
+
     @Produces
-    @ExternalResource("")
+    @ExternalResource(storage = "",location = "")
     public InputStream getInputStream(final InjectionPoint injectionPoint)
     {
-        final InputStream is = findInputStream(injectionPoint);
+        ExternalResource externalResource = getAnnotation(injectionPoint);
+        ExternalResourceProvider provider = getProvider(externalResource.storage());
+        final InputStream is = provider.readStream(externalResource);
         return is;
     }
 
     @Produces
-    @ExternalResource("")
+    @ExternalResource(storage = "",location = "")
     public Properties getProperties(final InjectionPoint injectionPoint) throws IOException
     {
-        final InputStream is = findInputStream(injectionPoint);
-        final boolean isXml = BeanUtils.extractAnnotation(injectionPoint.getAnnotated(), XMLProperties.class) != null;
-        if (is != null)
-        {
-            Properties properties = new Properties();
-            if (isXml)
-            {
-                properties.loadFromXML(is);
-            }
-            else
-            {
-                properties.load(is);
-            }
-            is.close();
-            return properties;
-        }
-        else
-        {
-            return null;
-        }
+        ExternalResource externalResource = getAnnotation(injectionPoint);
+        ExternalResourceProvider provider = getProvider(externalResource.storage());
+        final Properties properties = provider.readProperties(externalResource);
+        return properties;
     }
 
-    public void closeInputStream(@Disposes @ExternalResource("") InputStream inputStream)
+    public void closeInputStream(@Disposes @ExternalResource(storage = "",location = "") InputStream inputStream)
     {
         if (inputStream != null)
         {
@@ -102,24 +93,11 @@ public class ExternalResourceProducer
 
     private ExternalResource getAnnotation(final InjectionPoint injectionPoint)
     {
-        return BeanUtils.extractAnnotation(injectionPoint.getAnnotated(),ExternalResource.class);
-    }
-
-    private InputStream findInputStream(final InjectionPoint injectionPoint)
-    {
-        final ExternalResource externalResource = getAnnotation(injectionPoint);
-        final List<ExternalResourceProvider> providerList = new ArrayList<ExternalResourceProvider>();
-        for (ExternalResourceProvider erp : resourceProviders)
+        for (Annotation annotation : injectionPoint.getQualifiers())
         {
-            providerList.add(erp);
-        }
-        Collections.sort(providerList,new ExternalResourceProviderComparator());
-        for (final ExternalResourceProvider provider : providerList)
-        {
-            final InputStream is = provider.readStream(externalResource,injectionPoint);
-            if (is != null)
+            if (annotation instanceof ExternalResource)
             {
-                return is;
+                return (ExternalResource)annotation;
             }
         }
         return null;

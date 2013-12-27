@@ -19,11 +19,10 @@
 package org.apache.deltaspike.core.impl.resourceloader;
 
 import org.apache.deltaspike.core.api.resoureloader.ExternalResource;
-import org.apache.deltaspike.core.spi.resourceloader.ExternalResourceProvider;
+import org.apache.deltaspike.core.spi.resourceloader.StorageType;
 import org.apache.deltaspike.core.util.ClassUtils;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.spi.InjectionPoint;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -35,16 +34,17 @@ import java.util.logging.Logger;
  * A classpath based resource provider
  */
 @ApplicationScoped
-public class ClasspathResourceProvider implements ExternalResourceProvider
+@StorageType(StorageType.CLASSPATH)
+public class ClasspathResourceProvider extends BaseResourceProvider
 {
     private static final Logger logger = Logger.getLogger(ClasspathResourceProvider.class.getName());
 
     @Override
-    public InputStream readStream(final ExternalResource externalResource, final InjectionPoint injectionPoint)
+    public InputStream readStream(final ExternalResource externalResource)
     {
         try
         {
-            return readClassPath(externalResource.value());
+            return readClassPath(externalResource.location());
         }
         catch (IOException e)
         {
@@ -54,12 +54,6 @@ public class ClasspathResourceProvider implements ExternalResourceProvider
             }
             return null;
         }
-    }
-
-    @Override
-    public int getPriority()
-    {
-        return 10;
     }
 
     private InputStream readClassPath(final String name) throws IOException

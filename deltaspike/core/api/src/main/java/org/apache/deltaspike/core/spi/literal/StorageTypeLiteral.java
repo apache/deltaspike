@@ -16,29 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.api.resoureloader;
+package org.apache.deltaspike.core.spi.literal;
 
-import javax.enterprise.util.Nonbinding;
-import javax.inject.Qualifier;
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.apache.deltaspike.core.spi.resourceloader.StorageType;
 
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.ElementType.METHOD;
+import javax.enterprise.util.AnnotationLiteral;
 
-@Target( { TYPE, METHOD, PARAMETER, FIELD })
-@Retention(value = RetentionPolicy.RUNTIME)
-@Documented
-@Qualifier
-public @interface ExternalResource
+public class StorageTypeLiteral extends AnnotationLiteral<StorageType> implements StorageType
 {
-    @Nonbinding
-    String storage();
-
-    @Nonbinding
-    String location() default "";
+    private String value;
+    public StorageTypeLiteral(String value)
+    {
+        this.value = value;
+    }
+    @Override
+    public String value()
+    {
+        return this.value;
+    }
 }

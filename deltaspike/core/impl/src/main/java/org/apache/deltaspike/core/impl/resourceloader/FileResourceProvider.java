@@ -19,33 +19,24 @@
 package org.apache.deltaspike.core.impl.resourceloader;
 
 import org.apache.deltaspike.core.api.resoureloader.ExternalResource;
-import org.apache.deltaspike.core.spi.resourceloader.ExternalResourceProvider;
+import org.apache.deltaspike.core.spi.resourceloader.StorageType;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.spi.InjectionPoint;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * A file based resource provider, looking for a file based on the name.
  */
 @ApplicationScoped
-public class FileResourceProvider implements ExternalResourceProvider
+@StorageType(StorageType.FILE)
+public class FileResourceProvider extends BaseResourceProvider
 {
-    @Override
-    public InputStream readStream(final ExternalResource externalResource, final InjectionPoint injectionPoint)
-    {
-        return readFile(externalResource.value());
-    }
-
-    @Override
-    public int getPriority()
-    {
-        return 20;
-    }
-
+    private static final Logger logger = Logger.getLogger(FileResourceProvider.class.getName());
     InputStream readFile(final String name)
     {
         File f = new File(name);
@@ -57,6 +48,7 @@ public class FileResourceProvider implements ExternalResourceProvider
             }
             catch (FileNotFoundException e)
             {
+                logger.log(Level.SEVERE, "Problem reading resource.", e);
                 return null;
             }
         }
@@ -64,5 +56,11 @@ public class FileResourceProvider implements ExternalResourceProvider
         {
             return null;
         }
+    }
+
+    @Override
+    public InputStream readStream(ExternalResource externalResource)
+    {
+        return readFile(externalResource.location());
     }
 }

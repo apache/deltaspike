@@ -27,14 +27,22 @@ import javax.enterprise.util.AnnotationLiteral;
  */
 public class ExternalResourceLiteral extends AnnotationLiteral<ExternalResource> implements ExternalResource
 {
-    private String value;
-    public ExternalResourceLiteral(final String value)
+    private String storage;
+    private String location;
+    public ExternalResourceLiteral(final String storage, final String location)
     {
-        this.value = value;
+        this.storage = storage;
+        this.location = location;
     }
     @Override
-    public String value()
+    public String location()
     {
-        return this.value;
+        return this.location;
+    }
+
+    @Override
+    public String storage()
+    {
+        return this.storage;
     }
 }
