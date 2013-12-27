@@ -16,11 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.api.resoureloader;
+package org.apache.deltaspike.core.api.resourceloader;
 
 /**
- * A marker interface for types of external resource storage.
+ * Represents storage found on the classpath
  */
-public interface ExternalResourceStorage
+public interface ClasspathStorage extends ExternalResourceStorage
 {
 }

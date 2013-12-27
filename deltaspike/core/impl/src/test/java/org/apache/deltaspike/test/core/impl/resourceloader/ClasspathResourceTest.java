@@ -19,8 +19,8 @@
 package org.apache.deltaspike.test.core.impl.resourceloader;
 
 
-import org.apache.deltaspike.core.api.resoureloader.ClasspathStorage;
-import org.apache.deltaspike.core.api.resoureloader.ExternalResource;
+import org.apache.deltaspike.core.api.resourceloader.ClasspathStorage;
+import org.apache.deltaspike.core.api.resourceloader.ExternalResource;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;

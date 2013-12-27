@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.core.spi.resourceloader;
 
-import org.apache.deltaspike.core.api.resoureloader.ExternalResource;
+import org.apache.deltaspike.core.api.resourceloader.ExternalResource;
 
 import java.io.InputStream;
 import java.util.Properties;

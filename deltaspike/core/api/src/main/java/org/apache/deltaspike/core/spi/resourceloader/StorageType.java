@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.core.spi.resourceloader;
 
-import org.apache.deltaspike.core.api.resoureloader.ExternalResourceStorage;
+import org.apache.deltaspike.core.api.resourceloader.ExternalResourceStorage;
 
 import javax.inject.Qualifier;
 import java.lang.annotation.Documented;

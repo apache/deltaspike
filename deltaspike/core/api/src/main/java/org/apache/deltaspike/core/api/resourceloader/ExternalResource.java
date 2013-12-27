@@ -16,11 +16,29 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.api.resoureloader;
+package org.apache.deltaspike.core.api.resourceloader;
 
-/**
- * A File System marker for external resources.
- */
-public interface FileSystemStorage extends ExternalResourceStorage
+import javax.enterprise.util.Nonbinding;
+import javax.inject.Qualifier;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.ElementType.METHOD;
+
+@Target( { TYPE, METHOD, PARAMETER, FIELD })
+@Retention(value = RetentionPolicy.RUNTIME)
+@Documented
+@Qualifier
+public @interface ExternalResource
 {
+    @Nonbinding
+    Class<? extends ExternalResourceStorage> storage();
+
+    @Nonbinding
+    String location() default "";
 }

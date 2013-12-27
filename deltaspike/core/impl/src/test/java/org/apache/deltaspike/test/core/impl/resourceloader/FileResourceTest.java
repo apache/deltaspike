@@ -20,7 +20,7 @@ package org.apache.deltaspike.test.core.impl.resourceloader;
 
 
 import org.apache.deltaspike.core.api.literal.ExternalResourceLiteral;
-import org.apache.deltaspike.core.api.resoureloader.FileSystemStorage;
+import org.apache.deltaspike.core.api.resourceloader.FileSystemStorage;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;

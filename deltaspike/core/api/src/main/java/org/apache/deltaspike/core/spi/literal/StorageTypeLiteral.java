@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.core.spi.literal;
 
-import org.apache.deltaspike.core.api.resoureloader.ExternalResourceStorage;
+import org.apache.deltaspike.core.api.resourceloader.ExternalResourceStorage;
 import org.apache.deltaspike.core.spi.resourceloader.StorageType;
 
 import javax.enterprise.util.AnnotationLiteral;

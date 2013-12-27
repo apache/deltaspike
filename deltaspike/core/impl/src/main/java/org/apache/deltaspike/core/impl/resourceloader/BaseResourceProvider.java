@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.core.impl.resourceloader;
 
-import org.apache.deltaspike.core.api.resoureloader.ExternalResource;
+import org.apache.deltaspike.core.api.resourceloader.ExternalResource;
 import org.apache.deltaspike.core.spi.resourceloader.ExternalResourceProvider;
 
 import javax.enterprise.inject.Any;
