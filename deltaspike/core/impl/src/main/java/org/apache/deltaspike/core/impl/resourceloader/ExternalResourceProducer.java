@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -88,7 +89,10 @@ public class ExternalResourceProducer
             }
             catch (IOException e)
             {
-
+                if (logger.isLoggable(Level.FINE))
+                {
+                    logger.log(Level.FINE,"Unable to close input stream ",e);
+                }
             }
         }
     }
