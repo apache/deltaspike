@@ -16,65 +16,36 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.impl.activation;
+package org.apache.deltaspike.test.core.impl.util;
 
-import org.apache.deltaspike.core.util.ClassDeactivationUtils;
-import org.apache.deltaspike.test.category.DeltaSpikeTest;
+import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.apache.deltaspike.test.util.ArchiveUtils;
-import org.apache.deltaspike.test.util.FileUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
-import java.net.URL;
-
-/**
- * Test for {@link org.apache.deltaspike.core.spi.activation.ClassDeactivator}
- */
 @RunWith(Arquillian.class)
-public class TestClassDeactivation
+@Category(WebProfileCategory.class)
+public class JndiUtilsWarFileTest extends JndiUtilsTest
 {
-    /**
-     *X TODO creating a WebArchive is only a workaround because JavaArchive cannot contain other archives.
-     */
     @Deployment
     public static WebArchive deploy()
     {
-        URL fileUrl = TestClassDeactivation.class.getClassLoader()
-                .getResource(DeltaSpikeTest.DELTASPIKE_PROPERTIES);
+        String simpleName = JndiUtilsWarFileTest.class.getSimpleName();
+        String archiveName = simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1);
 
-        JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "testClassDeactivationTest.jar")
-                .addPackage(TestClassDeactivation.class.getPackage())
+        JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "jndiTest.jar")
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
-        return ShrinkWrap.create(WebArchive.class, "classDeactivation.war")
+        return ShrinkWrap.create(WebArchive.class, archiveName + ".war")
+                .addPackage(JndiUtilsWarFileTest.class.getPackage())
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
                 .addAsLibraries(testJar)
-                .addAsResource(FileUtils.getFileForURL(fileUrl.toString()), DeltaSpikeTest.DELTASPIKE_PROPERTIES)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
-    }
-
-    /**
-     * Tests if a class of the added package is active
-     */
-    @Test
-    public void testActivatedClass()
-    {
-        Assert.assertTrue(ClassDeactivationUtils.isActivated(ActivatedClass.class));
-    }
-
-    /**
-     * Tests if the class deactivated by {@link TestClassDeactivator} is recognized as such
-     */
-    @Test
-    public void testDeactivatedClass()
-    {
-        Assert.assertFalse(ClassDeactivationUtils.isActivated(DeactivatedClass.class));
     }
 }

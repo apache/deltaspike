@@ -77,6 +77,7 @@
             <property name="ajpPort">-1</property>
             <property name="stopPort">-1</property>
             <property name="appWorkingDir">target/arquillian-test-working-dir</property>
+            <property name="simpleLog">true</property>
         </configuration>
     </container>
 </arquillian>

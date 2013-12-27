@@ -20,43 +20,14 @@ package org.apache.deltaspike.test.core.api.exclude;
 
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
-import org.apache.deltaspike.core.util.ProjectStageProducer;
-import org.apache.deltaspike.test.util.ArchiveUtils;
-import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 /**
  * Tests for {@link org.apache.deltaspike.core.api.exclude.Exclude}
  */
-@RunWith(Arquillian.class)
-public class ExcludeTestProjectStageDevelopment
+public abstract class ExcludeTestProjectStageDevelopment
 {
-    /**
-     * X TODO creating a WebArchive is only a workaround because JavaArchive cannot contain other archives.
-     */
-    @Deployment
-    public static WebArchive deploy()
-    {
-        System.setProperty("org.apache.deltaspike.ProjectStage", "Development");
-        ProjectStageProducer.setProjectStage(null);
-
-        JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "excludeTestProjectStageDevelopmentTest.jar")
-                .addPackage(ExcludeTestProjectStageDevelopment.class.getPackage())
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
-
-        return ShrinkWrap.create(WebArchive.class, "excludeProjectStageDevelopment.war")
-                .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
-                .addAsLibraries(testJar)
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
-    }
-
     /**
      * bean included in case of project-stage development
      */

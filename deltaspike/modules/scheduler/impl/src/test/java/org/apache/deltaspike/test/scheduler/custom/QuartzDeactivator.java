@@ -16,25 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.api.partialbean.uc001;
+package org.apache.deltaspike.test.scheduler.custom;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.apache.deltaspike.core.spi.activation.ClassDeactivator;
+import org.apache.deltaspike.core.spi.activation.Deactivatable;
 
-import javax.inject.Inject;
-
-public abstract class PartialBeanAsInterfaceTest
+public class QuartzDeactivator implements ClassDeactivator
 {
-    @Inject
-    private PartialBean partialBean;
+    private static final long serialVersionUID = 6185043496640765473L;
 
-    @Test
-    public void testPartialBeanAsInterface() throws Exception
+    @Override
+    public Boolean isActivated(Class<? extends Deactivatable> targetClass)
     {
-        String result = this.partialBean.getResult();
-
-        Assert.assertEquals("partial-test-false", result);
-
-        //TODO test pre-destroy callback
+        return !"QuartzScheduler".equals(targetClass.getSimpleName());
     }
 }

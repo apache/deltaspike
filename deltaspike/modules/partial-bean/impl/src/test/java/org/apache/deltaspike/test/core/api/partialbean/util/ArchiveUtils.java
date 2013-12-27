@@ -35,6 +35,8 @@ public abstract class ArchiveUtils
 
         return ShrinkWrapArchiveUtil.getArchives(null,
                 "META-INF/beans.xml",
-                new String[]{"org.apache.deltaspike.core", "org.apache.deltaspike.partialbean"}, excludedFiles);
+                new String[]{"org.apache.deltaspike.core",
+                        "org.apache.deltaspike.test.category",
+                        "org.apache.deltaspike.partialbean"}, excludedFiles);
     }
 }

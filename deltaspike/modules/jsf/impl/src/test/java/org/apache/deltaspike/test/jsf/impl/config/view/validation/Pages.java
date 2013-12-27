@@ -16,25 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.api.partialbean.uc001;
+package org.apache.deltaspike.test.jsf.impl.config.view.validation;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.apache.deltaspike.core.api.config.view.ViewConfig;
+import org.apache.deltaspike.jsf.api.config.view.View;
 
-import javax.inject.Inject;
-
-public abstract class PartialBeanAsInterfaceTest
+interface Pages extends ViewConfig
 {
-    @Inject
-    private PartialBean partialBean;
-
-    @Test
-    public void testPartialBeanAsInterface() throws Exception
+    class Index implements Pages
     {
-        String result = this.partialBean.getResult();
-
-        Assert.assertEquals("partial-test-false", result);
-
-        //TODO test pre-destroy callback
     }
 }

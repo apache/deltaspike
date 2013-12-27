@@ -159,7 +159,8 @@
                             <!-- Ignore these groups because they don't work with embedded OWB -->
                             <excludedGroups>
                                 org.apache.deltaspike.test.category.WebProfileCategory,
-                                org.apache.deltaspike.test.category.FullProfileCategory
+                                org.apache.deltaspike.test.category.FullProfileCategory,
+                                org.apache.deltaspike.test.category.EnterpriseArchiveProfileCategory
                             </excludedGroups>
                         </configuration>
                     </plugin>
@@ -228,7 +229,8 @@
                             <!-- Ignore these groups because they don't work with embedded Weld -->
                             <excludedGroups>
                                 org.apache.deltaspike.test.category.WebProfileCategory,
-                                org.apache.deltaspike.test.category.FullProfileCategory
+                                org.apache.deltaspike.test.category.FullProfileCategory,
+                                org.apache.deltaspike.test.category.EnterpriseArchiveProfileCategory
                             </excludedGroups>
                         </configuration>
                     </plugin>

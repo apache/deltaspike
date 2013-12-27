@@ -16,25 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.api.partialbean.uc001;
+package org.apache.deltaspike.test.scheduler.custom;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.apache.deltaspike.scheduler.api.Scheduled;
 
-import javax.inject.Inject;
-
-public abstract class PartialBeanAsInterfaceTest
+@Scheduled(cronExpression = "*/1 * * * * ?")
+public class AutoRegisteredJob implements CustomJob
 {
-    @Inject
-    private PartialBean partialBean;
-
-    @Test
-    public void testPartialBeanAsInterface() throws Exception
-    {
-        String result = this.partialBean.getResult();
-
-        Assert.assertEquals("partial-test-false", result);
-
-        //TODO test pre-destroy callback
-    }
 }

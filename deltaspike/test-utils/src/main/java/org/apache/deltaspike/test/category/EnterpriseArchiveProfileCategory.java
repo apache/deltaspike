@@ -16,25 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.api.partialbean.uc001;
 
-import org.junit.Assert;
-import org.junit.Test;
+package org.apache.deltaspike.test.category;
 
-import javax.inject.Inject;
-
-public abstract class PartialBeanAsInterfaceTest
+/**
+ * Category marker interface. Tests which are packaged as ear-file.
+ */
+public interface EnterpriseArchiveProfileCategory
 {
-    @Inject
-    private PartialBean partialBean;
-
-    @Test
-    public void testPartialBeanAsInterface() throws Exception
-    {
-        String result = this.partialBean.getResult();
-
-        Assert.assertEquals("partial-test-false", result);
-
-        //TODO test pre-destroy callback
-    }
 }

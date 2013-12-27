@@ -18,19 +18,9 @@
 */
 package org.apache.deltaspike.test.core.api.alternative.local;
 
-
 import org.apache.deltaspike.core.api.provider.BeanProvider;
-import org.apache.deltaspike.test.category.SeCategory;
-import org.apache.deltaspike.test.util.ArchiveUtils;
-import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -41,27 +31,10 @@ import java.util.List;
  *
  * Tests which checks the behaviour with deactivated global alternates.
  */
-@RunWith(Arquillian.class)
-public class BdaAlternativeTest
+public abstract class BdaAlternativeTest
 {
     @Inject
     private BaseInterface2 bean;
-
-    /**
-     * X TODO creating a WebArchive is only a workaround because JavaArchive cannot contain other archives.
-     */
-    @Deployment
-    public static WebArchive deploy()
-    {
-        JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "securedAnnotationTest.jar")
-                .addPackage(BdaAlternativeTest.class.getPackage())
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
-
-        return ShrinkWrap.create(WebArchive.class, "bdaAlternative.war")
-                .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive(new String[]{"META-INF.config"}))
-                .addAsLibraries(testJar)
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
-    }
 
     /*
      * The default implementation should be found

@@ -19,8 +19,6 @@
 package org.apache.deltaspike.test.util;
 
 import org.apache.deltaspike.test.utils.ShrinkWrapArchiveUtil;
-import org.jboss.shrinkwrap.api.asset.Asset;
-import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 
 /**
@@ -28,35 +26,18 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
  */
 public class ArchiveUtils
 {
-    private ArchiveUtils() 
+    private ArchiveUtils()
     {
-        // private ct
     }
-    
-    public static JavaArchive[] getDeltaSpikeCoreAndSecurityArchive()
+
+    public static JavaArchive[] getDeltaSpikeCoreAndSchedulerArchive()
     {
-        String[] excludedFiles;
-
-        excludedFiles = new String[]{"META-INF.apache-deltaspike.properties"};
-
-
-        return ShrinkWrapArchiveUtil.getArchives(null,
+        return ShrinkWrapArchiveUtil.getArchives(
+                null,
                 "META-INF/beans.xml",
                 new String[]{"org.apache.deltaspike.core",
                         "org.apache.deltaspike.test.category",
-                        "org.apache.deltaspike.security"}, excludedFiles);
-    }
-
-    public static Asset getBeansXml()
-    {
-        Asset beansXml = new StringAsset(
-            "<beans>" +
-                "<interceptors>" +
-                    "<class>org.apache.deltaspike.security.impl.extension.SecurityInterceptor</class>" +
-                "</interceptors>" +
-            "</beans>"
-        );
-
-        return beansXml;
+                        "org.apache.deltaspike.scheduler"},
+                null);
     }
 }

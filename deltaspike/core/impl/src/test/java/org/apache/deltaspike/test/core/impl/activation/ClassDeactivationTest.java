@@ -16,35 +16,32 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.impl.util;
+package org.apache.deltaspike.test.core.impl.activation;
 
-import org.apache.deltaspike.core.impl.util.JndiUtils;
+import org.apache.deltaspike.core.util.ClassDeactivationUtils;
+import org.junit.Assert;
 import org.junit.Test;
 
-import javax.enterprise.inject.spi.BeanManager;
-import java.util.Map;
-
-import static org.junit.Assert.assertNotNull;
-
-public abstract class JndiUtilsTest
+/**
+ * Test for {@link org.apache.deltaspike.core.spi.activation.ClassDeactivator}
+ */
+public abstract class ClassDeactivationTest
 {
     /**
-     * Tests {@link JndiUtils#lookup(String, Class)} by looking up the {@link BeanManager}
+     * Tests if a class of the added package is active
      */
     @Test
-    public void testLookup()
+    public void testActivatedClass()
     {
-        BeanManager beanManager = JndiUtils.lookup("java:comp/BeanManager", BeanManager.class);
-        assertNotNull("JNDI lookup failed", beanManager);
+        Assert.assertTrue(ClassDeactivationUtils.isActivated(ActivatedClass.class));
     }
 
     /**
-     * Tests {@link JndiUtils#list(String, Class)} by digging in java:comp namespace
+     * Tests if the class deactivated by {@link TestClassDeactivator} is recognized as such
      */
     @Test
-    public void testList()
+    public void testDeactivatedClass()
     {
-        Map<String, BeanManager> beanManager = JndiUtils.list("java:comp", BeanManager.class);
-        assertNotNull("JNDI lookup failed", beanManager);
+        Assert.assertFalse(ClassDeactivationUtils.isActivated(DeactivatedClass.class));
     }
 }
