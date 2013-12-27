@@ -29,6 +29,7 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,8 +48,8 @@ public class FileResourceTest
 {
     private static String tempFileName;
 
-    @BeforeClass
-    public static void createTempFile()
+    @Before
+    public void createTempFile()
     {
         String javaiotmpdir = System.getProperty("java.io.tmpdir","/tmp");
         File tmpDir = new File(javaiotmpdir);
