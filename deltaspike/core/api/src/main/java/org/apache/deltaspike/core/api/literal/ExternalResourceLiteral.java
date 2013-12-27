@@ -19,6 +19,7 @@
 package org.apache.deltaspike.core.api.literal;
 
 import org.apache.deltaspike.core.api.resoureloader.ExternalResource;
+import org.apache.deltaspike.core.api.resoureloader.ExternalResourceStorage;
 
 import javax.enterprise.util.AnnotationLiteral;
 
@@ -27,9 +28,9 @@ import javax.enterprise.util.AnnotationLiteral;
  */
 public class ExternalResourceLiteral extends AnnotationLiteral<ExternalResource> implements ExternalResource
 {
-    private String storage;
+    private Class<? extends ExternalResourceStorage> storage;
     private String location;
-    public ExternalResourceLiteral(final String storage, final String location)
+    public ExternalResourceLiteral(final Class<? extends ExternalResourceStorage> storage, final String location)
     {
         this.storage = storage;
         this.location = location;
@@ -41,7 +42,7 @@ public class ExternalResourceLiteral extends AnnotationLiteral<ExternalResource>
     }
 
     @Override
-    public String storage()
+    public Class<? extends ExternalResourceStorage> storage()
     {
         return this.storage;
     }

@@ -19,6 +19,7 @@
 package org.apache.deltaspike.core.impl.resourceloader;
 
 import org.apache.deltaspike.core.api.resoureloader.ExternalResource;
+import org.apache.deltaspike.core.api.resoureloader.ExternalResourceStorage;
 import org.apache.deltaspike.core.spi.literal.StorageTypeLiteral;
 import org.apache.deltaspike.core.spi.resourceloader.ExternalResourceProvider;
 import org.apache.deltaspike.core.spi.resourceloader.StorageType;
@@ -49,15 +50,15 @@ public class ExternalResourceProducer
     @Any
     private Instance<ExternalResourceProvider> resourceProviders;
 
-    private ExternalResourceProvider getProvider(String storageTypeName)
+    private ExternalResourceProvider getProvider(Class<? extends ExternalResourceStorage> storageTypeClass)
     {
-        StorageType storageType = new StorageTypeLiteral(storageTypeName);
+        StorageType storageType = new StorageTypeLiteral(storageTypeClass);
         ExternalResourceProvider provider = resourceProviders.select(storageType).get();
         return provider;
     }
 
     @Produces
-    @ExternalResource(storage = "",location = "")
+    @ExternalResource(storage = ExternalResourceStorage.class,location = "")
     public InputStream getInputStream(final InjectionPoint injectionPoint)
     {
         ExternalResource externalResource = getAnnotation(injectionPoint);
@@ -67,7 +68,7 @@ public class ExternalResourceProducer
     }
 
     @Produces
-    @ExternalResource(storage = "",location = "")
+    @ExternalResource(storage = ExternalResourceStorage.class,location = "")
     public Properties getProperties(final InjectionPoint injectionPoint) throws IOException
     {
         ExternalResource externalResource = getAnnotation(injectionPoint);
@@ -76,7 +77,8 @@ public class ExternalResourceProducer
         return properties;
     }
 
-    public void closeInputStream(@Disposes @ExternalResource(storage = "",location = "") InputStream inputStream)
+    public void closeInputStream(@Disposes @ExternalResource(storage = ExternalResourceStorage.class,location = "")
+                                 InputStream inputStream)
     {
         if (inputStream != null)
         {
@@ -93,6 +95,8 @@ public class ExternalResourceProducer
 
     private ExternalResource getAnnotation(final InjectionPoint injectionPoint)
     {
+        System.out.println("processing injection point " + injectionPoint +
+                " with qualifiers " + injectionPoint.getQualifiers());
         for (Annotation annotation : injectionPoint.getQualifiers())
         {
             if (annotation instanceof ExternalResource)

@@ -19,8 +19,8 @@
 package org.apache.deltaspike.test.core.impl.resourceloader;
 
 
+import org.apache.deltaspike.core.api.resoureloader.ClasspathStorage;
 import org.apache.deltaspike.core.api.resoureloader.ExternalResource;
-import org.apache.deltaspike.core.spi.resourceloader.StorageType;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -51,15 +51,16 @@ public class ClasspathResourceTest {
     }
 
     @Inject
-    @ExternalResource(storage = StorageType.CLASSPATH,location="myconfig.properties")
+    @ExternalResource(storage = ClasspathStorage.class,location="myconfig.properties")
     private InputStream inputStream;
 
     @Inject
-    @ExternalResource(storage = StorageType.CLASSPATH,location="myconfig.properties")
+    @ExternalResource(storage = ClasspathStorage.class,location="myconfig.properties")
     private Properties props;
 
     @Test
-    public void testInputStream() throws IOException {
+    public void testInputStream() throws IOException
+    {
         Assert.assertNotNull(inputStream);
         Properties p = new Properties();
         p.load(inputStream);
@@ -67,7 +68,8 @@ public class ClasspathResourceTest {
     }
 
     @Test
-    public void testProperties() {
+    public void testProperties()
+    {
         Assert.assertEquals("somevalue", props.getProperty("some.propertykey", "wrong answer"));
     }
 }

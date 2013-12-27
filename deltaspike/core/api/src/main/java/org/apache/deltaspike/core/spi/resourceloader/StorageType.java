@@ -18,6 +18,8 @@
  */
 package org.apache.deltaspike.core.spi.resourceloader;
 
+import org.apache.deltaspike.core.api.resoureloader.ExternalResourceStorage;
+
 import javax.inject.Qualifier;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -39,8 +41,5 @@ import static java.lang.annotation.ElementType.FIELD;
 @Qualifier
 public @interface StorageType
 {
-    String FILE = "file";
-    String CLASSPATH = "classpath";
-
-    String value();
+    Class<? extends ExternalResourceStorage> value();
 }

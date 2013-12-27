@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.core.impl.resourceloader;
 
+import org.apache.deltaspike.core.api.resoureloader.ClasspathStorage;
 import org.apache.deltaspike.core.api.resoureloader.ExternalResource;
 import org.apache.deltaspike.core.spi.resourceloader.StorageType;
 import org.apache.deltaspike.core.util.ClassUtils;
@@ -34,7 +35,7 @@ import java.util.logging.Logger;
  * A classpath based resource provider
  */
 @ApplicationScoped
-@StorageType(StorageType.CLASSPATH)
+@StorageType(ClasspathStorage.class)
 public class ClasspathResourceProvider extends BaseResourceProvider
 {
     private static final Logger logger = Logger.getLogger(ClasspathResourceProvider.class.getName());

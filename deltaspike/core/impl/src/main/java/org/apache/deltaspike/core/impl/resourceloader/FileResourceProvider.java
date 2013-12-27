@@ -19,6 +19,7 @@
 package org.apache.deltaspike.core.impl.resourceloader;
 
 import org.apache.deltaspike.core.api.resoureloader.ExternalResource;
+import org.apache.deltaspike.core.api.resoureloader.FileSystemStorage;
 import org.apache.deltaspike.core.spi.resourceloader.StorageType;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -33,7 +34,7 @@ import java.util.logging.Logger;
  * A file based resource provider, looking for a file based on the name.
  */
 @ApplicationScoped
-@StorageType(StorageType.FILE)
+@StorageType(FileSystemStorage.class)
 public class FileResourceProvider extends BaseResourceProvider
 {
     private static final Logger logger = Logger.getLogger(FileResourceProvider.class.getName());

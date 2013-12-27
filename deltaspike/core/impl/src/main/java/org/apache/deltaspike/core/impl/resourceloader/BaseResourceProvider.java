@@ -19,9 +19,7 @@
 package org.apache.deltaspike.core.impl.resourceloader;
 
 import org.apache.deltaspike.core.api.resoureloader.ExternalResource;
-import org.apache.deltaspike.core.api.resoureloader.XMLProperties;
 import org.apache.deltaspike.core.spi.resourceloader.ExternalResourceProvider;
-import org.apache.deltaspike.core.util.BeanUtils;
 
 import javax.enterprise.inject.Any;
 import javax.enterprise.inject.Instance;
@@ -46,11 +44,9 @@ public abstract class BaseResourceProvider implements ExternalResourceProvider
     @Any
     private Instance<InjectionPoint> injectionPoint;
 
-    protected boolean isXml()
+    protected boolean isXml(String fileName)
     {
-        final boolean isXml = BeanUtils.extractAnnotation(getInjectionPoint().getAnnotated(), XMLProperties.class)
-                != null;
-        return isXml;
+        return fileName.endsWith(".xml");
     }
 
     protected InjectionPoint getInjectionPoint()
@@ -65,7 +61,7 @@ public abstract class BaseResourceProvider implements ExternalResourceProvider
 
     protected void loadInputStreamToProperties(InputStream inputStream, Properties properties, String name)
     {
-        boolean isXml = this.isXml();
+        boolean isXml = this.isXml(name);
         try
         {
             if (isXml)

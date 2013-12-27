@@ -18,18 +18,9 @@
  */
 package org.apache.deltaspike.core.api.resoureloader;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.ElementType.METHOD;
-
-@Target( { METHOD, PARAMETER, FIELD })
-@Retention(value = RetentionPolicy.RUNTIME)
-@Documented
-public @interface XMLProperties
+/**
+ * A marker interface for types of external resource storage.
+ */
+public interface ExternalResourceStorage
 {
 }

@@ -16,23 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.spi.literal;
+package org.apache.deltaspike.core.api.resoureloader;
 
-import org.apache.deltaspike.core.api.resoureloader.ExternalResourceStorage;
-import org.apache.deltaspike.core.spi.resourceloader.StorageType;
-
-import javax.enterprise.util.AnnotationLiteral;
-
-public class StorageTypeLiteral extends AnnotationLiteral<StorageType> implements StorageType
+/**
+ * A File System marker for external resources.
+ */
+public interface FileSystemStorage extends ExternalResourceStorage
 {
-    private Class<? extends ExternalResourceStorage> value;
-    public StorageTypeLiteral(Class<? extends ExternalResourceStorage> value)
-    {
-        this.value = value;
-    }
-    @Override
-    public Class<? extends ExternalResourceStorage> value()
-    {
-        return this.value;
-    }
 }

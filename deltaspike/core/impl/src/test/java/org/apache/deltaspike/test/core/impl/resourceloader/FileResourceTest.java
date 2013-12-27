@@ -20,17 +20,14 @@ package org.apache.deltaspike.test.core.impl.resourceloader;
 
 
 import org.apache.deltaspike.core.api.literal.ExternalResourceLiteral;
-import org.apache.deltaspike.core.api.resoureloader.ExternalResource;
-import org.apache.deltaspike.core.spi.resourceloader.StorageType;
+import org.apache.deltaspike.core.api.resoureloader.FileSystemStorage;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -88,9 +85,10 @@ public class FileResourceTest
     private Instance<Properties> propsInst;
 
     @Test
-    public void testInputStream() throws IOException {
+    public void testInputStream() throws IOException
+    {
         InputStream inputStream = inputStreamInst
-                .select(new ExternalResourceLiteral(StorageType.FILE, tempFileName)).get();
+                .select(new ExternalResourceLiteral(FileSystemStorage.class, tempFileName)).get();
         Assert.assertNotNull(inputStream);
         Properties p = new Properties();
         p.load(inputStream);
@@ -98,8 +96,10 @@ public class FileResourceTest
     }
 
     @Test
-    public void testProperties() {
-        Properties props = this.propsInst.select(new ExternalResourceLiteral(StorageType.FILE,tempFileName)).get();
+    public void testProperties()
+    {
+        Properties props = this.propsInst.select(new ExternalResourceLiteral(FileSystemStorage.class,tempFileName))
+                .get();
         Assert.assertEquals("somevalue", props.getProperty("some.propertykey", "wrong answer"));
     }
 }
