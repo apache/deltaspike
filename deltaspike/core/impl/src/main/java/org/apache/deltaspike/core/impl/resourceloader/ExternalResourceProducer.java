@@ -95,8 +95,6 @@ public class ExternalResourceProducer
 
     private ExternalResource getAnnotation(final InjectionPoint injectionPoint)
     {
-        System.out.println("processing injection point " + injectionPoint +
-                " with qualifiers " + injectionPoint.getQualifiers());
         for (Annotation annotation : injectionPoint.getQualifiers())
         {
             if (annotation instanceof ExternalResource)
