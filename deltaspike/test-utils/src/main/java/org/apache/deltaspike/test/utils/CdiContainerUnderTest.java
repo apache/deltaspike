@@ -18,6 +18,12 @@
  */
 package org.apache.deltaspike.test.utils;
 
+import java.net.URL;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
+
 /**
  * A small helper class which checks if the container
  * which is currently being tested matches the given version RegExp
@@ -52,5 +58,139 @@ public class CdiContainerUnderTest
         }
 
         return false;
+    }
+
+    //TODO discuss merge with #is (there 'cdicontainer.version' isn't available in all cases)
+    public static boolean isCdiVersion(CdiImplementation cdiImplementation)
+    {
+        Class implementationClass = tryToLoadClassForName(cdiImplementation.getImplementationClassName());
+
+        if (implementationClass == null)
+        {
+            return false;
+        }
+
+        String containerVersion = getJarVersion(implementationClass);
+        return containerVersion != null && containerVersion.matches(cdiImplementation.getVersionRegex());
+    }
+
+    private static Class tryToLoadClassForName(String name)
+    {
+        try
+        {
+            return loadClassForName(name);
+        }
+        catch (ClassNotFoundException e)
+        {
+            //do nothing - it's just a try
+            return null;
+        }
+    }
+
+    private static Class loadClassForName(String name) throws ClassNotFoundException
+    {
+        try
+        {
+            // Try WebApp ClassLoader first
+            return Class.forName(name, false, // do not initialize for faster startup
+                    getClassLoader(null));
+        }
+        catch (ClassNotFoundException ignore)
+        {
+            // fallback: Try ClassLoader for ClassUtils (i.e. the myfaces.jar lib)
+            return Class.forName(name, false, // do not initialize for faster startup
+                    CdiContainerUnderTest.class.getClassLoader());
+        }
+    }
+
+    private static ClassLoader getClassLoader(Object o)
+    {
+        if (System.getSecurityManager() != null)
+        {
+            return AccessController.doPrivileged(new GetClassLoaderAction(o));
+        }
+        else
+        {
+            return getClassLoaderInternal(o);
+        }
+    }
+
+    private static ClassLoader getClassLoaderInternal(Object o)
+    {
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+
+        if (loader == null && o != null)
+        {
+            loader = o.getClass().getClassLoader();
+        }
+
+        if (loader == null)
+        {
+            loader = CdiContainerUnderTest.class.getClassLoader();
+        }
+
+        return loader;
+    }
+
+    private static String getJarVersion(Class targetClass)
+    {
+        String manifestFileLocation = getManifestFileLocationOfClass(targetClass);
+
+        try
+        {
+            return new Manifest(new URL(manifestFileLocation).openStream())
+                    .getMainAttributes().getValue(Attributes.Name.IMPLEMENTATION_VERSION);
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
+    }
+
+    private static String getManifestFileLocationOfClass(Class targetClass)
+    {
+        String manifestFileLocation;
+
+        try
+        {
+            manifestFileLocation = getManifestLocation(targetClass);
+        }
+        catch (Exception e)
+        {
+            //in this case we have a proxy
+            manifestFileLocation = getManifestLocation(targetClass.getSuperclass());
+        }
+        return manifestFileLocation;
+    }
+
+    private static String getManifestLocation(Class targetClass)
+    {
+        String classFilePath = targetClass.getCanonicalName().replace('.', '/') + ".class";
+        String manifestFilePath = "/META-INF/MANIFEST.MF";
+
+        String classLocation = targetClass.getResource(targetClass.getSimpleName() + ".class").toString();
+        return classLocation.substring(0, classLocation.indexOf(classFilePath) - 1) + manifestFilePath;
+    }
+
+    private static class GetClassLoaderAction implements PrivilegedAction<ClassLoader>
+    {
+        private Object object;
+        GetClassLoaderAction(Object object)
+        {
+            this.object = object;
+        }
+
+        @Override
+        public ClassLoader run()
+        {
+            try
+            {
+                return getClassLoaderInternal(object);
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
     }
 }

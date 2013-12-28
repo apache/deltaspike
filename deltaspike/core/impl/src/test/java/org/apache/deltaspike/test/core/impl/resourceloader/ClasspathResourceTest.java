@@ -21,8 +21,9 @@ package org.apache.deltaspike.test.core.impl.resourceloader;
 
 import org.apache.deltaspike.core.api.literal.ExternalResourceLiteral;
 import org.apache.deltaspike.core.api.resourceloader.ClasspathStorage;
-import org.apache.deltaspike.core.api.resourceloader.ExternalResource;
 import org.apache.deltaspike.test.util.ArchiveUtils;
+import org.apache.deltaspike.test.utils.CdiContainerUnderTest;
+import org.apache.deltaspike.test.utils.CdiImplementation;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
@@ -31,22 +32,29 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import javax.enterprise.inject.Any;
-import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
 
 @RunWith(Arquillian.class)
-public class ClasspathResourceTest {
+public class ClasspathResourceTest
+{
     @Deployment
     public static Archive<?> createResourceLoaderArchive()
     {
+        Class versionDependentImplementation = Cdi11Bean.class;
+        if (isOwbForCdi10())
+        {
+            versionDependentImplementation = Cdi10Bean.class;
+        }
+
         Archive<?> arch = ShrinkWrap.create(WebArchive.class, ClasspathResourceTest.class.getSimpleName() + ".war")
+                .addClass(TestResourceHolder.class)
+                .addClass(versionDependentImplementation)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .add(new StringAsset("some.propertykey = somevalue"), "WEB-INF/classes/testconfig.properties")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive());
@@ -54,35 +62,39 @@ public class ClasspathResourceTest {
     }
 
     @Inject
-    @ExternalResource(storage = ClasspathStorage.class,location="testconfig.properties")
-    private InputStream inputStream;
-
-    @Inject
-    @ExternalResource(storage = ClasspathStorage.class,location="testconfig.properties")
-    private Properties props;
-
-    @Inject
-    @Any
-    private Instance<InputStream> inputStreams;
+    private TestResourceHolder testResourceHolder;
 
     @Test
     public void testInputStream() throws IOException
     {
-        Assert.assertNotNull(inputStream);
+        Assume.assumeTrue(!isOwbForCdi10());
+
+        Assert.assertNotNull(testResourceHolder.getInputStream());
         Properties p = new Properties();
-        p.load(inputStream);
+        p.load(testResourceHolder.getInputStream());
         Assert.assertEquals("somevalue", p.getProperty("some.propertykey", "wrong answer"));
     }
 
     @Test
     public void testProperties()
     {
-        Assert.assertEquals("somevalue", props.getProperty("some.propertykey", "wrong answer"));
+        Assume.assumeTrue(!isOwbForCdi10());
+
+        Assert.assertEquals("somevalue",
+            testResourceHolder.getProperties().getProperty("some.propertykey", "wrong answer"));
     }
 
     @Test(expected = RuntimeException.class)
     public void testAmbiguousFileLookup()
     {
-        inputStreams.select(new ExternalResourceLiteral(ClasspathStorage.class, "META-INF/beans.xml")).get();
+        Assume.assumeTrue(!isOwbForCdi10());
+
+        testResourceHolder.getInputStreamInstance()
+            .select(new ExternalResourceLiteral(ClasspathStorage.class, "META-INF/beans.xml")).get();
+    }
+
+    private static boolean isOwbForCdi10()
+    {
+        return CdiContainerUnderTest.isCdiVersion(CdiImplementation.OWB11) || CdiContainerUnderTest.isCdiVersion(CdiImplementation.OWB12);
     }
 }

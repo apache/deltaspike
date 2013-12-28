@@ -21,7 +21,10 @@ package org.apache.deltaspike.test.core.impl.resourceloader;
 
 import org.apache.deltaspike.core.api.literal.ExternalResourceLiteral;
 import org.apache.deltaspike.core.api.resourceloader.FileSystemStorage;
+import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.test.util.ArchiveUtils;
+import org.apache.deltaspike.test.utils.CdiContainerUnderTest;
+import org.apache.deltaspike.test.utils.CdiImplementation;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
@@ -29,8 +32,8 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -64,14 +67,22 @@ public class FileResourceTest
         }
         catch (IOException e)
         {
-
+            throw ExceptionUtils.throwAsRuntimeException(e);
         }
     }
 
     @Deployment
     public static Archive<?> createResourceLoaderArchive()
     {
+        Class versionDependentImplementation = Cdi11Bean.class;
+        if (isOwbForCdi10())
+        {
+            versionDependentImplementation = Cdi10Bean.class;
+        }
+
         Archive<?> arch = ShrinkWrap.create(WebArchive.class, FileResourceTest.class.getSimpleName() + ".war")
+                .addClass(TestResourceHolder.class)
+                .addClass(versionDependentImplementation)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive());
         return arch;
@@ -88,6 +99,8 @@ public class FileResourceTest
     @Test
     public void testInputStream() throws IOException
     {
+        Assume.assumeTrue(!isOwbForCdi10());
+
         InputStream inputStream = inputStreamInst
                 .select(new ExternalResourceLiteral(FileSystemStorage.class, tempFileName)).get();
         Assert.assertNotNull(inputStream);
@@ -99,8 +112,15 @@ public class FileResourceTest
     @Test
     public void testProperties()
     {
+        Assume.assumeTrue(!isOwbForCdi10());
+
         Properties props = this.propsInst.select(new ExternalResourceLiteral(FileSystemStorage.class,tempFileName))
                 .get();
         Assert.assertEquals("somevalue", props.getProperty("some.propertykey", "wrong answer"));
+    }
+
+    private static boolean isOwbForCdi10()
+    {
+        return CdiContainerUnderTest.isCdiVersion(CdiImplementation.OWB11) || CdiContainerUnderTest.isCdiVersion(CdiImplementation.OWB12);
     }
 }
