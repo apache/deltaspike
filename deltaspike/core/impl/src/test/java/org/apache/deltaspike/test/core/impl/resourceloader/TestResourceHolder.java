@@ -20,6 +20,7 @@ package org.apache.deltaspike.test.core.impl.resourceloader;
 
 import javax.enterprise.inject.Instance;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Properties;
 
 //just needed to build different archives - otherwise injection would fail with owb implementing cdi 1.0
@@ -32,4 +33,6 @@ public interface TestResourceHolder
     Instance<InputStream> getInputStreamInstance();
 
     Instance<Properties> getPropertiesInstance();
+
+    List<InputStream> getInputStreams();
 }

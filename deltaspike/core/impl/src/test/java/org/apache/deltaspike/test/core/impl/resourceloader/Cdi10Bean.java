@@ -20,6 +20,7 @@ package org.apache.deltaspike.test.core.impl.resourceloader;
 
 import javax.enterprise.inject.Instance;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Properties;
 
 public class Cdi10Bean implements TestResourceHolder
@@ -44,6 +45,12 @@ public class Cdi10Bean implements TestResourceHolder
 
     @Override
     public Instance<Properties> getPropertiesInstance()
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public List<InputStream> getInputStreams()
     {
         throw new UnsupportedOperationException();
     }

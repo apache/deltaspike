@@ -34,6 +34,7 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
+import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -66,6 +67,15 @@ public class ExternalResourceProducer
         ExternalResourceProvider provider = getProvider(externalResource.storage());
         final InputStream is = provider.readStream(externalResource);
         return is;
+    }
+
+    @Produces
+    @ExternalResource(storage = ExternalResourceStorage.class,location = "")
+    public List<InputStream> getInputStreams(final InjectionPoint injectionPoint)
+    {
+        ExternalResource externalResource = getAnnotation(injectionPoint);
+        ExternalResourceProvider provider = getProvider(externalResource.storage());
+        return provider.readStreams(externalResource);
     }
 
     @Produces

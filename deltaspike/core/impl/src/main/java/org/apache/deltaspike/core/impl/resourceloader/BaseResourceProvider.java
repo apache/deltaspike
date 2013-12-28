@@ -28,6 +28,8 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
+import java.util.Collections;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
@@ -88,5 +90,11 @@ public abstract class BaseResourceProvider implements ExternalResourceProvider
         final InputStream inputStream = this.readStream(externalResource);
         this.loadInputStreamToProperties(inputStream, properties, name);
         return properties;
+    }
+
+    @Override
+    public List<InputStream> readStreams(ExternalResource externalResource)
+    {
+        return Collections.singletonList(this.readStream(externalResource));
     }
 }

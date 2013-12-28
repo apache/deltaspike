@@ -21,6 +21,7 @@ package org.apache.deltaspike.core.spi.resourceloader;
 import org.apache.deltaspike.core.api.resourceloader.ExternalResource;
 
 import java.io.InputStream;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -31,6 +32,8 @@ public interface ExternalResourceProvider
 {
 
     InputStream readStream(final ExternalResource externalResource);
+
+    List<InputStream> readStreams(final ExternalResource externalResource);
 
     Properties readProperties(final ExternalResource externalResource);
 

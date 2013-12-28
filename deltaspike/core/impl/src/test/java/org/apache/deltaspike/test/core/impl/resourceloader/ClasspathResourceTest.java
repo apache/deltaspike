@@ -38,6 +38,8 @@ import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 import java.util.Properties;
 
 @RunWith(Arquillian.class)
@@ -91,6 +93,16 @@ public class ClasspathResourceTest
 
         testResourceHolder.getInputStreamInstance()
             .select(new ExternalResourceLiteral(ClasspathStorage.class, "META-INF/beans.xml")).get();
+    }
+
+    @Test
+    public void testSuccessfulAmbiguousLookup()
+    {
+        Assume.assumeTrue(!isOwbForCdi10());
+        //note, we only test this on classpath, since File impl is always getting 1.
+        List<InputStream> streams = testResourceHolder.getInputStreams();
+        Assert.assertEquals(4,streams.size());
+
     }
 
     private static boolean isOwbForCdi10()

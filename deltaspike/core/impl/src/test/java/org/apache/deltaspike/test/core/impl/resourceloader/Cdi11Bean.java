@@ -21,12 +21,15 @@ package org.apache.deltaspike.test.core.impl.resourceloader;
 import org.apache.deltaspike.core.api.resourceloader.ClasspathStorage;
 import org.apache.deltaspike.core.api.resourceloader.ExternalResource;
 
+import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Any;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Properties;
 
+@Dependent
 public class Cdi11Bean implements TestResourceHolder
 {
     @Inject
@@ -36,6 +39,10 @@ public class Cdi11Bean implements TestResourceHolder
     @Inject
     @ExternalResource(storage = ClasspathStorage.class,location="testconfig.properties")
     private Properties properties;
+
+    @Inject
+    @ExternalResource(storage = ClasspathStorage.class,location="META-INF/beans.xml")
+    private List<InputStream> inputStreams;
 
     @Inject
     @Any
@@ -63,5 +70,10 @@ public class Cdi11Bean implements TestResourceHolder
     public Instance<Properties> getPropertiesInstance()
     {
         return propertiesInstance;
+    }
+
+    @Override
+    public List<InputStream> getInputStreams() {
+        return inputStreams;
     }
 }

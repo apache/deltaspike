@@ -27,7 +27,9 @@ import javax.enterprise.context.ApplicationScoped;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -45,7 +47,8 @@ public class ClasspathResourceProvider extends BaseResourceProvider
     {
         try
         {
-            return readClassPath(externalResource.location());
+            List<InputStream> matchedStreams = this.readClassPath(externalResource.location(),true);
+            return matchedStreams.get(0);
         }
         catch (IOException e)
         {
@@ -57,35 +60,83 @@ public class ClasspathResourceProvider extends BaseResourceProvider
         }
     }
 
-    private InputStream readClassPath(final String name) throws IOException
+    @Override
+    public List<InputStream> readStreams(ExternalResource externalResource)
+    {
+        try
+        {
+            return readClassPath(externalResource.location(),false);
+        }
+        catch (IOException e)
+        {
+            throw new IllegalStateException("Error while trying to load resources from classpath ",e);
+        }
+    }
+
+    /**
+     * Reads all possibly matching classpath entries for the given name.
+     *
+     * If requireUnique is true, then validates that 1 element is present before returning
+     *
+     * @param name
+     * @param requireUnique
+     * @return
+     * @throws IOException
+     * @throws IllegalStateException
+     */
+    private List<InputStream> readClassPath(final String name, final boolean requireUnique)
+        throws IllegalStateException,IOException
     {
         Enumeration<URL> urls = ClassUtils.getClassLoader(null).getResources(name);
-
-        InputStream result = null;
-        URL firstURL = null;
+        List<URL> urlList = new ArrayList<URL>();
+        List<InputStream> results = new ArrayList<InputStream>();
         while (urls.hasMoreElements())
         {
             URL url = urls.nextElement();
             InputStream is = url.openStream();
             if (is != null)
             {
-                if (firstURL != null)
-                {
-                    try
-                    {
-                        result.close();
-                    }
-                    finally
-                    {
-                        is.close();
-                    }
-                    throw new IllegalStateException("multiple files found for '" + name +
-                        "' (" + firstURL.toExternalForm() + ", " + url.toExternalForm() + ")");
-                }
-                firstURL = url;
-                result = is;
+                results.add(is);
+                urlList.add(url);
             }
         }
-        return result;
+        if (requireUnique && results.size() != 1)
+        {
+            String msg = urlsToString(urlList,name);
+            for (InputStream is : results)
+            {
+                try
+                {
+                    is.close();
+                }
+                catch (IOException e)
+                {
+                    if (logger.isLoggable(Level.FINE))
+                    {
+                        logger.log(Level.FINE,"Unable to close stream",e);
+                    }
+                }
+            }
+            throw new IllegalStateException(msg);
+        }
+        return results;
+    }
+
+    private String urlsToString(List<URL> urls, String name)
+    {
+        if (urls.size() == 0)
+        {
+            return String.format("No resources found for '%s'",name);
+        }
+        else
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.append(String.format("multiple resources found for '%s'",name));
+            for (URL u : urls)
+            {
+                sb.append(" Match : ").append(u.toExternalForm());
+            }
+            return sb.toString();
+        }
     }
 }
