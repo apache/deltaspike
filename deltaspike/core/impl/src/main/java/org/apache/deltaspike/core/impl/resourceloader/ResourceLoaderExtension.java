@@ -18,7 +18,10 @@
  */
 package org.apache.deltaspike.core.impl.resourceloader;
 
-import javax.enterprise.inject.spi.*;
+import javax.enterprise.inject.spi.AnnotatedType;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.BeforeBeanDiscovery;
+import javax.enterprise.inject.spi.Extension;
 
 /**
  * This is needed for certain class loading cases (EARs, external modules).

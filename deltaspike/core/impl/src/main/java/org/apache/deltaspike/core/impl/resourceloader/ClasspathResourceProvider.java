@@ -71,6 +71,11 @@ public class ClasspathResourceProvider extends BaseResourceProvider
             {
                 if (firstURL != null)
                 {
+                    if (result != null)
+                    {
+                        result.close();
+                    }
+                    is.close();
                     throw new IllegalStateException("multiple files found for '" + name +
                         "' (" + firstURL.toExternalForm() + ", " + url.toExternalForm() + ")");
                 }
