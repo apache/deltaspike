@@ -71,7 +71,7 @@ public class FileResourceTest
     @Deployment
     public static Archive<?> createResourceLoaderArchive()
     {
-        Archive<?> arch = ShrinkWrap.create(WebArchive.class, "resourceloader.war")
+        Archive<?> arch = ShrinkWrap.create(WebArchive.class, FileResourceTest.class.getSimpleName() + ".war")
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive());
         return arch;

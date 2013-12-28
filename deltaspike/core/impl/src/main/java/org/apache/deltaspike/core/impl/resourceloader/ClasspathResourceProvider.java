@@ -27,7 +27,9 @@ import javax.enterprise.context.ApplicationScoped;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -60,19 +62,24 @@ public class ClasspathResourceProvider extends BaseResourceProvider
     private InputStream readClassPath(final String name) throws IOException
     {
         Enumeration<URL> urls = ClassUtils.getClassLoader(null).getResources(name);
-        if (logger.isLoggable(Level.FINEST))
-        {
-            logger.finest("Found URLS " + urls);
-        }
+
+        InputStream result = null;
+        URL firstURL = null;
         while (urls.hasMoreElements())
         {
             URL url = urls.nextElement();
             InputStream is = url.openStream();
             if (is != null)
             {
-                return is;
+                if (firstURL != null)
+                {
+                    throw new IllegalStateException("multiple files found for '" + name +
+                        "' (" + firstURL.toExternalForm() + ", " + url.toExternalForm() + ")");
+                }
+                firstURL = url;
+                result = is;
             }
         }
-        return null;
+        return result;
     }
 }
