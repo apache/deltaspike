@@ -466,7 +466,7 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
         {
             CdiContainer container = CdiContainerLoader.getCdiContainer();
 
-            stopStartedScopes();
+            stopStartedScopes(container);
 
             if (this.containerStarted)
             {
@@ -513,7 +513,7 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
         {
             try
             {
-                stopStartedScopes();
+                stopStartedScopes(CdiContainerLoader.getCdiContainer());
             }
             finally
             {
@@ -608,17 +608,15 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
             return this.startedScopes.contains(scopeAnnotation);
         }
 
-        private void stopStartedScopes()
+        private void stopStartedScopes(CdiContainer container)
         {
-            ContextControl contextControl = CdiContainerLoader.getCdiContainer().getContextControl();
-
             while (!this.startedScopes.empty())
             {
                 Class<? extends Annotation> scopeAnnotation = this.startedScopes.pop();
                 //TODO check if context was started by parent
                 try
                 {
-                    contextControl.stopContext(scopeAnnotation);
+                    container.getContextControl().stopContext(scopeAnnotation);
                     onScopeStopped(scopeAnnotation);
                 }
                 catch (RuntimeException e)
