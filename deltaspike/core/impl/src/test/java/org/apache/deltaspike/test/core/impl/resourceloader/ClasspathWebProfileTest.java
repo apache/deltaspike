@@ -87,7 +87,6 @@ public class ClasspathWebProfileTest
     public void testAmbiguousFileLookup(@ExternalResource(storage=ClasspathStorage.class,
             location="META-INF/beans.xml") InputStream inputStream)
     {
-        Assume.assumeTrue(CdiContainerUnderTest.isNotTomEE()); // don't run in TomEE until TOMEE-1101 is fixed.
         Assert.assertNull(inputStream); // for some reason, this works, exception no longer thrown.
     }
 
@@ -95,7 +94,6 @@ public class ClasspathWebProfileTest
     public void testSuccessfulAmbiguousLookup(@ExternalResource(storage = ClasspathStorage.class,
             location="META-INF/beans.xml") List<InputStream> inputStreams)
     {
-        Assume.assumeTrue(CdiContainerUnderTest.isNotTomEE()); // don't run in TomEE until TOMEE-1101 is fixed.
         Assert.assertTrue(inputStreams.size() > 1); //the count is different on as7 compared to the standalone setup
     }
 
