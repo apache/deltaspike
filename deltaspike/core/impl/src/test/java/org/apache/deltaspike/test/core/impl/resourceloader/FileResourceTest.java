@@ -22,6 +22,7 @@ package org.apache.deltaspike.test.core.impl.resourceloader;
 import org.apache.deltaspike.core.api.resourceloader.ExternalResource;
 import org.apache.deltaspike.core.api.resourceloader.FileSystemStorage;
 import org.apache.deltaspike.core.util.ExceptionUtils;
+import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -32,9 +33,9 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
-import javax.inject.Inject;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -42,6 +43,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 @RunWith(Arquillian.class)
+@Category(SeCategory.class)
 public class FileResourceTest
 {
     private boolean created = false;
@@ -50,8 +52,7 @@ public class FileResourceTest
     {
         if (!created)
         {
-            String javaiotmpdir = System.getProperty("java.io.tmpdir","/tmp");
-            File tmpDir = new File(javaiotmpdir);
+            File tmpDir = new File("target");
             try
             {
                 File dest = new File(tmpDir,"/propsdsfileresource.properties");
@@ -82,7 +83,7 @@ public class FileResourceTest
 
     @Test
     public void testInputStream(@ExternalResource(storage=FileSystemStorage.class,
-            location="/tmp/propsdsfileresource.properties")
+            location="target/propsdsfileresource.properties")
             InputStream inputStream) throws IOException
     {
         Assert.assertNotNull(inputStream);
@@ -93,7 +94,7 @@ public class FileResourceTest
 
     @Test
     public void testProperties(@ExternalResource(storage=FileSystemStorage.class,
-            location="/tmp/propsdsfileresource.properties")
+            location="target/propsdsfileresource.properties")
             Properties properties)
     {
         Assert.assertEquals("somevalue", properties.getProperty("some.propertykey", "wrong answer"));
