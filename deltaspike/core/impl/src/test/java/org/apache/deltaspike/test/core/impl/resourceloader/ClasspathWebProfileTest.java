@@ -22,6 +22,7 @@ import org.apache.deltaspike.core.api.resourceloader.ClasspathStorage;
 import org.apache.deltaspike.core.api.resourceloader.ExternalResource;
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.apache.deltaspike.test.util.ArchiveUtils;
+import org.apache.deltaspike.test.utils.CdiContainerUnderTest;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
@@ -30,6 +31,7 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -85,14 +87,16 @@ public class ClasspathWebProfileTest
     public void testAmbiguousFileLookup(@ExternalResource(storage=ClasspathStorage.class,
             location="META-INF/beans.xml") InputStream inputStream)
     {
-        // for some reason, this works
-        Assert.assertNull(inputStream);
+        Assume.assumeTrue(CdiContainerUnderTest.isNotTomEE()); // don't run in TomEE until TOMEE-1101 is fixed.
+        Assert.assertNull(inputStream); // for some reason, this works, exception no longer thrown.
     }
 
     @Test
     public void testSuccessfulAmbiguousLookup(@ExternalResource(storage = ClasspathStorage.class,
             location="META-INF/beans.xml") List<InputStream> inputStreams)
     {
+        Assume.assumeTrue(CdiContainerUnderTest.isNotTomEE()); // don't run in TomEE until TOMEE-1101 is fixed.
         Assert.assertTrue(inputStreams.size() > 1); //the count is different on as7 compared to the standalone setup
     }
+
 }

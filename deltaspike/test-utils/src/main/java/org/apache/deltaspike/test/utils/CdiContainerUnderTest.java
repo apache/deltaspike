@@ -193,4 +193,9 @@ public class CdiContainerUnderTest
             }
         }
     }
+
+    public static boolean isNotTomEE()
+    {
+        return !System.getProperty("cdicontainer.version").startsWith("tomee");
+    }
 }
