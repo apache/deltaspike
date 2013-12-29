@@ -1,31 +1,9 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements. See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership. The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License. You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
 package org.apache.deltaspike.test.core.impl.resourceloader;
 
-
-import org.apache.deltaspike.core.api.literal.ExternalResourceLiteral;
 import org.apache.deltaspike.core.api.resourceloader.ClasspathStorage;
 import org.apache.deltaspike.core.api.resourceloader.ExternalResource;
-import org.apache.deltaspike.test.category.SeCategory;
+import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.apache.deltaspike.test.util.ArchiveUtils;
-import org.apache.deltaspike.test.utils.CdiContainerUnderTest;
-import org.apache.deltaspike.test.utils.CdiImplementation;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
@@ -34,7 +12,6 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
-import org.junit.Assume;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -45,15 +22,19 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Properties;
 
+/**
+ * web profile will run in a separate JVM, as a result need to manually add the properties to the archive.
+ */
 @RunWith(Arquillian.class)
-@Category(SeCategory.class)
-public class ClasspathResourceTest
+@Category(WebProfileCategory.class)
+public class ClasspathWebProfileTest
 {
     @Deployment
     public static Archive<?> createResourceLoaderArchive()
     {
-        Archive<?> arch = ShrinkWrap.create(WebArchive.class, ClasspathResourceTest.class.getSimpleName() + ".war")
+        Archive<?> arch = ShrinkWrap.create(WebArchive.class, ClasspathWebProfileTest.class.getSimpleName() + ".war")
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+                .addAsResource(new StringAsset("some.propertykey = somevalue"), "myconfig.properties")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive());
         return arch;
     }
@@ -65,7 +46,6 @@ public class ClasspathResourceTest
     @Inject
     @ExternalResource(storage = ClasspathStorage.class,location="myconfig.properties")
     private Properties properties;
-
 
     @Test
     public void testInputStream() throws IOException
@@ -80,7 +60,7 @@ public class ClasspathResourceTest
     public void testProperties()
     {
         Assert.assertEquals("somevalue",
-            properties.getProperty("some.propertykey", "wrong answer"));
+                properties.getProperty("some.propertykey", "wrong answer"));
     }
 
     @Test

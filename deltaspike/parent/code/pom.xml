@@ -481,7 +481,7 @@
             <!--
              * JBoss AS-7  will be downloaded as maven dependency
              *
-             * JBOSS_HOME must be set for this work correctly!
+             * JBOSS_HOME need not be set for this.
              *
              * Start the build with:
              * $> mvn clean install -Pjbossas-build-managed-7
