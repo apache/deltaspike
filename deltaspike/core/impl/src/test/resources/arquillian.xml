@@ -29,16 +29,17 @@
 
     <container qualifier="jbossas-managed-7">
         <configuration>
-            <property name="javaVmArguments">-client -noverify -Xms64m -Xmx1024m -XX:MaxPermSize=512m</property>
+            <property name="javaVmArguments">-client -noverify -Xms64m -Xmx1024m -XX:MaxPermSize=512m -Dcdicontainer.version=${cdicontainer.version}</property>
             <property name="outputToConsole">false</property>
             <property name="allowConnectingToRunningServer">true</property>
+            <property name="cdicontainer.version">${cdicontainer.version}</property>
         </configuration>
     </container>
 
     <container qualifier="jbossas-build-managed-7">
         <configuration>
             <property name="jbossHome">${arquillian.jboss_home}</property>
-            <property name="javaVmArguments">-client -noverify -Xms64m -Xmx1024m -XX:MaxPermSize=512m</property>
+            <property name="javaVmArguments">-client -noverify -Xms64m -Xmx1024m -XX:MaxPermSize=512m -Dcdicontainer.version=${cdicontainer.version}</property>
             <property name="outputToConsole">false</property>
             <property name="allowConnectingToRunningServer">true</property>
         </configuration>
