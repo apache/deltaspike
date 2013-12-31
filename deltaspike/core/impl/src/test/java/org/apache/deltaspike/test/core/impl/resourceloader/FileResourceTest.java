@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.test.core.impl.resourceloader;
 
-
 import org.apache.deltaspike.core.api.resourceloader.ExternalResource;
 import org.apache.deltaspike.core.api.resourceloader.FileSystemStorage;
 import org.apache.deltaspike.core.util.ExceptionUtils;
