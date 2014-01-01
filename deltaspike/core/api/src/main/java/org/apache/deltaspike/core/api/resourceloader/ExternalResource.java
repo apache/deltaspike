@@ -37,7 +37,7 @@ import static java.lang.annotation.ElementType.METHOD;
 public @interface ExternalResource
 {
     @Nonbinding
-    Class<? extends ExternalResourceStorage> storage();
+    Class<? extends ExternalResourceStorage> storage() default ClasspathStorage.class;
 
     @Nonbinding
     String location() default "";
