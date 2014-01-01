@@ -28,6 +28,8 @@ import javax.enterprise.util.AnnotationLiteral;
  */
 public class ExternalResourceLiteral extends AnnotationLiteral<ExternalResource> implements ExternalResource
 {
+    private static final long serialVersionUID = 1705986508118055892L;
+
     private Class<? extends ExternalResourceStorage> storage;
     private String location;
     public ExternalResourceLiteral(final Class<? extends ExternalResourceStorage> storage, final String location)

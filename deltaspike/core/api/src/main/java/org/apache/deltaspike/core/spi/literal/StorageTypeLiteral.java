@@ -25,6 +25,8 @@ import javax.enterprise.util.AnnotationLiteral;
 
 public class StorageTypeLiteral extends AnnotationLiteral<StorageType> implements StorageType
 {
+    private static final long serialVersionUID = 9066640252429716441L;
+
     private Class<? extends ExternalResourceStorage> value;
     public StorageTypeLiteral(Class<? extends ExternalResourceStorage> value)
     {
