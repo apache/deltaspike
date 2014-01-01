@@ -27,6 +27,7 @@ import javax.enterprise.inject.spi.Extension;
  * This is needed for certain class loading cases (EARs, external modules).
  * Simply registers additional resource loader classes to the context.
  */
+//TODO re-visit it based on DELTASPIKE-472
 public class ResourceLoaderExtension implements Extension
 {
     public void addResourceLoaders(final BeforeBeanDiscovery beforeBeanDiscovery, final BeanManager beanManager)

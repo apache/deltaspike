@@ -39,6 +39,7 @@ import static java.lang.annotation.ElementType.FIELD;
 @Retention(value = RetentionPolicy.RUNTIME)
 @Documented
 @Qualifier
+//TODO re-visit it (not needed, if we merge ExternalResourceStorage with ExternalResourceProvider - see DELTASPIKE-399)
 public @interface StorageType
 {
     Class<? extends ExternalResourceStorage> value();
