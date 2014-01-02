@@ -53,7 +53,7 @@ public class RequestResponseEventsTest
     @Deployment
     public static WebArchive getDeployment()
     {
-        return ShrinkWrap.create(WebArchive.class, "test.war")
+        return ShrinkWrap.create(WebArchive.class, RequestResponseEventsTest.class.getSimpleName() + ".war")
                 .addAsLibraries(Deployments.getDeltaSpikeCoreArchives())
                 .addAsLibraries(Deployments.getDeltaSpikeServletArchives())
                 .addAsLibraries(Deployments.getTestSupportArchives())
@@ -80,7 +80,7 @@ public class RequestResponseEventsTest
     public void shouldReceiveRequestInitializedEvent()
     {
         assertTrue("Didn't receive expected event",
-                observer.getEventLog().contains("Initialized HttpServletRequest: /test/foobar.txt"));
+                observer.getEventLog().contains("Initialized HttpServletRequest: /RequestResponseEventsTest/foobar.txt"));
     }
 
     @Test
@@ -96,7 +96,7 @@ public class RequestResponseEventsTest
     public void shouldReceiveRequestDestroyedEvent()
     {
         assertTrue("Didn't receive expected event",
-                observer.getEventLog().contains("Destroyed HttpServletRequest: /test/foobar.txt"));
+                observer.getEventLog().contains("Destroyed HttpServletRequest: /RequestResponseEventsTest/foobar.txt"));
     }
 
     @Test

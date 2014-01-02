@@ -60,7 +60,7 @@ public class SessionEventsTest
     @Deployment
     public static WebArchive getDeployment()
     {
-        return ShrinkWrap.create(WebArchive.class, "test.war")
+        return ShrinkWrap.create(WebArchive.class, SessionEventsTest.class.getSimpleName() + ".war")
                 .addAsLibraries(Deployments.getDeltaSpikeCoreArchives())
                 .addAsLibraries(Deployments.getDeltaSpikeServletArchives())
                 .addAsLibraries(Deployments.getTestSupportArchives())

@@ -53,7 +53,7 @@ public class ServletObjectInjectionTest
     @Deployment(testable = false)
     public static WebArchive getDeployment()
     {
-        return ShrinkWrap.create(WebArchive.class, "test.war")
+        return ShrinkWrap.create(WebArchive.class, ServletObjectInjectionTest.class.getSimpleName() + ".war")
                 .addAsLibraries(Deployments.getDeltaSpikeCoreArchives())
                 .addAsLibraries(Deployments.getDeltaSpikeServletArchives())
                 .addClass(ServletObjectInjectionBean.class)

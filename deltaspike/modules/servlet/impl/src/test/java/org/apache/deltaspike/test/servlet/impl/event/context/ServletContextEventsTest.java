@@ -49,7 +49,7 @@ public class ServletContextEventsTest
     @Deployment
     public static WebArchive getDeployment()
     {
-        return ShrinkWrap.create(WebArchive.class, "test.war")
+        return ShrinkWrap.create(WebArchive.class, ServletContextEventsTest.class.getSimpleName() + ".war")
                 .addAsLibraries(Deployments.getDeltaSpikeCoreArchives())
                 .addAsLibraries(Deployments.getDeltaSpikeServletArchives())
                 .addAsLibraries(Deployments.getTestSupportArchives())
