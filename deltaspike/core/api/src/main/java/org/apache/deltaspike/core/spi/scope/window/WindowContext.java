@@ -18,6 +18,8 @@
  */
 package org.apache.deltaspike.core.spi.scope.window;
 
+import java.io.Serializable;
+
 /**
  * <p>We support the general notion of multiple 'windows'
  * That might be different parallel edit pages in a
@@ -36,7 +38,7 @@ package org.apache.deltaspike.core.spi.scope.window;
  * is the interface which allows resolving the current <i>windowId</i>
  * associated with this very Thread.</p>
  */
-public interface WindowContext
+public interface WindowContext extends Serializable
 {
     /**
      * @return the <i>windowId</i> associated with the very Thread or <code>null</code>.

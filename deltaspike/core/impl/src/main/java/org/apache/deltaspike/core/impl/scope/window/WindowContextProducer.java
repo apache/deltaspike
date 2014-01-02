@@ -41,6 +41,6 @@ public class WindowContextProducer
     @Dependent
     public WindowContext getWindowContext()
     {
-        return deltaSpikeContextExtension.getWindowContext();
+        return new InjectableWindowContext(deltaSpikeContextExtension.getWindowContext());
     }
 }
