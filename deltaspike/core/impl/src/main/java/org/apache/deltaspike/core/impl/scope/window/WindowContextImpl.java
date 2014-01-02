@@ -93,7 +93,13 @@ public class WindowContextImpl extends AbstractContext implements WindowContext
             return false;
         }
 
-        ContextualStorage windowStorage = windowBeanHolder.getContextualStorage(beanManager, windowId, false);
+        ContextualStorage windowStorage = windowBeanHolder.getStorageMap().remove(windowId);
+
+        if (windowStorage != null)
+        {
+            AbstractContext.destroyAllActive(windowStorage);
+        }
+
         return windowStorage != null;
     }
 
