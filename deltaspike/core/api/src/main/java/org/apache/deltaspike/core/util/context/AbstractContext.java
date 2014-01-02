@@ -160,7 +160,7 @@ public abstract class AbstractContext implements Context
      * This is a static method to allow various holder objects to cleanup
      * properly in &#064;PreDestroy.
      */
-    public static void destroyAllActive(ContextualStorage storage)
+    public static Map<Object, ContextualInstanceInfo<?>> destroyAllActive(ContextualStorage storage)
     {
         //drop all entries in the storage before starting with destroying the original entries
         Map<Object, ContextualInstanceInfo<?>> contextMap =
@@ -174,6 +174,7 @@ public abstract class AbstractContext implements Context
             ContextualInstanceInfo<?> contextualInstanceInfo = entry.getValue();
             bean.destroy(contextualInstanceInfo.getContextualInstance(), contextualInstanceInfo.getCreationalContext());
         }
+        return contextMap;
     }
 
     /**

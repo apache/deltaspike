@@ -65,7 +65,7 @@ public class WindowContextImpl extends AbstractContext implements WindowContext
      * requestscoped windowIdHolder in a later phase because
      * getBeans is only allowed from AfterDeploymentValidation onwards.
      */
-    void initWindowContext(WindowBeanHolder windowBeanHolder, WindowIdHolder windowIdHolder)
+    public void init(WindowBeanHolder windowBeanHolder, WindowIdHolder windowIdHolder)
     {
         this.windowBeanHolder = windowBeanHolder;
         this.windowIdHolder = windowIdHolder;

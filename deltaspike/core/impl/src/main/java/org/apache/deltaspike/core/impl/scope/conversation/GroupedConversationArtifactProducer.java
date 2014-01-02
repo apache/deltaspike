@@ -16,32 +16,37 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.impl.scope.window;
+package org.apache.deltaspike.core.impl.scope.conversation;
+
+import org.apache.deltaspike.core.api.scope.GroupedConversation;
+import org.apache.deltaspike.core.impl.scope.DeltaSpikeContextExtension;
+import org.apache.deltaspike.core.impl.util.ConversationUtils;
+import org.apache.deltaspike.core.spi.scope.conversation.GroupedConversationManager;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 
-import org.apache.deltaspike.core.impl.scope.DeltaSpikeContextExtension;
-import org.apache.deltaspike.core.spi.scope.window.WindowContext;
-
-/**
- * This producer provides access to the internally created
- * {@link WindowContext} implementation.
- * It simply wraps through to the instance used in the
- * {@link org.apache.deltaspike.core.impl.scope.DeltaSpikeContextExtension}.
- */
 @ApplicationScoped
-public class WindowContextProducer
+public class GroupedConversationArtifactProducer
 {
     @Inject
     private DeltaSpikeContextExtension deltaSpikeContextExtension;
 
     @Produces
     @Dependent
-    public WindowContext getWindowContext()
+    public GroupedConversationManager getGroupedConversationManager()
     {
-        return new InjectableWindowContext(deltaSpikeContextExtension.getWindowContext());
+        return new InjectableGroupedConversationManager(deltaSpikeContextExtension.getConversationContext());
+    }
+
+    @Produces
+    @Dependent
+    public GroupedConversation getGroupedConversation(InjectionPoint injectionPoint)
+    {
+        ConversationKey conversationKey = ConversationUtils.convertToConversationKey(injectionPoint.getBean());
+        return new InjectableGroupedConversation(conversationKey, getGroupedConversationManager());
     }
 }

@@ -16,19 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.impl.scope.window;
+package org.apache.deltaspike.core.api.scope;
 
-import org.apache.deltaspike.core.impl.scope.AbstractBeanHolder;
+import javax.enterprise.context.NormalScope;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-import javax.enterprise.context.SessionScoped;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-/**
- * This holder will store the window Ids and it's beans for the current
- * HTTP Session. We use standard SessionScoped bean to not need
- * to treat async-supported and similar headache.
- */
-@SessionScoped
-public class WindowBeanHolder extends AbstractBeanHolder<String>
+@Target( { METHOD,TYPE,FIELD } )
+@Retention(RUNTIME)
+@Inherited
+@Documented
+@NormalScope(passivating = true)
+public @interface GroupedConversationScoped
 {
-    private static final long serialVersionUID = 6313493410718133308L;
 }

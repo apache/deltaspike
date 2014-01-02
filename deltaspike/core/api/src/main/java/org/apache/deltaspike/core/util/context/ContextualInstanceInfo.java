@@ -28,6 +28,8 @@ import java.io.Serializable;
  */
 public class ContextualInstanceInfo<T> implements Serializable
 {
+    private static final long serialVersionUID = 6384932199958645324L;
+
     /**
      * The actual Contextual Instance in the context
      */

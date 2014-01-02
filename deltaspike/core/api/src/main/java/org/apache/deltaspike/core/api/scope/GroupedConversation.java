@@ -16,19 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.impl.scope.window;
+package org.apache.deltaspike.core.api.scope;
 
-import org.apache.deltaspike.core.impl.scope.AbstractBeanHolder;
+import java.io.Serializable;
 
-import javax.enterprise.context.SessionScoped;
-
-/**
- * This holder will store the window Ids and it's beans for the current
- * HTTP Session. We use standard SessionScoped bean to not need
- * to treat async-supported and similar headache.
- */
-@SessionScoped
-public class WindowBeanHolder extends AbstractBeanHolder<String>
+public interface GroupedConversation extends Serializable
 {
-    private static final long serialVersionUID = 6313493410718133308L;
+    void close();
 }

@@ -19,6 +19,7 @@
 package org.apache.deltaspike.core.impl.scope.window;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.core.impl.scope.DeltaSpikeContextExtension;
 import org.apache.deltaspike.core.spi.scope.window.WindowContext;
 
 import javax.enterprise.inject.Typed;

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.impl.scope.window;
+package org.apache.deltaspike.core.impl.scope;
 
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AfterBeanDiscovery;
@@ -25,6 +25,11 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.Extension;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.core.impl.scope.conversation.ConversationBeanHolder;
+import org.apache.deltaspike.core.impl.scope.conversation.GroupedConversationContext;
+import org.apache.deltaspike.core.impl.scope.window.WindowBeanHolder;
+import org.apache.deltaspike.core.impl.scope.window.WindowContextImpl;
+import org.apache.deltaspike.core.impl.scope.window.WindowIdHolder;
 
 /**
  * Handle all DeltaSpike WindowContext and ConversationContext
@@ -34,10 +39,14 @@ public class DeltaSpikeContextExtension implements Extension
 {
     private WindowContextImpl windowContext;
 
+    private GroupedConversationContext conversationContext;
+
     public void registerDeltaSpikeContexts(@Observes AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager)
     {
         windowContext = new WindowContextImpl(beanManager);
+        conversationContext = new GroupedConversationContext(beanManager, windowContext);
         afterBeanDiscovery.addContext(windowContext);
+        afterBeanDiscovery.addContext(conversationContext);
     }
 
     /**
@@ -47,17 +56,26 @@ public class DeltaSpikeContextExtension implements Extension
      */
     public void initializeDeltaSpikeContexts(@Observes AfterDeploymentValidation adv, BeanManager beanManager)
     {
-        WindowBeanHolder windowBeanHolder
-            = BeanProvider.getContextualReference(beanManager, WindowBeanHolder.class, false);
+        WindowBeanHolder windowBeanHolder =
+            BeanProvider.getContextualReference(beanManager, WindowBeanHolder.class, false);
 
-        WindowIdHolder windowIdHolder
-            = BeanProvider.getContextualReference(beanManager, WindowIdHolder.class, false);
+        WindowIdHolder windowIdHolder =
+            BeanProvider.getContextualReference(beanManager, WindowIdHolder.class, false);
 
-        windowContext.initWindowContext(windowBeanHolder, windowIdHolder);
+        windowContext.init(windowBeanHolder, windowIdHolder);
+
+        ConversationBeanHolder conversationBeanHolder =
+            BeanProvider.getContextualReference(beanManager, ConversationBeanHolder.class, false);
+        conversationContext.init(conversationBeanHolder);
     }
 
     public WindowContextImpl getWindowContext()
     {
         return windowContext;
+    }
+
+    public GroupedConversationContext getConversationContext()
+    {
+        return conversationContext;
     }
 }
