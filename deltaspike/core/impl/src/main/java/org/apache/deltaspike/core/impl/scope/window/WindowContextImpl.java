@@ -92,13 +92,8 @@ public class WindowContextImpl extends AbstractContext implements WindowContext
             return false;
         }
 
-        ContextualStorage windowStorage = windowBeanHolder.getContextualStorage(beanManager, windowId);
-        if (windowStorage == null)
-        {
-            return false;
-        }
-
-        return true;
+        ContextualStorage windowStorage = windowBeanHolder.getContextualStorage(beanManager, windowId, false);
+        return windowStorage != null;
     }
 
     @Override
@@ -110,7 +105,7 @@ public class WindowContextImpl extends AbstractContext implements WindowContext
             throw new ContextNotActiveException("WindowContext: no windowId set for the current Thread yet!");
         }
 
-        return windowBeanHolder.getContextualStorage(beanManager, windowId);
+        return windowBeanHolder.getContextualStorage(beanManager, windowId, createIfNotExist);
     }
 
     @Override

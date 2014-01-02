@@ -36,6 +36,8 @@ import org.apache.deltaspike.core.util.context.ContextualStorage;
 @SessionScoped
 public class WindowBeanHolder implements Serializable
 {
+    private static final long serialVersionUID = 6313493410718133308L;
+
     /**
      * key: the windowId for the browser tab or window
      * value: the {@link ContextualStorage} which holds all the
@@ -46,24 +48,29 @@ public class WindowBeanHolder implements Serializable
     /**
      * This method will return the ContextualStorage or create a new one
      * if no one is yet assigned to the current windowId.
-     * @param beanManager we need the CDI {@link BeanManager} for serialisation.
+     * @param beanManager we need the CDI {@link javax.enterprise.inject.spi.BeanManager} for serialisation.
      * @param windowId the windowId for the current browser tab or window.
+     * @param createIfNotExist true if a new storage should get created (if it doesn't exist already), false otherwise
      */
-    public ContextualStorage getContextualStorage(BeanManager beanManager, String windowId)
+    public ContextualStorage getContextualStorage(BeanManager beanManager, String windowId, boolean createIfNotExist)
+    {
+        ContextualStorage contextualStorage = storageMap.get(windowId);
+        if (contextualStorage == null && createIfNotExist)
+        {
+            contextualStorage = createContextualStorage(beanManager, windowId);
+        }
+
+        return contextualStorage;
+    }
+
+    private synchronized ContextualStorage createContextualStorage(BeanManager beanManager, String windowId)
     {
         ContextualStorage contextualStorage = storageMap.get(windowId);
         if (contextualStorage == null)
         {
-            synchronized (this)
-            {
-                contextualStorage = storageMap.get(windowId);
-                if (contextualStorage == null)
-                {
-                    storageMap.put(windowId, new ContextualStorage(beanManager, true, true));
-                }
-            }
+            contextualStorage = new ContextualStorage(beanManager, true, true);
+            storageMap.put(windowId, contextualStorage);
         }
-
         return contextualStorage;
     }
 
