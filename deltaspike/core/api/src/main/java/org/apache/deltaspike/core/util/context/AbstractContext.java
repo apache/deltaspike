@@ -25,6 +25,7 @@ import javax.enterprise.context.spi.Contextual;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.PassivationCapable;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -126,7 +127,8 @@ public abstract class AbstractContext implements Context
         {
             return false;
         }
-        ContextualInstanceInfo<?> contextualInstanceInfo = storage.getStorage().get(storage.getBeanKey(bean));
+
+        ContextualInstanceInfo<?> contextualInstanceInfo = storage.getStorage().remove(storage.getBeanKey(bean));
 
         if (contextualInstanceInfo == null)
         {
@@ -160,7 +162,11 @@ public abstract class AbstractContext implements Context
      */
     public static void destroyAllActive(ContextualStorage storage)
     {
-        Map<Object, ContextualInstanceInfo<?>> contextMap = storage.getStorage();
+        //drop all entries in the storage before starting with destroying the original entries
+        Map<Object, ContextualInstanceInfo<?>> contextMap =
+                new HashMap<Object, ContextualInstanceInfo<?>>(storage.getStorage());
+        storage.getStorage().clear();
+
         for (Map.Entry<Object, ContextualInstanceInfo<?>> entry : contextMap.entrySet())
         {
             Contextual bean = storage.getBean(entry.getKey());
