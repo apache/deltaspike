@@ -19,6 +19,7 @@
 package org.apache.deltaspike.core.impl.scope.window;
 
 import javax.enterprise.context.ContextNotActiveException;
+import javax.enterprise.context.spi.Contextual;
 import javax.enterprise.inject.Typed;
 import javax.enterprise.inject.spi.BeanManager;
 
@@ -97,7 +98,7 @@ public class WindowContextImpl extends AbstractContext implements WindowContext
     }
 
     @Override
-    protected ContextualStorage getContextualStorage(boolean createIfNotExist)
+    protected ContextualStorage getContextualStorage(Contextual<?> contextual, boolean createIfNotExist)
     {
         String windowId = getCurrentWindowId();
         if (windowId == null)

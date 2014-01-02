@@ -52,7 +52,7 @@ public class ViewScopedContext extends AbstractContext implements SystemEventLis
     }
 
     @Override
-    protected ContextualStorage getContextualStorage(boolean createIfNotExists)
+    protected ContextualStorage getContextualStorage(Contextual<?> contextual, boolean createIfNotExists)
     {
         Map<String, Object> viewMap = getViewMap();
         ContextualStorage storage = (ContextualStorage) viewMap.get(CONTEXTUAL_MAP_NAME);

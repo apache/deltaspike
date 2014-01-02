@@ -26,11 +26,12 @@ import org.apache.deltaspike.core.util.context.AbstractContext;
 import org.apache.deltaspike.core.util.context.ContextualStorage;
 
 import javax.enterprise.context.spi.Contextual;
-import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.Typed;
 import javax.enterprise.inject.spi.BeanManager;
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -40,9 +41,6 @@ import java.util.Set;
 public class GroupedConversationContext extends AbstractContext implements GroupedConversationManager
 {
     private static final long serialVersionUID = -5463564406828391468L;
-
-    @Deprecated //TODO remove it once DELTASPIKE-489 is fixed
-    private static ThreadLocal<Contextual<?>> currentContextual = new ThreadLocal<Contextual<?>>();
 
     private final BeanManager beanManager;
 
@@ -64,40 +62,18 @@ public class GroupedConversationContext extends AbstractContext implements Group
     }
 
     @Override
-    public <T> T get(Contextual<T> bean)
+    protected ContextualStorage getContextualStorage(Contextual<?> contextual, boolean createIfNotExist)
     {
-        try
-        {
-            currentContextual.set(bean);
-            return super.get(bean);
-        }
-        finally
-        {
-            currentContextual.set(null);
-            currentContextual.remove();
-        }
-    }
-
-    @Override
-    public <T> T get(Contextual<T> bean, CreationalContext<T> creationalContext)
-    {
-        try
-        {
-            currentContextual.set(bean);
-            return super.get(bean, creationalContext);
-        }
-        finally
-        {
-            currentContextual.set(null);
-            currentContextual.remove();
-        }
-    }
-
-    @Override
-    protected ContextualStorage getContextualStorage(boolean createIfNotExist)
-    {
-        ConversationKey conversationKey = ConversationUtils.convertToConversationKey(currentContextual.get());
+        ConversationKey conversationKey = ConversationUtils.convertToConversationKey(contextual);
         return this.conversationBeanHolder.getContextualStorage(beanManager, conversationKey, createIfNotExist);
+    }
+
+    @Override
+    protected List<ContextualStorage> getActiveContextualStorages()
+    {
+        List<ContextualStorage> result = new ArrayList<ContextualStorage>();
+        result.addAll(this.conversationBeanHolder.getStorageMap().values());
+        return result;
     }
 
     @Override

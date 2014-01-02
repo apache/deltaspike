@@ -25,13 +25,15 @@ import javax.enterprise.context.spi.Contextual;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.PassivationCapable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * A skeleton containing the most important parts of a custom CDI Context.
  * An implementing Context needs to implement the missing methods from the
- * {@link Context} interface and {@link #getContextualStorage(boolean)}.
+ * {@link Context} interface and {@link #getContextualStorage(Contextual, boolean)}.
  */
 public abstract class AbstractContext implements Context
 {
@@ -51,7 +53,14 @@ public abstract class AbstractContext implements Context
      * @param createIfNotExist whether a ContextualStorage shall get created if it doesn't yet exist.
      * @return the underlying storage
      */
-    protected abstract ContextualStorage getContextualStorage(boolean createIfNotExist);
+    protected abstract ContextualStorage getContextualStorage(Contextual<?> contextual, boolean createIfNotExist);
+
+    protected List<ContextualStorage> getActiveContextualStorages()
+    {
+        List<ContextualStorage> result = new ArrayList<ContextualStorage>();
+        result.add(getContextualStorage(null, false));
+        return result;
+    }
 
     /**
      * @return whether the served scope is a passivating scope
@@ -66,7 +75,7 @@ public abstract class AbstractContext implements Context
     {
         checkActive();
 
-        ContextualStorage storage = getContextualStorage(false);
+        ContextualStorage storage = getContextualStorage(bean, false);
         if (storage == null)
         {
             return null;
@@ -96,7 +105,7 @@ public abstract class AbstractContext implements Context
             }
         }
 
-        ContextualStorage storage = getContextualStorage(true);
+        ContextualStorage storage = getContextualStorage(bean, true);
 
         Map<Object, ContextualInstanceInfo<?>> contextMap = storage.getStorage();
         ContextualInstanceInfo<?> contextualInstanceInfo = contextMap.get(storage.getBeanKey(bean));
@@ -122,7 +131,7 @@ public abstract class AbstractContext implements Context
      */
     public boolean destroy(Contextual bean)
     {
-        ContextualStorage storage = getContextualStorage(false);
+        ContextualStorage storage = getContextualStorage(bean, false);
         if (storage == null)
         {
             return false;
@@ -142,17 +151,20 @@ public abstract class AbstractContext implements Context
 
     /**
      * destroys all the Contextual Instances in the Storage returned by
-     * {@link #getContextualStorage(boolean)}.
+     * {@link #getContextualStorage(Contextual, boolean)}.
      */
     public void destroyAllActive()
     {
-        ContextualStorage storage = getContextualStorage(false);
-        if (storage == null)
+        List<ContextualStorage> storages = getActiveContextualStorages();
+        if (storages == null)
         {
             return;
         }
 
-        destroyAllActive(storage);
+        for (ContextualStorage storage : storages)
+        {
+            destroyAllActive(storage);
+        }
     }
 
     /**

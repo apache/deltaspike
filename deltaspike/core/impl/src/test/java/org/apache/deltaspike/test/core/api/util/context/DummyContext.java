@@ -18,6 +18,7 @@
 */
 package org.apache.deltaspike.test.core.api.util.context;
 
+import javax.enterprise.context.spi.Contextual;
 import javax.enterprise.inject.spi.BeanManager;
 import java.lang.annotation.Annotation;
 
@@ -42,7 +43,7 @@ public class DummyContext extends AbstractContext
     }
 
     @Override
-    protected ContextualStorage getContextualStorage(boolean createIfNotExists)
+    protected ContextualStorage getContextualStorage(Contextual<?> contextual, boolean createIfNotExists)
     {
         if (storage == null && createIfNotExists)
         {
