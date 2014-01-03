@@ -33,6 +33,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
+import javax.enterprise.context.ContextNotActiveException;
 import javax.inject.Inject;
 
 @RunWith(Arquillian.class)
@@ -142,5 +143,25 @@ public class ImplicitlyGroupedConversationsTest
         windowContext.activateWindow("w1");
 
         Assert.assertNull(implicitlyGroupedBean.getValue());
+    }
+
+    @Test(expected = ContextNotActiveException.class)
+    public void noWindowTest()
+    {
+        try
+        {
+            windowContext.activateWindow("w1");
+
+            implicitlyGroupedBean.setValue("x");
+            Assert.assertEquals("x", implicitlyGroupedBean.getValue());
+
+            this.windowContext.closeWindow("w1");
+        }
+        catch (ContextNotActiveException e)
+        {
+            Assert.fail();
+        }
+
+        implicitlyGroupedBean.getValue();
     }
 }

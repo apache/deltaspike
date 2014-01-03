@@ -97,6 +97,10 @@ public class WindowContextImpl extends AbstractContext implements WindowContext
 
         if (windowStorage != null)
         {
+            if (windowId.equals(this.windowIdHolder.getWindowId()))
+            {
+                this.windowIdHolder.setWindowId(null);
+            }
             AbstractContext.destroyAllActive(windowStorage);
         }
 
