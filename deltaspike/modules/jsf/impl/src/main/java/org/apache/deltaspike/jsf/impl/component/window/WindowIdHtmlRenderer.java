@@ -30,22 +30,16 @@ import java.io.IOException;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.spi.scope.window.WindowContext;
 
-
-/**
- * HtmlRenderer for our dsWindowId hidden field.
- * This gets used for post requests.
- */
-@FacesRenderer(componentFamily = WindowIdHolderComponent.COMPONENT_FAMILY,
-        rendererType = WindowIdHolderComponent.COMPONENT_TYPE)
+@FacesRenderer(componentFamily = WindowIdComponent.COMPONENT_FAMILY, rendererType = WindowIdComponent.COMPONENT_TYPE)
 @ResourceDependencies( {
         @ResourceDependency(library = "deltaspike", name = "windowhandler.js", target = "head"),
         @ResourceDependency(library = "javax.faces", name = "jsf.js", target = "head") } )
-public class WindowIdHolderComponentHtmlRenderer extends Renderer
+public class WindowIdHtmlRenderer extends Renderer
 {
     private volatile WindowContext windowContext;
 
-
     /**
+     * 'deltaspikeJsWindowId' will be used to:
      * Write a simple hidden field into the form.
      * This might change in the future...
      * @param context

@@ -112,7 +112,6 @@ public class DefaultClientWindow implements ClientWindow
 
         if (facesContext.isPostback())
         {
-            // for POST we read the windowId from the WindowIdHolderComponent in our ViewRoot
             return getPostBackWindowId(facesContext);
         }
 
