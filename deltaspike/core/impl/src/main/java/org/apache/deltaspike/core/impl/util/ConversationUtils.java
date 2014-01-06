@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.core.impl.util;
 
-import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.scope.ConversationGroup;
 import org.apache.deltaspike.core.impl.scope.conversation.ConversationKey;
 
@@ -37,19 +36,13 @@ public abstract class ConversationUtils
     {
     }
 
-    public static ConversationKey convertToConversationKey(Contextual<?> contextual)
-    {
-        return convertToConversationKey(contextual, BeanManagerProvider.getInstance().getBeanManager());
-    }
-
     public static ConversationKey convertToConversationKey(Contextual<?> contextual, BeanManager beanManager)
     {
         if (!(contextual instanceof Bean))
         {
             if (contextual instanceof PassivationCapable)
             {
-                contextual = BeanManagerProvider.getInstance().getBeanManager()
-                    .getPassivationCapableBean(((PassivationCapable) contextual).getId());
+                contextual = beanManager.getPassivationCapableBean(((PassivationCapable) contextual).getId());
             }
             else
             {
