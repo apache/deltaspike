@@ -154,6 +154,29 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
         }
     }
 
+    @Override
+    protected Object createTest() throws Exception
+    {
+        BeanManager beanManager = BeanManagerProvider.getInstance().getBeanManager();
+
+        Class<?> type = getTestClass().getJavaClass();
+        Set<Bean<?>> beans = beanManager.getBeans(type);
+
+        Object result;
+        if (beans == null || beans.isEmpty())
+        {
+            result = super.createTest();
+            BeanProvider.injectFields(result); //fallback to simple injection
+        }
+        else
+        {
+            Bean<Object> bean = (Bean<Object>) beanManager.resolve(beans);
+            CreationalContext<Object> creationalContext = beanManager.createCreationalContext(bean);
+            result = beanManager.getReference(bean, type, creationalContext);
+        }
+        return result;
+    }
+
     //TODO use Rules instead
     @Override
     protected Statement withBefores(FrameworkMethod method, Object target, Statement statement)
