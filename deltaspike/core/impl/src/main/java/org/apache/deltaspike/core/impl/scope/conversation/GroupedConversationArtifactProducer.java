@@ -26,6 +26,7 @@ import org.apache.deltaspike.core.spi.scope.conversation.GroupedConversationMana
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 
@@ -44,9 +45,10 @@ public class GroupedConversationArtifactProducer
 
     @Produces
     @Dependent
-    public GroupedConversation getGroupedConversation(InjectionPoint injectionPoint)
+    public GroupedConversation getGroupedConversation(InjectionPoint injectionPoint, BeanManager beanManager)
     {
-        ConversationKey conversationKey = ConversationUtils.convertToConversationKey(injectionPoint.getBean());
+        ConversationKey conversationKey =
+            ConversationUtils.convertToConversationKey(injectionPoint.getBean(), beanManager);
         return new InjectableGroupedConversation(conversationKey, getGroupedConversationManager());
     }
 }

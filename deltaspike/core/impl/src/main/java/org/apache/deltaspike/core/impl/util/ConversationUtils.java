@@ -18,12 +18,15 @@
  */
 package org.apache.deltaspike.core.impl.util;
 
+import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.scope.ConversationGroup;
 import org.apache.deltaspike.core.impl.scope.conversation.ConversationKey;
 
 import javax.enterprise.context.spi.Contextual;
 import javax.enterprise.inject.Typed;
 import javax.enterprise.inject.spi.Bean;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.PassivationCapable;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 
@@ -36,10 +39,23 @@ public abstract class ConversationUtils
 
     public static ConversationKey convertToConversationKey(Contextual<?> contextual)
     {
+        return convertToConversationKey(contextual, BeanManagerProvider.getInstance().getBeanManager());
+    }
+
+    public static ConversationKey convertToConversationKey(Contextual<?> contextual, BeanManager beanManager)
+    {
         if (!(contextual instanceof Bean))
         {
-            throw new IllegalArgumentException(
-                contextual.getClass().getName() + " is not of type " + Bean.class.getName());
+            if (contextual instanceof PassivationCapable)
+            {
+                contextual = BeanManagerProvider.getInstance().getBeanManager()
+                    .getPassivationCapableBean(((PassivationCapable) contextual).getId());
+            }
+            else
+            {
+                throw new IllegalArgumentException(
+                        contextual.getClass().getName() + " is not of type " + Bean.class.getName());
+            }
         }
 
         Bean<?> bean = (Bean<?>) contextual;

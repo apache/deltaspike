@@ -64,7 +64,7 @@ public class GroupedConversationContext extends AbstractContext implements Group
     @Override
     protected ContextualStorage getContextualStorage(Contextual<?> contextual, boolean createIfNotExist)
     {
-        ConversationKey conversationKey = ConversationUtils.convertToConversationKey(contextual);
+        ConversationKey conversationKey = ConversationUtils.convertToConversationKey(contextual, this.beanManager);
         return this.conversationBeanHolder.getContextualStorage(this.beanManager, conversationKey, createIfNotExist);
     }
 
