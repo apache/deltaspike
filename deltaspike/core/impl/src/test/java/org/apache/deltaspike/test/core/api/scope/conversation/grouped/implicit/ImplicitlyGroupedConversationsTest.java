@@ -16,9 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.api.scope.conversation;
+package org.apache.deltaspike.test.core.api.scope.conversation.grouped.implicit;
 
-import org.apache.deltaspike.core.api.scope.ConversationGroup;
 import org.apache.deltaspike.core.spi.scope.conversation.GroupedConversationManager;
 import org.apache.deltaspike.core.spi.scope.window.WindowContext;
 import org.apache.deltaspike.test.category.SeCategory;
@@ -39,16 +38,16 @@ import javax.inject.Inject;
 
 @RunWith(Arquillian.class)
 @Category(SeCategory.class)
-public class ExplicitlyGroupedConversationsTest
+public class ImplicitlyGroupedConversationsTest
 {
     @Deployment
     public static WebArchive deploy()
     {
-        String simpleName = ExplicitlyGroupedConversationsTest.class.getSimpleName();
+        String simpleName = ImplicitlyGroupedConversationsTest.class.getSimpleName();
         String archiveName = simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1);
 
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, archiveName + ".jar")
-                .addPackage(ExplicitlyGroupedConversationsTest.class.getPackage().getName())
+                .addPackage(ImplicitlyGroupedConversationsTest.class.getPackage().getName())
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
         return ShrinkWrap.create(WebArchive.class, archiveName + ".war")
@@ -61,12 +60,7 @@ public class ExplicitlyGroupedConversationsTest
     private WindowContext windowContext;
 
     @Inject
-    @ConversationGroup(ExplicitTestGroup.class)
-    private ExplicitlyGroupedBeanX explicitlyGroupedBeanX;
-
-    @Inject
-    @ConversationGroup(ExplicitTestGroup.class)
-    private ExplicitlyGroupedBeanY explicitlyGroupedBeanY;
+    private ImplicitlyGroupedBean implicitlyGroupedBean;
 
     @Inject
     private GroupedConversationManager conversationManager;
@@ -76,20 +70,18 @@ public class ExplicitlyGroupedConversationsTest
     {
         windowContext.activateWindow("w1");
 
-        explicitlyGroupedBeanX.setValue("x1");
-        explicitlyGroupedBeanY.setValue("x2");
-        Assert.assertEquals("x1", explicitlyGroupedBeanX.getValue());
-        Assert.assertEquals("x2", explicitlyGroupedBeanY.getValue());
+        implicitlyGroupedBean.setValue("x");
+        Assert.assertEquals("x", implicitlyGroupedBean.getValue());
 
         windowContext.activateWindow("w2");
 
-        Assert.assertNull(explicitlyGroupedBeanX.getValue());
-        Assert.assertNull(explicitlyGroupedBeanY.getValue());
+        Assert.assertNull(implicitlyGroupedBean.getValue());
 
-        explicitlyGroupedBeanX.setValue("y1");
-        explicitlyGroupedBeanY.setValue("y2");
-        Assert.assertEquals("y1", explicitlyGroupedBeanX.getValue());
-        Assert.assertEquals("y2", explicitlyGroupedBeanY.getValue());
+        implicitlyGroupedBean.setValue("y");
+        Assert.assertEquals("y", implicitlyGroupedBean.getValue());
+
+        windowContext.activateWindow("w1");
+        Assert.assertEquals("x", implicitlyGroupedBean.getValue());
     }
 
     @Test
@@ -97,15 +89,12 @@ public class ExplicitlyGroupedConversationsTest
     {
         windowContext.activateWindow("w1");
 
-        explicitlyGroupedBeanX.setValue("x1");
-        explicitlyGroupedBeanY.setValue("x2");
-        Assert.assertEquals("x1", explicitlyGroupedBeanX.getValue());
-        Assert.assertEquals("x2", explicitlyGroupedBeanY.getValue());
+        implicitlyGroupedBean.setValue("x");
+        Assert.assertEquals("x", implicitlyGroupedBean.getValue());
 
-        explicitlyGroupedBeanX.done();
+        implicitlyGroupedBean.done();
 
-        Assert.assertNull(explicitlyGroupedBeanX.getValue());
-        Assert.assertNull(explicitlyGroupedBeanY.getValue());
+        Assert.assertNull(implicitlyGroupedBean.getValue());
     }
 
     @Test
@@ -113,15 +102,20 @@ public class ExplicitlyGroupedConversationsTest
     {
         windowContext.activateWindow("w1");
 
-        explicitlyGroupedBeanX.setValue("x1");
-        explicitlyGroupedBeanY.setValue("x2");
-        Assert.assertEquals("x1", explicitlyGroupedBeanX.getValue());
-        Assert.assertEquals("x2", explicitlyGroupedBeanY.getValue());
+        implicitlyGroupedBean.setValue("x");
+        Assert.assertEquals("x", implicitlyGroupedBean.getValue());
 
-        this.conversationManager.closeConversationGroup(ExplicitTestGroup.class);
+        this.conversationManager.closeConversation(ImplicitlyGroupedBean.class);
 
-        Assert.assertNull(explicitlyGroupedBeanX.getValue());
-        Assert.assertNull(explicitlyGroupedBeanY.getValue());
+        Assert.assertNull(implicitlyGroupedBean.getValue());
+
+
+        implicitlyGroupedBean.setValue("y");
+        Assert.assertEquals("y", implicitlyGroupedBean.getValue());
+
+        this.conversationManager.closeConversationGroup(ImplicitlyGroupedBean.class);
+
+        Assert.assertNull(implicitlyGroupedBean.getValue());
     }
 
     @Test
@@ -129,15 +123,12 @@ public class ExplicitlyGroupedConversationsTest
     {
         windowContext.activateWindow("w1");
 
-        explicitlyGroupedBeanX.setValue("x1");
-        explicitlyGroupedBeanY.setValue("x2");
-        Assert.assertEquals("x1", explicitlyGroupedBeanX.getValue());
-        Assert.assertEquals("x2", explicitlyGroupedBeanY.getValue());
+        implicitlyGroupedBean.setValue("x");
+        Assert.assertEquals("x", implicitlyGroupedBean.getValue());
 
         this.conversationManager.closeConversations();
 
-        Assert.assertNull(explicitlyGroupedBeanX.getValue());
-        Assert.assertNull(explicitlyGroupedBeanY.getValue());
+        Assert.assertNull(implicitlyGroupedBean.getValue());
     }
 
     @Test
@@ -145,16 +136,13 @@ public class ExplicitlyGroupedConversationsTest
     {
         windowContext.activateWindow("w1");
 
-        explicitlyGroupedBeanX.setValue("x1");
-        explicitlyGroupedBeanY.setValue("x2");
-        Assert.assertEquals("x1", explicitlyGroupedBeanX.getValue());
-        Assert.assertEquals("x2", explicitlyGroupedBeanY.getValue());
+        implicitlyGroupedBean.setValue("x");
+        Assert.assertEquals("x", implicitlyGroupedBean.getValue());
 
         Assert.assertTrue(this.windowContext.closeWindow("w1"));
         windowContext.activateWindow("w1");
 
-        Assert.assertNull(explicitlyGroupedBeanX.getValue());
-        Assert.assertNull(explicitlyGroupedBeanY.getValue());
+        Assert.assertNull(implicitlyGroupedBean.getValue());
     }
 
     @Test(expected = ContextNotActiveException.class)
@@ -164,10 +152,8 @@ public class ExplicitlyGroupedConversationsTest
         {
             windowContext.activateWindow("w1");
 
-            explicitlyGroupedBeanX.setValue("x1");
-            explicitlyGroupedBeanY.setValue("x2");
-            Assert.assertEquals("x1", explicitlyGroupedBeanX.getValue());
-            Assert.assertEquals("x2", explicitlyGroupedBeanY.getValue());
+            implicitlyGroupedBean.setValue("x");
+            Assert.assertEquals("x", implicitlyGroupedBean.getValue());
 
             this.windowContext.closeWindow("w1");
         }
@@ -176,6 +162,6 @@ public class ExplicitlyGroupedConversationsTest
             Assert.fail();
         }
 
-        explicitlyGroupedBeanX.getValue();
+        implicitlyGroupedBean.getValue();
     }
 }

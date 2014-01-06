@@ -144,7 +144,7 @@ public abstract class AbstractContext implements Context
             return false;
         }
 
-        bean.destroy(contextualInstanceInfo.getContextualInstance(), contextualInstanceInfo.getCreationalContext());
+        destroyBean(bean, contextualInstanceInfo);
 
         return true;
     }
@@ -184,9 +184,14 @@ public abstract class AbstractContext implements Context
             Contextual bean = storage.getBean(entry.getKey());
 
             ContextualInstanceInfo<?> contextualInstanceInfo = entry.getValue();
-            bean.destroy(contextualInstanceInfo.getContextualInstance(), contextualInstanceInfo.getCreationalContext());
+            destroyBean(bean, contextualInstanceInfo);
         }
         return contextMap;
+    }
+
+    public static void destroyBean(Contextual bean, ContextualInstanceInfo<?> contextualInstanceInfo)
+    {
+        bean.destroy(contextualInstanceInfo.getContextualInstance(), contextualInstanceInfo.getCreationalContext());
     }
 
     /**

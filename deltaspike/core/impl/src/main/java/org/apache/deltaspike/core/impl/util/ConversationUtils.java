@@ -19,6 +19,7 @@
 package org.apache.deltaspike.core.impl.util;
 
 import org.apache.deltaspike.core.api.scope.ConversationGroup;
+import org.apache.deltaspike.core.api.scope.ConversationSubGroup;
 import org.apache.deltaspike.core.impl.scope.conversation.ConversationKey;
 
 import javax.enterprise.context.spi.Contextual;
@@ -47,7 +48,7 @@ public abstract class ConversationUtils
             else
             {
                 throw new IllegalArgumentException(
-                        contextual.getClass().getName() + " is not of type " + Bean.class.getName());
+                    contextual.getClass().getName() + " is not of type " + Bean.class.getName());
             }
         }
 
@@ -82,5 +83,38 @@ public abstract class ConversationUtils
             }
         }
         return null;
+    }
+
+    public static Class<?> getDeclaredConversationGroup(Class<?> conversationGroup)
+    {
+        ConversationSubGroup conversationSubGroup = conversationGroup.getAnnotation(ConversationSubGroup.class);
+
+        if (conversationSubGroup == null)
+        {
+            return conversationGroup;
+        }
+
+        Class<?> result = conversationSubGroup.of();
+
+        if (!ConversationSubGroup.class.equals(result))
+        {
+            return result;
+        }
+
+        result = conversationGroup.getSuperclass();
+
+        if ((result == null || Object.class.getName().equals(result.getName())) &&
+                conversationGroup.getInterfaces().length == 1)
+        {
+            return conversationGroup.getInterfaces()[0];
+        }
+
+        if (result == null)
+        {
+            //TODO move validation to the bootstrapping process
+            throw new IllegalStateException(conversationGroup.getName() + " hosts an invalid usage of @" +
+                ConversationSubGroup.class.getName());
+        }
+        return result;
     }
 }

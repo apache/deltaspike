@@ -16,38 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.api.scope.conversation;
+package org.apache.deltaspike.test.core.api.scope.conversation.subgroup.shared;
 
 import org.apache.deltaspike.core.api.scope.ConversationGroup;
-import org.apache.deltaspike.core.api.scope.GroupedConversation;
 import org.apache.deltaspike.core.api.scope.GroupedConversationScoped;
 
-import javax.inject.Inject;
-import java.io.Serializable;
-
 @GroupedConversationScoped
-@ConversationGroup(ExplicitTestGroup.class)
-public class ExplicitlyGroupedBeanY implements Serializable
+@ConversationGroup(TestGroup.class)
+public class TestBeanA extends TestBaseBean
 {
     private static final long serialVersionUID = -1291355584482007178L;
-
-    private String value;
-
-    @Inject
-    private GroupedConversation conversation;
-
-    public String getValue()
-    {
-        return value;
-    }
-
-    public void setValue(String value)
-    {
-        this.value = value;
-    }
-
-    public void done()
-    {
-        this.conversation.close();
-    }
 }

@@ -18,11 +18,13 @@
  */
 package org.apache.deltaspike.core.impl.scope.conversation;
 
+import org.apache.deltaspike.core.api.scope.ConversationSubGroup;
 import org.apache.deltaspike.core.api.scope.GroupedConversationScoped;
 import org.apache.deltaspike.core.impl.scope.window.WindowContextImpl;
 import org.apache.deltaspike.core.impl.util.ConversationUtils;
 import org.apache.deltaspike.core.spi.scope.conversation.GroupedConversationManager;
 import org.apache.deltaspike.core.util.context.AbstractContext;
+import org.apache.deltaspike.core.util.context.ContextualInstanceInfo;
 import org.apache.deltaspike.core.util.context.ContextualStorage;
 
 import javax.enterprise.context.spi.Contextual;
@@ -30,6 +32,7 @@ import javax.enterprise.inject.Typed;
 import javax.enterprise.inject.spi.BeanManager;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -107,17 +110,61 @@ public class GroupedConversationContext extends AbstractContext implements Group
     {
         Set<ContextualStorage> result = new HashSet<ContextualStorage>();
 
+        ConversationSubGroup conversationSubGroup = conversationGroup.getAnnotation(ConversationSubGroup.class);
+        Set<Class<?>> subGroups = null;
+
+        if (conversationSubGroup != null)
+        {
+            conversationGroup = ConversationUtils.getDeclaredConversationGroup(conversationGroup);
+
+            subGroups = new HashSet<Class<?>>(conversationSubGroup.subGroup().length);
+            Collections.addAll(subGroups, conversationSubGroup.subGroup());
+        }
+
         Map<ConversationKey, ContextualStorage> storageMap = this.conversationBeanHolder.getStorageMap();
         for (Map.Entry<ConversationKey, ContextualStorage> entry : storageMap.entrySet())
         {
             if (entry.getKey().getConversationGroup().equals(conversationGroup))
             {
-                AbstractContext.destroyAllActive(entry.getValue());
-                result.add(entry.getValue());
-                storageMap.remove(entry.getKey()); //ok due to ConcurrentHashMap
+                if (subGroups == null)
+                {
+                    AbstractContext.destroyAllActive(entry.getValue());
+                    result.add(entry.getValue());
+                    storageMap.remove(entry.getKey()); //ok due to ConcurrentHashMap
+                }
+                else
+                {
+                    tryToDestroySubGroup(subGroups, entry);
+
+                    if (entry.getValue().getStorage().isEmpty())
+                    {
+                        storageMap.remove(entry.getKey()); //ok due to ConcurrentHashMap
+                    }
+                }
             }
         }
         return result;
+    }
+
+    private void tryToDestroySubGroup(Set<Class<?>> subGroups, Map.Entry<ConversationKey, ContextualStorage> entry)
+    {
+        ContextualStorage storage = entry.getValue();
+
+        for (Map.Entry<Object, ContextualInstanceInfo<?>> storageEntry : storage.getStorage().entrySet())
+        {
+            for (Class<?> subGroup : subGroups)
+            {
+                Class classOfEntry = storageEntry.getValue().getContextualInstance().getClass();
+                if (subGroup.equals(classOfEntry) ||
+                    (subGroup.isInterface() && subGroup.isAssignableFrom(classOfEntry)))
+                {
+                    Contextual bean = storage.getBean(storageEntry.getKey());
+                    AbstractContext.destroyBean(bean, storageEntry.getValue());
+                    storage.getStorage().remove(storageEntry.getKey()); //ok due to ConcurrentHashMap
+                    break;
+                }
+            }
+        }
     }
 
     @Override

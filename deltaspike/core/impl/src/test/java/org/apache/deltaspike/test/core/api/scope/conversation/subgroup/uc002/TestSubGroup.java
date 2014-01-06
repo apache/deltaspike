@@ -16,8 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.api.scope.conversation;
+package org.apache.deltaspike.test.core.api.scope.conversation.subgroup.uc002;
 
-public interface ExplicitTestGroup
+import org.apache.deltaspike.core.api.scope.ConversationSubGroup;
+import org.apache.deltaspike.test.core.api.scope.conversation.subgroup.shared.TestBeanA;
+import org.apache.deltaspike.test.core.api.scope.conversation.subgroup.shared.TestBeanC;
+import org.apache.deltaspike.test.core.api.scope.conversation.subgroup.shared.TestGroup;
+
+@ConversationSubGroup(subGroup = {TestBeanA.class, TestBeanC.class})
+public interface TestSubGroup extends TestGroup
 {
 }
