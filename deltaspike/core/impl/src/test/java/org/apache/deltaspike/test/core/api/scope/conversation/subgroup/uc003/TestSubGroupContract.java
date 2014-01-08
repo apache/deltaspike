@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.core.api.scope.conversation.subgroup.uc003;
 
-public interface TestSubGroupContract<T>
+public interface TestSubGroupContract
 {
-    T getValue();
+    String getValue();
 }

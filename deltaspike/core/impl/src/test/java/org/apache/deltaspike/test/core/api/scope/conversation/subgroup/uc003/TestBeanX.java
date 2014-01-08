@@ -25,7 +25,7 @@ import org.apache.deltaspike.test.core.api.scope.conversation.subgroup.shared.Te
 
 @GroupedConversationScoped
 @ConversationGroup(TestGroup.class)
-public class TestBeanX extends TestBaseBean implements TestSubGroupContract<String>
+public class TestBeanX extends TestBaseBean implements TestSubGroupContract
 {
     private static final long serialVersionUID = -1291355584482007178L;
 }
