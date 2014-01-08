@@ -24,6 +24,8 @@ import org.apache.deltaspike.jsf.impl.util.JsfUtils;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.ExternalContextWrapper;
 import java.io.IOException;
+import javax.faces.context.FacesContext;
+import org.apache.deltaspike.jsf.impl.scope.window.ClientWindowHelper;
 
 public class DeltaSpikeExternalContextWrapper extends ExternalContextWrapper implements Deactivatable
 {
@@ -38,7 +40,7 @@ public class DeltaSpikeExternalContextWrapper extends ExternalContextWrapper imp
     public void redirect(String url) throws IOException
     {
         JsfUtils.saveFacesMessages(this.wrapped);
-        this.wrapped.redirect(url);
+        this.wrapped.redirect(ClientWindowHelper.appendWindowId(FacesContext.getCurrentInstance(), url));
     }
 
     public ExternalContext getWrapped()

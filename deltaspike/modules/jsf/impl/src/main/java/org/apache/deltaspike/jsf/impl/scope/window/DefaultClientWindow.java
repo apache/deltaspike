@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.logging.Logger;
@@ -50,7 +51,7 @@ import static org.apache.deltaspike.jsf.spi.scope.window.ClientWindowConfig.Clie
  *
  */
 @ApplicationScoped
-public class DefaultClientWindow implements ClientWindow
+public class DefaultClientWindow extends ClientWindow
 {
 
     /**
@@ -65,6 +66,11 @@ public class DefaultClientWindow implements ClientWindow
     public static final String DELTASPIKE_WINDOW_ID_POST_PARAM = "dsPostWindowId";
     public static final String JSF_WINDOW_ID_POST_PARAM = "javax.faces.ClientWindow";
 
+    /**
+     * GET request parameter
+     */
+    public static final String DELTASPIKE_WINDOW_ID_URL_PARAM = "dswid";
+
     private static final Logger logger = Logger.getLogger(DefaultClientWindow.class.getName());
 
 
@@ -75,6 +81,7 @@ public class DefaultClientWindow implements ClientWindow
     private static final String WINDOW_ID_REPLACE_PATTERN = "$$windowIdValue$$";
     private static final String NOSCRIPT_URL_REPLACE_PATTERN = "$$noscriptUrl$$";
 
+    private static final String NEW_WINDOW_ID = DefaultClientWindow.class.getName() + ".NEW_WINDOW_ID";
 
     /**
      * Use this parameter to force a 'direct' request from the clients without any windowId detection
@@ -108,6 +115,29 @@ public class DefaultClientWindow implements ClientWindow
         if (ClientWindowRenderMode.DELEGATED.equals(clientWindowRenderMode))
         {
             return ClientWindowAdapter.getWindowIdFromJsf(facesContext);
+        }
+
+        if (ClientWindowRenderMode.URL.equals(clientWindowRenderMode))
+        {
+            ExternalContext externalContext = facesContext.getExternalContext();
+
+            if (facesContext.getAttributes().containsKey(NEW_WINDOW_ID))
+            {
+                return (String) facesContext.getAttributes().get(NEW_WINDOW_ID);
+            }
+            else if (externalContext.getRequestParameterMap().containsKey(DELTASPIKE_WINDOW_ID_URL_PARAM))
+            {
+                return externalContext.getRequestParameterMap().get(DELTASPIKE_WINDOW_ID_URL_PARAM);
+            }
+            else
+            {
+                // store the new windowId as context attribute to prevent infinite loops
+                // the #sendRedirect will append the windowId (from #getWindowId again) to the redirectUrl
+                facesContext.getAttributes().put(NEW_WINDOW_ID, generateNewWindowId());
+                ClientWindowHelper.handleInitialRedirect(facesContext);
+                facesContext.responseComplete();
+                return null;
+            }
         }
 
         if (facesContext.isPostback())
@@ -237,17 +267,7 @@ public class DefaultClientWindow implements ClientWindow
 
         // add request parameter
         url = JsfUtils.addPageParameters(externalContext, url, true);
-
-        // add noscript parameter
-        if (url.contains("?"))
-        {
-            url = url + "&";
-        }
-        else
-        {
-            url = url + "?";
-        }
-        url = url + NOSCRIPT_PARAMETER + "=true";
+        url = JsfUtils.addParameter(externalContext, url, false, NOSCRIPT_PARAMETER, "true");
 
         // NOTE that the url could contain data for an XSS attack
         // like e.g. ?"></a><a href%3D"http://hacker.org/attack.html?a
@@ -287,4 +307,77 @@ public class DefaultClientWindow implements ClientWindow
         return "";
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void disableClientWindowRenderMode(FacesContext context)
+    {
+        ClientWindowRenderMode clientWindowRenderMode = clientWindowConfig.getClientWindowRenderMode(context);
+
+        if (ClientWindowRenderMode.DELEGATED.equals(clientWindowRenderMode))
+        {
+            context.getExternalContext().getClientWindow().disableClientWindowRenderMode(context);
+        }
+        else if (ClientWindowRenderMode.URL.equals(clientWindowRenderMode))
+        {
+            super.disableClientWindowRenderMode(context);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void enableClientWindowRenderMode(FacesContext context)
+    {
+        ClientWindowRenderMode clientWindowRenderMode = clientWindowConfig.getClientWindowRenderMode(context);
+
+        if (ClientWindowRenderMode.DELEGATED.equals(clientWindowRenderMode))
+        {
+            context.getExternalContext().getClientWindow().enableClientWindowRenderMode(context);
+        }
+        else if (ClientWindowRenderMode.URL.equals(clientWindowRenderMode))
+        {
+            super.enableClientWindowRenderMode(context);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isClientWindowRenderModeEnabled(FacesContext context)
+    {
+        ClientWindowRenderMode clientWindowRenderMode = clientWindowConfig.getClientWindowRenderMode(context);
+
+        if (ClientWindowRenderMode.URL.equals(clientWindowRenderMode))
+        {
+            return super.isClientWindowRenderModeEnabled(context);
+        }
+
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Map<String, String> getQueryURLParameters(FacesContext context)
+    {
+        ClientWindowRenderMode clientWindowRenderMode = clientWindowConfig.getClientWindowRenderMode(context);
+
+        if (ClientWindowRenderMode.URL.equals(clientWindowRenderMode))
+        {
+            String windowId = getWindowId(context);
+            if (windowId != null)
+            {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put(DELTASPIKE_WINDOW_ID_URL_PARAM, getWindowId(context));
+                return params;
+            }
+        }
+
+        return null;
+    }
 }

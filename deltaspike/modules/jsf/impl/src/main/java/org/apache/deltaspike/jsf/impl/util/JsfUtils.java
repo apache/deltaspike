@@ -76,7 +76,7 @@ public abstract class JsfUtils
     }
 
     /**
-     * Adds the current request-parameters to the given url
+     * Adds the current page-parameters to the given url
      *
      * @param externalContext current external-context
      * @param url             current url
@@ -120,6 +120,100 @@ public abstract class JsfUtils
                 }
             }
         }
+        return finalUrl.toString();
+    }
+
+    /**
+     * Adds a paramter to the given url.
+     *
+     * @param externalContext   current external-context
+     * @param url               current url
+     * @param encodeValues      flag which indicates if parameter values should be encoded or not
+     * @param name              the paramter name
+     * @param value             the paramter value
+     * @return url with appended parameter
+     */
+    public static String addParameter(ExternalContext externalContext, String url, boolean encodeValues,
+            String name, String value)
+    {
+        // don't append if already available
+        if (url.contains(name + "=" + value)
+                || url.contains(name + "=" + encodeURLParameterValue(value, externalContext)))
+        {
+            return url;
+        }
+
+        StringBuilder finalUrl = new StringBuilder(url);
+
+        if (url.contains("?"))
+        {
+            finalUrl.append("&");
+        }
+        else
+        {
+            finalUrl.append("?");
+        }
+
+        finalUrl.append(name);
+        finalUrl.append("=");
+
+        if (encodeValues)
+        {
+            finalUrl.append(JsfUtils.encodeURLParameterValue(value, externalContext));
+        }
+        else
+        {
+            finalUrl.append(value);
+        }
+
+        return finalUrl.toString();
+    }
+
+    /**
+     * Adds the current request-parameters to the given url
+     *
+     * @param externalContext current external-context
+     * @param url             current url
+     * @param encodeValues    flag which indicates if parameter values should be encoded or not
+     * @return url with request-parameters
+     */
+    public static String addRequestParameters(ExternalContext externalContext, String url, boolean encodeValues)
+    {
+        StringBuilder finalUrl = new StringBuilder(url);
+        boolean existingParameters = url.contains("?");
+
+        for (Map.Entry<String, String[]> entry : externalContext.getRequestParameterValuesMap().entrySet())
+        {
+            for (String value : entry.getValue())
+            {
+                if (!url.contains(entry.getKey() + "=" + value) &&
+                        !url.contains(entry.getKey() + "=" + encodeURLParameterValue(value, externalContext)))
+                {
+                    if (!existingParameters)
+                    {
+                        finalUrl.append("?");
+                        existingParameters = true;
+                    }
+                    else
+                    {
+                        finalUrl.append("&");
+                    }
+
+                    finalUrl.append(entry.getKey());
+                    finalUrl.append("=");
+
+                    if (encodeValues)
+                    {
+                        finalUrl.append(JsfUtils.encodeURLParameterValue(value, externalContext));
+                    }
+                    else
+                    {
+                        finalUrl.append(value);
+                    }
+                }
+            }
+        }
+
         return finalUrl.toString();
     }
 

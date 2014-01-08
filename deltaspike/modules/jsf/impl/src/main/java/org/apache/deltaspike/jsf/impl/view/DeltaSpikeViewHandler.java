@@ -26,6 +26,7 @@ import javax.faces.application.ViewHandler;
 import javax.faces.application.ViewHandlerWrapper;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
+import org.apache.deltaspike.jsf.impl.scope.window.ClientWindowHelper;
 
 /**
  * Aggregates all {@link ViewHandler} implementations provided by DeltaSpike
@@ -69,6 +70,12 @@ public class DeltaSpikeViewHandler extends ViewHandlerWrapper implements Deactiv
             return this.wrapped.createView(facesContext, viewId);
         }
         return this.securityAwareViewHandler.createView(facesContext, viewId);
+    }
+
+    @Override
+    public String getActionURL(FacesContext context, String viewId)
+    {
+        return ClientWindowHelper.appendWindowId(context, this.wrapped.getActionURL(context, viewId));
     }
 
     @Override
