@@ -16,24 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.jsf.impl.scope.window;
+package org.apache.deltaspike.jsf.impl.util;
 
 import java.util.Map;
 import java.util.Map.Entry;
+import javax.enterprise.inject.Typed;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import org.apache.deltaspike.core.api.provider.BeanProvider;
-import org.apache.deltaspike.jsf.impl.util.JsfUtils;
 import org.apache.deltaspike.jsf.spi.scope.window.ClientWindow;
 
-public final class ClientWindowHelper
+@Typed()
+public abstract class ClientWindowHelper
 {
-    private ClientWindowHelper()
-    {
-
-    }
-
     /**
      * Handles the initial redirect for the URL modus, if no windowId is available in the current request URL.
      *
@@ -61,17 +56,17 @@ public final class ClientWindowHelper
     }
 
     /**
-     * Appends the current windowIf to the given url, if enabled via
+     * Appends the current windowId to the given url, if enabled via
      * {@link ClientWindow#isClientWindowRenderModeEnabled(javax.faces.context.FacesContext)}
      *
      * @param facesContext the {@link FacesContext}
      * @param url the url
+     * @param clientWindow the {@link ClientWindow} to use
      * @return if enabled, the url with windowId, otherwise the umodified url
      */
-    public static String appendWindowId(FacesContext facesContext, String url)
+    public static String appendWindowId(FacesContext facesContext, String url, ClientWindow clientWindow)
     {
-        ClientWindow clientWindow = BeanProvider.getContextualReference(ClientWindow.class);
-        if (clientWindow != null && clientWindow.isClientWindowRenderModeEnabled(FacesContext.getCurrentInstance()))
+        if (clientWindow != null && clientWindow.isClientWindowRenderModeEnabled(facesContext))
         {
             Map<String, String> parameters = clientWindow.getQueryURLParameters(facesContext);
 

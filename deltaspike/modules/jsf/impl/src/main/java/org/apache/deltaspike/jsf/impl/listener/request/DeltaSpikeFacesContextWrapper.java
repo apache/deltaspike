@@ -35,6 +35,7 @@ import javax.faces.context.FacesContextWrapper;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
+import org.apache.deltaspike.jsf.spi.scope.window.ClientWindow;
 
 class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
 {
@@ -48,14 +49,16 @@ class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
 
     private JsfModuleConfig jsfModuleConfig;
 
-    DeltaSpikeFacesContextWrapper(FacesContext wrappedFacesContext)
+    private volatile Boolean initialized;
+
+    DeltaSpikeFacesContextWrapper(FacesContext wrappedFacesContext, ClientWindow clientWindow)
     {
         this.wrappedFacesContext = wrappedFacesContext;
 
         if (ClassDeactivationUtils.isActivated(DeltaSpikeExternalContextWrapper.class))
         {
             this.wrappedExternalContext =
-                    new DeltaSpikeExternalContextWrapper(wrappedFacesContext.getExternalContext());
+                    new DeltaSpikeExternalContextWrapper(wrappedFacesContext.getExternalContext(), clientWindow);
         }
         else
         {
@@ -105,7 +108,16 @@ class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
 
     private void lazyInit()
     {
-        if (this.beforeAfterJsfRequestBroadcaster == null)
+        if (this.initialized == null)
+        {
+            init();
+        }
+    }
+
+    private synchronized void init()
+    {
+        // switch into paranoia mode
+        if (initialized == null)
         {
             if (ClassDeactivationUtils.isActivated(BeforeAfterJsfRequestBroadcaster.class))
             {

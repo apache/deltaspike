@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.jsf.impl.scope.window;
 
+import org.apache.deltaspike.jsf.impl.util.ClientWindowHelper;
 import javax.enterprise.context.ApplicationScoped;
 import javax.faces.FacesException;
 import javax.faces.context.ExternalContext;
@@ -121,15 +122,14 @@ public class DefaultClientWindow extends ClientWindow
         {
             ExternalContext externalContext = facesContext.getExternalContext();
 
-            if (facesContext.getAttributes().containsKey(NEW_WINDOW_ID))
+            String windowId = (String) facesContext.getAttributes().get(NEW_WINDOW_ID);
+
+            if (windowId == null)
             {
-                return (String) facesContext.getAttributes().get(NEW_WINDOW_ID);
+                windowId = externalContext.getRequestParameterMap().get(DELTASPIKE_WINDOW_ID_URL_PARAM);
             }
-            else if (externalContext.getRequestParameterMap().containsKey(DELTASPIKE_WINDOW_ID_URL_PARAM))
-            {
-                return externalContext.getRequestParameterMap().get(DELTASPIKE_WINDOW_ID_URL_PARAM);
-            }
-            else
+
+            if (windowId == null)
             {
                 // store the new windowId as context attribute to prevent infinite loops
                 // the #sendRedirect will append the windowId (from #getWindowId again) to the redirectUrl
@@ -138,6 +138,8 @@ public class DefaultClientWindow extends ClientWindow
                 facesContext.responseComplete();
                 return null;
             }
+
+            return windowId;
         }
 
         if (facesContext.isPostback())

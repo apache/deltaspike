@@ -26,7 +26,9 @@ import javax.faces.application.ViewHandler;
 import javax.faces.application.ViewHandlerWrapper;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
-import org.apache.deltaspike.jsf.impl.scope.window.ClientWindowHelper;
+import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.jsf.impl.util.ClientWindowHelper;
+import org.apache.deltaspike.jsf.spi.scope.window.ClientWindow;
 
 /**
  * Aggregates all {@link ViewHandler} implementations provided by DeltaSpike
@@ -36,6 +38,7 @@ public class DeltaSpikeViewHandler extends ViewHandlerWrapper implements Deactiv
     protected final ViewHandler wrapped;
 
     private final ViewHandler securityAwareViewHandler;
+    private final ClientWindow clientWindow;
 
     /**
      * Constructor for wrapping the given {@link ViewHandler}
@@ -54,6 +57,8 @@ public class DeltaSpikeViewHandler extends ViewHandlerWrapper implements Deactiv
         {
             this.securityAwareViewHandler = null;
         }
+
+        this.clientWindow = BeanProvider.getContextualReference(ClientWindow.class, true);
     }
 
     //allows custom implementations to override the SecurityAwareViewHandler
@@ -75,7 +80,8 @@ public class DeltaSpikeViewHandler extends ViewHandlerWrapper implements Deactiv
     @Override
     public String getActionURL(FacesContext context, String viewId)
     {
-        return ClientWindowHelper.appendWindowId(context, this.wrapped.getActionURL(context, viewId));
+        String actionURL = this.wrapped.getActionURL(context, viewId);
+        return ClientWindowHelper.appendWindowId(context, actionURL, clientWindow);
     }
 
     @Override

@@ -133,13 +133,10 @@ class DeltaSpikeLifecycleWrapper extends Lifecycle
             {
                 beforeAfterJsfRequestBroadcaster =
                         BeanProvider.getContextualReference(BeforeAfterJsfRequestBroadcaster.class, true);
-
-                clientWindow =
-                        BeanProvider.getContextualReference(ClientWindow.class, true);
-
-                windowContext =
-                        BeanProvider.getContextualReference(WindowContext.class, true);
             }
+
+            clientWindow = BeanProvider.getContextualReference(ClientWindow.class, true);
+            windowContext = BeanProvider.getContextualReference(WindowContext.class, true);
 
             initialized = true;
         }

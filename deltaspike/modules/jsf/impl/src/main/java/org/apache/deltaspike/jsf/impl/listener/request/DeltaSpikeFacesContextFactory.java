@@ -24,12 +24,16 @@ import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import javax.faces.context.FacesContext;
 import javax.faces.context.FacesContextFactory;
 import javax.faces.lifecycle.Lifecycle;
+import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.jsf.spi.scope.window.ClientWindow;
 
 public class DeltaSpikeFacesContextFactory extends FacesContextFactory implements Deactivatable
 {
     private final FacesContextFactory wrappedFacesContextFactory;
 
     private final boolean deactivated;
+
+    private final ClientWindow clientWindow;
 
     /**
      * Constructor for wrapping the given {@link FacesContextFactory}
@@ -40,6 +44,7 @@ public class DeltaSpikeFacesContextFactory extends FacesContextFactory implement
     {
         this.wrappedFacesContextFactory = wrappedFacesContextFactory;
         this.deactivated = !ClassDeactivationUtils.isActivated(getClass());
+        this.clientWindow = BeanProvider.getContextualReference(ClientWindow.class, true);
     }
 
     /**
@@ -61,7 +66,7 @@ public class DeltaSpikeFacesContextFactory extends FacesContextFactory implement
             return facesContext;
         }
 
-        return new DeltaSpikeFacesContextWrapper(facesContext);
+        return new DeltaSpikeFacesContextWrapper(facesContext, clientWindow);
     }
 
     /**
