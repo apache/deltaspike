@@ -44,6 +44,8 @@ public class DeltaSpikeExternalContextWrapper extends ExternalContextWrapper imp
     {
         FacesContext facesContext = FacesContext.getCurrentInstance();
 
+        // skip if we are in initialRedirect mode because
+        // save messages via flash scope will fail because the JSF lifecycle isn't initialized
         if (!ClientWindowHelper.isInitialRedirect(facesContext))
         {
             JsfUtils.saveFacesMessages(this.wrapped);
