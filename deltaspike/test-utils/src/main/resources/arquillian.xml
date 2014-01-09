@@ -18,7 +18,7 @@
 -->
 
 <arquillian xmlns="http://jboss.org/schema/arquillian" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://jboss.org/schema/arquillian http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
+    xsi:schemaLocation="http://jboss.org/schema/arquillian http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
 
     <!--Uncomment to have test archives exported to the file system for inspection -->
     <!--
@@ -26,6 +26,8 @@
         <property name="deploymentExportPath">target/</property>
     </engine>
     -->
+
+    <defaultProtocol type="Servlet 3.0" />
 
     <container qualifier="jbossas-managed-7">
         <configuration>
@@ -82,6 +84,15 @@
             <property name="appWorkingDir">target/arquillian-test-working-dir</property>
             <property name="catalina_opts">-Dcdicontainer.version=tomee-${tomee.version}</property>
             <property name="simpleLog">true</property>
+            
+            <!-- In-Memory database for the data module -->
+            <property name="properties">
+                testDatabase = new://Resource?type=DataSource
+                testDatabase.JdbcDriver = org.hsqldb.jdbcDriver
+                testDatabase.JdbcUrl = jdbc:hsqldb:mem:testdb
+                testDatabase.JtaManaged = true
+            </property>
+
         </configuration>
     </container>
 </arquillian>
