@@ -163,7 +163,10 @@ public abstract class AbstractContext implements Context
 
         for (ContextualStorage storage : storages)
         {
-            destroyAllActive(storage);
+            if (storage != null)
+            {
+                destroyAllActive(storage);
+            }
         }
     }
 
