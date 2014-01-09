@@ -44,7 +44,8 @@ public class CdiTestSuiteRunner extends Suite
 
     static
     {
-        String stopContainerConfigValue = ConfigResolver.getPropertyValue("testcontrol.stop_container", "true");
+        String stopContainerConfigValue =
+                ConfigResolver.getPropertyValue("deltaspike.testcontrol.stop_container", "true");
         STOP_CONTAINER = Boolean.parseBoolean(stopContainerConfigValue.trim());
     }
 
