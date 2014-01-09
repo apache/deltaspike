@@ -42,10 +42,14 @@ public class DeltaSpikeExternalContextWrapper extends ExternalContextWrapper imp
     @Override
     public void redirect(String url) throws IOException
     {
-        JsfUtils.saveFacesMessages(this.wrapped);
+        FacesContext facesContext = FacesContext.getCurrentInstance();
 
-        String targetURL = ClientWindowHelper.appendWindowId(FacesContext.getCurrentInstance(),
-                url, this.clientWindow);
+        if (!ClientWindowHelper.isInitialRedirect(facesContext))
+        {
+            JsfUtils.saveFacesMessages(this.wrapped);
+        }
+
+        String targetURL = ClientWindowHelper.appendWindowId(facesContext, url, this.clientWindow);
 
         this.wrapped.redirect(targetURL);
     }

@@ -82,8 +82,6 @@ public class DefaultClientWindow extends ClientWindow
     private static final String WINDOW_ID_REPLACE_PATTERN = "$$windowIdValue$$";
     private static final String NOSCRIPT_URL_REPLACE_PATTERN = "$$noscriptUrl$$";
 
-    private static final String NEW_WINDOW_ID = DefaultClientWindow.class.getName() + ".NEW_WINDOW_ID";
-
     /**
      * Use this parameter to force a 'direct' request from the clients without any windowId detection
      * We keep this name for backward compat with CODI.
@@ -122,7 +120,7 @@ public class DefaultClientWindow extends ClientWindow
         {
             ExternalContext externalContext = facesContext.getExternalContext();
 
-            String windowId = (String) facesContext.getAttributes().get(NEW_WINDOW_ID);
+            String windowId = (String) ClientWindowHelper.getInitialRedirectWindowId(facesContext);
 
             if (windowId == null)
             {
@@ -131,10 +129,7 @@ public class DefaultClientWindow extends ClientWindow
 
             if (windowId == null)
             {
-                // store the new windowId as context attribute to prevent infinite loops
-                // the #sendRedirect will append the windowId (from #getWindowId again) to the redirectUrl
-                facesContext.getAttributes().put(NEW_WINDOW_ID, generateNewWindowId());
-                ClientWindowHelper.handleInitialRedirect(facesContext);
+                ClientWindowHelper.handleInitialRedirect(facesContext, generateNewWindowId());
                 facesContext.responseComplete();
                 return null;
             }

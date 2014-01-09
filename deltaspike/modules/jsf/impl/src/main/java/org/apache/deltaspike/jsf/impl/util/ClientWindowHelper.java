@@ -29,13 +29,21 @@ import org.apache.deltaspike.jsf.spi.scope.window.ClientWindow;
 @Typed()
 public abstract class ClientWindowHelper
 {
+    public static final String INITIAL_REDIRECT_WINDOW_ID = ClientWindowHelper.class.getName()
+            + ".INITIAL_REDIRECT_WINDOW_ID";
+
     /**
      * Handles the initial redirect for the URL modus, if no windowId is available in the current request URL.
      *
      * @param facesContext the {@link FacesContext}
+     * @param newWindowId the new windowId
      */
-    public static void handleInitialRedirect(FacesContext facesContext)
+    public static void handleInitialRedirect(FacesContext facesContext, String newWindowId)
     {
+        // store the new windowId as context attribute to prevent infinite loops
+        // the #sendRedirect will append the windowId (from ClientWindow#getWindowId again) to the redirectUrl
+        facesContext.getAttributes().put(INITIAL_REDIRECT_WINDOW_ID, newWindowId);
+
         ExternalContext externalContext = facesContext.getExternalContext();
 
         // send initial redirect to add the windowId to the current request URL
@@ -53,6 +61,16 @@ public abstract class ClientWindowHelper
         outcome = JsfUtils.addRequestParameters(externalContext, outcome, true);
 
         facesContext.getApplication().getNavigationHandler().handleNavigation(facesContext, null, outcome);
+    }
+
+    public static boolean isInitialRedirect(FacesContext facesContext)
+    {
+        return facesContext.getAttributes().containsKey(INITIAL_REDIRECT_WINDOW_ID);
+    }
+
+    public static String getInitialRedirectWindowId(FacesContext facesContext)
+    {
+        return (String) facesContext.getAttributes().get(INITIAL_REDIRECT_WINDOW_ID);
     }
 
     /**
