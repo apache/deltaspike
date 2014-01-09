@@ -18,7 +18,12 @@
  */
 package org.apache.deltaspike.jsf.impl.scope.window;
 
+import org.apache.deltaspike.core.spi.scope.window.WindowContext;
 import org.apache.deltaspike.jsf.impl.util.ClientWindowHelper;
+import org.apache.deltaspike.jsf.impl.util.JsfUtils;
+import org.apache.deltaspike.jsf.spi.scope.window.ClientWindow;
+import org.apache.deltaspike.jsf.spi.scope.window.ClientWindowConfig;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.faces.FacesException;
 import javax.faces.context.ExternalContext;
@@ -26,18 +31,11 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-import java.util.logging.Logger;
-
-import org.apache.deltaspike.core.spi.scope.window.WindowContext;
-import org.apache.deltaspike.jsf.impl.util.JsfUtils;
-import org.apache.deltaspike.jsf.spi.scope.window.ClientWindow;
-import org.apache.deltaspike.jsf.spi.scope.window.ClientWindowConfig;
 
 import static org.apache.deltaspike.jsf.spi.scope.window.ClientWindowConfig.ClientWindowRenderMode;
 
@@ -48,13 +46,10 @@ import static org.apache.deltaspike.jsf.spi.scope.window.ClientWindowConfig.Clie
  * ClientSideWindowHandler.
  *
  * It will act according to the configured {@link ClientWindowRenderMode}.
- *
- *
  */
 @ApplicationScoped
-public class DefaultClientWindow extends ClientWindow
+public class DefaultClientWindow implements ClientWindow
 {
-
     /**
      * Value which can be used as "window-id" by external clients which aren't aware of windows.
      * It deactivates e.g. the redirect for the initial request.
@@ -72,8 +67,8 @@ public class DefaultClientWindow extends ClientWindow
      */
     public static final String DELTASPIKE_WINDOW_ID_URL_PARAM = "dswid";
 
-    private static final Logger logger = Logger.getLogger(DefaultClientWindow.class.getName());
-
+    private static final String PER_USE_CLIENT_WINDOW_URL_QUERY_PARAMETER_DISABLED_KEY =
+            ClientWindow.class.getName() + ".ClientWindowRenderModeEnablement";
 
     private static final String WINDOW_ID_COOKIE_PREFIX = "dsWindowId-";
     private static final String DELTASPIKE_REQUEST_TOKEN = "dsRid";
@@ -199,14 +194,12 @@ public class DefaultClientWindow extends ClientWindow
         return windowId;
     }
 
-
     private boolean isNoscriptRequest(ExternalContext externalContext)
     {
         String noscript = externalContext.getRequestParameterMap().get(NOSCRIPT_PARAMETER);
 
         return (noscript != null && "true".equals(noscript));
     }
-
 
     private void sendWindowHandlerHtml(ExternalContext externalContext, String windowId)
     {
@@ -304,73 +297,64 @@ public class DefaultClientWindow extends ClientWindow
         return "";
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public void disableClientWindowRenderMode(FacesContext context)
+    public void disableClientWindowRenderMode(FacesContext facesContext)
     {
-        ClientWindowRenderMode clientWindowRenderMode = clientWindowConfig.getClientWindowRenderMode(context);
+        ClientWindowRenderMode clientWindowRenderMode = clientWindowConfig.getClientWindowRenderMode(facesContext);
 
         if (ClientWindowRenderMode.DELEGATED.equals(clientWindowRenderMode))
         {
-            context.getExternalContext().getClientWindow().disableClientWindowRenderMode(context);
+            facesContext.getExternalContext().getClientWindow().disableClientWindowRenderMode(facesContext);
         }
         else if (ClientWindowRenderMode.URL.equals(clientWindowRenderMode))
         {
-            super.disableClientWindowRenderMode(context);
+            Map<Object, Object> attrMap = facesContext.getAttributes();
+            attrMap.put(PER_USE_CLIENT_WINDOW_URL_QUERY_PARAMETER_DISABLED_KEY, Boolean.TRUE);
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public void enableClientWindowRenderMode(FacesContext context)
+    public void enableClientWindowRenderMode(FacesContext facesContext)
     {
-        ClientWindowRenderMode clientWindowRenderMode = clientWindowConfig.getClientWindowRenderMode(context);
+        ClientWindowRenderMode clientWindowRenderMode = clientWindowConfig.getClientWindowRenderMode(facesContext);
 
         if (ClientWindowRenderMode.DELEGATED.equals(clientWindowRenderMode))
         {
-            context.getExternalContext().getClientWindow().enableClientWindowRenderMode(context);
+            facesContext.getExternalContext().getClientWindow().enableClientWindowRenderMode(facesContext);
         }
         else if (ClientWindowRenderMode.URL.equals(clientWindowRenderMode))
         {
-            super.enableClientWindowRenderMode(context);
+            Map<Object, Object> attrMap = facesContext.getAttributes();
+            attrMap.remove(PER_USE_CLIENT_WINDOW_URL_QUERY_PARAMETER_DISABLED_KEY);
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public boolean isClientWindowRenderModeEnabled(FacesContext context)
+    public boolean isClientWindowRenderModeEnabled(FacesContext facesContext)
     {
-        ClientWindowRenderMode clientWindowRenderMode = clientWindowConfig.getClientWindowRenderMode(context);
+        ClientWindowRenderMode clientWindowRenderMode = clientWindowConfig.getClientWindowRenderMode(facesContext);
 
         if (ClientWindowRenderMode.URL.equals(clientWindowRenderMode))
         {
-            return super.isClientWindowRenderModeEnabled(context);
+            Map<Object, Object> attrMap = facesContext.getAttributes();
+            return  !attrMap.containsKey(PER_USE_CLIENT_WINDOW_URL_QUERY_PARAMETER_DISABLED_KEY);
         }
 
         return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public Map<String, String> getQueryURLParameters(FacesContext context)
+    public Map<String, String> getQueryURLParameters(FacesContext facesContext)
     {
-        ClientWindowRenderMode clientWindowRenderMode = clientWindowConfig.getClientWindowRenderMode(context);
+        ClientWindowRenderMode clientWindowRenderMode = clientWindowConfig.getClientWindowRenderMode(facesContext);
 
         if (ClientWindowRenderMode.URL.equals(clientWindowRenderMode))
         {
-            String windowId = getWindowId(context);
+            String windowId = getWindowId(facesContext);
             if (windowId != null)
             {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put(DELTASPIKE_WINDOW_ID_URL_PARAM, getWindowId(context));
+                params.put(DELTASPIKE_WINDOW_ID_URL_PARAM, getWindowId(facesContext));
                 return params;
             }
         }
