@@ -35,8 +35,9 @@
     <description>Apache DeltaSpike Parent for container projects</description>
 
     <properties>
+        <container.unpack.directory>${java.io.tmpdir}/deltaspike-arquillian-containers</container.unpack.directory>
         <jboss.as.version>7.1.1.Final</jboss.as.version>
-        <wildfly.version>8.0.0.Alpha4</wildfly.version>
+        <wildfly.version>8.0.0.CR1</wildfly.version>
     </properties>
 
 
@@ -535,7 +536,7 @@
                             <systemProperties>
                                 <arquillian.launch>jbossas-build-managed-7</arquillian.launch>
                                 <arquillian.jboss_home>
-                                    ${project.build.directory}/jboss-as-${jboss.as.version}
+                                    ${container.unpack.directory}/jboss-as-${jboss.as.version}
                                 </arquillian.jboss_home>
                                 <org.apache.deltaspike.ProjectStage>UnitTest</org.apache.deltaspike.ProjectStage>
                                 <cdicontainer.version>${cdicontainer.version}</cdicontainer.version>
@@ -568,7 +569,7 @@
                                             <groupId>org.jboss.as</groupId>
                                             <artifactId>jboss-as-dist</artifactId>
                                             <version>${jboss.as.version}</version>
-                                            <outputDirectory>${project.build.directory}</outputDirectory>
+                                            <outputDirectory>${container.unpack.directory}</outputDirectory>
                                             <type>zip</type>
                                             <overWrite>false</overWrite>
                                         </artifactItem>
@@ -707,6 +708,104 @@
                                 org.apache.deltaspike.test.category.SeCategory
                             </excludedGroups>
                         </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <!--
+             * WildFly will be downloaded as maven dependency
+             *
+             * JBOSS_HOME need not be set for this.
+             *
+             * Start the build with:
+             * $> mvn clean install -Pwildfly-build-managed
+             *
+             -->
+            <id>wildfly-build-managed</id>
+
+            <properties>
+                <cdicontainer.version>wildfly-${wildfly.version}</cdicontainer.version>
+            </properties>
+
+            <dependencies>
+                <dependency>
+                    <groupId>javax.enterprise</groupId>
+                    <artifactId>cdi-api</artifactId>
+                    <version>1.1</version>
+                    <scope>provided</scope>
+                </dependency>
+                <dependency>
+                    <groupId>javax.inject</groupId>
+                    <artifactId>javax.inject</artifactId>
+                    <version>1</version>
+                    <scope>provided</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.wildfly</groupId>
+                    <artifactId>wildfly-arquillian-container-managed</artifactId>
+                    <version>${wildfly.version}</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.jboss.arquillian.protocol</groupId>
+                    <artifactId>arquillian-protocol-servlet</artifactId>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${maven.surefire.plugin.version}</version>
+                        <configuration>
+                            <systemProperties>
+                                <arquillian.launch>jbossas-build-managed-7</arquillian.launch>
+                                <arquillian.jboss_home>
+                                    ${container.unpack.directory}/wildfly-${wildfly.version}
+                                </arquillian.jboss_home>
+                                <org.apache.deltaspike.ProjectStage>UnitTest</org.apache.deltaspike.ProjectStage>
+                                <cdicontainer.version>${cdicontainer.version}</cdicontainer.version>
+                            </systemProperties>
+                            <!-- we just use groups to mark that a test should be executed only
+                            with specific environments. even though a java-ee6 application server has to be able to run
+                            all tests in theory, we have to exclude some tests because there are e.g. packaging issues or
+                            there are currently issues with arquillian. if a test isn't restricted to an environment,
+                            no category is used for the test-class. -->
+                            <excludedGroups>
+                                org.apache.deltaspike.test.category.FullProfileCategory,
+                                org.apache.deltaspike.test.category.SeCategory
+                            </excludedGroups>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>unpack-wf</id>
+                                <phase>process-test-classes</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.wildfly</groupId>
+                                            <artifactId>wildfly-dist</artifactId>
+                                            <version>${wildfly.version}</version>
+                                            <outputDirectory>${container.unpack.directory}</outputDirectory>
+                                            <type>zip</type>
+                                            <overWrite>false</overWrite>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>
