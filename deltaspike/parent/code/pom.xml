@@ -38,6 +38,7 @@
         <container.unpack.directory>${java.io.tmpdir}/deltaspike-arquillian-containers</container.unpack.directory>
         <jboss.as.version>7.1.1.Final</jboss.as.version>
         <wildfly.version>8.0.0.CR1</wildfly.version>
+        <glassfish3.version>3.1.2.2</glassfish3.version>
     </properties>
 
 
@@ -994,7 +995,129 @@
 
         </profile>
 
+        <profile>
+            <!--
+             * Glassfish will be downloaded as maven dependency
+             *
+             * Start the build with:
+             * $> mvn clean install -Pglassfish-build-managed-3
+             *
+             -->
+            <id>glassfish-build-managed-3</id>
 
+            <properties>
+                <cdicontainer.version>weld-1.1.8</cdicontainer.version>
+            </properties>
+
+            <dependencies>
+                <dependency>
+                    <groupId>javax.enterprise</groupId>
+                    <artifactId>cdi-api</artifactId>
+                    <version>1.0-SP4</version>
+                    <scope>provided</scope>
+                </dependency>
+                <dependency>
+                    <groupId>javax.inject</groupId>
+                    <artifactId>javax.inject</artifactId>
+                    <version>1</version>
+                    <scope>provided</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.jboss.arquillian.container</groupId>
+                    <artifactId>arquillian-glassfish-managed-3.1</artifactId>
+                    <version>1.0.0.CR4</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <systemProperties>
+                                <arquillian.launch>glassfish-build-managed-3</arquillian.launch>
+                                <arquillian.glassfish3_home>${container.unpack.directory}/glassfish3</arquillian.glassfish3_home>
+                                <org.apache.deltaspike.ProjectStage>UnitTest</org.apache.deltaspike.ProjectStage>
+                                <cdicontainer.version>${cdicontainer.version}</cdicontainer.version>
+                            </systemProperties>
+                            <!-- we just use groups to mark that a test should be executed only
+                            with specific environments. even though a java-ee6 application server has to be able to run
+                            all tests in theory, we have to exclude some tests because there are e.g. packaging issues or
+                            there are currently issues with arquillian. if a test isn't restricted to an environment,
+                            no category is used for the test-class. -->
+                            <excludedGroups>
+                                org.apache.deltaspike.test.category.SeCategory
+                            </excludedGroups>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>unpack-glassfish3</id>
+                                <phase>generate-test-resources</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.glassfish.main.distributions</groupId>
+                                            <artifactId>glassfish</artifactId>
+                                            <version>${glassfish3.version}</version>
+                                            <outputDirectory>${container.unpack.directory}</outputDirectory>
+                                            <type>zip</type>
+                                            <overWrite>false</overWrite>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>prepare-glassfish3</id>
+                                <phase>process-test-resources</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <!-- Change all TCP ports from "xxxx" to "3xxxx" -->
+                                        <replace
+                                            file="${container.unpack.directory}/glassfish3/glassfish/domains/domain1/config/domain.xml"
+                                            token="port=&quot;8080&quot;" value="port=&quot;38080&quot;" />
+                                        <replace
+                                            file="${container.unpack.directory}/glassfish3/glassfish/domains/domain1/config/domain.xml"
+                                            token="port=&quot;8181&quot;" value="port=&quot;38181&quot;" />
+                                        <replace
+                                            file="${container.unpack.directory}/glassfish3/glassfish/domains/domain1/config/domain.xml"
+                                            token="port=&quot;4848&quot;" value="port=&quot;34848&quot;" />
+                                        <replace
+                                            file="${container.unpack.directory}/glassfish3/glassfish/domains/domain1/config/domain.xml"
+                                            token="port=&quot;3700&quot;" value="port=&quot;33700&quot;" />
+                                        <replace
+                                            file="${container.unpack.directory}/glassfish3/glassfish/domains/domain1/config/domain.xml"
+                                            token="port=&quot;8686&quot;" value="port=&quot;38686&quot;" />
+                                        <replace
+                                            file="${container.unpack.directory}/glassfish3/glassfish/domains/domain1/config/domain.xml"
+                                            token="port=&quot;7676&quot;" value="port=&quot;37676&quot;" />
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
 
     </profiles>
 

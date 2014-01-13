@@ -95,4 +95,12 @@
 
         </configuration>
     </container>
+
+    <container qualifier="glassfish-build-managed-3">
+        <configuration>
+            <property name="glassFishHome">${arquillian.glassfish3_home}</property>
+            <property name="adminPort">34848</property>
+        </configuration>
+    </container>
+
 </arquillian>
