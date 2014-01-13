@@ -103,4 +103,11 @@
         </configuration>
     </container>
 
+    <container qualifier="glassfish-build-managed-4">
+        <configuration>
+            <property name="glassFishHome">${arquillian.glassfish4_home}</property>
+            <property name="adminPort">24848</property>
+        </configuration>
+    </container>
+
 </arquillian>
