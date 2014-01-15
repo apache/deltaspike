@@ -57,7 +57,8 @@ public class PartialBeanAsAbstractClassTest
 
         if (CdiContainerUnderTest.is("owb-.*")   ||
             CdiContainerUnderTest.is("tomee-.*") ||
-            CdiContainerUnderTest.is("wildfly-.*"))
+            CdiContainerUnderTest.is("wildfly-.*") ||
+            CdiContainerUnderTest.is("glassfish-.*"))
         {
             JavaArchive javassistJar = ShrinkWrap.create(JavaArchive.class, "dsjavassist.jar")
                     .addPackages(true, "javassist");
