@@ -1007,7 +1007,7 @@
             <id>glassfish-build-managed-3</id>
 
             <properties>
-                <cdicontainer.version>weld-1.1.8</cdicontainer.version>
+                <cdicontainer.version>glassfish-${glassfish3.version}</cdicontainer.version>
             </properties>
 
             <dependencies>
@@ -1111,6 +1111,16 @@
                                         <replace
                                             file="${container.unpack.directory}/glassfish3/glassfish/domains/domain1/config/domain.xml"
                                             token="port=&quot;7676&quot;" value="port=&quot;37676&quot;" />
+
+                                        <!-- Replace the default datasource with an in-memory one -->
+                                        <replace
+                                            file="${container.unpack.directory}/glassfish3/glassfish/domains/domain1/config/domain.xml"
+                                            token="datasource-classname=&quot;org.apache.derby.jdbc.ClientDataSource&quot;"
+                                            value="datasource-classname=&quot;org.apache.derby.jdbc.EmbeddedDataSource&quot;" />
+                                        <replace
+                                            file="${container.unpack.directory}/glassfish3/glassfish/domains/domain1/config/domain.xml"
+                                            token="value=&quot;sun-appserv-samples&quot;" value="value=&quot;memory:deltaspike&quot;" />
+
                                     </target>
                                 </configuration>
                             </execution>
@@ -1131,7 +1141,7 @@
             <id>glassfish-build-managed-4</id>
 
             <properties>
-                <cdicontainer.version>weld-2.0.0.SP1</cdicontainer.version>
+                <cdicontainer.version>glassfish-${glassfish4.version}</cdicontainer.version>
             </properties>
 
             <dependencies>
@@ -1236,6 +1246,16 @@
                                         <replace
                                             file="${container.unpack.directory}/glassfish4/glassfish/domains/domain1/config/domain.xml"
                                             token="value=&quot;7676&quot;" value="value=&quot;27676&quot;" />
+
+                                        <!-- Replace the default datasource with an in-memory one -->
+                                        <replace
+                                            file="${container.unpack.directory}/glassfish4/glassfish/domains/domain1/config/domain.xml"
+                                            token="datasource-classname=&quot;org.apache.derby.jdbc.ClientDataSource&quot;"
+                                            value="datasource-classname=&quot;org.apache.derby.jdbc.EmbeddedDataSource&quot;" />
+                                        <replace
+                                            file="${container.unpack.directory}/glassfish4/glassfish/domains/domain1/config/domain.xml"
+                                            token="value=&quot;sun-appserv-samples&quot;" value="value=&quot;memory:deltaspike&quot;" />
+
                                     </target>
                                 </configuration>
                             </execution>

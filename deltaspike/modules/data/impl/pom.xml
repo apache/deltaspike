@@ -217,6 +217,32 @@
             </build>
         </profile>
         <profile>
+            <id>glassfish-build-managed-3</id>
+            <build>
+                <testResources>
+                    <testResource>
+                        <directory>src/test/resources</directory>
+                    </testResource>
+                    <testResource>
+                        <directory>src/test/resources-glassfish</directory>
+                    </testResource>
+                </testResources>
+            </build>
+        </profile>
+        <profile>
+            <id>glassfish-build-managed-4</id>
+            <build>
+                <testResources>
+                    <testResource>
+                        <directory>src/test/resources</directory>
+                    </testResource>
+                    <testResource>
+                        <directory>src/test/resources-glassfish</directory>
+                    </testResource>
+                </testResources>
+            </build>
+        </profile>
+        <profile>
             <id>tomee-build-managed</id>
             <build>
                 <testResources>

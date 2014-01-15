@@ -152,6 +152,19 @@ public abstract class TestDeployments
             }
         }
 
+        /*
+         * We need to add Javassist in case of Glassfish for the partial beans to work correctly. But as Javassist is
+         * not on the test classpath like for the OWB and TomEE profiles, it is added using the Shrinkwrap Maven
+         * resolver.
+         */
+        if (CdiContainerUnderTest.is("glassfish-.*"))
+        {
+            webArchive.addAsLibraries(Maven.resolver()
+                    .resolve("javassist:javassist:3.12.0.GA")
+                    .withTransitivity()
+                    .asFile());
+        }
+
         return webArchive;
     }
 
