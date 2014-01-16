@@ -25,7 +25,7 @@ import org.apache.deltaspike.core.spi.scope.window.WindowContext;
 import javax.enterprise.inject.Typed;
 
 @Typed()
-class InjectableWindowContext implements WindowContext
+public class InjectableWindowContext implements WindowContext
 {
     private static final long serialVersionUID = -3606786361833889628L;
 
