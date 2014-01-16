@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.apache.deltaspike.examples</groupId>
+        <artifactId>examples-project</artifactId>
+        <version>0.6-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>deltaspike-jsf-playground</artifactId>
+
+    <name>Apache DeltaSpike JSF Playground</name>
+
+    <packaging>war</packaging>
+
+    <properties>
+        <deploy.skip>true</deploy.skip>
+    </properties>
+
+    <profiles>
+        <profile>
+            <!--
+             * Run it with: mvn clean package tomee:run -PtomeeConfig
+             *
+             * For debugging add: -Dopenejb.server.debug=true
+             *
+             * The application can be browsed under http://localhost:8080/ds
+             -->
+            <id>tomeeConfig</id>
+            <build>
+                <defaultGoal>install</defaultGoal>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>3.0</version>
+                        <configuration>
+                            <source>1.6</source>
+                            <target>1.6</target>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.openejb.maven</groupId>
+                        <artifactId>tomee-maven-plugin</artifactId>
+                        <version>1.0.1</version>
+                        <configuration>
+                            <tomeeVersion>${tomee.version}</tomeeVersion>
+                        </configuration>
+
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+    </profiles>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.apache.myfaces.core</groupId>
+            <artifactId>myfaces-api</artifactId>
+            <version>${myfaces2.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- DeltaSpike modules -->
+        <dependency>
+            <groupId>org.apache.deltaspike.core</groupId>
+            <artifactId>deltaspike-core-api</artifactId>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.deltaspike.core</groupId>
+            <artifactId>deltaspike-core-impl</artifactId>
+            <scope>compile</scope>
+            <!-- compile since we extends DefaultMessageResolver -->
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.deltaspike.modules</groupId>
+            <artifactId>deltaspike-jsf-module-api</artifactId>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.deltaspike.modules</groupId>
+            <artifactId>deltaspike-jsf-module-impl</artifactId>
+            <scope>runtime</scope>
+
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <finalName>ds</finalName>
+    </build>
+</project>
+
