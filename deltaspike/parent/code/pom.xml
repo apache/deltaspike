@@ -765,7 +765,7 @@
                         <version>${maven.surefire.plugin.version}</version>
                         <configuration>
                             <systemProperties>
-                                <arquillian.launch>jbossas-build-managed-7</arquillian.launch>
+                                <arquillian.launch>wildfly-build-managed</arquillian.launch>
                                 <arquillian.jboss_home>
                                     ${container.unpack.directory}/wildfly-${wildfly.version}
                                 </arquillian.jboss_home>
