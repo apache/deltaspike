@@ -35,8 +35,9 @@
 
     <modules>
         <module>jse-examples</module>
-		<module>jsf-examples</module>
-    </modules>
+	<module>jsf-examples</module>
+    <module>jsf-playground</module>
+  </modules>
 
     <properties>
         <deploy.skip>false</deploy.skip>
@@ -74,4 +75,3 @@
         </plugins>
     </build>
 </project>
-
