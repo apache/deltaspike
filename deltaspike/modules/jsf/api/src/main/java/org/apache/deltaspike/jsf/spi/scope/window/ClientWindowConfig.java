@@ -53,8 +53,6 @@ public interface ClientWindowConfig
          */
         DELEGATED,
 
-        URL,
-
         /**
          * If you set this mode, you also need to provide an own {@link ClientWindow} implementation.
          */

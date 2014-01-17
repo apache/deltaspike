@@ -111,7 +111,7 @@ public class DefaultClientWindow implements ClientWindow
             return ClientWindowAdapter.getWindowIdFromJsf(facesContext);
         }
 
-        if (ClientWindowRenderMode.URL.equals(clientWindowRenderMode))
+        if (ClientWindowRenderMode.LAZY.equals(clientWindowRenderMode))
         {
             ExternalContext externalContext = facesContext.getExternalContext();
 
@@ -306,7 +306,7 @@ public class DefaultClientWindow implements ClientWindow
         {
             facesContext.getExternalContext().getClientWindow().disableClientWindowRenderMode(facesContext);
         }
-        else if (ClientWindowRenderMode.URL.equals(clientWindowRenderMode))
+        else if (ClientWindowRenderMode.LAZY.equals(clientWindowRenderMode))
         {
             Map<Object, Object> attrMap = facesContext.getAttributes();
             attrMap.put(PER_USE_CLIENT_WINDOW_URL_QUERY_PARAMETER_DISABLED_KEY, Boolean.TRUE);
@@ -322,7 +322,7 @@ public class DefaultClientWindow implements ClientWindow
         {
             facesContext.getExternalContext().getClientWindow().enableClientWindowRenderMode(facesContext);
         }
-        else if (ClientWindowRenderMode.URL.equals(clientWindowRenderMode))
+        else if (ClientWindowRenderMode.LAZY.equals(clientWindowRenderMode))
         {
             Map<Object, Object> attrMap = facesContext.getAttributes();
             attrMap.remove(PER_USE_CLIENT_WINDOW_URL_QUERY_PARAMETER_DISABLED_KEY);
@@ -334,7 +334,7 @@ public class DefaultClientWindow implements ClientWindow
     {
         ClientWindowRenderMode clientWindowRenderMode = clientWindowConfig.getClientWindowRenderMode(facesContext);
 
-        if (ClientWindowRenderMode.URL.equals(clientWindowRenderMode))
+        if (ClientWindowRenderMode.LAZY.equals(clientWindowRenderMode))
         {
             Map<Object, Object> attrMap = facesContext.getAttributes();
             return  !attrMap.containsKey(PER_USE_CLIENT_WINDOW_URL_QUERY_PARAMETER_DISABLED_KEY);
@@ -348,7 +348,7 @@ public class DefaultClientWindow implements ClientWindow
     {
         ClientWindowRenderMode clientWindowRenderMode = clientWindowConfig.getClientWindowRenderMode(facesContext);
 
-        if (ClientWindowRenderMode.URL.equals(clientWindowRenderMode))
+        if (ClientWindowRenderMode.LAZY.equals(clientWindowRenderMode))
         {
             String windowId = getWindowId(facesContext);
             if (windowId != null)
