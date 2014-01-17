@@ -24,6 +24,8 @@ import org.apache.deltaspike.core.spi.scope.window.WindowContext;
 
 import javax.enterprise.inject.Typed;
 
+//keep it public for supporting #{dsWindowContext.getCurrentWindowId()} in addition to
+//#{dsWindowContext.currentWindowId}
 @Typed()
 public class InjectableWindowContext implements WindowContext
 {
