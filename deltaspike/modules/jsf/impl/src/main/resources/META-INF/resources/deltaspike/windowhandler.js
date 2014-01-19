@@ -204,7 +204,7 @@ window.onload = function(evt) {
             jsf.ajax.addOnEvent(jsfAjaxHandler);
             
             if (window.$ && window.PrimeFaces) {
-                $(document).on('pfAjaxComplete', pfAjaxHandler);
+                $(document).on('pfAjaxSuccess', pfAjaxHandler);
             }
         }
     }
