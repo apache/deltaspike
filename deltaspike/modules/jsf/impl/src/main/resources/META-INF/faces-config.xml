@@ -32,6 +32,7 @@
         <view-handler>org.apache.deltaspike.jsf.impl.view.DeltaSpikeViewHandler</view-handler>
         <navigation-handler>org.apache.deltaspike.jsf.impl.navigation.DeltaSpikeNavigationHandler</navigation-handler>
         <action-listener>org.apache.deltaspike.jsf.impl.listener.action.DeltaSpikeActionListener</action-listener>
+        <resource-handler>org.apache.deltaspike.jsf.impl.resource.DeltaSpikeResourceHandler</resource-handler>
 
         <system-event-listener>
             <system-event-listener-class>org.apache.deltaspike.jsf.impl.listener.system.JsfSystemEventBroadcaster</system-event-listener-class>
