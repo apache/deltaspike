@@ -74,7 +74,7 @@ function equalsIgnoreCase(source, destination) {
 
 /** This method will be called onWindowLoad and after AJAX success */
 function applyWindowId() {
-    if (isHtml5()) { // onClick handling
+    if (window.deltaspikeClientWindowRenderMode === 'CLIENTWINDOW' && isHtml5()) { // onClick handling
         var links = document.getElementsByTagName("a");
         for (var i = 0; i < links.length; i++) {
             if (!links[i].onclick) {
@@ -108,7 +108,7 @@ function applyWindowId() {
             form.appendChild(windowIdHolder);
         }
 
-        windowIdHolder.value = window.deltaspikeJsWindowId;
+        windowIdHolder.value = window.deltaspikeWindowId;
     }
 }
 
@@ -155,9 +155,18 @@ function setUrlParam(baseUrl, paramName, paramValue) {
 // this method runs to ensure that windowIds get checked even if no windowhandler.html is used
 function assertWindowId() {
     if (!window.name || window.name.length < 1) {
-        url = setUrlParam(window.location.href, 'windowId', null);
         window.name = 'tempWindowId';
-        window.location = url;
+        window.location = setUrlParam(window.location.href, 'dswid', null);
+    }
+    else if (window.deltaspikeClientWindowRenderMode === 'LAZY') {
+        var dswid = getUrlParameter('dswid');
+        if (window.name === 'tempWindowId') {
+            window.name = dswid;
+        }
+        else if (window.name !== dswid) {
+            // redirect with current window.name / windowId
+            window.location = setUrlParam(window.location.href, 'dswid', window.name);
+        }
     }
 }
 
@@ -181,13 +190,15 @@ var ajaxOnClick = function ajaxDecorateClick(event) {
 var oldWindowOnLoad = window.onload;
 
 window.onload = function(evt) {
-    try {
-        (oldWindowOnLoad)? oldWindowOnLoad(evt): null;
-    } finally {
-        eraseRequestCookie(); // manually erase the old dsRid cookie because Firefox doesn't do it properly
-        assertWindowId();
-        applyWindowId();
-        jsf.ajax.addOnEvent(ajaxOnClick);
+    if (window.deltaspikeClientWindowRenderMode === 'LAZY' || window.deltaspikeClientWindowRenderMode === 'CLIENTWINDOW') {
+        try {
+            (oldWindowOnLoad)? oldWindowOnLoad(evt): null;
+        } finally {
+            eraseRequestCookie(); // manually erase the old dsRid cookie because Firefox doesn't do it properly
+            assertWindowId();
+            applyWindowId();
+            jsf.ajax.addOnEvent(ajaxOnClick);
+        }
     }
 }
 })();

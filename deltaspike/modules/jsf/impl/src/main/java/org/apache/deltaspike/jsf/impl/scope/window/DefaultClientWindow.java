@@ -36,6 +36,7 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import org.apache.deltaspike.core.util.StringUtils;
 
 import static org.apache.deltaspike.jsf.spi.scope.window.ClientWindowConfig.ClientWindowRenderMode;
 
@@ -117,12 +118,12 @@ public class DefaultClientWindow implements ClientWindow
 
             String windowId = (String) ClientWindowHelper.getInitialRedirectWindowId(facesContext);
 
-            if (windowId == null)
+            if (StringUtils.isEmpty(windowId))
             {
                 windowId = externalContext.getRequestParameterMap().get(DELTASPIKE_WINDOW_ID_URL_PARAM);
             }
 
-            if (windowId == null)
+            if (StringUtils.isEmpty(windowId))
             {
                 ClientWindowHelper.handleInitialRedirect(facesContext, generateNewWindowId());
                 facesContext.responseComplete();

@@ -29,6 +29,7 @@ import java.io.IOException;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.spi.scope.window.WindowContext;
+import org.apache.deltaspike.jsf.spi.scope.window.ClientWindowConfig;
 
 @FacesRenderer(componentFamily = WindowIdComponent.COMPONENT_FAMILY, rendererType = WindowIdComponent.COMPONENT_TYPE)
 @ResourceDependencies( {
@@ -37,6 +38,7 @@ import org.apache.deltaspike.core.spi.scope.window.WindowContext;
 public class WindowIdHtmlRenderer extends Renderer
 {
     private volatile WindowContext windowContext;
+    private volatile ClientWindowConfig clientWindowConfig;
 
     /**
      * 'deltaspikeJsWindowId' will be used to:
@@ -52,11 +54,13 @@ public class WindowIdHtmlRenderer extends Renderer
         super.encodeBegin(context, component);
 
         String windowId = getWindowContext().getCurrentWindowId();
+        String mode = getClientWindowConfig().getClientWindowRenderMode(context).name();
 
         ResponseWriter writer = context.getResponseWriter();
         writer.startElement("script", component);
         writer.writeAttribute("type", "text/javascript", null);
-        writer.write("window.deltaspikeJsWindowId=" + windowId + ";");
+        writer.write("window.deltaspikeWindowId='" + windowId + "';");
+        writer.write("window.deltaspikeClientWindowRenderMode='" + mode + "';");
 
         writer.endElement("script");
     }
@@ -75,5 +79,21 @@ public class WindowIdHtmlRenderer extends Renderer
         }
 
         return windowContext;
+    }
+    
+    private ClientWindowConfig getClientWindowConfig()
+    {
+        if (clientWindowConfig == null)
+        {
+            synchronized (this)
+            {
+                if (clientWindowConfig == null)
+                {
+                    clientWindowConfig = BeanProvider.getContextualReference(ClientWindowConfig.class);
+                }
+            }
+        }
+
+        return clientWindowConfig;
     }
 }
