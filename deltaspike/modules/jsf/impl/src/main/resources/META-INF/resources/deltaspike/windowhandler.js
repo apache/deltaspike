@@ -181,10 +181,14 @@ function eraseRequestCookie() {
     }
 }
 
-var ajaxOnClick = function ajaxDecorateClick(event) {
+var jsfAjaxHandler = function(event) {
     if (event.status=="success") {
         applyWindowId();
     }
+}
+
+var pfAjaxHandler = function() {
+    applyWindowId();
 }
 
 var oldWindowOnLoad = window.onload;
@@ -197,7 +201,11 @@ window.onload = function(evt) {
             eraseRequestCookie(); // manually erase the old dsRid cookie because Firefox doesn't do it properly
             assertWindowId();
             applyWindowId();
-            jsf.ajax.addOnEvent(ajaxOnClick);
+            jsf.ajax.addOnEvent(jsfAjaxHandler);
+            
+            if (window.$ && window.PrimeFaces) {
+                $(document).on('pfAjaxComplete', pfAjaxHandler);
+            }
         }
     }
 }
