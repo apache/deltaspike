@@ -311,6 +311,15 @@
             </roles>
             <timezone>-5</timezone>
         </developer>
+        <developer>
+            <id>tandraschko</id>
+            <name>Thomas Andraschko</name>
+            <email>tandraschko@apache.org</email>
+            <roles>
+                <role>Committer</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
     </developers>
 
 
