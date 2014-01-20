@@ -20,6 +20,7 @@ package org.apache.deltaspike.jsf.api.config;
 
 import org.apache.deltaspike.core.api.config.DeltaSpikeConfig;
 import org.apache.deltaspike.core.util.ClassUtils;
+import org.apache.deltaspike.jsf.spi.scope.window.ClientWindowConfig;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.faces.context.FacesContext;
@@ -87,7 +88,23 @@ public class JsfModuleConfig implements DeltaSpikeConfig
         return true;
     }
 
-    public boolean isDelegatedWindowHandlingEnabled()
+    /**
+     * If the window-handling of JSF 2.2+ is enabled,
+     * {@link org.apache.deltaspike.jsf.spi.scope.window.ClientWindowConfig.ClientWindowRenderMode#DELEGATED}
+     * will be returned. In all other cases <code>null</code> gets returned as application wide default value.
+     * That leads to a default-handling per session (which includes logic for handling bots,...)
+     * @return application-default for the window-mode
+     */
+    public ClientWindowConfig.ClientWindowRenderMode getDefaultWindowMode()
+    {
+        if (isDelegatedWindowHandlingEnabled())
+        {
+            return ClientWindowConfig.ClientWindowRenderMode.DELEGATED;
+        }
+        return null;
+    }
+
+    protected boolean isDelegatedWindowHandlingEnabled()
     {
         if (ClassUtils.tryToLoadClassForName(CLIENT_WINDOW_CLASS_NAME) == null)
         {

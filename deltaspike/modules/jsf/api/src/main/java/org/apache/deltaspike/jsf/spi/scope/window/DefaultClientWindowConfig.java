@@ -74,12 +74,12 @@ public class DefaultClientWindowConfig implements ClientWindowConfig, Serializab
     @Inject
     private ProjectStage projectStage;
 
-    private boolean useDelegatedWindowHandling;
+    private ClientWindowRenderMode defaultClientWindowRenderMode;
 
     @PostConstruct
     protected void init()
     {
-        this.useDelegatedWindowHandling = this.jsfModuleConfig.isDelegatedWindowHandlingEnabled();
+        this.defaultClientWindowRenderMode = this.jsfModuleConfig.getDefaultWindowMode();
     }
 
     @Override
@@ -131,9 +131,9 @@ public class DefaultClientWindowConfig implements ClientWindowConfig, Serializab
     {
         if (!isJavaScriptEnabled())
         {
-            if (this.useDelegatedWindowHandling)
+            if (this.defaultClientWindowRenderMode != null)
             {
-                return ClientWindowRenderMode.DELEGATED;
+                return this.defaultClientWindowRenderMode;
             }
             return ClientWindowRenderMode.NONE;
         }
@@ -150,11 +150,10 @@ public class DefaultClientWindowConfig implements ClientWindowConfig, Serializab
             return ClientWindowRenderMode.NONE;
         }
 
-        if (this.useDelegatedWindowHandling)
+        if (this.defaultClientWindowRenderMode != null)
         {
-            return ClientWindowRenderMode.DELEGATED;
+            return this.defaultClientWindowRenderMode;
         }
-
         return ClientWindowRenderMode.CLIENTWINDOW;
     }
 

@@ -23,6 +23,7 @@ import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;
 import org.apache.deltaspike.jsf.impl.scope.window.ClientWindowAdapter;
 import org.apache.deltaspike.jsf.spi.scope.window.ClientWindow;
+import org.apache.deltaspike.jsf.spi.scope.window.ClientWindowConfig;
 
 import javax.faces.context.FacesContext;
 import javax.faces.lifecycle.Lifecycle;
@@ -152,8 +153,8 @@ public class JsfClientWindowAwareLifecycleWrapper extends LifecycleWrapper
         // switch into paranoia mode
         if (initialized == null)
         {
-            delegateWindowHandling =
-                BeanProvider.getContextualReference(JsfModuleConfig.class).isDelegatedWindowHandlingEnabled();
+            delegateWindowHandling = ClientWindowConfig.ClientWindowRenderMode.DELEGATED.equals(
+                BeanProvider.getContextualReference(JsfModuleConfig.class).getDefaultWindowMode());
 
             initialized = true;
         }
