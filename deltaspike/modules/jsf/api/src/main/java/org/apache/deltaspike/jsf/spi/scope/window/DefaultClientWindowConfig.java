@@ -119,12 +119,10 @@ public class DefaultClientWindowConfig implements ClientWindowConfig, Serializab
     }
 
     /**
-     * By default we use {@link ClientWindowRenderMode#CLIENTWINDOW} unless
-     * we detect a bot.
+     * By default we use {@link ClientWindowRenderMode#LAZY} unless
+     * we detect a bot. Use {@link org.apache.deltaspike.jsf.api.config.JsfModuleConfig#getDefaultWindowMode()}
+     * to change this default behavior. Alternative:
      * Override this method to exclude other requests from getting accessed.
-     *
-     * @param facesContext
-     * @return
      */
     @Override
     public ClientWindowRenderMode getClientWindowRenderMode(FacesContext facesContext)
@@ -133,7 +131,7 @@ public class DefaultClientWindowConfig implements ClientWindowConfig, Serializab
         {
             if (this.defaultClientWindowRenderMode != null)
             {
-                return this.defaultClientWindowRenderMode;
+                return this.defaultClientWindowRenderMode; //currently mainly needed for 'DELEGATED'
             }
             return ClientWindowRenderMode.NONE;
         }
@@ -154,7 +152,7 @@ public class DefaultClientWindowConfig implements ClientWindowConfig, Serializab
         {
             return this.defaultClientWindowRenderMode;
         }
-        return ClientWindowRenderMode.CLIENTWINDOW;
+        return ClientWindowRenderMode.LAZY;
     }
 
     @Override
