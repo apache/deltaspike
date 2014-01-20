@@ -116,7 +116,7 @@ public class DefaultClientWindow implements ClientWindow
         {
             ExternalContext externalContext = facesContext.getExternalContext();
 
-            String windowId = (String) ClientWindowHelper.getInitialRedirectWindowId(facesContext);
+            String windowId = ClientWindowHelper.getInitialRedirectWindowId(facesContext);
 
             if (StringUtils.isEmpty(windowId))
             {
