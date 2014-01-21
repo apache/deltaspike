@@ -47,7 +47,7 @@ public class JsfModuleConfig implements DeltaSpikeConfig
      */
     public boolean isInitialRedirectEnabled()
     {
-        return false; //TODO re-visit it
+        return true;
     }
 
     /**
