@@ -83,13 +83,7 @@ public class BeanManagedUserTransactionStrategy extends ResourceLocalTransaction
         {
             UserTransaction userTransaction = resolveUserTransaction();
 
-            if (userTransaction == null)
-            {
-                // if there is a CMT EJB call active, then we do not set any timeout
-                return;
-            }
-
-            if (userTransaction.getStatus() != Status.STATUS_ACTIVE)
+            if (userTransaction != null && userTransaction.getStatus() != Status.STATUS_ACTIVE)
             {
                 userTransaction.setTransactionTimeout(transactionTimeout);
             }
@@ -182,7 +176,7 @@ public class BeanManagedUserTransactionStrategy extends ResourceLocalTransaction
         {
             return JndiUtils.lookup(USER_TRANSACTION_JNDI_NAME, UserTransaction.class);
         }
-        catch (Exception ne)
+        catch (Exception e)
         {
             // do nothing it was just a try
             return null;
@@ -197,7 +191,8 @@ public class BeanManagedUserTransactionStrategy extends ResourceLocalTransaction
     private class UserTransactionAdapter implements EntityTransaction
     {
         private final UserTransaction userTransaction;
-        private TransactionSynchronizationRegistry transactionSynchronizationRegistry = null;
+        //needed for calls through an EJB with CMT
+        private final TransactionSynchronizationRegistry transactionSynchronizationRegistry;
 
         public UserTransactionAdapter()
         {
@@ -205,12 +200,17 @@ public class BeanManagedUserTransactionStrategy extends ResourceLocalTransaction
 
             if (this.userTransaction == null)
             {
-                transactionSynchronizationRegistry = resolveTransactionRegistry();
+                this.transactionSynchronizationRegistry = resolveTransactionRegistry();
 
-                if (transactionSynchronizationRegistry.getTransactionStatus() != Status.STATUS_ACTIVE)
+                if (this.transactionSynchronizationRegistry.getTransactionStatus() != Status.STATUS_ACTIVE)
                 {
-                    throw new RuntimeException("invalid state/badly configured JTA datasource");
+                    throw new IllegalStateException(
+                        "The CMT is not active. Please check the config of the Data-Source.");
                 }
+            }
+            else
+            {
+                this.transactionSynchronizationRegistry = null;
             }
         }
 
@@ -222,10 +222,9 @@ public class BeanManagedUserTransactionStrategy extends ResourceLocalTransaction
         @Override
         public void begin()
         {
-
             if (this.userTransaction == null)
             {
-                throw new IllegalStateException("cannot begin UserTransaction in CMT environment");
+                throw new UnsupportedOperationException("A CMT is active. This operation is only supported with BMT.");
             }
 
             try
@@ -257,9 +256,8 @@ public class BeanManagedUserTransactionStrategy extends ResourceLocalTransaction
         {
             if (this.userTransaction == null)
             {
-                throw new IllegalStateException("cannot commit UserTransaction in CMT environment");
+                throw new UnsupportedOperationException("A CMT is active. This operation is only supported with BMT.");
             }
-
 
             try
             {
@@ -290,7 +288,7 @@ public class BeanManagedUserTransactionStrategy extends ResourceLocalTransaction
         {
             if (this.userTransaction == null)
             {
-                throw new IllegalStateException("cannot rollback UserTransaction in CMT environment");
+                throw new UnsupportedOperationException("A CMT is active. This operation is only supported with BMT.");
             }
 
             try
@@ -332,7 +330,7 @@ public class BeanManagedUserTransactionStrategy extends ResourceLocalTransaction
         {
             try
             {
-                return this.getStatus() == Status.STATUS_MARKED_ROLLBACK;
+                return getTransactionStatus() == Status.STATUS_MARKED_ROLLBACK;
             }
             catch (SystemException e)
             {
@@ -349,8 +347,8 @@ public class BeanManagedUserTransactionStrategy extends ResourceLocalTransaction
             //we can't use the status of the overall
             try
             {
-                return this.getStatus() != Status.STATUS_NO_TRANSACTION &&
-                        this.getStatus() != Status.STATUS_UNKNOWN; //TODO re-visit it
+                return this.getTransactionStatus() != Status.STATUS_NO_TRANSACTION &&
+                        this.getTransactionStatus() != Status.STATUS_UNKNOWN; //TODO re-visit it
             }
             catch (SystemException e)
             {
@@ -362,19 +360,19 @@ public class BeanManagedUserTransactionStrategy extends ResourceLocalTransaction
         {
             //if the following gets changed, it needs to be tested with different constellations
             //(normal exception, timeout,...) as well as servers
-            return this.getStatus() != Status.STATUS_COMMITTED &&
-                    this.getStatus() != Status.STATUS_NO_TRANSACTION &&
-                    this.getStatus() != Status.STATUS_UNKNOWN;
+            return this.getTransactionStatus() != Status.STATUS_COMMITTED &&
+                    this.getTransactionStatus() != Status.STATUS_NO_TRANSACTION &&
+                    this.getTransactionStatus() != Status.STATUS_UNKNOWN;
         }
 
         protected boolean isTransactionReadyToCommit() throws SystemException
         {
-            return this.getStatus() == Status.STATUS_ACTIVE ||
-                    this.getStatus() == Status.STATUS_PREPARING ||
-                    this.getStatus() == Status.STATUS_PREPARED;
+            return getTransactionStatus() == Status.STATUS_ACTIVE ||
+                    getTransactionStatus() == Status.STATUS_PREPARING ||
+                    getTransactionStatus() == Status.STATUS_PREPARED;
         }
 
-        protected int getStatus() throws SystemException
+        protected int getTransactionStatus() throws SystemException
         {
             if (this.userTransaction != null)
             {
