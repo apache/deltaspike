@@ -21,6 +21,7 @@ package org.apache.deltaspike.test.jsf.impl.scope.view;
 
 import java.net.URL;
 
+import org.apache.deltaspike.test.jsf.impl.config.TestJsfModuleConfig;
 import org.apache.deltaspike.test.jsf.impl.scope.view.beans.ViewScopedBackingBean;
 import org.apache.deltaspike.test.jsf.impl.util.ArchiveUtils;
 import org.apache.deltaspike.test.category.WebProfileCategory;
@@ -64,6 +65,7 @@ public class ViewScopedContextTest
         return ShrinkWrap
                 .create(WebArchive.class, "viewScopedContextTest.war")
                 .addPackage(ViewScopedBackingBean.class.getPackage())
+                .addClass(TestJsfModuleConfig.class)
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndJsfArchive())
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeSecurityArchive())
                 .addAsWebInfResource("default/WEB-INF/web.xml", "web.xml")

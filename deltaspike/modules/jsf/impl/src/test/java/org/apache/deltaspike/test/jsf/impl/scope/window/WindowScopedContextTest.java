@@ -23,6 +23,7 @@ import java.net.URL;
 import java.util.logging.Logger;
 
 import org.apache.deltaspike.test.category.WebProfileCategory;
+import org.apache.deltaspike.test.jsf.impl.config.TestJsfModuleConfig;
 import org.apache.deltaspike.test.jsf.impl.scope.window.beans.WindowScopedBackingBean;
 import org.apache.deltaspike.test.jsf.impl.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -66,6 +67,7 @@ public class WindowScopedContextTest
         return ShrinkWrap
                 .create(WebArchive.class, "windowScopedContextTest.war")
                 .addPackage(WindowScopedBackingBean.class.getPackage())
+                .addClass(TestJsfModuleConfig.class)
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndJsfArchive())
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeSecurityArchive())
                 .addAsWebInfResource("default/WEB-INF/web.xml", "web.xml")

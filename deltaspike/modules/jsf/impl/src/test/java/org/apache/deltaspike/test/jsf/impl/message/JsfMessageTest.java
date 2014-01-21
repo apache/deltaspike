@@ -22,6 +22,7 @@ package org.apache.deltaspike.test.jsf.impl.message;
 import java.net.URL;
 
 import org.apache.deltaspike.test.category.WebProfileCategory;
+import org.apache.deltaspike.test.jsf.impl.config.TestJsfModuleConfig;
 import org.apache.deltaspike.test.jsf.impl.message.beans.JsfMessageBackingBean;
 import org.apache.deltaspike.test.jsf.impl.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -62,6 +63,7 @@ public class JsfMessageTest
         return ShrinkWrap
                 .create(WebArchive.class, "jsfMessageTest.war")
                 .addPackage(JsfMessageBackingBean.class.getPackage())
+                .addClass(TestJsfModuleConfig.class)
                 .addAsResource("jsfMessageTest/UserMessage_en.properties")
                 .addAsResource("jsfMessageTest/UserMessage_de.properties")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndJsfArchive())

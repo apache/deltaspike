@@ -22,6 +22,7 @@ package org.apache.deltaspike.test.jsf.impl.scope.mapped;
 import java.net.URL;
 
 import org.apache.deltaspike.test.category.WebProfileCategory;
+import org.apache.deltaspike.test.jsf.impl.config.TestJsfModuleConfig;
 import org.apache.deltaspike.test.jsf.impl.scope.mapped.beans.JsfApplicationScopedBackingBean;
 import org.apache.deltaspike.test.jsf.impl.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -62,6 +63,7 @@ public class MappedJsfContextTest
         return ShrinkWrap
                 .create(WebArchive.class, "mappedJsfContetxtTest.war")
                 .addPackage(JsfApplicationScopedBackingBean.class.getPackage())
+                .addClass(TestJsfModuleConfig.class)
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndJsfArchive())
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeSecurityArchive())
                 .addAsWebInfResource("default/WEB-INF/web.xml", "web.xml")
