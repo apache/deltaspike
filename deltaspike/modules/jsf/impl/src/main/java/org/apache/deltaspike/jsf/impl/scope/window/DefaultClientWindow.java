@@ -90,6 +90,8 @@ public class DefaultClientWindow implements ClientWindow
      */
     private static final String DEFAULT_WINDOW_ID = "default";
 
+    private static final String WINDOW_ID_REQUEST_MAP_KEY =
+            ClientWindow.class.getName() + ".WindowId";
 
     @Inject
     private ClientWindowConfig clientWindowConfig;
@@ -104,23 +106,29 @@ public class DefaultClientWindow implements ClientWindow
     @Override
     public String getWindowId(FacesContext facesContext)
     {
+        ExternalContext externalContext = facesContext.getExternalContext();
+        Map<String, Object> requestMap = externalContext.getRequestMap();
+        
+        // try to lookup from cache
+        String windowId = (String) requestMap.get(WINDOW_ID_REQUEST_MAP_KEY);
+        if (windowId != null)
+        {
+            return windowId;
+        }
+        
         ClientWindowRenderMode clientWindowRenderMode = clientWindowConfig.getClientWindowRenderMode(facesContext);
         if (ClientWindowRenderMode.NONE.equals(clientWindowRenderMode))
         {
             // if this request should not get any window detection then we are done
-            return DEFAULT_WINDOW_ID;
+            windowId = DEFAULT_WINDOW_ID;
         }
-
-        if (ClientWindowRenderMode.DELEGATED.equals(clientWindowRenderMode))
+        else if (ClientWindowRenderMode.DELEGATED.equals(clientWindowRenderMode))
         {
-            return ClientWindowAdapter.getWindowIdFromJsf(facesContext);
+            windowId = ClientWindowAdapter.getWindowIdFromJsf(facesContext);
         }
-
-        if (ClientWindowRenderMode.LAZY.equals(clientWindowRenderMode))
+        else if (ClientWindowRenderMode.LAZY.equals(clientWindowRenderMode))
         {
-            ExternalContext externalContext = facesContext.getExternalContext();
-
-            String windowId = ClientWindowHelper.getInitialRedirectWindowId(facesContext);
+            windowId = ClientWindowHelper.getInitialRedirectWindowId(facesContext);
 
             if (StringUtils.isEmpty(windowId))
             {
@@ -133,51 +141,54 @@ public class DefaultClientWindow implements ClientWindow
                 {
                     ClientWindowHelper.handleInitialRedirect(facesContext, generateNewWindowId());
                     facesContext.responseComplete();
-                    return null;
+                    windowId = null;
                 }
                 else
                 {
-                    return generateNewWindowId();
+                    windowId = generateNewWindowId();
                 }
             }
-
-            return windowId;
         }
-
-        if (facesContext.isPostback())
+        else if (ClientWindowRenderMode.CLIENTWINDOW.equals(clientWindowRenderMode))
         {
-            return getPostBackWindowId(facesContext);
-        }
+            if (facesContext.isPostback())
+            {
+                windowId = getPostBackWindowId(facesContext);
+            }
+            else if (isNoscriptRequest(externalContext))
+            {
+                // the client has JavaScript disabled
+                clientWindowConfig.setJavaScriptEnabled(false);
 
-        ExternalContext externalContext = facesContext.getExternalContext();
+                windowId = DEFAULT_WINDOW_ID;
+            }
+            else
+            {
+                windowId = getVerifiedWindowIdFromCookie(externalContext);
 
-        // and now for the GET request stuff
-        if (isNoscriptRequest(externalContext))
-        {
-            // the client has JavaScript disabled
-            clientWindowConfig.setJavaScriptEnabled(false);
+                boolean newWindowIdRequested = false;
+                if (AUTOMATED_ENTRY_POINT_PARAMETER_KEY.equals(windowId))
+                {
+                    // this is a marker for generating a new windowId
+                    windowId = generateNewWindowId();
+                    newWindowIdRequested = true;
+                }
 
-            return DEFAULT_WINDOW_ID;
-        }
-
-        String windowId = getVerifiedWindowIdFromCookie(externalContext);
-
-        boolean newWindowIdRequested = false;
-        if (AUTOMATED_ENTRY_POINT_PARAMETER_KEY.equals(windowId))
-        {
-            // this is a marker for generating a new windowId
-            windowId = generateNewWindowId();
-            newWindowIdRequested = true;
-        }
-
-        if (windowId == null || newWindowIdRequested)
-        {
-            // GET request without windowId - send windowhandlerfilter.html to get the windowId
-            sendWindowHandlerHtml(externalContext, windowId);
-            facesContext.responseComplete();
+                if (windowId == null || newWindowIdRequested)
+                {
+                    // GET request without windowId - send windowhandlerfilter.html to get the windowId
+                    sendWindowHandlerHtml(externalContext, windowId);
+                    facesContext.responseComplete();
+                }
+            }
         }
 
         // we have a valid windowId - set it and continue with the request
+        if (windowId != null)
+        {
+            requestMap.put(WINDOW_ID_REQUEST_MAP_KEY, windowId);
+        }
+        
         return windowId;
     }
 

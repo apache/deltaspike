@@ -18,10 +18,11 @@
  */
 package org.apache.deltaspike.jsf.impl.util;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.Map.Entry;
 import javax.enterprise.inject.Typed;
-import javax.faces.component.UIViewRoot;
+import javax.faces.FacesException;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import org.apache.deltaspike.jsf.spi.scope.window.ClientWindow;
@@ -41,26 +42,27 @@ public abstract class ClientWindowHelper
     public static void handleInitialRedirect(FacesContext facesContext, String newWindowId)
     {
         // store the new windowId as context attribute to prevent infinite loops
-        // the #sendRedirect will append the windowId (from ClientWindow#getWindowId again) to the redirectUrl
+        // #sendRedirect will append the windowId (from ClientWindow#getWindowId again) to the redirectUrl
         facesContext.getAttributes().put(INITIAL_REDIRECT_WINDOW_ID, newWindowId);
 
         ExternalContext externalContext = facesContext.getExternalContext();
 
-        // send initial redirect to add the windowId to the current request URL
-        String viewId = facesContext.getApplication().getViewHandler().deriveViewId(
-                facesContext, externalContext.getRequestServletPath());
-
-        // The NavigationHandler tries to access the UIViewRoot but it isn't available because our
-        // ClientWindow will be initialized before the normal JSF lifecycle
-        UIViewRoot viewRoot = new UIViewRoot();
-        viewRoot.setViewId(viewId);
-        facesContext.setViewRoot(viewRoot);
-
-        String outcome = viewId + "?faces-redirect=true&includeViewParams=true";
-        // append it manually - includeViewParams doesn't work here because of the not fully initialized UIViewRoot
-        outcome = JsfUtils.addRequestParameters(externalContext, outcome, true);
-
-        facesContext.getApplication().getNavigationHandler().handleNavigation(facesContext, null, outcome);
+        String url = externalContext.getRequestScheme()
+                + "://" + externalContext.getRequestServerName()
+                + ":" + externalContext.getRequestServerPort()
+                + externalContext.getRequestContextPath()
+                + externalContext.getRequestServletPath();
+ 
+        url = JsfUtils.addRequestParameters(externalContext, url, true);
+        
+        try
+        {
+            externalContext.redirect(url);
+        }
+        catch (IOException e)
+        {
+            throw new FacesException("Could not send initial redirect!", e);
+        }
     }
 
     public static boolean isInitialRedirect(FacesContext facesContext)

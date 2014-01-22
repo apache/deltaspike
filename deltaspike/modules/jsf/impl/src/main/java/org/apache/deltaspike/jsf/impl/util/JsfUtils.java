@@ -179,6 +179,11 @@ public abstract class JsfUtils
      */
     public static String addRequestParameters(ExternalContext externalContext, String url, boolean encodeValues)
     {
+        if (externalContext.getRequestParameterValuesMap().isEmpty())
+        {
+            return url;
+        }
+        
         StringBuilder finalUrl = new StringBuilder(url);
         boolean existingParameters = url.contains("?");
 

@@ -33,7 +33,6 @@ public class TestJsfModuleConfig extends JsfModuleConfig
     @Override
     public ClientWindowConfig.ClientWindowRenderMode getDefaultWindowMode()
     {
-        //TODO check issue with LAZY
-        return ClientWindowConfig.ClientWindowRenderMode.CLIENTWINDOW;
+        return ClientWindowConfig.ClientWindowRenderMode.LAZY;
     }
 }
