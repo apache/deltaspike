@@ -27,8 +27,6 @@
     </engine>
     -->
 
-    <defaultProtocol type="Servlet 3.0" />
-
     <container qualifier="jbossas-managed-7">
         <configuration>
             <property name="javaVmArguments">-client -noverify -Xms64m -Xmx1024m -XX:MaxPermSize=512m -Dcdicontainer.version=${cdicontainer.version}</property>
