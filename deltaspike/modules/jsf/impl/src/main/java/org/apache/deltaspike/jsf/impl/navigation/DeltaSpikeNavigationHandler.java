@@ -68,9 +68,11 @@ public class DeltaSpikeNavigationHandler extends ConfigurableNavigationHandler i
         {
             this.wrapped.handleNavigation(context, fromAction, outcome);
         }
-
-        //don't refactor it - currently we need the lazy wrapping due to special jsf2 constellations
-        getWrappedNavigationHandler().handleNavigation(context, fromAction, outcome);
+        else
+        {
+            //don't refactor it - currently we need the lazy wrapping due to special jsf2 constellations
+            getWrappedNavigationHandler().handleNavigation(context, fromAction, outcome);
+        }
     }
 
     private boolean isUnhandledExceptionQueued(FacesContext context)
