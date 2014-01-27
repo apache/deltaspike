@@ -32,6 +32,7 @@ import javax.inject.Inject;
 import javax.interceptor.InvocationContext;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+
 import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.Set;
@@ -307,7 +308,8 @@ public class ResourceLocalTransactionStrategy implements TransactionStrategy
 
         if (entityManagerBean == null)
         {
-            return null;
+            throw new IllegalStateException("Cannot find an EntityManager qualified with [" + emQualifier.getName()
+                    + "]. Did you add a corresponding producer?");
         }
 
         return (EntityManager) beanManager.getReference(entityManagerBean, EntityManager.class,
