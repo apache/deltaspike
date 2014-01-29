@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.testcontrol.impl.jsf;
 
+import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.testcontrol.spi.ExternalContainer;
 import org.apache.myfaces.test.mock.MockApplicationFactory;
 import org.apache.myfaces.test.mock.MockExceptionHandlerFactory;
@@ -35,6 +36,7 @@ import org.apache.myfaces.test.mock.MockServletContext;
 import org.apache.myfaces.test.mock.lifecycle.MockLifecycleFactory;
 import org.apache.myfaces.test.mock.visit.MockVisitContextFactory;
 
+import javax.el.ExpressionFactory;
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.FactoryFinder;
@@ -50,47 +52,90 @@ import javax.faces.lifecycle.LifecycleFactory;
 import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import java.lang.annotation.Annotation;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
+//known restriction: faces-config.xml files are ignored
 public class MockedJsf2TestContainer implements ExternalContainer
 {
-    protected MockServletConfig config = null;
-    protected MockServletContext servletContext = null;
+    protected MockServletConfig servletConfig;
+    protected MockServletContext servletContext;
 
-    protected Lifecycle lifecycle = null;
-    protected RenderKit renderKit = null;
-    protected Application application = null;
+    protected Lifecycle lifecycle;
+    protected RenderKit renderKit;
+    protected Application application;
 
-    protected FacesContext facesContext = null;
-    protected MockHttpServletRequest request = null;
-    protected MockHttpServletResponse response = null;
-    protected MockHttpSession session = null;
+    protected FacesContext facesContext;
+    protected MockHttpServletRequest request;
+    protected MockHttpServletResponse response;
+    protected MockHttpSession session;
+
+    protected Map<String, String> containerConfig;
 
     public void boot()
     {
+        initContainerConfig();
         initServletObjects();
         initJsf();
+    }
+
+    protected void initContainerConfig()
+    {
+        containerConfig = new HashMap<String, String>();
+        for (Map.Entry<String, String> entry : ConfigResolver.getAllProperties().entrySet())
+        {
+            if (entry.getKey().startsWith("org.apache.myfaces.") || entry.getKey().startsWith("javax.faces.") ||
+                    entry.getKey().startsWith("facelets."))
+            {
+                containerConfig.put(entry.getKey(), entry.getValue());
+            }
+        }
     }
 
     protected void initServletObjects()
     {
         this.servletContext = new MockServletContext();
-        this.config = new MockServletConfig(this.servletContext);
+        this.servletConfig = new MockServletConfig(this.servletContext);
+        applyContainerConfig();
+    }
+
+    protected void applyContainerConfig()
+    {
+        //add the default values
+        servletContext.addInitParameter("javax.faces.PROJECT_STAGE", "UnitTest");
+        servletContext.addInitParameter("javax.faces.PARTIAL_STATE_SAVING", "true");
+        servletContext.addInitParameter("javax.faces.FACELETS_REFRESH_PERIOD", "-1");
+
+        servletContext.addInitParameter("org.apache.myfaces.INITIALIZE_ALWAYS_STANDALONE", "true");
+        servletContext.addInitParameter("org.apache.myfaces.spi.InjectionProvider",
+            "org.apache.myfaces.spi.impl.NoInjectionAnnotationInjectionProvider");
+        servletContext.addInitParameter("org.apache.myfaces.config.annotation.LifecycleProvider",
+            "org.apache.myfaces.config.annotation.NoInjectionAnnotationLifecycleProvider");
+        servletConfig.addInitParameter("org.apache.myfaces.CHECKED_VIEWID_CACHE_ENABLED", "false");
+
+        servletContext.addInitParameter(ExpressionFactory.class.getName(), "org.apache.el.ExpressionFactoryImpl");
+        //add custom values (might replace the default values)
+        for (Map.Entry<String, String> entry : containerConfig.entrySet())
+        {
+            servletContext.addInitParameter(entry.getKey(), entry.getValue());
+        }
     }
 
     protected void initJsf()
     {
-        initJsfFactories();
+        FactoryFinder.releaseFactories();
+
+        onPreInitJsf();
 
         initLifecycle();
         initApplication();
         initRenderKit();
     }
 
-    protected void initJsfFactories()
+    protected void onPreInitJsf()
     {
-        FactoryFinder.releaseFactories();
-
+        //init mocked jsf factories
         addFactory(FactoryFinder.APPLICATION_FACTORY, MockApplicationFactory.class.getName());
         addFactory(FactoryFinder.FACES_CONTEXT_FACTORY, MockFacesContextFactory.class.getName());
         addFactory(FactoryFinder.LIFECYCLE_FACTORY, MockLifecycleFactory.class.getName());
@@ -109,7 +154,7 @@ public class MockedJsf2TestContainer implements ExternalContainer
     {
         LifecycleFactory lifecycleFactory =
                 (LifecycleFactory) FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
-        this.lifecycle = lifecycleFactory.getLifecycle(LifecycleFactory.DEFAULT_LIFECYCLE);
+        this.lifecycle = lifecycleFactory.getLifecycle(getLifecycleId());
     }
 
     protected void initApplication()
@@ -151,7 +196,7 @@ public class MockedJsf2TestContainer implements ExternalContainer
         this.request.setServletContext(this.servletContext);
     }
 
-    private void initResponse()
+    protected void initResponse()
     {
         this.response = new MockHttpServletResponse();
     }
@@ -214,7 +259,8 @@ public class MockedJsf2TestContainer implements ExternalContainer
     public void shutdown()
     {
         this.application = null;
-        this.config = null;
+        this.servletConfig = null;
+        this.containerConfig = null;
         this.lifecycle = null;
         this.renderKit = null;
         this.servletContext = null;
@@ -226,5 +272,10 @@ public class MockedJsf2TestContainer implements ExternalContainer
     public int getOrdinal()
     {
         return 1000; //default in ds
+    }
+
+    protected String getLifecycleId()
+    {
+        return LifecycleFactory.DEFAULT_LIFECYCLE;
     }
 }
