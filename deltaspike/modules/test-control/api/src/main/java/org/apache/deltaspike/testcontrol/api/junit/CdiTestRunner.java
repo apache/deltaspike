@@ -21,6 +21,7 @@ package org.apache.deltaspike.testcontrol.api.junit;
 import org.apache.deltaspike.cdise.api.CdiContainer;
 import org.apache.deltaspike.cdise.api.CdiContainerLoader;
 import org.apache.deltaspike.cdise.api.ContextControl;
+import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
@@ -64,7 +65,17 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
 {
     private static final Logger LOGGER = Logger.getLogger(CdiTestRunner.class.getName());
 
+    private static final boolean USE_TEST_CLASS_AS_CDI_BEAN;
+
     private static Set<Integer> notifierIdentities = new CopyOnWriteArraySet<Integer>();
+
+    static
+    {
+        //default is false to improve the compatibility with @Before and @After
+        String useTestClassAsCdiBeanValue =
+                ConfigResolver.getPropertyValue("deltaspike.testcontrol.use_test_class_as_cdi_bean", "false");
+        USE_TEST_CLASS_AS_CDI_BEAN = Boolean.parseBoolean(useTestClassAsCdiBeanValue);
+    }
 
     private List<TestStatementDecoratorFactory> statementDecoratorFactories;
 
@@ -163,7 +174,7 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
         Set<Bean<?>> beans = beanManager.getBeans(type);
 
         Object result;
-        if (beans == null || beans.isEmpty())
+        if (!USE_TEST_CLASS_AS_CDI_BEAN || beans == null || beans.isEmpty())
         {
             result = super.createTest();
             BeanProvider.injectFields(result); //fallback to simple injection
@@ -279,7 +290,7 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
             Class<?> type = this.method.getMethod().getDeclaringClass();
             Set<Bean<?>> beans = beanManager.getBeans(type);
 
-            if (beans == null || beans.isEmpty())
+            if (!USE_TEST_CLASS_AS_CDI_BEAN || beans == null || beans.isEmpty())
             {
                 BeanProvider.injectFields(this.originalTarget); //fallback to simple injection
                 invokeMethod(this.originalTarget);

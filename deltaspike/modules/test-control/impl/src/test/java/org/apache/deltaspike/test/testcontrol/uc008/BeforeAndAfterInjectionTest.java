@@ -41,6 +41,8 @@ public class BeforeAndAfterInjectionTest
     @Inject
     private ApplicationScopedBean applicationScopedBean;
 
+    private Integer foundValue;
+
     @Before
     public void before()
     {
@@ -48,12 +50,15 @@ public class BeforeAndAfterInjectionTest
         {
             throw new IllegalStateException("injection failed");
         }
+
+        this.foundValue = this.applicationScopedBean.getCount();
     }
 
     @Test
     public void injectionTest()
     {
         Assert.assertNotNull(this.applicationScopedBean);
+        Assert.assertNotNull(this.foundValue);
     }
 
     @After
@@ -62,6 +67,10 @@ public class BeforeAndAfterInjectionTest
         if (this.applicationScopedBean == null)
         {
             throw new IllegalStateException("injection failed");
+        }
+        if (this.foundValue == null)
+        {
+            throw new IllegalStateException("different instance without initialized value found");
         }
     }
 }
