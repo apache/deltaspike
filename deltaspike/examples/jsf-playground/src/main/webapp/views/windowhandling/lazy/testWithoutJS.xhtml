@@ -32,10 +32,30 @@
     <h:form>
         DS WindowId: #{dsWindowContext.currentWindowId}
         <br />
-        <h:link value="Simple Link" outcome="testWithoutJS.xhtml" /> <br/>
+        <br />
+        <h:link value="GET Link" outcome="test.xhtml" />
+        <br />
+        <br />
+        <h:commandLink value="Postback">
+        </h:commandLink>
+        <br />
+        <br />
+        <h:commandLink value="Postback with outcome" action="test.xhtml?faces-redirect=true">
+        </h:commandLink>
+        <br />
+        <br />
+        <h:commandLink value="AJAX Postback">
+            <f:ajax render="@form" execute="@this" />
+        </h:commandLink>
+        <br />
+        <br />
+        <h:commandLink value="AJAX Postback with outcome" action="test.xhtml?faces-redirect=true">
+            <f:ajax render="@form" execute="@this" />
+        </h:commandLink>
+        <br />
         <br />
         <ds:disableClientWindow>
-            <h:link value="Simple Link" outcome="testWithoutJS.xhtml" />
+            <h:link value="Simple Link - surrounded by ds:disableClientWindow" outcome="test.xhtml" />
         </ds:disableClientWindow>
     </h:form>
     
