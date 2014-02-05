@@ -608,18 +608,18 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
 
         private void addScopesForDefaultBehavior(List<Class<? extends Annotation>> scopeClasses)
         {
-            if (this.parent != null && !this.parent.isScopeStarted(SessionScoped.class))
-            {
-                if (!scopeClasses.contains(SessionScoped.class))
-                {
-                    scopeClasses.add(SessionScoped.class);
-                }
-            }
             if (this.parent != null && !this.parent.isScopeStarted(RequestScoped.class))
             {
                 if (!scopeClasses.contains(RequestScoped.class))
                 {
                     scopeClasses.add(RequestScoped.class);
+                }
+            }
+            if (this.parent != null && !this.parent.isScopeStarted(SessionScoped.class))
+            {
+                if (!scopeClasses.contains(SessionScoped.class))
+                {
+                    scopeClasses.add(SessionScoped.class);
                 }
             }
         }

@@ -228,8 +228,15 @@ public class MockedJsf2TestContainer implements ExternalContainer
 
     protected void initSession()
     {
-        this.session = new MockHttpSession();
-        this.session.setServletContext(this.servletContext);
+        if (this.request != null)
+        {
+            this.session = (MockHttpSession)this.request.getSession(true);
+        }
+        else
+        {
+            this.session = new MockHttpSession();
+            this.session.setServletContext(this.servletContext);
+        }
     }
 
     @Override
