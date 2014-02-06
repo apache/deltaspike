@@ -55,7 +55,7 @@ public class CountQueryPostProcessor implements JpaQueryPostProcessor
         {
             return context.getQueryString();
         }
-        return factory.select(query).extractFrom(query);
+        return factory.extract(query);
     }
 
     private static class QueryExtraction

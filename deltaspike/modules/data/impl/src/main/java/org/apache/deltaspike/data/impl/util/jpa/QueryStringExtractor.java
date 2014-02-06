@@ -18,11 +18,9 @@
  */
 package org.apache.deltaspike.data.impl.util.jpa;
 
-import javax.persistence.Query;
-
 public interface QueryStringExtractor
 {
 
-    String extractFrom(Query query);
+    String extractFrom(Object query);
 
 }

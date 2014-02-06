@@ -18,43 +18,51 @@
  */
 package org.apache.deltaspike.data.impl.util.jpa;
 
-import java.util.Arrays;
-import java.util.List;
-
 import javax.persistence.Query;
 
 public class QueryStringExtractorFactory
 {
 
-    private final List<QueryStringExtractor> extractors = Arrays.<QueryStringExtractor> asList(
-            new HibernateQueryStringExtractor(),
-            new EclipseLinkEjbQueryStringExtractor(),
-            new OpenJpaQueryStringExtractor());
-
-    public QueryStringExtractor select(Query query)
+    private final QueryStringExtractor[] extractors = new QueryStringExtractor[]
     {
-        for (QueryStringExtractor extractor : extractors)
+        new HibernateQueryStringExtractor(),
+        new EclipseLinkEjbQueryStringExtractor(),
+        new OpenJpaQueryStringExtractor()
+    };
+
+    public String extract(final Query query)
+    {
+        for (final QueryStringExtractor extractor : extractors)
         {
-            String compare = extractor.getClass().getAnnotation(ProviderSpecific.class).value();
-            if (isQueryClass(compare, query))
+            final String compare = extractor.getClass().getAnnotation(ProviderSpecific.class).value();
+            final Object implQuery = toImplQuery(compare, query);
+            if (implQuery != null)
             {
-                return extractor;
+                return extractor.extractFrom(implQuery);
             }
         }
         throw new RuntimeException("Persistence provider not supported");
     }
 
-    private boolean isQueryClass(String clazzName, Query query)
+    private static Object toImplQuery(final String clazzName, final Query query)
     {
         try
         {
             Class<?> toClass = Class.forName(clazzName);
-            toClass.cast(query);
-            return true;
+            try
+            {
+                // throw a persistence exception if not possible
+                return query.unwrap(toClass);
+            }
+            catch (Exception e)
+            {
+                toClass.cast(query);
+                return query;
+            }
         }
         catch (Exception e)
         {
-            return false;
+            return null;
         }
     }
 

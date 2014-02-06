@@ -63,7 +63,7 @@ public class AnnotatedQueryBuilder extends QueryBuilder
             else
             {
                 javax.persistence.Query namedQuery = entityManager.createNamedQuery(query.named());
-                String named = factory.select(namedQuery).extractFrom(namedQuery);
+                String named = factory.extract(namedQuery);
                 String jpqlQuery = context.applyQueryStringPostProcessors(named);
                 result = params.applyTo(entityManager.createQuery(jpqlQuery));
             }

@@ -18,14 +18,12 @@
  */
 package org.apache.deltaspike.data.impl.util.jpa;
 
-import javax.persistence.Query;
-
 @ProviderSpecific("org.eclipse.persistence.jpa.JpaQuery")
 public class EclipseLinkEjbQueryStringExtractor extends BaseQueryStringExtractor
 {
 
     @Override
-    public String extractFrom(Query query)
+    public String extractFrom(Object query)
     {
         Object dbQuery = invoke("getDatabaseQuery", query);
         return (String) invoke("getJPQLString", dbQuery);

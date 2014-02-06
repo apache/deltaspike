@@ -18,14 +18,11 @@
  */
 package org.apache.deltaspike.data.impl.util.jpa;
 
-import javax.persistence.Query;
-
 @ProviderSpecific("org.apache.openjpa.persistence.OpenJPAQuery")
 public class OpenJpaQueryStringExtractor extends BaseQueryStringExtractor
 {
-
     @Override
-    public String extractFrom(Query query)
+    public String extractFrom(Object query)
     {
         return (String) invoke("getQueryString", query);
     }
