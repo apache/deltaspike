@@ -468,6 +468,7 @@
                         <configuration>
                             <systemProperties>
                                 <arquillian.launch>jbossas-managed-7</arquillian.launch>
+                                <arquillian.xml>arquillian-jboss.xml</arquillian.xml>
                                 <org.apache.deltaspike.ProjectStage>UnitTest</org.apache.deltaspike.ProjectStage>
                                 <cdicontainer.version>${cdicontainer.version}</cdicontainer.version>
                             </systemProperties>
@@ -537,6 +538,7 @@
                         <configuration>
                             <systemProperties>
                                 <arquillian.launch>jbossas-build-managed-7</arquillian.launch>
+                                <arquillian.xml>arquillian-jboss.xml</arquillian.xml>
                                 <arquillian.jboss_home>
                                     ${container.unpack.directory}/jboss-as-${jboss.as.version}
                                 </arquillian.jboss_home>
@@ -629,6 +631,7 @@
                         <configuration>
                             <systemProperties>
                                 <arquillian.launch>jbossas-remote-7</arquillian.launch>
+                                <arquillian.xml>arquillian-jboss.xml</arquillian.xml>
                                 <org.apache.deltaspike.ProjectStage>UnitTest</org.apache.deltaspike.ProjectStage>
                                 <cdicontainer.version>${cdicontainer.version}</cdicontainer.version>
                             </systemProperties>
@@ -697,6 +700,7 @@
                         <configuration>
                             <systemProperties>
                                 <arquillian.launch>jbossas-managed-7</arquillian.launch>
+                                <arquillian.xml>arquillian-jboss.xml</arquillian.xml>
                                 <org.apache.deltaspike.ProjectStage>UnitTest</org.apache.deltaspike.ProjectStage>
                                 <cdicontainer.version>${cdicontainer.version}</cdicontainer.version>
                             </systemProperties>
@@ -766,6 +770,7 @@
                         <configuration>
                             <systemProperties>
                                 <arquillian.launch>wildfly-build-managed</arquillian.launch>
+                                <arquillian.xml>arquillian-jboss.xml</arquillian.xml>
                                 <arquillian.jboss_home>
                                     ${container.unpack.directory}/wildfly-${wildfly.version}
                                 </arquillian.jboss_home>
@@ -857,6 +862,7 @@
                         <configuration>
                             <systemProperties>
                                 <arquillian.launch>jbossas-remote-7</arquillian.launch>
+                                <arquillian.xml>arquillian-jboss.xml</arquillian.xml>
                                 <org.apache.deltaspike.ProjectStage>UnitTest</org.apache.deltaspike.ProjectStage>
                                 <cdicontainer.version>${cdicontainer.version}</cdicontainer.version>
                             </systemProperties>

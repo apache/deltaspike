@@ -27,45 +27,6 @@
     </engine>
     -->
 
-    <container qualifier="jbossas-managed-7">
-        <configuration>
-            <property name="javaVmArguments">-client -noverify -Xms64m -Xmx1024m -XX:MaxPermSize=512m -Dcdicontainer.version=${cdicontainer.version}</property>
-            <property name="outputToConsole">false</property>
-            <property name="allowConnectingToRunningServer">true</property>
-            <property name="cdicontainer.version">${cdicontainer.version}</property>
-        </configuration>
-    </container>
-
-    <container qualifier="jbossas-build-managed-7">
-        <configuration>
-            <property name="jbossHome">${arquillian.jboss_home}</property>
-            <property name="javaVmArguments">-client -noverify -Xms64m -Xmx1024m -XX:MaxPermSize=512m -Djboss.socket.binding.port-offset=40000 -Dcdicontainer.version=${cdicontainer.version}</property>
-            <property name="outputToConsole">false</property>
-            <property name="allowConnectingToRunningServer">true</property>
-            <property name="managementPort">49999</property>
-        </configuration>
-    </container>
-
-    <container qualifier="wildfly-build-managed">
-        <configuration>
-            <property name="jbossHome">${arquillian.jboss_home}</property>
-            <property name="javaVmArguments">-client -noverify -Xms64m -Xmx1024m -XX:MaxPermSize=512m -Djboss.socket.binding.port-offset=50000 -Dcdicontainer.version=${cdicontainer.version}</property>
-            <property name="outputToConsole">false</property>
-            <property name="managementPort">59990</property>
-        </configuration>
-    </container>
-
-    <container qualifier="jbossas-remote-7">
-        <!--
-        for remote debugging enable "remote socket debugging" - uncomment:
-            set "JAVA_OPTS=%JAVA_OPTS% -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n"
-        in
-            standalone.conf (standalone.conf.bat)
-        and connect to
-            port 8787
-        -->
-    </container>
-
     <!-- don't remove the qualifier - it's needed for the arquillian.launch property -->
     <container qualifier="glassfish-remote-3.1">
     </container>
