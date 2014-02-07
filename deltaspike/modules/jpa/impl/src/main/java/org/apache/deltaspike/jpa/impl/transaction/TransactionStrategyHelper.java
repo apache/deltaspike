@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.jpa.impl.transaction;
 
+import org.apache.deltaspike.core.util.ProxyUtils;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
 
 import javax.enterprise.context.Dependent;
@@ -158,8 +159,10 @@ public class TransactionStrategyHelper implements Serializable
 
         if (transactionalAnnotation == null)
         {
+            Class targetClass = ProxyUtils.getUnproxiedClass(context.getTarget().getClass()); //see DELTASPIKE-517
+
             // and if not found search on the class
-            transactionalAnnotation = extractTransactionalAnnotation(context.getTarget().getClass().getAnnotations());
+            transactionalAnnotation = extractTransactionalAnnotation(targetClass.getAnnotations());
         }
         return transactionalAnnotation;
     }

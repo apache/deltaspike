@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.security.impl.extension;
 
+import org.apache.deltaspike.core.util.ProxyUtils;
 import org.apache.deltaspike.security.spi.authorization.SecurityStrategy;
 
 import javax.enterprise.context.Dependent;
@@ -50,7 +51,9 @@ public class DefaultSecurityStrategy implements SecurityStrategy
 
         SecurityMetaDataStorage metaDataStorage = securityExtension.getMetaDataStorage();
 
-        for (Authorizer authorizer : metaDataStorage.getAuthorizers(invocationContext.getTarget().getClass(), method))
+        Class targetClass = ProxyUtils.getUnproxiedClass(invocationContext.getTarget().getClass()); //see DELTASPIKE-517
+
+        for (Authorizer authorizer : metaDataStorage.getAuthorizers(targetClass, method))
         {
             if (authorizer.isBeforeMethodInvocationAuthorizer())
             {
@@ -60,7 +63,7 @@ public class DefaultSecurityStrategy implements SecurityStrategy
 
         Object result = invocationContext.proceed();
 
-        for (Authorizer authorizer : metaDataStorage.getAuthorizers(invocationContext.getTarget().getClass(), method))
+        for (Authorizer authorizer : metaDataStorage.getAuthorizers(targetClass, method))
         {
             if (authorizer.isAfterMethodInvocationAuthorizer())
             {

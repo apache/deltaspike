@@ -20,6 +20,7 @@ package org.apache.deltaspike.jpa.impl.transaction;
 
 
 import org.apache.deltaspike.core.api.literal.AnyLiteral;
+import org.apache.deltaspike.core.util.ProxyUtils;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
 import org.apache.deltaspike.jpa.impl.transaction.context.EntityManagerEntry;
 import org.apache.deltaspike.jpa.impl.transaction.context.TransactionBeanStorage;
@@ -73,9 +74,11 @@ public class ResourceLocalTransactionStrategy implements TransactionStrategy
     {
         Transactional transactionalAnnotation = transactionHelper.extractTransactionalAnnotation(invocationContext);
 
+        Class targetClass = ProxyUtils.getUnproxiedClass(invocationContext.getTarget().getClass()); //see DELTASPIKE-517
+
         // all the configured qualifier keys
         Set<Class<? extends Annotation>> emQualifiers = transactionHelper.resolveEntityManagerQualifiers(
-                    transactionalAnnotation, invocationContext.getTarget().getClass());
+                    transactionalAnnotation, targetClass);
 
         TransactionBeanStorage transactionBeanStorage = TransactionBeanStorage.getInstance();
 
