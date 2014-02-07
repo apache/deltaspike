@@ -143,6 +143,8 @@ public @interface View
         @Override
         public View beforeAddToConfig(View view, ViewConfigNode viewConfigNode)
         {
+            validateViewMetaData(view, viewConfigNode);
+
             boolean defaultValueReplaced = false;
 
             View.NavigationMode navigation = view.navigation();
@@ -204,6 +206,17 @@ public @interface View
                 return result;
             }
             return view;
+        }
+
+        protected void validateViewMetaData(View view, ViewConfigNode viewConfigNode)
+        {
+            String basePath = view.basePath();
+            if (viewConfigNode.getSource().isInterface() && !"".equals(basePath) && basePath != null)
+            {
+                throw new IllegalStateException("Using @" + View.class.getName() + "#basePath isn't allowed on" +
+                    " folder-nodes (= interfaces). Use @" + Folder.class.getName() + " for intended folder-nodes" +
+                    " or a class instead of the interface for page-nodes.");
+            }
         }
 
         private void updateNodeMetaData(ViewConfigNode viewConfigNode, View view)

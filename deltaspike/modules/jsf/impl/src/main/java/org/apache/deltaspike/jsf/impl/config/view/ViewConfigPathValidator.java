@@ -25,6 +25,7 @@ import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.core.util.ExceptionUtils;
+import org.apache.deltaspike.jsf.api.config.view.Folder;
 import org.apache.deltaspike.jsf.api.config.view.View;
 
 import javax.servlet.ServletContextEvent;
@@ -37,6 +38,8 @@ import java.util.logging.Logger;
 
 public class ViewConfigPathValidator implements ServletContextListener, Deactivatable
 {
+    private static final Logger LOGGER = Logger.getLogger(ViewConfigPathValidator.class.getName());
+
     @Override
     public void contextInitialized(ServletContextEvent sce)
     {
@@ -75,6 +78,17 @@ public class ViewConfigPathValidator implements ServletContextListener, Deactiva
 
                 if (!isValidPath(sce, configDescriptor))
                 {
+                    if (configDescriptor instanceof DefaultFolderConfigDescriptor &&
+                        !configDescriptor.getConfigClass().isAnnotationPresent(Folder.class))
+                    {
+
+                        LOGGER.fine(configDescriptor.getConfigClass().getName() + " looks like a marker interface" +
+                            " only used for providing meta-data, because the path " + configDescriptor.getPath() +
+                            " doesn't exist and the config-class isn't annotated with " + Folder.class.getName());
+
+                        continue;
+                    }
+
                     throw new IllegalStateException("path '" + configDescriptor.getPath() +
                             "' is missing, but mapped by: " + configDescriptor.getConfigClass().getName());
                 }

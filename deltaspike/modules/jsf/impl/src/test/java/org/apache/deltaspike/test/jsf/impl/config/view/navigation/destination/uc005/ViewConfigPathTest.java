@@ -18,20 +18,79 @@
  */
 package org.apache.deltaspike.test.jsf.impl.config.view.navigation.destination.uc005;
 
+import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigDescriptor;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
+import org.apache.deltaspike.core.spi.config.ConfigSource;
+import org.apache.deltaspike.jsf.api.config.view.View;
 import org.apache.deltaspike.jsf.impl.config.view.ViewConfigExtension;
 import org.apache.deltaspike.jsf.impl.config.view.ViewConfigResolverProducer;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Map;
 
 public class ViewConfigPathTest
 {
+    private static boolean active;
+
     private ViewConfigExtension viewConfigExtension;
 
     private ViewConfigResolverProducer viewConfigResolverProducer;
+
+    @BeforeClass
+    public static void init()
+    {
+        active = true;
+
+        ConfigResolver.addConfigSources(new ArrayList<ConfigSource>() {
+            {
+                add(new ConfigSource() {
+                    @Override
+                    public int getOrdinal() {
+                        return Integer.MAX_VALUE;
+                    }
+
+                    @Override
+                    public Map<String, String> getProperties() {
+                        return Collections.emptyMap();
+                    }
+
+                    @Override
+                    public String getPropertyValue(String key) {
+                        if (active && View.ViewConfigPreProcessor.class.getName().equals(key)) {
+                            return ViewConfigPreProcessorWithoutValidation.class.getName();
+                        }
+                        return null;
+                    }
+
+                    @Override
+                    public String getConfigName() {
+                        return "test-view-config";
+                    }
+
+                    @Override
+                    public boolean isScannable() {
+                        return false;
+                    }
+                });
+            }
+
+            private static final long serialVersionUID = 3247551986947387154L;
+        });
+    }
+
+    @AfterClass
+    public static void cleanup()
+    {
+        active = false;
+    }
 
     @Before
     public void before()
