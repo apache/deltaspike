@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.jsf.impl.exception;
 
+import java.lang.annotation.Annotation;
 import java.util.Iterator;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.faces.FacesException;
@@ -36,7 +37,7 @@ import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;
 public class DeltaSpikeExceptionHandler extends ExceptionHandlerWrapper implements Deactivatable
 {
     private final ExceptionHandler wrapped;
-    private final JsfModuleConfig jsfModuleConfig;
+    private final Annotation exceptionQualifier;
 
     private boolean isActivated = true;
 
@@ -44,7 +45,8 @@ public class DeltaSpikeExceptionHandler extends ExceptionHandlerWrapper implemen
     {
         this.isActivated = ClassDeactivationUtils.isActivated(getClass());
         this.wrapped = wrapped;
-        this.jsfModuleConfig = BeanProvider.getContextualReference(JsfModuleConfig.class);
+        this.exceptionQualifier = AnnotationInstanceProvider.of(
+                BeanProvider.getContextualReference(JsfModuleConfig.class).getExceptionQualifier());
     }
 
     @Override
@@ -77,9 +79,7 @@ public class DeltaSpikeExceptionHandler extends ExceptionHandlerWrapper implemen
                     Throwable throwable = iterator.next().getContext().getException();
                     Throwable rootCause = getRootCause(throwable);
 
-                    ExceptionToCatchEvent event = new ExceptionToCatchEvent(
-                            rootCause,
-                            AnnotationInstanceProvider.of(jsfModuleConfig.getExceptionQualifier()));
+                    ExceptionToCatchEvent event = new ExceptionToCatchEvent(rootCause, exceptionQualifier);
 
                     beanManager.fireEvent(event);
 
