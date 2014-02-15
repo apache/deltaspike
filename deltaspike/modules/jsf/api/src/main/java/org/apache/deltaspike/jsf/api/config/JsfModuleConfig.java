@@ -18,11 +18,13 @@
  */
 package org.apache.deltaspike.jsf.api.config;
 
+import java.lang.annotation.Annotation;
 import org.apache.deltaspike.core.api.config.DeltaSpikeConfig;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.jsf.spi.scope.window.ClientWindowConfig;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Default;
 import javax.faces.context.FacesContext;
 
 /**
@@ -102,6 +104,18 @@ public class JsfModuleConfig implements DeltaSpikeConfig
             return ClientWindowConfig.ClientWindowRenderMode.DELEGATED;
         }
         return null;
+    }
+
+    /**
+     * Defines the {@link javax.enterprise.Qualifier} which will be used to fire the
+     * {@link org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent}
+     * for unhandled JSF exceptions.
+     * 
+     * @return the {@link javax.enterprise.Qualifier}.
+     */
+    public Class<? extends Annotation> getExceptionQualifier()
+    {
+        return Default.class;
     }
 
     protected boolean isDelegatedWindowHandlingEnabled()
