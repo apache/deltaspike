@@ -226,4 +226,9 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
         return repoMethod.getSingleResultStyle();
     }
 
+    public Object getProxy()
+    {
+        return proxy;
+    }
+
 }

@@ -37,6 +37,7 @@ import javax.persistence.metamodel.SingularAttribute;
 
 import org.apache.deltaspike.data.api.EntityRepository;
 import org.apache.deltaspike.data.impl.builder.QueryBuilder;
+import org.apache.deltaspike.data.impl.meta.RequiresTransaction;
 import org.apache.deltaspike.data.impl.property.Property;
 import org.apache.deltaspike.data.impl.property.query.NamedPropertyCriteria;
 import org.apache.deltaspike.data.impl.property.query.PropertyQueries;
@@ -59,6 +60,7 @@ public class EntityRepositoryHandler<E, PK extends Serializable>
     private QueryInvocationContext context;
 
     @Override
+    @RequiresTransaction
     public E save(E entity)
     {
         if (context.isNew(entity))
@@ -70,6 +72,7 @@ public class EntityRepositoryHandler<E, PK extends Serializable>
     }
 
     @Override
+    @RequiresTransaction
     public E saveAndFlush(E entity)
     {
         E result = save(entity);
@@ -78,6 +81,7 @@ public class EntityRepositoryHandler<E, PK extends Serializable>
     }
 
     @Override
+    @RequiresTransaction
     public E saveAndFlushAndRefresh(E entity)
     {
         E result = saveAndFlush(entity);
@@ -86,6 +90,7 @@ public class EntityRepositoryHandler<E, PK extends Serializable>
     }
 
     @Override
+    @RequiresTransaction
     public void refresh(E entity)
     {
         entityManager().refresh(entity);
@@ -161,12 +166,14 @@ public class EntityRepositoryHandler<E, PK extends Serializable>
     }
 
     @Override
+    @RequiresTransaction
     public void remove(E entity)
     {
         entityManager().remove(entity);
     }
 
     @Override
+    @RequiresTransaction
     public void removeAndFlush(E entity)
     {
         entityManager().remove(entity);
@@ -174,6 +181,7 @@ public class EntityRepositoryHandler<E, PK extends Serializable>
     }
 
     @Override
+    @RequiresTransaction
     public void flush()
     {
         entityManager().flush();

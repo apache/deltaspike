@@ -18,6 +18,9 @@
  */
 package org.apache.deltaspike.data.impl.builder;
 
+import static org.apache.deltaspike.data.impl.util.ClassUtils.contains;
+import static org.apache.deltaspike.data.impl.util.ClassUtils.extract;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Set;
@@ -85,24 +88,6 @@ public class DelegateQueryBuilder extends QueryBuilder
             }
         }
         return null;
-    }
-
-    private boolean contains(Class<?> obj, Method method)
-    {
-        return extract(obj, method) != null;
-    }
-
-    private Method extract(Class<?> obj, Method method)
-    {
-        try
-        {
-            String name = method.getName();
-            return obj != null ? obj.getMethod(name, method.getParameterTypes()) : null;
-        }
-        catch (NoSuchMethodException e)
-        {
-            return null;
-        }
     }
 
     private Object invoke(DelegateQueryHandler delegate, CdiQueryInvocationContext context)

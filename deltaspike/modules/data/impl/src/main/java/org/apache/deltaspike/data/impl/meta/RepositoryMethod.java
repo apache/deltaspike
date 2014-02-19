@@ -27,10 +27,12 @@ import java.util.Set;
 
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
+import javax.persistence.LockModeType;
 
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.api.provider.DependentProvider;
+import org.apache.deltaspike.data.api.Modifying;
 import org.apache.deltaspike.data.api.Query;
 import org.apache.deltaspike.data.api.SingleResultType;
 import org.apache.deltaspike.data.api.mapping.MappingConfig;
@@ -228,6 +230,16 @@ public class RepositoryMethod
             return method.getAnnotation(Query.class).singleResult();
         }
         return methodPrefix.getSingleResultStyle();
+    }
+
+    public boolean requiresTransaction()
+    {
+        boolean hasLockMode = false;
+        if (method.isAnnotationPresent(Query.class))
+        {
+            hasLockMode = !method.getAnnotation(Query.class).lock().equals(LockModeType.NONE);
+        }
+        return hasLockMode || method.isAnnotationPresent(Modifying.class);
     }
 
 }

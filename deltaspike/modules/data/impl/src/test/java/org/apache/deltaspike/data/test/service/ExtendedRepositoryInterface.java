@@ -18,11 +18,25 @@
  */
 package org.apache.deltaspike.data.test.service;
 
+import static javax.persistence.LockModeType.PESSIMISTIC_READ;
+
 import org.apache.deltaspike.data.api.EntityRepository;
+import org.apache.deltaspike.data.api.Modifying;
+import org.apache.deltaspike.data.api.Query;
 import org.apache.deltaspike.data.api.Repository;
 import org.apache.deltaspike.data.test.domain.Simple;
 
 @Repository
 public interface ExtendedRepositoryInterface extends EntityRepository<Simple, Long>
 {
+
+    @Query(lock = PESSIMISTIC_READ)
+    Simple findByName(String name);
+
+    @Query(named = Simple.BY_NAME_LIKE)
+    Simple findByNameNoLock(String name);
+
+    @Modifying @Query("delete from Simple")
+    int deleteAll();
+
 }

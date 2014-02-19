@@ -47,13 +47,16 @@ import org.apache.deltaspike.data.impl.builder.QueryBuilder;
 import org.apache.deltaspike.data.impl.criteria.QueryCriteria;
 import org.apache.deltaspike.data.impl.handler.QueryHandler;
 import org.apache.deltaspike.data.impl.meta.RepositoryComponents;
+import org.apache.deltaspike.data.impl.meta.RequiresTransaction;
 import org.apache.deltaspike.data.impl.param.Parameters;
 import org.apache.deltaspike.data.impl.property.Property;
+import org.apache.deltaspike.data.impl.tx.TransactionalQueryRunner;
 import org.apache.deltaspike.data.impl.util.EntityUtils;
 import org.apache.deltaspike.data.spi.DelegateQueryHandler;
 import org.apache.deltaspike.data.spi.QueryInvocationContext;
 import org.apache.deltaspike.data.test.TransactionalTestCase;
 import org.apache.deltaspike.data.test.domain.AuditedEntity;
+import org.apache.deltaspike.jpa.impl.transaction.EnvironmentAwareTransactionStrategy;
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.apache.deltaspike.test.utils.CdiContainerUnderTest;
 import org.jboss.shrinkwrap.api.Archive;
@@ -61,9 +64,11 @@ import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.shrinkwrap.descriptor.api.Descriptors;
+import org.jboss.shrinkwrap.descriptor.api.beans10.BeansDescriptor;
 import org.jboss.shrinkwrap.impl.base.filter.ExcludeRegExpPaths;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 
@@ -85,6 +90,12 @@ public abstract class TestDeployments
     public static WebArchive initDeployment(String testFilter)
     {
         Logging.reconfigure();
+        String descriptor = Descriptors.create(BeansDescriptor.class)
+                .addDefaultNamespaces()
+                .createAlternatives()
+                    .clazz(EnvironmentAwareTransactionStrategy.class.getName())
+                    .up()
+                .exportAsString();
         WebArchive archive = ShrinkWrap
                 .create(WebArchive.class, "test.war")
                 .addAsLibrary(createApiArchive())
@@ -98,7 +109,7 @@ public abstract class TestDeployments
                         ArchivePaths.create("classes/META-INF/persistence.xml"))
                 .addAsWebInfResource("META-INF/services/javax.enterprise.inject.spi.Extension",
                         ArchivePaths.create("classes/META-INF/services/javax.enterprise.inject.spi.Extension"))
-                .addAsWebInfResource(EmptyAsset.INSTANCE, ArchivePaths.create("beans.xml"));
+                .addAsWebInfResource(new StringAsset(descriptor), ArchivePaths.create("beans.xml"));
 
         return addDependencies(archive);
     }
@@ -113,7 +124,8 @@ public abstract class TestDeployments
                 RepositoryComponents.class.getPackage(),
                 Parameters.class.getPackage(),
                 EntityUtils.class.getPackage(),
-                Property.class.getPackage()
+                Property.class.getPackage(),
+                TransactionalQueryRunner.class.getPackage()
         };
     }
 
@@ -128,7 +140,7 @@ public abstract class TestDeployments
                 .addClasses(Criteria.class, QuerySelection.class, CriteriaSupport.class)
                 .addClasses(CreatedOn.class, CurrentUser.class, ModifiedBy.class, ModifiedOn.class)
                 .addClasses(MappingConfig.class, QueryInOutMapper.class)
-                .addClasses(DelegateQueryHandler.class, QueryInvocationContext.class);
+                .addClasses(DelegateQueryHandler.class, QueryInvocationContext.class, RequiresTransaction.class);
     }
 
     public static WebArchive addDependencies(WebArchive archive)
@@ -138,7 +150,9 @@ public abstract class TestDeployments
                         "org.apache.deltaspike.core:deltaspike-core-api",
                         "org.apache.deltaspike.core:deltaspike-core-impl",
                         "org.apache.deltaspike.modules:deltaspike-partial-bean-module-api",
-                        "org.apache.deltaspike.modules:deltaspike-partial-bean-module-impl")
+                        "org.apache.deltaspike.modules:deltaspike-partial-bean-module-impl",
+                        "org.apache.deltaspike.modules:deltaspike-jpa-module-api",
+                        "org.apache.deltaspike.modules:deltaspike-jpa-module-impl")
                         .withTransitivity()
                         .asFile());
         if (CdiContainerUnderTest.is("owb-.*") ||

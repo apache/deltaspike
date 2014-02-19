@@ -19,14 +19,15 @@
 package org.apache.deltaspike.jpa.impl.transaction;
 
 
-import org.apache.deltaspike.core.api.literal.AnyLiteral;
-import org.apache.deltaspike.core.util.ProxyUtils;
-import org.apache.deltaspike.jpa.api.transaction.Transactional;
-import org.apache.deltaspike.jpa.impl.transaction.context.EntityManagerEntry;
-import org.apache.deltaspike.jpa.impl.transaction.context.TransactionBeanStorage;
-import org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy;
+import java.lang.annotation.Annotation;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.enterprise.context.Dependent;
+import javax.enterprise.inject.Default;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
@@ -34,11 +35,13 @@ import javax.interceptor.InvocationContext;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
-import java.lang.annotation.Annotation;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.deltaspike.core.api.literal.AnyLiteral;
+import org.apache.deltaspike.core.util.ProxyUtils;
+import org.apache.deltaspike.jpa.api.transaction.Transactional;
+import org.apache.deltaspike.jpa.impl.entitymanager.EntityManagerHolder;
+import org.apache.deltaspike.jpa.impl.transaction.context.EntityManagerEntry;
+import org.apache.deltaspike.jpa.impl.transaction.context.TransactionBeanStorage;
+import org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy;
 
 /**
  * <p>Default implementation of our plugable TransactionStrategy.
@@ -70,6 +73,10 @@ public class ResourceLocalTransactionStrategy implements TransactionStrategy
     @Inject
     private TransactionStrategyHelper transactionHelper;
 
+    @Inject
+    private EntityManagerHolder emHolder;
+
+    @Override
     public Object execute(InvocationContext invocationContext) throws Exception
     {
         Transactional transactionalAnnotation = transactionHelper.extractTransactionalAnnotation(invocationContext);
@@ -77,8 +84,9 @@ public class ResourceLocalTransactionStrategy implements TransactionStrategy
         Class targetClass = ProxyUtils.getUnproxiedClass(invocationContext.getTarget().getClass()); //see DELTASPIKE-517
 
         // all the configured qualifier keys
-        Set<Class<? extends Annotation>> emQualifiers = transactionHelper.resolveEntityManagerQualifiers(
-                    transactionalAnnotation, targetClass);
+        Set<Class<? extends Annotation>> emQualifiers = emHolder.isSet() ?
+                new HashSet<Class<? extends Annotation>>(Arrays.asList(Default.class)) :
+                transactionHelper.resolveEntityManagerQualifiers(transactionalAnnotation, targetClass);
 
         TransactionBeanStorage transactionBeanStorage = TransactionBeanStorage.getInstance();
 
@@ -307,6 +315,10 @@ public class ResourceLocalTransactionStrategy implements TransactionStrategy
 
     private EntityManager resolveEntityManagerForQualifier(Class<? extends Annotation> emQualifier)
     {
+        if (emHolder.isSet())
+        {
+            return emHolder.get();
+        }
         Bean<EntityManager> entityManagerBean = resolveEntityManagerBean(emQualifier);
 
         if (entityManagerBean == null)
