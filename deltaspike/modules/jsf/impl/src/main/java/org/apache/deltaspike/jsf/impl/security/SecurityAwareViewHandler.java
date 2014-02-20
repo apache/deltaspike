@@ -34,10 +34,15 @@ import javax.faces.application.ViewHandler;
 import javax.faces.application.ViewHandlerWrapper;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 public class SecurityAwareViewHandler extends ViewHandlerWrapper implements Deactivatable
 {
+    public  static final String PRE_DESTROY_VIEW_MAP_EVENT_FILTER_ENABLED =
+            SecurityAwareViewHandler.class.getName() + "#PRE_DESTROY_VIEW_MAP_EVENT_FILTER_ENABLED";
+
     protected final ViewHandler wrapped;
 
     private final boolean activated;
@@ -82,6 +87,21 @@ public class SecurityAwareViewHandler extends ViewHandlerWrapper implements Deac
 
         UIViewRoot originalViewRoot = context.getViewRoot();
 
+        Map<String, Object> viewMap = null;
+        if (originalViewRoot != null)
+        {
+            Map<String, Object> originalViewMap = originalViewRoot.getViewMap(false);
+
+            if (originalViewMap != null && !originalViewMap.isEmpty())
+            {
+                viewMap = new HashMap<String, Object>();
+                viewMap.putAll(originalViewMap);
+            }
+        }
+
+        //workaround for PreDestroyViewMapEvent which would be caused by the security check
+        deactivatePreDestroyViewMapEvent(context);
+
         //we have to use it as current view if an AccessDecisionVoter uses the JSF API to check access to the view-id
         context.setViewRoot(result);
 
@@ -118,9 +138,14 @@ public class SecurityAwareViewHandler extends ViewHandlerWrapper implements Deac
         }
         finally
         {
+            activatePreDestroyViewMapEvent(context);
             if (originalViewRoot != null)
             {
                 context.setViewRoot(originalViewRoot);
+                if (viewMap != null)
+                {
+                    originalViewRoot.getViewMap().putAll(viewMap);
+                }
             }
         }
 
@@ -137,5 +162,15 @@ public class SecurityAwareViewHandler extends ViewHandlerWrapper implements Deac
             Logger.getLogger(getClass().getName()) //it's the only case for which a logger is needed in this class
                     .info("security-module-impl isn't used -> " + getClass().getName() + " gets deactivated");
         }
+    }
+
+    private void deactivatePreDestroyViewMapEvent(FacesContext facesContext)
+    {
+        facesContext.getExternalContext().getRequestMap().put(PRE_DESTROY_VIEW_MAP_EVENT_FILTER_ENABLED, Boolean.TRUE);
+    }
+
+    private void activatePreDestroyViewMapEvent(FacesContext facesContext)
+    {
+        facesContext.getExternalContext().getRequestMap().put(PRE_DESTROY_VIEW_MAP_EVENT_FILTER_ENABLED, Boolean.FALSE);
     }
 }

@@ -35,6 +35,8 @@ import javax.faces.context.FacesContextWrapper;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import org.apache.deltaspike.jsf.impl.security.SecurityAwareViewHandler;
 import org.apache.deltaspike.jsf.spi.scope.window.ClientWindow;
 
 class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
@@ -50,6 +52,8 @@ class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
     private JsfModuleConfig jsfModuleConfig;
 
     private volatile Boolean initialized;
+
+    private boolean preDestroyViewMapEventFilterMode;
 
     DeltaSpikeFacesContextWrapper(FacesContext wrappedFacesContext, ClientWindow clientWindow)
     {
@@ -117,8 +121,10 @@ class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
     private synchronized void init()
     {
         // switch into paranoia mode
-        if (initialized == null)
+        if (this.initialized == null)
         {
+            this.jsfModuleConfig = BeanProvider.getContextualReference(JsfModuleConfig.class);
+
             if (ClassDeactivationUtils.isActivated(BeforeAfterJsfRequestBroadcaster.class))
             {
                 this.beforeAfterJsfRequestBroadcaster =
@@ -131,6 +137,9 @@ class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
             this.defaultErrorViewExceptionHandlerActivated =
                     viewConfigResolver.getDefaultErrorViewConfigDescriptor() != null &&
                             ClassDeactivationUtils.isActivated(DefaultErrorViewAwareExceptionHandlerWrapper.class);
+
+            this.preDestroyViewMapEventFilterMode = ClassDeactivationUtils.isActivated(SecurityAwareViewHandler.class);
+            this.initialized = true;
         }
     }
 
@@ -170,12 +179,10 @@ class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
     @Override
     public Application getApplication()
     {
-        if (this.jsfModuleConfig == null)
-        {
-            this.jsfModuleConfig = BeanProvider.getContextualReference(JsfModuleConfig.class);
-        }
+        lazyInit();
 
-        return new InjectionAwareApplicationWrapper(this.wrappedFacesContext.getApplication(), this.jsfModuleConfig);
+        return new InjectionAwareApplicationWrapper(
+            this.wrappedFacesContext.getApplication(), this.jsfModuleConfig, this.preDestroyViewMapEventFilterMode);
     }
 
     @Override

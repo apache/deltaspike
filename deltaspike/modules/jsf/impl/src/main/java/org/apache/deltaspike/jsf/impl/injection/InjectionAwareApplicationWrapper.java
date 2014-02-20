@@ -19,11 +19,15 @@
 package org.apache.deltaspike.jsf.impl.injection;
 
 import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;
+import org.apache.deltaspike.jsf.impl.security.SecurityAwareViewHandler;
 
 import javax.faces.FacesException;
 import javax.faces.application.Application;
 import javax.faces.application.ApplicationWrapper;
+import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
+import javax.faces.event.PreDestroyViewMapEvent;
+import javax.faces.event.SystemEvent;
 import javax.faces.validator.Validator;
 
 public class InjectionAwareApplicationWrapper extends ApplicationWrapper
@@ -31,12 +35,15 @@ public class InjectionAwareApplicationWrapper extends ApplicationWrapper
     private final Application wrapped;
     private final boolean containerManagedConvertersEnabled;
     private final boolean containerManagedValidatorsEnabled;
+    private final boolean preDestroyViewMapEventFilterMode;
 
-    public InjectionAwareApplicationWrapper(Application wrapped, JsfModuleConfig jsfModuleConfig)
+    public InjectionAwareApplicationWrapper(
+        Application wrapped, JsfModuleConfig jsfModuleConfig, boolean preDestroyViewMapEventFilterMode)
     {
         this.wrapped = wrapped;
         this.containerManagedConvertersEnabled = jsfModuleConfig.isContainerManagedConvertersEnabled();
         this.containerManagedValidatorsEnabled = jsfModuleConfig.isContainerManagedValidatorsEnabled();
+        this.preDestroyViewMapEventFilterMode = preDestroyViewMapEventFilterMode;
     }
 
     @Override
@@ -101,6 +108,23 @@ public class InjectionAwareApplicationWrapper extends ApplicationWrapper
         {
             return new ValidatorWrapper(result);
         }
+    }
+
+    @Override
+    public void publishEvent(FacesContext facesContext, Class<? extends SystemEvent> systemEventClass, Object source)
+    {
+        if (!PreDestroyViewMapEvent.class.isAssignableFrom(systemEventClass) ||
+                isPreDestroyViewMapEventAllowed(facesContext))
+        {
+            super.publishEvent(facesContext, systemEventClass, source);
+        }
+    }
+
+    private boolean isPreDestroyViewMapEventAllowed(FacesContext facesContext)
+    {
+        return !this.preDestroyViewMapEventFilterMode ||
+                    !Boolean.TRUE.equals(facesContext.getExternalContext().getRequestMap().get(
+                            SecurityAwareViewHandler.PRE_DESTROY_VIEW_MAP_EVENT_FILTER_ENABLED));
     }
 
     @Override
