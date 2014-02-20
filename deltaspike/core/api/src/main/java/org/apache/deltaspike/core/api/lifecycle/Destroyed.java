@@ -16,35 +16,28 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.jsf.api.listener.request;
+package org.apache.deltaspike.core.api.lifecycle;
 
-import javax.inject.Qualifier;
-import java.lang.annotation.Documented;
-
-import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.ElementType.FIELD;
-
-import java.lang.annotation.Retention;
-
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-/**
- * Qualifier for observers which should be invoked before the current {@link javax.faces.context.FacesContext} gets
- * destroyed.
- * <p/>
- * Parameter-type of the observer: {@link javax.faces.context.FacesContext}
- * <p/>
- * Attention: referencing @ApplicationScoped or @Singleton scoped beans might lead to issues with a CDI implementation
- * (e.g. if the ServletRequestListener of OWB gets called earlier)
- */
+import javax.inject.Qualifier;
 
-@Target({ PARAMETER, FIELD })
+/**
+ * Qualifier for events which are fired when servlet objects are destroyed.
+ */
+@Qualifier
+@Target({ TYPE, METHOD, PARAMETER, FIELD })
 @Retention(RUNTIME)
 @Documented
-
-@Qualifier
-public @interface AfterJsfRequest
+public @interface Destroyed
 {
+
 }

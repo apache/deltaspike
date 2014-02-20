@@ -18,6 +18,8 @@
  */
 package org.apache.deltaspike.data.impl.meta;
 
+import org.apache.deltaspike.core.api.lifecycle.Initialized;
+
 import javax.enterprise.inject.Produces;
 
 /**

@@ -21,8 +21,8 @@ package org.apache.deltaspike.servlet.impl.event;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import org.apache.deltaspike.servlet.api.literal.DestroyedLiteral;
-import org.apache.deltaspike.servlet.api.literal.InitializedLiteral;
+import org.apache.deltaspike.core.api.literal.DestroyedLiteral;
+import org.apache.deltaspike.core.api.literal.InitializedLiteral;
 
 /**
  * This class listens for servlet context events and forwards them to the CDI event bus.

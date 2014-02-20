@@ -16,31 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.jsf.api.listener.request;
+package org.apache.deltaspike.core.api.literal;
 
-import javax.inject.Qualifier;
-import java.lang.annotation.Documented;
+import javax.enterprise.util.AnnotationLiteral;
 
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.ElementType.FIELD;
-
-import java.lang.annotation.Retention;
-
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
-import java.lang.annotation.Target;
+import org.apache.deltaspike.core.api.lifecycle.Destroyed;
 
 /**
- * Qualifier for observers which should be invoked as soon as a jsf request is started.
- * <p/>
- * Parameter-type of the observer: {@link javax.faces.context.FacesContext}
+ * Annotation literal for {@link Destroyed}.
  */
-
-@Target({ PARAMETER, FIELD })
-@Retention(RUNTIME)
-@Documented
-
-@Qualifier
-public @interface BeforeJsfRequest
+public class DestroyedLiteral extends AnnotationLiteral<Destroyed> implements Destroyed
 {
+
+    public static final Destroyed INSTANCE = new DestroyedLiteral();
+
+    private static final long serialVersionUID = 8310730593030223981L;
+
 }

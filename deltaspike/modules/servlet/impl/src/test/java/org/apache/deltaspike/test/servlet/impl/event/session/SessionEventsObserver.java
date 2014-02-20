@@ -26,8 +26,8 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.servlet.http.HttpSession;
 
-import org.apache.deltaspike.servlet.api.Destroyed;
-import org.apache.deltaspike.servlet.api.Initialized;
+import org.apache.deltaspike.core.api.lifecycle.Destroyed;
+import org.apache.deltaspike.core.api.lifecycle.Initialized;
 
 /**
  * Application scoped observer which listens for {@link HttpSession} events on the CDI event bus.

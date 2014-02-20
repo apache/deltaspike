@@ -27,8 +27,8 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
-import org.apache.deltaspike.servlet.api.literal.DestroyedLiteral;
-import org.apache.deltaspike.servlet.api.literal.InitializedLiteral;
+import org.apache.deltaspike.core.api.literal.DestroyedLiteral;
+import org.apache.deltaspike.core.api.literal.InitializedLiteral;
 
 /**
  * This filter sends events to the CDI event bus when requests and responses get created and destroyed.

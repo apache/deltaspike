@@ -43,7 +43,7 @@ class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
 {
     private final FacesContext wrappedFacesContext;
 
-    private BeforeAfterJsfRequestBroadcaster beforeAfterJsfRequestBroadcaster;
+    private JsfRequestBroadcaster jsfRequestBroadcaster;
 
     private boolean defaultErrorViewExceptionHandlerActivated;
 
@@ -73,7 +73,7 @@ class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
     }
 
     /**
-     * Broadcasts the {@link org.apache.deltaspike.jsf.api.listener.request.AfterJsfRequest} event
+     * Broadcasts the {@link org.apache.deltaspike.core.api.lifecycle.Destroyed} event
      * {@inheritDoc}
      */
     @Override
@@ -81,7 +81,7 @@ class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
     {
         if (!this.wrappedFacesContext.getApplication().getResourceHandler().isResourceRequest(this.wrappedFacesContext))
         {
-            broadcastAfterJsfRequestEvent();
+            broadcastDestroyedJsfRequestEvent();
         }
 
         wrappedFacesContext.release();
@@ -101,12 +101,12 @@ class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
         return exceptionHandler;
     }
 
-    private void broadcastAfterJsfRequestEvent()
+    private void broadcastDestroyedJsfRequestEvent()
     {
         lazyInit();
-        if (this.beforeAfterJsfRequestBroadcaster != null)
+        if (this.jsfRequestBroadcaster != null)
         {
-            this.beforeAfterJsfRequestBroadcaster.broadcastAfterJsfRequestEvent(this);
+            this.jsfRequestBroadcaster.broadcastDestroyedJsfRequestEvent(this);
         }
     }
 
@@ -125,10 +125,10 @@ class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
         {
             this.jsfModuleConfig = BeanProvider.getContextualReference(JsfModuleConfig.class);
 
-            if (ClassDeactivationUtils.isActivated(BeforeAfterJsfRequestBroadcaster.class))
+            if (ClassDeactivationUtils.isActivated(JsfRequestBroadcaster.class))
             {
-                this.beforeAfterJsfRequestBroadcaster =
-                        BeanProvider.getContextualReference(BeforeAfterJsfRequestBroadcaster.class, true);
+                this.jsfRequestBroadcaster =
+                        BeanProvider.getContextualReference(JsfRequestBroadcaster.class, true);
             }
 
             ViewConfigResolver viewConfigResolver = BeanProvider.getContextualReference(ViewConfigResolver.class);

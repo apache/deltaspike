@@ -27,8 +27,8 @@ import javax.enterprise.event.Observes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.deltaspike.servlet.api.Destroyed;
-import org.apache.deltaspike.servlet.api.Initialized;
+import org.apache.deltaspike.core.api.lifecycle.Destroyed;
+import org.apache.deltaspike.core.api.lifecycle.Initialized;
 
 /**
  * Application scoped observer which listens for {@link HttpServletRequest} and {@link HttpServletResponse} events on

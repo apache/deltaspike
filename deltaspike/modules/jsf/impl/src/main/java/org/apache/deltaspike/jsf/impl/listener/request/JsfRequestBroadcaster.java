@@ -18,9 +18,9 @@
  */
 package org.apache.deltaspike.jsf.impl.listener.request;
 
+import org.apache.deltaspike.core.api.lifecycle.Destroyed;
+import org.apache.deltaspike.core.api.lifecycle.Initialized;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
-import org.apache.deltaspike.jsf.api.listener.request.AfterJsfRequest;
-import org.apache.deltaspike.jsf.api.listener.request.BeforeJsfRequest;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
@@ -28,37 +28,36 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
 /**
- * Broadcaster for {@link org.apache.deltaspike.jsf.api.listener.request.BeforeJsfRequest} and
- * {@link org.apache.deltaspike.jsf.api.listener.request.AfterJsfRequest}
+ * Broadcaster for {@link Initialized} and {@link Destroyed}
  */
 @ApplicationScoped
-public class BeforeAfterJsfRequestBroadcaster implements Deactivatable
+public class JsfRequestBroadcaster implements Deactivatable
 {
     @Inject
-    @BeforeJsfRequest
-    private Event<FacesContext> beforeJsfRequestEvent;
+    @Initialized
+    private Event<FacesContext> initializedJsfRequestEvent;
 
     @Inject
-    @AfterJsfRequest
-    private Event<FacesContext> afterJsfRequestEvent;
+    @Destroyed
+    private Event<FacesContext> destroyedJsfRequestEvent;
 
     /**
-     * Broadcasts the {@link org.apache.deltaspike.jsf.api.listener.request.BeforeJsfRequest} event
+     * Broadcasts the {@link Initialized} event
      *
      * @param facesContext current faces-context
      */
-    public void broadcastBeforeJsfRequestEvent(FacesContext facesContext)
+    public void broadcastInitializedJsfRequestEvent(FacesContext facesContext)
     {
-        this.beforeJsfRequestEvent.fire(facesContext);
+        this.initializedJsfRequestEvent.fire(facesContext);
     }
 
     /**
-     * Broadcasts the {@link org.apache.deltaspike.jsf.api.listener.request.AfterJsfRequest} event
+     * Broadcasts the {@link Destroyed} event
      *
      * @param facesContext current faces-context
      */
-    public void broadcastAfterJsfRequestEvent(FacesContext facesContext)
+    public void broadcastDestroyedJsfRequestEvent(FacesContext facesContext)
     {
-        this.afterJsfRequestEvent.fire(facesContext);
+        this.destroyedJsfRequestEvent.fire(facesContext);
     }
 }

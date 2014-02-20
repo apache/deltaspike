@@ -31,7 +31,7 @@ class DeltaSpikeLifecycleWrapper extends Lifecycle
 {
     private final Lifecycle wrapped;
 
-    private BeforeAfterJsfRequestBroadcaster beforeAfterJsfRequestBroadcaster;
+    private JsfRequestBroadcaster jsfRequestBroadcaster;
 
     private ClientWindow clientWindow;
     private WindowContext windowContext;
@@ -56,8 +56,8 @@ class DeltaSpikeLifecycleWrapper extends Lifecycle
 
     /**
      * Broadcasts
-     * {@link org.apache.deltaspike.jsf.api.listener.request.BeforeJsfRequest} and
-     * {@link org.apache.deltaspike.jsf.api.listener.request.AfterJsfRequest}
+     * {@link org.apache.deltaspike.core.api.lifecycle.Initialized} and
+     * {@link org.apache.deltaspike.core.api.lifecycle.Destroyed}
      * //TODO StartupEvent
      */
     @Override
@@ -72,7 +72,7 @@ class DeltaSpikeLifecycleWrapper extends Lifecycle
         lazyInit();
 
         //TODO broadcastApplicationStartupBroadcaster();
-        broadcastBeforeFacesRequestEvent(facesContext);
+        broadcastInitializedJsfRequestEvent(facesContext);
 
         // ClientWindow handling
         String windowId = clientWindow.getWindowId(facesContext);
@@ -108,11 +108,11 @@ class DeltaSpikeLifecycleWrapper extends Lifecycle
         this.wrapped.render(facesContext);
     }
 
-    private void broadcastBeforeFacesRequestEvent(FacesContext facesContext)
+    private void broadcastInitializedJsfRequestEvent(FacesContext facesContext)
     {
-        if (this.beforeAfterJsfRequestBroadcaster != null)
+        if (this.jsfRequestBroadcaster != null)
         {
-            this.beforeAfterJsfRequestBroadcaster.broadcastBeforeJsfRequestEvent(facesContext);
+            this.jsfRequestBroadcaster.broadcastInitializedJsfRequestEvent(facesContext);
         }
     }
 
@@ -127,18 +127,18 @@ class DeltaSpikeLifecycleWrapper extends Lifecycle
     private synchronized void init()
     {
         // switch into paranoia mode
-        if (initialized == null)
+        if (this.initialized == null)
         {
-            if (ClassDeactivationUtils.isActivated(BeforeAfterJsfRequestBroadcaster.class))
+            if (ClassDeactivationUtils.isActivated(JsfRequestBroadcaster.class))
             {
-                beforeAfterJsfRequestBroadcaster =
-                        BeanProvider.getContextualReference(BeforeAfterJsfRequestBroadcaster.class, true);
+                this.jsfRequestBroadcaster =
+                        BeanProvider.getContextualReference(JsfRequestBroadcaster.class, true);
             }
 
             clientWindow = BeanProvider.getContextualReference(ClientWindow.class, true);
             windowContext = BeanProvider.getContextualReference(WindowContext.class, true);
 
-            initialized = true;
+            this.initialized = true;
         }
     }
 }

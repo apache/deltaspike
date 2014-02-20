@@ -31,11 +31,11 @@ import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.persistence.PersistenceException;
 
+import org.apache.deltaspike.core.api.lifecycle.Initialized;
 import org.apache.deltaspike.data.api.QueryInvocationException;
 import org.apache.deltaspike.data.api.Repository;
 import org.apache.deltaspike.data.impl.builder.QueryBuilder;
 import org.apache.deltaspike.data.impl.builder.QueryBuilderFactory;
-import org.apache.deltaspike.data.impl.meta.Initialized;
 import org.apache.deltaspike.data.impl.meta.RepositoryComponent;
 import org.apache.deltaspike.data.impl.meta.RepositoryComponents;
 import org.apache.deltaspike.data.impl.meta.RepositoryMethod;
