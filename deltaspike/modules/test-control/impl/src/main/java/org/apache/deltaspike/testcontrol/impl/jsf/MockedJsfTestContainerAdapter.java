@@ -18,70 +18,24 @@
  */
 package org.apache.deltaspike.testcontrol.impl.jsf;
 
-import org.apache.deltaspike.core.util.ClassUtils;
-import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.testcontrol.spi.ExternalContainer;
+import org.apache.myfaces.test.mock.MockedJsfTestContainer;
 
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.SessionScoped;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 
 /**
  * Optional adapter for MockedJsfTestContainer
  * Requires MyFaces-Test v1.0.6 or higher
  */
-//TODO use MockedJsfTestContainer without reflection once v1.0.6 of myfaces-test is released
 public class MockedJsfTestContainerAdapter implements ExternalContainer
 {
-    private final Object mockedMyFacesTestContainer;
-
-    private final Method startContainerMethod;
-    private final Method stopContainerMethod;
-
-    private final Method startRequestMethod;
-    private final Method stopRequestMethod;
-
-    private final Method startSessionMethod;
-    private final Method stopSessionMethod;
-
-    public MockedJsfTestContainerAdapter()
-    {
-        this.mockedMyFacesTestContainer =
-            ClassUtils.tryToInstantiateClassForName("org.apache.myfaces.test.mock.MockedJsfTestContainer");
-
-        if (this.mockedMyFacesTestContainer == null)
-        {
-            throw new IllegalStateException("This adapter requires MyFaces-Test v1.0.6 or higher.");
-        }
-
-        try
-        {
-            this.startContainerMethod = this.mockedMyFacesTestContainer.getClass().getDeclaredMethod("setUp");
-            this.stopContainerMethod = this.mockedMyFacesTestContainer.getClass().getDeclaredMethod("tearDown");
-
-            this.startRequestMethod = this.mockedMyFacesTestContainer.getClass().getDeclaredMethod("startRequest");
-            this.stopRequestMethod = this.mockedMyFacesTestContainer.getClass().getDeclaredMethod("endRequest");
-
-            this.startSessionMethod = this.mockedMyFacesTestContainer.getClass().getDeclaredMethod("startSession");
-            this.stopSessionMethod = this.mockedMyFacesTestContainer.getClass().getDeclaredMethod("endSession");
-        }
-        catch (NoSuchMethodException e)
-        {
-            throw ExceptionUtils.throwAsRuntimeException(e);
-        }
-    }
+    private final MockedJsfTestContainer mockedMyFacesTestContainer = new MockedJsfTestContainer();
 
     public void boot()
     {
-        try
-        {
-            this.startContainerMethod.invoke(this.mockedMyFacesTestContainer);
-        }
-        catch (Exception e)
-        {
-            throw ExceptionUtils.throwAsRuntimeException(e);
-        }
+        this.mockedMyFacesTestContainer.setUp();
     }
 
     @Override
@@ -89,25 +43,11 @@ public class MockedJsfTestContainerAdapter implements ExternalContainer
     {
         if (RequestScoped.class.equals(scopeClass))
         {
-            try
-            {
-                this.startRequestMethod.invoke(this.mockedMyFacesTestContainer);
-            }
-            catch (Exception e)
-            {
-                throw ExceptionUtils.throwAsRuntimeException(e);
-            }
+            this.mockedMyFacesTestContainer.startRequest();
         }
         else if (SessionScoped.class.equals(scopeClass))
         {
-            try
-            {
-                this.startSessionMethod.invoke(this.mockedMyFacesTestContainer);
-            }
-            catch (Exception e)
-            {
-                throw ExceptionUtils.throwAsRuntimeException(e);
-            }
+            this.mockedMyFacesTestContainer.startSession();
         }
     }
 
@@ -116,38 +56,17 @@ public class MockedJsfTestContainerAdapter implements ExternalContainer
     {
         if (RequestScoped.class.equals(scopeClass))
         {
-            try
-            {
-                this.stopRequestMethod.invoke(this.mockedMyFacesTestContainer);
-            }
-            catch (Exception e)
-            {
-                throw ExceptionUtils.throwAsRuntimeException(e);
-            }
+            this.mockedMyFacesTestContainer.endRequest();
         }
         else if (SessionScoped.class.equals(scopeClass))
         {
-            try
-            {
-                this.stopSessionMethod.invoke(this.mockedMyFacesTestContainer);
-            }
-            catch (Exception e)
-            {
-                throw ExceptionUtils.throwAsRuntimeException(e);
-            }
+            this.mockedMyFacesTestContainer.endSession();
         }
     }
 
     public void shutdown()
     {
-        try
-        {
-            this.stopContainerMethod.invoke(this.mockedMyFacesTestContainer);
-        }
-        catch (Exception e)
-        {
-            throw ExceptionUtils.throwAsRuntimeException(e);
-        }
+        this.mockedMyFacesTestContainer.tearDown();
     }
 
     @Override
