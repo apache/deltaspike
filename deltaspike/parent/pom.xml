@@ -57,7 +57,7 @@
 
         <!-- JSF-2.0 implementations-->
         <myfaces2.version>2.0.14</myfaces2.version>
-        <myfaces22.version>2.2.0-beta</myfaces22.version>
+        <myfaces22.version>2.2.0</myfaces22.version>
         <myfaces2.version.current>2.1.8</myfaces2.version.current>
         <mojarra2.version>2.0.3-b03</mojarra2.version>
 

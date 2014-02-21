@@ -37,7 +37,7 @@
     <properties>
         <container.unpack.directory>${java.io.tmpdir}/deltaspike-arquillian-containers</container.unpack.directory>
         <jboss.as.version>7.1.1.Final</jboss.as.version>
-        <wildfly.version>8.0.0.CR1</wildfly.version>
+        <wildfly.version>8.0.0.Final</wildfly.version>
         <glassfish3.version>3.1.2.2</glassfish3.version>
         <glassfish4.version>4.0</glassfish4.version>
     </properties>
