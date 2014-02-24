@@ -24,6 +24,7 @@ import java.lang.reflect.Proxy;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.InjectionPoint;
 
 import org.apache.deltaspike.core.util.ClassUtils;
@@ -36,6 +37,7 @@ import org.apache.deltaspike.core.util.ReflectionUtils;
 public class TypedMessageBundleProducer implements Serializable
 {
     private static final long serialVersionUID = -5077306523543940760L;
+    private static final String JAVA_PACKAGE = "java.";
 
     @Produces
     @Dependent
@@ -44,6 +46,30 @@ public class TypedMessageBundleProducer implements Serializable
     Object produceTypedMessageBundle(InjectionPoint injectionPoint, MessageBundleInvocationHandler handler)
     {
         return createMessageBundleProxy(ReflectionUtils.getRawType(injectionPoint.getType()), handler);
+    }
+
+    @Produces
+    @Dependent
+    @NamedTypedMessageBundle
+    @SuppressWarnings("UnusedDeclaration")
+    Object produceTypedMessageBundle(NamedMessageBundleInvocationHandler handler)
+    {
+        Bean currentMessageBundleContextBean = MessageBundleContext.getCurrentMessageBundleBean();
+        Class<?> type = extractCustomType(currentMessageBundleContextBean);
+        handler.setTargetType(type);
+        return createMessageBundleProxy(type, handler);
+    }
+
+    private Class<?> extractCustomType(Bean currentMessageBundleBean)
+    {
+        for (Object type : currentMessageBundleBean.getTypes())
+        {
+            if (type instanceof Class && !((Class)type).getName().startsWith(JAVA_PACKAGE))
+            {
+                return (Class)type;
+            }
+        }
+        throw new IllegalStateException("no custom type found for bean: " + currentMessageBundleBean.toString());
     }
 
     private <T> T createMessageBundleProxy(Class<T> type, MessageBundleInvocationHandler handler)

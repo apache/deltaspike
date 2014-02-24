@@ -18,14 +18,19 @@
  */
 package org.apache.deltaspike.core.impl.message;
 
+import java.beans.Introspector;
 import java.io.Serializable;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AfterBeanDiscovery;
 import javax.enterprise.inject.spi.AfterDeploymentValidation;
@@ -35,12 +40,17 @@ import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.BeforeBeanDiscovery;
 import javax.enterprise.inject.spi.Extension;
+import javax.enterprise.inject.spi.PassivationCapable;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import javax.enterprise.inject.spi.ProcessProducerMethod;
+import javax.inject.Named;
 
+import org.apache.deltaspike.core.api.literal.AnyLiteral;
 import org.apache.deltaspike.core.api.message.Message;
 import org.apache.deltaspike.core.api.message.MessageBundle;
 import org.apache.deltaspike.core.api.message.MessageTemplate;
+import org.apache.deltaspike.core.util.bean.ImmutableBeanWrapper;
+import org.apache.deltaspike.core.util.bean.ImmutablePassivationCapableBeanWrapper;
 import org.apache.deltaspike.core.util.bean.WrappingBeanBuilder;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
@@ -55,6 +65,9 @@ public class MessageBundleExtension implements Extension, Deactivatable
 {
     private final Collection<AnnotatedType<?>> messageBundleTypes = new HashSet<AnnotatedType<?>>();
     private Bean<Object> bundleProducerBean;
+    private Bean<Object> namedBundleProducerBean;
+    private NamedTypedMessageBundle namedTypedMessageBundle = new NamedTypedMessageBundleLiteral();
+    private boolean elSupportEnabled;
 
     private List<String> deploymentErrors = new ArrayList<String>();
 
@@ -64,6 +77,7 @@ public class MessageBundleExtension implements Extension, Deactivatable
     protected void init(@Observes BeforeBeanDiscovery beforeBeanDiscovery)
     {
         isActivated = ClassDeactivationUtils.isActivated(getClass());
+        elSupportEnabled = ClassDeactivationUtils.isActivated(NamedMessageBundleInvocationHandler.class);
     }
 
     @SuppressWarnings("UnusedDeclaration")
@@ -176,6 +190,10 @@ public class MessageBundleExtension implements Extension, Deactivatable
         {
             bundleProducerBean = (Bean<Object>) bean;
         }
+        else if (method.isAnnotationPresent(NamedTypedMessageBundle.class))
+        {
+            namedBundleProducerBean = (Bean<Object>)bean;
+        }
     }
 
     @SuppressWarnings("UnusedDeclaration")
@@ -191,6 +209,15 @@ public class MessageBundleExtension implements Extension, Deactivatable
         for (AnnotatedType<?> type : messageBundleTypes)
         {
             abd.addBean(createMessageBundleBean(bundleProducerBean, type, beanManager));
+
+            if (this.elSupportEnabled)
+            {
+                Bean<?> namedBean = createNamedMessageBundleBean(namedBundleProducerBean, type, beanManager);
+                if (namedBean.getName() != null)
+                {
+                    abd.addBean(namedBean);
+                }
+            }
         }
     }
 
@@ -200,6 +227,12 @@ public class MessageBundleExtension implements Extension, Deactivatable
     {
         WrappingBeanBuilder<T> beanBuilder = new WrappingBeanBuilder<T>(delegate, beanManager)
                 .readFromType(annotatedType);
+
+        if (this.elSupportEnabled)
+        {
+            /*see namedBundleProducerBean - a producer without injection-point is needed*/
+            beanBuilder.name(null);
+        }
         //X TODO re-visit type.getBaseType() in combination with #addQualifier
         beanBuilder.types(annotatedType.getJavaClass(), Object.class, Serializable.class);
         beanBuilder.passivationCapable(true);
@@ -207,6 +240,102 @@ public class MessageBundleExtension implements Extension, Deactivatable
 
         return beanBuilder.create();
     }
+
+    private <T> Bean<T> createNamedMessageBundleBean(Bean<Object> delegate,
+                                                     AnnotatedType<T> annotatedType,
+                                                     BeanManager beanManager)
+    {
+        WrappingBeanBuilder<T> beanBuilder = new WrappingBeanBuilder<T>(delegate, beanManager) {
+            @Override
+            public ImmutableBeanWrapper<T> create()
+            {
+                final ImmutableBeanWrapper<T> result = super.create();
+
+                String beanName = createBeanName(result.getTypes());
+
+                Set<Annotation> qualifiers = new HashSet<Annotation>();
+                qualifiers.add(new AnyLiteral());
+                qualifiers.add(namedTypedMessageBundle);
+
+                if (isPassivationCapable())
+                {
+                    return new ImmutablePassivationCapableBeanWrapper<T>(result,
+                            beanName, qualifiers, result.getScope(),
+                            result.getStereotypes(), result.getTypes(), result.isAlternative(),
+                            result.isNullable(), result.toString(), ((PassivationCapable)result).getId()) {
+                        @Override
+                        public T create(CreationalContext<T> creationalContext)
+                        {
+                            MessageBundleContext.setBean(result);
+
+                            try
+                            {
+                                return super.create(creationalContext);
+                            }
+                            finally
+                            {
+                                MessageBundleContext.reset();
+                            }
+                        }
+                    };
+                }
+                else
+                {
+                    return new ImmutableBeanWrapper<T>(result,
+                            beanName, qualifiers, result.getScope(),
+                            result.getStereotypes(), result.getTypes(), result.isAlternative(),
+                            result.isNullable(), result.toString()) {
+                        @Override
+                        public T create(CreationalContext<T> creationalContext)
+                        {
+                            MessageBundleContext.setBean(result);
+                            try
+                            {
+                                return super.create(creationalContext);
+                            }
+                            finally
+                            {
+                                MessageBundleContext.reset();
+                            }
+                        }
+                    };
+                }
+            }
+
+            private String createBeanName(Set<Type> types)
+            {
+                for (Object type : types)
+                {
+                    if (type instanceof Class)
+                    {
+                        Named namedAnnotation = ((Class<?>) type).getAnnotation(Named.class);
+
+                        if (namedAnnotation == null)
+                        {
+                            continue;
+                        }
+
+                        String result = namedAnnotation.value();
+                        if (!"".equals(result))
+                        {
+                            return result;
+                        }
+                        return Introspector.decapitalize(((Class<?>) type).getSimpleName());
+                    }
+                }
+                return null;
+            }
+        };
+        beanBuilder.readFromType(annotatedType);
+
+        //X TODO re-visit type.getBaseType() in combination with #addQualifier
+        beanBuilder.types(annotatedType.getJavaClass(), Object.class, Serializable.class);
+        beanBuilder.passivationCapable(true);
+        beanBuilder.id("NamedMessageBundleBean#" + annotatedType.getJavaClass().getName());
+
+        return beanBuilder.create();
+    }
+
 
     @SuppressWarnings("UnusedDeclaration")
     protected void cleanup(@Observes AfterDeploymentValidation afterDeploymentValidation)

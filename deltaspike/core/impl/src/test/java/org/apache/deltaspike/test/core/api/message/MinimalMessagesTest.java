@@ -83,11 +83,25 @@ public class MinimalMessagesTest
         Assert.assertEquals("Hello DeltaSpike", customMinimalMessages.sayHello("DeltaSpike"));
     }
 
-    //X TODO @Test currently disabled as we currently rely on having an InjectionPoint internally...
+    @Test
     public void testExpressionLanguageIntegration()
     {
-        ElPickedUpMessages elMessage = (ElPickedUpMessages) BeanProvider.getContextualReference("elPickedUpMessage");
+        ElPickedUpMessages elMessage =
+                (ElPickedUpMessages) BeanProvider.getContextualReference("elPickedUpMessages");
         Assert.assertNotNull(elMessage);
         Assert.assertEquals("Hello DeltaSpike", elMessage.sayHello("DeltaSpike"));
+        Assert.assertEquals("Hello 'null'", elMessage.sayHello(null));
+        Assert.assertEquals("Text", elMessage.text());
+    }
+
+    @Test
+    public void testExpressionLanguageIntegrationWithCustomName()
+    {
+        TypedMessageWithCustomName elMessage =
+                (TypedMessageWithCustomName) BeanProvider.getContextualReference("namedTypedMessages");
+        Assert.assertNotNull(elMessage);
+        Assert.assertEquals("Hello DeltaSpike", elMessage.sayHello("DeltaSpike"));
+        Assert.assertEquals("Hello 'null'", elMessage.sayHello(null));
+        Assert.assertEquals("Text", elMessage.text());
     }
 }

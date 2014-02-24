@@ -16,20 +16,34 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.api.message;
+package org.apache.deltaspike.core.impl.message;
 
-import javax.inject.Named;
+import javax.enterprise.inject.Typed;
+import javax.enterprise.inject.spi.Bean;
 
-import org.apache.deltaspike.core.api.message.MessageBundle;
-import org.apache.deltaspike.core.api.message.MessageContextConfig;
-
-@Named
-@MessageBundle
-@MessageContextConfig(
-    localeResolver = FixedEnglishLocalResolver.class,
-    messageSource = "customMinimalMessage")
-public interface ElPickedUpMessages
+@Typed()
+abstract class MessageBundleContext
 {
-    String sayHello(String name);
-    String text();
+    private static final ThreadLocal<Bean> MESSAGE_BUNDLE_BEAN = new ThreadLocal<Bean>();
+
+    private MessageBundleContext()
+    {
+        // prevent instantiation
+    }
+
+    static void setBean(Bean bean)
+    {
+        MESSAGE_BUNDLE_BEAN.set(bean);
+    }
+
+    static void reset()
+    {
+        MESSAGE_BUNDLE_BEAN.set(null);
+        MESSAGE_BUNDLE_BEAN.remove();
+    }
+
+    static Bean getCurrentMessageBundleBean()
+    {
+        return MESSAGE_BUNDLE_BEAN.get();
+    }
 }

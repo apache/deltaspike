@@ -19,6 +19,7 @@
 package org.apache.deltaspike.core.impl.message;
 
 import javax.enterprise.context.Dependent;
+import javax.enterprise.inject.Typed;
 import javax.inject.Inject;
 import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
@@ -42,8 +43,11 @@ import org.apache.deltaspike.core.util.ClassUtils;
  * {@link org.apache.deltaspike.core.api.message.MessageBundle}s.
  */
 @Dependent
+@Typed(MessageBundleInvocationHandler.class)
 public class MessageBundleInvocationHandler implements InvocationHandler, Serializable
 {
+    private static final long serialVersionUID = -8980912335543392357L;
+
     @Inject
     private MessageContext baseMessageContext = null;
 

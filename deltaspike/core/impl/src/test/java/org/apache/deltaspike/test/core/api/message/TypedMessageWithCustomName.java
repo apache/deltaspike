@@ -18,17 +18,17 @@
  */
 package org.apache.deltaspike.test.core.api.message;
 
-import javax.inject.Named;
-
 import org.apache.deltaspike.core.api.message.MessageBundle;
 import org.apache.deltaspike.core.api.message.MessageContextConfig;
 
-@Named
+import javax.inject.Named;
+
+@Named("namedTypedMessages")
 @MessageBundle
 @MessageContextConfig(
     localeResolver = FixedEnglishLocalResolver.class,
     messageSource = "customMinimalMessage")
-public interface ElPickedUpMessages
+public interface TypedMessageWithCustomName
 {
     String sayHello(String name);
     String text();
