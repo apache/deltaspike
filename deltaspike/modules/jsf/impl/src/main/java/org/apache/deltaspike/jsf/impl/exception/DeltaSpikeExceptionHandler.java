@@ -37,16 +37,16 @@ import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;
 public class DeltaSpikeExceptionHandler extends ExceptionHandlerWrapper implements Deactivatable
 {
     private final ExceptionHandler wrapped;
-    private final Annotation exceptionQualifier;
 
+    private volatile Boolean initialized;
+    
+    private Annotation exceptionQualifier;
     private boolean isActivated = true;
 
     public DeltaSpikeExceptionHandler(ExceptionHandler wrapped)
     {
         this.isActivated = ClassDeactivationUtils.isActivated(getClass());
         this.wrapped = wrapped;
-        this.exceptionQualifier = AnnotationInstanceProvider.of(
-                BeanProvider.getContextualReference(JsfModuleConfig.class).getExceptionQualifier());
     }
 
     @Override
@@ -60,6 +60,8 @@ public class DeltaSpikeExceptionHandler extends ExceptionHandlerWrapper implemen
     {
         if (isActivated)
         {
+            init();
+            
             FacesContext context = FacesContext.getCurrentInstance();
 
             if (context.getResponseComplete())
@@ -98,5 +100,16 @@ public class DeltaSpikeExceptionHandler extends ExceptionHandlerWrapper implemen
         }
 
         super.handle();
+    }
+    
+    private synchronized void init()
+    {
+        if (this.initialized == null)
+        {
+            this.exceptionQualifier = AnnotationInstanceProvider.of(
+                    BeanProvider.getContextualReference(JsfModuleConfig.class).getExceptionQualifier());
+
+            this.initialized = true;
+        }
     }
 }
