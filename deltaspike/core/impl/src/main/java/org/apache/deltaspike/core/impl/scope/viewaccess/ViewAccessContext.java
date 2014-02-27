@@ -19,8 +19,6 @@
 package org.apache.deltaspike.core.impl.scope.viewaccess;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import javax.enterprise.context.ContextNotActiveException;
 import javax.enterprise.context.spi.Contextual;
@@ -115,28 +113,19 @@ public class ViewAccessContext extends AbstractContext
             destroyExpiredBeans();
             
             // clear list from last request
-            List<String> lastAccessedBeans = viewAccessScopedBeanHistory.getLastAccessedBeans();
-            lastAccessedBeans.clear();
-            
-            // move used beans from this request to last request
-            viewAccessScopedBeanHistory.setLastAccessedBeans(viewAccessScopedBeanHistory.getAccessedBeans());
-            viewAccessScopedBeanHistory.setAccessedBeans(lastAccessedBeans);
+            viewAccessScopedBeanHistory.getAccessedBeans().clear();
         }
     }
     
     private void destroyExpiredBeans()
     {
-        List<String> usedBeans = new ArrayList<String>();
-        usedBeans.addAll(viewAccessScopedBeanHistory.getAccessedBeans());
-        usedBeans.addAll(viewAccessScopedBeanHistory.getLastAccessedBeans());
-
         ContextualStorage storage =
                 viewAccessScopedBeanHolder.getContextualStorage(beanManager, getCurrentWindowId(), false);
         if (storage != null)
         {
             for (Map.Entry<Object, ContextualInstanceInfo<?>> storageEntry : storage.getStorage().entrySet())
             {
-                if (!usedBeans.contains((String) storageEntry.getKey()))
+                if (!viewAccessScopedBeanHistory.getAccessedBeans().contains((String) storageEntry.getKey()))
                 {
                     Contextual bean = storage.getBean(storageEntry.getKey());
                     AbstractContext.destroyBean(bean, storageEntry.getValue());

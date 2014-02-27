@@ -30,13 +30,11 @@ public class ViewAccessScopedBeanHistory implements Serializable
     private static final long serialVersionUID = 3617603930728148927L;
     
     private List<String> accessedBeans;
-    private List<String> lastAccessedBeans;
     private String lastView;
 
     public ViewAccessScopedBeanHistory()
     {
         accessedBeans = new ArrayList<String>();
-        lastAccessedBeans = new ArrayList<String>();
     }
     
     public List<String> getAccessedBeans()
@@ -47,16 +45,6 @@ public class ViewAccessScopedBeanHistory implements Serializable
     public void setAccessedBeans(List<String> accessedBeans)
     {
         this.accessedBeans = accessedBeans;
-    }
-
-    public List<String> getLastAccessedBeans()
-    {
-        return lastAccessedBeans;
-    }
-
-    public void setLastAccessedBeans(List<String> lastAccessedBeans)
-    {
-        this.lastAccessedBeans = lastAccessedBeans;
     }
 
     public String getLastView()
