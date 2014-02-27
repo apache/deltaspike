@@ -60,7 +60,7 @@ public class DeltaSpikeExceptionHandler extends ExceptionHandlerWrapper implemen
     {
         if (isActivated)
         {
-            init();
+            lazyInit();
             
             FacesContext context = FacesContext.getCurrentInstance();
 
@@ -101,7 +101,15 @@ public class DeltaSpikeExceptionHandler extends ExceptionHandlerWrapper implemen
 
         super.handle();
     }
-    
+
+    private void lazyInit()
+    {
+        if (this.initialized == null)
+        {
+            init();
+        }
+    }
+
     private synchronized void init()
     {
         if (this.initialized == null)
