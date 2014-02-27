@@ -18,6 +18,8 @@
  */
 package org.apache.deltaspike.cdise.tck.beans;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 
@@ -25,8 +27,23 @@ import java.io.Serializable;
 public class TestUser implements Serializable
 {
     private static final long serialVersionUID = -4171521313675763849L;
+    private static ThreadLocal<Boolean> preDestroyCalled = new ThreadLocal<Boolean>();
 
     private String name;
+
+    @PostConstruct
+    protected void onPostConstruct()
+    {
+        //reset it
+        preDestroyCalled.remove();
+        preDestroyCalled.set(false);
+    }
+
+    @PreDestroy
+    protected void onPreDestroy()
+    {
+        preDestroyCalled.set(true);
+    }
 
     public String getName()
     {
@@ -36,5 +53,10 @@ public class TestUser implements Serializable
     public void setName(String name)
     {
         this.name = name;
+    }
+
+    public static boolean isPreDestroyCalled()
+    {
+        return preDestroyCalled.get();
     }
 }

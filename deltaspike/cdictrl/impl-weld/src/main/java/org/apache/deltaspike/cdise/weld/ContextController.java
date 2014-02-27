@@ -66,6 +66,9 @@ public class ContextController
     {
         if (applicationContext.isActive())
         {
+            applicationContext.invalidate();
+
+            //needed for weld < v1.1.9
             if (applicationContext instanceof AbstractSharedContext)
             {
                 ((AbstractSharedContext) applicationContext).getBeanStore().clear();
