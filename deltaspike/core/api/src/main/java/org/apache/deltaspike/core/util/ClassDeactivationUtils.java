@@ -16,161 +16,142 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.util;
+package org.apache.deltaspike.jsf.impl.listener.request;
 
-import org.apache.deltaspike.core.api.config.ConfigResolver;
-import org.apache.deltaspike.core.spi.activation.ClassDeactivator;
-import org.apache.deltaspike.core.spi.activation.Deactivatable;
+import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.core.spi.scope.window.WindowContext;
+import org.apache.deltaspike.core.util.ClassDeactivationUtils;
+import org.apache.deltaspike.jsf.spi.scope.window.ClientWindow;
 
-import javax.enterprise.inject.Typed;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Logger;
+import javax.faces.context.FacesContext;
+import javax.faces.event.PhaseListener;
+import javax.faces.lifecycle.Lifecycle;
+import org.apache.deltaspike.core.impl.scope.DeltaSpikeContextExtension;
+import org.apache.deltaspike.core.impl.scope.viewaccess.ViewAccessContext;
 
-/**
- * Helper methods for {@link ClassDeactivator}
- */
-@Typed()
-public abstract class ClassDeactivationUtils
+class DeltaSpikeLifecycleWrapper extends Lifecycle
 {
-    private static final Logger LOG = Logger.getLogger(ClassDeactivationUtils.class.getName());
+    private final Lifecycle wrapped;
 
-    /**
-     * This Map holds the ClassLoader as first level to make it possible to have different configurations per 
-     * WebApplication in an EAR or other Multi-ClassLoader scenario.
-     * 
-     * The Map then contains a List of {@link ClassDeactivator}s in order of their configured ordinal.
-     */
-    private static Map<ClassLoader, List<ClassDeactivator>> classDeactivatorMap
-        = new ConcurrentHashMap<ClassLoader, List<ClassDeactivator>>();
+    private JsfRequestBroadcaster jsfRequestBroadcaster;
 
-    /**
-     * Cache for the result. It won't contain many classes but it might be accessed frequently.
-     * Valid entries are only true or false. If an entry isn't available or null, it gets calculated.
-     */
-    private static Map<Class<? extends Deactivatable>, Boolean> activationStatusCache
-        = new ConcurrentHashMap<Class<? extends Deactivatable>, Boolean>();
-    
-    private ClassDeactivationUtils()
+    private ClientWindow clientWindow;
+    private WindowContext windowContext;
+    private DeltaSpikeContextExtension contextExtension;
+
+    private volatile Boolean initialized;
+
+    DeltaSpikeLifecycleWrapper(Lifecycle wrapped)
     {
-        // prevent instantiation
+        this.wrapped = wrapped;
+    }
+
+    Lifecycle getWrapped()
+    {
+        return wrapped;
+    }
+
+    @Override
+    public void addPhaseListener(PhaseListener phaseListener)
+    {
+        this.wrapped.addPhaseListener(phaseListener);
     }
 
     /**
-     * Evaluates if the given {@link Deactivatable} is active.
-     *
-     * @param targetClass {@link Deactivatable} under test.
-     * @return <code>true</code> if it is active, <code>false</code> otherwise
+     * Broadcasts
+     * {@link org.apache.deltaspike.core.api.lifecycle.Initialized} and
+     * {@link org.apache.deltaspike.core.api.lifecycle.Destroyed}
+     * //TODO StartupEvent
      */
-    public static boolean isActivated(Class<? extends Deactivatable> targetClass)
+    @Override
+    public void execute(FacesContext facesContext)
     {
-        Boolean activatedClassCacheEntry = activationStatusCache.get(targetClass);
-
-        if (activatedClassCacheEntry == null)
-        {
-            initDeactivatableCacheFor(targetClass);
-            activatedClassCacheEntry = activationStatusCache.get(targetClass);
-        }
-        return activatedClassCacheEntry;
-    }
-
-    private static synchronized void initDeactivatableCacheFor(Class<? extends Deactivatable> targetClass)
-    {
-        Boolean activatedClassCacheEntry = activationStatusCache.get(targetClass);
-
-        if (activatedClassCacheEntry != null) //double-check
+        //can happen due to the window-handling of deltaspike
+        if (facesContext.getResponseComplete())
         {
             return;
         }
 
-        List<ClassDeactivator> classDeactivators = getClassDeactivators();
+        lazyInit();
 
-        Boolean isActivated = Boolean.TRUE;
-        Class<? extends ClassDeactivator> deactivatedBy = null;
+        //TODO broadcastApplicationStartupBroadcaster();
+        broadcastInitializedJsfRequestEvent(facesContext);
 
-        LOG.fine("start evaluation if " + targetClass.getName() + " is de-/activated");
-
-        // we get the classActivators ordered by it's ordinal
-        // thus the last one which returns != null 'wins' ;)
-        for (ClassDeactivator classDeactivator : classDeactivators)
+        // ClientWindow handling
+        String windowId = clientWindow.getWindowId(facesContext);
+        if (windowId != null)
         {
-            Boolean isLocallyActivated = classDeactivator.isActivated(targetClass);
-
-            if (isLocallyActivated != null)
-            {
-                isActivated = isLocallyActivated;
-
-                /*
-                * Check and log the details across class-deactivators
-                */
-                if (!isActivated)
-                {
-                    deactivatedBy = classDeactivator.getClass();
-                    LOG.fine("Deactivating class " + targetClass);
-                }
-                else if (deactivatedBy != null)
-                {
-                    LOG.fine("Reactivation of: " + targetClass.getName() + " by " +
-                            classDeactivator.getClass().getName() +
-                            " - original deactivated by: " + deactivatedBy.getName() + ".\n" +
-                            "If that isn't the intended behaviour, you have to use a higher ordinal for " +
-                            deactivatedBy.getName());
-                }
-            }
+            windowContext.activateWindow(windowId);
         }
 
-        cacheResult(targetClass, isActivated);
+        if (!FacesContext.getCurrentInstance().getResponseComplete())
+        {
+            this.wrapped.execute(facesContext);
+        }
     }
 
-    private static void cacheResult(Class<? extends Deactivatable> targetClass, Boolean activated)
+    @Override
+    public PhaseListener[] getPhaseListeners()
     {
-        activationStatusCache.put(targetClass, activated);
-        LOG.info("class: " + targetClass.getName() + " activated=" + activated);
+        return this.wrapped.getPhaseListeners();
+    }
+
+    @Override
+    public void removePhaseListener(PhaseListener phaseListener)
+    {
+        this.wrapped.removePhaseListener(phaseListener);
     }
 
     /**
-     * @return the List of configured @{link ClassDeactivator}s for the current context ClassLoader.
+     * Performs cleanup tasks after the rendering process
      */
-    private static List<ClassDeactivator> getClassDeactivators()
+    @Override
+    public void render(FacesContext facesContext)
     {
-        ClassLoader classLoader = ClassUtils.getClassLoader(null);
-        List<ClassDeactivator> classDeactivators = classDeactivatorMap.get(classLoader);
-
-        if (classDeactivators == null)
+        this.wrapped.render(facesContext);
+        
+        if (facesContext.getViewRoot() != null)
         {
-            return initConfiguredClassDeactivators(classLoader);
+            ViewAccessContext viewAccessContext = contextExtension.getViewAccessScopedContext();
+            if (viewAccessContext != null)
+            {
+                viewAccessContext.onRenderingFinished(facesContext.getViewRoot().getViewId());
+            }
         }
-
-        return classDeactivators;
     }
 
-    //synchronized isn't needed - #initDeactivatableCacheFor is already synchronized
-    private static List<ClassDeactivator> initConfiguredClassDeactivators(ClassLoader classLoader)
+    private void broadcastInitializedJsfRequestEvent(FacesContext facesContext)
     {
-        List<String> classDeactivatorClassNames = ConfigResolver.getAllPropertyValues(ClassDeactivator.class.getName());
-
-        List<ClassDeactivator> classDeactivators = new ArrayList<ClassDeactivator>();
-
-        for (String classDeactivatorClassName : classDeactivatorClassNames)
+        if (this.jsfRequestBroadcaster != null)
         {
-            LOG.fine("processing ClassDeactivator: " + classDeactivatorClassName);
-
-            try
-            {
-                ClassDeactivator currentClassDeactivator =
-                        (ClassDeactivator) ClassUtils.instantiateClassForName(classDeactivatorClassName);
-                classDeactivators.add(currentClassDeactivator);
-            }
-            catch (Exception e)
-            {
-                LOG.warning(classDeactivatorClassName + " can't be instantiated");
-                throw new IllegalStateException(e);
-            }
+            this.jsfRequestBroadcaster.broadcastInitializedJsfRequestEvent(facesContext);
         }
+    }
 
-        classDeactivatorMap.put(classLoader, classDeactivators);
-        return classDeactivators;
+    private void lazyInit()
+    {
+        if (this.initialized == null)
+        {
+            init();
+        }
+    }
+
+    private synchronized void init()
+    {
+        // switch into paranoia mode
+        if (this.initialized == null)
+        {
+            if (ClassDeactivationUtils.isActivated(JsfRequestBroadcaster.class))
+            {
+                this.jsfRequestBroadcaster =
+                        BeanProvider.getContextualReference(JsfRequestBroadcaster.class, true);
+            }
+
+            clientWindow = BeanProvider.getContextualReference(ClientWindow.class, true);
+            windowContext = BeanProvider.getContextualReference(WindowContext.class, true);
+            contextExtension = BeanProvider.getContextualReference(DeltaSpikeContextExtension.class, true);
+            
+            this.initialized = true;
+        }
     }
 }
