@@ -26,6 +26,8 @@ import org.apache.deltaspike.jsf.spi.scope.window.ClientWindow;
 import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseListener;
 import javax.faces.lifecycle.Lifecycle;
+import org.apache.deltaspike.core.impl.scope.DeltaSpikeContextExtension;
+import org.apache.deltaspike.core.impl.scope.viewaccess.ViewAccessContext;
 
 class DeltaSpikeLifecycleWrapper extends Lifecycle
 {
@@ -35,6 +37,7 @@ class DeltaSpikeLifecycleWrapper extends Lifecycle
 
     private ClientWindow clientWindow;
     private WindowContext windowContext;
+    private DeltaSpikeContextExtension contextExtension;
 
     private volatile Boolean initialized;
 
@@ -106,6 +109,15 @@ class DeltaSpikeLifecycleWrapper extends Lifecycle
     public void render(FacesContext facesContext)
     {
         this.wrapped.render(facesContext);
+        
+        if (!facesContext.isPostback() && facesContext.getViewRoot() != null)
+        {
+            ViewAccessContext viewAccessContext = contextExtension.getViewAccessScopedContext();
+            if (viewAccessContext != null)
+            {
+                viewAccessContext.onRenderingFinished(facesContext.getViewRoot().getViewId());
+            }
+        }
     }
 
     private void broadcastInitializedJsfRequestEvent(FacesContext facesContext)
@@ -137,7 +149,8 @@ class DeltaSpikeLifecycleWrapper extends Lifecycle
 
             clientWindow = BeanProvider.getContextualReference(ClientWindow.class, true);
             windowContext = BeanProvider.getContextualReference(WindowContext.class, true);
-
+            contextExtension = BeanProvider.getContextualReference(DeltaSpikeContextExtension.class, true);
+            
             this.initialized = true;
         }
     }

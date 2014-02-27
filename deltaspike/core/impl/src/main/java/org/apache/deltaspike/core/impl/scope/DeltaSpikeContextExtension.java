@@ -28,6 +28,9 @@ import javax.enterprise.inject.spi.Extension;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.impl.scope.conversation.ConversationBeanHolder;
 import org.apache.deltaspike.core.impl.scope.conversation.GroupedConversationContext;
+import org.apache.deltaspike.core.impl.scope.viewaccess.ViewAccessScopedBeanHistory;
+import org.apache.deltaspike.core.impl.scope.viewaccess.ViewAccessScopedBeanHolder;
+import org.apache.deltaspike.core.impl.scope.viewaccess.ViewAccessContext;
 import org.apache.deltaspike.core.impl.scope.window.WindowBeanHolder;
 import org.apache.deltaspike.core.impl.scope.window.WindowContextImpl;
 import org.apache.deltaspike.core.impl.scope.window.WindowIdHolder;
@@ -41,8 +44,8 @@ import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 public class DeltaSpikeContextExtension implements Extension, Deactivatable
 {
     private WindowContextImpl windowContext;
-
     private GroupedConversationContext conversationContext;
+    private ViewAccessContext viewAccessScopedContext;
 
     private Boolean isActivated = true;
 
@@ -60,8 +63,10 @@ public class DeltaSpikeContextExtension implements Extension, Deactivatable
 
         windowContext = new WindowContextImpl(beanManager);
         conversationContext = new GroupedConversationContext(beanManager, windowContext);
+        viewAccessScopedContext = new ViewAccessContext(beanManager, windowContext);
         afterBeanDiscovery.addContext(windowContext);
         afterBeanDiscovery.addContext(conversationContext);
+        afterBeanDiscovery.addContext(viewAccessScopedContext);
     }
 
     /**
@@ -87,6 +92,12 @@ public class DeltaSpikeContextExtension implements Extension, Deactivatable
         ConversationBeanHolder conversationBeanHolder =
             BeanProvider.getContextualReference(beanManager, ConversationBeanHolder.class, false);
         conversationContext.init(conversationBeanHolder);
+        
+        ViewAccessScopedBeanHolder viewAccessScopedBeanHolder =
+            BeanProvider.getContextualReference(beanManager, ViewAccessScopedBeanHolder.class, false);
+        ViewAccessScopedBeanHistory viewAccessScopedBeanHistory =
+            BeanProvider.getContextualReference(beanManager, ViewAccessScopedBeanHistory.class, false);
+        viewAccessScopedContext.init(viewAccessScopedBeanHolder, windowIdHolder, viewAccessScopedBeanHistory);
     }
 
     public WindowContextImpl getWindowContext()
@@ -97,5 +108,10 @@ public class DeltaSpikeContextExtension implements Extension, Deactivatable
     public GroupedConversationContext getConversationContext()
     {
         return conversationContext;
+    }
+    
+    public ViewAccessContext getViewAccessScopedContext()
+    {
+        return viewAccessScopedContext;
     }
 }
