@@ -32,6 +32,8 @@ import javax.enterprise.inject.spi.BeforeBeanDiscovery;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 
+import org.apache.deltaspike.core.spi.activation.Deactivatable;
+import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.data.api.Repository;
 import org.apache.deltaspike.data.impl.meta.RepositoryComponentsFactory;
 import org.apache.deltaspike.data.impl.meta.unit.PersistenceUnits;
@@ -50,7 +52,7 @@ import org.apache.deltaspike.data.impl.meta.unit.PersistenceUnits;
  * <b>{@code @Observes AfterBeanDiscovery<X>}</b>:
  *     Raises any definition errors discovered before.
  */
-public class RepositoryExtension implements Extension
+public class RepositoryExtension implements Extension, Deactivatable
 {
 
     private static final Logger log = Logger.getLogger(RepositoryExtension.class.getName());
@@ -58,13 +60,26 @@ public class RepositoryExtension implements Extension
     private final List<RepositoryDefinitionException> definitionExceptions =
             new LinkedList<RepositoryDefinitionException>();
 
+    private Boolean isActivated = true;
+
     void beforeBeanDiscovery(@Observes BeforeBeanDiscovery before)
     {
+        isActivated = ClassDeactivationUtils.isActivated(getClass());
+
+        if (!isActivated)
+        {
+            return;
+        }
         PersistenceUnits.instance().init();
     }
 
     <X> void processAnnotatedType(@Observes ProcessAnnotatedType<X> event)
     {
+        if (!isActivated)
+        {
+            return;
+        }
+
         if (isRepository(event.getAnnotatedType()))
         {
             Class<X> repoClass = event.getAnnotatedType().getJavaClass();
@@ -87,6 +102,11 @@ public class RepositoryExtension implements Extension
 
     <X> void addDefinitionErrors(@Observes AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager)
     {
+        if (!isActivated)
+        {
+            return;
+        }
+
         for (RepositoryDefinitionException ex : definitionExceptions)
         {
             afterBeanDiscovery.addDefinitionError(ex);

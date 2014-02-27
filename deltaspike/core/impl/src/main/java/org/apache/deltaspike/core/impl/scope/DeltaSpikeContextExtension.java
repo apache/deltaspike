@@ -22,6 +22,7 @@ import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AfterBeanDiscovery;
 import javax.enterprise.inject.spi.AfterDeploymentValidation;
 import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.BeforeBeanDiscovery;
 import javax.enterprise.inject.spi.Extension;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
@@ -30,19 +31,33 @@ import org.apache.deltaspike.core.impl.scope.conversation.GroupedConversationCon
 import org.apache.deltaspike.core.impl.scope.window.WindowBeanHolder;
 import org.apache.deltaspike.core.impl.scope.window.WindowContextImpl;
 import org.apache.deltaspike.core.impl.scope.window.WindowIdHolder;
+import org.apache.deltaspike.core.spi.activation.Deactivatable;
+import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 
 /**
  * Handle all DeltaSpike WindowContext and ConversationContext
  * related features.
  */
-public class DeltaSpikeContextExtension implements Extension
+public class DeltaSpikeContextExtension implements Extension, Deactivatable
 {
     private WindowContextImpl windowContext;
 
     private GroupedConversationContext conversationContext;
 
+    private Boolean isActivated = true;
+
+    protected void init(@Observes BeforeBeanDiscovery beforeBeanDiscovery)
+    {
+        isActivated = ClassDeactivationUtils.isActivated(getClass());
+    }
+
     public void registerDeltaSpikeContexts(@Observes AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager)
     {
+        if (!isActivated)
+        {
+            return;
+        }
+
         windowContext = new WindowContextImpl(beanManager);
         conversationContext = new GroupedConversationContext(beanManager, windowContext);
         afterBeanDiscovery.addContext(windowContext);
@@ -56,6 +71,11 @@ public class DeltaSpikeContextExtension implements Extension
      */
     public void initializeDeltaSpikeContexts(@Observes AfterDeploymentValidation adv, BeanManager beanManager)
     {
+        if (!isActivated)
+        {
+            return;
+        }
+
         WindowBeanHolder windowBeanHolder =
             BeanProvider.getContextualReference(beanManager, WindowBeanHolder.class, false);
 
