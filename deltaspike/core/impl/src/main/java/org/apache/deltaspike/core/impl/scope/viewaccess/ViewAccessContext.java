@@ -60,19 +60,35 @@ public class ViewAccessContext extends AbstractContext
     @Override
     public <T> T get(Contextual<T> bean)
     {
-        PassivationCapable pc = (PassivationCapable) bean;
-        viewAccessScopedBeanHistory.getAccessedBeans().add(pc.getId());
-
-        return super.get(bean);
+        try
+        {
+            return super.get(bean);
+        }
+        finally
+        {
+            if (bean instanceof PassivationCapable)
+            {
+                PassivationCapable pc = (PassivationCapable) bean;
+                viewAccessScopedBeanHistory.getAccessedBeans().add(pc.getId());
+            }
+        }
     }
 
     @Override
     public <T> T get(Contextual<T> bean, CreationalContext<T> creationalContext)
     {
-        PassivationCapable pc = (PassivationCapable) bean;
-        viewAccessScopedBeanHistory.getAccessedBeans().add(pc.getId());
-
-        return super.get(bean, creationalContext);
+        try
+        {
+            return super.get(bean, creationalContext);
+        }
+        finally
+        {
+            if (bean instanceof PassivationCapable)
+            {
+                PassivationCapable pc = (PassivationCapable) bean;
+                viewAccessScopedBeanHistory.getAccessedBeans().add(pc.getId());
+            }
+        }
     }
     
     @Override
@@ -106,15 +122,16 @@ public class ViewAccessContext extends AbstractContext
 
     public void onRenderingFinished(String view)
     {
+        // destroy beans only if the view has been changed
         if (!view.equals(viewAccessScopedBeanHistory.getLastView()))
         {
             viewAccessScopedBeanHistory.setLastView(view);
             
             destroyExpiredBeans();
-            
-            // clear list from last request
-            viewAccessScopedBeanHistory.getAccessedBeans().clear();
         }
+        
+        // clear history after each rendering process
+        viewAccessScopedBeanHistory.getAccessedBeans().clear();
     }
     
     private void destroyExpiredBeans()
@@ -130,7 +147,6 @@ public class ViewAccessContext extends AbstractContext
                     Contextual bean = storage.getBean(storageEntry.getKey());
                     AbstractContext.destroyBean(bean, storageEntry.getValue());
                     storage.getStorage().remove(storageEntry.getKey()); //ok due to ConcurrentHashMap
-                    break;
                 }
             }
         }

@@ -16,18 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.example;
+package org.apache.deltaspike.playground.exception;
 
-import java.lang.annotation.Annotation;
-import javax.enterprise.inject.Specializes;
-import org.apache.deltaspike.example.exception.Jsf;
-import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Named;
 
-@Specializes
-public class PlaygroundJsfModuleConfig extends JsfModuleConfig
+@Named
+@RequestScoped
+public class TestExceptionController
 {
-    public Class<? extends Annotation> getExceptionQualifier()
+    public void throwException()
     {
-        return Jsf.class;
+        throw new TestException();
     }
 }

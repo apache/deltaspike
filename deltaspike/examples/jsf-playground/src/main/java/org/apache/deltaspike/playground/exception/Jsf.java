@@ -16,39 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.deltaspike.playground.exception;
 
-package org.apache.deltaspike.core.impl.scope.viewaccess;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import static java.lang.annotation.ElementType.TYPE;
+import java.lang.annotation.Retention;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import java.lang.annotation.Target;
+import javax.inject.Qualifier;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import org.apache.deltaspike.core.api.scope.WindowScoped;
-
-@WindowScoped
-public class ViewAccessScopedBeanHistory implements Serializable
+@Target( { TYPE, ElementType.PARAMETER } )
+@Retention(RUNTIME)
+@Documented
+@Qualifier
+public @interface Jsf
 {
-    private static final long serialVersionUID = 3617603930728148927L;
     
-    private List<String> accessedBeans = new ArrayList<String>();
-    private String lastView;
-
-    public List<String> getAccessedBeans()
-    {
-        return accessedBeans;
-    }
-
-    public void setAccessedBeans(List<String> accessedBeans)
-    {
-        this.accessedBeans = accessedBeans;
-    }
-
-    public String getLastView()
-    {
-        return lastView;
-    }
-
-    public void setLastView(String lastView)
-    {
-        this.lastView = lastView;
-    }
 }

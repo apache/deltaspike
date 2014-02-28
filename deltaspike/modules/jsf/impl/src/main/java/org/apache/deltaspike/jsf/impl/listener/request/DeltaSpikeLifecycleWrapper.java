@@ -110,7 +110,7 @@ class DeltaSpikeLifecycleWrapper extends Lifecycle
     {
         this.wrapped.render(facesContext);
         
-        if (facesContext.getViewRoot() != null)
+        if (facesContext.getViewRoot() != null && facesContext.getViewRoot().getViewId() != null)
         {
             ViewAccessContext viewAccessContext = contextExtension.getViewAccessScopedContext();
             if (viewAccessContext != null)

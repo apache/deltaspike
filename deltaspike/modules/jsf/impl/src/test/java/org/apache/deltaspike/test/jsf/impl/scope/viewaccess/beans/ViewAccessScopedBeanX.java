@@ -16,19 +16,25 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.example.exception;
+package org.apache.deltaspike.test.jsf.impl.scope.viewaccess.beans;
 
-import org.apache.deltaspike.core.api.exception.control.ExceptionHandler;
-import org.apache.deltaspike.core.api.exception.control.Handles;
-import org.apache.deltaspike.core.api.exception.control.event.ExceptionEvent;
+import java.io.Serializable;
+import javax.inject.Named;
+import org.apache.deltaspike.core.api.scope.ViewAccessScoped;
 
-@ExceptionHandler
-public class TestExceptionHandler
+@Named
+@ViewAccessScoped
+public class ViewAccessScopedBeanX implements Serializable
 {
-    public void handleTestException(@Handles @Jsf ExceptionEvent<TestException> event)
-    {
-        System.err.println("TestException handled!");
+    private String value;
 
-        event.handled();
+    public String getValue()
+    {
+        return value;
+    }
+
+    public void setValue(String value)
+    {
+        this.value = value;
     }
 }

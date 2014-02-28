@@ -16,17 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.example.exception;
+package org.apache.deltaspike.playground.exception;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Named;
-
-@Named
-@RequestScoped
-public class TestExceptionController
+public class TestException extends RuntimeException
 {
-    public void throwException()
-    {
-        throw new TestException();
-    }
+
 }

@@ -16,39 +16,25 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
-package org.apache.deltaspike.core.impl.scope.viewaccess;
+package org.apache.deltaspike.test.jsf.impl.scope.viewaccess.beans;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import org.apache.deltaspike.core.api.scope.WindowScoped;
+import javax.inject.Named;
+import org.apache.deltaspike.core.api.scope.ViewAccessScoped;
 
-@WindowScoped
-public class ViewAccessScopedBeanHistory implements Serializable
+@Named
+@ViewAccessScoped
+public class ViewAccessScopedBeanY implements Serializable
 {
-    private static final long serialVersionUID = 3617603930728148927L;
-    
-    private List<String> accessedBeans = new ArrayList<String>();
-    private String lastView;
+    private String value;
 
-    public List<String> getAccessedBeans()
+    public String getValue()
     {
-        return accessedBeans;
+        return value;
     }
 
-    public void setAccessedBeans(List<String> accessedBeans)
+    public void setValue(String value)
     {
-        this.accessedBeans = accessedBeans;
-    }
-
-    public String getLastView()
-    {
-        return lastView;
-    }
-
-    public void setLastView(String lastView)
-    {
-        this.lastView = lastView;
+        this.value = value;
     }
 }

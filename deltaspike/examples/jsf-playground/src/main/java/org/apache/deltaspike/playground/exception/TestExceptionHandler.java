@@ -16,21 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.example.exception;
+package org.apache.deltaspike.playground.exception;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import static java.lang.annotation.ElementType.TYPE;
-import java.lang.annotation.Retention;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-import java.lang.annotation.Target;
-import javax.inject.Qualifier;
+import org.apache.deltaspike.core.api.exception.control.ExceptionHandler;
+import org.apache.deltaspike.core.api.exception.control.Handles;
+import org.apache.deltaspike.core.api.exception.control.event.ExceptionEvent;
 
-@Target( { TYPE, ElementType.PARAMETER } )
-@Retention(RUNTIME)
-@Documented
-@Qualifier
-public @interface Jsf
+@ExceptionHandler
+public class TestExceptionHandler
 {
-    
+    public void handleTestException(@Handles @Jsf ExceptionEvent<TestException> event)
+    {
+        System.err.println("TestException handled!");
+
+        event.handled();
+    }
 }

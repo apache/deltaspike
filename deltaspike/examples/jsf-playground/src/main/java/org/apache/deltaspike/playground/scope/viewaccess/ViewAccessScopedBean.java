@@ -16,9 +16,44 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.example.exception;
+package org.apache.deltaspike.playground.scope.viewaccess;
 
-public class TestException extends RuntimeException
+import java.io.Serializable;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.inject.Named;
+import org.apache.deltaspike.core.api.scope.ViewAccessScoped;
+
+@Named
+@ViewAccessScoped
+public class ViewAccessScopedBean implements Serializable
 {
+    private String value;
+    
+    @PostConstruct
+    public void postConstruct()
+    {
+        System.err.println("postConstruct");
+    }
+    
+    @PreDestroy
+    public void preDestroy()
+    {
+        System.err.println("preDestroy");
+    }
+    
+    public void touch()
+    {
+        System.err.println("touch");
+    }
 
+    public String getValue()
+    {
+        return value;
+    }
+
+    public void setValue(String value)
+    {
+        this.value = value;
+    }
 }

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.example;
+package org.apache.deltaspike.playground;
 
 import javax.enterprise.inject.Specializes;
 import javax.faces.context.FacesContext;
