@@ -20,24 +20,23 @@ package org.apache.deltaspike.core.impl.scope.viewaccess;
 
 import java.lang.annotation.Annotation;
 import java.util.Map;
-import javax.enterprise.context.ContextNotActiveException;
 import javax.enterprise.context.spi.Contextual;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.PassivationCapable;
 import org.apache.deltaspike.core.api.scope.ViewAccessScoped;
 import org.apache.deltaspike.core.impl.scope.window.WindowContextImpl;
-import org.apache.deltaspike.core.impl.scope.window.WindowIdHolder;
 import org.apache.deltaspike.core.util.context.AbstractContext;
 import org.apache.deltaspike.core.util.context.ContextualInstanceInfo;
 import org.apache.deltaspike.core.util.context.ContextualStorage;
 
 public class ViewAccessContext extends AbstractContext
 {
+    private static final String KEY = "VAS"; //TODO re-visit key (e.g. view-id instead of using one big storage)
+
     private final BeanManager beanManager;
     private final WindowContextImpl windowContext;
 
-    private WindowIdHolder windowIdHolder;
     private ViewAccessScopedBeanHolder viewAccessScopedBeanHolder;
     private ViewAccessScopedBeanHistory viewAccessScopedBeanHistory;
     
@@ -49,11 +48,10 @@ public class ViewAccessContext extends AbstractContext
         this.windowContext = windowContext;
     }
 
-    public void init(ViewAccessScopedBeanHolder viewAccessScopedBeanHolder, WindowIdHolder windowIdHolder,
+    public void init(ViewAccessScopedBeanHolder viewAccessScopedBeanHolder,
             ViewAccessScopedBeanHistory viewAccessScopedBeanHistory)
     {
         this.viewAccessScopedBeanHolder = viewAccessScopedBeanHolder;
-        this.windowIdHolder = windowIdHolder;
         this.viewAccessScopedBeanHistory = viewAccessScopedBeanHistory;
     }
 
@@ -94,13 +92,7 @@ public class ViewAccessContext extends AbstractContext
     @Override
     protected ContextualStorage getContextualStorage(Contextual<?> contextual, boolean createIfNotExist)
     {
-        String windowId = getCurrentWindowId();
-        if (windowId == null)
-        {
-            throw new ContextNotActiveException("WindowContext: no windowId set for the current Thread yet!");
-        }
-        
-        return this.viewAccessScopedBeanHolder.getContextualStorage(this.beanManager, windowId, createIfNotExist);
+        return this.viewAccessScopedBeanHolder.getContextualStorage(this.beanManager, KEY, createIfNotExist);
     }
 
     @Override
@@ -113,11 +105,6 @@ public class ViewAccessContext extends AbstractContext
     public boolean isActive()
     {
         return this.windowContext.isActive(); //autom. active once a window is active
-    }
-    
-    public String getCurrentWindowId()
-    {
-        return windowIdHolder.getWindowId();
     }
 
     public void onRenderingFinished(String view)
@@ -136,8 +123,7 @@ public class ViewAccessContext extends AbstractContext
     
     private void destroyExpiredBeans()
     {
-        ContextualStorage storage =
-                viewAccessScopedBeanHolder.getContextualStorage(beanManager, getCurrentWindowId(), false);
+        ContextualStorage storage = viewAccessScopedBeanHolder.getContextualStorage(beanManager, KEY, false);
         if (storage != null)
         {
             for (Map.Entry<Object, ContextualInstanceInfo<?>> storageEntry : storage.getStorage().entrySet())

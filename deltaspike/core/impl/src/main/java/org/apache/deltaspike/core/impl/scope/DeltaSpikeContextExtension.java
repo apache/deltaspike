@@ -97,7 +97,7 @@ public class DeltaSpikeContextExtension implements Extension, Deactivatable
             BeanProvider.getContextualReference(beanManager, ViewAccessScopedBeanHolder.class, false);
         ViewAccessScopedBeanHistory viewAccessScopedBeanHistory =
             BeanProvider.getContextualReference(beanManager, ViewAccessScopedBeanHistory.class, false);
-        viewAccessScopedContext.init(viewAccessScopedBeanHolder, windowIdHolder, viewAccessScopedBeanHistory);
+        viewAccessScopedContext.init(viewAccessScopedBeanHolder, viewAccessScopedBeanHistory);
     }
 
     public WindowContextImpl getWindowContext()
