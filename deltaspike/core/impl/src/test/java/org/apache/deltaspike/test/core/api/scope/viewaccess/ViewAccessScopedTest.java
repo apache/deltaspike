@@ -76,12 +76,12 @@ public class ViewAccessScopedTest
         viewAccessScopedBeanY.setValue("y1");
         Assert.assertEquals("x1", viewAccessScopedBeanX.getValue());
         Assert.assertEquals("y1", viewAccessScopedBeanY.getValue());
-        contextExtension.getViewAccessScopedContext().onRenderingFinished("viewA");
+        contextExtension.getViewAccessScopedContext().onProcessingViewFinished("viewA");
         Assert.assertEquals("x1", viewAccessScopedBeanX.getValue());
         Assert.assertEquals("y1", viewAccessScopedBeanY.getValue());
-        contextExtension.getViewAccessScopedContext().onRenderingFinished("viewA");
+        contextExtension.getViewAccessScopedContext().onProcessingViewFinished("viewA");
         //no access
-        contextExtension.getViewAccessScopedContext().onRenderingFinished("viewA");
+        contextExtension.getViewAccessScopedContext().onProcessingViewFinished("viewA");
 
         Assert.assertEquals("x1", viewAccessScopedBeanX.getValue());
         Assert.assertEquals("y1", viewAccessScopedBeanY.getValue());
@@ -103,12 +103,12 @@ public class ViewAccessScopedTest
         viewAccessScopedBeanY.setValue("y1");
         Assert.assertEquals("x1", viewAccessScopedBeanX.getValue());
         Assert.assertEquals("y1", viewAccessScopedBeanY.getValue());
-        contextExtension.getViewAccessScopedContext().onRenderingFinished("viewA");
+        contextExtension.getViewAccessScopedContext().onProcessingViewFinished("viewA");
         Assert.assertEquals("x1", viewAccessScopedBeanX.getValue());
         Assert.assertEquals("y1", viewAccessScopedBeanY.getValue());
-        contextExtension.getViewAccessScopedContext().onRenderingFinished("viewA");
+        contextExtension.getViewAccessScopedContext().onProcessingViewFinished("viewA");
 
-        contextExtension.getViewAccessScopedContext().onRenderingFinished("viewB");
+        contextExtension.getViewAccessScopedContext().onProcessingViewFinished("viewB");
 
         Assert.assertNull(viewAccessScopedBeanX.getValue());
         Assert.assertNull(viewAccessScopedBeanY.getValue());
@@ -125,14 +125,14 @@ public class ViewAccessScopedTest
         viewAccessScopedBeanY.setValue("y1");
         Assert.assertEquals("x1", viewAccessScopedBeanX.getValue());
         Assert.assertEquals("y1", viewAccessScopedBeanY.getValue());
-        contextExtension.getViewAccessScopedContext().onRenderingFinished("viewA");
+        contextExtension.getViewAccessScopedContext().onProcessingViewFinished("viewA");
         Assert.assertEquals("x1", viewAccessScopedBeanX.getValue());
         Assert.assertEquals("y1", viewAccessScopedBeanY.getValue());
-        contextExtension.getViewAccessScopedContext().onRenderingFinished("viewA");
+        contextExtension.getViewAccessScopedContext().onProcessingViewFinished("viewA");
 
         Assert.assertEquals("y1", viewAccessScopedBeanY.getValue());
 
-        contextExtension.getViewAccessScopedContext().onRenderingFinished("viewB");
+        contextExtension.getViewAccessScopedContext().onProcessingViewFinished("viewB");
 
         Assert.assertNull(viewAccessScopedBeanX.getValue());
         Assert.assertEquals("y1", viewAccessScopedBeanY.getValue());
@@ -154,14 +154,14 @@ public class ViewAccessScopedTest
         viewAccessScopedBeanY.setValue("y1");
         Assert.assertEquals("x1", viewAccessScopedBeanX.getValue());
         Assert.assertEquals("y1", viewAccessScopedBeanY.getValue());
-        contextExtension.getViewAccessScopedContext().onRenderingFinished("viewA");
+        contextExtension.getViewAccessScopedContext().onProcessingViewFinished("viewA");
         Assert.assertEquals("x1", viewAccessScopedBeanX.getValue());
         Assert.assertEquals("y1", viewAccessScopedBeanY.getValue());
-        contextExtension.getViewAccessScopedContext().onRenderingFinished("viewA");
+        contextExtension.getViewAccessScopedContext().onProcessingViewFinished("viewA");
 
         Assert.assertEquals("x1", viewAccessScopedBeanX.getValue());
 
-        contextExtension.getViewAccessScopedContext().onRenderingFinished("viewB");
+        contextExtension.getViewAccessScopedContext().onProcessingViewFinished("viewB");
 
         Assert.assertEquals("x1", viewAccessScopedBeanX.getValue());
         Assert.assertNull(viewAccessScopedBeanY.getValue());
@@ -180,17 +180,17 @@ public class ViewAccessScopedTest
         windowContext.activateWindow("w1");
 
         viewAccessScopedBeanX.setValue("x1");
-        contextExtension.getViewAccessScopedContext().onRenderingFinished("viewA");
+        contextExtension.getViewAccessScopedContext().onProcessingViewFinished("viewA");
         Assert.assertEquals("x1", viewAccessScopedBeanX.getValue());
 
         viewAccessScopedBeanY.setValue("y1");
-        contextExtension.getViewAccessScopedContext().onRenderingFinished("viewA");
+        contextExtension.getViewAccessScopedContext().onProcessingViewFinished("viewA");
         Assert.assertEquals("x1", viewAccessScopedBeanX.getValue());
         Assert.assertEquals("y1", viewAccessScopedBeanY.getValue());
 
-        contextExtension.getViewAccessScopedContext().onRenderingFinished("viewA");
+        contextExtension.getViewAccessScopedContext().onProcessingViewFinished("viewA");
         //no access
-        contextExtension.getViewAccessScopedContext().onRenderingFinished("viewA");
+        contextExtension.getViewAccessScopedContext().onProcessingViewFinished("viewA");
         Assert.assertEquals("x1", viewAccessScopedBeanX.getValue());
         Assert.assertEquals("y1", viewAccessScopedBeanY.getValue());
 
@@ -208,14 +208,14 @@ public class ViewAccessScopedTest
         windowContext.activateWindow("w1");
 
         viewAccessScopedBeanX.setValue("x1");
-        contextExtension.getViewAccessScopedContext().onRenderingFinished("viewA");
+        contextExtension.getViewAccessScopedContext().onProcessingViewFinished("viewA");
         Assert.assertEquals("x1", viewAccessScopedBeanX.getValue());
 
         viewAccessScopedBeanY.setValue("y1");
-        contextExtension.getViewAccessScopedContext().onRenderingFinished("viewA");
+        contextExtension.getViewAccessScopedContext().onProcessingViewFinished("viewA");
         Assert.assertEquals("x1", viewAccessScopedBeanX.getValue());
 
-        contextExtension.getViewAccessScopedContext().onRenderingFinished("viewB");
+        contextExtension.getViewAccessScopedContext().onProcessingViewFinished("viewB");
         Assert.assertEquals("x1", viewAccessScopedBeanX.getValue());
         Assert.assertNull(viewAccessScopedBeanY.getValue());
 
@@ -233,14 +233,14 @@ public class ViewAccessScopedTest
         windowContext.activateWindow("w1");
 
         viewAccessScopedBeanX.setValue("x1");
-        contextExtension.getViewAccessScopedContext().onRenderingFinished("viewA");
+        contextExtension.getViewAccessScopedContext().onProcessingViewFinished("viewA");
         Assert.assertEquals("x1", viewAccessScopedBeanX.getValue());
 
         viewAccessScopedBeanY.setValue("y1");
-        contextExtension.getViewAccessScopedContext().onRenderingFinished("viewA");
+        contextExtension.getViewAccessScopedContext().onProcessingViewFinished("viewA");
         Assert.assertEquals("y1", viewAccessScopedBeanY.getValue());
 
-        contextExtension.getViewAccessScopedContext().onRenderingFinished("viewB");
+        contextExtension.getViewAccessScopedContext().onProcessingViewFinished("viewB");
         Assert.assertNull(viewAccessScopedBeanX.getValue());
         Assert.assertEquals("y1", viewAccessScopedBeanY.getValue());
 

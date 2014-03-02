@@ -107,7 +107,7 @@ public class ViewAccessContext extends AbstractContext
         return this.windowContext.isActive(); //autom. active once a window is active
     }
 
-    public void onRenderingFinished(String view)
+    public void onProcessingViewFinished(String view)
     {
         // destroy beans only if the view has been changed
         if (!view.equals(viewAccessScopedBeanHistory.getLastView()))

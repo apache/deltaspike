@@ -39,6 +39,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
+import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.core.impl.scope.DeltaSpikeContextExtension;
+import org.apache.deltaspike.core.impl.scope.viewaccess.ViewAccessContext;
 
 public class DeltaSpikeNavigationHandler extends ConfigurableNavigationHandler implements Deactivatable
 {
@@ -50,6 +53,10 @@ public class DeltaSpikeNavigationHandler extends ConfigurableNavigationHandler i
     private final NavigationHandler wrapped;
     private final boolean activated;
 
+    private volatile Boolean initialized;
+    
+    private DeltaSpikeContextExtension contextExtension;
+    
     /**
      * Constructor for wrapping the given {@link NavigationHandler}
      *
@@ -64,6 +71,17 @@ public class DeltaSpikeNavigationHandler extends ConfigurableNavigationHandler i
     @Override
     public void handleNavigation(FacesContext context, String fromAction, String outcome)
     {
+        lazyInit();
+        
+        if (context.getViewRoot() != null && context.getViewRoot().getViewId() != null)
+        {
+            ViewAccessContext viewAccessContext = contextExtension.getViewAccessScopedContext();
+            if (viewAccessContext != null)
+            {
+                viewAccessContext.onProcessingViewFinished(context.getViewRoot().getViewId());
+            }
+        }
+        
         if (!this.activated || isUnhandledExceptionQueued(context))
         {
             this.wrapped.handleNavigation(context, fromAction, outcome);
@@ -169,5 +187,24 @@ public class DeltaSpikeNavigationHandler extends ConfigurableNavigationHandler i
         }
 
         return new NavigationCaseMapWrapper(result, this.wrapped);
+    }
+    
+    private void lazyInit()
+    {
+        if (this.initialized == null)
+        {
+            init();
+        }
+    }
+
+    private synchronized void init()
+    {
+        // switch into paranoia mode
+        if (this.initialized == null)
+        {
+            contextExtension = BeanProvider.getContextualReference(DeltaSpikeContextExtension.class, true);
+            
+            this.initialized = true;
+        }
     }
 }
