@@ -28,9 +28,10 @@ import javax.enterprise.inject.spi.Extension;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.impl.scope.conversation.ConversationBeanHolder;
 import org.apache.deltaspike.core.impl.scope.conversation.GroupedConversationContext;
-import org.apache.deltaspike.core.impl.scope.viewaccess.ViewAccessScopedBeanHistory;
-import org.apache.deltaspike.core.impl.scope.viewaccess.ViewAccessScopedBeanHolder;
+import org.apache.deltaspike.core.impl.scope.viewaccess.ViewAccessBeanAccessHistory;
+import org.apache.deltaspike.core.impl.scope.viewaccess.ViewAccessBeanHolder;
 import org.apache.deltaspike.core.impl.scope.viewaccess.ViewAccessContext;
+import org.apache.deltaspike.core.impl.scope.viewaccess.ViewAccessViewHistory;
 import org.apache.deltaspike.core.impl.scope.window.WindowBeanHolder;
 import org.apache.deltaspike.core.impl.scope.window.WindowContextImpl;
 import org.apache.deltaspike.core.impl.scope.window.WindowIdHolder;
@@ -93,11 +94,13 @@ public class DeltaSpikeContextExtension implements Extension, Deactivatable
             BeanProvider.getContextualReference(beanManager, ConversationBeanHolder.class, false);
         conversationContext.init(conversationBeanHolder);
         
-        ViewAccessScopedBeanHolder viewAccessScopedBeanHolder =
-            BeanProvider.getContextualReference(beanManager, ViewAccessScopedBeanHolder.class, false);
-        ViewAccessScopedBeanHistory viewAccessScopedBeanHistory =
-            BeanProvider.getContextualReference(beanManager, ViewAccessScopedBeanHistory.class, false);
-        viewAccessScopedContext.init(viewAccessScopedBeanHolder, viewAccessScopedBeanHistory);
+        ViewAccessBeanHolder viewAccessBeanHolder =
+            BeanProvider.getContextualReference(beanManager, ViewAccessBeanHolder.class, false);
+        ViewAccessBeanAccessHistory viewAccessBeanAccessHistory =
+            BeanProvider.getContextualReference(beanManager, ViewAccessBeanAccessHistory.class, false);
+        ViewAccessViewHistory viewAccessViewHistory =
+            BeanProvider.getContextualReference(beanManager, ViewAccessViewHistory.class, false);
+        viewAccessScopedContext.init(viewAccessBeanHolder, viewAccessBeanAccessHistory, viewAccessViewHistory);
     }
 
     public WindowContextImpl getWindowContext()

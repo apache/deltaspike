@@ -37,8 +37,9 @@ public class ViewAccessContext extends AbstractContext
     private final BeanManager beanManager;
     private final WindowContextImpl windowContext;
 
-    private ViewAccessScopedBeanHolder viewAccessScopedBeanHolder;
-    private ViewAccessScopedBeanHistory viewAccessScopedBeanHistory;
+    private ViewAccessBeanHolder viewAccessBeanHolder;
+    private ViewAccessBeanAccessHistory viewAccessBeanAccessHistory;
+    private ViewAccessViewHistory viewAccessViewHistory;
     
     public ViewAccessContext(BeanManager beanManager, WindowContextImpl windowContext)
     {
@@ -48,11 +49,13 @@ public class ViewAccessContext extends AbstractContext
         this.windowContext = windowContext;
     }
 
-    public void init(ViewAccessScopedBeanHolder viewAccessScopedBeanHolder,
-            ViewAccessScopedBeanHistory viewAccessScopedBeanHistory)
+    public void init(ViewAccessBeanHolder viewAccessBeanHolder,
+            ViewAccessBeanAccessHistory viewAccessBeanAccessHistory,
+            ViewAccessViewHistory viewAccessViewHistory)
     {
-        this.viewAccessScopedBeanHolder = viewAccessScopedBeanHolder;
-        this.viewAccessScopedBeanHistory = viewAccessScopedBeanHistory;
+        this.viewAccessBeanHolder = viewAccessBeanHolder;
+        this.viewAccessBeanAccessHistory = viewAccessBeanAccessHistory;
+        this.viewAccessViewHistory = viewAccessViewHistory;
     }
 
     @Override
@@ -67,7 +70,7 @@ public class ViewAccessContext extends AbstractContext
             if (bean instanceof PassivationCapable)
             {
                 PassivationCapable pc = (PassivationCapable) bean;
-                viewAccessScopedBeanHistory.getAccessedBeans().add(pc.getId());
+                viewAccessBeanAccessHistory.getAccessedBeans().add(pc.getId());
             }
         }
     }
@@ -84,7 +87,7 @@ public class ViewAccessContext extends AbstractContext
             if (bean instanceof PassivationCapable)
             {
                 PassivationCapable pc = (PassivationCapable) bean;
-                viewAccessScopedBeanHistory.getAccessedBeans().add(pc.getId());
+                viewAccessBeanAccessHistory.getAccessedBeans().add(pc.getId());
             }
         }
     }
@@ -92,7 +95,7 @@ public class ViewAccessContext extends AbstractContext
     @Override
     protected ContextualStorage getContextualStorage(Contextual<?> contextual, boolean createIfNotExist)
     {
-        return this.viewAccessScopedBeanHolder.getContextualStorage(this.beanManager, KEY, createIfNotExist);
+        return this.viewAccessBeanHolder.getContextualStorage(this.beanManager, KEY, createIfNotExist);
     }
 
     @Override
@@ -110,25 +113,25 @@ public class ViewAccessContext extends AbstractContext
     public void onProcessingViewFinished(String view)
     {
         // destroy beans only if the view has been changed
-        if (!view.equals(viewAccessScopedBeanHistory.getLastView()))
+        if (!view.equals(viewAccessViewHistory.getLastView()))
         {
-            viewAccessScopedBeanHistory.setLastView(view);
+            viewAccessViewHistory.setLastView(view);
             
             destroyExpiredBeans();
         }
         
         // clear history after each rendering process
-        viewAccessScopedBeanHistory.getAccessedBeans().clear();
+        viewAccessBeanAccessHistory.getAccessedBeans().clear();
     }
     
     private void destroyExpiredBeans()
     {
-        ContextualStorage storage = viewAccessScopedBeanHolder.getContextualStorage(beanManager, KEY, false);
+        ContextualStorage storage = viewAccessBeanHolder.getContextualStorage(beanManager, KEY, false);
         if (storage != null)
         {
             for (Map.Entry<Object, ContextualInstanceInfo<?>> storageEntry : storage.getStorage().entrySet())
             {
-                if (!viewAccessScopedBeanHistory.getAccessedBeans().contains((String) storageEntry.getKey()))
+                if (!viewAccessBeanAccessHistory.getAccessedBeans().contains((String) storageEntry.getKey()))
                 {
                     Contextual bean = storage.getBean(storageEntry.getKey());
                     AbstractContext.destroyBean(bean, storageEntry.getValue());
