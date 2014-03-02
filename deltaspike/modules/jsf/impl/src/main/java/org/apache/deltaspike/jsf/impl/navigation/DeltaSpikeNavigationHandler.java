@@ -50,6 +50,7 @@ public class DeltaSpikeNavigationHandler extends ConfigurableNavigationHandler i
 
     private final NavigationHandler wrapped;
     private final boolean activated;
+    private final boolean vasnhActivated;
 
     /**
      * Constructor for wrapping the given {@link NavigationHandler}
@@ -60,6 +61,7 @@ public class DeltaSpikeNavigationHandler extends ConfigurableNavigationHandler i
     {
         this.wrapped = navigationHandler;
         this.activated = ClassDeactivationUtils.isActivated(getClass());
+        this.vasnhActivated = ClassDeactivationUtils.isActivated(ViewAccessScopedAwareNavigationHandler.class);
     }
 
     @Override
@@ -84,10 +86,14 @@ public class DeltaSpikeNavigationHandler extends ConfigurableNavigationHandler i
 
     private NavigationHandler getWrappedNavigationHandler()
     {
-        ViewConfigAwareNavigationHandler viewConfigAwareNavigationHandler =
-                new ViewConfigAwareNavigationHandler(this.wrapped);
+        NavigationHandler navigationHandler = new ViewConfigAwareNavigationHandler(this.wrapped);
 
-        return new ViewAccessScopedAwareNavigationHandler(viewConfigAwareNavigationHandler);
+        if (vasnhActivated)
+        {
+            navigationHandler = new ViewAccessScopedAwareNavigationHandler(navigationHandler);
+        }
+
+        return navigationHandler;
     }
 
     @Override

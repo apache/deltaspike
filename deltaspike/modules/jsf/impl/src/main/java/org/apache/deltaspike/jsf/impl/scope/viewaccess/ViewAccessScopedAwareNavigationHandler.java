@@ -24,12 +24,10 @@ import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.impl.scope.DeltaSpikeContextExtension;
 import org.apache.deltaspike.core.impl.scope.viewaccess.ViewAccessContext;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
-import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 
 public class ViewAccessScopedAwareNavigationHandler extends NavigationHandler implements Deactivatable
 {
     private final NavigationHandler navigationHandler;
-    private final boolean activated;
 
     private volatile Boolean initialized;
     
@@ -38,7 +36,6 @@ public class ViewAccessScopedAwareNavigationHandler extends NavigationHandler im
     public ViewAccessScopedAwareNavigationHandler(NavigationHandler navigationHandler)
     {
         this.navigationHandler = navigationHandler;
-        this.activated = ClassDeactivationUtils.isActivated(getClass());
     }
 
     @Override
@@ -46,14 +43,14 @@ public class ViewAccessScopedAwareNavigationHandler extends NavigationHandler im
     {
         // remember viewId before navigation
         String viewId = null;
-        if (this.activated && context.getViewRoot() != null)
+        if (context.getViewRoot() != null)
         {
             viewId = context.getViewRoot().getViewId();
         }
 
         this.navigationHandler.handleNavigation(context, fromAction, outcome);
         
-        if (this.activated && viewId != null)
+        if (viewId != null)
         {
             lazyInit();
 
