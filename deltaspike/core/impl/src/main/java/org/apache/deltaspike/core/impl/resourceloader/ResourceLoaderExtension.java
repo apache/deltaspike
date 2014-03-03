@@ -18,6 +18,10 @@
  */
 package org.apache.deltaspike.core.impl.resourceloader;
 
+import org.apache.deltaspike.core.api.resourceloader.ClasspathResourceProvider;
+import org.apache.deltaspike.core.api.resourceloader.ExternalResourceProducer;
+import org.apache.deltaspike.core.api.resourceloader.FileResourceProvider;
+
 import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.BeforeBeanDiscovery;

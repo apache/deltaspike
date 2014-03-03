@@ -19,24 +19,23 @@
 package org.apache.deltaspike.core.api.literal;
 
 import org.apache.deltaspike.core.api.resourceloader.ExternalResource;
-import org.apache.deltaspike.core.api.resourceloader.ExternalResourceStorage;
+import org.apache.deltaspike.core.api.resourceloader.ExternalResourceProvider;
 
 import javax.enterprise.util.AnnotationLiteral;
 
-/**
- *
- */
 public class ExternalResourceLiteral extends AnnotationLiteral<ExternalResource> implements ExternalResource
 {
     private static final long serialVersionUID = 1705986508118055892L;
 
-    private Class<? extends ExternalResourceStorage> storage;
-    private String location;
-    public ExternalResourceLiteral(final Class<? extends ExternalResourceStorage> storage, final String location)
+    private final Class<? extends ExternalResourceProvider> resourceProvider;
+    private final String location;
+
+    public ExternalResourceLiteral(Class<? extends ExternalResourceProvider> resourceProvider, String location)
     {
-        this.storage = storage;
+        this.resourceProvider = resourceProvider;
         this.location = location;
     }
+
     @Override
     public String location()
     {
@@ -44,8 +43,8 @@ public class ExternalResourceLiteral extends AnnotationLiteral<ExternalResource>
     }
 
     @Override
-    public Class<? extends ExternalResourceStorage> storage()
+    public Class<? extends ExternalResourceProvider> resourceProvider()
     {
-        return this.storage;
+        return this.resourceProvider;
     }
 }

@@ -16,13 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.impl.resourceloader;
+package org.apache.deltaspike.core.api.resourceloader;
 
-import org.apache.deltaspike.core.api.resourceloader.ExternalResource;
-import org.apache.deltaspike.core.api.resourceloader.ExternalResourceStorage;
-import org.apache.deltaspike.core.spi.literal.StorageTypeLiteral;
-import org.apache.deltaspike.core.spi.resourceloader.ExternalResourceProvider;
-import org.apache.deltaspike.core.spi.resourceloader.StorageType;
+import org.apache.deltaspike.core.api.provider.BeanProvider;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Any;
@@ -52,43 +48,37 @@ public class ExternalResourceProducer
     @Any
     private Instance<ExternalResourceProvider> resourceProviders;
 
-    private ExternalResourceProvider getProvider(Class<? extends ExternalResourceStorage> storageTypeClass)
-    {
-        StorageType storageType = new StorageTypeLiteral(storageTypeClass);
-        ExternalResourceProvider provider = resourceProviders.select(storageType).get();
-        return provider;
-    }
-
     @Produces
-    @ExternalResource(storage = ExternalResourceStorage.class,location = "")
+    @ExternalResource(resourceProvider = ExternalResourceProvider.class,location = "")
     public InputStream getInputStream(final InjectionPoint injectionPoint)
     {
         ExternalResource externalResource = getAnnotation(injectionPoint);
-        ExternalResourceProvider provider = getProvider(externalResource.storage());
+        ExternalResourceProvider provider = BeanProvider.getContextualReference(externalResource.resourceProvider());
         final InputStream is = provider.readStream(externalResource);
         return is;
     }
 
     @Produces
-    @ExternalResource(storage = ExternalResourceStorage.class,location = "")
+    @ExternalResource(resourceProvider = ExternalResourceProvider.class,location = "")
     public List<InputStream> getInputStreams(final InjectionPoint injectionPoint)
     {
         ExternalResource externalResource = getAnnotation(injectionPoint);
-        ExternalResourceProvider provider = getProvider(externalResource.storage());
+        ExternalResourceProvider provider = BeanProvider.getContextualReference(externalResource.resourceProvider());
         return provider.readStreams(externalResource);
     }
 
     @Produces
-    @ExternalResource(storage = ExternalResourceStorage.class,location = "")
+    @ExternalResource(resourceProvider = ExternalResourceProvider.class,location = "")
     public Properties getProperties(final InjectionPoint injectionPoint) throws IOException
     {
         ExternalResource externalResource = getAnnotation(injectionPoint);
-        ExternalResourceProvider provider = getProvider(externalResource.storage());
+        ExternalResourceProvider provider = BeanProvider.getContextualReference(externalResource.resourceProvider());
         final Properties properties = provider.readProperties(externalResource);
         return properties;
     }
 
-    public void closeInputStream(@Disposes @ExternalResource(storage = ExternalResourceStorage.class,location = "")
+    public void closeInputStream(@Disposes
+                                 @ExternalResource(resourceProvider = ExternalResourceProvider.class, location = "")
                                  InputStream inputStream)
     {
         if (inputStream != null)

@@ -19,7 +19,7 @@
 package org.apache.deltaspike.test.core.impl.resourceloader;
 
 import org.apache.deltaspike.core.api.resourceloader.ExternalResource;
-import org.apache.deltaspike.core.api.resourceloader.FileSystemStorage;
+import org.apache.deltaspike.core.api.resourceloader.FileResourceProvider;
 import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.test.util.ArchiveUtils;
@@ -81,7 +81,7 @@ public class FileResourceTest
     }
 
     @Test
-    public void testInputStream(@ExternalResource(storage=FileSystemStorage.class,
+    public void testInputStream(@ExternalResource(resourceProvider = FileResourceProvider.class,
             location="target/propsdsfileresource.properties")
             InputStream inputStream) throws IOException
     {
@@ -92,7 +92,7 @@ public class FileResourceTest
     }
 
     @Test
-    public void testProperties(@ExternalResource(storage=FileSystemStorage.class,
+    public void testProperties(@ExternalResource(resourceProvider = FileResourceProvider.class,
             location="target/propsdsfileresource.properties")
             Properties properties)
     {

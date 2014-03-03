@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.servlet.impl.resourceloader;
+package org.apache.deltaspike.servlet.api.resourceloader;
 
 import java.io.InputStream;
 
@@ -24,20 +24,16 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
 
+import org.apache.deltaspike.core.api.resourceloader.BaseResourceProvider;
 import org.apache.deltaspike.core.api.resourceloader.ExternalResource;
-import org.apache.deltaspike.core.impl.resourceloader.BaseResourceProvider;
-import org.apache.deltaspike.core.spi.resourceloader.StorageType;
 import org.apache.deltaspike.servlet.api.Web;
-import org.apache.deltaspike.servlet.api.resourceloader.WebStorage;
 
 /**
  * Loads resources using {@link ServletContext#getResource(String)}.
  */
 @ApplicationScoped
-@StorageType(WebStorage.class)
 public class WebResourceProvider extends BaseResourceProvider
 {
-
     @Inject
     @Web
     private ServletContext servletContext;
@@ -45,7 +41,6 @@ public class WebResourceProvider extends BaseResourceProvider
     @Override
     public InputStream readStream(ExternalResource externalResource)
     {
-
         /*
          * ServletContext.getResourceAsStream() requires the path to start with "/". We add it here if it is missing
          * because it is a common mistake to miss it.
@@ -57,7 +52,5 @@ public class WebResourceProvider extends BaseResourceProvider
         }
 
         return servletContext.getResourceAsStream(path);
-
     }
-
 }

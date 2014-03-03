@@ -27,7 +27,7 @@ import java.util.Properties;
 import javax.inject.Inject;
 
 import org.apache.deltaspike.core.api.resourceloader.ExternalResource;
-import org.apache.deltaspike.servlet.api.resourceloader.WebStorage;
+import org.apache.deltaspike.servlet.api.resourceloader.WebResourceProvider;
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.apache.deltaspike.test.servlet.impl.Deployments;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -58,19 +58,19 @@ public class WebResourceProviderTest
     }
 
     @Inject
-    @ExternalResource(location = "/foobar.txt", storage = WebStorage.class)
+    @ExternalResource(location = "/foobar.txt", resourceProvider = WebResourceProvider.class)
     private InputStream streamAbsolutePath;
 
     @Inject
-    @ExternalResource(location = "foobar.txt", storage = WebStorage.class)
+    @ExternalResource(location = "foobar.txt", resourceProvider = WebResourceProvider.class)
     private InputStream streamRelativePath;
 
     @Inject
-    @ExternalResource(location = "/foo/bar.txt", storage = WebStorage.class)
+    @ExternalResource(location = "/foo/bar.txt", resourceProvider = WebResourceProvider.class)
     private InputStream streamDirectory;
 
     @Inject
-    @ExternalResource(location = "/foobar.properties", storage = WebStorage.class)
+    @ExternalResource(location = "/foobar.properties", resourceProvider = WebResourceProvider.class)
     private Properties propertiesAbsolutePath;
 
     @Test

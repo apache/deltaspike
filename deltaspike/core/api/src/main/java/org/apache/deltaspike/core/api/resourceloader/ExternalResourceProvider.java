@@ -18,9 +18,21 @@
  */
 package org.apache.deltaspike.core.api.resourceloader;
 
+import java.io.InputStream;
+import java.util.List;
+import java.util.Properties;
+
 /**
- * Represents storage found on the classpath
+ * Provides lookup capability to find a resource.
+ *
  */
-public interface ClasspathStorage extends ExternalResourceStorage
+public interface ExternalResourceProvider
 {
+
+    InputStream readStream(final ExternalResource externalResource);
+
+    List<InputStream> readStreams(final ExternalResource externalResource);
+
+    Properties readProperties(final ExternalResource externalResource);
+
 }

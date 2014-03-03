@@ -16,11 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.impl.resourceloader;
-
-import org.apache.deltaspike.core.api.resourceloader.ExternalResource;
-import org.apache.deltaspike.core.api.resourceloader.FileSystemStorage;
-import org.apache.deltaspike.core.spi.resourceloader.StorageType;
+package org.apache.deltaspike.core.api.resourceloader;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.io.File;
@@ -34,7 +30,6 @@ import java.util.logging.Logger;
  * A file based resource provider, looking for a file based on the name.
  */
 @ApplicationScoped
-@StorageType(FileSystemStorage.class)
 public class FileResourceProvider extends BaseResourceProvider
 {
     private static final Logger logger = Logger.getLogger(FileResourceProvider.class.getName());

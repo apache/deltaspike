@@ -16,11 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.impl.resourceloader;
+package org.apache.deltaspike.core.api.resourceloader;
 
-import org.apache.deltaspike.core.api.resourceloader.ClasspathStorage;
-import org.apache.deltaspike.core.api.resourceloader.ExternalResource;
-import org.apache.deltaspike.core.spi.resourceloader.StorageType;
 import org.apache.deltaspike.core.util.ClassUtils;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -37,7 +34,6 @@ import java.util.logging.Logger;
  * A classpath based resource provider
  */
 @ApplicationScoped
-@StorageType(ClasspathStorage.class)
 public class ClasspathResourceProvider extends BaseResourceProvider
 {
     private static final Logger logger = Logger.getLogger(ClasspathResourceProvider.class.getName());
