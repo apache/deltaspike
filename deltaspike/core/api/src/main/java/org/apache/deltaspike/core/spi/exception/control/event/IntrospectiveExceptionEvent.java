@@ -17,13 +17,13 @@
  * under the License.
  */
 
-package org.apache.deltaspike.core.spi.exception.control;
+package org.apache.deltaspike.core.spi.exception.control.event;
 
 import org.apache.deltaspike.core.api.exception.control.event.ExceptionEvent;
 import org.apache.deltaspike.core.api.exception.control.ExceptionHandlingFlow;
 
 /**
- * Internal view into the ExceptionEvent. Methods on this interface are used by the ExceptionHandlerDispatcher.
+ * Internal view into the ExceptionEvent. Methods on this interface are used by the ExceptionHandlerBroadcaster.
  */
 public interface IntrospectiveExceptionEvent<T extends Throwable> extends ExceptionEvent<T>
 {

@@ -21,7 +21,7 @@ package org.apache.deltaspike.core.impl.exception.control;
 
 import org.apache.deltaspike.core.api.exception.control.ExceptionHandlingFlow;
 import org.apache.deltaspike.core.api.exception.control.event.ExceptionStackEvent;
-import org.apache.deltaspike.core.spi.exception.control.IntrospectiveExceptionEvent;
+import org.apache.deltaspike.core.spi.exception.control.event.IntrospectiveExceptionEvent;
 
 import javax.enterprise.inject.Typed;
 

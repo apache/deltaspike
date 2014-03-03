@@ -24,7 +24,7 @@ import org.apache.deltaspike.core.api.exception.control.ExceptionHandler;
 import org.apache.deltaspike.core.api.exception.control.Handles;
 import org.apache.deltaspike.core.api.exception.control.event.ExceptionEvent;
 import org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent;
-import org.apache.deltaspike.core.spi.exception.control.IntrospectiveExceptionEvent;
+import org.apache.deltaspike.core.spi.exception.control.event.IntrospectiveExceptionEvent;
 import org.apache.deltaspike.test.core.impl.exception.control.event.literal.EventQualifierLiteral;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;

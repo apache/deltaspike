@@ -42,9 +42,9 @@ import java.util.logging.Logger;
  * handler dispatcher. All handlers are invoked from this class.  This class is immutable.
  */
 @ApplicationScoped
-public class ExceptionHandlerDispatch
+public class ExceptionHandlerBroadcaster
 {
-    private static final Logger LOG = Logger.getLogger(ExceptionHandlerDispatch.class.getName());
+    private static final Logger LOG = Logger.getLogger(ExceptionHandlerBroadcaster.class.getName());
 
     /**
      * Observes the event, finds the correct exception handler(s) and invokes them.
@@ -56,7 +56,8 @@ public class ExceptionHandlerDispatch
     public void executeHandlers(@Observes @Any ExceptionToCatchEvent exceptionEventEvent,
                                 final BeanManager beanManager) throws Throwable
     {
-        LOG.entering(ExceptionHandlerDispatch.class.getName(), "executeHandlers", exceptionEventEvent.getException());
+        LOG.entering(
+            ExceptionHandlerBroadcaster.class.getName(), "executeHandlers", exceptionEventEvent.getException());
 
         CreationalContext<Object> creationalContext = null;
 
@@ -205,7 +206,7 @@ public class ExceptionHandlerDispatch
             {
                 creationalContext.release();
             }
-            LOG.exiting(ExceptionHandlerDispatch.class.getName(), "executeHandlers",
+            LOG.exiting(ExceptionHandlerBroadcaster.class.getName(), "executeHandlers",
                     exceptionEventEvent.getException());
         }
     }
