@@ -16,9 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.api.resourceloader;
+package org.apache.deltaspike.core.impl.resourceloader;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.core.api.resourceloader.ExternalResource;
+import org.apache.deltaspike.core.api.resourceloader.ExternalResourceProvider;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Any;
