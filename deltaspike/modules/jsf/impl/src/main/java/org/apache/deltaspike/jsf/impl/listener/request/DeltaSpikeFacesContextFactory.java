@@ -32,8 +32,10 @@ public class DeltaSpikeFacesContextFactory extends FacesContextFactory implement
     private final FacesContextFactory wrappedFacesContextFactory;
 
     private final boolean deactivated;
-
-    private final ClientWindow clientWindow;
+    
+    private volatile Boolean initialized;
+    
+    private ClientWindow clientWindow;
 
     /**
      * Constructor for wrapping the given {@link FacesContextFactory}
@@ -44,7 +46,6 @@ public class DeltaSpikeFacesContextFactory extends FacesContextFactory implement
     {
         this.wrappedFacesContextFactory = wrappedFacesContextFactory;
         this.deactivated = !ClassDeactivationUtils.isActivated(getClass());
-        this.clientWindow = BeanProvider.getContextualReference(ClientWindow.class, true);
     }
 
     /**
@@ -66,6 +67,8 @@ public class DeltaSpikeFacesContextFactory extends FacesContextFactory implement
             return facesContext;
         }
 
+        lazyInit();
+        
         return new DeltaSpikeFacesContextWrapper(facesContext, clientWindow);
     }
 
@@ -76,5 +79,24 @@ public class DeltaSpikeFacesContextFactory extends FacesContextFactory implement
     public FacesContextFactory getWrapped()
     {
         return wrappedFacesContextFactory;
+    }
+    
+    private void lazyInit()
+    {
+        if (this.initialized == null)
+        {
+            init();
+        }
+    }
+
+    private synchronized void init()
+    {
+        // switch into paranoia mode
+        if (this.initialized == null)
+        {
+            this.clientWindow = BeanProvider.getContextualReference(ClientWindow.class, true);
+            
+            this.initialized = true;
+        }
     }
 }
