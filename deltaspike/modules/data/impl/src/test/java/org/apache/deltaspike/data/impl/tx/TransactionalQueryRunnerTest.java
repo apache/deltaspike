@@ -114,6 +114,13 @@ public class TransactionalQueryRunnerTest
         assertTrue(wrapper.isRunInNonTx());
     }
 
+    @Test
+    @InSequence(10)
+    public void should_cleanup() throws Exception
+    {
+        repository.deleteAll();
+    }
+
     @Before
     public void init()
     {

@@ -16,19 +16,43 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.jpa.impl.entitymanager;
+package org.apache.deltaspike.data.impl.tx;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Specializes;
 import javax.persistence.EntityManager;
 
-public interface EntityManagerHolder
+import org.apache.deltaspike.jpa.impl.entitymanager.DefaultEntityManagerHolder;
+
+@Specializes
+@ApplicationScoped
+public class ThreadLocalEntityManagerHolder extends DefaultEntityManagerHolder
 {
 
-    void set(EntityManager entityManager);
+    private final ThreadLocal<EntityManager> holder = new ThreadLocal<EntityManager>();
 
-    boolean isSet();
+    @Override
+    public void set(EntityManager entityManager)
+    {
+        holder.set(entityManager);
+    }
 
-    EntityManager get();
+    @Override
+    public boolean isSet()
+    {
+        return get() != null;
+    }
 
-    void dispose();
+    @Override
+    public EntityManager get()
+    {
+        return holder.get();
+    }
+
+    @Override
+    public void dispose()
+    {
+        holder.remove();
+    }
 
 }

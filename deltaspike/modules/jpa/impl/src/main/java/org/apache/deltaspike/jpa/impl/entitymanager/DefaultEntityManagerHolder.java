@@ -20,15 +20,35 @@ package org.apache.deltaspike.jpa.impl.entitymanager;
 
 import javax.persistence.EntityManager;
 
-public interface EntityManagerHolder
+/**
+ * Empty holder. Override and specialize in using module.
+ * Currently only used by the data module.
+ */
+public class DefaultEntityManagerHolder implements EntityManagerHolder
 {
 
-    void set(EntityManager entityManager);
+    @Override
+    public void set(EntityManager entityManager)
+    {
+        throw new UnsupportedOperationException(
+                "Default implementation does not store an EntityManager");
+    }
 
-    boolean isSet();
+    @Override
+    public boolean isSet()
+    {
+        return false;
+    }
 
-    EntityManager get();
+    @Override
+    public EntityManager get()
+    {
+        return null;
+    }
 
-    void dispose();
+    @Override
+    public void dispose()
+    {
+    }
 
 }

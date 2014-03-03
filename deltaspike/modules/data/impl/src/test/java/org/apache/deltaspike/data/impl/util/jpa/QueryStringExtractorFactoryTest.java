@@ -99,6 +99,16 @@ public class QueryStringExtractorFactoryTest
                 new FakeQueryInvocationHandler());
     }
 
+    private static Object createInstance(Method method) throws Exception
+    {
+        // EclipseLink specific
+        Class<?> returnType = Class.forName("org.eclipse.persistence.queries.DataReadQuery");
+        Object instance = returnType.newInstance();
+        Method setter = returnType.getMethod("setJPQLString", String.class);
+        setter.invoke(instance, QUERY_STRING);
+        return instance;
+    }
+
     private static class FakeQueryInvocationHandler implements InvocationHandler
     {
 
@@ -107,7 +117,11 @@ public class QueryStringExtractorFactoryTest
         {
             if (!method.getReturnType().equals(String.class))
             {
-                return createProxy(method.getReturnType());
+                if (method.getReturnType().isInterface())
+                {
+                    return createProxy(method.getReturnType());
+                }
+                return createInstance(method);
             }
             return QUERY_STRING; // we don't care of the result actually
         }
