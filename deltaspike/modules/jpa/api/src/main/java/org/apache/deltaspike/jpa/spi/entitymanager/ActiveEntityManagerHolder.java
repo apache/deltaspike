@@ -16,11 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.jpa.impl.entitymanager;
+package org.apache.deltaspike.jpa.spi.entitymanager;
 
 import javax.persistence.EntityManager;
 
-public interface EntityManagerHolder
+/**
+ * Optional holder which allows to customize the handling of the {@link EntityManager}.
+ * Multiple Entity-Managers with different qualifiers aren't supported.
+ * See the data-module for further details.
+ */
+public interface ActiveEntityManagerHolder
 {
 
     void set(EntityManager entityManager);

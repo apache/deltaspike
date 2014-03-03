@@ -20,11 +20,13 @@ package org.apache.deltaspike.jpa.impl.entitymanager;
 
 import javax.persistence.EntityManager;
 
+import org.apache.deltaspike.jpa.spi.entitymanager.ActiveEntityManagerHolder;
+
 /**
  * Empty holder. Override and specialize in using module.
  * Currently only used by the data module.
  */
-public class DefaultEntityManagerHolder implements EntityManagerHolder
+public class DefaultEntityManagerHolder implements ActiveEntityManagerHolder
 {
 
     @Override

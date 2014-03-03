@@ -38,9 +38,9 @@ import javax.persistence.EntityTransaction;
 import org.apache.deltaspike.core.api.literal.AnyLiteral;
 import org.apache.deltaspike.core.util.ProxyUtils;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
-import org.apache.deltaspike.jpa.impl.entitymanager.EntityManagerHolder;
 import org.apache.deltaspike.jpa.impl.transaction.context.EntityManagerEntry;
 import org.apache.deltaspike.jpa.impl.transaction.context.TransactionBeanStorage;
+import org.apache.deltaspike.jpa.spi.entitymanager.ActiveEntityManagerHolder;
 import org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy;
 
 /**
@@ -74,7 +74,7 @@ public class ResourceLocalTransactionStrategy implements TransactionStrategy
     private TransactionStrategyHelper transactionHelper;
 
     @Inject
-    private EntityManagerHolder emHolder;
+    private ActiveEntityManagerHolder emHolder;
 
     @Override
     public Object execute(InvocationContext invocationContext) throws Exception

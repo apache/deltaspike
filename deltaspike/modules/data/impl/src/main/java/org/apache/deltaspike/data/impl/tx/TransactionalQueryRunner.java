@@ -30,7 +30,7 @@ import org.apache.deltaspike.data.impl.handler.CdiQueryInvocationContext;
 import org.apache.deltaspike.data.impl.handler.EntityRepositoryHandler;
 import org.apache.deltaspike.data.impl.handler.QueryRunner;
 import org.apache.deltaspike.data.impl.meta.RequiresTransaction;
-import org.apache.deltaspike.jpa.impl.entitymanager.EntityManagerHolder;
+import org.apache.deltaspike.jpa.spi.entitymanager.ActiveEntityManagerHolder;
 import org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy;
 
 public class TransactionalQueryRunner implements QueryRunner
@@ -40,7 +40,7 @@ public class TransactionalQueryRunner implements QueryRunner
     private TransactionStrategy strategy;
 
     @Inject
-    private EntityManagerHolder entityManagerHolder;
+    private ActiveEntityManagerHolder activeEntityManagerHolder;
 
     @Override
     public Object executeQuery(final QueryBuilder builder, final CdiQueryInvocationContext context)
@@ -50,12 +50,12 @@ public class TransactionalQueryRunner implements QueryRunner
         {
             try
             {
-                entityManagerHolder.set(context.getEntityManager());
+                activeEntityManagerHolder.set(context.getEntityManager());
                 return executeTransactional(builder, context);
             }
             finally
             {
-                entityManagerHolder.dispose();
+                activeEntityManagerHolder.dispose();
             }
         }
         return executeNonTransactional(builder, context);
