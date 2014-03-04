@@ -101,7 +101,6 @@ public class DeltaSpikeViewHandler extends ViewHandlerWrapper implements Deactiv
             if (ClassDeactivationUtils.isActivated(getClass()))
             {
                 this.securityAwareViewHandler = createSecurityAwareViewHandler();
-                //TODO add ViewHandler for handling the WindowContext
             }
             else
             {
