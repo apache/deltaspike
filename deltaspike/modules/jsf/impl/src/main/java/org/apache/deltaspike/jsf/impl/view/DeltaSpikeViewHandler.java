@@ -37,8 +37,10 @@ public class DeltaSpikeViewHandler extends ViewHandlerWrapper implements Deactiv
 {
     protected final ViewHandler wrapped;
 
-    private final ViewHandler securityAwareViewHandler;
-    private final ClientWindow clientWindow;
+    private volatile Boolean initialized;
+    
+    private ViewHandler securityAwareViewHandler;
+    private ClientWindow clientWindow;
 
     /**
      * Constructor for wrapping the given {@link ViewHandler}
@@ -48,17 +50,6 @@ public class DeltaSpikeViewHandler extends ViewHandlerWrapper implements Deactiv
     public DeltaSpikeViewHandler(ViewHandler wrapped)
     {
         this.wrapped = wrapped;
-        if (ClassDeactivationUtils.isActivated(getClass()))
-        {
-            this.securityAwareViewHandler = createSecurityAwareViewHandler();
-            //TODO add ViewHandler for handling the WindowContext
-        }
-        else
-        {
-            this.securityAwareViewHandler = null;
-        }
-
-        this.clientWindow = BeanProvider.getContextualReference(ClientWindow.class, true);
     }
 
     //allows custom implementations to override the SecurityAwareViewHandler
@@ -70,6 +61,8 @@ public class DeltaSpikeViewHandler extends ViewHandlerWrapper implements Deactiv
     @Override
     public UIViewRoot createView(FacesContext facesContext, String viewId)
     {
+        lazyInit();
+        
         if (this.securityAwareViewHandler == null)
         {
             return this.wrapped.createView(facesContext, viewId);
@@ -80,6 +73,8 @@ public class DeltaSpikeViewHandler extends ViewHandlerWrapper implements Deactiv
     @Override
     public String getActionURL(FacesContext context, String viewId)
     {
+        lazyInit();
+        
         String actionURL = this.wrapped.getActionURL(context, viewId);
         return ClientWindowHelper.appendWindowId(context, actionURL, clientWindow);
     }
@@ -88,5 +83,34 @@ public class DeltaSpikeViewHandler extends ViewHandlerWrapper implements Deactiv
     public ViewHandler getWrapped()
     {
         return this.wrapped;
+    }
+    
+    private void lazyInit()
+    {
+        if (this.initialized == null)
+        {
+            init();
+        }
+    }
+
+    private synchronized void init()
+    {
+        // switch into paranoia mode
+        if (this.initialized == null)
+        {
+            if (ClassDeactivationUtils.isActivated(getClass()))
+            {
+                this.securityAwareViewHandler = createSecurityAwareViewHandler();
+                //TODO add ViewHandler for handling the WindowContext
+            }
+            else
+            {
+                this.securityAwareViewHandler = null;
+            }
+
+            this.clientWindow = BeanProvider.getContextualReference(ClientWindow.class, true);
+            
+            this.initialized = true;
+        }
     }
 }
