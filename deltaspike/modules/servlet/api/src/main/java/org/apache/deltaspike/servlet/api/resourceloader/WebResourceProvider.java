@@ -24,9 +24,9 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
 
+import org.apache.deltaspike.core.api.common.DeltaSpike;
 import org.apache.deltaspike.core.api.resourceloader.AbstractResourceProvider;
 import org.apache.deltaspike.core.api.resourceloader.InjectableResource;
-import org.apache.deltaspike.servlet.api.Web;
 
 /**
  * Loads resources using {@link ServletContext#getResource(String)}.
@@ -35,7 +35,7 @@ import org.apache.deltaspike.servlet.api.Web;
 public class WebResourceProvider extends AbstractResourceProvider
 {
     @Inject
-    @Web
+    @DeltaSpike
     private ServletContext servletContext;
 
     @Override

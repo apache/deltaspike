@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.deltaspike.servlet.api.Web;
+import org.apache.deltaspike.core.api.common.DeltaSpike;
 
 /**
  * Simple CDI beans with various injection points for servlet ojbects.
@@ -35,27 +35,27 @@ import org.apache.deltaspike.servlet.api.Web;
 public class ServletObjectInjectionBean
 {
 
-    @Web
+    @DeltaSpike
     @Inject
     private ServletRequest servletRequest;
 
-    @Web
+    @DeltaSpike
     @Inject
     private HttpServletRequest httpServletRequest;
 
-    @Web
+    @DeltaSpike
     @Inject
     private ServletResponse servletResponse;
 
-    @Web
+    @DeltaSpike
     @Inject
     private HttpServletResponse httpServletResponse;
 
-    @Web
+    @DeltaSpike
     @Inject
     private HttpSession httpSession;
 
-    @Web
+    @DeltaSpike
     @Inject
     private Principal principal;
 

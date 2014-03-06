@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.deltaspike.servlet.api.Web;
+import org.apache.deltaspike.core.api.common.DeltaSpike;
 
 /**
  * Producer for standard servlet objects. All objects are produced with the {@link Web} qualifier. Currently the
@@ -51,14 +51,14 @@ public class ServletObjectProducer
 {
 
     @Produces
-    @Web
+    @DeltaSpike
     public ServletContext getServletContext()
     {
         return ServletContextHolder.get();
     }
 
     @Produces
-    @Web
+    @DeltaSpike
     @RequestScoped
     public ServletRequest getServletRequest()
     {
@@ -67,7 +67,7 @@ public class ServletObjectProducer
 
     @Produces
     @Typed(HttpServletRequest.class)
-    @Web
+    @DeltaSpike
     @RequestScoped
     public HttpServletRequest getHttpServletRequest()
     {
@@ -80,7 +80,7 @@ public class ServletObjectProducer
     }
 
     @Produces
-    @Web
+    @DeltaSpike
     @RequestScoped
     public ServletResponse getServletResponse()
     {
@@ -89,7 +89,7 @@ public class ServletObjectProducer
 
     @Produces
     @Typed(HttpServletResponse.class)
-    @Web
+    @DeltaSpike
     @RequestScoped
     public HttpServletResponse getHttpServletResponse()
     {
@@ -102,7 +102,7 @@ public class ServletObjectProducer
     }
 
     @Produces
-    @Web
+    @DeltaSpike
     @SessionScoped
     public HttpSession getHttpSession()
     {
@@ -116,7 +116,7 @@ public class ServletObjectProducer
     }
 
     @Produces
-    @Web
+    @DeltaSpike
     @RequestScoped
     public Principal getPrincipal()
     {

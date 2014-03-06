@@ -24,7 +24,7 @@ import static org.junit.Assert.assertThat;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
 
-import org.apache.deltaspike.servlet.api.Web;
+import org.apache.deltaspike.core.api.common.DeltaSpike;
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.apache.deltaspike.test.servlet.impl.Deployments;
 import org.hamcrest.Matchers;
@@ -63,7 +63,7 @@ public class ServletContextInjectionTest
     }
 
     @Inject
-    @Web
+    @DeltaSpike
     private ServletContext servletContext;
 
     @Test
