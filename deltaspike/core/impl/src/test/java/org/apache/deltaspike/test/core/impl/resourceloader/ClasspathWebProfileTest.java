@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.core.impl.resourceloader;
 
-import org.apache.deltaspike.core.api.resourceloader.ExternalResource;
+import org.apache.deltaspike.core.api.resourceloader.InjectableResource;
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -57,11 +57,11 @@ public class ClasspathWebProfileTest
     }
 
     @Inject
-    @ExternalResource(location="myconfig.properties")
+    @InjectableResource(location="myconfig.properties")
     private InputStream inputStream;
 
     @Inject
-    @ExternalResource(location="myconfig.properties")
+    @InjectableResource(location="myconfig.properties")
     private Properties properties;
 
     @Test
@@ -81,13 +81,13 @@ public class ClasspathWebProfileTest
     }
 
     @Test
-    public void testAmbiguousFileLookup(@ExternalResource(location="META-INF/beans.xml") InputStream inputStream)
+    public void testAmbiguousFileLookup(@InjectableResource(location="META-INF/beans.xml") InputStream inputStream)
     {
         Assert.assertNull(inputStream); // for some reason, this works, exception no longer thrown.
     }
 
     @Test
-    public void testSuccessfulAmbiguousLookup(@ExternalResource(location="META-INF/beans.xml") List<InputStream> inputStreams)
+    public void testSuccessfulAmbiguousLookup(@InjectableResource(location="META-INF/beans.xml") List<InputStream> inputStreams)
     {
         Assert.assertTrue(inputStreams.size() > 1); //the count is different on as7 compared to the standalone setup
     }

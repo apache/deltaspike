@@ -24,28 +24,28 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
 
-import org.apache.deltaspike.core.api.resourceloader.BaseResourceProvider;
-import org.apache.deltaspike.core.api.resourceloader.ExternalResource;
+import org.apache.deltaspike.core.api.resourceloader.AbstractResourceProvider;
+import org.apache.deltaspike.core.api.resourceloader.InjectableResource;
 import org.apache.deltaspike.servlet.api.Web;
 
 /**
  * Loads resources using {@link ServletContext#getResource(String)}.
  */
 @ApplicationScoped
-public class WebResourceProvider extends BaseResourceProvider
+public class WebResourceProvider extends AbstractResourceProvider
 {
     @Inject
     @Web
     private ServletContext servletContext;
 
     @Override
-    public InputStream readStream(ExternalResource externalResource)
+    public InputStream readStream(InjectableResource injectableResource)
     {
         /*
          * ServletContext.getResourceAsStream() requires the path to start with "/". We add it here if it is missing
          * because it is a common mistake to miss it.
          */
-        String path = externalResource.location();
+        String path = injectableResource.location();
         if (!path.startsWith("/"))
         {
             path = "/" + path;

@@ -19,8 +19,8 @@
 package org.apache.deltaspike.core.impl.resourceloader;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
-import org.apache.deltaspike.core.api.resourceloader.ExternalResource;
-import org.apache.deltaspike.core.api.resourceloader.ExternalResourceProvider;
+import org.apache.deltaspike.core.api.resourceloader.InjectableResource;
+import org.apache.deltaspike.core.api.resourceloader.InjectableResourceProvider;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Any;
@@ -42,45 +42,48 @@ import java.util.logging.Logger;
  *
  */
 @ApplicationScoped
-public class ExternalResourceProducer
+public class InjectableResourceProducer
 {
-    private static final Logger logger = Logger.getLogger(ExternalResourceProducer.class.getName());
+    private static final Logger logger = Logger.getLogger(InjectableResourceProducer.class.getName());
 
     @Inject
     @Any
-    private Instance<ExternalResourceProvider> resourceProviders;
+    private Instance<InjectableResourceProvider> resourceProviders;
 
     @Produces
-    @ExternalResource(resourceProvider = ExternalResourceProvider.class,location = "")
+    @InjectableResource(resourceProvider = InjectableResourceProvider.class,location = "")
     public InputStream getInputStream(final InjectionPoint injectionPoint)
     {
-        ExternalResource externalResource = getAnnotation(injectionPoint);
-        ExternalResourceProvider provider = BeanProvider.getContextualReference(externalResource.resourceProvider());
-        final InputStream is = provider.readStream(externalResource);
+        InjectableResource injectableResource = getAnnotation(injectionPoint);
+        InjectableResourceProvider provider =
+                BeanProvider.getContextualReference(injectableResource.resourceProvider());
+        final InputStream is = provider.readStream(injectableResource);
         return is;
     }
 
     @Produces
-    @ExternalResource(resourceProvider = ExternalResourceProvider.class,location = "")
+    @InjectableResource(resourceProvider = InjectableResourceProvider.class,location = "")
     public List<InputStream> getInputStreams(final InjectionPoint injectionPoint)
     {
-        ExternalResource externalResource = getAnnotation(injectionPoint);
-        ExternalResourceProvider provider = BeanProvider.getContextualReference(externalResource.resourceProvider());
-        return provider.readStreams(externalResource);
+        InjectableResource injectableResource = getAnnotation(injectionPoint);
+        InjectableResourceProvider provider =
+                BeanProvider.getContextualReference(injectableResource.resourceProvider());
+        return provider.readStreams(injectableResource);
     }
 
     @Produces
-    @ExternalResource(resourceProvider = ExternalResourceProvider.class,location = "")
+    @InjectableResource(resourceProvider = InjectableResourceProvider.class,location = "")
     public Properties getProperties(final InjectionPoint injectionPoint) throws IOException
     {
-        ExternalResource externalResource = getAnnotation(injectionPoint);
-        ExternalResourceProvider provider = BeanProvider.getContextualReference(externalResource.resourceProvider());
-        final Properties properties = provider.readProperties(externalResource);
+        InjectableResource injectableResource = getAnnotation(injectionPoint);
+        InjectableResourceProvider provider =
+                BeanProvider.getContextualReference(injectableResource.resourceProvider());
+        final Properties properties = provider.readProperties(injectableResource);
         return properties;
     }
 
     public void closeInputStream(@Disposes
-                                 @ExternalResource(resourceProvider = ExternalResourceProvider.class, location = "")
+                                 @InjectableResource(resourceProvider = InjectableResourceProvider.class, location = "")
                                  InputStream inputStream)
     {
         if (inputStream != null)
@@ -99,13 +102,13 @@ public class ExternalResourceProducer
         }
     }
 
-    private ExternalResource getAnnotation(final InjectionPoint injectionPoint)
+    private InjectableResource getAnnotation(final InjectionPoint injectionPoint)
     {
         for (Annotation annotation : injectionPoint.getQualifiers())
         {
-            if (annotation instanceof ExternalResource)
+            if (annotation instanceof InjectableResource)
             {
-                return (ExternalResource)annotation;
+                return (InjectableResource)annotation;
             }
         }
         return null;

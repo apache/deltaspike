@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.core.impl.resourceloader;
 
-import org.apache.deltaspike.core.api.resourceloader.ExternalResource;
+import org.apache.deltaspike.core.api.resourceloader.InjectableResource;
 import org.apache.deltaspike.core.api.resourceloader.FileResourceProvider;
 import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.test.category.SeCategory;
@@ -81,7 +81,7 @@ public class FileResourceTest
     }
 
     @Test
-    public void testInputStream(@ExternalResource(resourceProvider = FileResourceProvider.class,
+    public void testInputStream(@InjectableResource(resourceProvider = FileResourceProvider.class,
             location="target/propsdsfileresource.properties")
             InputStream inputStream) throws IOException
     {
@@ -92,7 +92,7 @@ public class FileResourceTest
     }
 
     @Test
-    public void testProperties(@ExternalResource(resourceProvider = FileResourceProvider.class,
+    public void testProperties(@InjectableResource(resourceProvider = FileResourceProvider.class,
             location="target/propsdsfileresource.properties")
             Properties properties)
     {

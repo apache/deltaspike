@@ -18,27 +18,21 @@
  */
 package org.apache.deltaspike.core.api.resourceloader;
 
-import javax.enterprise.util.Nonbinding;
-import javax.inject.Qualifier;
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Properties;
 
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.ElementType.METHOD;
-
-@Target( { TYPE, METHOD, PARAMETER, FIELD })
-@Retention(value = RetentionPolicy.RUNTIME)
-@Documented
-@Qualifier
-public @interface ExternalResource
+/**
+ * Provides lookup capability to find a resource.
+ *
+ */
+public interface InjectableResourceProvider
 {
-    @Nonbinding
-    Class<? extends ExternalResourceProvider> resourceProvider() default ClasspathResourceProvider.class;
 
-    @Nonbinding
-    String location() default "";
+    InputStream readStream(final InjectableResource injectableResource);
+
+    List<InputStream> readStreams(final InjectableResource injectableResource);
+
+    Properties readProperties(final InjectableResource injectableResource);
+
 }

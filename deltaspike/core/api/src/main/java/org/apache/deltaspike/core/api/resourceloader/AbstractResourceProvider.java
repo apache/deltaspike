@@ -33,11 +33,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * An abstract ExternalResourceProvider implementation with some basic utility functionality.
+ * An abstract InjectableResourceProvider implementation with some basic utility functionality.
  */
-public abstract class BaseResourceProvider implements ExternalResourceProvider
+public abstract class AbstractResourceProvider implements InjectableResourceProvider
 {
-    private static final Logger logger = Logger.getLogger(BaseResourceProvider.class.getName());
+    private static final Logger logger = Logger.getLogger(AbstractResourceProvider.class.getName());
 
     @Inject
     @Any
@@ -80,18 +80,18 @@ public abstract class BaseResourceProvider implements ExternalResourceProvider
     }
 
     @Override
-    public Properties readProperties(ExternalResource externalResource)
+    public Properties readProperties(InjectableResource injectableResource)
     {
         final Properties properties = new Properties();
-        final String name = externalResource.location();
-        final InputStream inputStream = this.readStream(externalResource);
+        final String name = injectableResource.location();
+        final InputStream inputStream = this.readStream(injectableResource);
         this.loadInputStreamToProperties(inputStream, properties, name);
         return properties;
     }
 
     @Override
-    public List<InputStream> readStreams(ExternalResource externalResource)
+    public List<InputStream> readStreams(InjectableResource injectableResource)
     {
-        return Collections.singletonList(this.readStream(externalResource));
+        return Collections.singletonList(this.readStream(injectableResource));
     }
 }

@@ -30,7 +30,7 @@ import java.util.logging.Logger;
  * A file based resource provider, looking for a file based on the name.
  */
 @ApplicationScoped
-public class FileResourceProvider extends BaseResourceProvider
+public class FileResourceProvider extends AbstractResourceProvider
 {
     private static final Logger logger = Logger.getLogger(FileResourceProvider.class.getName());
     InputStream readFile(final String name)
@@ -55,8 +55,8 @@ public class FileResourceProvider extends BaseResourceProvider
     }
 
     @Override
-    public InputStream readStream(ExternalResource externalResource)
+    public InputStream readStream(InjectableResource injectableResource)
     {
-        return readFile(externalResource.location());
+        return readFile(injectableResource.location());
     }
 }

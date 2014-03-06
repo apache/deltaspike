@@ -34,16 +34,16 @@ import java.util.logging.Logger;
  * A classpath based resource provider
  */
 @ApplicationScoped
-public class ClasspathResourceProvider extends BaseResourceProvider
+public class ClasspathResourceProvider extends AbstractResourceProvider
 {
     private static final Logger logger = Logger.getLogger(ClasspathResourceProvider.class.getName());
 
     @Override
-    public InputStream readStream(final ExternalResource externalResource)
+    public InputStream readStream(final InjectableResource injectableResource)
     {
         try
         {
-            List<InputStream> matchedStreams = this.readClassPath(externalResource.location(),true);
+            List<InputStream> matchedStreams = this.readClassPath(injectableResource.location(),true);
             return matchedStreams.get(0);
         }
         catch (IOException e)
@@ -57,11 +57,11 @@ public class ClasspathResourceProvider extends BaseResourceProvider
     }
 
     @Override
-    public List<InputStream> readStreams(ExternalResource externalResource)
+    public List<InputStream> readStreams(InjectableResource injectableResource)
     {
         try
         {
-            return readClassPath(externalResource.location(),false);
+            return readClassPath(injectableResource.location(),false);
         }
         catch (IOException e)
         {
