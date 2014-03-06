@@ -48,6 +48,7 @@ public class WebResourceProviderTest
     public static WebArchive getDeployment()
     {
         return ShrinkWrap.create(WebArchive.class, WebResourceProviderTest.class.getSimpleName() + ".war")
+                .addClass(WebResourceProvider.class)
                 .addAsLibraries(Deployments.getDeltaSpikeCoreArchives())
                 .addAsLibraries(Deployments.getDeltaSpikeServletArchives())
                 .addAsLibraries(Deployments.getTestSupportArchives())
