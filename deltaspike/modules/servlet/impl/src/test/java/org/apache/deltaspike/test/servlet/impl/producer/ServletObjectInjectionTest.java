@@ -24,7 +24,7 @@ import static org.junit.Assert.assertThat;
 import java.net.URL;
 
 import org.apache.deltaspike.test.category.WebProfileCategory;
-import org.apache.deltaspike.test.servlet.impl.Deployments;
+import org.apache.deltaspike.test.servlet.impl.util.ArchiveUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -54,8 +54,8 @@ public class ServletObjectInjectionTest
     public static WebArchive getDeployment()
     {
         return ShrinkWrap.create(WebArchive.class, ServletObjectInjectionTest.class.getSimpleName() + ".war")
-                .addAsLibraries(Deployments.getDeltaSpikeCoreArchives())
-                .addAsLibraries(Deployments.getDeltaSpikeServletArchives())
+                .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndServletModuleArchive())
+                .addAsResource("META-INF/web-fragment.xml", "META-INF/web-fragment.xml")
                 .addClass(ServletObjectInjectionBean.class)
                 .addClass(ServletObjectInjectionServlet.class)
                 .addAsWebInfResource(new StringAsset("<beans/>"), "beans.xml")

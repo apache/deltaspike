@@ -29,7 +29,7 @@ import javax.inject.Inject;
 import org.apache.deltaspike.core.api.resourceloader.InjectableResource;
 import org.apache.deltaspike.servlet.api.resourceloader.WebResourceProvider;
 import org.apache.deltaspike.test.category.WebProfileCategory;
-import org.apache.deltaspike.test.servlet.impl.Deployments;
+import org.apache.deltaspike.test.servlet.impl.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -49,9 +49,8 @@ public class WebResourceProviderTest
     {
         return ShrinkWrap.create(WebArchive.class, WebResourceProviderTest.class.getSimpleName() + ".war")
                 .addClass(WebResourceProvider.class)
-                .addAsLibraries(Deployments.getDeltaSpikeCoreArchives())
-                .addAsLibraries(Deployments.getDeltaSpikeServletArchives())
-                .addAsLibraries(Deployments.getTestSupportArchives())
+                .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndServletModuleArchive())
+                .addAsResource("META-INF/web-fragment.xml", "META-INF/web-fragment.xml")
                 .addAsWebInfResource(new StringAsset("<beans/>"), "beans.xml")
                 .addAsWebResource(new StringAsset("foobar"), "foobar.txt")
                 .addAsWebResource(new StringAsset("foobar"), "foo/bar.txt")

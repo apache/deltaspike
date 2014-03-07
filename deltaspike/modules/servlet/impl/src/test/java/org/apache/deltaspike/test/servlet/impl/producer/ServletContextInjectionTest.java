@@ -26,7 +26,7 @@ import javax.servlet.ServletContext;
 
 import org.apache.deltaspike.core.api.common.DeltaSpike;
 import org.apache.deltaspike.test.category.WebProfileCategory;
-import org.apache.deltaspike.test.servlet.impl.Deployments;
+import org.apache.deltaspike.test.servlet.impl.util.ArchiveUtils;
 import org.hamcrest.Matchers;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -51,9 +51,8 @@ public class ServletContextInjectionTest
     public static WebArchive getDeployment()
     {
         return ShrinkWrap.create(WebArchive.class, ServletContextInjectionTest.class.getSimpleName() + ".war")
-                .addAsLibraries(Deployments.getDeltaSpikeCoreArchives())
-                .addAsLibraries(Deployments.getDeltaSpikeServletArchives())
-                .addAsLibraries(Deployments.getTestSupportArchives())
+                .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndServletModuleArchive())
+                .addAsResource("META-INF/web-fragment.xml", "META-INF/web-fragment.xml")
                 .addAsWebInfResource(new StringAsset("<beans/>"), "beans.xml")
                 .setWebXML(new StringAsset(
                         Descriptors.create(WebAppDescriptor.class)

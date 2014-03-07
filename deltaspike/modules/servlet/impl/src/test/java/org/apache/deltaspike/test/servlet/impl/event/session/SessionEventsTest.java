@@ -26,7 +26,7 @@ import java.net.URL;
 import javax.inject.Inject;
 
 import org.apache.deltaspike.test.category.WebProfileCategory;
-import org.apache.deltaspike.test.servlet.impl.Deployments;
+import org.apache.deltaspike.test.servlet.impl.util.ArchiveUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.params.ClientPNames;
@@ -61,9 +61,8 @@ public class SessionEventsTest
     public static WebArchive getDeployment()
     {
         return ShrinkWrap.create(WebArchive.class, SessionEventsTest.class.getSimpleName() + ".war")
-                .addAsLibraries(Deployments.getDeltaSpikeCoreArchives())
-                .addAsLibraries(Deployments.getDeltaSpikeServletArchives())
-                .addAsLibraries(Deployments.getTestSupportArchives())
+                .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndServletModuleArchive())
+                .addAsResource("META-INF/web-fragment.xml", "META-INF/web-fragment.xml")
                 .addClass(SessionEventsObserver.class)
                 .addClass(CreateSessionServlet.class)
                 .addClass(DestroySessionServlet.class)
