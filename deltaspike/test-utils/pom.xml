@@ -42,6 +42,11 @@
             <artifactId>shrinkwrap-api</artifactId>
             <version>${shrinkwrap.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.container</groupId>
+            <artifactId>arquillian-container-test-spi</artifactId>
+            <version>${arquillian.version}</version>
+        </dependency>
     </dependencies>
 
     <properties>
