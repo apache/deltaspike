@@ -44,14 +44,16 @@ public class RequestResponseHolderFilter implements Filter
             ServletException
     {
 
-        RequestResponseHolder.bind(request, response);
+        RequestResponseHolder.REQUEST.bind(request);
+        RequestResponseHolder.RESPONSE.bind(response);
         try
         {
             chain.doFilter(request, response);
         }
         finally
         {
-            RequestResponseHolder.release();
+            RequestResponseHolder.REQUEST.release();
+            RequestResponseHolder.RESPONSE.release();
         }
 
     }

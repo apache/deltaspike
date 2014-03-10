@@ -22,69 +22,79 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 /**
- * The {@link RequestResponseHolder} holds {@link RequestResponse} objects in a {@link ThreadLocal}.
+ * Utility class which is used to bind the {@link ServletRequest} and {@link ServletResponse} to the current thread.
+ * 
+ * @param <Type>
+ *            {@link ServletRequest} or {@link ServletResponse}
  */
-class RequestResponseHolder
+class RequestResponseHolder<Type>
 {
 
-    private static final ThreadLocal<RequestResponse> requestResponseThreadLocal = new ThreadLocal<RequestResponse>();
+    /**
+     * Instance for storing the {@link ServletRequest}
+     */
+    static final RequestResponseHolder<ServletRequest> REQUEST = new RequestResponseHolder<ServletRequest>();
+
+    /**
+     * Instance for storing the {@link ServletResponse}
+     */
+    static final RequestResponseHolder<ServletResponse> RESPONSE = new RequestResponseHolder<ServletResponse>();
+
+    private final ThreadLocal<Type> threadLocal = new ThreadLocal<Type>();
 
     private RequestResponseHolder()
     {
-        // no instance creation allowed
+        // hide constructor
     }
 
     /**
-     * Binds the a request/response pair to the current thread.
+     * Binds the request or response to the current thread.
      * 
-     * @param request
-     *            The request, must not be <code>null</code>
-     * @param response
-     *            The response, must not be <code>null</code>
-     */
-    static void bind(ServletRequest request, ServletResponse response)
-    {
-        bind(new RequestResponse(request, response));
-    }
-
-    /**
-     * Binds the a request/response pair to the current thread.
-     * 
-     * @param pair
-     *            The request/response pair, must not be <code>null</code>
-     */
-    static void bind(RequestResponse pair)
-    {
-        if (requestResponseThreadLocal.get() != null)
-        {
-            throw new IllegalStateException("There is already an instance stored for this thread.");
-        }
-        requestResponseThreadLocal.set(pair);
-    }
-
-    /**
-     * Releases the stored request/response pair for the current thread.
-     */
-    static void release()
-    {
-        requestResponseThreadLocal.remove();
-    }
-
-    /**
-     * Retrieves the request/response pair associated with the current thread.
-     * 
-     * @return The request/response pair, never <code>null</code>
+     * @param instance
+     *            The request/response
      * @throws IllegalStateException
-     *             if no pair is associated with the thread
+     *             if there is already an instance bound to the thread
      */
-    static RequestResponse get()
+    void bind(Type instance)
     {
-        RequestResponse requestResponse = requestResponseThreadLocal.get();
-        if (requestResponse == null)
+        if (isBound())
+        {
+            throw new IllegalStateException("There is already an instance bound to this thread.");
+        }
+        threadLocal.set(instance);
+    }
+
+    /**
+     * Returns <code>true</code> if there is already an instance bound to the thread
+     */
+    boolean isBound()
+    {
+        return threadLocal.get() != null;
+    }
+
+    /**
+     * Release the instance bound to the current thread
+     */
+    void release()
+    {
+        threadLocal.remove();
+    }
+
+    /**
+     * Retrieve the request/response bound to the current thread.
+     * 
+     * @return instance bound to the thread
+     * @throws IllegalStateException
+     *             if there is no instance bound to the thread
+     */
+    Type get()
+    {
+        Type instance = threadLocal.get();
+        if (instance == null)
         {
             throw new IllegalStateException("Attempt to access the request/response without an active HTTP request");
         }
-        return requestResponse;
+        return instance;
     }
 
 }

@@ -62,7 +62,7 @@ public class ServletObjectProducer
     @RequestScoped
     public ServletRequest getServletRequest()
     {
-        return RequestResponseHolder.get().getRequest();
+        return RequestResponseHolder.REQUEST.get();
     }
 
     @Produces
@@ -71,7 +71,7 @@ public class ServletObjectProducer
     @RequestScoped
     public HttpServletRequest getHttpServletRequest()
     {
-        ServletRequest request = RequestResponseHolder.get().getRequest();
+        ServletRequest request = RequestResponseHolder.REQUEST.get();
         if (request instanceof HttpServletRequest)
         {
             return (HttpServletRequest) request;
@@ -84,7 +84,7 @@ public class ServletObjectProducer
     @RequestScoped
     public ServletResponse getServletResponse()
     {
-        return RequestResponseHolder.get().getResponse();
+        return RequestResponseHolder.RESPONSE.get();
     }
 
     @Produces
@@ -93,7 +93,7 @@ public class ServletObjectProducer
     @RequestScoped
     public HttpServletResponse getHttpServletResponse()
     {
-        ServletResponse response = RequestResponseHolder.get().getResponse();
+        ServletResponse response = RequestResponseHolder.RESPONSE.get();
         if (response instanceof HttpServletResponse)
         {
             return (HttpServletResponse) response;
@@ -106,7 +106,7 @@ public class ServletObjectProducer
     @SessionScoped
     public HttpSession getHttpSession()
     {
-        ServletRequest request = RequestResponseHolder.get().getRequest();
+        ServletRequest request = RequestResponseHolder.REQUEST.get();
         if (request instanceof HttpServletRequest)
         {
             return ((HttpServletRequest) request).getSession(true);
