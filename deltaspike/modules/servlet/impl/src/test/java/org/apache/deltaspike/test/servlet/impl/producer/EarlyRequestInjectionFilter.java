@@ -16,72 +16,54 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.servlet.impl.produce;
+package org.apache.deltaspike.test.servlet.impl.producer;
 
 import java.io.IOException;
 
+import javax.inject.Inject;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-/**
- * This filter stores the current request and response in the {@link RequestResponseHolder}.
- */
-public class RequestResponseHolderFilter implements Filter
+import org.apache.deltaspike.core.api.common.DeltaSpike;
+
+public class EarlyRequestInjectionFilter implements Filter
 {
 
-    @Override
-    public void init(FilterConfig config) throws ServletException
-    {
-        // nothing yet
-    }
+    @Inject
+    @DeltaSpike
+    private HttpServletRequest injectedRequest;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
             ServletException
     {
 
-        /*
-         * Typically the request is bound to the thread in RequestResponseHolderListener. But as this listener was added
-         * after the initial release of the Servlet module, the filter will also do it if necessary.
-         */
-        final boolean alreadyBound = RequestResponseHolder.REQUEST.isBound();
-        if (!alreadyBound)
+        // check if the request has been injected
+        if (injectedRequest != null && injectedRequest.getContextPath() != null)
         {
-            RequestResponseHolder.REQUEST.bind(request);
+            ((HttpServletResponse) response).setHeader("X-DS-Request-Injected", "true");
         }
 
-        try
-        {
+        chain.doFilter(request, response);
 
-            RequestResponseHolder.RESPONSE.bind(response);
-            try
-            {
-                chain.doFilter(request, response);
-            }
-            finally
-            {
-                RequestResponseHolder.RESPONSE.release();
-            }
+    }
 
-        }
-        finally
-        {
-            if (!alreadyBound)
-            {
-                RequestResponseHolder.REQUEST.release();
-            }
-        }
-
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException
+    {
+        // nothing to do
     }
 
     @Override
     public void destroy()
     {
-        // nothing yet
+        // nothing to do
     }
 
 }

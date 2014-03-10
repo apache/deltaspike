@@ -45,6 +45,11 @@
         <listener-class>org.apache.deltaspike.servlet.impl.produce.ServletContextHolderListener</listener-class>
     </listener>
 
+    <listener>
+        <display-name>RequestResponseHolderListener</display-name>
+        <listener-class>org.apache.deltaspike.servlet.impl.produce.RequestResponseHolderListener</listener-class>
+    </listener>
+
     <filter>
         <display-name>RequestResponseHolderFilter</display-name>
         <filter-name>RequestResponseHolderFilter</filter-name>
