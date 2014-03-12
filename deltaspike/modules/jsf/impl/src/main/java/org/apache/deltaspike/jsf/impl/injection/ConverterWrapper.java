@@ -22,6 +22,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
+import javax.faces.convert.FacesConverter;
 
 public class ConverterWrapper extends AbstractContextualReferenceWrapper<Converter> implements Converter
 {
@@ -44,5 +45,23 @@ public class ConverterWrapper extends AbstractContextualReferenceWrapper<Convert
     public String getAsString(FacesContext facesContext, UIComponent component, Object value) throws ConverterException
     {
         return getWrapped().getAsString(facesContext, component, value);
+    }
+
+    @Override
+    protected Converter resolveInstanceForClass(FacesContext facesContext, Class<?> wrappedClass)
+    {
+        FacesConverter facesConverter = wrappedClass.getAnnotation(FacesConverter.class);
+
+        if (facesConverter == null)
+        {
+            return null;
+        }
+
+        if (!"".equals(facesConverter.value()))
+        {
+            return facesContext.getApplication().createConverter(facesConverter.value());
+        }
+
+        return facesContext.getApplication().createConverter(facesConverter.forClass());
     }
 }

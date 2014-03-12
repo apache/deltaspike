@@ -105,10 +105,24 @@ abstract class AbstractContextualReferenceWrapper<T> implements PartialStateHold
 
         if (this.wrapped == null) //fallback for full state-saving
         {
-            //TODO check for @FacesConverter/@FacesValidator
-            //-> delegate to javax.faces.application.Application (+ unwrap it - since it will be wrapped again)
-            this.wrapped = (T)ClassUtils.tryToInstantiateClassForName((String)wrappedState[0]);
+            Class wrappedClass = ClassUtils.tryToLoadClassForName((String)wrappedState[0]);
+
+            T resolvedInstance = resolveInstanceForClass(context, wrappedClass);
+
+            //TODO re-visit logic for multiple (custom) wrappers
+            if (resolvedInstance instanceof AbstractContextualReferenceWrapper)
+            {
+                resolvedInstance = ((AbstractContextualReferenceWrapper<T>)resolvedInstance).getWrapped();
+            }
+            this.wrapped = resolvedInstance;
         }
+
+        if (this.wrapped == null)
+        {
+            this.wrapped = (T)ClassUtils.tryToInstantiateClassForName((String)wrappedState[0]);
+            BeanProvider.injectFields(this.wrapped);
+        }
+
         if (this.wrapped instanceof StateHolder)
         {
             ((StateHolder) this.wrapped).restoreState(context, wrappedState[1]);
@@ -135,4 +149,6 @@ abstract class AbstractContextualReferenceWrapper<T> implements PartialStateHold
     {
         return this.wrapped;
     }
+
+    protected abstract T resolveInstanceForClass(FacesContext facesContext, Class<?> wrappedClass);
 }
