@@ -70,15 +70,16 @@ abstract class AbstractContextualReferenceWrapper<T> implements PartialStateHold
     @Override
     public Object saveState(FacesContext context)
     {
+        if (this.fullStateSavingFallbackEnabled == null)
+        {
+            this.fullStateSavingFallbackEnabled =
+                BeanProvider.getContextualReference(JsfModuleConfig.class).isFullStateSavingFallbackEnabled();
+        }
+
         if (this.wrapped instanceof StateHolder)
         {
             Object[] result = new Object[2];
 
-            if (this.fullStateSavingFallbackEnabled == null)
-            {
-                this.fullStateSavingFallbackEnabled =
-                    BeanProvider.getContextualReference(JsfModuleConfig.class).isFullStateSavingFallbackEnabled();
-            }
             if (this.fullStateSavingFallbackEnabled)
             {
                 result[0] = this.getWrapped().getClass().getName();
@@ -87,6 +88,13 @@ abstract class AbstractContextualReferenceWrapper<T> implements PartialStateHold
             return result;
         }
 
+        if (this.fullStateSavingFallbackEnabled)
+        {
+            Object[] result = new Object[1];
+            result[0] = this.getWrapped().getClass().getName();
+
+            return result;
+        }
         return null;
     }
 
