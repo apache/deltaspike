@@ -25,9 +25,13 @@ import javax.faces.validator.ValidatorException;
 
 public class ValidatorWrapper extends AbstractContextualReferenceWrapper<Validator> implements Validator
 {
-    public ValidatorWrapper(Validator wrapped)
+    public ValidatorWrapper()
     {
-        super(wrapped);
+    }
+
+    public ValidatorWrapper(Validator wrapped, boolean fullStateSavingFallbackEnabled)
+    {
+        super(wrapped, fullStateSavingFallbackEnabled);
     }
 
     @Override

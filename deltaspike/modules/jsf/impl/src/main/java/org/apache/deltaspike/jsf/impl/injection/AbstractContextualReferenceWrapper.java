@@ -18,6 +18,10 @@
  */
 package org.apache.deltaspike.jsf.impl.injection;
 
+import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.core.util.ClassUtils;
+import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;
+
 import javax.faces.FacesWrapper;
 import javax.faces.component.PartialStateHolder;
 import javax.faces.component.StateHolder;
@@ -27,10 +31,16 @@ import javax.faces.context.FacesContext;
 abstract class AbstractContextualReferenceWrapper<T> implements PartialStateHolder, FacesWrapper<T>
 {
     private T wrapped;
+    private transient Boolean fullStateSavingFallbackEnabled;
 
-    protected AbstractContextualReferenceWrapper(T wrapped)
+    protected AbstractContextualReferenceWrapper()
+    {
+    }
+
+    protected AbstractContextualReferenceWrapper(T wrapped, boolean fullStateSavingFallbackEnabled)
     {
         this.wrapped = wrapped;
+        this.fullStateSavingFallbackEnabled = fullStateSavingFallbackEnabled;
     }
 
     @Override
@@ -62,7 +72,19 @@ abstract class AbstractContextualReferenceWrapper<T> implements PartialStateHold
     {
         if (this.wrapped instanceof StateHolder)
         {
-            return ((StateHolder)wrapped).saveState(context);
+            Object[] result = new Object[2];
+
+            if (this.fullStateSavingFallbackEnabled == null)
+            {
+                this.fullStateSavingFallbackEnabled =
+                    BeanProvider.getContextualReference(JsfModuleConfig.class).isFullStateSavingFallbackEnabled();
+            }
+            if (this.fullStateSavingFallbackEnabled)
+            {
+                result[0] = this.getWrapped().getClass().getName();
+            }
+            result[1] = ((StateHolder)wrapped).saveState(context);
+            return result;
         }
 
         return null;
@@ -71,9 +93,17 @@ abstract class AbstractContextualReferenceWrapper<T> implements PartialStateHold
     @Override
     public void restoreState(FacesContext context, Object state)
     {
+        Object[] wrappedState = (Object[]) state;
+
+        if (this.wrapped == null) //fallback for full state-saving
+        {
+            //TODO check for @FacesConverter/@FacesValidator
+            //-> delegate to javax.faces.application.Application (+ unwrap it - since it will be wrapped again)
+            this.wrapped = (T)ClassUtils.tryToInstantiateClassForName((String)wrappedState[0]);
+        }
         if (this.wrapped instanceof StateHolder)
         {
-            ((StateHolder)this.wrapped).restoreState(context, state);
+            ((StateHolder) this.wrapped).restoreState(context, wrappedState[1]);
         }
     }
 

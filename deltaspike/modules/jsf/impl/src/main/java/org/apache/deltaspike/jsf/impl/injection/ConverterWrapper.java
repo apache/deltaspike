@@ -25,9 +25,13 @@ import javax.faces.convert.ConverterException;
 
 public class ConverterWrapper extends AbstractContextualReferenceWrapper<Converter> implements Converter
 {
-    public ConverterWrapper(Converter wrapped)
+    public ConverterWrapper()
     {
-        super(wrapped);
+    }
+
+    public ConverterWrapper(Converter wrapped, boolean fullStateSavingFallbackEnabled)
+    {
+        super(wrapped, fullStateSavingFallbackEnabled);
     }
 
     @Override

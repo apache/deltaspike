@@ -36,6 +36,7 @@ public class InjectionAwareApplicationWrapper extends ApplicationWrapper
     private final boolean containerManagedConvertersEnabled;
     private final boolean containerManagedValidatorsEnabled;
     private final boolean preDestroyViewMapEventFilterMode;
+    private final boolean fullStateSavingFallbackEnabled;
 
     public InjectionAwareApplicationWrapper(
         Application wrapped, JsfModuleConfig jsfModuleConfig, boolean preDestroyViewMapEventFilterMode)
@@ -43,6 +44,7 @@ public class InjectionAwareApplicationWrapper extends ApplicationWrapper
         this.wrapped = wrapped;
         this.containerManagedConvertersEnabled = jsfModuleConfig.isContainerManagedConvertersEnabled();
         this.containerManagedValidatorsEnabled = jsfModuleConfig.isContainerManagedValidatorsEnabled();
+        this.fullStateSavingFallbackEnabled = jsfModuleConfig.isFullStateSavingFallbackEnabled();
         this.preDestroyViewMapEventFilterMode = preDestroyViewMapEventFilterMode;
     }
 
@@ -77,7 +79,7 @@ public class InjectionAwareApplicationWrapper extends ApplicationWrapper
         }
         else
         {
-            return new ConverterWrapper(result);
+            return new ConverterWrapper(result, this.fullStateSavingFallbackEnabled);
         }
     }
 
@@ -106,7 +108,7 @@ public class InjectionAwareApplicationWrapper extends ApplicationWrapper
         }
         else
         {
-            return new ValidatorWrapper(result);
+            return new ValidatorWrapper(result, this.fullStateSavingFallbackEnabled);
         }
     }
 
