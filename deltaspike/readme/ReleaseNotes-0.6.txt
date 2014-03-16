@@ -38,6 +38,7 @@ Bug
     [DELTASPIKE-530] - deactivatable extensions
     [DELTASPIKE-532] - DeltaSpikeFacesContextFactory construction issue in non EE
     [DELTASPIKE-535] - DeltaSpikeViewHandler construction issue in non EE
+    [DELTASPIKE-541] - Remove errant source directory
 
 Improvement
 
@@ -112,6 +113,7 @@ Task
     [DELTASPIKE-526] - upgrade dependencies
     [DELTASPIKE-536] - align creation of test-archives
     [DELTASPIKE-539] - release notes for v0.6
+    [DELTASPIKE-540] - update notice file
 
 Test
 
