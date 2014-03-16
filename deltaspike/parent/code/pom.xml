@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.apache.deltaspike</groupId>
         <artifactId>parent</artifactId>
-        <version>0.6-SNAPSHOT</version>
+        <version>0.6</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -1100,18 +1100,11 @@
                                     <target>
 
                                         <!-- Change all TCP ports from "xxxx" to "3xxxx" -->
-                                        <replaceregexp
-                                            file="${container.unpack.directory}/glassfish3/glassfish/domains/domain1/config/domain.xml"
-                                            match="port=&quot;(\d{4})&quot;" replace="port=&quot;3\1&quot;" flags="g" />
+                                        <replaceregexp file="${container.unpack.directory}/glassfish3/glassfish/domains/domain1/config/domain.xml" match="port=&quot;(\d{4})&quot;" replace="port=&quot;3\1&quot;" flags="g" />
 
                                         <!-- Replace the default datasource with an in-memory one -->
-                                        <replace
-                                            file="${container.unpack.directory}/glassfish3/glassfish/domains/domain1/config/domain.xml"
-                                            token="datasource-classname=&quot;org.apache.derby.jdbc.ClientDataSource&quot;"
-                                            value="datasource-classname=&quot;org.apache.derby.jdbc.EmbeddedDataSource&quot;" />
-                                        <replace
-                                            file="${container.unpack.directory}/glassfish3/glassfish/domains/domain1/config/domain.xml"
-                                            token="value=&quot;sun-appserv-samples&quot;" value="value=&quot;memory:deltaspike&quot;" />
+                                        <replace file="${container.unpack.directory}/glassfish3/glassfish/domains/domain1/config/domain.xml" token="datasource-classname=&quot;org.apache.derby.jdbc.ClientDataSource&quot;" value="datasource-classname=&quot;org.apache.derby.jdbc.EmbeddedDataSource&quot;" />
+                                        <replace file="${container.unpack.directory}/glassfish3/glassfish/domains/domain1/config/domain.xml" token="value=&quot;sun-appserv-samples&quot;" value="value=&quot;memory:deltaspike&quot;" />
 
                                     </target>
                                 </configuration>
@@ -1221,21 +1214,12 @@
                                     <target>
 
                                         <!-- Change all TCP ports from "xxxx" to "2xxxx" -->
-                                        <replaceregexp
-                                            file="${container.unpack.directory}/glassfish4/glassfish/domains/domain1/config/domain.xml"
-                                            match="port=&quot;(\d{4})&quot;" replace="port=&quot;2\1&quot;" flags="g" />
-                                        <replace
-                                            file="${container.unpack.directory}/glassfish4/glassfish/domains/domain1/config/domain.xml"
-                                            token="value=&quot;7676&quot;" value="value=&quot;27676&quot;" />
+                                        <replaceregexp file="${container.unpack.directory}/glassfish4/glassfish/domains/domain1/config/domain.xml" match="port=&quot;(\d{4})&quot;" replace="port=&quot;2\1&quot;" flags="g" />
+                                        <replace file="${container.unpack.directory}/glassfish4/glassfish/domains/domain1/config/domain.xml" token="value=&quot;7676&quot;" value="value=&quot;27676&quot;" />
 
                                         <!-- Replace the default datasource with an in-memory one -->
-                                        <replace
-                                            file="${container.unpack.directory}/glassfish4/glassfish/domains/domain1/config/domain.xml"
-                                            token="datasource-classname=&quot;org.apache.derby.jdbc.ClientDataSource&quot;"
-                                            value="datasource-classname=&quot;org.apache.derby.jdbc.EmbeddedDataSource&quot;" />
-                                        <replace
-                                            file="${container.unpack.directory}/glassfish4/glassfish/domains/domain1/config/domain.xml"
-                                            token="value=&quot;sun-appserv-samples&quot;" value="value=&quot;memory:deltaspike&quot;" />
+                                        <replace file="${container.unpack.directory}/glassfish4/glassfish/domains/domain1/config/domain.xml" token="datasource-classname=&quot;org.apache.derby.jdbc.ClientDataSource&quot;" value="datasource-classname=&quot;org.apache.derby.jdbc.EmbeddedDataSource&quot;" />
+                                        <replace file="${container.unpack.directory}/glassfish4/glassfish/domains/domain1/config/domain.xml" token="value=&quot;sun-appserv-samples&quot;" value="value=&quot;memory:deltaspike&quot;" />
 
                                     </target>
                                 </configuration>

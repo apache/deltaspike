@@ -23,12 +23,12 @@
     <parent>
         <groupId>org.apache.deltaspike.modules</groupId>
         <artifactId>modules-project</artifactId>
-        <version>0.6-SNAPSHOT</version>
+        <version>0.6</version>
     </parent>
 
     <groupId>org.apache.deltaspike.modules</groupId>
     <artifactId>test-control-module-project</artifactId>
-    <version>0.6-SNAPSHOT</version>
+    <version>0.6</version>
     <packaging>pom</packaging>
 
     <name>Apache DeltaSpike Test-Control-Module</name>
