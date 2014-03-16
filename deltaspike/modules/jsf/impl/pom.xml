@@ -39,10 +39,10 @@
                 <version>2.6</version>
                 <executions>
                     <execution>
-						<phase>process-resources</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
                         <configuration>
                             <includeEmptyDirs>true</includeEmptyDirs>
                             <outputDirectory>${project.build.directory}/classes/META-INF/resources/deltaspike-uncompressed</outputDirectory>
