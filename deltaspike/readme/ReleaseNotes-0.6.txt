@@ -1,0 +1,119 @@
+Release Notes - Apache DeltaSpike - Version 0.6
+
+Sub-task
+
+    [DELTASPIKE-252] - documentation for @Transactional with JTA
+
+Bug
+
+    [DELTASPIKE-391] - Memory Leak in Data Module
+    [DELTASPIKE-414] - HttpServletRequest (and others) injection not working in servlet filters from web.xml
+    [DELTASPIKE-415] - Nested @Folder throws IllegalStateException
+    [DELTASPIKE-416] - @Folder's name check/resolution is broken
+    [DELTASPIKE-417] - EntityManagerResolver ignored
+    [DELTASPIKE-418] - EntityManagerResolver ignored
+    [DELTASPIKE-424] - EntityManagerResolver with normal scope is not supported
+    [DELTASPIKE-427] - WeldContainerControl throws a NullPointer before a null check.
+    [DELTASPIKE-434] - bean-lookup during ProcessAnnotatedType in RepositoryComponent
+    [DELTASPIKE-442] - PersistenceConfigurationProvider does not pick up any configuration yet
+    [DELTASPIKE-446] - Current windowhandler.js is incompatible with PrimeFaces
+    [DELTASPIKE-458] - UserTransaction is not always available in JNDI
+    [DELTASPIKE-463] - @ViewConfigRoot breaks view-configs added earlier
+    [DELTASPIKE-471] - support external handling of navigation-cases
+    [DELTASPIKE-484] - wrong handling of new contextual-storages in WindowBeanHolder#getContextualStorage
+    [DELTASPIKE-485] - WindowContext isn't injectable in passivation capable beans
+    [DELTASPIKE-486] - #destroy and #destroyAllActive of AbstractContext destroy entries without dropping them
+    [DELTASPIKE-489] - AbstractContext#getContextualStorage doesn't forward the current contextual
+    [DELTASPIKE-490] - WindowContextImpl#closeWindow doesn't destroy beans
+    [DELTASPIKE-493] - inconsistent handling in WindowContextImpl#closeWindow
+    [DELTASPIKE-501] - windowhandler.js also handles NONE and CUSTOM
+    [DELTASPIKE-507] - UserTransaction not available in WAS 8.0 and 8.5 during EJB CMT call
+    [DELTASPIKE-512] - Navigation happens twice if DeltaSpikeNavigationHandler is de-activated
+    [DELTASPIKE-513] - Transactional interceptor throws NPE for missing EntityManager
+    [DELTASPIKE-516] - ClientWindowHelper.handleInitialRedirect mutilates URL, pathInfo is omitted
+    [DELTASPIKE-518] - DS Data should support Wrapped JPA APIs
+    [DELTASPIKE-524] - preserve view-parameters
+    [DELTASPIKE-528] - stopContexts() and container shutdown() do not dispose of application scoped beans
+    [DELTASPIKE-529] - DeltaSpikeExceptionHandler construction issue in non EE
+    [DELTASPIKE-530] - deactivatable extensions
+    [DELTASPIKE-532] - DeltaSpikeFacesContextFactory construction issue in non EE
+    [DELTASPIKE-535] - DeltaSpikeViewHandler construction issue in non EE
+
+Improvement
+
+    [DELTASPIKE-341] - Provide Integration between Faces Exceptions and Exception Handling
+    [DELTASPIKE-373] - Provide an out of the box alternative for ClientWindowConfig
+    [DELTASPIKE-423] - limit inherited meta-data
+    [DELTASPIKE-425] - DependentProvider#destroy() must not destroy NormalScoped instances
+    [DELTASPIKE-429] - Old property that could be removed in parent\pom.xml
+    [DELTASPIKE-431] - 'ordinal' for @JsfPhaseListener
+    [DELTASPIKE-432] - ClientWindow adapter for jsf 2.2
+    [DELTASPIKE-439] - ViewConfigs not residing in packages should be treated as a definition error
+    [DELTASPIKE-459] - add optional config "testcontrol.stop_container"
+    [DELTASPIKE-460] - @SkipMetaDataMerge for view-configs
+    [DELTASPIKE-461] - AccessDecisionVoterContext should contain view-meta-data in case of @Secured in combination with view-configs
+    [DELTASPIKE-464] - unify naming (Broadcaster vs Emitter)
+    [DELTASPIKE-465] - provide DefaultViewConfigInheritanceStrategy#addViewMetaData as protected method
+    [DELTASPIKE-467] - Add default module.xml for jboss modules.
+    [DELTASPIKE-478] - Create build profile in jenkins that creates binary distribution.
+    [DELTASPIKE-480] - view-config validation
+    [DELTASPIKE-495] - expose WindowContext as named bean
+    [DELTASPIKE-499] - Minify javascripts
+    [DELTASPIKE-502] - Finish LAZY ClientWindowRenderMode
+    [DELTASPIKE-504] - easier configuration of ClientWindowRenderMode
+    [DELTASPIKE-505] - change default ClientWindowRenderMode to LAZY
+    [DELTASPIKE-517] - improved weld-support
+    [DELTASPIKE-527] - @Named support for type-safe messages
+    [DELTASPIKE-531] - rename ExternalResource to InjectableResource
+    [DELTASPIKE-533] - Introduce a global deltaspike qualifier
+    [DELTASPIKE-534] - Replace @Web with @DeltaSpike
+    [DELTASPIKE-537] - test-utils jar should be added to deployed wars only if the test is a server test
+
+New Feature
+
+    [DELTASPIKE-256] - allow custom timeout for the UserTransaction
+    [DELTASPIKE-263] - Generate binaries of DeltaSpike project
+    [DELTASPIKE-342] - config-annotations for test-runners to control CdiContainer and ContextControl
+    [DELTASPIKE-399] - Incorporate Solder's ResourceLoader features into DeltaSpike
+    [DELTASPIKE-426] - cdi support for jsf converters and validators
+    [DELTASPIKE-437] - window-timeout
+    [DELTASPIKE-438] - window quota handling
+    [DELTASPIKE-444] - provide an utility class for data mapper to avoid to reimplement loops each time
+    [DELTASPIKE-454] - Provide a ClientWindowRenderMode similiar to CODI
+    [DELTASPIKE-466] - ExternalContainer spi
+    [DELTASPIKE-468] - optional integration with myfaces-test
+    [DELTASPIKE-474] - support of Deactivatable for the ds-spi
+    [DELTASPIKE-475] - auto. registration of jobs with cron-expressions
+    [DELTASPIKE-487] - port @ViewAccessScoped from codi
+    [DELTASPIKE-488] - port grouped conversation scope from codi
+    [DELTASPIKE-491] - port @ConversationSubGroup from codi
+    [DELTASPIKE-492] - Create ExternalResourceProvider for the Servlet Module
+    [DELTASPIKE-500] - Implement ds:disableClientWindow
+    [DELTASPIKE-515] - optional adapter for MockedJsfTestContainer
+
+Task
+
+    [DELTASPIKE-118] - custom port for jbossas-build-managed-7
+    [DELTASPIKE-389] - Create documentation for the servlet module
+    [DELTASPIKE-428] - update build for weld 2.1.x
+    [DELTASPIKE-430] - re-visit DependentProvider
+    [DELTASPIKE-435] - upgrade arquillian adapter for glassfish3
+    [DELTASPIKE-447] - upgrade tests to tomee 1.6.0
+    [DELTASPIKE-455] - unify literal-packages
+    [DELTASPIKE-456] - wildfly-build-managed profile
+    [DELTASPIKE-477] - New Scheduler module is not included in binary distribution.
+    [DELTASPIKE-481] - Use unique archive names in Servlet module integration tests
+    [DELTASPIKE-483] - WildFly build-managed test profile
+    [DELTASPIKE-496] - Merge arquillian.xml files into a single one
+    [DELTASPIKE-497] - Create build-managed test profiles for Glassfish
+    [DELTASPIKE-503] - Add JSF playground module
+    [DELTASPIKE-523] - align event-packages
+    [DELTASPIKE-525] - move @Initialized and @Destroyed
+    [DELTASPIKE-526] - upgrade dependencies
+    [DELTASPIKE-536] - align creation of test-archives
+    [DELTASPIKE-539] - release notes for v0.6
+
+Test
+
+    [DELTASPIKE-476] - scheduler tests
+    [DELTASPIKE-479] - add tests with simple ear-packaging
