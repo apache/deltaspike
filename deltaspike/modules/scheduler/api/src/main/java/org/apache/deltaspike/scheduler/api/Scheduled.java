@@ -35,6 +35,8 @@ public @interface Scheduled
 {
     String cronExpression();
 
+    boolean overrideOnStartup() default false; //'true' triggers a re-schedule if the job exists already
+
     Class<? extends Annotation>[] startScopes() default { SessionScoped.class, RequestScoped.class };
 
     Class group() default Scheduled.class; //type-safe group

@@ -40,12 +40,14 @@ import org.quartz.impl.StdSchedulerFactory;
 
 import java.lang.annotation.Annotation;
 import java.util.Collections;
+import java.util.List;
 import java.util.Stack;
+import java.util.logging.Logger;
 
 //vetoed class (see SchedulerExtension)
 public class QuartzScheduler implements Scheduler<Job>
 {
-    private org.quartz.Scheduler scheduler;
+    protected org.quartz.Scheduler scheduler;
 
     @Override
     public void start()
@@ -120,15 +122,56 @@ public class QuartzScheduler implements Scheduler<Job>
                 description = jobClass.getName();
             }
 
-            JobDetail jobDetail = JobBuilder.newJob(jobClass)
-                    .withDescription(description)
-                    .withIdentity(jobKey)
-                    .build();
-            Trigger trigger = TriggerBuilder.newTrigger()
-                    .withSchedule(CronScheduleBuilder.cronSchedule(scheduled.cronExpression()))
-                    .build();
+            JobDetail jobDetail = this.scheduler.getJobDetail(jobKey);
+            Trigger trigger;
 
-            this.scheduler.scheduleJob(jobDetail, trigger);
+            if (jobDetail == null)
+            {
+                jobDetail = JobBuilder.newJob(jobClass)
+                        .withDescription(description)
+                        .withIdentity(jobKey)
+                        .build();
+
+                trigger = TriggerBuilder.newTrigger()
+                        .withSchedule(CronScheduleBuilder.cronSchedule(scheduled.cronExpression()))
+                        .build();
+
+                this.scheduler.scheduleJob(jobDetail, trigger);
+            }
+            else if (scheduled.overrideOnStartup())
+            {
+                List<? extends Trigger> existingTriggers = this.scheduler.getTriggersOfJob(jobKey);
+
+                if (existingTriggers == null || existingTriggers.isEmpty())
+                {
+                    //TODO re-visit it
+                    trigger = TriggerBuilder.newTrigger()
+                            .withSchedule(CronScheduleBuilder.cronSchedule(scheduled.cronExpression()))
+                            .build();
+
+                    this.scheduler.scheduleJob(jobDetail, trigger);
+                    return;
+                }
+
+                if (existingTriggers.size() > 1)
+                {
+                    throw new IllegalStateException("multiple triggers found for " + jobKey + " ('" + jobDetail + "')" +
+                        ", but aren't supported by @" + Scheduled.class.getName() + "#overrideOnStartup");
+                }
+
+                trigger = existingTriggers.iterator().next();
+
+                trigger = TriggerBuilder.newTrigger()
+                        .withIdentity(trigger.getKey())
+                        .withSchedule(CronScheduleBuilder.cronSchedule(scheduled.cronExpression()))
+                        .build();
+
+                this.scheduler.rescheduleJob(trigger.getKey(), trigger);
+            }
+            else
+            {
+                Logger.getLogger(QuartzScheduler.class.getName()).info(jobKey + " exists already and will be ignored.");
+            }
         }
         catch (SchedulerException e)
         {
