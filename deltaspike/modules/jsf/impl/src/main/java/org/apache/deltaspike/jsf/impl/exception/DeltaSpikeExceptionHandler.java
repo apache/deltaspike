@@ -20,6 +20,7 @@ package org.apache.deltaspike.jsf.impl.exception;
 
 import java.lang.annotation.Annotation;
 import java.util.Iterator;
+import javax.el.ELException;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.faces.FacesException;
 import javax.faces.context.ExceptionHandler;
@@ -100,6 +101,18 @@ public class DeltaSpikeExceptionHandler extends ExceptionHandlerWrapper implemen
         }
 
         super.handle();
+    }
+
+    @Override
+    public Throwable getRootCause(Throwable throwable)
+    {
+        while ((ELException.class.isInstance(throwable) || FacesException.class.isInstance(throwable))
+                && throwable.getCause() != null)
+        {
+            throwable = throwable.getCause();
+        }
+
+        return throwable;
     }
 
     private void lazyInit()
