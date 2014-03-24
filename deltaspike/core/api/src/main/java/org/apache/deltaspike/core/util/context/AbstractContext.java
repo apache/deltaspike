@@ -94,6 +94,11 @@ public abstract class AbstractContext implements Context
     @Override
     public <T> T get(Contextual<T> bean, CreationalContext<T> creationalContext)
     {
+        if (creationalContext == null)
+        {
+            return null;
+        }
+        
         checkActive();
 
         if (passivatingScope)
