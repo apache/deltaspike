@@ -51,6 +51,11 @@ public abstract class ProxyUtils
      */
     public static boolean isProxiedClass(Class currentClass)
     {
+        if (currentClass == null || currentClass.getSuperclass() == null)
+        {
+            return false;
+        }
+
         return currentClass.getName().startsWith(currentClass.getSuperclass().getName()) &&
             currentClass.getName().contains("$$");
     }
