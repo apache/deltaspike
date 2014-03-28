@@ -101,6 +101,11 @@ public class DeltaSpikeNavigationHandler extends ConfigurableNavigationHandler i
     {
         if (this.wrapped instanceof ConfigurableNavigationHandler)
         {
+            if (!this.activated)
+            {
+                return ((ConfigurableNavigationHandler)this.wrapped).getNavigationCase(context, action, outcome);
+            }
+
             if (action == null && outcome != null && outcome.contains(".") && outcome.startsWith("class ") &&
                     !otherOutcomes.contains(outcome))
             {
@@ -172,6 +177,11 @@ public class DeltaSpikeNavigationHandler extends ConfigurableNavigationHandler i
         if (result == null)
         {
             result = new HashMap<String, Set<NavigationCase>>();
+        }
+
+        if (!this.activated)
+        {
+            return result;
         }
 
         return new NavigationCaseMapWrapper(result, this.wrapped);
