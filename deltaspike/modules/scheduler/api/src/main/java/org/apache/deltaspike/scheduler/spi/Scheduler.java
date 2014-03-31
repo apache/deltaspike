@@ -37,4 +37,6 @@ public interface Scheduler<T> extends Deactivatable
     void registerNewJob(Class<? extends T> jobClass);
 
     void startJobManually(Class<? extends T> jobClass);
+
+    <S> S unwrap(Class<? extends S> schedulerClass);
 }

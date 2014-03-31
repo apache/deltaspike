@@ -63,4 +63,16 @@ public class MockedScheduler implements Scheduler<CustomJob>
     {
         TestJobManager.getInstance().startJobManually(jobClass);
     }
+
+    @Override
+    public <S> S unwrap(Class<? extends S> schedulerClass)
+    {
+        if (schedulerClass.isAssignableFrom(TestJobManager.getInstance().getClass()))
+        {
+            return (S)TestJobManager.getInstance();
+        }
+
+        throw new IllegalArgumentException(schedulerClass.getName() +
+            " isn't compatible with " + TestJobManager.getInstance().getClass().getName());
+    }
 }

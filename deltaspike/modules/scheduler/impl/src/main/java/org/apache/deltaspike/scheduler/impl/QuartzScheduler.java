@@ -330,4 +330,16 @@ public class QuartzScheduler implements Scheduler<Job>
             }
         }
     }
+
+    @Override
+    public <S> S unwrap(Class<? extends S> schedulerClass)
+    {
+        if (schedulerClass.isAssignableFrom(this.scheduler.getClass()))
+        {
+            return (S)this.scheduler;
+        }
+
+        throw new IllegalArgumentException(schedulerClass.getName() +
+            " isn't compatible with " + this.scheduler.getClass().getName());
+    }
 }

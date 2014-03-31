@@ -93,4 +93,16 @@ public abstract class CustomSchedulerTest
         this.scheduler.registerNewJob(AutoRegisteredJob.class);
         Assert.assertEquals(1, testJobManager.getRegisteredJobs().size());
     }
+
+    @Test
+    public void unwrap()
+    {
+        Assert.assertEquals(TestJobManager.class, this.scheduler.unwrap(TestJobManager.class).getClass());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void invalidUnwrap()
+    {
+        this.scheduler.unwrap(MockedScheduler.class);
+    }
 }
