@@ -38,12 +38,6 @@
             <artifactId>deltaspike-cdictrl-api</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.deltaspike.test</groupId>
-            <artifactId>deltaspike-cdictrl-tck</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
 
         <dependency>
             <groupId>org.jboss.weld.se</groupId>
