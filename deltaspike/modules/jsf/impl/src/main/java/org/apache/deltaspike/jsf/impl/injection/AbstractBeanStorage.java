@@ -30,7 +30,7 @@ abstract class AbstractBeanStorage
 
     private List<DependentBeanEntry> dependentBeanEntries = new ArrayList<DependentBeanEntry>();
 
-    void add(DependentBeanEntry dependentBeanEntry)
+    public void add(DependentBeanEntry dependentBeanEntry)
     {
         this.dependentBeanEntries.add(dependentBeanEntry);
     }
