@@ -22,43 +22,55 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core">
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
 
 <h:head>
-    <title>Simple JSF Facelets page</title>
+	<title>Simple JSF Facelets page</title>
 </h:head>
 
 <h:body>
-    <h1>JSF 2/CDI Scope testing</h1>
-    <h2>Page 1</h2>
-    <h:panelGrid columns="2" id="scopedValues">
-        <h:outputLabel value="ApplicationScope : "/>
-        <h:outputText value="#{applicationScopedBean.creationDate}">
-            <f:convertDateTime dateStyle="full" type="both" />
-        </h:outputText>
+	<h1>JSF 2/CDI Scope testing</h1>
+	<h2>Page 1</h2>
+	<h:panelGrid columns="2" id="scopedValues">
+		<h:outputLabel value="ApplicationScope : " />
+		<h:outputText value="#{applicationScopedBean.creationDate}">
+			<f:convertDateTime dateStyle="full" type="both" />
+		</h:outputText>
 
-        <h:outputLabel value="SessionScope : "/>
-        <h:outputText value="#{sessionScopedBean.creationDate}">
-            <f:convertDateTime dateStyle="full" type="both" />
-        </h:outputText>
+		<h:outputLabel value="SessionScope : " />
+		<h:outputText value="#{sessionScopedBean.creationDate}">
+			<f:convertDateTime dateStyle="full" type="both" />
+		</h:outputText>
 
-        <h:outputLabel value="ViewScope : "/>
-        <h:outputText value="#{viewScopedBean.creationDate}">
-            <f:convertDateTime dateStyle="full" type="both" />
-        </h:outputText>
+		<h:outputLabel value="WindowScope : " />
+		<h:outputText value="#{windowScopedBean.creationDate}">
+			<f:convertDateTime dateStyle="full" type="both" />
+		</h:outputText>
 
-        <h:outputLabel value="RequestScope : "/>
-        <h:outputText value="#{requestScopedBean.creationDate}">
-            <f:convertDateTime dateStyle="full" type="both" />
-        </h:outputText>
-    </h:panelGrid>
-    <h:form>
-        <h:commandButton value="Same page"/>
-        <h:commandButton value="AJAX refresh">
-            <f:ajax render=":scopedValues"/>
-        </h:commandButton>
-        <h:commandButton value="Next page" action="scopePage2"/>
-    </h:form>
+		<h:outputLabel value="ViewScope : " />
+		<h:outputText value="#{viewScopedBean.creationDate}">
+			<f:convertDateTime dateStyle="full" type="both" />
+		</h:outputText>
+
+		<h:outputLabel value="ViewAccessScope : " />
+		<h:outputText value="#{viewAccessScopedBean.creationDate}">
+			<f:convertDateTime dateStyle="full" type="both" />
+		</h:outputText>
+
+		<h:outputLabel value="RequestScope : " />
+		<h:outputText value="#{requestScopedBean.creationDate}">
+			<f:convertDateTime dateStyle="full" type="both" />
+		</h:outputText>
+
+	</h:panelGrid>
+	<h:form>
+		<h:commandButton value="Same page" />
+		<h:commandButton value="AJAX refresh">
+			<f:ajax render=":scopedValues" />
+		</h:commandButton>
+		<h:commandButton value="Next page" action="scopePage2" />
+	</h:form>
 
 </h:body>
 

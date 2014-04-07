@@ -30,13 +30,12 @@
 </h:head>
 
 <h:body>
-	<h1>Deltaspike JSF module examples</h1>
-	<h:link value="Scopes" outcome="pages/scopes/scopePage1.jsf" />
-	<br />
-	<h:link value="Messages" outcome="pages/message/jsfMessage.jsf" />
-	<br />
-	<h:link value="Type-Safe View-Config"
-		outcome="pages/viewconfig/viewConfigPage.jsf" />
+	<h1>Redirected Page</h1>
+	<h:form>
+		<h:commandButton action="#{pageController.returnToMainPage()}"
+			value="Return to Main Page" />
+	</h:form>
+
 </h:body>
 
 </html>
