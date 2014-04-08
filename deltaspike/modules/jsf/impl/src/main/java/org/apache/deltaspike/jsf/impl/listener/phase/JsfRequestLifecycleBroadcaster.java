@@ -18,6 +18,9 @@
  */
 package org.apache.deltaspike.jsf.impl.listener.phase;
 
+import org.apache.deltaspike.core.spi.activation.Deactivatable;
+import org.apache.deltaspike.core.util.ClassDeactivationUtils;
+import org.apache.deltaspike.core.util.ProxyUtils;
 import org.apache.deltaspike.jsf.api.listener.phase.AfterPhase;
 import org.apache.deltaspike.jsf.api.listener.phase.BeforePhase;
 import org.apache.deltaspike.jsf.api.listener.phase.JsfPhaseId;
@@ -63,10 +66,18 @@ public class JsfRequestLifecycleBroadcaster
     @Inject
     protected JsfRequestLifecycleBroadcaster(Instance<PhaseListener> phaseListenerInstance)
     {
+        Class phaseListenerClass;
         for (PhaseListener currentPhaseListener : phaseListenerInstance)
         {
-            if (currentPhaseListener.getClass().isAnnotationPresent(JsfPhaseListener.class))
+            phaseListenerClass = ProxyUtils.getUnproxiedClass(currentPhaseListener.getClass());
+
+            if (phaseListenerClass.isAnnotationPresent(JsfPhaseListener.class))
             {
+                if (Deactivatable.class.isAssignableFrom(phaseListenerClass) &&
+                    !ClassDeactivationUtils.isActivated(phaseListenerClass))
+                {
+                    continue;
+                }
                 this.phaseListeners.add(currentPhaseListener);
             }
         }
