@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.jsf.impl.listener.request;
 
+import java.lang.annotation.Annotation;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
@@ -35,6 +36,8 @@ import javax.faces.context.FacesContextWrapper;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
+import org.apache.deltaspike.core.util.metadata.AnnotationInstanceProvider;
+import org.apache.deltaspike.jsf.impl.exception.control.BridgeExceptionHandlerWrapper;
 
 import org.apache.deltaspike.jsf.impl.security.SecurityAwareViewHandler;
 import org.apache.deltaspike.jsf.spi.scope.window.ClientWindow;
@@ -46,6 +49,9 @@ class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
     private JsfRequestBroadcaster jsfRequestBroadcaster;
 
     private boolean defaultErrorViewExceptionHandlerActivated;
+
+    private boolean bridgeExceptionHandlerActivated;
+    private Annotation bridgeExceptionQualifier;
 
     private ExternalContext wrappedExternalContext;
 
@@ -94,10 +100,16 @@ class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
 
         ExceptionHandler exceptionHandler = this.wrappedFacesContext.getExceptionHandler();
 
+        if (this.bridgeExceptionHandlerActivated)
+        {
+            exceptionHandler = new BridgeExceptionHandlerWrapper(exceptionHandler, this.bridgeExceptionQualifier);
+        }
+        
         if (this.defaultErrorViewExceptionHandlerActivated)
         {
             exceptionHandler = new DefaultErrorViewAwareExceptionHandlerWrapper(exceptionHandler);
         }
+
         return exceptionHandler;
     }
 
@@ -137,6 +149,11 @@ class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
             this.defaultErrorViewExceptionHandlerActivated =
                     viewConfigResolver.getDefaultErrorViewConfigDescriptor() != null &&
                             ClassDeactivationUtils.isActivated(DefaultErrorViewAwareExceptionHandlerWrapper.class);
+            
+            this.bridgeExceptionHandlerActivated =
+                    ClassDeactivationUtils.isActivated(BridgeExceptionHandlerWrapper.class);
+            
+            this.bridgeExceptionQualifier = AnnotationInstanceProvider.of(jsfModuleConfig.getExceptionQualifier());
 
             this.preDestroyViewMapEventFilterMode = ClassDeactivationUtils.isActivated(SecurityAwareViewHandler.class);
             this.initialized = true;

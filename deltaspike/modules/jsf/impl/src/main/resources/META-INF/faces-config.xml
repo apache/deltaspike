@@ -49,7 +49,6 @@
     </application>
 
     <factory>
-        <exception-handler-factory>org.apache.deltaspike.jsf.impl.exception.DeltaSpikeExceptionHandlerFactory</exception-handler-factory>
         <lifecycle-factory>org.apache.deltaspike.jsf.impl.listener.request.DeltaSpikeLifecycleFactoryWrapper</lifecycle-factory>
         <faces-context-factory>org.apache.deltaspike.jsf.impl.listener.request.DeltaSpikeFacesContextFactory</faces-context-factory>
     </factory>
