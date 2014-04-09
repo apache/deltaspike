@@ -112,6 +112,12 @@ public class ViewAccessContext extends AbstractContext
 
     public void onProcessingViewFinished(String view)
     {
+        // ignore if WindowContext isn't active - our ViewAccessViewHistory is WindowScoped
+        if (!windowContext.isActive())
+        {
+            return;
+        }
+        
         // destroy beans only if the view has been changed
         if (!view.equals(viewAccessViewHistory.getLastView()))
         {
