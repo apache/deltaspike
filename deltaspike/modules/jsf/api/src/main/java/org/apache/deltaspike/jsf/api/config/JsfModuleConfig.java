@@ -128,6 +128,11 @@ public class JsfModuleConfig implements DeltaSpikeConfig
         return Default.class;
     }
 
+    public boolean isAllowPostRequestWithoutDoubleSubmitPrevention()
+    {
+        return true;
+    }
+
     protected boolean isDelegatedWindowHandlingEnabled()
     {
         if (ClassUtils.tryToLoadClassForName(CLIENT_WINDOW_CLASS_NAME) == null)
