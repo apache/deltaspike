@@ -173,7 +173,7 @@ function assertWindowId() {
 function eraseRequestCookie() {
     var requestToken = getUrlParameter('dsRid'); // random request param
     if (requestToken) {
-        var cookieName = 'dsiWindowId-' + requestToken;
+        var cookieName = 'dsWindowId-' + requestToken;
         var date = new Date();
         date.setTime(date.getTime()-(10*24*60*60*1000)); // - 10 day
         var expires = "; expires="+date.toGMTString();
