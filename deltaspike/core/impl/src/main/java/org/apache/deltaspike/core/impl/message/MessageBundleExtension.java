@@ -116,17 +116,7 @@ public class MessageBundleExtension implements Extension, Deactivatable
 
         for (Method currentMethod : currentClass.getDeclaredMethods())
         {
-            if (!currentMethod.isAnnotationPresent(MessageTemplate.class))
-            {
-                continue;
-            }
-            
-            if (String.class.isAssignableFrom(currentMethod.getReturnType()))
-            {
-                continue;
-            }
-
-            if (Message.class.isAssignableFrom(currentMethod.getReturnType()))
+            if (isValidMethod(currentMethod))
             {
                 continue;
             }
@@ -140,11 +130,22 @@ public class MessageBundleExtension implements Extension, Deactivatable
         return ok;
     }
 
+    private boolean isValidMethod(Method currentMethod)
+    {
+        if (!currentMethod.isAnnotationPresent(MessageTemplate.class) || String.class
+                .isAssignableFrom(currentMethod.getReturnType()) || Message.class
+                .isAssignableFrom(currentMethod.getReturnType()))
+        {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Part of a workaround for very old CDI containers. The spec originally had a
      * mismatch in the generic parameters of ProcessProducerMethod between the JavaDoc
      * and the spec PDF.
-     *
+     * <p/>
      * According to the Java EE 6 javadoc (the authority according to the powers
      * that be), this is the correct order of type parameters.
      *
@@ -165,7 +166,7 @@ public class MessageBundleExtension implements Extension, Deactivatable
      * Part of a workaround for very old CDI containers. The spec originally had a
      * mismatch in the generic parameters of ProcessProducerMethod between the JavaDoc
      * and the spec PDF.
-     *
+     * <p/>
      * According to the old JSR-299 spec wording, this is the correct order of type parameters.
      * This is now fixed in the spec as of today, but old containers might still fire it!
      *
@@ -192,7 +193,7 @@ public class MessageBundleExtension implements Extension, Deactivatable
         }
         else if (method.isAnnotationPresent(NamedTypedMessageBundle.class))
         {
-            namedBundleProducerBean = (Bean<Object>)bean;
+            namedBundleProducerBean = (Bean<Object>) bean;
         }
     }
 
@@ -245,7 +246,8 @@ public class MessageBundleExtension implements Extension, Deactivatable
                                                      AnnotatedType<T> annotatedType,
                                                      BeanManager beanManager)
     {
-        WrappingBeanBuilder<T> beanBuilder = new WrappingBeanBuilder<T>(delegate, beanManager) {
+        WrappingBeanBuilder<T> beanBuilder = new WrappingBeanBuilder<T>(delegate, beanManager)
+        {
             @Override
             public ImmutableBeanWrapper<T> create()
             {
@@ -262,7 +264,8 @@ public class MessageBundleExtension implements Extension, Deactivatable
                     return new ImmutablePassivationCapableBeanWrapper<T>(result,
                             beanName, qualifiers, result.getScope(),
                             result.getStereotypes(), result.getTypes(), result.isAlternative(),
-                            result.isNullable(), result.toString(), ((PassivationCapable)result).getId()) {
+                            result.isNullable(), result.toString(), ((PassivationCapable) result).getId())
+                    {
                         @Override
                         public T create(CreationalContext<T> creationalContext)
                         {
@@ -284,7 +287,8 @@ public class MessageBundleExtension implements Extension, Deactivatable
                     return new ImmutableBeanWrapper<T>(result,
                             beanName, qualifiers, result.getScope(),
                             result.getStereotypes(), result.getTypes(), result.isAlternative(),
-                            result.isNullable(), result.toString()) {
+                            result.isNullable(), result.toString())
+                    {
                         @Override
                         public T create(CreationalContext<T> creationalContext)
                         {
