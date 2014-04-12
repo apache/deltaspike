@@ -30,12 +30,12 @@ import java.io.Serializable;
 @SessionScoped
 public class PageBean004 implements Serializable
 {
-    private int currentValue = -100;
+    private static final long serialVersionUID = -436742087379474804L;
+
+    private int currentValue = -2;
 
     @Inject
     private NavigationParameterContext navigationParameterContext;
-
-    //TODO add test
 
     public Class<? extends ViewConfig> actionMethod()
     {
@@ -43,7 +43,7 @@ public class PageBean004 implements Serializable
 
         if (currentValue >= 0)
         {
-            this.navigationParameterContext.addPageParameter("cv", this.currentValue++);
+            this.navigationParameterContext.addPageParameter("cv", this.currentValue);
         }
         return SimplePageConfig.class;
     }

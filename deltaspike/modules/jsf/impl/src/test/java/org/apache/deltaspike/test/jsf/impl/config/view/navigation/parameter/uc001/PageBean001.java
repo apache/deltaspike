@@ -25,7 +25,6 @@ import javax.enterprise.inject.Model;
 @Model
 public class PageBean001
 {
-    //TODO add test
     //no params
     public Class<? extends ViewConfig> actionMethod()
     {

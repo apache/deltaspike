@@ -22,6 +22,7 @@ import org.apache.deltaspike.core.api.config.view.metadata.Aggregated;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewMetaData;
 
 import javax.enterprise.util.Nonbinding;
+import javax.interceptor.InterceptorBinding;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -40,7 +41,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @ViewMetaData
 @Aggregated(true)
-//TODO @InterceptorBinding
+@InterceptorBinding
 public @interface NavigationParameter
 {
     /**
@@ -67,7 +68,7 @@ public @interface NavigationParameter
      */
     @ViewMetaData
     @Aggregated(true)
-    //TODO @InterceptorBinding
+    @InterceptorBinding
     public static @interface List
     {
         /**

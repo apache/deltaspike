@@ -21,6 +21,8 @@ package org.apache.deltaspike.test.jsf.impl.util;
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.apache.deltaspike.test.utils.ShrinkWrapArchiveUtil;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.Asset;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 
 import java.util.ArrayList;
@@ -74,5 +76,19 @@ public class ArchiveUtils
         return ShrinkWrapArchiveUtil.getArchives(null,
                 "META-INF/beans.xml",
                 new String[]{"org.apache.deltaspike.security"}, excludedFiles);
+    }
+
+    public static Asset getBeansXml()
+    {
+        Asset beansXml = new StringAsset(
+            "<beans>" +
+                "<interceptors>" +
+                    "<class>org.apache.deltaspike.jsf.impl.config.view.navigation.NavigationParameterInterceptor</class>" +
+                    "<class>org.apache.deltaspike.jsf.impl.config.view.navigation.NavigationParameterListInterceptor</class>" +
+                "</interceptors>" +
+            "</beans>"
+        );
+
+        return beansXml;
     }
 }

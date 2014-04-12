@@ -16,28 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.jsf.impl.config.view.navigation.parameter.uc002;
+package org.apache.deltaspike.jsf.spi.config.view.navigation;
 
-import org.apache.deltaspike.core.api.config.view.ViewConfig;
-import org.apache.deltaspike.core.api.config.view.navigation.NavigationParameter;
+import org.apache.deltaspike.core.spi.InterceptorStrategy;
 
-import javax.enterprise.inject.Model;
-
-@Model
-public class PageBean002
+/**
+ * Allows to provide a custom {@link InterceptorStrategy}
+ */
+public interface NavigationParameterStrategy extends InterceptorStrategy
 {
-    @NavigationParameter(key = "param1", value = "staticMarker")
-    public Class<? extends ViewConfig> actionMethod1()
-    {
-        return SimplePageConfig.class;
-    }
-
-    @NavigationParameter.List({
-            @NavigationParameter(key = "param1", value = "staticMarker1"),
-            @NavigationParameter(key = "param2", value = "staticMarker2")
-    })
-    public Class<? extends ViewConfig> actionMethod2()
-    {
-        return SimplePageConfig.class;
-    }
 }

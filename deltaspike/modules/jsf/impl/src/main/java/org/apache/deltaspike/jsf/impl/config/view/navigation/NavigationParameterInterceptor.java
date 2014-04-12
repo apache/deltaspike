@@ -16,28 +16,29 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.jsf.impl.config.view.navigation.parameter.uc002;
+package org.apache.deltaspike.jsf.impl.config.view.navigation;
 
-import org.apache.deltaspike.core.api.config.view.ViewConfig;
 import org.apache.deltaspike.core.api.config.view.navigation.NavigationParameter;
+import org.apache.deltaspike.jsf.spi.config.view.navigation.NavigationParameterStrategy;
 
-import javax.enterprise.inject.Model;
+import javax.inject.Inject;
+import javax.interceptor.AroundInvoke;
+import javax.interceptor.Interceptor;
+import javax.interceptor.InvocationContext;
+import java.io.Serializable;
 
-@Model
-public class PageBean002
+@NavigationParameter(key = "", value = "")
+@Interceptor
+public class NavigationParameterInterceptor implements Serializable
 {
-    @NavigationParameter(key = "param1", value = "staticMarker")
-    public Class<? extends ViewConfig> actionMethod1()
-    {
-        return SimplePageConfig.class;
-    }
+    private static final long serialVersionUID = 1762625956958428994L;
 
-    @NavigationParameter.List({
-            @NavigationParameter(key = "param1", value = "staticMarker1"),
-            @NavigationParameter(key = "param2", value = "staticMarker2")
-    })
-    public Class<? extends ViewConfig> actionMethod2()
+    @Inject
+    private NavigationParameterStrategy navigationParameterStrategy;
+
+    @AroundInvoke
+    public Object addParameter(InvocationContext invocationContext) throws Exception
     {
-        return SimplePageConfig.class;
+        return this.navigationParameterStrategy.execute(invocationContext);
     }
 }
