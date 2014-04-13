@@ -61,7 +61,7 @@ public class DefaultClientWindow implements ClientWindow
     /**
      * The parameter for the windowId for POST requests
      */
-    public static final String DELTASPIKE_WINDOW_ID_POST_PARAM = "dsPostWindowId";
+    public static final String DELTASPIKE_WINDOW_ID_POST_PARAM = "dspwid";
     public static final String JSF_WINDOW_ID_POST_PARAM = "javax.faces.ClientWindow";
 
     /**
@@ -73,7 +73,7 @@ public class DefaultClientWindow implements ClientWindow
             ClientWindow.class.getName() + ".ClientWindowRenderModeEnablement";
 
     private static final String WINDOW_ID_COOKIE_PREFIX = "dsWindowId-";
-    private static final String DELTASPIKE_REQUEST_TOKEN = "dsRid";
+    private static final String DELTASPIKE_REQUEST_TOKEN = "dsrid";
 
     private static final String UNINITIALIZED_WINDOW_ID_VALUE = "uninitializedWindowId";
     private static final String WINDOW_ID_REPLACE_PATTERN = "$$windowIdValue$$";

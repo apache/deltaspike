@@ -161,7 +161,7 @@ window.onload = function() {
     var expires = "; expires="+expdt.toGMTString();
 
     var requestToken = Math.floor(Math.random()*999);
-    var newUrl = setUrlParam(window.location.href, "dsRid", requestToken);
+    var newUrl = setUrlParam(window.location.href, "dsrid", requestToken);
 
     // we still add hte windowId page param to support lazy windowId dropping for some clients
     newUrl = setUrlParam(newUrl, "dswid", urlId);

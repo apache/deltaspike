@@ -100,10 +100,10 @@ function applyWindowId() {
     var forms = document.getElementsByTagName("form");
     for (var i = 0; i < forms.length; i++) {
         var form = forms[i];
-        var windowIdHolder = form.elements["dsPostWindowId"];
+        var windowIdHolder = form.elements["dspwid"];
         if (!windowIdHolder) {
             windowIdHolder = document.createElement("INPUT");
-            windowIdHolder.name = "dsPostWindowId";
+            windowIdHolder.name = "dspwid";
             windowIdHolder.type = "hidden";
             form.appendChild(windowIdHolder);
         }
@@ -171,7 +171,7 @@ function assertWindowId() {
 }
 
 function eraseRequestCookie() {
-    var requestToken = getUrlParameter('dsRid'); // random request param
+    var requestToken = getUrlParameter('dsrid'); // random request param
     if (requestToken) {
         var cookieName = 'dsWindowId-' + requestToken;
         var date = new Date();
@@ -198,7 +198,7 @@ window.onload = function(evt) {
         try {
             (oldWindowOnLoad)? oldWindowOnLoad(evt): null;
         } finally {
-            eraseRequestCookie(); // manually erase the old dsRid cookie because Firefox doesn't do it properly
+            eraseRequestCookie(); // manually erase the old dsrid cookie because Firefox doesn't do it properly
             assertWindowId();
             applyWindowId();
             jsf.ajax.addOnEvent(jsfAjaxHandler);
