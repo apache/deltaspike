@@ -20,7 +20,10 @@ package org.apache.deltaspike.test.jsf.impl.config.view.navigation.parameter.uc0
 
 import junit.framework.Assert;
 import org.apache.deltaspike.core.api.config.view.navigation.NavigationParameterContext;
+import org.apache.deltaspike.test.category.DeltaSpikeTest;
+import org.apache.deltaspike.test.jsf.impl.config.view.navigation.parameter.shared.TestClassDeactivator;
 import org.apache.deltaspike.test.jsf.impl.util.ArchiveUtils;
+import org.apache.deltaspike.test.jsf.impl.util.FileUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -29,6 +32,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
+import java.net.URL;
 
 
 @RunWith(Arquillian.class)
@@ -40,8 +44,13 @@ public class StaticNavigationParameterWarFileTest
         String simpleName = StaticNavigationParameterWarFileTest.class.getSimpleName();
         String archiveName = simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1);
 
+        URL fileUrl = StaticNavigationParameterWarFileTest.class.getClassLoader()
+                .getResource("navigationParameterTest/apache-deltaspike.properties");
+
         return ShrinkWrap.create(WebArchive.class, archiveName + ".war")
+                .addClass(TestClassDeactivator.class)
                 .addPackage(StaticNavigationParameterWarFileTest.class.getPackage())
+                .addAsResource(FileUtils.getFileForURL(fileUrl.toString()), DeltaSpikeTest.DELTASPIKE_PROPERTIES)
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndJsfArchive())
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeSecurityArchive())
                 .addAsWebInfResource(ArchiveUtils.getBeansXml(), "beans.xml");
