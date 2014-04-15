@@ -48,7 +48,7 @@ public class DeltaSpikeResourceHandler extends ResourceHandlerWrapper
 
         if (resource != null
                 && libraryName != null
-                && LIBRARY.equals(libraryName)
+                && libraryName.equals(LIBRARY)
                 && ProjectStageProducer.getInstance().getProjectStage() == ProjectStage.Development)
         {
 
