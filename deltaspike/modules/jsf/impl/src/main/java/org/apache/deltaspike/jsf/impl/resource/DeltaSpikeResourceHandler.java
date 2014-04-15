@@ -22,6 +22,7 @@ import javax.faces.application.Resource;
 import javax.faces.application.ResourceHandler;
 import javax.faces.application.ResourceHandlerWrapper;
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
+import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
 
 /**
@@ -33,12 +34,14 @@ public class DeltaSpikeResourceHandler extends ResourceHandlerWrapper
     private static final String LIBRARY_UNCOMPRESSED = "deltaspike-uncompressed";
     
     private final ResourceHandler wrapped;
+    private final String version;
 
     public DeltaSpikeResourceHandler(ResourceHandler resourceHandler)
     {
         super();
 
         wrapped = resourceHandler;
+        version = ClassUtils.getJarVersion(this.getClass());
     }
 
     @Override
@@ -46,13 +49,14 @@ public class DeltaSpikeResourceHandler extends ResourceHandlerWrapper
     {
         Resource resource = wrapped.createResource(resourceName, libraryName);
 
-        if (resource != null
-                && libraryName != null
-                && LIBRARY.equals(libraryName)
-                && ProjectStageProducer.getInstance().getProjectStage() == ProjectStage.Development)
+        if (resource != null && libraryName != null && LIBRARY.equals(libraryName))
         {
-
-            resource = wrapped.createResource(resourceName, LIBRARY_UNCOMPRESSED);
+            if (ProjectStageProducer.getInstance().getProjectStage() == ProjectStage.Development)
+            {
+                resource = wrapped.createResource(resourceName, LIBRARY_UNCOMPRESSED);
+            }
+            
+            resource = new DeltaSpikeResource(resource, version);
         }
 
         return resource;
