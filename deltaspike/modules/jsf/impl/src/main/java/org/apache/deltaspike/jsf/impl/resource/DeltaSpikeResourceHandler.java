@@ -18,11 +18,11 @@
  */
 package org.apache.deltaspike.jsf.impl.resource;
 
-import javax.faces.application.ProjectStage;
 import javax.faces.application.Resource;
 import javax.faces.application.ResourceHandler;
 import javax.faces.application.ResourceHandlerWrapper;
-import javax.faces.context.FacesContext;
+import org.apache.deltaspike.core.api.projectstage.ProjectStage;
+import org.apache.deltaspike.core.util.ProjectStageProducer;
 
 /**
  * {@link ResourceHandlerWrapper} to deliver uncompressed resources in {@link ProjectStage#Development}.
@@ -49,7 +49,7 @@ public class DeltaSpikeResourceHandler extends ResourceHandlerWrapper
         if (resource != null
                 && libraryName != null
                 && libraryName.equals(LIBRARY)
-                && FacesContext.getCurrentInstance().isProjectStage(ProjectStage.Development))
+                && ProjectStageProducer.getInstance().getProjectStage() == ProjectStage.Development)
         {
 
             resource = wrapped.createResource(resourceName, LIBRARY_UNCOMPRESSED);
