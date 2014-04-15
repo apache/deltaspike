@@ -154,18 +154,23 @@ function setUrlParam(baseUrl, paramName, paramValue) {
 }
 // this method runs to ensure that windowIds get checked even if no windowhandler.html is used
 function assertWindowId() {
-    if (!window.name || window.name.length < 1) {
-        window.name = 'tempWindowId';
-        window.location = setUrlParam(window.location.href, 'dswid', null);
+    if (window.deltaspikeClientWindowRenderMode === 'CLIENTWINDOW') {
+        if (!window.name || window.name.length < 1) {
+            window.name = 'tempWindowId';
+            window.location = setUrlParam(window.location.href, 'dswid', null);
+        }
     }
     else if (window.deltaspikeClientWindowRenderMode === 'LAZY') {
-        var dswid = getUrlParameter('dswid');
-        if (window.name === 'tempWindowId') {
-            window.name = dswid;
+        if (!window.name || window.name.length < 1) {
+            window.name = window.deltaspikeWindowId;
         }
-        else if (window.name !== dswid) {
-            // redirect with current window.name / windowId
-            window.location = setUrlParam(window.location.href, 'dswid', window.name);
+        else {
+            var dswid = getUrlParameter('dswid');
+
+            if (window.name !== dswid) {
+                // redirect with current window.name / windowId
+                window.location = setUrlParam(window.location.href, 'dswid', window.name);
+            }
         }
     }
 }
