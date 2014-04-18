@@ -19,6 +19,7 @@
 package org.apache.deltaspike.jsf.impl.exception.control;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 import javax.el.ELException;
 import javax.enterprise.inject.spi.BeanManager;
@@ -26,7 +27,11 @@ import javax.faces.FacesException;
 import javax.faces.context.ExceptionHandler;
 import javax.faces.context.ExceptionHandlerWrapper;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ExceptionQueuedEvent;
+import javax.faces.event.PhaseId;
+import javax.faces.event.SystemEvent;
+
 import org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
@@ -34,11 +39,15 @@ import org.apache.deltaspike.core.spi.activation.Deactivatable;
 public class BridgeExceptionHandlerWrapper extends ExceptionHandlerWrapper implements Deactivatable
 {
     private final ExceptionHandler wrapped;
+    private final BeanManager beanManager;
     private final Annotation exceptionQualifier;
 
-    public BridgeExceptionHandlerWrapper(ExceptionHandler wrapped, Annotation exceptionQualifier)
+    public BridgeExceptionHandlerWrapper(ExceptionHandler wrapped,
+                                         BeanManager beanManager,
+                                         Annotation exceptionQualifier)
     {
         this.wrapped = wrapped;
+        this.beanManager = beanManager;
         this.exceptionQualifier = exceptionQualifier;
     }
 
@@ -93,12 +102,39 @@ public class BridgeExceptionHandlerWrapper extends ExceptionHandlerWrapper imple
     @Override
     public Throwable getRootCause(Throwable throwable)
     {
-        while ((ELException.class.isInstance(throwable) || FacesException.class.isInstance(throwable))
-                && throwable.getCause() != null)
+        while ((ELException.class.isInstance(throwable) || FacesException.class.isInstance(throwable) ||
+            InvocationTargetException.class.isInstance(throwable)) && throwable.getCause() != null)
         {
             throwable = throwable.getCause();
         }
 
         return throwable;
+    }
+
+    @Override
+    public void processEvent(SystemEvent event) throws AbortProcessingException
+    {
+        //handle exceptions which occur in a phase-listener (beforePhase) for PhaseId.RENDER_RESPONSE
+        //needed because #handle gets called too late in this case
+        if (event instanceof ExceptionQueuedEvent)
+        {
+            ExceptionQueuedEvent exceptionQueuedEvent = (ExceptionQueuedEvent)event;
+            FacesContext facesContext = exceptionQueuedEvent.getContext().getContext();
+
+            if (facesContext.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE &&
+                exceptionQueuedEvent.getContext().inBeforePhase())
+            {
+                Throwable exception = getRootCause(exceptionQueuedEvent.getContext().getException());
+
+                ExceptionToCatchEvent exceptionToCatchEvent = new ExceptionToCatchEvent(exception);
+                this.beanManager.fireEvent(exceptionToCatchEvent);
+
+                if (exceptionToCatchEvent.isHandled())
+                {
+                    return;
+                }
+            }
+        }
+        super.processEvent(event);
     }
 }

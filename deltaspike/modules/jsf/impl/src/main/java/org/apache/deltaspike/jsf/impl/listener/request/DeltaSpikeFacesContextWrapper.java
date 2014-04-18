@@ -20,6 +20,7 @@ package org.apache.deltaspike.jsf.impl.listener.request;
 
 import java.lang.annotation.Annotation;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
+import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;
@@ -27,6 +28,7 @@ import org.apache.deltaspike.jsf.impl.config.view.DefaultErrorViewAwareException
 import org.apache.deltaspike.jsf.impl.injection.InjectionAwareApplicationWrapper;
 import org.apache.deltaspike.jsf.impl.message.FacesMessageEntry;
 
+import javax.enterprise.inject.spi.BeanManager;
 import javax.faces.application.Application;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExceptionHandler;
@@ -45,6 +47,8 @@ import org.apache.deltaspike.jsf.spi.scope.window.ClientWindow;
 class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
 {
     private final FacesContext wrappedFacesContext;
+
+    private BeanManager beanManager;
 
     private JsfRequestBroadcaster jsfRequestBroadcaster;
 
@@ -102,7 +106,8 @@ class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
 
         if (this.bridgeExceptionHandlerActivated)
         {
-            exceptionHandler = new BridgeExceptionHandlerWrapper(exceptionHandler, this.bridgeExceptionQualifier);
+            exceptionHandler = new BridgeExceptionHandlerWrapper(
+                exceptionHandler, this.beanManager, this.bridgeExceptionQualifier);
         }
         
         if (this.defaultErrorViewExceptionHandlerActivated)
@@ -135,7 +140,8 @@ class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
         // switch into paranoia mode
         if (this.initialized == null)
         {
-            this.jsfModuleConfig = BeanProvider.getContextualReference(JsfModuleConfig.class);
+            this.beanManager = BeanManagerProvider.getInstance().getBeanManager();
+            this.jsfModuleConfig = BeanProvider.getContextualReference(this.beanManager, JsfModuleConfig.class, false);
 
             if (ClassDeactivationUtils.isActivated(JsfRequestBroadcaster.class))
             {
