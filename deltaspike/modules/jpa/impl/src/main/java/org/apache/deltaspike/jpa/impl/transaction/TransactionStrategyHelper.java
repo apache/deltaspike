@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.jpa.impl.transaction;
 
-import org.apache.deltaspike.core.util.ProxyUtils;
+import org.apache.deltaspike.core.util.AnnotationUtils;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
 
 import javax.enterprise.context.Dependent;
@@ -154,42 +154,7 @@ public class TransactionStrategyHelper implements Serializable
      */
     protected Transactional extractTransactionalAnnotation(InvocationContext context)
     {
-        // try to detect the interceptor on the method
-        Transactional transactionalAnnotation = extractTransactionalAnnotation(context.getMethod().getAnnotations());
-
-        if (transactionalAnnotation == null)
-        {
-            Class targetClass = ProxyUtils.getUnproxiedClass(context.getTarget().getClass()); //see DELTASPIKE-517
-
-            // and if not found search on the class
-            transactionalAnnotation = extractTransactionalAnnotation(targetClass.getAnnotations());
-        }
-        return transactionalAnnotation;
-    }
-
-    /**
-     * @return a &#064;Transactional annotation extracted from the list of given annotations
-     *         or <code>null</code> if none present.
-     */
-    private Transactional extractTransactionalAnnotation(Annotation[] annotations)
-    {
-        for (Annotation annotation : annotations)
-        {
-            if (Transactional.class.equals(annotation.annotationType()))
-            {
-                return (Transactional) annotation;
-            }
-            if (beanManager.isStereotype(annotation.annotationType()))
-            {
-                Transactional transactionalAnnotation =
-                        extractTransactionalAnnotation(annotation.annotationType().getAnnotations());
-                if (transactionalAnnotation != null)
-                {
-                    return transactionalAnnotation;
-                }
-            }
-        }
-
-        return null;
+        return AnnotationUtils
+            .extractAnnotationFromMethodOrClass(this.beanManager, context.getMethod(), Transactional.class);
     }
 }
