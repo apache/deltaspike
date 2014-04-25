@@ -166,7 +166,7 @@ public class ContainerCtrlTckTest
         cdiContainer.boot();
         cdiContainer.getContextControl().startContexts();
 
-        // now do some randmo stuff
+        // now do some random stuff
         BeanManager beanManager = cdiContainer.getBeanManager();
         Assert.assertNotNull(beanManager);
 
@@ -179,9 +179,23 @@ public class ContainerCtrlTckTest
         Assert.assertNotNull(carRepair);
 
         Car car = carRepair.getCar();
-        Assert.assertNotNull(car);
 
-        cdiContainer.getContextControl().startContexts();
+        Assert.assertNotNull(car);
+        Assert.assertNotNull(car.getUser());
+
+
+        carRepair.getCar().getUser().setName("tester");
+        Assert.assertEquals("tester", car.getUser().getName());
+
+        Assert.assertFalse(CarRepair.isPreDestroyCalled());
+        Assert.assertFalse(Car.isPreDestroyCalled());
+        Assert.assertFalse(TestUser.isPreDestroyCalled());
+
+        cdiContainer.getContextControl().stopContexts();
+
+        Assert.assertTrue(CarRepair.isPreDestroyCalled());
+        Assert.assertTrue(Car.isPreDestroyCalled());
+        Assert.assertTrue(TestUser.isPreDestroyCalled());
 
         cdiContainer.shutdown();
     }
