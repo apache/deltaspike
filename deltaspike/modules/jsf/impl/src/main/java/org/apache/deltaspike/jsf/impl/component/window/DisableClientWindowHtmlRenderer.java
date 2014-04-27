@@ -35,17 +35,17 @@ public class DisableClientWindowHtmlRenderer extends Renderer
     @Override
     public void encodeChildren(FacesContext context, UIComponent component) throws IOException
     {
-        boolean isEnabled = getClientWindow().isClientWindowRenderModeEnabled(context);
-        
-        if (isEnabled)
-        {
-            try
-            {
-                getClientWindow().disableClientWindowRenderMode(context);
+        boolean clientWindowRenderModeEnabled = getClientWindow().isClientWindowRenderModeEnabled(context);
 
-                super.encodeChildren(context, component);
-            }
-            finally
+        try
+        {
+            getClientWindow().disableClientWindowRenderMode(context);
+
+            super.encodeChildren(context, component);
+        }
+        finally
+        {
+            if (clientWindowRenderModeEnabled)
             {
                 getClientWindow().enableClientWindowRenderMode(context);
             }
