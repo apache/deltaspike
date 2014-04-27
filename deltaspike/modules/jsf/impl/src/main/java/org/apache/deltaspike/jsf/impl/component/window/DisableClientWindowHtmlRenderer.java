@@ -39,7 +39,10 @@ public class DisableClientWindowHtmlRenderer extends Renderer
 
         try
         {
-            getClientWindow().disableClientWindowRenderMode(context);
+            if (clientWindowRenderModeEnabled)
+            {
+                getClientWindow().disableClientWindowRenderMode(context);
+            }
 
             super.encodeChildren(context, component);
         }
