@@ -62,7 +62,6 @@ public class SessionEventsTest
     {
         return ShrinkWrap.create(WebArchive.class, SessionEventsTest.class.getSimpleName() + ".war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndServletModuleArchive())
-                .addAsResource("META-INF/web-fragment.xml", "META-INF/web-fragment.xml")
                 .addClass(SessionEventsObserver.class)
                 .addClass(CreateSessionServlet.class)
                 .addClass(DestroySessionServlet.class)

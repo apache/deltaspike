@@ -55,7 +55,6 @@ public class ServletObjectInjectionTest
     {
         return ShrinkWrap.create(WebArchive.class, ServletObjectInjectionTest.class.getSimpleName() + ".war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndServletModuleArchive())
-                .addAsResource("META-INF/web-fragment.xml", "META-INF/web-fragment.xml")
                 .addClass(ServletObjectInjectionBean.class)
                 .addClass(ServletObjectInjectionServlet.class)
                 .addAsWebInfResource(new StringAsset("<beans/>"), "beans.xml")

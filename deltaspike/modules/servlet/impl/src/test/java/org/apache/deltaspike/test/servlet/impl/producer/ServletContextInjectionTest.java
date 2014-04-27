@@ -52,7 +52,6 @@ public class ServletContextInjectionTest
     {
         return ShrinkWrap.create(WebArchive.class, ServletContextInjectionTest.class.getSimpleName() + ".war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndServletModuleArchive())
-                .addAsResource("META-INF/web-fragment.xml", "META-INF/web-fragment.xml")
                 .addAsWebInfResource(new StringAsset("<beans/>"), "beans.xml")
                 .setWebXML(new StringAsset(
                         Descriptors.create(WebAppDescriptor.class)

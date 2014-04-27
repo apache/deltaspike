@@ -55,7 +55,6 @@ public class RequestResponseEventsTest
     {
         return ShrinkWrap.create(WebArchive.class, RequestResponseEventsTest.class.getSimpleName() + ".war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndServletModuleArchive())
-                .addAsResource("META-INF/web-fragment.xml", "META-INF/web-fragment.xml")
                 .addClass(RequestResponseEventsObserver.class)
                 .addAsWebInfResource(new StringAsset("<beans/>"), "beans.xml")
                 .addAsWebResource(new StringAsset("foobar"), "foobar.txt");

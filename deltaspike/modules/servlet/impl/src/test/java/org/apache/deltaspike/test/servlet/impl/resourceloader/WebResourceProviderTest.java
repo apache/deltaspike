@@ -50,7 +50,6 @@ public class WebResourceProviderTest
         return ShrinkWrap.create(WebArchive.class, WebResourceProviderTest.class.getSimpleName() + ".war")
                 .addClass(WebResourceProvider.class)
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndServletModuleArchive())
-                .addAsResource("META-INF/web-fragment.xml", "META-INF/web-fragment.xml")
                 .addAsWebInfResource(new StringAsset("<beans/>"), "beans.xml")
                 .addAsWebResource(new StringAsset("foobar"), "foobar.txt")
                 .addAsWebResource(new StringAsset("foobar"), "foo/bar.txt")

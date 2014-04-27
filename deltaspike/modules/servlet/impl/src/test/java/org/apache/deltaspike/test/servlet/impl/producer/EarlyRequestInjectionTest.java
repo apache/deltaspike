@@ -55,7 +55,6 @@ public class EarlyRequestInjectionTest
     {
         return ShrinkWrap.create(WebArchive.class, EarlyRequestInjectionTest.class.getSimpleName() + ".war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndServletModuleArchive())
-                .addAsResource("META-INF/web-fragment.xml", "META-INF/web-fragment.xml")
                 .addAsWebInfResource(new StringAsset("<beans/>"), "beans.xml")
                 .addClass(EarlyRequestInjectionFilter.class)
                 .addAsWebResource(new StringAsset("foobar"), "foobar.txt")
