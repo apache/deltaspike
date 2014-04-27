@@ -51,7 +51,6 @@ public class ServletContextEventsTest
     {
         return ShrinkWrap.create(WebArchive.class, ServletContextEventsTest.class.getSimpleName() + ".war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndServletModuleArchive())
-                .addAsResource("META-INF/web-fragment.xml", "META-INF/web-fragment.xml")
                 .addClass(ServletContextEventsObserver.class)
                 .addAsWebInfResource(new StringAsset("<beans/>"), "beans.xml")
                 .addAsWebResource(new StringAsset("foobar"), "foobar.txt")
