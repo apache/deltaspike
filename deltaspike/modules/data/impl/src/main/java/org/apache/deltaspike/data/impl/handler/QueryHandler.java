@@ -18,8 +18,6 @@
  */
 package org.apache.deltaspike.data.impl.handler;
 
-import static org.apache.deltaspike.data.impl.util.ProxyUtils.extractFromProxy;
-
 import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -31,6 +29,7 @@ import javax.inject.Inject;
 import javax.persistence.PersistenceException;
 
 import org.apache.deltaspike.core.api.lifecycle.Initialized;
+import org.apache.deltaspike.core.util.ProxyUtils;
 import org.apache.deltaspike.data.api.QueryInvocationException;
 import org.apache.deltaspike.data.api.Repository;
 import org.apache.deltaspike.data.impl.builder.QueryBuilder;
@@ -72,7 +71,7 @@ public class QueryHandler implements Serializable, InvocationHandler
         CdiQueryInvocationContext queryContext = null;
         try
         {
-            List<Class<?>> candidates = extractFromProxy(proxy.getClass());
+            List<Class<?>> candidates = ProxyUtils.getProxyAndBaseTypes(proxy.getClass());
             RepositoryComponent repo = components.lookupComponent(candidates);
             RepositoryMethod repoMethod = components.lookupMethod(repo.getRepositoryClass(), method);
             queryContext = createContext(proxy, method, args, repo, repoMethod);

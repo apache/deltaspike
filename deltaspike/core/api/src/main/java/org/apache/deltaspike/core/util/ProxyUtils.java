@@ -19,6 +19,10 @@
 package org.apache.deltaspike.core.util;
 
 import javax.enterprise.inject.Typed;
+import java.lang.reflect.Proxy;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Helper for proxies
@@ -58,5 +62,27 @@ public abstract class ProxyUtils
 
         return currentClass.getName().startsWith(currentClass.getSuperclass().getName()) &&
             currentClass.getName().contains("$$");
+    }
+
+    public static List<Class<?>> getProxyAndBaseTypes(Class<?> proxyClass)
+    {
+        List<Class<?>> result = new ArrayList<Class<?>>();
+        result.add(proxyClass);
+        if (isInterfaceProxy(proxyClass))
+        {
+            result.addAll(Arrays.asList(proxyClass.getInterfaces()));
+        }
+        else
+        {
+            result.add(proxyClass.getSuperclass());
+        }
+        return result;
+    }
+
+    public static boolean isInterfaceProxy(Class<?> proxyClass)
+    {
+        Class<?>[] interfaces = proxyClass.getInterfaces();
+        return Proxy.class.equals(proxyClass.getSuperclass()) &&
+                interfaces != null && interfaces.length > 0;
     }
 }
