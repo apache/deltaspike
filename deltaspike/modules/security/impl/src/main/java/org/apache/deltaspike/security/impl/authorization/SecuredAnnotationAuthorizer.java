@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.security.impl.authorization;
 
+import org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.security.api.authorization.AccessDecisionState;
 import org.apache.deltaspike.security.api.authorization.AccessDecisionVoter;
@@ -30,6 +31,7 @@ import org.apache.deltaspike.security.impl.util.SecurityUtils;
 import org.apache.deltaspike.security.spi.authorization.EditableAccessDecisionVoterContext;
 
 import javax.enterprise.context.Dependent;
+import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.interceptor.InvocationContext;
 import java.lang.annotation.Annotation;
@@ -48,6 +50,9 @@ public class SecuredAnnotationAuthorizer
 {
     @Inject
     private AccessDecisionVoterContext voterContext;
+
+    @Inject
+    private BeanManager beanManager;
 
     @Secures
     @Secured({ })
@@ -137,7 +142,14 @@ public class SecuredAnnotationAuthorizer
                             ((EditableAccessDecisionVoterContext) voterContext).addViolation(securityViolation);
                         }
                     }
-                    throw new AccessDeniedException(violations);
+                    AccessDeniedException accessDeniedException = new AccessDeniedException(violations);
+                    ExceptionToCatchEvent exceptionToCatchEvent = new ExceptionToCatchEvent(accessDeniedException);
+                    this.beanManager.fireEvent(exceptionToCatchEvent);
+
+                    if (!exceptionToCatchEvent.isHandled())
+                    {
+                        throw accessDeniedException;
+                    }
                 }
             }
         }
