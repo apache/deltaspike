@@ -18,7 +18,12 @@
  */
 package org.apache.deltaspike.test.jsf.impl.config.view.navigation.parameter.uc002;
 
+import java.net.URL;
+
+import javax.inject.Inject;
+
 import junit.framework.Assert;
+
 import org.apache.deltaspike.core.api.config.view.navigation.NavigationParameterContext;
 import org.apache.deltaspike.test.category.DeltaSpikeTest;
 import org.apache.deltaspike.test.jsf.impl.config.view.navigation.parameter.shared.TestClassDeactivator;
@@ -30,9 +35,6 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import javax.inject.Inject;
-import java.net.URL;
 
 
 @RunWith(Arquillian.class)
@@ -63,7 +65,7 @@ public class StaticNavigationParameterWarFileTest
     private NavigationParameterContext navigationParameterContext;
 
     @Test
-    public void oneParameters()
+    public void oneParameter()
     {
         Assert.assertTrue(this.navigationParameterContext.getPageParameters().isEmpty());
         this.pageBean.actionMethod1();

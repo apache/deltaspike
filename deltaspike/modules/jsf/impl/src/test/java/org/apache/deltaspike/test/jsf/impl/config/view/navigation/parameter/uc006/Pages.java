@@ -18,12 +18,16 @@
  */
 package org.apache.deltaspike.test.jsf.impl.config.view.navigation.parameter.uc006;
 
-import org.apache.deltaspike.core.api.config.view.DefaultErrorView;
-import org.apache.deltaspike.jsf.api.config.view.View;
-
 import static org.apache.deltaspike.jsf.api.config.view.View.NavigationMode.REDIRECT;
 
+import org.apache.deltaspike.core.api.config.view.DefaultErrorView;
+import org.apache.deltaspike.core.api.config.view.ViewConfig;
+import org.apache.deltaspike.jsf.api.config.view.View;
+
 @View(navigation = REDIRECT)
-public class PageConfigForRedirect extends DefaultErrorView
+public interface Pages extends ViewConfig
 {
+    public class CustomErrorPage extends DefaultErrorView implements Pages
+    {
+    }
 }

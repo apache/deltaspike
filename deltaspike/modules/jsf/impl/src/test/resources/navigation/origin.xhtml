@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"> 
+
+<h:head><title>Test</title></h:head>
+<body> 
+	<h:form id="destination">
+		<h:commandButton id="pb001ActionMethod" value="Action Method" action="#{pageBean001.actionMethod()}" />
+		<h:commandButton id="pb002ActionWithoutError" value="Action Method" action="#{pageBean002.actionWithoutError()}" />
+		<h:commandButton id="pb002ActionWithError" value="Action Method" action="#{pageBean002.actionWithError()}" />
+		<h:commandButton id="pb002RestrictedToPages" value="Action Method" action="#{pageBean002.restrictedToPages()}" />
+	</h:form>
+	<h:form id="event">
+		<h:commandButton id="pb002ActionWithError" value="Action Method" action="#{pageBean002.actionWithError()}" />
+	</h:form>
+	<h:form id="parameter">
+		<h:commandButton id="pb003ActionMethod" value="Action Method" action="#{pageBean003.actionMethod()}" />
+		<h:commandButton id="pb004ActionMethod" value="Action Method" action="#{pageBean004.actionMethod()}" />
+		<h:commandButton id="pb005Overview" value="Action Method" action="#{pageBean005.overview()}" />
+		<h:commandButton id="pb005Index" value="Action Method" action="#{pageBean005.index()}" />
+		<h:commandButton id="pb006AnyMethod" value="Action" action="#{pageBean006.anyMethod()}" />
+	</h:form>
+	
+</body> 
+</html>

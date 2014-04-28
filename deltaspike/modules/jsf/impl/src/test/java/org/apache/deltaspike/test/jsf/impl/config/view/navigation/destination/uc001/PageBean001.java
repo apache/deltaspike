@@ -22,8 +22,6 @@ import org.apache.deltaspike.core.api.config.view.ViewConfig;
 
 import javax.enterprise.inject.Model;
 
-//TODO add jsf-navigation test
-
 @Model
 public class PageBean001
 {

@@ -19,7 +19,11 @@
 package org.apache.deltaspike.test.jsf.impl.config.view.navigation.parameter.uc004;
 
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
+import org.apache.deltaspike.jsf.api.config.view.View;
+import org.apache.deltaspike.jsf.api.config.view.View.NavigationMode;
+import org.apache.deltaspike.jsf.api.config.view.View.ViewParameterMode;
 
+@View(navigation = NavigationMode.REDIRECT, viewParams = ViewParameterMode.INCLUDE)
 public class SimplePageConfig implements ViewConfig
 {
 }

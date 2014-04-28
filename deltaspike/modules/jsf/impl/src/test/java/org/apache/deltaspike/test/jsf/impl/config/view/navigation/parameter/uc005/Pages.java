@@ -20,9 +20,11 @@ package org.apache.deltaspike.test.jsf.impl.config.view.navigation.parameter.uc0
 
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
 import org.apache.deltaspike.core.api.config.view.navigation.NavigationParameter;
+import org.apache.deltaspike.jsf.api.config.view.View;
+import org.apache.deltaspike.jsf.api.config.view.View.NavigationMode;
+import org.apache.deltaspike.jsf.api.config.view.View.ViewParameterMode;
 
-//TODO add tests
-
+@View(navigation = NavigationMode.REDIRECT, viewParams = ViewParameterMode.INCLUDE)
 public interface Pages extends ViewConfig
 {
     @NavigationParameter(key = "param1", value = "staticValue2")

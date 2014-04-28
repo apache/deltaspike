@@ -18,17 +18,16 @@
  */
 package org.apache.deltaspike.test.jsf.impl.config.view.navigation.parameter.uc003;
 
+import javax.enterprise.inject.Model;
+
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
 import org.apache.deltaspike.core.api.config.view.navigation.NavigationParameter;
-
-import javax.enterprise.inject.Model;
 
 @Model
 public class PageBean003
 {
     private int nextValue = 0;
 
-    //TODO add test
     @NavigationParameter(key = "param1", value = "#{pageBean003.nextValue}")
     public Class<? extends ViewConfig> actionMethod()
     {

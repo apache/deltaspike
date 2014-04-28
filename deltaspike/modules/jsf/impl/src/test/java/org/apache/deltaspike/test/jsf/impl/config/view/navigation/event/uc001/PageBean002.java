@@ -18,14 +18,13 @@
  */
 package org.apache.deltaspike.test.jsf.impl.config.view.navigation.event.uc001;
 
-import org.apache.deltaspike.core.api.config.view.DefaultErrorView;
-import org.apache.deltaspike.core.api.config.view.ViewConfig;
-import org.apache.deltaspike.core.api.config.view.navigation.event.PreViewConfigNavigateEvent;
-
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Model;
 
-//TODO add jsf-navigation tests
+import org.apache.deltaspike.core.api.config.view.DefaultErrorView;
+import org.apache.deltaspike.core.api.config.view.ViewConfig;
+import org.apache.deltaspike.core.api.config.view.navigation.event.PreViewConfigNavigateEvent;
+import org.apache.deltaspike.test.jsf.impl.config.view.navigation.event.uc001.Pages.CustomErrorPage;
 
 @Model
 public class PageBean002
@@ -43,7 +42,7 @@ public class PageBean002
     protected void onNavigation(@Observes PreViewConfigNavigateEvent navigateEvent)
     {
         //change the target dynamically instead of a static config of the DefaultErrorView
-        if (navigateEvent.getToView().equals(DefaultErrorView.class))
+        if (navigateEvent.getToView().equals(CustomErrorPage.class))
         {
             navigateEvent.navigateTo(Pages.Index.class);
         }

@@ -25,21 +25,19 @@ import javax.enterprise.inject.Model;
 @Model
 public class PageBean005
 {
-    private int currentValue = 0;
+    private String currentValue = "aValue";
 
     public Class<? extends ViewConfig> index()
     {
-        currentValue++;
         return Pages.Index.class;
     }
 
     public Class<? extends ViewConfig> overview()
     {
-        currentValue++;
         return Pages.Overview.class;
     }
 
-    public int getCurrentValue()
+    public String getCurrentValue()
     {
         return currentValue;
     }

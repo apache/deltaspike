@@ -31,7 +31,6 @@ public class PageBean006
     private ViewNavigationHandler viewNavigationHandler;
 
     //faces-redirect=true will be added by the navigation handler
-    //TODO add test
     public void anyMethod()
     {
         //navigates to the view which is configured as default error-view

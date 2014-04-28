@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.test.jsf.impl.config.view.navigation.event.uc001;
 
+import org.apache.deltaspike.core.api.config.view.DefaultErrorView;
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
 import org.apache.deltaspike.jsf.api.config.view.View;
 
@@ -41,5 +42,10 @@ public interface Pages extends ViewConfig
     @View(navigation = FORWARD)
     class Home implements Pages
     {
+    }
+
+    class CustomErrorPage extends DefaultErrorView
+    {
+
     }
 }
