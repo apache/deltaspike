@@ -21,7 +21,6 @@ package org.apache.deltaspike.servlet.impl.produce;
 import java.security.Principal;
 
 import javax.enterprise.context.RequestScoped;
-import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.Typed;
 import javax.servlet.ServletContext;
@@ -103,7 +102,7 @@ public class ServletObjectProducer
 
     @Produces
     @DeltaSpike
-    @SessionScoped
+    @RequestScoped
     public HttpSession getHttpSession()
     {
         ServletRequest request = RequestResponseHolder.REQUEST.get();
