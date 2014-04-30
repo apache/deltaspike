@@ -18,6 +18,9 @@
  */
 package org.apache.deltaspike.data.impl.builder.postprocessor;
 
+import static org.apache.deltaspike.data.impl.util.QueryUtils.isNotEmpty;
+import static org.apache.deltaspike.data.impl.util.QueryUtils.nullSafeValue;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,7 +29,6 @@ import javax.persistence.Query;
 import org.apache.deltaspike.data.impl.handler.CdiQueryInvocationContext;
 import org.apache.deltaspike.data.impl.handler.JpaQueryPostProcessor;
 import org.apache.deltaspike.data.impl.param.Parameters;
-import org.apache.deltaspike.data.impl.util.QueryUtils;
 import org.apache.deltaspike.data.impl.util.jpa.QueryStringExtractorFactory;
 
 public class CountQueryPostProcessor implements JpaQueryPostProcessor
@@ -51,7 +53,7 @@ public class CountQueryPostProcessor implements JpaQueryPostProcessor
 
     private String getQueryString(CdiQueryInvocationContext context, Query query)
     {
-        if (QueryUtils.isNotEmpty(context.getQueryString()))
+        if (isNotEmpty(context.getQueryString()))
         {
             return context.getQueryString();
         }
@@ -82,7 +84,13 @@ public class CountQueryPostProcessor implements JpaQueryPostProcessor
 
         private String rewrite()
         {
-            return "select count(" + (select != null ? select : entityName) + ") " + from + where;
+            return new StringBuilder()
+                    .append("select count(")
+                        .append(nullSafeValue(select, entityName))
+                    .append(") ")
+                    .append(from)
+                    .append(nullSafeValue(where))
+                    .toString();
         }
 
         private void extractEntityName()

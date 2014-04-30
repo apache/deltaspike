@@ -73,6 +73,16 @@ public final class QueryUtils
         return value != null && value instanceof String;
     }
 
+    public static String nullSafeValue(String value)
+    {
+        return nullSafeValue(value, null);
+    }
+
+    public static String nullSafeValue(String value, String fallback)
+    {
+        return value != null ? value : (fallback != null ? fallback : "");
+    }
+
     public static boolean contains(Class<?> clazz, Method method)
     {
         return extract(clazz, method) != null;

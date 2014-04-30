@@ -283,6 +283,21 @@ public class QueryResultTest extends TransactionalTestCase
     }
 
     @Test
+    public void should_count_without_whereclause()
+    {
+        // given
+        final String name = "testCountWithoutWhereclause";
+        builder.createSimple(name);
+        builder.createSimple(name);
+
+        // when
+        long result = repo.queryAll().count();
+
+        // then
+        assertEquals(2L, result);
+    }
+
+    @Test
     public void should_query_optional()
     {
         // given

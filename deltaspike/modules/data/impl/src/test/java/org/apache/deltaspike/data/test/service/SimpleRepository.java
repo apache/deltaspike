@@ -89,6 +89,9 @@ public abstract class SimpleRepository extends AbstractEntityRepository<Simple, 
     @Query(named = Simple.BY_NAME_LIKE)
     public abstract QueryResult<Simple> queryResultWithNamed(String name);
 
+    @Query("select s from Simple s")
+    public abstract QueryResult<Simple> queryAll();
+
     public abstract QueryResult<Simple> findByName(String name);
 
     @Override
