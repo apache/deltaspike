@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.data.impl.tx;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +35,12 @@ public abstract class InvocationContextWrapper implements InvocationContext
     public InvocationContextWrapper(CdiQueryInvocationContext context)
     {
         this.context = context;
+    }
+
+    // @Override - forward compatibility to interceptors API 1.2
+    public Constructor<?> getConstructor()
+    {
+        return null;
     }
 
     @Override
