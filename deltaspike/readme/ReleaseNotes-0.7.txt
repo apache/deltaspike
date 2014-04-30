@@ -1,0 +1,54 @@
+Release Notes - Apache DeltaSpike - Version 0.7
+
+Sub-task
+
+    [DELTASPIKE-156] - documentation for ContainerControl API
+
+Bug
+
+    [DELTASPIKE-542] - Problem with JdbcJobstore
+    [DELTASPIKE-545] - DeltaSpikeExceptionHandler getRootCause assumes caught FacesException is wrapping another Exception
+    [DELTASPIKE-546] - NPE in observer method on Glassfish 4.x
+    [DELTASPIKE-548] - WELD-001408: Unsatisfied dependencies for type Scheduler<Job>
+    [DELTASPIKE-559] - ExceptionHandler lifecycle
+    [DELTASPIKE-566] - JSF always requires an active WindowContext
+    [DELTASPIKE-568] - Client Window cookie name is different on server and client side
+    [DELTASPIKE-573] - f:viewAction is executed twice with LAZY window handling mode
+    [DELTASPIKE-578] - org.apache.deltaspike.data.impl.meta.RepositoryComponent is not thread safe
+    [DELTASPIKE-581] - CountQueryPostProcessor assumes a where clause
+    [DELTASPIKE-583] - duplicated web-fragment.xml in test-archives
+    [DELTASPIKE-584] - ds:disableClientWindow prevents child rendering with CLIENTWINDOW mode
+    [DELTASPIKE-585] - HttpSession is not serializable
+
+Improvement
+
+    [DELTASPIKE-441] - provide a default implementation for the interface 'SecurityViolation'
+    [DELTASPIKE-445] - read ProjectStage also from a few other places
+    [DELTASPIKE-547] - merge ProxyUtils
+    [DELTASPIKE-550] - improve proxy detection
+    [DELTASPIKE-551] - allow full deactivation of DeltaSpikeNavigationHandler
+    [DELTASPIKE-554] - ContainerManagedTransactionStrategy
+    [DELTASPIKE-563] - Deactivatable support for PhaseListener
+    [DELTASPIKE-567] - Consistent post/get parameter naming
+    [DELTASPIKE-569] - Improve DeltaSpikeResourceHandler handling
+    [DELTASPIKE-572] - Remove Documentation TODOs
+    [DELTASPIKE-574] - Versioning for DeltaSpike JSF resources
+    [DELTASPIKE-576] - improved integration with view-controller
+    [DELTASPIKE-579] - extract annotation lookup
+    [DELTASPIKE-586] - optional forward compatibility for javax.interceptor.InvocationContext
+
+New Feature
+
+    [DELTASPIKE-449] - ExceptionHandler not invoked for AccessDeniedException
+    [DELTASPIKE-560] - interceptor for @NavigationParameter
+    [DELTASPIKE-564] - optional double submit prevention
+
+Task
+
+    [DELTASPIKE-553] - improve the config for maven-compiler-plugin
+    [DELTASPIKE-556] - Impl-Weld tests: Unpacking causes ambiguous dependencies
+    [DELTASPIKE-587] - release notes for v0.7
+
+Wish
+
+    [DELTASPIKE-555] - Do not use package-private methods in CDI beans
