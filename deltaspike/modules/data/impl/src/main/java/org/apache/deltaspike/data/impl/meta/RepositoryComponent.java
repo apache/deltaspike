@@ -90,7 +90,7 @@ public class RepositoryComponent
         {
             return;
         }
-
+        initialize();
         if (entityManagerResolver != null && beanManager != null)
         {
             final Set<Bean<?>> beans = beanManager.getBeans(entityManagerResolver);
@@ -101,8 +101,6 @@ public class RepositoryComponent
         {
             entityManagerResolverIsNormalScope = false;
         }
-
-        initialize();
     }
 
     public boolean isEntityManagerResolverIsNormalScope()
