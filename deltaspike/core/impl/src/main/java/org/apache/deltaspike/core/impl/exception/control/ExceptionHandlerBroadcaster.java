@@ -189,7 +189,7 @@ public class ExceptionHandlerBroadcaster
                 stack.skipCause();
             }
 
-            if (!exceptionEventEvent.isHandled() && throwException == null)
+            if (!exceptionEventEvent.isHandled() && throwException == null && !exceptionEventEvent.isOptional())
             {
                 LOG.warning(String.format("No handlers found for exception %s", exceptionEventEvent.getException()));
                 throw exceptionEventEvent.getException();

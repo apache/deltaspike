@@ -33,7 +33,6 @@ import javax.faces.event.PhaseId;
 import javax.faces.event.SystemEvent;
 
 import org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent;
-import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 
 public class BridgeExceptionHandlerWrapper extends ExceptionHandlerWrapper implements Deactivatable
@@ -72,14 +71,13 @@ public class BridgeExceptionHandlerWrapper extends ExceptionHandlerWrapper imple
         {
             Iterator<ExceptionQueuedEvent> iterator = exceptionQueuedEvents.iterator();
 
-            BeanManager beanManager = BeanManagerProvider.getInstance().getBeanManager();
-
             while (iterator.hasNext())
             {
                 Throwable throwable = iterator.next().getContext().getException();
                 Throwable rootCause = getRootCause(throwable);
 
                 ExceptionToCatchEvent event = new ExceptionToCatchEvent(rootCause, exceptionQualifier);
+                event.setOptional(true);
 
                 beanManager.fireEvent(event);
 
@@ -127,6 +125,8 @@ public class BridgeExceptionHandlerWrapper extends ExceptionHandlerWrapper imple
                 Throwable exception = getRootCause(exceptionQueuedEvent.getContext().getException());
 
                 ExceptionToCatchEvent exceptionToCatchEvent = new ExceptionToCatchEvent(exception);
+                exceptionToCatchEvent.setOptional(true);
+
                 this.beanManager.fireEvent(exceptionToCatchEvent);
 
                 if (exceptionToCatchEvent.isHandled())

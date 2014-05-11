@@ -39,6 +39,7 @@ public class ExceptionToCatchEvent implements Serializable
     private Throwable exception;
     private boolean handled;
     private transient Set<Annotation> qualifiers;
+    private boolean optional;
 
     /**
      * Constructor that adds qualifiers for the handler(s) to run.
@@ -52,6 +53,7 @@ public class ExceptionToCatchEvent implements Serializable
         this.exception = exception;
         this.qualifiers = new HashSet<Annotation>();
         Collections.addAll(this.qualifiers, qualifiers);
+        this.optional = false;
     }
 
     /**
@@ -62,7 +64,8 @@ public class ExceptionToCatchEvent implements Serializable
     public ExceptionToCatchEvent(Throwable exception)
     {
         this.exception = exception;
-        qualifiers = Collections.emptySet();
+        this.qualifiers = Collections.emptySet();
+        this.optional = false;
     }
 
     public Throwable getException()
@@ -98,5 +101,15 @@ public class ExceptionToCatchEvent implements Serializable
     public Set<Annotation> getQualifiers()
     {
         return Collections.unmodifiableSet(qualifiers);
+    }
+
+    public boolean isOptional()
+    {
+        return optional;
+    }
+
+    public void setOptional(boolean optional)
+    {
+        this.optional = optional;
     }
 }
