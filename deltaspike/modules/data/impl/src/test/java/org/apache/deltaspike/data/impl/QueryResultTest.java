@@ -18,6 +18,8 @@
  */
 package org.apache.deltaspike.data.impl;
 
+import static org.apache.deltaspike.data.test.util.TestDeployments.finalizeDeployment;
+import static org.apache.deltaspike.data.test.util.TestDeployments.initDeployment;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -41,7 +43,6 @@ import org.apache.deltaspike.data.test.domain.Simple;
 import org.apache.deltaspike.data.test.domain.SimpleBuilder;
 import org.apache.deltaspike.data.test.domain.Simple_;
 import org.apache.deltaspike.data.test.service.SimpleRepository;
-import org.apache.deltaspike.data.test.util.TestDeployments;
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
@@ -56,9 +57,10 @@ public class QueryResultTest extends TransactionalTestCase
     @Deployment
     public static Archive<?> deployment()
     {
-        return TestDeployments.initDeployment()
-                .addClasses(SimpleRepository.class)
-                .addPackage(Simple.class.getPackage());
+        return finalizeDeployment(QueryResultTest.class,
+                initDeployment()
+                    .addClasses(SimpleRepository.class)
+                    .addPackage(Simple.class.getPackage()));
     }
 
     @Inject

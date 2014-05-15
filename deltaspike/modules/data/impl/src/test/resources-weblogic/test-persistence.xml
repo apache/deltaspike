@@ -20,14 +20,11 @@
 <persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
     <persistence-unit name="test"> 
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+        <jta-data-source>java:/app/jdbc/TestDS</jta-data-source>
         <properties>
             <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
             <property name="eclipselink.logging.level" value="FINE"/>
             <property name="eclipselink.logging.parameters" value="true" />
-            <property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbcDriver"/>  
-            <property name="javax.persistence.jdbc.url" value="jdbc:hsqldb:."/>  
-            <property name="javax.persistence.jdbc.user" value="sa"/>  
-            <property name="javax.persistence.jdbc.password" value=""/>  
         </properties>
     </persistence-unit>
 </persistence>

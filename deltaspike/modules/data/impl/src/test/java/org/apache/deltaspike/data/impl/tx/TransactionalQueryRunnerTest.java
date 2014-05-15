@@ -18,6 +18,8 @@
  */
 package org.apache.deltaspike.data.impl.tx;
 
+import static org.apache.deltaspike.data.test.util.TestDeployments.finalizeDeployment;
+import static org.apache.deltaspike.data.test.util.TestDeployments.initDeployment;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -28,7 +30,6 @@ import javax.persistence.PersistenceContext;
 
 import org.apache.deltaspike.data.test.domain.Simple;
 import org.apache.deltaspike.data.test.service.ExtendedRepositoryInterface;
-import org.apache.deltaspike.data.test.util.TestDeployments;
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -49,9 +50,10 @@ public class TransactionalQueryRunnerTest
     @Deployment
     public static Archive<?> deployment()
     {
-        return TestDeployments.initDeployment()
-                .addClasses(ExtendedRepositoryInterface.class)
-                .addPackage(Simple.class.getPackage());
+        return finalizeDeployment(TransactionalQueryRunnerTest.class,
+                initDeployment()
+                    .addClasses(ExtendedRepositoryInterface.class)
+                    .addPackage(Simple.class.getPackage()));
     }
 
     @Inject

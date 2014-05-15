@@ -18,6 +18,8 @@
  */
 package org.apache.deltaspike.data.impl.criteria;
 
+import static org.apache.deltaspike.data.test.util.TestDeployments.finalizeDeployment;
+import static org.apache.deltaspike.data.test.util.TestDeployments.initDeployment;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -39,7 +41,6 @@ import org.apache.deltaspike.data.test.domain.Simple;
 import org.apache.deltaspike.data.test.service.ParentRepository;
 import org.apache.deltaspike.data.test.service.SimpleCriteriaRepository;
 import org.apache.deltaspike.data.test.service.Statistics;
-import org.apache.deltaspike.data.test.util.TestDeployments;
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
@@ -53,9 +54,10 @@ public class CriteriaTest extends TransactionalTestCase
     @Deployment
     public static Archive<?> deployment()
     {
-        return TestDeployments.initDeployment()
-                .addClasses(SimpleCriteriaRepository.class, ParentRepository.class, Statistics.class)
-                .addPackage(Simple.class.getPackage());
+        return finalizeDeployment(CriteriaTest.class,
+                initDeployment()
+                    .addClasses(SimpleCriteriaRepository.class, ParentRepository.class, Statistics.class)
+                    .addPackage(Simple.class.getPackage()));
     }
 
     @Inject

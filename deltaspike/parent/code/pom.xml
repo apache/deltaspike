@@ -40,6 +40,7 @@
         <wildfly.version>8.0.0.Final</wildfly.version>
         <glassfish3.version>3.1.2.2</glassfish3.version>
         <glassfish4.version>4.0</glassfish4.version>
+        <wls.version>12.1</wls.version>
     </properties>
 
 
@@ -951,7 +952,7 @@
             <id>wls-remote-12c</id>
 
             <properties>
-                <cdicontainer.version>weld-${weld.version}</cdicontainer.version>
+                <cdicontainer.version>wls-${wls.version}</cdicontainer.version>
             </properties>
 
             <dependencies>

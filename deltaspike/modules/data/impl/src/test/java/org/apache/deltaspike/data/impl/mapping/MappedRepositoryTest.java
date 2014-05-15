@@ -18,6 +18,8 @@
  */
 package org.apache.deltaspike.data.impl.mapping;
 
+import static org.apache.deltaspike.data.test.util.TestDeployments.finalizeDeployment;
+import static org.apache.deltaspike.data.test.util.TestDeployments.initDeployment;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -37,7 +39,6 @@ import org.apache.deltaspike.data.test.domain.dto.SimpleDto;
 import org.apache.deltaspike.data.test.service.SimpleMappedRepository;
 import org.apache.deltaspike.data.test.service.SimpleMapper;
 import org.apache.deltaspike.data.test.service.WrappedMapper;
-import org.apache.deltaspike.data.test.util.TestDeployments;
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
@@ -51,14 +52,15 @@ public class MappedRepositoryTest extends TransactionalTestCase
     @Deployment
     public static Archive<?> deployment()
     {
-        return TestDeployments.initDeployment()
-                .addClasses(
-                        SimpleMappedRepository.class,
-                        SimpleMapper.class,
-                        WrappedMapper.class)
-                .addPackages(false,
-                        Simple.class.getPackage(),
-                        SimpleDto.class.getPackage());
+        return finalizeDeployment(MappedRepositoryTest.class,
+                initDeployment()
+                    .addClasses(
+                            SimpleMappedRepository.class,
+                            SimpleMapper.class,
+                            WrappedMapper.class)
+                    .addPackages(false,
+                            Simple.class.getPackage(),
+                            SimpleDto.class.getPackage()));
     }
 
     @Inject

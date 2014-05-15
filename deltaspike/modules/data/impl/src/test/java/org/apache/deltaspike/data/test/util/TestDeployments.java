@@ -18,6 +18,8 @@
  */
 package org.apache.deltaspike.data.test.util;
 
+import java.net.URL;
+
 import org.apache.deltaspike.data.api.AbstractEntityRepository;
 import org.apache.deltaspike.data.api.EntityManagerConfig;
 import org.apache.deltaspike.data.api.EntityManagerResolver;
@@ -59,12 +61,14 @@ import org.apache.deltaspike.data.test.domain.AuditedEntity;
 import org.apache.deltaspike.jpa.impl.transaction.EnvironmentAwareTransactionStrategy;
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.apache.deltaspike.test.utils.CdiContainerUnderTest;
+import org.jboss.arquillian.container.test.spi.TestDeployment;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
+import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.descriptor.api.Descriptors;
@@ -99,9 +103,8 @@ public abstract class TestDeployments
         WebArchive archive = ShrinkWrap
                 .create(WebArchive.class, "test.war")
                 .addAsLibrary(createApiArchive())
-                .addClass(WebProfileCategory.class)
+                .addClasses(WebProfileCategory.class, TransactionalTestCase.class)
                 .addClasses(RepositoryExtension.class, RepositoryDefinitionException.class)
-                .addClasses(TransactionalTestCase.class)
                 .addPackages(true, TEST_FILTER, createImplPackages())
                 .addPackages(true, AuditedEntity.class.getPackage())
                 .addPackages(true, new ExcludeRegExpPaths(testFilter), TransactionalTestCase.class.getPackage())
@@ -110,8 +113,25 @@ public abstract class TestDeployments
                 .addAsWebInfResource("META-INF/services/javax.enterprise.inject.spi.Extension",
                         ArchivePaths.create("classes/META-INF/services/javax.enterprise.inject.spi.Extension"))
                 .addAsWebInfResource(new StringAsset(descriptor), ArchivePaths.create("beans.xml"));
-
         return addDependencies(archive);
+    }
+
+    public static Archive<?> finalizeDeployment(Class<?> testClass, WebArchive archive)
+    {
+        if (CdiContainerUnderTest.is("wls-.*"))
+        {
+            archive.addClass(testClass); // see https://issues.jboss.org/browse/ARQ-659
+            EnterpriseArchive ear = ShrinkWrap.create(EnterpriseArchive.class, "test.ear")
+                    .addAsModule(archive);
+            ear.addAsLibraries(Maven.resolver()
+                    .resolve("hsqldb:hsqldb:1.8.0.10")
+                    .withTransitivity()
+                    .asFile());
+            addToEarManifestIfExists(ear, "weblogic-application.xml");
+            addToEarManifestIfExists(ear, "TestDS-jdbc.xml");
+            return ear;
+        }
+        return archive;
     }
 
     public static Package[] createImplPackages()
@@ -181,5 +201,14 @@ public abstract class TestDeployments
 
         return webArchive;
     }
+
+    public static void addToEarManifestIfExists(EnterpriseArchive archive, String resource)
+    {
+        URL url = TestDeployment.class.getClassLoader().getResource(resource);
+        if (url != null) {
+            archive.addAsManifestResource(resource);
+        }
+    }
+
 
 }

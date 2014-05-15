@@ -18,6 +18,8 @@
  */
 package org.apache.deltaspike.data.impl;
 
+import static org.apache.deltaspike.data.test.util.TestDeployments.finalizeDeployment;
+import static org.apache.deltaspike.data.test.util.TestDeployments.initDeployment;
 import static org.junit.Assert.assertNotNull;
 
 import javax.enterprise.inject.Instance;
@@ -27,7 +29,6 @@ import org.apache.deltaspike.data.test.domain.Simple;
 import org.apache.deltaspike.data.test.service.ExtendedRepositoryInterface;
 import org.apache.deltaspike.data.test.service.RepositoryInterface;
 import org.apache.deltaspike.data.test.service.SimpleRepository;
-import org.apache.deltaspike.data.test.util.TestDeployments;
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -44,11 +45,12 @@ public class RepositoryExtensionTest
     @Deployment
     public static Archive<?> deployment()
     {
-        return TestDeployments.initDeployment()
-                .addClasses(RepositoryInterface.class,
-                            ExtendedRepositoryInterface.class,
-                            SimpleRepository.class)
-                .addPackages(true, Simple.class.getPackage());
+        return finalizeDeployment(RepositoryExtensionTest.class,
+                initDeployment()
+                    .addClasses(RepositoryInterface.class,
+                                ExtendedRepositoryInterface.class,
+                                SimpleRepository.class)
+                    .addPackages(true, Simple.class.getPackage()));
     }
 
     @Inject

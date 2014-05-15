@@ -18,6 +18,8 @@
  */
 package org.apache.deltaspike.data.impl.handler;
 
+import static org.apache.deltaspike.data.test.util.TestDeployments.finalizeDeployment;
+import static org.apache.deltaspike.data.test.util.TestDeployments.initDeployment;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
@@ -32,7 +34,6 @@ import org.apache.deltaspike.data.test.service.SimpleRepositoryWithEntityManager
 import org.apache.deltaspike.data.test.service.SimpleRepositoryWithEntityManagerResolver;
 import org.apache.deltaspike.data.test.service.Simplistic;
 import org.apache.deltaspike.data.test.service.SimplisticEntityManagerResolver;
-import org.apache.deltaspike.data.test.util.TestDeployments;
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -49,12 +50,13 @@ public class EntityManagerTest
     @Deployment
     public static Archive<?> deployment()
     {
-        return TestDeployments.initDeployment()
-                .addClasses(SimpleRepositoryWithEntityManager.class,
-                        SimpleRepositoryWithEntityManagerResolver.class,
-                        QualifiedEntityManagerTestProducer.class,
-                        NonQualifiedEntityManagerTestProducer.class,
-                        Simplistic.class, SimplisticEntityManagerResolver.class);
+        return finalizeDeployment(EntityManagerTest.class,
+                initDeployment()
+                    .addClasses(SimpleRepositoryWithEntityManager.class,
+                            SimpleRepositoryWithEntityManagerResolver.class,
+                            QualifiedEntityManagerTestProducer.class,
+                            NonQualifiedEntityManagerTestProducer.class,
+                            Simplistic.class, SimplisticEntityManagerResolver.class));
     }
 
     @Inject

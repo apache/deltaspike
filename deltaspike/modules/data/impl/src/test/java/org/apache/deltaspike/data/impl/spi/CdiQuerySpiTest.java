@@ -18,6 +18,8 @@
  */
 package org.apache.deltaspike.data.impl.spi;
 
+import static org.apache.deltaspike.data.test.util.TestDeployments.finalizeDeployment;
+import static org.apache.deltaspike.data.test.util.TestDeployments.initDeployment;
 import static org.junit.Assert.assertNotNull;
 
 import javax.enterprise.inject.Produces;
@@ -30,7 +32,6 @@ import org.apache.deltaspike.data.test.domain.Simple;
 import org.apache.deltaspike.data.test.service.MyEntityRepository;
 import org.apache.deltaspike.data.test.service.MyEntityRepositoryDelegate;
 import org.apache.deltaspike.data.test.service.MySimpleRepository;
-import org.apache.deltaspike.data.test.util.TestDeployments;
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
@@ -44,11 +45,12 @@ public class CdiQuerySpiTest extends TransactionalTestCase
     @Deployment
     public static Archive<?> deployment()
     {
-        return TestDeployments.initDeployment()
-                .addClasses(MySimpleRepository.class,
-                        MyEntityRepository.class,
-                        MyEntityRepositoryDelegate.class)
-                .addPackage(Simple.class.getPackage());
+        return finalizeDeployment(CdiQuerySpiTest.class,
+                initDeployment()
+                    .addClasses(MySimpleRepository.class,
+                            MyEntityRepository.class,
+                            MyEntityRepositoryDelegate.class)
+                    .addPackage(Simple.class.getPackage()));
     }
 
     @Produces
