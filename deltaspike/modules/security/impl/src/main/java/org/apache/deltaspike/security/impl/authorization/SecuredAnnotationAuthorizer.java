@@ -144,6 +144,7 @@ public class SecuredAnnotationAuthorizer
                     }
                     AccessDeniedException accessDeniedException = new AccessDeniedException(violations);
                     ExceptionToCatchEvent exceptionToCatchEvent = new ExceptionToCatchEvent(accessDeniedException);
+                    exceptionToCatchEvent.setOptional(true);
                     this.beanManager.fireEvent(exceptionToCatchEvent);
 
                     if (!exceptionToCatchEvent.isHandled())
