@@ -59,7 +59,8 @@ public class ArchiveUtils
                 , "META-INF/beans.xml"
                 , new String[]{ "org.apache.deltaspike.core"
                               , "org.apache.deltaspike.jsf" }
-                , excludedFiles);
+                , excludedFiles,
+                "ds-core_and_jsf");
 
         List<JavaArchive> archives = new ArrayList<JavaArchive>(Arrays.asList(coreArchives));
         archives.add(grapheneJar);
@@ -75,7 +76,8 @@ public class ArchiveUtils
 
         return ShrinkWrapArchiveUtil.getArchives(null,
                 "META-INF/beans.xml",
-                new String[]{"org.apache.deltaspike.security"}, excludedFiles);
+                new String[]{"org.apache.deltaspike.security"}, excludedFiles,
+                "ds-security");
     }
 
     public static Asset getBeansXml()

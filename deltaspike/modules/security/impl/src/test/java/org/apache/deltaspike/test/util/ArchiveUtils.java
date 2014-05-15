@@ -44,7 +44,8 @@ public class ArchiveUtils
                 "META-INF/beans.xml",
                 new String[]{"org.apache.deltaspike.core",
                         "org.apache.deltaspike.test.category",
-                        "org.apache.deltaspike.security"}, excludedFiles);
+                        "org.apache.deltaspike.security"}, excludedFiles,
+                "ds-core_and_security");
     }
 
     public static Asset getBeansXml()

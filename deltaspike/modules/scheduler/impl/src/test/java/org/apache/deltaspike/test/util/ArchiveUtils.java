@@ -38,6 +38,7 @@ public class ArchiveUtils
                 new String[]{"org.apache.deltaspike.core",
                         "org.apache.deltaspike.test.category",
                         "org.apache.deltaspike.scheduler"},
-                null);
+                null,
+                "ds-core_and_scheduler");
     }
 }

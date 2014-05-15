@@ -26,7 +26,8 @@ public class ArchiveUtils {
         JavaArchive[] coreArchives = ShrinkWrapArchiveUtil.getArchives(null,
                 "META-INF/beans.xml",
                 new String[]{"org.apache.deltaspike.core", "org.apache.deltaspike.test.category"},
-                null);
+                null,
+                "ds-core");
         return coreArchives;
     }
 }

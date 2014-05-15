@@ -42,7 +42,8 @@ public class ArchiveUtils
                 null,
                 "META-INF/beans.xml",
                 new String[]{"org.apache.deltaspike.core", "org.apache.deltaspike.jpa"},
-                null);
+                null,
+                "ds-core_and_jpa");
     }
 
     public static Asset getBeansXml()

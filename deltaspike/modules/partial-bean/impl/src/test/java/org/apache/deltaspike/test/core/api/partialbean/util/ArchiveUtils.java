@@ -37,6 +37,7 @@ public abstract class ArchiveUtils
                 "META-INF/beans.xml",
                 new String[]{"org.apache.deltaspike.core",
                         "org.apache.deltaspike.test.category",
-                        "org.apache.deltaspike.partialbean"}, excludedFiles);
+                        "org.apache.deltaspike.partialbean"}, excludedFiles,
+                "ds-core_and_partial-bean");
     }
 }

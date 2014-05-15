@@ -24,16 +24,14 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.jar.JarInputStream;
+import java.util.UUID;
 import java.util.logging.Logger;
-import java.util.zip.ZipEntry;
 
 
 /**
@@ -45,7 +43,6 @@ import java.util.zip.ZipEntry;
 public class ShrinkWrapArchiveUtil
 {
     private static final Logger LOG = Logger.getLogger(ShrinkWrapArchiveUtil.class.getName());
-    private static String testName;
 
     private ShrinkWrapArchiveUtil()
     {
@@ -65,7 +62,8 @@ public class ShrinkWrapArchiveUtil
     public static JavaArchive[] getArchives(ClassLoader classLoader,
                                             String markerFile,
                                             String[] includeIfPackageExists,
-                                            String[] excludeIfPackageExists)
+                                            String[] excludeIfPackageExists,
+                                            String archiveName)
     {
         if (classLoader == null)
         {
@@ -84,7 +82,7 @@ public class ShrinkWrapArchiveUtil
                 LOG.fine("Evaluating Java ClassPath URL " + foundFile.toExternalForm());
 
                 JavaArchive archive
-                    = createArchive(foundFile, markerFile, includeIfPackageExists, excludeIfPackageExists);
+                    = createArchive(foundFile, markerFile, includeIfPackageExists, excludeIfPackageExists, archiveName);
                 if (archive != null)
                 {
                     LOG.info("Test " + getTestName()
@@ -103,7 +101,9 @@ public class ShrinkWrapArchiveUtil
     }
 
     private static JavaArchive createArchive(URL foundFile, String markerFile,
-                                             String[] includeIfPackageExists, String[] excludeIfPackageExists)
+                                             String[] includeIfPackageExists,
+                                             String[] excludeIfPackageExists,
+                                             String archiveName)
         throws IOException
     {
         String urlString = foundFile.toString();
@@ -151,77 +151,14 @@ public class ShrinkWrapArchiveUtil
 
             }
 
-            return addFileArchive(f, includeIfPackageExists, excludeIfPackageExists);
+            return addFileArchive(f, includeIfPackageExists, excludeIfPackageExists, archiveName);
         }
-    }
-
-    private static JavaArchive addJarArchive(InputStream inputStream,
-                                             String[] includeIfPackageExists,
-                                             String[] excludeIfPackageExists)
-        throws IOException
-    {
-        JavaArchive ret = null;
-        JavaArchive javaArchive = ShrinkWrap.create(JavaArchive.class);
-
-        if (includeIfPackageExists == null)
-        {
-            // no include rule, thus add it immediately
-            ret = javaArchive;
-        }
-
-        JarInputStream jar = new JarInputStream(inputStream);
-        try
-        {
-            for (ZipEntry jarEntry = jar.getNextEntry(); jarEntry != null; jarEntry = jar.getNextEntry())
-            {
-                String entryName = jarEntry.getName();
-
-                if (jarEntry.isDirectory())
-                {
-                    // exclude rule
-                    if (excludeIfPackageExists(entryName, excludeIfPackageExists))
-                    {
-                        return null;
-                    }
-
-                    if (ret == null && includeIfPackageExists(entryName, includeIfPackageExists))
-                    {
-                        ret = javaArchive;
-                    }
-
-                    continue;
-                }
-
-                if (entryName.endsWith(".class"))
-                {
-                    String className
-                        = pathToClassName(entryName.substring(0, entryName.length() - (".class".length())));
-                    javaArchive.addClass(className);
-                }
-                else
-                {
-                    javaArchive.addAsResource(entryName);
-                }
-            }
-        }
-        finally
-        {
-            try
-            {
-                jar.close();
-            }
-            catch (IOException ignored)
-            {
-                // all fine
-            }
-        }
-
-        return ret;
     }
 
     private static JavaArchive addFileArchive(File archiveBasePath,
                                               String[] includeIfPackageExists,
-                                              String[] excludeIfPackageExists)
+                                              String[] excludeIfPackageExists,
+                                              String archiveName)
         throws IOException
     {
         if (!archiveBasePath.exists())
@@ -229,8 +166,13 @@ public class ShrinkWrapArchiveUtil
             return null;
         }
 
+        if (archiveName == null)
+        {
+            archiveName = UUID.randomUUID().toString();
+        }
+
         JavaArchive ret = null;
-        JavaArchive javaArchive = ShrinkWrap.create(JavaArchive.class);
+        JavaArchive javaArchive = ShrinkWrap.create(JavaArchive.class, archiveName + ".jar");
 
         if (includeIfPackageExists == null)
         {

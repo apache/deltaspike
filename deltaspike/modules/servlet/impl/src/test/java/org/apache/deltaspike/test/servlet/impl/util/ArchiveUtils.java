@@ -44,7 +44,8 @@ public class ArchiveUtils
         JavaArchive[] coreArchives = ShrinkWrapArchiveUtil.getArchives(null,
                 "META-INF/beans.xml",
                 new String[]{"org.apache.deltaspike.core", "org.apache.deltaspike.test.category",
-                        "org.apache.deltaspike.servlet"}, null);
+                        "org.apache.deltaspike.servlet"}, null,
+                "ds-core_and_servlet");
 
         List<JavaArchive> archives = new ArrayList<JavaArchive>(Arrays.asList(coreArchives));
         archives.add(extensionsJar);
