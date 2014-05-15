@@ -16,11 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.testcontrol.mock.uc009;
+package org.apache.deltaspike.test.testcontrol.mock.uc013;
 
 import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.testcontrol.api.junit.CdiTestRunner;
 import org.apache.deltaspike.testcontrol.api.mock.DynamicMockManager;
+import org.apache.deltaspike.testcontrol.api.mock.TypedMock;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -57,12 +58,12 @@ public class MockedTypedProducedBeanTest
         Assert.assertEquals(14, t3.getCount());
     }
 
-    @Typed({T1.class, T2.class}) //fine for the cdi-container due to parametrized constructor
+    @TypedMock({T1.class, T2.class}) //specify the types for mocking (to replace the producer)
     private static class MockedTypedBean1and2 extends TypedBean1and2
     {
         private final int mockedCount;
 
-        private MockedTypedBean1and2(int mockedCount)
+        private MockedTypedBean1and2(int mockedCount) //-> no @Typed() needed
         {
             this.mockedCount = mockedCount;
         }
@@ -74,12 +75,13 @@ public class MockedTypedProducedBeanTest
         }
     }
 
-    @Typed(T3.class) //fine for the cdi-container due to parametrized constructor
+     //exclude it for the cdi type-check
+    @TypedMock(T3.class)
     private static class MockedTypedBean3 extends TypedBean3
     {
         private final int mockedCount;
 
-        private MockedTypedBean3(int mockedCount)
+        private MockedTypedBean3(int mockedCount) //-> no @Typed() needed
         {
             this.mockedCount = mockedCount;
         }

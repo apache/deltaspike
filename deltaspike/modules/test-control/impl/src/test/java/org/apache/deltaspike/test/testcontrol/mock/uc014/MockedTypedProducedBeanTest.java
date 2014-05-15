@@ -16,11 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.testcontrol.mock.uc009;
+package org.apache.deltaspike.test.testcontrol.mock.uc014;
 
 import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.testcontrol.api.junit.CdiTestRunner;
 import org.apache.deltaspike.testcontrol.api.mock.DynamicMockManager;
+import org.apache.deltaspike.testcontrol.api.mock.TypedMock;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -50,19 +51,26 @@ public class MockedTypedProducedBeanTest
     @Test
     public void manualMockT1()
     {
-        mockManager.addMock(new MockedTypedBean1and2(7));
-        mockManager.addMock(new MockedTypedBean3(14));
+        MockedTypedBean1and2 mockedTypedBean1and2 = new MockedTypedBean1and2();
+        mockedTypedBean1and2.setMockedCount(7);
+        mockManager.addMock(mockedTypedBean1and2);
+
+        MockedTypedBean3 mockedTypedBean3 = new MockedTypedBean3();
+        mockedTypedBean3.setMockedCount(14);
+        mockManager.addMock(mockedTypedBean3);
+
         Assert.assertEquals(7, t1.getCount());
         Assert.assertEquals(7, t2.getCount());
         Assert.assertEquals(14, t3.getCount());
     }
 
-    @Typed({T1.class, T2.class}) //fine for the cdi-container due to parametrized constructor
+    @Typed() //exclude it for the cdi type-check
+    @TypedMock({T1.class, T2.class}) //specify the types for mocking (to replace the producer)
     private static class MockedTypedBean1and2 extends TypedBean1and2
     {
-        private final int mockedCount;
+        private int mockedCount;
 
-        private MockedTypedBean1and2(int mockedCount)
+        private void setMockedCount(int mockedCount)
         {
             this.mockedCount = mockedCount;
         }
@@ -74,12 +82,13 @@ public class MockedTypedProducedBeanTest
         }
     }
 
-    @Typed(T3.class) //fine for the cdi-container due to parametrized constructor
+    @Typed() //exclude it for the cdi type-check
+    @TypedMock(T3.class)
     private static class MockedTypedBean3 extends TypedBean3
     {
-        private final int mockedCount;
+        private int mockedCount;
 
-        private MockedTypedBean3(int mockedCount)
+        private void setMockedCount(int mockedCount)
         {
             this.mockedCount = mockedCount;
         }

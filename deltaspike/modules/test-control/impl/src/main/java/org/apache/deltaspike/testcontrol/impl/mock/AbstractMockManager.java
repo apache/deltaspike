@@ -61,7 +61,12 @@ public abstract class AbstractMockManager implements DynamicMockManager
         }
         else
         {
-            Typed typed = beanClass.getAnnotation(Typed.class);
+            Typed typed = mockClass.getAnnotation(Typed.class);
+
+            if (typed == null || typed.value().length == 0)
+            {
+                typed = beanClass.getAnnotation(Typed.class);
+            }
 
             if (typed != null && typed.value().length > 0)
             {
