@@ -26,6 +26,7 @@ import javax.enterprise.inject.spi.AnnotatedType;
 
 public class DefaultMockFilter implements MockFilter
 {
+    private static final String DS_BASE_PACKAGE = "org.apache.deltaspike.";
     private static final String OWB_BASE_PACKAGE = "org.apache.webbeans.";
     private static final String WELD_BASE_PACKAGE = "org.jboss.weld.";
 
@@ -48,6 +49,12 @@ public class DefaultMockFilter implements MockFilter
 
     protected boolean isInternalPackage(String packageName)
     {
-        return packageName.startsWith(OWB_BASE_PACKAGE) || packageName.startsWith(WELD_BASE_PACKAGE);
+        return packageName.startsWith(OWB_BASE_PACKAGE) || packageName.startsWith(WELD_BASE_PACKAGE) ||
+            isDeltaSpikePackage(packageName);
+    }
+
+    protected boolean isDeltaSpikePackage(String packageName)
+    {
+        return packageName.startsWith(DS_BASE_PACKAGE);
     }
 }

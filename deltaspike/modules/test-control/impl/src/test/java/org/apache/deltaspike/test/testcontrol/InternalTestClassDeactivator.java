@@ -18,14 +18,16 @@
  */
 package org.apache.deltaspike.test.testcontrol;
 
+import org.apache.deltaspike.core.spi.activation.ClassDeactivator;
+import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.testcontrol.impl.mock.DefaultMockFilter;
 
-public class InternalTestMockFilter extends DefaultMockFilter
+//just needed because the internal test-packages need to be handled differently
+public class InternalTestClassDeactivator implements ClassDeactivator
 {
-    private static final String DS_TEST_BASE_PACKAGE = "org.apache.deltaspike.test.testcontrol.mock.";
-
-    protected boolean isInternalPackage(String packageName)
+    @Override
+    public Boolean isActivated(Class<? extends Deactivatable> targetClass)
     {
-        return super.isInternalPackage(packageName) && !packageName.startsWith(DS_TEST_BASE_PACKAGE);
+        return !DefaultMockFilter.class.equals(targetClass);
     }
 }
