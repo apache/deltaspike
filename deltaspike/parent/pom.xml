@@ -58,7 +58,7 @@
 
         <!-- JSF-2.0 implementations-->
         <myfaces2.version>2.0.14</myfaces2.version>
-        <myfaces22.version>2.2.0</myfaces22.version>
+        <myfaces22.version>2.2.3</myfaces22.version>
         <myfaces2.version.current>2.1.8</myfaces2.version.current>
         <mojarra2.version>2.0.3-b03</mojarra2.version>
 
@@ -641,14 +641,21 @@
             <dependency>
                 <groupId>org.apache.myfaces.core</groupId>
                 <artifactId>myfaces-api</artifactId>
-                <version>${myfaces2.version}</version>
+                <version>${myfaces22.version}</version>
                 <scope>provided</scope>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.myfaces.core</groupId>
                 <artifactId>myfaces-impl</artifactId>
-                <version>${myfaces2.version}</version>
+                <version>${myfaces22.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.myfaces.core</groupId>
+                <artifactId>myfaces-impl-test</artifactId>
+                <version>${myfaces22.version}</version>
                 <scope>provided</scope>
             </dependency>
 

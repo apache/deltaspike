@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.testcontrol.uc005;
+package org.apache.deltaspike.test.testcontrol.uc009;
 
 import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.test.testcontrol.shared.RequestScopedBean;
@@ -32,6 +32,7 @@ import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.render.RenderKitFactory;
 import javax.inject.Inject;
+import java.util.Map;
 
 //Usually NOT needed! Currently only needed due to our arquillian-setup
 @Category(SeCategory.class)
@@ -42,6 +43,8 @@ import javax.inject.Inject;
 @TestControl(startExternalContainers = true)
 public class JsfContainerTest
 {
+    private Integer identityHashCode;
+
     @Inject
     private SessionScopedBean sessionScopedBean;
 
@@ -59,10 +62,12 @@ public class JsfContainerTest
         sessionScopedBean.increaseCount();
         Assert.assertEquals(1, sessionScopedBean.getCount());
 
+        UIViewRoot uiViewRoot = new UIViewRoot();
+        uiViewRoot.setViewId("/viewId");
+        FacesContext.getCurrentInstance().setViewRoot(uiViewRoot);
         Assert.assertNotNull(FacesContext.getCurrentInstance().getViewRoot());
         Assert.assertEquals("/viewId", FacesContext.getCurrentInstance().getViewRoot().getViewId());
 
-        UIViewRoot uiViewRoot = new UIViewRoot();
         uiViewRoot.setViewId("/test1.xhtml");
         uiViewRoot.setRenderKitId(RenderKitFactory.HTML_BASIC_RENDER_KIT);
         FacesContext.getCurrentInstance().setViewRoot(uiViewRoot);
@@ -78,6 +83,16 @@ public class JsfContainerTest
         Assert.assertNull(FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("test"));
         FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("test", "1");
         Assert.assertEquals("1", FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("test"));
+
+        Map applicationMap = FacesContext.getCurrentInstance().getExternalContext().getApplicationMap();
+        if (identityHashCode == null)
+        {
+            identityHashCode = System.identityHashCode(applicationMap);
+        }
+        else
+        {
+            Assert.assertSame(identityHashCode, System.identityHashCode(applicationMap));
+        }
     }
 
     @Test
@@ -91,12 +106,16 @@ public class JsfContainerTest
         sessionScopedBean.increaseCount();
         Assert.assertEquals(1, sessionScopedBean.getCount());
 
+        UIViewRoot uiViewRoot = new UIViewRoot();
+        uiViewRoot.setViewId("/viewId");
+        FacesContext.getCurrentInstance().setViewRoot(uiViewRoot);
         Assert.assertNotNull(FacesContext.getCurrentInstance().getViewRoot());
         Assert.assertEquals("/viewId", FacesContext.getCurrentInstance().getViewRoot().getViewId());
 
-        UIViewRoot uiViewRoot = new UIViewRoot();
         uiViewRoot.setViewId("/test2.xhtml");
         uiViewRoot.setRenderKitId(RenderKitFactory.HTML_BASIC_RENDER_KIT);
+        FacesContext.getCurrentInstance().setViewRoot(uiViewRoot);
+
         FacesContext.getCurrentInstance().setViewRoot(uiViewRoot);
         Assert.assertEquals("/test2.xhtml", FacesContext.getCurrentInstance().getViewRoot().getViewId());
 
@@ -110,5 +129,15 @@ public class JsfContainerTest
         Assert.assertNull(FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("test"));
         FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("test", "2");
         Assert.assertEquals("2", FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("test"));
+
+        Map applicationMap = FacesContext.getCurrentInstance().getExternalContext().getApplicationMap();
+        if (identityHashCode == null)
+        {
+            identityHashCode = System.identityHashCode(applicationMap);
+        }
+        else
+        {
+            Assert.assertSame(identityHashCode, System.identityHashCode(applicationMap));
+        }
     }
 }

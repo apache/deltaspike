@@ -15,4 +15,4 @@
 # specific language governing permissions and limitations
 # under the License.
 
-org.apache.deltaspike.testcontrol.impl.jsf.MockedJsf2TestContainer
+org.apache.deltaspike.test.testcontrol.InternalMyFacesTestContainerAdapter

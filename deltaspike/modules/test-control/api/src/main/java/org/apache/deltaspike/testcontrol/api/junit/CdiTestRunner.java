@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.testcontrol.api.junit;
 
+import junit.framework.Assert;
 import org.apache.deltaspike.cdise.api.CdiContainer;
 import org.apache.deltaspike.cdise.api.CdiContainerLoader;
 import org.apache.deltaspike.cdise.api.ContextControl;
@@ -718,7 +719,16 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
             {
                 if (externalContainer instanceof TestAware)
                 {
-                    ((TestAware)externalContainer).setTestMethod(testMethod);
+                    try
+                    {
+                        ((TestAware)externalContainer).setTestMethod(testMethod);
+                    }
+                    catch (Throwable t)
+                    {
+                        //with a correct setup it shouldn't happen
+                        //TODO better handling for invalid constellations
+                        Assert.fail(t.getMessage());
+                    }
                 }
             }
         }
