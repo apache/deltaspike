@@ -31,6 +31,7 @@ import org.apache.deltaspike.core.util.ServiceUtils;
 import org.apache.deltaspike.testcontrol.api.TestControl;
 import org.apache.deltaspike.testcontrol.api.literal.TestControlLiteral;
 import org.apache.deltaspike.testcontrol.spi.ExternalContainer;
+import org.apache.deltaspike.testcontrol.spi.TestAware;
 import org.apache.deltaspike.testcontrol.spi.junit.TestStatementDecoratorFactory;
 import org.junit.Test;
 import org.junit.internal.runners.statements.FailOnTimeout;
@@ -50,6 +51,7 @@ import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Singleton;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -153,7 +155,7 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
         ContainerAwareTestContext currentTestContext =
                 new ContainerAwareTestContext(testControl, this.testContext);
 
-        currentTestContext.applyBeforeMethodConfig();
+        currentTestContext.applyBeforeMethodConfig(method.getMethod());
 
         try
         {
@@ -237,7 +239,9 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
     @Override
     protected Statement withBeforeClasses(Statement statement)
     {
-        return new BeforeClassStatement(super.withBeforeClasses(statement), this.testContext);
+        return new BeforeClassStatement(super.withBeforeClasses(statement),
+            this.testContext,
+            getTestClass().getJavaClass());
     }
 
     @Override
@@ -334,17 +338,19 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
     {
         private final Statement wrapped;
         private final ContainerAwareTestContext testContext;
+        private final Class testClass;
 
-        BeforeClassStatement(Statement statement, ContainerAwareTestContext testContext)
+        BeforeClassStatement(Statement statement, ContainerAwareTestContext testContext, Class testClass)
         {
             this.wrapped = statement;
             this.testContext = testContext;
+            this.testClass = testClass;
         }
 
         @Override
         public void evaluate() throws Throwable
         {
-            testContext.applyBeforeClassConfig();
+            testContext.applyBeforeClassConfig(this.testClass);
             wrapped.evaluate();
         }
     }
@@ -431,7 +437,7 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
             return this.testControl.logHandler();
         }
 
-        void applyBeforeClassConfig()
+        void applyBeforeClassConfig(Class testClass)
         {
             CdiContainer container = CdiContainerLoader.getCdiContainer();
 
@@ -442,7 +448,7 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
                     container.boot();
                     setContainerStarted();
 
-                    bootExternalContainers();
+                    bootExternalContainers(testClass);
                 }
             }
 
@@ -462,7 +468,7 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
             startScopes(container, restrictedScopes.toArray(new Class[restrictedScopes.size()]));
         }
 
-        private void bootExternalContainers()
+        private void bootExternalContainers(Class testClass)
         {
             if (!this.testControl.startExternalContainers())
             {
@@ -485,6 +491,10 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
                 {
                     try
                     {
+                        if (externalContainer instanceof TestAware)
+                        {
+                            ((TestAware)externalContainer).setTestClass(testClass);
+                        }
                         externalContainer.boot();
                     }
                     catch (RuntimeException e)
@@ -535,11 +545,12 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
             }
         }
 
-        void applyBeforeMethodConfig()
+        void applyBeforeMethodConfig(Method testMethod)
         {
             this.previousProjectStage = ProjectStageProducer.getInstance().getProjectStage();
             ProjectStageProducer.setProjectStage(this.projectStage);
 
+            setCurrentTestMethod(testMethod);
             startScopes(CdiContainerLoader.getCdiContainer());
         }
 
@@ -551,6 +562,7 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
             }
             finally
             {
+                setCurrentTestMethod(null);
                 ProjectStageProducer.setProjectStage(previousProjectStage);
                 previousProjectStage = null;
             }
@@ -696,6 +708,19 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
                 result.addAll(collectExternalContainers(testContext.parent));
             }
             return result;
+        }
+
+        private void setCurrentTestMethod(Method testMethod)
+        {
+            List<ExternalContainer> externalContainerList = collectExternalContainers(this);
+
+            for (ExternalContainer externalContainer : externalContainerList)
+            {
+                if (externalContainer instanceof TestAware)
+                {
+                    ((TestAware)externalContainer).setTestMethod(testMethod);
+                }
+            }
         }
     }
 }
