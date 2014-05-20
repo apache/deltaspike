@@ -19,14 +19,19 @@
 package org.apache.deltaspike.testcontrol.impl.jsf;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
+import org.apache.deltaspike.core.util.metadata.AnnotationInstanceProvider;
 import org.apache.deltaspike.testcontrol.spi.ExternalContainer;
 import org.apache.deltaspike.testcontrol.spi.TestAware;
+import org.apache.myfaces.mc.test.core.annotation.TestConfig;
 import org.apache.myfaces.mc.test.core.runner.MyFacesContainer;
 import org.junit.runners.model.TestClass;
 
+import javax.el.ExpressionFactory;
 import javax.enterprise.context.RequestScoped;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Optional adapter for MyFacesContainer
@@ -34,8 +39,10 @@ import java.lang.reflect.Method;
  */
 public class MyFacesContainerAdapter implements TestAware, ExternalContainer
 {
-    private MyFacesContainer mockedMyFacesTestContainer;
-    private Class testClass;
+    private static final TestConfig DEFAULT_TEST_CONFIG_LITERAL = AnnotationInstanceProvider.of(TestConfig.class);
+    protected MyFacesContainer mockedMyFacesTestContainer;
+    protected Class testClass;
+    protected Map<String, String> containerConfig = new HashMap<String, String>();
 
     public void boot()
     {
@@ -46,7 +53,14 @@ public class MyFacesContainerAdapter implements TestAware, ExternalContainer
             @Override
             protected String getWebappResourcePath()
             {
-                return ConfigResolver.getPropertyValue("deltaspike.testcontrol.mf.test.webapp_resource_path", "");
+                TestConfig testConfig = testClass.getJavaClass().getAnnotation(TestConfig.class);
+
+                if (testConfig == null || DEFAULT_TEST_CONFIG_LITERAL.webappResourcePath().equals(
+                    testConfig.webappResourcePath()))
+                {
+                    return ConfigResolver.getPropertyValue("deltaspike.testcontrol.mf.test.webapp_resource_path", "");
+                }
+                return testConfig.webappResourcePath();
             }
 
             @Override
@@ -57,6 +71,27 @@ public class MyFacesContainerAdapter implements TestAware, ExternalContainer
                 setCurrentClassLoader(originalClassLoader);
                 super.setUpServletObjects();
             }
+
+            @Override
+            protected void setUpWebConfigParams()
+            {
+                servletContext.addInitParameter("org.apache.myfaces.config.annotation.LifecycleProvider",
+                    "org.apache.myfaces.config.annotation.NoInjectionAnnotationLifecycleProvider");
+                servletContext.addInitParameter("org.apache.myfaces.CHECKED_VIEWID_CACHE_ENABLED", "false");
+
+                servletContext.addInitParameter(ExpressionFactory.class.getName(),
+                    "org.apache.el.ExpressionFactoryImpl");
+
+                super.setUpWebConfigParams();
+
+                initContainerConfig();
+
+                //add custom values (might replace the default values)
+                for (Map.Entry<String, String> entry : containerConfig.entrySet())
+                {
+                    servletContext.addInitParameter(entry.getKey(), entry.getValue());
+                }
+            }
         };
 
         this.mockedMyFacesTestContainer.setUp(new Object() /*we don't need the test-instance here*/);
@@ -65,6 +100,19 @@ public class MyFacesContainerAdapter implements TestAware, ExternalContainer
     protected void setCurrentClassLoader(ClassLoader originalClassLoader)
     {
         Thread.currentThread().setContextClassLoader(originalClassLoader);
+    }
+
+    protected void initContainerConfig()
+    {
+        containerConfig = new HashMap<String, String>();
+        for (Map.Entry<String, String> entry : ConfigResolver.getAllProperties().entrySet())
+        {
+            if (entry.getKey().startsWith("org.apache.myfaces.") || entry.getKey().startsWith("javax.faces.") ||
+                    entry.getKey().startsWith("facelets."))
+            {
+                containerConfig.put(entry.getKey(), entry.getValue());
+            }
+        }
     }
 
     @Override
