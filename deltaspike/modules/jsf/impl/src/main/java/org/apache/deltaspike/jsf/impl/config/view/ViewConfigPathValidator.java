@@ -45,7 +45,18 @@ public class ViewConfigPathValidator implements ServletContextListener, Deactiva
     {
         if (ClassDeactivationUtils.isActivated(getClass()))
         {
-            ViewConfigResolver viewConfigResolver = BeanProvider.getContextualReference(ViewConfigResolver.class);
+            ViewConfigResolver viewConfigResolver;
+
+            try
+            {
+                viewConfigResolver = BeanProvider.getContextualReference(ViewConfigResolver.class);
+            }
+            catch (Exception e)
+            {
+                LOGGER.log(Level.WARNING, "Container issue detected -> can't validate view-configs.", e);
+                return;
+            }
+
             List<String> supportedExtensions = new ArrayList<String>();
             supportedExtensions.add(View.Extension.XHTML);
             supportedExtensions.add(View.Extension.JSP);
@@ -116,7 +127,7 @@ public class ViewConfigPathValidator implements ServletContextListener, Deactiva
     protected void printException(Exception e)
     {
         //for easier analysis (in combination with several servers)
-        Logger.getLogger(ViewConfigPathValidator.class.getName()).log(Level.SEVERE, "invalid view-config found", e);
+        LOGGER.log(Level.SEVERE, "invalid view-config found", e);
     }
 
     @Override
