@@ -20,12 +20,16 @@ package org.apache.deltaspike.testcontrol.impl.request;
 
 import org.apache.deltaspike.cdise.api.ContextControl;
 import org.apache.deltaspike.testcontrol.api.junit.CdiTestRunner;
+import org.apache.deltaspike.testcontrol.spi.ExternalContainer;
 
 import javax.decorator.Decorator;
 import javax.decorator.Delegate;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.ConversationScoped;
 import javax.enterprise.context.RequestScoped;
-import javax.enterprise.event.Event;
+import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.lang.annotation.Annotation;
 
 /**
@@ -44,18 +48,39 @@ public class ContextControlDecorator implements ContextControl
     @Delegate
     private ContextControl wrapped;
 
-    @Inject
-    private Event<ManuallyHandledRequestEvent> manualRequestEvent;
-
     @Override
     public void startContexts()
     {
         wrapped.startContexts();
+
+        if (isManualScopeHandling())
+        {
+            for (ExternalContainer externalContainer : CdiTestRunner.getActiveExternalContainers())
+            {
+                externalContainer.startScope(Singleton.class);
+                externalContainer.startScope(ApplicationScoped.class);
+                externalContainer.startScope(RequestScoped.class);
+                externalContainer.startScope(SessionScoped.class);
+                externalContainer.startScope(ConversationScoped.class);
+            }
+        }
     }
 
     @Override
     public void stopContexts()
     {
+        if (isManualScopeHandling())
+        {
+            for (ExternalContainer externalContainer : CdiTestRunner.getActiveExternalContainers())
+            {
+                externalContainer.stopScope(ConversationScoped.class);
+                externalContainer.stopScope(SessionScoped.class);
+                externalContainer.stopScope(RequestScoped.class);
+                externalContainer.stopScope(ApplicationScoped.class);
+                externalContainer.stopScope(Singleton.class);
+            }
+        }
+
         wrapped.stopContexts();
     }
 
@@ -66,7 +91,10 @@ public class ContextControlDecorator implements ContextControl
 
         if (isManuallyHandledRequest(scopeClass))
         {
-            manualRequestEvent.fire(new ManuallyHandledRequestEvent(ManuallyHandledRequestEvent.ManualAction.STARTED));
+            for (ExternalContainer externalContainer : CdiTestRunner.getActiveExternalContainers())
+            {
+                externalContainer.startScope(scopeClass);
+            }
         }
     }
 
@@ -77,13 +105,20 @@ public class ContextControlDecorator implements ContextControl
 
         if (isManuallyHandledRequest(scopeClass))
         {
-            manualRequestEvent.fire(new ManuallyHandledRequestEvent(ManuallyHandledRequestEvent.ManualAction.STOPPED));
+            for (ExternalContainer externalContainer : CdiTestRunner.getActiveExternalContainers())
+            {
+                externalContainer.stopScope(scopeClass);
+            }
         }
     }
 
     private boolean isManuallyHandledRequest(Class<? extends Annotation> scopeClass)
     {
-        return RequestScoped.class.equals(scopeClass) &&
-            !Boolean.TRUE.equals(CdiTestRunner.isAutomaticScopeHandlingActive());
+        return RequestScoped.class.equals(scopeClass) && isManualScopeHandling();
+    }
+
+    private boolean isManualScopeHandling()
+    {
+        return !Boolean.TRUE.equals(CdiTestRunner.isAutomaticScopeHandlingActive());
     }
 }

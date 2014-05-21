@@ -19,7 +19,6 @@
 package org.apache.deltaspike.testcontrol.impl.jsf;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
-import org.apache.deltaspike.testcontrol.impl.request.ManuallyHandledRequestEvent;
 import org.apache.deltaspike.testcontrol.spi.ExternalContainer;
 import org.apache.myfaces.test.mock.MockApplicationFactory;
 import org.apache.myfaces.test.mock.MockExceptionHandlerFactory;
@@ -41,8 +40,6 @@ import javax.el.ExpressionFactory;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.SessionScoped;
-import javax.enterprise.event.Observes;
-import javax.enterprise.event.Reception;
 import javax.faces.FactoryFinder;
 import javax.faces.application.Application;
 import javax.faces.application.ApplicationFactory;
@@ -289,22 +286,5 @@ public class MockedJsf2TestContainer implements ExternalContainer
     protected String getLifecycleId()
     {
         return LifecycleFactory.DEFAULT_LIFECYCLE;
-    }
-
-    public void onManuallyHandledRequest(
-        @Observes(notifyObserver = Reception.IF_EXISTS) ManuallyHandledRequestEvent manuallyHandledRequestEvent)
-    {
-        switch (manuallyHandledRequestEvent.getManualAction())
-        {
-            case STARTED:
-                startScope(RequestScoped.class);
-                break;
-            case STOPPED:
-                stopScope(RequestScoped.class);
-                break;
-            default:
-                throw new IllegalArgumentException("unsupported action: " +
-                    manuallyHandledRequestEvent.getManualAction().name());
-        }
     }
 }

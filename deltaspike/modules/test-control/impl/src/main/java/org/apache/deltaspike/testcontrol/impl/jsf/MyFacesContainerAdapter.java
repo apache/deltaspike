@@ -20,7 +20,6 @@ package org.apache.deltaspike.testcontrol.impl.jsf;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.util.metadata.AnnotationInstanceProvider;
-import org.apache.deltaspike.testcontrol.impl.request.ManuallyHandledRequestEvent;
 import org.apache.deltaspike.testcontrol.spi.ExternalContainer;
 import org.apache.deltaspike.testcontrol.spi.TestAware;
 import org.apache.myfaces.mc.test.core.annotation.TestConfig;
@@ -30,8 +29,6 @@ import org.junit.runners.model.TestClass;
 import javax.el.ExpressionFactory;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.RequestScoped;
-import javax.enterprise.event.Observes;
-import javax.enterprise.event.Reception;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -163,22 +160,5 @@ public class MyFacesContainerAdapter implements TestAware, ExternalContainer
     public void setTestMethod(Method method)
     {
         //not needed
-    }
-
-    public void onManuallyHandledRequest(
-            @Observes(notifyObserver = Reception.IF_EXISTS) ManuallyHandledRequestEvent manuallyHandledRequestEvent)
-    {
-        switch (manuallyHandledRequestEvent.getManualAction())
-        {
-            case STARTED:
-                startScope(RequestScoped.class);
-                break;
-            case STOPPED:
-                stopScope(RequestScoped.class);
-                break;
-            default:
-                throw new IllegalArgumentException("unsupported action: " +
-                        manuallyHandledRequestEvent.getManualAction().name());
-        }
     }
 }

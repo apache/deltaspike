@@ -82,6 +82,8 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
 
     private static ThreadLocal<Boolean> automaticScopeHandlingActive = new ThreadLocal<Boolean>();
 
+    private static ThreadLocal<CdiTestRunner> currentTestRunner = new ThreadLocal<CdiTestRunner>();
+
     private List<TestStatementDecoratorFactory> statementDecoratorFactories;
 
     private ContainerAwareTestContext testContext;
@@ -153,6 +155,8 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
     @Override
     protected void runChild(FrameworkMethod method, RunNotifier notifier)
     {
+        currentTestRunner.set(this);
+
         TestControl testControl = method.getAnnotation(TestControl.class);
 
         ContainerAwareTestContext currentTestContext =
@@ -587,6 +591,8 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
                 setCurrentTestMethod(null);
                 ProjectStageProducer.setProjectStage(previousProjectStage);
                 previousProjectStage = null;
+                currentTestRunner.remove();
+                currentTestRunner.set(null);
             }
         }
 
@@ -778,5 +784,17 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
     public static Boolean isAutomaticScopeHandlingActive()
     {
         return automaticScopeHandlingActive.get();
+    }
+
+    public static List<ExternalContainer> getActiveExternalContainers()
+    {
+        CdiTestRunner cdiTestRunner = currentTestRunner.get();
+
+        if (cdiTestRunner == null)
+        {
+            return Collections.emptyList();
+        }
+
+        return Collections.unmodifiableList(cdiTestRunner.testContext.externalContainers);
     }
 }

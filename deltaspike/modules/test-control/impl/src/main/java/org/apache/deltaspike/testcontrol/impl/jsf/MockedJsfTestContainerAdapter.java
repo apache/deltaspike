@@ -18,15 +18,12 @@
  */
 package org.apache.deltaspike.testcontrol.impl.jsf;
 
-import org.apache.deltaspike.testcontrol.impl.request.ManuallyHandledRequestEvent;
 import org.apache.deltaspike.testcontrol.spi.ExternalContainer;
 import org.apache.myfaces.test.mock.MockedJsfTestContainer;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.SessionScoped;
-import javax.enterprise.event.Observes;
-import javax.enterprise.event.Reception;
 import java.lang.annotation.Annotation;
 
 /**
@@ -78,22 +75,5 @@ public class MockedJsfTestContainerAdapter implements ExternalContainer
     public int getOrdinal()
     {
         return 1000; //default in ds
-    }
-
-    public void onManuallyHandledRequest(
-            @Observes(notifyObserver = Reception.IF_EXISTS) ManuallyHandledRequestEvent manuallyHandledRequestEvent)
-    {
-        switch (manuallyHandledRequestEvent.getManualAction())
-        {
-            case STARTED:
-                startScope(RequestScoped.class);
-                break;
-            case STOPPED:
-                stopScope(RequestScoped.class);
-                break;
-            default:
-                throw new IllegalArgumentException("unsupported action: " +
-                        manuallyHandledRequestEvent.getManualAction().name());
-        }
     }
 }
