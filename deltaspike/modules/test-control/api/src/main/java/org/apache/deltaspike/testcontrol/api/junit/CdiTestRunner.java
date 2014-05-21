@@ -80,6 +80,8 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
         USE_TEST_CLASS_AS_CDI_BEAN = Boolean.parseBoolean(useTestClassAsCdiBeanValue);
     }
 
+    private static ThreadLocal<Boolean> automaticScopeHandlingActive = new ThreadLocal<Boolean>();
+
     private List<TestStatementDecoratorFactory> statementDecoratorFactories;
 
     private ContainerAwareTestContext testContext;
@@ -478,8 +480,9 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
 
             if (this.externalContainers == null)
             {
-                this.externalContainers = ServiceUtils.loadServiceImplementations(ExternalContainer.class);
-                Collections.sort(this.externalContainers, new Comparator<ExternalContainer>()
+                List<ExternalContainer> configuredExternalContainers =
+                    ServiceUtils.loadServiceImplementations(ExternalContainer.class);
+                Collections.sort(configuredExternalContainers, new Comparator<ExternalContainer>()
                 {
                     @Override
                     public int compare(ExternalContainer ec1, ExternalContainer ec2)
@@ -487,6 +490,24 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
                         return ec1.getOrdinal() > ec2.getOrdinal() ? 1 : -1;
                     }
                 });
+
+                this.externalContainers = new ArrayList<ExternalContainer>(configuredExternalContainers.size());
+
+                ExternalContainer externalContainerBean;
+                for (ExternalContainer externalContainer : configuredExternalContainers)
+                {
+                    //needed to use cdi-observers in the container optionally
+                    externalContainerBean = BeanProvider.getContextualReference(externalContainer.getClass(), true);
+
+                    if (externalContainerBean != null)
+                    {
+                        this.externalContainers.add(externalContainerBean);
+                    }
+                    else
+                    {
+                        this.externalContainers.add(externalContainer);
+                    }
+                }
 
                 for (ExternalContainer externalContainer : this.externalContainers)
                 {
@@ -577,45 +598,55 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
 
         private void startScopes(CdiContainer container, Class<? extends Annotation>... restrictedScopes)
         {
-            ContextControl contextControl = container.getContextControl();
-
-            List<Class<? extends Annotation>> scopeClasses = new ArrayList<Class<? extends Annotation>>();
-
-            Collections.addAll(scopeClasses, this.testControl.startScopes());
-
-            if (this.testControl.startScopes().length == 0)
+            try
             {
-                addScopesForDefaultBehavior(scopeClasses);
+                automaticScopeHandlingActive.set(Boolean.TRUE);
+
+                ContextControl contextControl = container.getContextControl();
+
+                List<Class<? extends Annotation>> scopeClasses = new ArrayList<Class<? extends Annotation>>();
+
+                Collections.addAll(scopeClasses, this.testControl.startScopes());
+
+                if (this.testControl.startScopes().length == 0)
+                {
+                    addScopesForDefaultBehavior(scopeClasses);
+                }
+
+                for (Class<? extends Annotation> scopeAnnotation : scopeClasses)
+                {
+                    if (this.parent != null && this.parent.isScopeStarted(scopeAnnotation))
+                    {
+                        continue;
+                    }
+
+                    if (isRestrictedScope(scopeAnnotation, restrictedScopes))
+                    {
+                        continue;
+                    }
+
+                    try
+                    {
+                        //force a clean context - TODO discuss onScopeStopped call
+                        contextControl.stopContext(scopeAnnotation);
+
+                        contextControl.startContext(scopeAnnotation);
+                        this.startedScopes.add(scopeAnnotation);
+
+                        onScopeStarted(scopeAnnotation);
+                    }
+                    catch (RuntimeException e)
+                    {
+                        Logger logger = Logger.getLogger(CdiTestRunner.class.getName());
+                        logger.setLevel(Level.SEVERE);
+                        logger.log(Level.SEVERE, "failed to start scope @" + scopeAnnotation.getName(), e);
+                    }
+                }
             }
-
-            for (Class<? extends Annotation> scopeAnnotation : scopeClasses)
+            finally
             {
-                if (this.parent != null && this.parent.isScopeStarted(scopeAnnotation))
-                {
-                    continue;
-                }
-
-                if (isRestrictedScope(scopeAnnotation, restrictedScopes))
-                {
-                    continue;
-                }
-
-                try
-                {
-                    //force a clean context - TODO discuss onScopeStopped call
-                    contextControl.stopContext(scopeAnnotation);
-
-                    contextControl.startContext(scopeAnnotation);
-                    this.startedScopes.add(scopeAnnotation);
-
-                    onScopeStarted(scopeAnnotation);
-                }
-                catch (RuntimeException e)
-                {
-                    Logger logger = Logger.getLogger(CdiTestRunner.class.getName());
-                    logger.setLevel(Level.SEVERE);
-                    logger.log(Level.SEVERE, "failed to start scope @" + scopeAnnotation.getName(), e);
-                }
+                automaticScopeHandlingActive.remove();
+                automaticScopeHandlingActive.set(null);
             }
         }
 
@@ -657,21 +688,31 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
 
         private void stopStartedScopes(CdiContainer container)
         {
-            while (!this.startedScopes.empty())
+            try
             {
-                Class<? extends Annotation> scopeAnnotation = this.startedScopes.pop();
-                //TODO check if context was started by parent
-                try
+                automaticScopeHandlingActive.set(Boolean.TRUE);
+
+                while (!this.startedScopes.empty())
                 {
-                    container.getContextControl().stopContext(scopeAnnotation);
-                    onScopeStopped(scopeAnnotation);
+                    Class<? extends Annotation> scopeAnnotation = this.startedScopes.pop();
+                    //TODO check if context was started by parent
+                    try
+                    {
+                        container.getContextControl().stopContext(scopeAnnotation);
+                        onScopeStopped(scopeAnnotation);
+                    }
+                    catch (RuntimeException e)
+                    {
+                        Logger logger = Logger.getLogger(CdiTestRunner.class.getName());
+                        logger.setLevel(Level.SEVERE);
+                        logger.log(Level.SEVERE, "failed to stop scope @" + scopeAnnotation.getName(), e);
+                    }
                 }
-                catch (RuntimeException e)
-                {
-                    Logger logger = Logger.getLogger(CdiTestRunner.class.getName());
-                    logger.setLevel(Level.SEVERE);
-                    logger.log(Level.SEVERE, "failed to stop scope @" + scopeAnnotation.getName(), e);
-                }
+            }
+            finally
+            {
+                automaticScopeHandlingActive.remove();
+                automaticScopeHandlingActive.set(null);
             }
         }
 
@@ -732,5 +773,10 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
                 }
             }
         }
+    }
+
+    public static Boolean isAutomaticScopeHandlingActive()
+    {
+        return automaticScopeHandlingActive.get();
     }
 }

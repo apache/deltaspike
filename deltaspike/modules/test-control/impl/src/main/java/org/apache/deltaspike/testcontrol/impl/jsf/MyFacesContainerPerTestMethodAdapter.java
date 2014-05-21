@@ -18,9 +18,14 @@
  */
 package org.apache.deltaspike.testcontrol.impl.jsf;
 
+import org.apache.deltaspike.testcontrol.impl.request.ManuallyHandledRequestEvent;
 import org.apache.deltaspike.testcontrol.spi.ExternalContainer;
 import org.apache.deltaspike.testcontrol.spi.TestAware;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
+import javax.enterprise.event.Observes;
+import javax.enterprise.event.Reception;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
@@ -28,6 +33,7 @@ import java.lang.reflect.Method;
  * Optional adapter for MyFacesContainer which gets started and stopped for every test-method
  * Requires MyFaces-Core 2.2.x, MyFaces-Test v1.0.6 or higher as well as org.apache.myfaces.core:myfaces-impl-test
  */
+@ApplicationScoped
 public class MyFacesContainerPerTestMethodAdapter implements TestAware, ExternalContainer
 {
     private static ThreadLocal<MyFacesContainerAdapter> myFacesContainerAdapterThreadLocal =
@@ -79,6 +85,23 @@ public class MyFacesContainerPerTestMethodAdapter implements TestAware, External
         else
         {
             myFacesContainerAdapterThreadLocal.get().shutdown();
+        }
+    }
+
+    public void onManuallyHandledRequest(
+            @Observes(notifyObserver = Reception.IF_EXISTS) ManuallyHandledRequestEvent manuallyHandledRequestEvent)
+    {
+        switch (manuallyHandledRequestEvent.getManualAction())
+        {
+            case STARTED:
+                startScope(RequestScoped.class);
+                break;
+            case STOPPED:
+                stopScope(RequestScoped.class);
+                break;
+            default:
+                throw new IllegalArgumentException("unsupported action: " +
+                        manuallyHandledRequestEvent.getManualAction().name());
         }
     }
 }
