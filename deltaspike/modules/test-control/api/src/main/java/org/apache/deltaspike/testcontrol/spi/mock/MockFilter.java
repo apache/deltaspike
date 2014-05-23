@@ -21,8 +21,9 @@ package org.apache.deltaspike.testcontrol.spi.mock;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 
 import javax.enterprise.inject.spi.Annotated;
+import javax.enterprise.inject.spi.BeanManager;
 
 public interface MockFilter extends Deactivatable
 {
-    boolean isMockedImplementationSupported(Annotated annotated);
+    boolean isMockedImplementationSupported(BeanManager beanManager, Annotated annotated);
 }

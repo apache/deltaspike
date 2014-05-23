@@ -60,7 +60,7 @@ public class MockExtension implements Extension, Deactivatable
 
         for (MockFilter mockFilter : mockFilters)
         {
-            if (!mockFilter.isMockedImplementationSupported(processInjectionTarget.getAnnotatedType()))
+            if (!mockFilter.isMockedImplementationSupported(beanManager, processInjectionTarget.getAnnotatedType()))
             {
                 return;
             }
@@ -106,7 +106,7 @@ public class MockExtension implements Extension, Deactivatable
 
         for (MockFilter mockFilter : mockFilters)
         {
-            if (!mockFilter.isMockedImplementationSupported(processProducer.getAnnotatedMember()))
+            if (!mockFilter.isMockedImplementationSupported(beanManager, processProducer.getAnnotatedMember()))
             {
                 return;
             }
