@@ -36,6 +36,7 @@ public class DefaultMockFilter implements MockFilter
     private static final String DS_BASE_PACKAGE = "org.apache.deltaspike.";
     private static final String JAVA_BASE_PACKAGE = "java.";
     private static final String JAVAX_BASE_PACKAGE = "javax.";
+    private static final String EJB_BASE_PACKAGE = "javax.ejb.";
     private static final String OWB_BASE_PACKAGE = "org.apache.webbeans.";
     private static final String WELD_BASE_PACKAGE = "org.jboss.weld.";
 
@@ -45,9 +46,9 @@ public class DefaultMockFilter implements MockFilter
         Class origin = null;
         if (annotated instanceof AnnotatedType)
         {
-
             origin = ((AnnotatedType)annotated).getJavaClass();
-            if (isAnnotatedTypeWithInterceptorAnnotation(beanManager, annotated.getAnnotations(), origin.getName()))
+            if (isEjbOrAnnotatedTypeWithInterceptorAnnotation(
+                beanManager, annotated.getAnnotations(), origin.getName()))
             {
                 return false;
             }
@@ -56,7 +57,8 @@ public class DefaultMockFilter implements MockFilter
         {
             Member member = ((AnnotatedMember)annotated).getJavaMember();
             origin = member.getDeclaringClass();
-            if (isAnnotatedTypeWithInterceptorAnnotation(beanManager, annotated.getAnnotations(), member.toString()))
+            if (isEjbOrAnnotatedTypeWithInterceptorAnnotation(
+                beanManager, annotated.getAnnotations(), member.toString()))
             {
                 return false;
             }
@@ -65,20 +67,25 @@ public class DefaultMockFilter implements MockFilter
         return origin != null && !isInternalPackage(origin.getPackage().getName());
     }
 
-    protected boolean isAnnotatedTypeWithInterceptorAnnotation(BeanManager beanManager,
-                                                               Set<Annotation> annotations,
-                                                               String origin)
+    protected boolean isEjbOrAnnotatedTypeWithInterceptorAnnotation(BeanManager beanManager,
+                                                                    Set<Annotation> annotations,
+                                                                    String origin)
     {
         for (Annotation annotation : annotations)
         {
+            if (annotation.annotationType().getName().startsWith(EJB_BASE_PACKAGE))
+            {
+                return true;
+            }
+
             if (isStandardAnnotation(annotation))
             {
                 continue;
             }
 
             if (beanManager.isInterceptorBinding(annotation.annotationType()) ||
-                    (beanManager.isStereotype(annotation.annotationType()) &&
-                            isStereotypeWithInterceptor(annotation, beanManager)))
+                (beanManager.isStereotype(annotation.annotationType()) &&
+                    isStereotypeWithInterceptor(annotation, beanManager)))
             {
                 LOG.warning("Skip mocking intercepted bean " + origin);
 
@@ -98,7 +105,7 @@ public class DefaultMockFilter implements MockFilter
             }
 
             if (beanManager.isInterceptorBinding(annotation.annotationType()) ||
-                    isStereotypeWithInterceptor(annotation, beanManager))
+                isStereotypeWithInterceptor(annotation, beanManager))
             {
                 return true;
             }
@@ -109,7 +116,7 @@ public class DefaultMockFilter implements MockFilter
     protected boolean isStandardAnnotation(Annotation annotation)
     {
         return annotation.annotationType().getName().startsWith(JAVA_BASE_PACKAGE) ||
-                annotation.annotationType().getName().startsWith(JAVAX_BASE_PACKAGE);
+            annotation.annotationType().getName().startsWith(JAVAX_BASE_PACKAGE);
     }
 
     protected boolean isInternalPackage(String packageName)
