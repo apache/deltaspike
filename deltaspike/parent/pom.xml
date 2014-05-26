@@ -321,6 +321,15 @@
             </roles>
             <timezone>+1</timezone>
         </developer>
+        <developer>
+            <id>rafabene</id>
+            <name>Rafael Benevides</name>
+            <email>rafabene@apache.org</email>
+            <roles>
+                <role>Committer</role>
+            </roles>
+            <timezone>-3</timezone>
+        </developer>
     </developers>
 
 
