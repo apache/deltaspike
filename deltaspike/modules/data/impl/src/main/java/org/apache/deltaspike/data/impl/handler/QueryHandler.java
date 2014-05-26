@@ -103,8 +103,8 @@ public class QueryHandler implements Serializable, InvocationHandler
     {
         CdiQueryInvocationContext queryContext = new CdiQueryInvocationContext(proxy, method, args, repoMethod,
                 entityManagerLookup.lookupFor(repo));
-        queryContext.init();
         context.set(queryContext);
+        queryContext.initMapper();
         return queryContext;
     }
 

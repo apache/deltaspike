@@ -23,8 +23,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import org.apache.deltaspike.data.api.audit.CreatedOn;
-import org.apache.deltaspike.data.impl.audit.AuditPropertyException;
-import org.apache.deltaspike.data.impl.audit.TimestampsProvider;
 import org.apache.deltaspike.data.test.domain.AuditedEntity;
 import org.apache.deltaspike.data.test.domain.Simple;
 import org.junit.Test;
@@ -68,7 +66,7 @@ public class TimestampsProviderTest
     public void should_not_fail_on_non_audited_entity()
     {
         // given
-        Simple entity = new Simple();
+        Simple entity = new Simple("should_not_fail_on_non_audited_entity");
 
         // when
         TimestampsProvider provider = new TimestampsProvider();

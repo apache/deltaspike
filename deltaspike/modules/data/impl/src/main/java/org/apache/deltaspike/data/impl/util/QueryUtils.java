@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.data.impl.util;
 
-import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.Collection;
 
@@ -83,21 +82,4 @@ public final class QueryUtils
         return value != null ? value : (fallback != null ? fallback : "");
     }
 
-    public static boolean contains(Class<?> clazz, Method method)
-    {
-        return extract(clazz, method) != null;
-    }
-
-    public static Method extract(Class<?> clazz, Method method)
-    {
-        try
-        {
-            String name = method.getName();
-            return clazz.getMethod(name, method.getParameterTypes());
-        }
-        catch (NoSuchMethodException e)
-        {
-            return null;
-        }
-    }
 }

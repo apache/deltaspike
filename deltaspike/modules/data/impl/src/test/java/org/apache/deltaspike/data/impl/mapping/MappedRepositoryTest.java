@@ -36,8 +36,11 @@ import org.apache.deltaspike.data.test.domain.Simple;
 import org.apache.deltaspike.data.test.domain.Simple_;
 import org.apache.deltaspike.data.test.domain.dto.BooleanWrapper;
 import org.apache.deltaspike.data.test.domain.dto.SimpleDto;
+import org.apache.deltaspike.data.test.domain.dto.SimpleId;
+import org.apache.deltaspike.data.test.service.SimpleMappedDtoRepository;
 import org.apache.deltaspike.data.test.service.SimpleMappedRepository;
 import org.apache.deltaspike.data.test.service.SimpleMapper;
+import org.apache.deltaspike.data.test.service.SimpleQueryInOutMapper;
 import org.apache.deltaspike.data.test.service.WrappedMapper;
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -56,8 +59,10 @@ public class MappedRepositoryTest extends TransactionalTestCase
                 initDeployment()
                     .addClasses(
                             SimpleMappedRepository.class,
+                            SimpleMappedDtoRepository.class,
                             SimpleMapper.class,
-                            WrappedMapper.class)
+                            WrappedMapper.class,
+                            SimpleQueryInOutMapper.class)
                     .addPackages(false,
                             Simple.class.getPackage(),
                             SimpleDto.class.getPackage()));
@@ -65,6 +70,9 @@ public class MappedRepositoryTest extends TransactionalTestCase
 
     @Inject
     private SimpleMappedRepository repository;
+
+    @Inject
+    private SimpleMappedDtoRepository dtoRepository;
 
     @Produces
     @PersistenceContext
@@ -154,6 +162,45 @@ public class MappedRepositoryTest extends TransactionalTestCase
 
         // then
         assertTrue(result.size() > 0);
+    }
+
+    @Test
+    public void should_save_new_entity_with_simplemapper()
+    {
+        // given
+        SimpleDto dto = new SimpleDto();
+        dto.setName("should_save_new_entity_with_simplemapper");
+        dto.setEnabled(Boolean.TRUE);
+
+        // when
+        SimpleDto result = dtoRepository.save(dto);
+
+        // then
+        assertNotNull(result);
+        assertNotNull(result.getId());
+    }
+
+    @Test
+    public void should_update_existing_entity_with_simplemapper()
+    {
+        // given
+        final String name = "should_update_existing_entity_with_simplemapper";
+        Simple simple = new Simple(name);
+        simple.setEnabled(Boolean.TRUE);
+        entityManager.persist(simple);
+
+        SimpleDto dto = new SimpleDto();
+        dto.setName(name + "_updated");
+        dto.setEnabled(Boolean.TRUE);
+        dto.setId(new SimpleId(simple.getId()));
+
+        // when
+        dtoRepository.save(dto);
+        Simple lookup = entityManager.find(Simple.class, simple.getId());
+
+        // then
+        assertNotNull(lookup);
+        assertEquals(name + "_updated", lookup.getName());
     }
 
     @Override

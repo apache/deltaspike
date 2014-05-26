@@ -18,13 +18,47 @@
  */
 package org.apache.deltaspike.data.api.mapping;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import org.apache.deltaspike.data.spi.QueryInvocationContext;
+
+/**
+ * A base mapper to map from Dto to Entity and vice versa. This should be sufficient
+ * for most mapping cases and simplify the implementation of a mapper.
+ *
+ * @param <Entity>      The Entity type.
+ * @param <Dto>         The Dto type.
+ */
 public abstract class SimpleQueryInOutMapperBase<Entity, Dto> implements QueryInOutMapper<Entity>
 {
+    @Inject
+    private QueryInvocationContext context;
+
+    /**
+     * Return the primary key of the Entity corresponding to the Dto. If this is a new
+     * Entity, return {@code null}.
+     * @param dto       The Dto to map to an Entity.
+     * @return          The Entity primary key, or {@code null} for a new Entity.
+     */
+    protected abstract Object getPrimaryKey(Dto dto);
+
     protected abstract Dto toDto(Entity entity);
-    protected abstract Entity toEntity(Dto dto);
+
+    /**
+     * Map a Dto to an Entity. In case the Dto contains a valid primary key,
+     * the Entity will be retrieved first and used as method parameter. Otherwise
+     * Entity is a unmanaged new instance.
+     *
+     * @param entity    Either a managed Entity looked up by the primary key,
+     *                  or a new Entity instance.
+     * @param dto       The Dto to map.
+     * @return          Mapped Entity.
+     */
+    protected abstract Entity toEntity(Entity entity, Dto dto);
 
     @Override
     public Object mapResult(final Entity result)
@@ -64,6 +98,33 @@ public abstract class SimpleQueryInOutMapperBase<Entity, Dto> implements QueryIn
     @Override
     public Object mapParameter(final Object parameter)
     {
-        return toEntity((Dto) parameter);
+        Dto dto = (Dto) parameter;
+        Object primaryKey = getPrimaryKey(dto);
+        if (primaryKey != null)
+        {
+            Entity entity = findEntity(primaryKey);
+            return toEntity(entity, dto);
+        }
+        return toEntity(newEntity(), dto);
+    }
+
+    protected Entity newEntity()
+    {
+        try
+        {
+            Class<?> entityClass = context.getEntityClass();
+            Constructor<?> constructor = entityClass.getDeclaredConstructor();
+            constructor.setAccessible(true);
+            return (Entity) constructor.newInstance();
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException("Failed instantiating new Entity", e);
+        }
+    }
+
+    protected Entity findEntity(Object primaryKey)
+    {
+        return (Entity) context.getEntityManager().find(context.getEntityClass(), primaryKey);
     }
 }

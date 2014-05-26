@@ -18,18 +18,19 @@
  */
 package org.apache.deltaspike.data.api.mapping;
 
-import org.junit.Test;
-
-import java.util.Arrays;
-import java.util.List;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.Test;
+
 public class SimpleQueryInOutMapperBaseTest
 {
+
     @Test
     public void checkDefault() {
         final SimpleQueryInOutMapperBase<String, Integer> mapper = new SimpleQueryInOutMapperBase<String, Integer>()
@@ -40,7 +41,19 @@ public class SimpleQueryInOutMapperBaseTest
             }
 
             @Override
-            protected String toEntity(Integer b) {
+            protected String toEntity(String entity, Integer b) {
+                return entity;
+            }
+
+            @Override
+            protected Object getPrimaryKey(Integer dto)
+            {
+                return null;
+            }
+
+            @Override
+            protected String newEntity()
+            {
                 return "ok";
             }
         };
@@ -63,4 +76,5 @@ public class SimpleQueryInOutMapperBaseTest
         // but at least we test what is expected!
         assertEquals("ok", mapper.mapParameter(2));
     }
+
 }

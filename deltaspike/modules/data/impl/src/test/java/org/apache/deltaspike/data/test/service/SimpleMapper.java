@@ -63,11 +63,9 @@ public class SimpleMapper implements QueryInOutMapper<Simple>
         if (parameter instanceof SimpleDto)
         {
             SimpleDto dto = (SimpleDto) parameter;
-            Simple simple = new Simple();
+            Simple simple = new Simple(dto.getName());
             simple.setId(dto.getId() != null ? dto.getId().getId() : null);
             simple.setEnabled(dto.getEnabled());
-            simple.setName(dto.getName());
-            System.out.println("Converted " + simple);
             return simple;
         }
         return ((SimpleId) parameter).getId();

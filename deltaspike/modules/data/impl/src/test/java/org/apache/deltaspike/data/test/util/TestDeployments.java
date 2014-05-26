@@ -43,6 +43,7 @@ import org.apache.deltaspike.data.api.criteria.CriteriaSupport;
 import org.apache.deltaspike.data.api.criteria.QuerySelection;
 import org.apache.deltaspike.data.api.mapping.MappingConfig;
 import org.apache.deltaspike.data.api.mapping.QueryInOutMapper;
+import org.apache.deltaspike.data.api.mapping.SimpleQueryInOutMapperBase;
 import org.apache.deltaspike.data.impl.RepositoryDefinitionException;
 import org.apache.deltaspike.data.impl.RepositoryExtension;
 import org.apache.deltaspike.data.impl.audit.AuditEntityListener;
@@ -161,7 +162,8 @@ public abstract class TestDeployments
                 .addClasses(Criteria.class, QuerySelection.class, CriteriaSupport.class)
                 .addClasses(CreatedOn.class, CurrentUser.class, ModifiedBy.class, ModifiedOn.class)
                 .addClasses(MappingConfig.class, QueryInOutMapper.class)
-                .addClasses(DelegateQueryHandler.class, QueryInvocationContext.class, RequiresTransaction.class);
+                .addClasses(DelegateQueryHandler.class, QueryInvocationContext.class, RequiresTransaction.class)
+                .addClasses(SimpleQueryInOutMapperBase.class);
     }
 
     public static WebArchive addDependencies(WebArchive archive)

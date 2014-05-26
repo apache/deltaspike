@@ -58,7 +58,7 @@ public class Simple
     private Date temporal;
     private EmbeddedSimple embedded;
 
-    public Simple()
+    protected Simple()
     {
     }
 
