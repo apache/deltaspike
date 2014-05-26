@@ -30,7 +30,6 @@
 
     <application>
         <view-handler>org.apache.deltaspike.jsf.impl.view.DeltaSpikeViewHandler</view-handler>
-        <navigation-handler>org.apache.deltaspike.jsf.impl.navigation.DeltaSpikeNavigationHandler</navigation-handler>
         <action-listener>org.apache.deltaspike.jsf.impl.listener.action.DeltaSpikeActionListener</action-listener>
         <resource-handler>org.apache.deltaspike.jsf.impl.resource.DeltaSpikeResourceHandler</resource-handler>
 
@@ -51,6 +50,7 @@
     <factory>
         <lifecycle-factory>org.apache.deltaspike.jsf.impl.listener.request.DeltaSpikeLifecycleFactoryWrapper</lifecycle-factory>
         <faces-context-factory>org.apache.deltaspike.jsf.impl.listener.request.DeltaSpikeFacesContextFactory</faces-context-factory>
+        <application-factory>org.apache.deltaspike.jsf.impl.navigation.NavigationHandlerAwareApplicationFactory</application-factory>
     </factory>
 
 </faces-config>
