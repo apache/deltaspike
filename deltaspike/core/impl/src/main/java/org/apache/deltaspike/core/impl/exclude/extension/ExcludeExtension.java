@@ -41,6 +41,7 @@ import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import javax.enterprise.util.Nonbinding;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -152,12 +153,12 @@ public class ExcludeExtension implements Extension, Deactivatable
         //also forces deterministic project-stage initialization
         ProjectStage projectStage = ProjectStageProducer.getInstance().getProjectStage();
 
-        if (!processAnnotatedType.getAnnotatedType().getJavaClass().isAnnotationPresent(Exclude.class))
+        Exclude exclude = extractExcludeAnnotation(processAnnotatedType.getAnnotatedType().getJavaClass());
+
+        if (exclude == null)
         {
             return;
         }
-
-        Exclude exclude = (Exclude) processAnnotatedType.getAnnotatedType().getJavaClass().getAnnotation(Exclude.class);
 
         if (!evalExcludeWithoutCondition(processAnnotatedType, exclude))
         {
@@ -175,6 +176,36 @@ public class ExcludeExtension implements Extension, Deactivatable
         }
 
         evalExcludeWithExpression(processAnnotatedType, exclude);
+    }
+
+    //only support the physical usage and inheritance if @Exclude comes from an abstract class
+    //TODO re-visit the impact of java.lang.annotation.Inherited (for @Exclude) for the available use-cases
+    protected Exclude extractExcludeAnnotation(Class<?> currentClass)
+    {
+        Exclude result = currentClass.getAnnotation(Exclude.class);
+
+        if (result != null)
+        {
+            return result;
+        }
+
+        currentClass = currentClass.getSuperclass();
+
+        while (!Object.class.equals(currentClass) && currentClass != null)
+        {
+            if (Modifier.isAbstract(currentClass.getModifiers()))
+            {
+                result = currentClass.getAnnotation(Exclude.class);
+            }
+
+            if (result != null)
+            {
+                return result;
+            }
+
+            currentClass = currentClass.getSuperclass();
+        }
+        return null;
     }
 
     protected void vetoCustomProjectStageBeans(ProcessAnnotatedType processAnnotatedType)
