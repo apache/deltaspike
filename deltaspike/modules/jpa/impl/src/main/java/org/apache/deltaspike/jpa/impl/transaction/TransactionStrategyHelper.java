@@ -154,7 +154,9 @@ public class TransactionStrategyHelper implements Serializable
      */
     protected Transactional extractTransactionalAnnotation(InvocationContext context)
     {
+        Class targetClass = context.getTarget() != null ? context.getTarget().getClass() :
+            context.getMethod().getDeclaringClass();
         return AnnotationUtils
-            .extractAnnotationFromMethodOrClass(this.beanManager, context.getMethod(), Transactional.class);
+            .extractAnnotationFromMethodOrClass(beanManager, context.getMethod(), targetClass, Transactional.class);
     }
 }

@@ -33,17 +33,17 @@ public abstract class AnnotationUtils
     }
 
     public static <T extends Annotation> T extractAnnotationFromMethodOrClass(
-        BeanManager beanManager, Method targetMethod, Class<T> targetAnnotationType)
+        BeanManager beanManager, Method targetMethod, Class targetClass, Class<T> targetAnnotationType)
     {
         T result = extractAnnotationFromMethod(beanManager, targetMethod, targetAnnotationType);
 
         if (result == null)
         {
             //see DELTASPIKE-517
-            Class targetClass = ProxyUtils.getUnproxiedClass(targetMethod.getDeclaringClass());
+            Class unproxiedTargetClass = ProxyUtils.getUnproxiedClass(targetClass);
 
             // and if not found search on the class
-            result = findAnnotation(beanManager, targetClass.getAnnotations(), targetAnnotationType);
+            result = findAnnotation(beanManager, unproxiedTargetClass.getAnnotations(), targetAnnotationType);
         }
         return result;
     }
