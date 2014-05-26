@@ -20,6 +20,7 @@ package org.apache.deltaspike.data.test.service;
 
 import static javax.persistence.LockModeType.PESSIMISTIC_READ;
 
+import org.apache.deltaspike.data.api.EntityManagerDelegate;
 import org.apache.deltaspike.data.api.EntityRepository;
 import org.apache.deltaspike.data.api.Modifying;
 import org.apache.deltaspike.data.api.Query;
@@ -27,7 +28,7 @@ import org.apache.deltaspike.data.api.Repository;
 import org.apache.deltaspike.data.test.domain.Simple;
 
 @Repository
-public interface ExtendedRepositoryInterface extends EntityRepository<Simple, Long>
+public interface ExtendedRepositoryInterface extends EntityRepository<Simple, Long>, EntityManagerDelegate<Simple>
 {
 
     @Query(lock = PESSIMISTIC_READ)

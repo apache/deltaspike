@@ -22,6 +22,7 @@ import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.transaction.UserTransaction;
 
+import org.apache.deltaspike.data.test.util.TestData;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
 import org.junit.Before;
@@ -33,6 +34,8 @@ public abstract class TransactionalTestCase
 
     @Resource
     protected UserTransaction ut;
+    
+    protected TestData testData;
 
     @Before
     public void startTransaction() throws Exception
@@ -40,6 +43,12 @@ public abstract class TransactionalTestCase
         ut.begin();
         // Required by OpenJPA
         getEntityManager().getMetamodel();
+    }
+    
+    @Before
+    public void initTestData()
+    {
+        testData = new TestData(getEntityManager());
     }
 
     @After

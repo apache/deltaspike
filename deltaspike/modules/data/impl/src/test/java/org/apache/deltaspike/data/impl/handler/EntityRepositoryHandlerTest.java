@@ -80,7 +80,7 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
     public void should_merge() throws Exception
     {
         // given
-        Simple simple = createSimple("testMerge");
+        Simple simple = testData.createSimple("testMerge");
         Long id = simple.getId();
 
         // when
@@ -115,7 +115,7 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
     {
         // given
         final String name = "testRefresh";
-        Simple simple = createSimple(name);
+        Simple simple = testData.createSimple(name);
 
         // when
         simple.setName("override");
@@ -129,7 +129,7 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
     public void should_find_by_pk() throws Exception
     {
         // given
-        Simple simple = createSimple("testFindByPk");
+        Simple simple = testData.createSimple("testFindByPk");
 
         // when
         Simple find = repo.findBy(simple.getId());
@@ -143,7 +143,7 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
     public void should_find_by_example() throws Exception
     {
         // given
-        Simple simple = createSimple("testFindByExample");
+        Simple simple = testData.createSimple("testFindByExample");
 
         // when
         List<Simple> find = repo.findBy(simple, Simple_.name);
@@ -159,8 +159,8 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
     public void should_find_by_example_with_start_and_max() throws Exception
     {
         // given
-        Simple simple = createSimple("testFindByExample1", Integer.valueOf(10));
-        createSimple("testFindByExample1", Integer.valueOf(10));
+        Simple simple = testData.createSimple("testFindByExample1", Integer.valueOf(10));
+        testData.createSimple("testFindByExample1", Integer.valueOf(10));
 
         // when
         List<Simple> find = repo.findBy(simple, 0, 1, Simple_.name, Simple_.counter);
@@ -177,7 +177,7 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
     public void should_find_by_example_with_no_attributes() throws Exception
     {
         // given
-        Simple simple = createSimple("testFindByExample");
+        Simple simple = testData.createSimple("testFindByExample");
         SingularAttribute<Simple, ?>[] attributes = new SingularAttribute[] {};
 
         // when
@@ -193,8 +193,8 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
     public void should_find_all()
     {
         // given
-        createSimple("testFindAll1");
-        createSimple("testFindAll2");
+        testData.createSimple("testFindAll1");
+        testData.createSimple("testFindAll2");
 
         // when
         List<Simple> find = repo.findAll();
@@ -207,8 +207,8 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
     public void should_find_by_all_with_start_and_max()
     {
         // given
-        createSimple("testFindAll1");
-        createSimple("testFindAll2");
+        testData.createSimple("testFindAll1");
+        testData.createSimple("testFindAll2");
 
         // when
         List<Simple> find = repo.findAll(0, 1);
@@ -222,8 +222,8 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
     public void should_find_by_like()
     {
         // given
-        createSimple("testFindAll1");
-        createSimple("testFindAll2");
+        testData.createSimple("testFindAll1");
+        testData.createSimple("testFindAll2");
         Simple example = new Simple("test");
 
         // when
@@ -238,8 +238,8 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
     public void should_find_by_like_with_start_and_max()
     {
         // given
-        createSimple("testFindAll1");
-        createSimple("testFindAll2");
+        testData.createSimple("testFindAll1");
+        testData.createSimple("testFindAll2");
         Simple example = new Simple("test");
 
         // when
@@ -254,8 +254,8 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
     public void should_find_by_like_non_string()
     {
         // given
-        createSimple("testFindAll1", 1);
-        createSimple("testFindAll2", 2);
+        testData.createSimple("testFindAll1", 1);
+        testData.createSimple("testFindAll2", 2);
         Simple example = new Simple("test");
         example.setCounter(1);
 
@@ -270,7 +270,7 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
     public void should_count_all()
     {
         // given
-        createSimple("testCountAll");
+        testData.createSimple("testCountAll");
 
         // when
         Long result = repo.count();
@@ -284,8 +284,8 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
     public void should_count_with_attributes()
     {
         // given
-        Simple simple = createSimple("testFindAll1", Integer.valueOf(55));
-        createSimple("testFindAll2", Integer.valueOf(55));
+        Simple simple = testData.createSimple("testFindAll1", Integer.valueOf(55));
+        testData.createSimple("testFindAll2", Integer.valueOf(55));
 
         // when
         Long result = repo.count(simple, Simple_.name, Simple_.counter);
@@ -299,8 +299,8 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
     public void should_count_with_no_attributes()
     {
         // given
-        Simple simple = createSimple("testFindAll1");
-        createSimple("testFindAll2");
+        Simple simple = testData.createSimple("testFindAll1");
+        testData.createSimple("testFindAll2");
         SingularAttribute<Simple, Object>[] attributes = new SingularAttribute[] {};
 
         // when
@@ -315,8 +315,8 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
     public void should_count_by_like()
     {
         // given
-        createSimple("testFindAll1");
-        createSimple("testFindAll2");
+        testData.createSimple("testFindAll1");
+        testData.createSimple("testFindAll2");
         Simple example = new Simple("test");
 
         // when
@@ -330,7 +330,7 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
     public void should_remove()
     {
         // given
-        Simple simple = createSimple("testRemove");
+        Simple simple = testData.createSimple("testRemove");
 
         // when
         repo.remove(simple);
@@ -345,20 +345,6 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
     protected EntityManager getEntityManager()
     {
         return entityManager;
-    }
-
-    private Simple createSimple(String name)
-    {
-        return createSimple(name, null);
-    }
-
-    private Simple createSimple(String name, Integer counter)
-    {
-        Simple result = new Simple(name);
-        result.setCounter(counter);
-        entityManager.persist(result);
-        entityManager.flush();
-        return result;
     }
 
 }

@@ -22,6 +22,7 @@ import java.net.URL;
 
 import org.apache.deltaspike.data.api.AbstractEntityRepository;
 import org.apache.deltaspike.data.api.EntityManagerConfig;
+import org.apache.deltaspike.data.api.EntityManagerDelegate;
 import org.apache.deltaspike.data.api.EntityManagerResolver;
 import org.apache.deltaspike.data.api.EntityRepository;
 import org.apache.deltaspike.data.api.FirstResult;
@@ -103,7 +104,7 @@ public abstract class TestDeployments
         WebArchive archive = ShrinkWrap
                 .create(WebArchive.class, "test.war")
                 .addAsLibrary(createApiArchive())
-                .addClasses(WebProfileCategory.class, TransactionalTestCase.class)
+                .addClasses(WebProfileCategory.class, TransactionalTestCase.class, TestData.class)
                 .addClasses(RepositoryExtension.class, RepositoryDefinitionException.class)
                 .addPackages(true, TEST_FILTER, createImplPackages())
                 .addPackages(true, AuditedEntity.class.getPackage())
@@ -156,7 +157,7 @@ public abstract class TestDeployments
                         FirstResult.class, MaxResults.class, Modifying.class,
                         Query.class, QueryParam.class, QueryResult.class,
                         EntityManagerConfig.class, EntityManagerResolver.class, SingleResultType.class,
-                        QueryInvocationException.class)
+                        QueryInvocationException.class, EntityManagerDelegate.class)
                 .addClasses(Criteria.class, QuerySelection.class, CriteriaSupport.class)
                 .addClasses(CreatedOn.class, CurrentUser.class, ModifiedBy.class, ModifiedOn.class)
                 .addClasses(MappingConfig.class, QueryInOutMapper.class)
