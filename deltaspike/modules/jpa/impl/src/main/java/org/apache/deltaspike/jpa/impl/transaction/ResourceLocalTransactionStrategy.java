@@ -190,33 +190,37 @@ public class ResourceLocalTransactionStrategy implements TransactionStrategy
                         Set<EntityManagerEntry> entityManagerEntryList =
                             transactionBeanStorage.getUsedEntityManagerEntries();
 
-                        boolean rollbackOnly = false;
-                        // but first try to flush all the transactions and write the updates to the database
-                        for (EntityManagerEntry currentEntityManagerEntry : entityManagerEntryList)
-                        {
-                            EntityTransaction transaction = getTransaction(currentEntityManagerEntry);
-                            if (transaction != null && transaction.isActive())
-                            {
-                                try
-                                {
-                                    if (!commitFailed)
-                                    {
-                                        currentEntityManagerEntry.getEntityManager().flush();
+                        boolean rollbackOnly = isRollbackOnly(transactionalAnnotation);
 
-                                        if (!rollbackOnly && transaction.getRollbackOnly())
+                        if (!rollbackOnly)
+                        {
+                            // but first try to flush all the transactions and write the updates to the database
+                            for (EntityManagerEntry currentEntityManagerEntry : entityManagerEntryList)
+                            {
+                                EntityTransaction transaction = getTransaction(currentEntityManagerEntry);
+                                if (transaction != null && transaction.isActive())
+                                {
+                                    try
+                                    {
+                                        if (!commitFailed)
                                         {
-                                            // don't set commitFailed to true directly
-                                            // (the order of the entity-managers isn't deterministic
-                                            //  -> tests would break)
-                                            rollbackOnly = true;
+                                            currentEntityManagerEntry.getEntityManager().flush();
+
+                                            if (!rollbackOnly && transaction.getRollbackOnly())
+                                            {
+                                                // don't set commitFailed to true directly
+                                                // (the order of the entity-managers isn't deterministic
+                                                //  -> tests would break)
+                                                rollbackOnly = true;
+                                            }
                                         }
                                     }
-                                }
-                                catch (Exception e)
-                                {
-                                    firstException = e;
-                                    commitFailed = true;
-                                    break;
+                                    catch (Exception e)
+                                    {
+                                        firstException = e;
+                                        commitFailed = true;
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -265,6 +269,12 @@ public class ResourceLocalTransactionStrategy implements TransactionStrategy
                 throw firstException;
             }
         }
+    }
+
+    //allows to use a custom tx-controller in a custom strategy
+    protected boolean isRollbackOnly(Transactional transactionalAnnotation)
+    {
+        return transactionalAnnotation != null && transactionalAnnotation.readOnly();
     }
 
     private void rollbackAllTransactions(Set<EntityManagerEntry> entityManagerEntryList)
