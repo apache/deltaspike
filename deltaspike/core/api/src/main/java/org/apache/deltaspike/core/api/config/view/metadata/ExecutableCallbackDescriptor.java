@@ -53,7 +53,21 @@ public abstract class ExecutableCallbackDescriptor<R> extends CallbackDescriptor
             {
                 try
                 {
-                    Object bean = getTargetObject(callbackEntry.getTargetBeanClass());
+                    Class<?> targetBeanClass = callbackEntry.getTargetBeanClass();
+                    Object bean = getTargetObject(targetBeanClass);
+
+                    if (bean == null)
+                    {
+                        String beanName = callbackEntry.getBeanName();
+                        bean = getTargetObjectByName(beanName);
+
+                        if (bean == null)
+                        {
+                            throw new IllegalStateException("Can't find bean by type " + targetBeanClass +
+                                " or by name: " + beanName);
+                        }
+                    }
+
                     R result = (R) callbackMethod.invoke(bean, parameters);
 
                     if (result != null)

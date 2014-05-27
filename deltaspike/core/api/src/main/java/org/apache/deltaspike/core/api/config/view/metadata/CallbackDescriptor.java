@@ -20,6 +20,8 @@ package org.apache.deltaspike.core.api.config.view.metadata;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 
+import javax.inject.Named;
+import java.beans.Introspector;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -80,7 +82,12 @@ public abstract class CallbackDescriptor
 
     protected Object getTargetObject(Class targetType)
     {
-        return BeanProvider.getContextualReference(targetType);
+        return BeanProvider.getContextualReference(targetType, true);
+    }
+
+    protected Object getTargetObjectByName(String beanName)
+    {
+        return BeanProvider.getContextualReference(beanName, true);
     }
 
     public boolean isBoundTo(Class<? extends Annotation> callbackType)
@@ -91,11 +98,24 @@ public abstract class CallbackDescriptor
     protected static class CallbackEntry
     {
         private List<Method> callbackMethods = new ArrayList<Method>();
-        private final Class targetBeanClass;
+        private final Class<?> targetBeanClass;
+        private final String beanName;
 
         private CallbackEntry(Class beanClass, Class<? extends Annotation> callbackMarker)
         {
             this.targetBeanClass = beanClass;
+
+            Named named = this.targetBeanClass.getAnnotation(Named.class);
+
+            if (named != null && !"".equals(named.value()))
+            {
+                this.beanName = named.value();
+            }
+            else
+            {
+                //fallback to the default (which might exist) -> TODO check meta-data of Bean<T>
+                this.beanName = Introspector.decapitalize(targetBeanClass.getSimpleName());
+            }
 
             List<String> processedMethodNames = new ArrayList<String>();
 
@@ -150,9 +170,14 @@ public abstract class CallbackDescriptor
             return callbackMethods;
         }
 
-        public Class getTargetBeanClass()
+        public Class<?> getTargetBeanClass()
         {
             return targetBeanClass;
+        }
+
+        public String getBeanName()
+        {
+            return beanName;
         }
     }
 }
