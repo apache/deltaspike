@@ -21,6 +21,7 @@ package org.apache.deltaspike.data.api;
 import java.io.Serializable;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 
 
@@ -38,9 +39,6 @@ public abstract class AbstractEntityRepository<E, PK extends Serializable>
 
     /**
      * Utility method to get hold of the entity manager for this Repository.
-     * This method can be overridden and decorated with qualifiers. If done, the qualifiers
-     * will be used to resolve a specific entity manager other than the default one.
-     *
      * @return          Entity manager instance.
      */
     protected abstract EntityManager entityManager();
@@ -50,6 +48,13 @@ public abstract class AbstractEntityRepository<E, PK extends Serializable>
      * @return          Criteria query
      */
     protected abstract CriteriaQuery<E> criteriaQuery();
+
+    /**
+     * Utility method to create a typed query.
+     * @param qlString  Query string
+     * @return          Typed query
+     */
+    protected abstract TypedQuery<E> typedQuery(String qlString);
 
     /**
      * Get the entity class this Repository is related to.

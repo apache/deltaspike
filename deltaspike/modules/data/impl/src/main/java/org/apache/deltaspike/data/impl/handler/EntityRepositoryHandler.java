@@ -197,6 +197,11 @@ public class EntityRepositoryHandler<E, PK extends Serializable>
         return entityManager().getCriteriaBuilder().createQuery(entityClass());
     }
 
+    public TypedQuery<E> typedQuery(String qlString)
+    {
+        return entityManager().createQuery(qlString, entityClass());
+    }
+
     @SuppressWarnings("unchecked")
     public Class<E> entityClass()
     {

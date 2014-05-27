@@ -43,7 +43,7 @@ public abstract class SimpleRepository extends AbstractEntityRepository<Simple, 
     public List<Simple> implementedQueryByName(String name)
     {
         String query = "select s from Simple s where s.name = :name";
-        return entityManager().createQuery(query, Simple.class)
+        return typedQuery(query)
                 .setParameter("name", name)
                 .getResultList();
     }
