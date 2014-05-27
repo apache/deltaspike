@@ -68,7 +68,7 @@
                 <plugin>
                     <groupId>org.apache.rat</groupId>
                     <artifactId>apache-rat-plugin</artifactId>
-                    <version>0.8-SNAPSHOT</version>
+                    <version>0.8</version>
                     <configuration>
                         <excludes>
                             <exclude>.idea/**/*</exclude>
