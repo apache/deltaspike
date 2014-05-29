@@ -22,6 +22,7 @@ import org.apache.deltaspike.cdise.api.ContextControl;
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.ExceptionUtils;
+import org.apache.deltaspike.core.util.metadata.AnnotationInstanceProvider;
 import org.apache.deltaspike.scheduler.api.Scheduled;
 import org.apache.deltaspike.scheduler.spi.Scheduler;
 import org.quartz.CronScheduleBuilder;
@@ -47,6 +48,8 @@ import java.util.logging.Logger;
 //vetoed class (see SchedulerExtension)
 public class QuartzScheduler implements Scheduler<Job>
 {
+    private static final Scheduled DEFAULT_SCHEDULED_LITERAL = AnnotationInstanceProvider.of(Scheduled.class);
+
     protected org.quartz.Scheduler scheduler;
 
     @Override
@@ -294,6 +297,12 @@ public class QuartzScheduler implements Scheduler<Job>
         public void jobToBeExecuted(JobExecutionContext jobExecutionContext)
         {
             Scheduled scheduled = jobExecutionContext.getJobInstance().getClass().getAnnotation(Scheduled.class);
+
+            //can happen with manually registered job-instances (via #unwrap)
+            if (scheduled == null)
+            {
+                scheduled = DEFAULT_SCHEDULED_LITERAL;
+            }
 
             Collections.addAll(this.scopes, scheduled.startScopes());
 
