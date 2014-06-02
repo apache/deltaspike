@@ -24,9 +24,12 @@ import java.security.PrivilegedAction;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
+import org.apache.maven.artifact.versioning.InvalidVersionSpecificationException;
+import org.apache.maven.artifact.versioning.VersionRange;
+
 /**
- * A small helper class which checks if the container
- * which is currently being tested matches the given version RegExp
+ * A small helper class which checks if the container which is currently being tested matches the given version RegExp
  */
 public class CdiContainerUnderTest
 {
@@ -37,8 +40,9 @@ public class CdiContainerUnderTest
 
     /**
      * Checks whether the current container matches the given version regexps.
-     * @param containerRegExps container versions to test against.
-     *                         e.g. 'owb-1\\.0\\..*' or 'weld-2\\.0\\.0\\..*'
+     * 
+     * @param containerRegExps
+     *            container versions to test against. e.g. 'owb-1\\.0\\..*' or 'weld-2\\.0\\.0\\..*'
      */
     public static boolean is(String... containerRegExps)
     {
@@ -60,9 +64,19 @@ public class CdiContainerUnderTest
         return false;
     }
 
-    //TODO discuss merge with #is (there 'cdicontainer.version' isn't available in all cases)
-    public static boolean isCdiVersion(CdiImplementation cdiImplementation)
+    /**
+     * Verify if the runtime is using the following CdiImplementation
+     * 
+     * @param cdiImplementation
+     * @param versionRange
+     *            optional - If not defined it will used the range defined on {@link CdiImplementation}
+     * @return
+     * @throws InvalidVersionSpecificationException
+     */
+    public static boolean isCdiVersion(CdiImplementation cdiImplementation, String versionRange)
+        throws InvalidVersionSpecificationException
     {
+
         Class implementationClass = tryToLoadClassForName(cdiImplementation.getImplementationClassName());
 
         if (implementationClass == null)
@@ -70,8 +84,10 @@ public class CdiContainerUnderTest
             return false;
         }
 
-        String containerVersion = getJarVersion(implementationClass);
-        return containerVersion != null && containerVersion.matches(cdiImplementation.getVersionRegex());
+        VersionRange range = VersionRange.createFromVersionSpec(versionRange == null ? cdiImplementation
+                .getVersionRange() : versionRange);
+        String containerVersion = getJarSpecification(implementationClass);
+        return containerVersion != null && range.containsVersion(new DefaultArtifactVersion(containerVersion));
     }
 
     private static Class tryToLoadClassForName(String name)
@@ -82,7 +98,7 @@ public class CdiContainerUnderTest
         }
         catch (ClassNotFoundException e)
         {
-            //do nothing - it's just a try
+            // do nothing - it's just a try
             return null;
         }
     }
@@ -147,6 +163,21 @@ public class CdiContainerUnderTest
         }
     }
 
+    private static String getJarSpecification(Class targetClass)
+    {
+        String manifestFileLocation = getManifestFileLocationOfClass(targetClass);
+
+        try
+        {
+            return new Manifest(new URL(manifestFileLocation).openStream())
+                    .getMainAttributes().getValue(Attributes.Name.SPECIFICATION_VERSION);
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
+    }
+
     private static String getManifestFileLocationOfClass(Class targetClass)
     {
         String manifestFileLocation;
@@ -157,7 +188,7 @@ public class CdiContainerUnderTest
         }
         catch (Exception e)
         {
-            //in this case we have a proxy
+            // in this case we have a proxy
             manifestFileLocation = getManifestLocation(targetClass.getSuperclass());
         }
         return manifestFileLocation;
@@ -175,6 +206,7 @@ public class CdiContainerUnderTest
     private static class GetClassLoaderAction implements PrivilegedAction<ClassLoader>
     {
         private Object object;
+
         GetClassLoaderAction(Object object)
         {
             this.object = object;
