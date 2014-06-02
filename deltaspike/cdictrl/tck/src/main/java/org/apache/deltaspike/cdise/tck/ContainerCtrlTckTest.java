@@ -19,24 +19,34 @@
 package org.apache.deltaspike.cdise.tck;
 
 
+import java.util.Set;
+
+import javax.enterprise.context.ContextNotActiveException;
+import javax.enterprise.inject.spi.Bean;
+import javax.enterprise.inject.spi.BeanManager;
+
 import org.apache.deltaspike.cdise.api.CdiContainer;
 import org.apache.deltaspike.cdise.api.CdiContainerLoader;
 import org.apache.deltaspike.cdise.tck.beans.Car;
 import org.apache.deltaspike.cdise.tck.beans.CarRepair;
 import org.apache.deltaspike.cdise.tck.beans.TestUser;
+import org.apache.deltaspike.cdise.tck.control.LockedCDIImplementation;
+import org.apache.deltaspike.cdise.tck.control.LockedVersionRange;
+import org.apache.deltaspike.cdise.tck.control.VersionControlRule;
+import org.apache.deltaspike.test.utils.CdiImplementation;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
-
-import javax.enterprise.context.ContextNotActiveException;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
-import java.util.Set;
 
 /**
  * TCK test for the {@link org.apache.deltaspike.cdise.api.CdiContainer}
  */
 public class ContainerCtrlTckTest
 {
+
+    @Rule
+    public VersionControlRule versionControlRule = new VersionControlRule();
+
     @Test
     public void testContainerBoot()
     {
@@ -158,6 +168,10 @@ public class ContainerCtrlTckTest
     }
 
     @Test
+    @LockedCDIImplementation(versions = {
+            @LockedVersionRange(implementation = CdiImplementation.WELD11, versionRange = "[1.1.14,1.2)"),
+            @LockedVersionRange(implementation = CdiImplementation.WELD20, versionRange = "[2.0.1.Final,2.1)")
+            })
     public void testShutdownWithInactiveContexts()
     {
         CdiContainer cdiContainer = CdiContainerLoader.getCdiContainer();
