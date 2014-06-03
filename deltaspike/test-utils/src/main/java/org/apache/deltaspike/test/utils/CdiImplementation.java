@@ -20,20 +20,20 @@ package org.apache.deltaspike.test.utils;
 
 public enum CdiImplementation
 {
-    OWB11 ("org.apache.webbeans.container.BeanManagerImpl", "1\\.1\\..*"),
-    OWB12 ("org.apache.webbeans.container.BeanManagerImpl", "1\\.2\\..*"),
+    OWB11 ("org.apache.webbeans.container.BeanManagerImpl", "[1.1,1.2)"),
+    OWB12 ("org.apache.webbeans.container.BeanManagerImpl", "[1.2,1.3)"),
 
-    WELD11("org.jboss.weld.manager.BeanManagerImpl", "1\\.1\\..*"),
-    WELD12("org.jboss.weld.manager.BeanManagerImpl", "1\\.2\\..*"),
-    WELD20("org.jboss.weld.manager.BeanManagerImpl", "2\\.0\\..*");
+    WELD11("org.jboss.weld.manager.BeanManagerImpl", "[1.1,1.2)"),
+    WELD12("org.jboss.weld.manager.BeanManagerImpl", "[1.2,1.3)"),
+    WELD20("org.jboss.weld.manager.BeanManagerImpl", "[2.0,2.1)");
 
     private final String implementationClassName;
-    private final String versionRegex;
+    private final String versionRange;
 
-    CdiImplementation(String implementationClassName, String versionRegex)
+    CdiImplementation(String implementationClassName, String versionRange)
     {
         this.implementationClassName = implementationClassName;
-        this.versionRegex = versionRegex;
+        this.versionRange = versionRange;
     }
 
     public String getImplementationClassName()
@@ -41,8 +41,8 @@ public enum CdiImplementation
         return implementationClassName;
     }
 
-    public String getVersionRegex()
+    public String getVersionRange()
     {
-        return versionRegex;
+        return versionRange;
     }
 }
