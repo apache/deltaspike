@@ -18,15 +18,16 @@
  */
 package org.apache.deltaspike.test.arquillian;
 
-import org.jboss.arquillian.container.test.spi.client.deployment.AuxiliaryArchiveAppender;
-import org.jboss.arquillian.core.spi.LoadableExtension;
+import org.jboss.arquillian.container.test.spi.client.deployment.CachedAuxilliaryArchiveAppender;
+import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 
-public class DeltaSpikeTestUtilExtension implements LoadableExtension
+public class TestUtilDependenciesAppender extends CachedAuxilliaryArchiveAppender
 {
     @Override
-    public void register(final ExtensionBuilder extensionBuilder)
+    protected Archive<?> buildArchive()
     {
-        extensionBuilder.service(AuxiliaryArchiveAppender.class, DeltaSpikeServerUtilAppender.class);
-        extensionBuilder.service(AuxiliaryArchiveAppender.class, TestUtilDependenciesAppender.class);
+        return ShrinkWrap.create(JavaArchive.class, "maven-artifact").addPackage("org.apache.maven.artifact.versioning");
     }
 }
