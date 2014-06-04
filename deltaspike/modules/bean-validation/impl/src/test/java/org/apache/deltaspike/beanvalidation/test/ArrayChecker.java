@@ -16,30 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.beanValidation.test;
+package org.apache.deltaspike.beanvalidation.test;
 
-import javax.inject.Inject;
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
-
-public class InjectableConstraintValidator implements
-        ConstraintValidator<ArraySize, String[]>
-{
-    @Inject
-    private ArrayChecker arrayChecker;
-
-    private ArraySize arraySize;
-
-    @Override
-    public void initialize(ArraySize arraySize)
-    {
-        this.arraySize = arraySize;
+public class ArrayChecker {
+    public boolean checkArray(ArraySize as, String[] data) {
+        if (data.length < as.min() || data.length > as.max()) {
+             return false;
+        } else {
+             return true;
+        }
     }
-
-    @Override
-    public boolean isValid(String[] values, ConstraintValidatorContext context)
-    {
-       return arrayChecker.checkArray(arraySize, values);
-    }
-
 }

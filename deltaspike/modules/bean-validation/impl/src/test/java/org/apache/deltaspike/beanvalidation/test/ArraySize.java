@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.beanValidation.test;
+package org.apache.deltaspike.beanvalidation.test;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;

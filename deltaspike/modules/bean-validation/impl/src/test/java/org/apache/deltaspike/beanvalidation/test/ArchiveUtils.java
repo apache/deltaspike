@@ -16,21 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.beanValidation.test;
+package org.apache.deltaspike.beanvalidation.test;
 
-public class BasicPojo
-{
-    @ArraySize(min=1)
-    private String[] value;
+import org.apache.deltaspike.test.utils.ShrinkWrapArchiveUtil;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 
-    public String[] getValue()
-    {
-        return value;
+public class ArchiveUtils {
+    public static JavaArchive[] getDeltaSpikeCore() {
+        JavaArchive[] coreArchives = ShrinkWrapArchiveUtil.getArchives(null,
+                "META-INF/beans.xml",
+                new String[]{"org.apache.deltaspike.core", "org.apache.deltaspike.test.category"},
+                null,
+                "ds-core");
+        return coreArchives;
     }
-
-    public void setValue(String[] value)
-    {
-        this.value = value;
-    }
-    
 }

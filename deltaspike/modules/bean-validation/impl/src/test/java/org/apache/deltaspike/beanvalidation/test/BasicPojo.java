@@ -16,14 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.beanValidation.test;
+package org.apache.deltaspike.beanvalidation.test;
 
-public class ArrayChecker {
-    public boolean checkArray(ArraySize as, String[] data) {
-        if (data.length < as.min() || data.length > as.max()) {
-             return false;
-        } else {
-             return true;
-        }
+public class BasicPojo
+{
+    @ArraySize(min=1)
+    private String[] value;
+
+    public String[] getValue()
+    {
+        return value;
     }
+
+    public void setValue(String[] value)
+    {
+        this.value = value;
+    }
+    
 }

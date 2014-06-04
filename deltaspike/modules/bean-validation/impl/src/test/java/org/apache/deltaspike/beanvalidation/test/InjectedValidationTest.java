@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.beanValidation.test;
+package org.apache.deltaspike.beanvalidation.test;
 
 import java.util.Set;
 
@@ -24,7 +24,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 
-import org.apache.deltaspike.beanValidation.impl.CDIAwareConstraintValidatorFactory;
+import org.apache.deltaspike.beanvalidation.impl.CDIAwareConstraintValidatorFactory;
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
