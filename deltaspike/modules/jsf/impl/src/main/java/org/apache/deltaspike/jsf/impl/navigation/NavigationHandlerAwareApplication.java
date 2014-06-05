@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.jsf.impl.navigation;
 
+import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.ExceptionUtils;
 
@@ -27,8 +28,10 @@ import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.application.NavigationHandler;
 import java.lang.reflect.Constructor;
 
-public class NavigationHandlerAwareApplication extends ApplicationWrapper
+public class NavigationHandlerAwareApplication extends ApplicationWrapper implements Deactivatable
 {
+    private static Boolean manualNavigationHandlerWrapperMode;
+    private static Class navigationHandlerWrapperClass;
     private final Application wrapped;
 
     public NavigationHandlerAwareApplication(Application wrapped)
@@ -37,37 +40,77 @@ public class NavigationHandlerAwareApplication extends ApplicationWrapper
     }
 
     @Override
-    public void setNavigationHandler(NavigationHandler handler)
+    public NavigationHandler getNavigationHandler()
     {
-        Class wrapperClass = ClassUtils
-            .tryToLoadClassForName("javax.faces.application.ConfigurableNavigationHandlerWrapper");
+        return wrapNavigationHandler(this.wrapped.getNavigationHandler());
+    }
+
+    private NavigationHandler wrapNavigationHandler(NavigationHandler handler)
+    {
+        NavigationHandler result = null;
+
+        if (manualNavigationHandlerWrapperMode == null)
+        {
+            lazyInit();
+        }
 
         //jsf 2.2+
-        if (wrapperClass != null)
+        if (!manualNavigationHandlerWrapperMode)
         {
-            if (ConfigurableNavigationHandler.class.isAssignableFrom(handler.getClass()))
-            {
-                try
-                {
-                    Class deltaSpikeWrapperClass = ClassUtils.tryToLoadClassForName(
-                        "org.apache.deltaspike.jsf.impl.navigation.DeltaSpikeNavigationHandlerWrapper");
-                    Constructor deltaSpikeNavigationHandlerWrapperConstructor =
-                        deltaSpikeWrapperClass.getConstructor(ConfigurableNavigationHandler.class);
-
-                    NavigationHandler navigationHandlerWrapper =
-                            (NavigationHandler)deltaSpikeNavigationHandlerWrapperConstructor.newInstance(handler);
-                    this.wrapped.setNavigationHandler(navigationHandlerWrapper);
-                    return;
-                }
-                catch (Exception e)
-                {
-                    throw ExceptionUtils.throwAsRuntimeException(e);
-                }
-            }
+            result = wrapNavigationHandlerWithNewWrapper(handler);
+        }
+        if (result != null)
+        {
+            return result;
         }
 
         //jsf 2.0 and 2.1
-        this.wrapped.setNavigationHandler(new DeltaSpikeNavigationHandler(handler));
+        return new DeltaSpikeNavigationHandler(handler);
+    }
+
+    private static synchronized void lazyInit()
+    {
+        if (manualNavigationHandlerWrapperMode != null)
+        {
+            return;
+        }
+
+        Class wrapperClass = ClassUtils
+            .tryToLoadClassForName("javax.faces.application.ConfigurableNavigationHandlerWrapper");
+
+        if (wrapperClass != null)
+        {
+            navigationHandlerWrapperClass =
+                ClassUtils.tryToLoadClassForName(
+                    "org.apache.deltaspike.jsf.impl.navigation.DeltaSpikeNavigationHandlerWrapper");
+            manualNavigationHandlerWrapperMode = false;
+        }
+        else
+        {
+            manualNavigationHandlerWrapperMode = true;
+        }
+    }
+
+    private NavigationHandler wrapNavigationHandlerWithNewWrapper(NavigationHandler handler)
+    {
+        if (ConfigurableNavigationHandler.class.isAssignableFrom(handler.getClass()))
+        {
+            try
+            {
+                Constructor deltaSpikeNavigationHandlerWrapperConstructor =
+                    this.navigationHandlerWrapperClass.getConstructor(ConfigurableNavigationHandler.class);
+
+                NavigationHandler navigationHandlerWrapper =
+                    (NavigationHandler)deltaSpikeNavigationHandlerWrapperConstructor.newInstance(handler);
+                return  navigationHandlerWrapper;
+            }
+            catch (Exception e)
+            {
+                throw ExceptionUtils.throwAsRuntimeException(e);
+            }
+        }
+
+        return null;
     }
 
     @Override

@@ -41,6 +41,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.apache.deltaspike.core.util.metadata.AnnotationInstanceProvider;
 import org.apache.deltaspike.jsf.impl.exception.control.BridgeExceptionHandlerWrapper;
 
+import org.apache.deltaspike.jsf.impl.navigation.NavigationHandlerAwareApplication;
 import org.apache.deltaspike.jsf.impl.security.SecurityAwareViewHandler;
 import org.apache.deltaspike.jsf.spi.scope.window.ClientWindow;
 
@@ -62,6 +63,7 @@ class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
     private JsfModuleConfig jsfModuleConfig;
 
     private volatile Boolean initialized;
+    private volatile Boolean isNavigationAwareApplicationWrapperActivated;
 
     private boolean preDestroyViewMapEventFilterMode;
 
@@ -162,6 +164,8 @@ class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
             this.bridgeExceptionQualifier = AnnotationInstanceProvider.of(jsfModuleConfig.getExceptionQualifier());
 
             this.preDestroyViewMapEventFilterMode = ClassDeactivationUtils.isActivated(SecurityAwareViewHandler.class);
+            this.isNavigationAwareApplicationWrapperActivated =
+                ClassDeactivationUtils.isActivated(NavigationHandlerAwareApplication.class);
             this.initialized = true;
         }
     }
@@ -204,8 +208,13 @@ class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
     {
         lazyInit();
 
+        Application wrappedApplication = this.wrappedFacesContext.getApplication();
+        if (this.isNavigationAwareApplicationWrapperActivated)
+        {
+            wrappedApplication = new NavigationHandlerAwareApplication(wrappedApplication);
+        }
         return new InjectionAwareApplicationWrapper(
-            this.wrappedFacesContext.getApplication(), this.jsfModuleConfig, this.preDestroyViewMapEventFilterMode);
+            wrappedApplication, this.jsfModuleConfig, this.preDestroyViewMapEventFilterMode);
     }
 
     @Override
