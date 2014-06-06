@@ -49,7 +49,7 @@ public class DefaultMessageResolver implements MessageResolver
         {
             String resourceKey = messageTemplate.substring(1, messageTemplate.length() - 1);
 
-            List<String> messageSources = messageContext.getMessageSources();
+            List<String> messageSources = getMessageSources(messageContext);
 
             if (messageSources == null || messageSources.isEmpty())
             {
@@ -96,5 +96,10 @@ public class DefaultMessageResolver implements MessageResolver
         }
 
         return messageTemplate;
+    }
+
+    protected List<String> getMessageSources(MessageContext messageContext)
+    {
+        return messageContext.getMessageSources();
     }
 }
