@@ -21,16 +21,18 @@ package org.apache.deltaspike.jsf.impl.message;
 import org.apache.deltaspike.core.impl.message.DefaultLocaleResolver;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Alternative;
+import javax.enterprise.inject.Specializes;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import java.util.Iterator;
 import java.util.Locale;
 
 @ApplicationScoped
-@Alternative
-public class JsfSupportedLocaleAwareLocaleResolver extends DefaultLocaleResolver
+@Specializes
+public class JsfAwareLocaleResolver extends DefaultLocaleResolver
 {
+    private static final long serialVersionUID = -8776583393262804931L;
+
     @Override
     public Locale getLocale()
     {
@@ -56,8 +58,13 @@ public class JsfSupportedLocaleAwareLocaleResolver extends DefaultLocaleResolver
                         return result;
                     }
                 }
+            }
 
-                return facesContext.getApplication().getDefaultLocale();
+            result = facesContext.getApplication().getDefaultLocale();
+
+            if (result != null)
+            {
+                return result;
             }
         }
 
