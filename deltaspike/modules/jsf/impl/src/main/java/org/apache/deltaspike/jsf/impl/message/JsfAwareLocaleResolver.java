@@ -51,12 +51,19 @@ public class JsfAwareLocaleResolver extends DefaultLocaleResolver
             {
                 Iterator<Locale> supportedLocale = facesContext.getApplication().getSupportedLocales();
 
+                boolean supportedLocaleConfigured = false;
                 while (supportedLocale.hasNext())
                 {
+                    supportedLocaleConfigured = true;
                     if (result.equals(supportedLocale.next()))
                     {
                         return result;
                     }
+                }
+
+                if (!supportedLocaleConfigured)
+                {
+                    return result;
                 }
             }
 
