@@ -47,17 +47,14 @@ public abstract class ClientWindowHelper
 
         ExternalContext externalContext = facesContext.getExternalContext();
 
-        String url = externalContext.getRequestScheme()
-                + "://" + externalContext.getRequestServerName()
-                + ":" + externalContext.getRequestServerPort()
-                + externalContext.getRequestContextPath()
+        String url = externalContext.getRequestContextPath()
                 + externalContext.getRequestServletPath();
 
         if (externalContext.getRequestPathInfo() != null)
         {
             url += externalContext.getRequestPathInfo();
         }
-        
+  
         url = JsfUtils.addRequestParameters(externalContext, url, true);
         
         try
