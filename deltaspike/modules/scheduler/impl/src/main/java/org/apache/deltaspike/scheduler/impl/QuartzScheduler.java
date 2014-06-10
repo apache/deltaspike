@@ -21,7 +21,10 @@ package org.apache.deltaspike.scheduler.impl;
 import org.apache.deltaspike.cdise.api.ContextControl;
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.ExceptionUtils;
+import org.apache.deltaspike.core.util.PropertyFileUtils;
+import org.apache.deltaspike.core.util.ProxyUtils;
 import org.apache.deltaspike.core.util.metadata.AnnotationInstanceProvider;
 import org.apache.deltaspike.scheduler.api.Scheduled;
 import org.apache.deltaspike.scheduler.spi.Scheduler;
@@ -39,15 +42,21 @@ import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
 
+import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.Properties;
+import java.util.ResourceBundle;
 import java.util.Stack;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 //vetoed class (see SchedulerExtension)
 public class QuartzScheduler implements Scheduler<Job>
 {
+    private static final Logger LOG = Logger.getLogger(QuartzScheduler.class.getName());
     private static final Scheduled DEFAULT_SCHEDULED_LITERAL = AnnotationInstanceProvider.of(Scheduled.class);
 
     protected org.quartz.Scheduler scheduler;
@@ -60,15 +69,55 @@ public class QuartzScheduler implements Scheduler<Job>
             throw new UnsupportedOperationException("the scheduler is started already");
         }
 
-        SchedulerFactory schedulerFactory;
+        SchedulerFactory schedulerFactory = null;
         try
         {
-            String configFile =
-                ConfigResolver.getPropertyValue("deltaspike.scheduler.quartz_config-file", "quartz.properties");
-            schedulerFactory = new StdSchedulerFactory(configFile);
+            Properties properties = new Properties();
+            properties.put(StdSchedulerFactory.PROP_SCHED_JOB_FACTORY_CLASS, CdiAwareJobFactory.class.getName());
+
+            try
+            {
+                ResourceBundle config = loadCustomQuartzConfig();
+
+                Enumeration<String> keys = config.getKeys();
+                String key;
+                while (keys.hasMoreElements())
+                {
+                    key = keys.nextElement();
+                    properties.put(key, config.getString(key));
+                }
+            }
+            catch (Exception e1)
+            {
+                LOG.info("no custom quartz-config file found. falling back to the default config provided by quartz.");
+
+                InputStream inputStream = null;
+                try
+                {
+                    inputStream = ClassUtils.getClassLoader(null).getResourceAsStream("org/quartz/quartz.properties");
+                    properties.load(inputStream);
+                }
+                catch (Exception e2)
+                {
+                    LOG.warning("failed to load quartz default-config");
+                    schedulerFactory = new StdSchedulerFactory();
+                }
+                finally
+                {
+                    if (inputStream != null)
+                    {
+                        inputStream.close();
+                    }
+                }
+            }
+            if (schedulerFactory == null)
+            {
+                schedulerFactory = new StdSchedulerFactory(properties);
+            }
         }
-        catch (SchedulerException e)
+        catch (Exception e)
         {
+            LOG.log(Level.WARNING, "fallback to default scheduler-factory", e);
             schedulerFactory = new StdSchedulerFactory();
         }
 
@@ -88,6 +137,13 @@ public class QuartzScheduler implements Scheduler<Job>
         {
             throw ExceptionUtils.throwAsRuntimeException(e);
         }
+    }
+
+    protected ResourceBundle loadCustomQuartzConfig()
+    {
+        String configFile =
+            ConfigResolver.getPropertyValue("deltaspike.scheduler.quartz_config-file", "quartz.properties");
+        return PropertyFileUtils.getResourceBundle(configFile);
     }
 
     @Override
@@ -296,7 +352,8 @@ public class QuartzScheduler implements Scheduler<Job>
         @Override
         public void jobToBeExecuted(JobExecutionContext jobExecutionContext)
         {
-            Scheduled scheduled = jobExecutionContext.getJobInstance().getClass().getAnnotation(Scheduled.class);
+            Class<?> jobClass = ProxyUtils.getUnproxiedClass(jobExecutionContext.getJobInstance().getClass());
+            Scheduled scheduled = jobClass.getAnnotation(Scheduled.class);
 
             //can happen with manually registered job-instances (via #unwrap)
             if (scheduled == null)
@@ -316,7 +373,22 @@ public class QuartzScheduler implements Scheduler<Job>
                 }
             }
 
-            BeanProvider.injectFields(jobExecutionContext.getJobInstance());
+            boolean jobInstanceIsBean;
+
+            try
+            {
+                jobInstanceIsBean =
+                    Boolean.TRUE.equals(jobExecutionContext.getScheduler().getContext().get(jobClass.getName()));
+            }
+            catch (SchedulerException e)
+            {
+                jobInstanceIsBean = false;
+            }
+
+            if (!jobInstanceIsBean)
+            {
+                BeanProvider.injectFields(jobExecutionContext.getJobInstance());
+            }
         }
 
         @Override
