@@ -22,19 +22,22 @@ import javax.faces.application.Resource;
 import javax.faces.application.ResourceHandler;
 import javax.faces.application.ResourceHandlerWrapper;
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
+import org.apache.deltaspike.core.spi.activation.Deactivatable;
+import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
 
 /**
  * {@link ResourceHandlerWrapper} to deliver uncompressed resources in {@link ProjectStage#Development}.
  */
-public class DeltaSpikeResourceHandler extends ResourceHandlerWrapper
+public class DeltaSpikeResourceHandler extends ResourceHandlerWrapper implements Deactivatable
 {
     private static final String LIBRARY = "deltaspike";
     private static final String LIBRARY_UNCOMPRESSED = "deltaspike-uncompressed";
     
     private final ResourceHandler wrapped;
     private final String version;
+    private final boolean activated;
 
     public DeltaSpikeResourceHandler(ResourceHandler resourceHandler)
     {
@@ -42,6 +45,7 @@ public class DeltaSpikeResourceHandler extends ResourceHandlerWrapper
 
         wrapped = resourceHandler;
         version = ClassUtils.getJarVersion(this.getClass());
+        activated = ClassDeactivationUtils.isActivated(this.getClass());
     }
 
     @Override
@@ -49,7 +53,7 @@ public class DeltaSpikeResourceHandler extends ResourceHandlerWrapper
     {
         Resource resource = wrapped.createResource(resourceName, libraryName);
 
-        if (resource != null && libraryName != null && LIBRARY.equals(libraryName))
+        if (activated && resource != null && libraryName != null && LIBRARY.equals(libraryName))
         {
             if (ProjectStageProducer.getInstance().getProjectStage() == ProjectStage.Development)
             {
