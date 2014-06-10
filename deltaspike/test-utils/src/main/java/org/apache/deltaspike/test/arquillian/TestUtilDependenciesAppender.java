@@ -28,7 +28,7 @@ public class TestUtilDependenciesAppender extends CachedAuxilliaryArchiveAppende
     @Override
     protected Archive<?> buildArchive()
     {
-        return ShrinkWrap.create(JavaArchive.class, "maven-artifact")
+        return ShrinkWrap.create(JavaArchive.class, "maven-artifact.jar")
                 .addPackage("org.apache.maven.artifact.versioning");
     }
 }
