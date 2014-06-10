@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.jsf.impl.config.view.navigation.destination.uc001;
+package org.apache.deltaspike.test.jsf.impl.config.view.controller.uc002;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -38,15 +38,13 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 @WarpTest
 @RunWith(Arquillian.class)
 @Category(WebProfileCategory.class)
-public class ViewConfigTest
+public class ViewConfigTestDrone
 {
-
     @Drone
     private WebDriver driver;
 
@@ -57,12 +55,11 @@ public class ViewConfigTest
     public static WebArchive deploy()
     {
         return ShrinkWrap
-                .create(WebArchive.class, "nav-destination-uc001.war")
-                .addPackage(Pages.class.getPackage())
+                .create(WebArchive.class, "nav-controller-uc002.war")
+                .addPackage(PageBean002.class.getPackage())
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndJsfArchive())
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeSecurityArchive())
-                .addAsWebResource("navigation/origin.xhtml", "/origin.xhtml")
-                .addAsWebResource("navigation/pages/index.xhtml", "/pages/index.xhtml")
+                .addAsWebResource("controller/simplePageConfig.xhtml", "/simplePageConfig.xhtml")
                 .addAsWebInfResource("default/WEB-INF/web.xml", "web.xml")
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
@@ -71,10 +68,8 @@ public class ViewConfigTest
     @RunAsClient
     public void testNavigation() throws MalformedURLException
     {
-        driver.get(new URL(contextPath, "origin.xhtml").toString());
+        driver.get(new URL(contextPath, "simplePageConfig.xhtml").toString());
 
-        WebElement button = driver.findElement(By.id("destination:pb001ActionMethod"));
-        button.click();
-        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("indexPage"), "You arrived at index page").apply(driver));
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("pageBean002Called"), "true").apply(driver));
     }
 }

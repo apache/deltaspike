@@ -16,13 +16,29 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.jsf.impl.config.view.validation;
+package org.apache.deltaspike.test.jsf.impl.config.view.navigation.destination.uc006;
 
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
+import org.apache.deltaspike.jsf.api.config.view.Folder;
+import org.apache.deltaspike.jsf.api.config.view.View;
 
-interface Pages extends ViewConfig
+interface PagesViolation
 {
-    class Index implements Pages
+    @View(basePath = "w1") //causes a violation because @Folder should be used instead
+    interface Wizard1
     {
+        @View(basePath = "")
+        class Start implements ViewConfig
+        {
+        }
+    }
+
+    @Folder(name = "w2") //valid usage
+    interface Wizard2
+    {
+        @View(basePath = "")
+        class Start implements ViewConfig
+        {
+        }
     }
 }

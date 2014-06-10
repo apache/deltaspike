@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.jsf.impl.config.view.navigation.event.uc001;
+package org.apache.deltaspike.test.jsf.impl.config.view.controller.uc001;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -38,15 +38,13 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 @WarpTest
 @RunWith(Arquillian.class)
 @Category(WebProfileCategory.class)
-public class PreViewConfigNavigateEventTest
+public class ViewConfigTestDrone
 {
-
     @Drone
     private WebDriver driver;
 
@@ -56,33 +54,22 @@ public class PreViewConfigNavigateEventTest
     @Deployment
     public static WebArchive deploy()
     {
-        WebArchive archive = ShrinkWrap
-                .create(WebArchive.class, "nav-event-uc001.war")
-                .addPackage(Pages.class.getPackage())
-                .addClass(PageBean002.class)
+        return ShrinkWrap
+                .create(WebArchive.class, "nav-controller-uc001.war")
+                .addPackage(PageBean001.class.getPackage())
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndJsfArchive())
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeSecurityArchive())
-                .addAsWebResource("navigation/origin.xhtml", "/origin.xhtml")
-                .addAsWebResource("navigation/pages/index.xhtml", "/pages/index.xhtml")
-                .addAsWebResource("navigation/pages/home.xhtml", "/pages/home.xhtml")
-                .addAsWebResource("navigation/pages/overview.xhtml", "/pages/overview.xhtml")
-                .addAsWebResource("navigation/pages/customErrorPage.xhtml", "/pages/customErrorPage.xhtml")
+                .addAsWebResource("controller/simplePageConfig.xhtml", "/simplePageConfig.xhtml")
                 .addAsWebInfResource("default/WEB-INF/web.xml", "web.xml")
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
-        return archive;
     }
 
     @Test
     @RunAsClient
-    public void testNavigationActionWithError() throws MalformedURLException
+    public void testNavigation() throws MalformedURLException
     {
-        driver.get(new URL(contextPath, "origin.xhtml").toString());
+        driver.get(new URL(contextPath, "simplePageConfig.xhtml").toString());
 
-        WebElement button = driver.findElement(By.id("event:pb002ActionWithError"));
-        button.click();
-        // Index Page is shown instead of DefaultErrorView because PreViewConfigNavigateEvent changed the navigation
-        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("indexPage"), "You arrived at index page")
-                .apply(driver));
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("pageBean001Called"), "true").apply(driver));
     }
-
 }

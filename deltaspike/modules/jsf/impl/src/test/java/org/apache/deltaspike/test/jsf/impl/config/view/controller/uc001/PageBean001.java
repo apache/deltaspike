@@ -25,8 +25,16 @@ import javax.enterprise.inject.Model;
 @Model
 class PageBean001
 {
+    private boolean called = false;
+
     @PreRenderView
     protected void preRenderViewCallbackMethod()
     {
+        called = true;
+    }
+
+    public boolean getCalled()
+    {
+        return called;
     }
 }

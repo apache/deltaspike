@@ -27,7 +27,7 @@ interface Pages extends ViewConfig
     {
     }
 
-    @View(name = "index")
+    @View(name = "home")
     class Overview implements Pages
     {
     }

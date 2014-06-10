@@ -26,4 +26,5 @@ interface Pages
     class Index implements ViewConfig
     {
     }
+    
 }

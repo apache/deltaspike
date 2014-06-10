@@ -24,20 +24,11 @@ import org.apache.deltaspike.jsf.api.config.view.View;
 
 interface Pages
 {
-    @View(basePath = "w1") //causes a violation because @Folder should be used instead
+    @Folder(name = "wizard1") //valid usage
     interface Wizard1
     {
         @View(basePath = "")
-        class Start implements ViewConfig
-        {
-        }
-    }
-
-    @Folder(name = "w2") //valid usage
-    interface Wizard2
-    {
-        @View(basePath = "")
-        class Start implements ViewConfig
+        class Step1 implements ViewConfig
         {
         }
     }

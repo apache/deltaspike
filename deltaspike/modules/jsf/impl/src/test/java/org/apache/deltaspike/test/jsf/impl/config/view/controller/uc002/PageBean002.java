@@ -23,12 +23,21 @@ import org.apache.deltaspike.core.api.config.view.controller.PostRenderView;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 
+
 @Named("pageBean")
 @RequestScoped
 class PageBean002
 {
+    private boolean called = false;
+
     @PostRenderView
     protected void postRenderViewCallbackMethod()
     {
+        called = true;
+    }
+
+    public boolean getCalled()
+    {
+        return called;
     }
 }

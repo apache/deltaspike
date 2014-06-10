@@ -29,10 +29,14 @@ import javax.enterprise.inject.Model;
 @ViewRef(config = SimplePageConfig.class)
 class PageBean003
 {
+    
+    private boolean called = false;
+
     @InitView
     @PreViewAction
     protected void callbackMethod1()
     {
+        called = true;
     }
 
     @PreRenderView

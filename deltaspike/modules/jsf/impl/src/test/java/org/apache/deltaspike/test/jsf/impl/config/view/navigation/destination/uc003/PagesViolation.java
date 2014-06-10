@@ -16,13 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.jsf.impl.config.view.validation;
+package org.apache.deltaspike.test.jsf.impl.config.view.navigation.destination.uc003;
 
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
+import org.apache.deltaspike.jsf.api.config.view.View;
 
-interface Pages extends ViewConfig
+interface PagesViolation extends ViewConfig
 {
-    class Index implements Pages
+    class Index implements PagesViolation
+    {
+    }
+
+    @View(name = "index")
+    class Overview implements PagesViolation
     {
     }
 }

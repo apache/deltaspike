@@ -16,13 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.jsf.impl.config.view.validation;
+package org.apache.deltaspike.test.jsf.impl.config.view.navigation.destination.uc006;
+
+import javax.enterprise.inject.Model;
 
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
 
-interface Pages extends ViewConfig
+@Model
+public class PageBean006
 {
-    class Index implements Pages
+    public Class<? extends ViewConfig> actionMethod()
     {
+        return Pages.Wizard1.Step1.class;
     }
+
+   
 }

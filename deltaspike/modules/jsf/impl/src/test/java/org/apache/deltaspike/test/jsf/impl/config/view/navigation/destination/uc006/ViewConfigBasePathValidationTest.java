@@ -49,7 +49,7 @@ public class ViewConfigBasePathValidationTest
     @Test
     public void testInvalidBasePathUsage()
     {
-        this.viewConfigExtension.addPageDefinition(Pages.Wizard1.Start.class);
+        this.viewConfigExtension.addPageDefinition(PagesViolation.Wizard1.Start.class);
 
         try
         {
@@ -71,7 +71,7 @@ public class ViewConfigBasePathValidationTest
     @Test
     public void testValidBasePathUsage()
     {
-        this.viewConfigExtension.addPageDefinition(Pages.Wizard2.Start.class);
+        this.viewConfigExtension.addPageDefinition(PagesViolation.Wizard2.Start.class);
         Assert.assertNotNull(this.viewConfigResolverProducer.createViewConfigResolver()); //won't cause an exception
     }
 }

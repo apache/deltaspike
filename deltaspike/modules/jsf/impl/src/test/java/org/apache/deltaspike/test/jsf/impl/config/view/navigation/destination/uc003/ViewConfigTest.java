@@ -49,10 +49,10 @@ public class ViewConfigTest
     @Test
     public void testDuplicatedNavigationTargetsInMetaDataTree()
     {
-        this.viewConfigExtension.addPageDefinition(Pages.Index.class);
-        this.viewConfigExtension.addPageDefinition(Pages.Overview.class);
+        this.viewConfigExtension.addPageDefinition(PagesViolation.Index.class);
+        this.viewConfigExtension.addPageDefinition(PagesViolation.Overview.class);
 
-        ViewConfigNode node = this.viewConfigExtension.findNode(Pages.Index.class);
+        ViewConfigNode node = this.viewConfigExtension.findNode(PagesViolation.Index.class);
 
         Assert.assertNotNull(node);
         Assert.assertNotNull(node.getParent());
@@ -69,7 +69,7 @@ public class ViewConfigTest
         Assert.assertEquals(0, node.getInheritedMetaData().size());
 
 
-        node = this.viewConfigExtension.findNode(Pages.Overview.class);
+        node = this.viewConfigExtension.findNode(PagesViolation.Overview.class);
 
         Assert.assertNotNull(node);
         Assert.assertNotNull(node.getParent());
@@ -90,8 +90,8 @@ public class ViewConfigTest
     @Test(expected = IllegalStateException.class)
     public void testDuplicatedNavigationTargetsDuringPageMetaDataTransformation()
     {
-        this.viewConfigExtension.addPageDefinition(Pages.Index.class);
-        this.viewConfigExtension.addPageDefinition(Pages.Overview.class);
+        this.viewConfigExtension.addPageDefinition(PagesViolation.Index.class);
+        this.viewConfigExtension.addPageDefinition(PagesViolation.Overview.class);
 
         this.viewConfigResolverProducer.createViewConfigResolver();
     }

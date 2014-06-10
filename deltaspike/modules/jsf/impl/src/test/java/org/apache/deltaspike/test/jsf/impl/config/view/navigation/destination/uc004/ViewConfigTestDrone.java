@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.jsf.impl.config.view.navigation.destination.uc002;
+package org.apache.deltaspike.test.jsf.impl.config.view.navigation.destination.uc004;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -44,7 +44,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 @WarpTest
 @RunWith(Arquillian.class)
 @Category(WebProfileCategory.class)
-public class ViewConfigTest
+public class ViewConfigTestDrone
 {
 
     @Drone
@@ -57,58 +57,39 @@ public class ViewConfigTest
     public static WebArchive deploy()
     {
         return ShrinkWrap
-                .create(WebArchive.class, "nav-destination-uc002.war")
+                .create(WebArchive.class, "nav-destination-uc004.war")
                 .addPackage(Pages.class.getPackage())
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndJsfArchive())
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeSecurityArchive())
-                .addAsWebResource("navigation/origin.xhtml", "/origin.xhtml")
                 .addAsWebResource("navigation/pages/index.xhtml", "/pages/index.xhtml")
-                .addAsWebResource("navigation/pages/home.xhtml", "/pages/home.xhtml")
                 .addAsWebResource("navigation/pages/overview.xhtml", "/pages/overview.xhtml")
-                .addAsWebResource("navigation/pages/customErrorPage.xhtml", "/pages/customErrorPage.xhtml")
                 .addAsWebInfResource("default/WEB-INF/web.xml", "web.xml")
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
+
     @Test
     @RunAsClient
-    public void testNavigationActionWithoutError() throws MalformedURLException
+    public void testNavigationActionMethod() throws MalformedURLException
     {
         driver.get(new URL(contextPath, "origin.xhtml").toString());
 
-        WebElement button = driver.findElement(By.id("destination:pb002ActionWithoutError"));
+        WebElement button = driver.findElement(By.id("destination:pb004ActionMethod"));
         button.click();
-        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("overviewPage"),
-                "You arrived at overview page").apply(driver));
-        // Was redirected ?
-        Assert.assertTrue(driver.getCurrentUrl().contains("overview.xhtml"));
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("indexPage"),
+                "You arrived at index page").apply(driver));
     }
     
     @Test
     @RunAsClient
-    public void testNavigationActionWithError() throws MalformedURLException
+    public void testNavigationActionMethod2() throws MalformedURLException
     {
         driver.get(new URL(contextPath, "origin.xhtml").toString());
 
-        WebElement button = driver.findElement(By.id("destination:pb002ActionWithError"));
+        WebElement button = driver.findElement(By.id("destination:pb004ActionMethod2"));
         button.click();
-        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("customErrorPage"),
-                "This is a custom error page").apply(driver));
-    }
-
-
-    @Test
-    @RunAsClient
-    public void testNavigationRestrictedToPages() throws MalformedURLException
-    {
-        driver.get(new URL(contextPath, "origin.xhtml").toString());
-
-        WebElement button = driver.findElement(By.id("destination:pb002RestrictedToPages"));
-        button.click();
-        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("homePage"), "You arrived at home page")
-                .apply(driver));
-        // Was fowarded ?
-        Assert.assertTrue(driver.getCurrentUrl().contains("origin.xhtml"));
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("overviewPage"),
+                "You arrived at overview page").apply(driver));
     }
 
 }
