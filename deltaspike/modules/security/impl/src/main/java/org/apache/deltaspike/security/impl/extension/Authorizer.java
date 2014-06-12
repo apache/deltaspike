@@ -36,7 +36,6 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.util.Nonbinding;
 import javax.interceptor.InvocationContext;
 
-import org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent;
 import org.apache.deltaspike.core.util.metadata.builder.InjectableMethod;
 import org.apache.deltaspike.security.api.authorization.AccessDeniedException;
 import org.apache.deltaspike.security.api.authorization.SecurityBindingType;
@@ -197,15 +196,7 @@ class Authorizer
                 }
             });
 
-            AccessDeniedException accessDeniedException = new AccessDeniedException(violations);
-            ExceptionToCatchEvent exceptionToCatchEvent = new ExceptionToCatchEvent(accessDeniedException);
-            exceptionToCatchEvent.setOptional(true);
-            beanManager.fireEvent(exceptionToCatchEvent);
-
-            if (!exceptionToCatchEvent.isHandled())
-            {
-                throw accessDeniedException;
-            }
+            throw new AccessDeniedException(violations);
         }
     }
 
