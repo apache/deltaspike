@@ -18,7 +18,9 @@
  */
 package org.apache.deltaspike.security.impl.extension;
 
+import org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent;
 import org.apache.deltaspike.core.util.ProxyUtils;
+import org.apache.deltaspike.security.api.authorization.AccessDeniedException;
 import org.apache.deltaspike.security.spi.authorization.SecurityStrategy;
 
 import javax.enterprise.context.Dependent;
@@ -26,6 +28,7 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.interceptor.InvocationContext;
 import java.lang.reflect.Method;
+import java.util.Set;
 
 /**
  * {@inheritDoc}
@@ -53,24 +56,86 @@ public class DefaultSecurityStrategy implements SecurityStrategy
 
         Class targetClass = ProxyUtils.getUnproxiedClass(invocationContext.getTarget().getClass()); //see DELTASPIKE-517
 
-        for (Authorizer authorizer : metaDataStorage.getAuthorizers(targetClass, method))
+        Set<Authorizer> authorizers = metaDataStorage.getAuthorizers(targetClass, method);
+
+        Object result = null;
+
+        if (invokeBeforeMethodInvocationAuthorizers(invocationContext, authorizers))
         {
-            if (authorizer.isBeforeMethodInvocationAuthorizer())
-            {
-                authorizer.authorize(invocationContext, null, this.beanManager);
-            }
+            result = invocationContext.proceed();
+
+            invokeAfterMethodInvocationAuthorizers(invocationContext, authorizers, result);
         }
 
-        Object result = invocationContext.proceed();
-
-        for (Authorizer authorizer : metaDataStorage.getAuthorizers(targetClass, method))
-        {
-            if (authorizer.isAfterMethodInvocationAuthorizer())
-            {
-                authorizer.authorize(invocationContext, result, this.beanManager);
-            }
-        }
-        
         return result;
+    }
+
+    private boolean invokeBeforeMethodInvocationAuthorizers(InvocationContext invocationContext,
+        Set<Authorizer> authorizers) throws IllegalAccessException
+    {
+        try
+        {
+            for (Authorizer authorizer : authorizers)
+            {
+                if (authorizer.isBeforeMethodInvocationAuthorizer())
+                {
+                    authorizer.authorize(invocationContext, null, this.beanManager);
+                }
+            }
+        }
+        catch (AccessDeniedException ade)
+        {
+            return handleAccessDeniedException(ade);
+        }
+
+        return true;
+    }
+
+    private boolean invokeAfterMethodInvocationAuthorizers(InvocationContext invocationContext,
+        Set<Authorizer> authorizers, Object result) throws IllegalAccessException
+    {
+        try
+        {
+            for (Authorizer authorizer : authorizers)
+            {
+                if (authorizer.isAfterMethodInvocationAuthorizer())
+                {
+                    authorizer.authorize(invocationContext, result, this.beanManager);
+                }
+            }
+        }
+        catch (AccessDeniedException ade)
+        {
+            return handleAccessDeniedException(ade);
+        }
+
+        return true;
+    }
+
+    /**
+     * <p>Fires a {@link org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent} for the given
+     * {@link org.apache.deltaspike.security.api.authorization.AccessDeniedException}.</p>
+     *
+     * @param ade The previously thrown exception representing a authorization check failure.
+     *
+     * @return False if the processing should be aborted.
+     *
+     * @throws org.apache.deltaspike.security.api.authorization.AccessDeniedException
+     * If the exception was not handled by the application.
+     */
+    private boolean handleAccessDeniedException(AccessDeniedException ade) throws AccessDeniedException
+    {
+        ExceptionToCatchEvent exceptionToCatchEvent = new ExceptionToCatchEvent(ade);
+
+        exceptionToCatchEvent.setOptional(true);
+
+        beanManager.fireEvent(exceptionToCatchEvent);
+
+        if (!exceptionToCatchEvent.isHandled())
+        {
+            throw ade;
+        }
+
+        return false;
     }
 }
