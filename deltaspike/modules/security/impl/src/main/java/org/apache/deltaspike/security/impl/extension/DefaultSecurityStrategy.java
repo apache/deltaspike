@@ -21,6 +21,7 @@ package org.apache.deltaspike.security.impl.extension;
 import org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent;
 import org.apache.deltaspike.core.util.ProxyUtils;
 import org.apache.deltaspike.security.api.authorization.AccessDeniedException;
+import org.apache.deltaspike.security.impl.authorization.SkipInternalProcessingException;
 import org.apache.deltaspike.security.spi.authorization.SecurityStrategy;
 
 import javax.enterprise.context.Dependent;
@@ -58,20 +59,17 @@ public class DefaultSecurityStrategy implements SecurityStrategy
 
         Set<Authorizer> authorizers = metaDataStorage.getAuthorizers(targetClass, method);
 
-        Object result = null;
+        invokeBeforeMethodInvocationAuthorizers(invocationContext, authorizers);
 
-        if (invokeBeforeMethodInvocationAuthorizers(invocationContext, authorizers))
-        {
-            result = invocationContext.proceed();
+        Object result = invocationContext.proceed();
 
-            invokeAfterMethodInvocationAuthorizers(invocationContext, authorizers, result);
-        }
+        invokeAfterMethodInvocationAuthorizers(invocationContext, authorizers, result);
 
         return result;
     }
 
-    private boolean invokeBeforeMethodInvocationAuthorizers(InvocationContext invocationContext,
-        Set<Authorizer> authorizers) throws IllegalAccessException
+    protected void invokeBeforeMethodInvocationAuthorizers(
+        InvocationContext invocationContext, Set<Authorizer> authorizers) throws IllegalAccessException
     {
         try
         {
@@ -83,15 +81,21 @@ public class DefaultSecurityStrategy implements SecurityStrategy
                 }
             }
         }
-        catch (AccessDeniedException ade)
+        catch (SkipInternalProcessingException e)
         {
-            return handleAccessDeniedException(ade);
+            throw e.getAccessDeniedException();
         }
-
-        return true;
+        catch (AccessDeniedException e)
+        {
+            RuntimeException exceptionToThrow = handleAccessDeniedException(e);
+            if (exceptionToThrow != null)
+            {
+                throw exceptionToThrow;
+            }
+        }
     }
 
-    private boolean invokeAfterMethodInvocationAuthorizers(InvocationContext invocationContext,
+    protected void invokeAfterMethodInvocationAuthorizers(InvocationContext invocationContext,
         Set<Authorizer> authorizers, Object result) throws IllegalAccessException
     {
         try
@@ -104,38 +108,37 @@ public class DefaultSecurityStrategy implements SecurityStrategy
                 }
             }
         }
-        catch (AccessDeniedException ade)
+        catch (AccessDeniedException e)
         {
-            return handleAccessDeniedException(ade);
+            RuntimeException exceptionToThrow = handleAccessDeniedException(e);
+            if (exceptionToThrow != null)
+            {
+                throw exceptionToThrow;
+            }
         }
-
-        return true;
     }
 
     /**
      * <p>Fires a {@link org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent} for the given
      * {@link org.apache.deltaspike.security.api.authorization.AccessDeniedException}.</p>
      *
-     * @param ade The previously thrown exception representing a authorization check failure.
-     *
-     * @return False if the processing should be aborted.
-     *
-     * @throws org.apache.deltaspike.security.api.authorization.AccessDeniedException
-     * If the exception was not handled by the application.
+     * @param originalException exception thrown by an authorizer
+     * @return the original exception if the default behavior was changed and the exception is unhandled
      */
-    private boolean handleAccessDeniedException(AccessDeniedException ade) throws AccessDeniedException
+    protected RuntimeException handleAccessDeniedException(AccessDeniedException originalException)
     {
-        ExceptionToCatchEvent exceptionToCatchEvent = new ExceptionToCatchEvent(ade);
-
-        exceptionToCatchEvent.setOptional(true);
-
-        beanManager.fireEvent(exceptionToCatchEvent);
-
+        ExceptionToCatchEvent exceptionToCatchEvent = new ExceptionToCatchEvent(originalException);
+        this.beanManager.fireEvent(exceptionToCatchEvent);
+        //the next step won't happen per default since ExceptionHandlerBroadcaster will throw the exception,
+        //because BeforeAccessDeniedExceptionHandler calls #throwOriginal
+        //but allows to suppress it via deactivating BeforeAccessDeniedExceptionHandler
+        //(or a 2nd @BeforeHandles method which overrules the default behavior
+        //(if needed)
         if (!exceptionToCatchEvent.isHandled())
         {
-            throw ade;
+            throw originalException;
         }
 
-        return false;
+        return null;
     }
 }
