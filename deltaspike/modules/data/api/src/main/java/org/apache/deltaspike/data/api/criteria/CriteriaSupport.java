@@ -27,7 +27,7 @@ import javax.persistence.metamodel.SingularAttribute;
 
 /**
  * Interface to be added to a repository for criteria support.
- * 
+ *
  * @param <E>   Entity type.
  */
 public interface CriteriaSupport<E>
@@ -88,7 +88,16 @@ public interface CriteriaSupport<E>
      * @param attribute Attribute to use in the aggregate.
      * @return          {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
      */
-    <N extends Number> QuerySelection<E, N> count(SingularAttribute<E, N> attribute);
+    QuerySelection<E, Long> count(SingularAttribute<E, ?> attribute);
+
+    /**
+     * Create a query selection for the
+     * {@link javax.persistence.criteria.CriteriaBuilder#countDistinct(javax.persistence.criteria.Expression)}
+     * over an attribute.
+     * @param attribute Attribute to use in the aggregate.
+     * @return          {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
+     */
+    QuerySelection<E, Long> countDistinct(SingularAttribute<E, ?> attribute);
 
     /**
      * Create a query selection for the

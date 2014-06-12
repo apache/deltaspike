@@ -34,6 +34,7 @@ import org.apache.deltaspike.data.impl.criteria.selection.AttributeQuerySelectio
 import org.apache.deltaspike.data.impl.criteria.selection.numeric.Abs;
 import org.apache.deltaspike.data.impl.criteria.selection.numeric.Avg;
 import org.apache.deltaspike.data.impl.criteria.selection.numeric.Count;
+import org.apache.deltaspike.data.impl.criteria.selection.numeric.CountDistinct;
 import org.apache.deltaspike.data.impl.criteria.selection.numeric.Max;
 import org.apache.deltaspike.data.impl.criteria.selection.numeric.Min;
 import org.apache.deltaspike.data.impl.criteria.selection.numeric.Modulo;
@@ -92,9 +93,15 @@ public class CriteriaSupportHandler<E> extends AbstractDelegateQueryHandler<E> i
     }
 
     @Override
-    public <N extends Number> QuerySelection<E, N> count(SingularAttribute<E, N> attribute)
+    public QuerySelection<E, Long> count(SingularAttribute<E, ?> attribute)
     {
-        return new Count<E, N>(attribute);
+        return new Count<E>(attribute);
+    }
+
+    @Override
+    public QuerySelection<E, Long> countDistinct(SingularAttribute<E, ?> attribute)
+    {
+        return new CountDistinct<E>(attribute);
     }
 
     @Override

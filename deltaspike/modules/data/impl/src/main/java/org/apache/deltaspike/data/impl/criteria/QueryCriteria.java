@@ -138,7 +138,7 @@ public class QueryCriteria<C, R> implements Criteria<C, R>
         try
         {
             CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-            CriteriaQuery<R> query = builder.createQuery(resultClass);
+            CriteriaQuery<?> query = createCriteriaQuery(builder);
             From<C, C> root = query.from(entityClass);
             if (!selections.isEmpty())
             {
@@ -151,7 +151,7 @@ public class QueryCriteria<C, R> implements Criteria<C, R>
                 query.where(predicates.toArray(new Predicate[predicates.size()]));
             }
             applyProcessors(query, builder, root);
-            return entityManager.createQuery(query);
+            return (TypedQuery<R>) entityManager.createQuery(query);
         }
         catch (RuntimeException e)
         {
@@ -290,7 +290,7 @@ public class QueryCriteria<C, R> implements Criteria<C, R>
     // Package criteria methods
     // --------------------------------------------------------------------
 
-    void applyProcessors(CriteriaQuery<R> query, CriteriaBuilder builder, From<C, C> from)
+    void applyProcessors(CriteriaQuery<?> query, CriteriaBuilder builder, From<C, C> from)
     {
         for (QueryProcessor<C> proc : processors)
         {
@@ -333,7 +333,7 @@ public class QueryCriteria<C, R> implements Criteria<C, R>
         processors.add(proc);
     }
 
-    private Selection<?>[] prepareSelections(CriteriaQuery<R> query, CriteriaBuilder builder, From<C, C> root)
+    private Selection<?>[] prepareSelections(CriteriaQuery<?> query, CriteriaBuilder builder, From<C, C> root)
     {
         List<Selection<?>> result = new ArrayList<Selection<?>>(selections.size());
         for (QuerySelection<? super C, ?> selection : selections)
@@ -341,6 +341,18 @@ public class QueryCriteria<C, R> implements Criteria<C, R>
             result.add(selection.toSelection(query, builder, root));
         }
         return result.toArray(new Selection<?>[] {});
+    }
+
+    private CriteriaQuery<?> createCriteriaQuery(CriteriaBuilder builder)
+    {
+        if (resultClass.getName().startsWith("java.lang"))
+        {
+            return builder.createQuery();
+        }
+        else
+        {
+            return builder.createQuery(resultClass);
+        }
     }
 
     // --------------------------------------------------------------------

@@ -341,6 +341,22 @@ public class CriteriaTest extends TransactionalTestCase
         assertNull(result2);
     }
 
+    @Test
+    public void should_create_count_criteria()
+    {
+        // given
+        final String name = "should_create_count_criteria";
+        createSimple(name, 10);
+        createSimple(name, 11);
+
+        // when
+        Long result = repo.criteriaCount(name);
+
+        // then
+        assertNotNull(result);
+        assertEquals(1l, result.longValue());
+    }
+
     @Override
     protected EntityManager getEntityManager()
     {

@@ -26,12 +26,12 @@ import javax.persistence.metamodel.SingularAttribute;
 
 import org.apache.deltaspike.data.api.criteria.QuerySelection;
 
-public class Count<P> implements QuerySelection<P, Long>
+public class CountDistinct<P> implements QuerySelection<P, Long>
 {
 
     private final SingularAttribute<P, ?> attribute;
 
-    public Count(SingularAttribute<P, ?> attribute)
+    public CountDistinct(SingularAttribute<P, ?> attribute)
     {
         this.attribute = attribute;
     }
@@ -39,6 +39,6 @@ public class Count<P> implements QuerySelection<P, Long>
     @Override
     public <R> Selection<Long> toSelection(CriteriaQuery<R> query, CriteriaBuilder builder, Path<? extends P> path)
     {
-        return builder.count(path.get(attribute));
+        return builder.countDistinct(path.get(attribute));
     }
 }

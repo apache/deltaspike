@@ -54,6 +54,14 @@ public abstract class SimpleCriteriaRepository extends AbstractEntityRepository<
                 .getAnyResult();
     }
 
+    public Long criteriaCount(String name)
+    {
+        return criteria()
+                .select(Long.class, countDistinct(Simple_.name))
+                .eq(Simple_.name, name)
+                .getSingleResult();
+    }
+
     @SuppressWarnings("unchecked")
     public Statistics queryWithSelect(String name)
     {
