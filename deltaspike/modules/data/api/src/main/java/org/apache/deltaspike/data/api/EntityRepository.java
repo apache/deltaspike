@@ -24,7 +24,7 @@ import java.util.List;
 import javax.persistence.metamodel.SingularAttribute;
 
 /**
- * Base Repository interface. All methods are implemented by the query extension.
+ * Base Repository interface. All methods are implemented by the CDI extension.
  *
  * @param <E>   Entity type.
  * @param <PK>  Primary key type.
@@ -33,7 +33,11 @@ public interface EntityRepository<E, PK extends Serializable>
 {
 
     /**
-     * Persist (new entity) or merge the given entity.
+     * Persist (new entity) or merge the given entity. The distinction on calling either
+     * method is done based on the primary key field being null or not.
+     * If this results in wrong behavior for a specific case, consider using the
+     * {@link org.apache.deltaspike.data.api.EntityManagerDelegate} which offers both
+     * {@code persist} and {@code merge}.
      * @param entity            Entity to save.
      * @return                  Returns the modified entity.
      */
