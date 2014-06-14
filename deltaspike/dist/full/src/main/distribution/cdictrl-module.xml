@@ -22,6 +22,7 @@
     <resources>
         <resource-root path="deltaspike-cdictrl-api-${project.version}.jar"/>
         <resource-root path="deltaspike-cdictrl-weld-${project.version}.jar"/>
+        <resource-root path="deltaspike-cdictrl-openejb-${project.version}.jar"/>
     </resources>
 
     <dependencies>

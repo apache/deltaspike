@@ -41,10 +41,6 @@
             <includes>
                 <include>org.apache.deltaspike.modules:*</include>
             </includes>
-            <excludes>
-                <exclude>org.apache.deltaspike.modules:deltaspike-test-control-module-api</exclude>
-                <exclude>org.apache.deltaspike.modules:deltaspike-test-control-module-impl</exclude>
-            </excludes>
             <outputDirectory>modules</outputDirectory>
         </dependencySet>
         <dependencySet>
