@@ -1,0 +1,59 @@
+Release Notes - Apache DeltaSpike - Version 1.0.0
+
+Sub-task
+
+    [DELTASPIKE-227] - documentation for minimal type-safe messages
+
+Bug
+
+    [DELTASPIKE-370] - ContainerCtrlTckTest - fix testShutdownWithInactiveContexts()
+    [DELTASPIKE-372] - WeldContainerControl should stop contexts during shutdown
+    [DELTASPIKE-543] - org.apache.deltaspike.distribution is disconnected
+    [DELTASPIKE-590] - ExceptionHandlerBroadcaster should not rethrow exceptions from BridgeExceptionHandlerWrapper
+    [DELTASPIKE-595] - broken assembly config
+    [DELTASPIKE-597] - Use correct names of brands and products in documentation
+    [DELTASPIKE-609] - @Transactional for methods in super-class(es)
+    [DELTASPIKE-618] - NullPointerException when trying to schedule job manually
+    [DELTASPIKE-624] - inconsistent package naming
+    [DELTASPIKE-629] - Initial redirect fails behind proxy/fw/apache redirects
+    [DELTASPIKE-639] - Fix Criteria API count methods signatures
+
+Improvement
+
+    [DELTASPIKE-396] - ShrinkWrapArchiveUtil creates jar files with random names
+    [DELTASPIKE-596] - use optional flag for ExceptionToCatchEvent
+    [DELTASPIKE-598] - TestAware as optional contract for implementations of ExternalContainer
+    [DELTASPIKE-601] - legacy support for ViewConfigPathValidator
+    [DELTASPIKE-602] - forward manual request-handling to myfaces-test adapters
+    [DELTASPIKE-606] - Simplified DTO mapping for Entity updates
+    [DELTASPIKE-607] - Add EntityManagerDelegate<E> interface to API
+    [DELTASPIKE-611] - @Exclude on abstract classes
+    [DELTASPIKE-612] - optional ConfigurableNavigationHandlerWrapper for jsf v2.2+
+    [DELTASPIKE-614] - @Named support for ExecutableCallbackDescriptor
+    [DELTASPIKE-617] - Utility Method for TypedQuery in AbstractEntityRepository
+    [DELTASPIKE-621] - DeltaSpikeResourceHandler should implement Deactivatable
+    [DELTASPIKE-626] - ensure valid application wrapper chain
+    [DELTASPIKE-630] - JsfSupportedLocaleAwareLocaleResolver should be the default LocaleResolver for the jsf module
+    [DELTASPIKE-631] - improve supported-locale check
+    [DELTASPIKE-636] - @Secures should trigger the ds-exception-handler
+
+New Feature
+
+    [DELTASPIKE-514] - optional integration with myfaces-core 2.2
+    [DELTASPIKE-593] - support for mocked cdi-beans
+    [DELTASPIKE-608] - @Transactional#readOnly
+    [DELTASPIKE-628] - support for the configured message-bundle in faces-config.xml
+    [DELTASPIKE-632] - CdiAwareJobFactory
+
+Task
+
+    [DELTASPIKE-306] - Examples for the features of the JSF module
+    [DELTASPIKE-589] - Support WLS Profile in Data Module
+    [DELTASPIKE-592] - merge back release branch 'deltaspike-0.7'
+    [DELTASPIKE-610] - re-visit DataSourceConfig
+    [DELTASPIKE-615] - create list of undocumented api classes
+    [DELTASPIKE-616] - update build config for v1
+    [DELTASPIKE-619] - update version numbers of dependencies
+    [DELTASPIKE-622] - improve profile "wildfly-build-managed"
+    [DELTASPIKE-644] - release notes for v1.0.0
+
