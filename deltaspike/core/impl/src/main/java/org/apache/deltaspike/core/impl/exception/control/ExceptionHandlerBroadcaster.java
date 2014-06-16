@@ -50,14 +50,14 @@ public class ExceptionHandlerBroadcaster
      * Observes the event, finds the correct exception handler(s) and invokes them.
      *
      * @param exceptionEventEvent exception to be invoked
-     * @param beanManager    active bean manager
+     * @param beanManager         active bean manager
      * @throws Throwable If a handler requests the exception to be re-thrown.
      */
     public void executeHandlers(@Observes @Any ExceptionToCatchEvent exceptionEventEvent,
                                 final BeanManager beanManager) throws Throwable
     {
         LOG.entering(
-            ExceptionHandlerBroadcaster.class.getName(), "executeHandlers", exceptionEventEvent.getException());
+                ExceptionHandlerBroadcaster.class.getName(), "executeHandlers", exceptionEventEvent.getException());
 
         CreationalContext<Object> creationalContext = null;
 
@@ -76,7 +76,7 @@ public class ExceptionHandlerBroadcaster
 
             beanManager.fireEvent(stack); // Allow for modifying the exception stack
 
-        inbound_cause:
+            inbound_cause:
             //indentation needed by the current checkstyle rules
             while (stack.getCurrent() != null)
             {
@@ -119,11 +119,9 @@ public class ExceptionHandlerBroadcaster
                                 stack.skipCause();
                                 continue inbound_cause;
                             case THROW_ORIGINAL:
-                                throwException = exceptionEventEvent.getException();
-                                break;
+                                throw exceptionEventEvent.getException();
                             case THROW:
-                                throwException = callbackEvent.getThrowNewException();
-                                break;
+                                throw callbackEvent.getThrowNewException();
                             default:
                                 throw new IllegalStateException(
                                         "Unexpected enum type " + callbackEvent.getCurrentExceptionHandlingFlow());
