@@ -27,6 +27,9 @@ import org.apache.deltaspike.core.api.exception.control.event.ExceptionEvent;
 @ExceptionHandler
 public class RethrowHandler
 {
+
+    static boolean iaeHandlerCalled = false;
+
     public void rethrow(@Handles ExceptionEvent<NullPointerException> event)
     {
         event.throwOriginal();
@@ -36,5 +39,15 @@ public class RethrowHandler
             @BeforeHandles ExceptionEvent<IllegalArgumentException> event)
     {
         event.throwOriginal();
+    }
+
+    public void handleInbound(@Handles ExceptionEvent<IllegalArgumentException> event)
+    {
+        iaeHandlerCalled = true;
+    }
+
+    public static boolean isIaeHandlerCalled()
+    {
+        return iaeHandlerCalled;
     }
 }

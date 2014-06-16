@@ -33,6 +33,8 @@ import org.junit.runner.RunWith;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 
+import static org.junit.Assert.assertFalse;
+
 @RunWith(Arquillian.class)
 public class RethrowTest
 {
@@ -52,12 +54,31 @@ public class RethrowTest
     @Test(expected = NullPointerException.class)
     public void assertOutboundRethrow()
     {
-        bm.fireEvent(new ExceptionToCatchEvent(new NullPointerException()));
+        final ExceptionToCatchEvent event = new ExceptionToCatchEvent(new NullPointerException());
+        try
+        {
+            bm.fireEvent(event);
+        }
+        catch (NullPointerException e)
+        {
+            assertFalse(event.isHandled());
+            throw e;
+        }
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void assertInboundRethrow()
     {
-        bm.fireEvent(new ExceptionToCatchEvent(new IllegalArgumentException()));
+        final ExceptionToCatchEvent event = new ExceptionToCatchEvent(new IllegalArgumentException());
+        try
+        {
+            bm.fireEvent(event);
+        }
+        catch (IllegalArgumentException e)
+        {
+            assertFalse(event.isHandled());
+            assertFalse(RethrowHandler.isIaeHandlerCalled());
+            throw e;
+        }
     }
 }
