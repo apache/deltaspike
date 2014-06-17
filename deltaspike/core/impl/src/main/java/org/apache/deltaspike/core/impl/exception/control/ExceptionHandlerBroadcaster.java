@@ -19,16 +19,6 @@
 
 package org.apache.deltaspike.core.impl.exception.control;
 
-import org.apache.deltaspike.core.api.exception.control.HandlerMethod;
-import org.apache.deltaspike.core.api.exception.control.event.ExceptionStackEvent;
-import org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent;
-import org.apache.deltaspike.core.api.provider.BeanProvider;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.event.Observes;
-import javax.enterprise.inject.Any;
-import javax.enterprise.inject.spi.BeanManager;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -37,9 +27,20 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.spi.CreationalContext;
+import javax.enterprise.event.Observes;
+import javax.enterprise.inject.Any;
+import javax.enterprise.inject.spi.BeanManager;
+
+import org.apache.deltaspike.core.api.exception.control.HandlerMethod;
+import org.apache.deltaspike.core.api.exception.control.event.ExceptionStackEvent;
+import org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent;
+import org.apache.deltaspike.core.api.provider.BeanProvider;
+
 /**
- * Observer of {@link org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent} events and
- * handler dispatcher. All handlers are invoked from this class.  This class is immutable.
+ * Observer of {@link org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent} events and handler
+ * dispatcher. All handlers are invoked from this class. This class is immutable.
  */
 @ApplicationScoped
 public class ExceptionHandlerBroadcaster
@@ -48,13 +49,16 @@ public class ExceptionHandlerBroadcaster
 
     /**
      * Observes the event, finds the correct exception handler(s) and invokes them.
-     *
-     * @param exceptionEventEvent exception to be invoked
-     * @param beanManager         active bean manager
-     * @throws Throwable If a handler requests the exception to be re-thrown.
+     * 
+     * @param exceptionEventEvent
+     *            exception to be invoked
+     * @param beanManager
+     *            active bean manager
+     * @throws Throwable
+     *             If a handler requests the exception to be re-thrown.
      */
     public void executeHandlers(@Observes @Any ExceptionToCatchEvent exceptionEventEvent,
-                                final BeanManager beanManager) throws Throwable
+            final BeanManager beanManager) throws Throwable
     {
         LOG.entering(
                 ExceptionHandlerBroadcaster.class.getName(), "executeHandlers", exceptionEventEvent.getException());
@@ -76,8 +80,8 @@ public class ExceptionHandlerBroadcaster
 
             beanManager.fireEvent(stack); // Allow for modifying the exception stack
 
-            inbound_cause:
-            //indentation needed by the current checkstyle rules
+        // indentation with 8 for label needed by the current checkstyle rules
+        inbound_cause:
             while (stack.getCurrent() != null)
             {
                 final List<HandlerMethod<?>> callbackExceptionEvent = new ArrayList<HandlerMethod<?>>(
