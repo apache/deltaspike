@@ -56,6 +56,8 @@ import java.util.logging.Logger;
 //vetoed class (see SchedulerExtension)
 public class QuartzScheduler implements Scheduler<Job>
 {
+    public static final String START_SCOPES_KEY = "deltaspike.scheduler.start_scopes_for_jobs";
+
     private static final Logger LOG = Logger.getLogger(QuartzScheduler.class.getName());
     private static final Scheduled DEFAULT_SCHEDULED_LITERAL = AnnotationInstanceProvider.of(Scheduled.class);
 
@@ -124,8 +126,12 @@ public class QuartzScheduler implements Scheduler<Job>
         try
         {
             this.scheduler = schedulerFactory.getScheduler();
-            this.scheduler.getListenerManager().addJobListener(new InjectionAwareJobListener());
-
+            final String startScopes = ConfigResolver
+                    .getPropertyValue(START_SCOPES_KEY, "true");
+            if ("true".equalsIgnoreCase(startScopes))
+            {
+                this.scheduler.getListenerManager().addJobListener(new InjectionAwareJobListener());
+            }
             if (!this.scheduler.isStarted())
             {
                 String delayedStart =
