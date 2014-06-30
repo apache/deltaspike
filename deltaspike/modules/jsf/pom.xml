@@ -37,6 +37,7 @@
     <modules>
         <module>api</module>
         <module>impl</module>
+        <module>impl-ee6</module>
     </modules>
 
     <dependencies>

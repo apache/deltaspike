@@ -28,6 +28,7 @@
         <resource-root path="deltaspike-jpa-module-impl-${project.version}.jar"/>
         <resource-root path="deltaspike-jsf-module-api-${project.version}.jar"/>
         <resource-root path="deltaspike-jsf-module-impl-${project.version}.jar"/>
+        <resource-root path="deltaspike-jsf-module-impl-ee6-${project.version}.jar"/>
         <resource-root path="deltaspike-partial-bean-module-api-${project.version}.jar"/>
         <resource-root path="deltaspike-partial-bean-module-impl-${project.version}.jar"/>
         <resource-root path="deltaspike-security-module-api-${project.version}.jar"/>
