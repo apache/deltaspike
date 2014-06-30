@@ -34,6 +34,7 @@ import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import javax.faces.convert.Converter;
 import javax.faces.validator.Validator;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -55,7 +56,7 @@ public class ConverterAndValidatorProxyExtension implements Extension, Deactivat
 
     @SuppressWarnings("UnusedDeclaration")
     public <X> void findConverterAndValidatorsWhichNeedProxiesForDependencyInjectionSupport(
-        @Observes ProcessAnnotatedType<X> pat)
+        @Observes ProcessAnnotatedType<X> pat, BeanManager beanManager)
     {
         if (!this.isActivated)
         {
@@ -66,6 +67,14 @@ public class ConverterAndValidatorProxyExtension implements Extension, Deactivat
 
         if (!(Converter.class.isAssignableFrom(beanClass) || (Validator.class.isAssignableFrom(beanClass))))
         {
+            return;
+        }
+
+        Bean<X> bean = new BeanBuilder<X>(beanManager).readFromType(pat.getAnnotatedType()).create();
+        //veto normal converters/validators -> they will get excluded from the special handling later on
+        if (!hasInjectionPoints(bean) && !hasNormalScopeAnnotation(bean, beanManager))
+        {
+            pat.veto();
             return;
         }
 
@@ -94,6 +103,17 @@ public class ConverterAndValidatorProxyExtension implements Extension, Deactivat
             LOG.warning("To use dependency-injection in converters/validators with properties, " +
                 "you they aren't allowed to be 'final'.");
         }
+    }
+
+    protected <X> boolean hasInjectionPoints(Bean<X> bean)
+    {
+        return !bean.getInjectionPoints().isEmpty();
+    }
+
+    protected <X> boolean hasNormalScopeAnnotation(Bean<X> bean, BeanManager beanManager)
+    {
+        Class<? extends Annotation> scopeAnnotationClass = bean.getScope();
+        return  scopeAnnotationClass != null && beanManager.isNormalScope(scopeAnnotationClass);
     }
 
     protected <X> boolean hasPublicProperty(Class<X> beanClass)
