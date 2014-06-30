@@ -18,7 +18,9 @@
  */
 package org.apache.deltaspike.jsf.impl.injection;
 
+import org.apache.deltaspike.core.util.ProxyUtils;
 import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;
+import org.apache.deltaspike.jsf.impl.injection.proxy.ProxyMarker;
 import org.apache.deltaspike.jsf.impl.security.SecurityAwareViewHandler;
 
 import javax.faces.FacesException;
@@ -77,6 +79,11 @@ public class InjectionAwareApplicationWrapper extends ApplicationWrapper
         {
             return defaultResult;
         }
+
+        if (result instanceof ProxyMarker || ProxyUtils.isProxiedClass(result.getClass()))
+        {
+            return result;
+        }
         else
         {
             return new ConverterWrapper(result, this.fullStateSavingFallbackEnabled);
@@ -105,6 +112,11 @@ public class InjectionAwareApplicationWrapper extends ApplicationWrapper
         if (result == null)
         {
             return defaultResult;
+        }
+
+        if (result instanceof ProxyMarker || ProxyUtils.isProxiedClass(result.getClass()))
+        {
+            return result;
         }
         else
         {
