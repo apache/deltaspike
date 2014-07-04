@@ -61,6 +61,8 @@ public class QuartzScheduler implements Scheduler<Job>
     private static final Logger LOG = Logger.getLogger(QuartzScheduler.class.getName());
     private static final Scheduled DEFAULT_SCHEDULED_LITERAL = AnnotationInstanceProvider.of(Scheduled.class);
 
+    private static ThreadLocal<JobListenerContext> currentJobListenerContext = new ThreadLocal<JobListenerContext>();
+
     protected org.quartz.Scheduler scheduler;
 
     @Override
@@ -346,9 +348,6 @@ public class QuartzScheduler implements Scheduler<Job>
 
     private class InjectionAwareJobListener implements JobListener
     {
-        private Stack<Class<? extends Annotation>> scopes = new Stack<Class<? extends Annotation>>();
-        private ContextControl contextControl;
-
         @Override
         public String getName()
         {
@@ -367,17 +366,9 @@ public class QuartzScheduler implements Scheduler<Job>
                 scheduled = DEFAULT_SCHEDULED_LITERAL;
             }
 
-            Collections.addAll(this.scopes, scheduled.startScopes());
-
-            if (!this.scopes.isEmpty())
-            {
-                this.contextControl = BeanProvider.getContextualReference(ContextControl.class);
-
-                for (Class<? extends Annotation> scopeAnnotation : this.scopes)
-                {
-                    contextControl.startContext(scopeAnnotation);
-                }
-            }
+            JobListenerContext jobListenerContext = new JobListenerContext();
+            currentJobListenerContext.set(jobListenerContext);
+            jobListenerContext.startContexts(scheduled);
 
             boolean jobInstanceIsBean;
 
@@ -407,6 +398,38 @@ public class QuartzScheduler implements Scheduler<Job>
         public void jobWasExecuted(JobExecutionContext context, JobExecutionException jobException)
         {
             stopStartedScopes();
+        }
+
+        private void stopStartedScopes()
+        {
+            JobListenerContext jobListenerContext = currentJobListenerContext.get();
+            if (jobListenerContext != null)
+            {
+                jobListenerContext.stopStartedScopes();
+                currentJobListenerContext.set(null);
+                currentJobListenerContext.remove();
+            }
+        }
+    }
+
+    private class JobListenerContext
+    {
+        private Stack<Class<? extends Annotation>> scopes = new Stack<Class<? extends Annotation>>();
+        private ContextControl contextControl;
+
+        public void startContexts(Scheduled scheduled)
+        {
+            Collections.addAll(this.scopes, scheduled.startScopes());
+
+            if (!this.scopes.isEmpty())
+            {
+                this.contextControl = BeanProvider.getContextualReference(ContextControl.class);
+
+                for (Class<? extends Annotation> scopeAnnotation : this.scopes)
+                {
+                    contextControl.startContext(scopeAnnotation);
+                }
+            }
         }
 
         private void stopStartedScopes()
