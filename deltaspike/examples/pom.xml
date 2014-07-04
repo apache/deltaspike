@@ -35,9 +35,10 @@
 
     <modules>
         <module>jse-examples</module>
-	<module>jsf-examples</module>
-    <module>jsf-playground</module>
-  </modules>
+        <module>jsf-examples</module>
+        <module>jsf-playground</module>
+        <module>scheduler-playground</module>
+    </modules>
 
     <properties>
         <deploy.skip>false</deploy.skip>
