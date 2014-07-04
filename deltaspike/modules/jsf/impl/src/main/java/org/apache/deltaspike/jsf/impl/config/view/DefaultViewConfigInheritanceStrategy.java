@@ -106,7 +106,8 @@ public class DefaultViewConfigInheritanceStrategy implements ViewConfigInheritan
         {
             metaDataList.add(currentAnnotation);
         }
-        else if (annotationClass.isAnnotationPresent(Stereotype.class))
+
+        if (annotationClass.isAnnotationPresent(Stereotype.class))
         {
             for (Annotation inheritedViaStereotype : annotationClass.getAnnotations())
             {
