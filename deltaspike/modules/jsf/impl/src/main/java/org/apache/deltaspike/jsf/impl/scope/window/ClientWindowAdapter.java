@@ -23,6 +23,9 @@ import javax.faces.lifecycle.ClientWindow;
 import java.util.Collections;
 import java.util.Map;
 
+//ATTENTION: don't rename/move this class as long as we need the workaround in impl-ee6
+//(further details are available at: DELTASPIKE-655 and DELTASPIKE-659)
+
 /**
  * This adapter supports two use-cases:
  * #1: Using the window-handling of DeltaSpike also for JSF internals like state-handling

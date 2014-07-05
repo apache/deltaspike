@@ -30,6 +30,9 @@ import javax.faces.lifecycle.Lifecycle;
 import javax.faces.lifecycle.LifecycleWrapper;
 import java.lang.reflect.Field;
 
+//ATTENTION: don't rename/move this class as long as we need the workaround in impl-ee6
+//(further details are available at: DELTASPIKE-655 and DELTASPIKE-659)
+
 @SuppressWarnings("UnusedDeclaration")
 public class JsfClientWindowAwareLifecycleWrapper extends LifecycleWrapper
 {

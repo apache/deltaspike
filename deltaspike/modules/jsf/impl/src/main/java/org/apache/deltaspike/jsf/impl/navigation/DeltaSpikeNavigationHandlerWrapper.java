@@ -25,6 +25,9 @@ import javax.faces.context.FacesContext;
 import java.util.Map;
 import java.util.Set;
 
+//ATTENTION: don't rename/move this class as long as we need the workaround in impl-ee6
+//(further details are available at: DELTASPIKE-655 and DELTASPIKE-659)
+
 @SuppressWarnings("UnusedDeclaration")
 public class DeltaSpikeNavigationHandlerWrapper extends ConfigurableNavigationHandlerWrapper
 {
