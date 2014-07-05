@@ -20,8 +20,11 @@ package org.apache.deltaspike.test.core.api.partialbean.uc004;
 
 import org.apache.deltaspike.test.core.api.partialbean.shared.TestPartialBeanBinding;
 
+import javax.enterprise.context.ApplicationScoped;
+
 @TestPartialBeanBinding
-public abstract class PartialBeanWithoutScope
+@ApplicationScoped
+public abstract class ApplicationScopedPartialBean
 {
     private int count;
 

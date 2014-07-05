@@ -67,28 +67,28 @@ public class ScopedPartialBeanTest
     @Test
     public void testPartialBeanWithApplicationScope() throws Exception
     {
-        String result = BeanProvider.getContextualReference(PartialBeanWithScope.class).getResult();
+        String result = BeanProvider.getContextualReference(ApplicationScopedPartialBean.class).getResult();
 
         Assert.assertEquals("partial-test-false", result);
 
-        int count = BeanProvider.getContextualReference(PartialBeanWithScope.class).getManualResult();
+        int count = BeanProvider.getContextualReference(ApplicationScopedPartialBean.class).getManualResult();
         Assert.assertEquals(0, count);
 
-        count = BeanProvider.getContextualReference(PartialBeanWithScope.class).getManualResult();
+        count = BeanProvider.getContextualReference(ApplicationScopedPartialBean.class).getManualResult();
         Assert.assertEquals(1, count);
     }
 
     @Test
     public void testPartialBeanWithDependentScope() throws Exception
     {
-        String result = BeanProvider.getContextualReference(PartialBeanWithoutScope.class).getResult();
+        String result = BeanProvider.getContextualReference(DependentScopedPartialBean.class).getResult();
 
         Assert.assertEquals("partial-test-false", result);
 
-        int count = BeanProvider.getContextualReference(PartialBeanWithoutScope.class).getManualResult();
+        int count = BeanProvider.getContextualReference(DependentScopedPartialBean.class).getManualResult();
         Assert.assertEquals(0, count);
 
-        count = BeanProvider.getContextualReference(PartialBeanWithoutScope.class).getManualResult();
+        count = BeanProvider.getContextualReference(DependentScopedPartialBean.class).getManualResult();
         Assert.assertEquals(0, count);
     }
 }
