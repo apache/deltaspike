@@ -37,6 +37,7 @@ import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.jsf.api.config.view.Folder;
 import org.apache.deltaspike.jsf.impl.util.ViewConfigUtils;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AfterDeploymentValidation;
 import javax.enterprise.inject.spi.BeforeBeanDiscovery;
@@ -71,30 +72,42 @@ public class ViewConfigExtension implements Extension, Deactivatable
     }
 
     @SuppressWarnings("UnusedDeclaration")
-    protected void buildViewConfigMetaDataTree(@Observes ProcessAnnotatedType pat)
+    protected void buildViewConfigMetaDataTree(@Observes final ProcessAnnotatedType pat)
     {
         if (!isActivated)
         {
             return;
         }
 
-        Class beanClass = pat.getAnnotatedType().getJavaClass();
+        buildViewConfigMetaDataTreeFor(
+            pat.getAnnotatedType().getJavaClass(), pat.getAnnotatedType().getAnnotations(), new VetoCallback() {
+                    @Override
+                    public void veto()
+                    {
+                        pat.veto();
+                    }
+                });
+    }
+
+    protected void buildViewConfigMetaDataTreeFor(Class beanClass,
+                                                  Set<Annotation> annotations,
+                                                  VetoCallback vetoCallback)
+    {
         if (ViewConfig.class.isAssignableFrom(beanClass))
         {
-            addConfigClass(pat.getAnnotatedType().getJavaClass(), pat.getAnnotatedType().getAnnotations());
-            pat.veto();
+            addConfigClass(beanClass, annotations);
+            vetoCallback.veto();
         }
         else
         {
             if (ViewConfigUtils.isFolderConfig(beanClass) && beanClass.isAnnotationPresent(Folder.class))
             {
-                addConfigClass(pat.getAnnotatedType().getJavaClass(), pat.getAnnotatedType().getAnnotations());
-                pat.veto();
+                addConfigClass(beanClass, annotations);
+                vetoCallback.veto();
             }
             else
             {
-                addIndirectlyInheritedMetaData(
-                        pat.getAnnotatedType().getJavaClass(), pat.getAnnotatedType().getAnnotations());
+                addIndirectlyInheritedMetaData(beanClass, annotations);
             }
         }
     }
@@ -200,6 +213,27 @@ public class ViewConfigExtension implements Extension, Deactivatable
                 }
                 this.rootViewConfigNode.getMetaData().add(annotation);
                 this.rootViewConfigNode = new FolderConfigNode(this.rootViewConfigNode, viewConfigClass);
+
+                //needed for cdi 1.1+ with bean-discovery-mode 'annotated'
+                if (viewConfigClass.getAnnotation(ApplicationScoped.class) != null)
+                {
+                    Set<Class> manuallyDiscoveredViewConfigs = new HashSet<Class>();
+                    findNestedClasses(viewConfigClass, manuallyDiscoveredViewConfigs);
+
+                    for (Class foundClass : manuallyDiscoveredViewConfigs)
+                    {
+                        buildViewConfigMetaDataTreeFor(
+                            foundClass,
+                            new HashSet<Annotation>(Arrays.asList(foundClass.getAnnotations())),
+                            new VetoCallback() {
+                                @Override
+                                public void veto()
+                                {
+
+                                }
+                            });
+                    }
+                }
                 break;
             }
         }
@@ -226,6 +260,15 @@ public class ViewConfigExtension implements Extension, Deactivatable
             {
                 previousRootNode = baseNode;
             }
+        }
+    }
+
+    private void findNestedClasses(Class viewConfigClass, Set<Class> nestedClasses)
+    {
+        for (Class nestedClass : viewConfigClass.getDeclaredClasses())
+        {
+            nestedClasses.add(nestedClass);
+            findNestedClasses(nestedClass, nestedClasses);
         }
     }
 
@@ -453,5 +496,10 @@ public class ViewConfigExtension implements Extension, Deactivatable
     ViewConfigResolver getViewConfigResolver()
     {
         return viewConfigResolver;
+    }
+
+    interface VetoCallback
+    {
+        void veto();
     }
 }
