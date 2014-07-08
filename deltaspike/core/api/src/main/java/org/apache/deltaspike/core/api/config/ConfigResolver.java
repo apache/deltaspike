@@ -35,7 +35,6 @@ import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.spi.config.ConfigFilter;
 import org.apache.deltaspike.core.spi.config.ConfigSource;
 import org.apache.deltaspike.core.spi.config.ConfigSourceProvider;
-import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
 import org.apache.deltaspike.core.util.ServiceUtils;
 
@@ -85,7 +84,7 @@ public final class ConfigResolver
         getConfigSources();
 
         // and now we can easily add our own
-        ClassLoader currentClassLoader = ClassUtils.getClassLoader(null);
+        ClassLoader currentClassLoader = ConfigResolver.class.getClassLoader();
         ConfigSource[] configuredConfigSources = configSources.get(currentClassLoader);
 
         List<ConfigSource> allConfigSources = new ArrayList<ConfigSource>();
@@ -101,7 +100,7 @@ public final class ConfigResolver
      */
     public static synchronized void freeConfigSources()
     {
-        configSources.remove(ClassUtils.getClassLoader(null));
+        configSources.remove(ConfigResolver.class.getClassLoader());
     }
 
     /**
@@ -122,7 +121,7 @@ public final class ConfigResolver
      */
     public static List<ConfigFilter> getConfigFilters()
     {
-        ClassLoader cl = ClassUtils.getClassLoader(null);
+        ClassLoader cl = ConfigResolver.class.getClassLoader();
         List<ConfigFilter> currentConfigFilters = configFilters.get(cl);
         if (currentConfigFilters == null)
         {
@@ -344,7 +343,7 @@ public final class ConfigResolver
 
     private static synchronized ConfigSource[] getConfigSources()
     {
-        ClassLoader currentClassLoader = ClassUtils.getClassLoader(null);
+        ClassLoader currentClassLoader = ConfigResolver.class.getClassLoader();
 
         ConfigSource[] appConfigSources = configSources.get(currentClassLoader);
 
