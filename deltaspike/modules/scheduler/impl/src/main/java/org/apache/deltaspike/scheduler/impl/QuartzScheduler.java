@@ -149,8 +149,9 @@ public class QuartzScheduler implements Scheduler<Job>
 
     protected ResourceBundle loadCustomQuartzConfig()
     {
+        //don't use quartz.properties as default-value
         String configFile =
-            ConfigResolver.getPropertyValue("deltaspike.scheduler.quartz_config-file", "quartz.properties");
+            ConfigResolver.getPropertyValue("deltaspike.scheduler.quartz_config-file", "quartz");
         return PropertyFileUtils.getResourceBundle(configFile);
     }
 
