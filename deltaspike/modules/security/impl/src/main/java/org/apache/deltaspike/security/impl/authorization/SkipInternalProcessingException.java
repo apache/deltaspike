@@ -24,6 +24,8 @@ import org.apache.deltaspike.security.api.authorization.AccessDeniedException;
 //the first one can't be removed, because we need an active AccessDecisionVoterContext
 public class SkipInternalProcessingException extends RuntimeException
 {
+    private static final long serialVersionUID = 3585306529694592791L;
+
     private final AccessDeniedException  accessDeniedException;
 
     public SkipInternalProcessingException(AccessDeniedException accessDeniedException)
