@@ -3,6 +3,7 @@ Release Notes - Apache DeltaSpike - Version 1.0.1
 Bug
 
     [DELTASPIKE-470] - Releases must be distributed via the ASF mirror system
+    [DELTASPIKE-648] - @ConfigProperty in Wildfly 8.1 not working correctly
     [DELTASPIKE-650] - Custom JSF Converters/Validators error
     [DELTASPIKE-656] - Concurrency Problem when using QuartzScheduler
     [DELTASPIKE-661] - No custom quartz-config file found after upgrade to 1.0.0
