@@ -1,0 +1,26 @@
+Release Notes - Apache DeltaSpike - Version 1.0.1
+
+Bug
+
+    [DELTASPIKE-470] - Releases must be distributed via the ASF mirror system
+    [DELTASPIKE-650] - Custom JSF Converters/Validators error
+    [DELTASPIKE-656] - Concurrency Problem when using QuartzScheduler
+    [DELTASPIKE-661] - No custom quartz-config file found after upgrade to 1.0.0
+
+Improvement
+
+    [DELTASPIKE-599] - CDI 1.1 friendly ViewConfig discovery
+    [DELTASPIKE-651] - Support for disabling scope activation globally
+    [DELTASPIKE-654] - veto converters and validators without injection-points or scope
+    [DELTASPIKE-658] - improved @Stereotype support for @ViewMetaData
+
+Task
+
+    [DELTASPIKE-520] - test proxy handling
+    [DELTASPIKE-638] - re-visit inconsistent handling of @BeforeHandles
+    [DELTASPIKE-646] - Please delete old releases from mirroring system
+    [DELTASPIKE-655] - create ee6 only version of the jsf module
+    [DELTASPIKE-657] - create simple scheduler example
+    [DELTASPIKE-663] - force AccessDeniedException per default
+    [DELTASPIKE-667] - update jsf demo
+    [DELTASPIKE-668] - release notes for v1.0.1
