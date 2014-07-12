@@ -19,17 +19,15 @@
 package org.apache.deltaspike.example.message;
 
 import org.apache.deltaspike.core.api.message.MessageContext;
-import org.apache.deltaspike.core.impl.message.DefaultMessageResolver;
+import org.apache.deltaspike.jsf.impl.message.JsfMessageResolver;
 
 import javax.enterprise.inject.Specializes;
 import javax.faces.context.FacesContext;
 
-/**
- *
- */
 @Specializes
-public class CustomMessageResolver extends DefaultMessageResolver
+public class CustomMessageResolver extends JsfMessageResolver
 {
+    private static final long serialVersionUID = -7566133260553818285L;
 
     @Override
     public String getMessage(MessageContext messageContext, String messageTemplate, String category)
