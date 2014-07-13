@@ -7,6 +7,7 @@ Bug
     [DELTASPIKE-650] - Custom JSF Converters/Validators error
     [DELTASPIKE-656] - Concurrency Problem when using QuartzScheduler
     [DELTASPIKE-661] - No custom quartz-config file found after upgrade to 1.0.0
+    [DELTASPIKE-664] - SecurityViolation are evaluated twice for redirect pages with configured errorView
 
 Improvement
 
