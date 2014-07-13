@@ -26,10 +26,12 @@ import org.apache.deltaspike.jsf.impl.listener.phase.WindowMetaData;
 import org.apache.deltaspike.jsf.impl.message.FacesMessageEntry;
 
 import javax.enterprise.context.ContextNotActiveException;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -298,12 +300,16 @@ public abstract class JsfUtils
 
             @SuppressWarnings({ "unchecked" })
             List<FacesMessageEntry> facesMessageEntryList = windowMetaData.getFacesMessageEntryList();
+            List<FacesMessage> originalMessageList = new ArrayList<FacesMessage>(facesContext.getMessageList());
 
             if (facesMessageEntryList != null)
             {
-                for (FacesMessageEntry facesMessageEntry : facesMessageEntryList)
+                for (FacesMessageEntry messageEntry : facesMessageEntryList)
                 {
-                    facesContext.addMessage(facesMessageEntry.getComponentId(), facesMessageEntry.getFacesMessage());
+                    if (isNewMessage(originalMessageList, messageEntry.getFacesMessage()))
+                    {
+                        facesContext.addMessage(messageEntry.getComponentId(), messageEntry.getFacesMessage());
+                    }
                 }
                 facesMessageEntryList.clear();
             }
@@ -312,5 +318,20 @@ public abstract class JsfUtils
         {
             //TODO discuss how we handle it
         }
+    }
+
+    public static boolean isNewMessage(List<FacesMessage> facesMessages, FacesMessage messageToCheck)
+    {
+        for (FacesMessage facesMessage : facesMessages)
+        {
+            if ((facesMessage.getSummary() != null && facesMessage.getSummary().equals(messageToCheck.getSummary()) ||
+                    facesMessage.getSummary() == null && messageToCheck.getSummary() == null) &&
+                    (facesMessage.getDetail() != null && facesMessage.getDetail().equals(messageToCheck.getDetail()) ||
+                        facesMessage.getDetail() == null && messageToCheck.getDetail() == null))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 }
