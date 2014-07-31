@@ -24,8 +24,10 @@ import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
+import javax.inject.Inject;
 import javax.servlet.ServletContext;
 
+import org.apache.deltaspike.core.api.common.DeltaSpike;
 import org.apache.deltaspike.core.api.lifecycle.Destroyed;
 import org.apache.deltaspike.core.api.lifecycle.Initialized;
 
@@ -38,9 +40,17 @@ public class ServletContextEventsObserver
 
     private final List<String> eventLog = new ArrayList<String>();
 
+    @Inject
+    @DeltaSpike
+    private ServletContext servletContext;
+
     public void contextInitialized(@Observes @Initialized ServletContext context)
     {
         eventLog.add("Initialized ServletContext: " + context.getServletContextName());
+        if (servletContext != null)
+        {
+            eventLog.add("ServletContext was injected");
+        }
     }
 
     public void contextDestroyed(@Observes @Destroyed ServletContext context)

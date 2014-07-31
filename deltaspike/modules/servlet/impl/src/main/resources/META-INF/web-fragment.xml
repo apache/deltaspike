@@ -31,16 +31,6 @@
     </ordering>
 
     <listener>
-        <display-name>EventBridgeContextListener</display-name>
-        <listener-class>org.apache.deltaspike.servlet.impl.event.EventBridgeContextListener</listener-class>
-    </listener>
-
-    <listener>
-        <display-name>EventBridgeSessionListener</display-name>
-        <listener-class>org.apache.deltaspike.servlet.impl.event.EventBridgeSessionListener</listener-class>
-    </listener>
-
-    <listener>
         <display-name>ServletContextHolderListener</display-name>
         <listener-class>org.apache.deltaspike.servlet.impl.produce.ServletContextHolderListener</listener-class>
     </listener>
@@ -48,6 +38,16 @@
     <listener>
         <display-name>RequestResponseHolderListener</display-name>
         <listener-class>org.apache.deltaspike.servlet.impl.produce.RequestResponseHolderListener</listener-class>
+    </listener>
+
+    <listener>
+        <display-name>EventBridgeContextListener</display-name>
+        <listener-class>org.apache.deltaspike.servlet.impl.event.EventBridgeContextListener</listener-class>
+    </listener>
+
+    <listener>
+        <display-name>EventBridgeSessionListener</display-name>
+        <listener-class>org.apache.deltaspike.servlet.impl.event.EventBridgeSessionListener</listener-class>
     </listener>
 
     <filter>

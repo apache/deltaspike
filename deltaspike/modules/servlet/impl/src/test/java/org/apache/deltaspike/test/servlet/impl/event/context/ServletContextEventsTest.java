@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.test.servlet.impl.event.context;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import javax.inject.Inject;
@@ -67,9 +66,18 @@ public class ServletContextEventsTest
     @Test
     public void shouldReceiveServletContextInitializedEvent()
     {
-        assertEquals(1, observer.getEventCount());
         assertTrue("Didn't receive expected event",
                 observer.getEventLog().contains("Initialized ServletContext: " + MODULE));
+    }
+
+    /**
+     * @see https://issues.apache.org/jira/browse/DELTASPIKE-676
+     */
+    @Test
+    public void testDeltaSpike676()
+    {
+        assertTrue("ServletContext wasn't injected",
+                observer.getEventLog().contains("ServletContext was injected"));
     }
 
 }
