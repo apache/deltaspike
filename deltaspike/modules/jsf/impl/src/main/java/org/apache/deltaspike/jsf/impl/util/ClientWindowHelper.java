@@ -98,8 +98,6 @@ public abstract class ClientWindowHelper
 
                 for (Entry<String, String> entry : parameters.entrySet())
                 {
-                    // NOTE: each call will instantiate a new StringBuilder
-                    // i didn't optimized this call because it's unlikely that there will be multiple parameters
                     targetUrl = JsfUtils.addParameter(facesContext.getExternalContext(),
                             targetUrl,
                             true,

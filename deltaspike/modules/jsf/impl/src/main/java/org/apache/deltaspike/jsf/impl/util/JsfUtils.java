@@ -40,6 +40,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class JsfUtils
 {
+    private static final String SB_ADD_PARAMETER = "SB:" + JsfUtils.class + "#addParameter";
+    
     public static <T> T getValueOfExpression(String expression, Class<T> targetType)
     {
         FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -145,7 +147,8 @@ public abstract class JsfUtils
             return url;
         }
 
-        StringBuilder finalUrl = new StringBuilder(url);
+        StringBuilder finalUrl = SharedStringBuilder.get(SB_ADD_PARAMETER);
+        finalUrl.append(url);
 
         if (url.contains("?"))
         {
