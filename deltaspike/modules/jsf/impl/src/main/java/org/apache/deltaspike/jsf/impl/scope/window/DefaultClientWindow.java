@@ -93,6 +93,9 @@ public class DefaultClientWindow implements ClientWindow
     private static final String WINDOW_ID_REQUEST_MAP_KEY =
             ClientWindow.class.getName() + ".WindowId";
 
+    private static final String CACHE_QUERY_URL_PARAMETERS =
+            "CACHE:" + DefaultClientWindow.class + "#getQueryURLParameters";
+    
     @Inject
     private ClientWindowConfig clientWindowConfig;
 
@@ -373,13 +376,22 @@ public class DefaultClientWindow implements ClientWindow
 
         if (ClientWindowRenderMode.LAZY.equals(clientWindowRenderMode))
         {
-            String windowId = getWindowId(facesContext);
-            if (windowId != null)
+            if (!facesContext.getAttributes().containsKey(CACHE_QUERY_URL_PARAMETERS))
             {
+                String windowId = getWindowId(facesContext);
+                
+                if (windowId == null)
+                {
+                    return null;
+                }
+                
                 Map<String, String> params = new HashMap<String, String>();
-                params.put(DELTASPIKE_WINDOW_ID_URL_PARAM, getWindowId(facesContext));
-                return params;
+                params.put(DELTASPIKE_WINDOW_ID_URL_PARAM, windowId);
+
+                facesContext.getAttributes().put(CACHE_QUERY_URL_PARAMETERS, params);
             }
+
+            return (Map<String, String>) facesContext.getAttributes().get(CACHE_QUERY_URL_PARAMETERS);
         }
 
         return null;
