@@ -337,7 +337,7 @@ public class BeanManagerProvider implements Extension
     private BeanManagerInfo getParentBeanManagerInfo(ClassLoader classLoader)
     {
         ClassLoader parentClassLoader = classLoader.getParent();
-        if (parentClassLoader.equals(ClassLoader.getSystemClassLoader()))
+        if (parentClassLoader == null || parentClassLoader.equals(ClassLoader.getSystemClassLoader()))
         {
             return null;
         }
