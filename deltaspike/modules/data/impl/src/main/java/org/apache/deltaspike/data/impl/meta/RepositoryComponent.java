@@ -34,7 +34,6 @@ import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.persistence.FlushModeType;
 
-import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.data.api.EntityManagerConfig;
 import org.apache.deltaspike.data.api.EntityManagerResolver;
 import org.apache.deltaspike.data.api.Repository;
@@ -58,12 +57,13 @@ public class RepositoryComponent
 
     private final Class<?> repoClass;
     private final RepositoryEntity entityClass;
+    private final BeanManager beanManager;
     private final Class<? extends EntityManagerResolver> entityManagerResolver;
     private final FlushModeType entityManagerFlushMode;
 
     private final Map<Method, RepositoryMethod> methods = new HashMap<Method, RepositoryMethod>();
 
-    public RepositoryComponent(Class<?> repoClass, RepositoryEntity entityClass)
+    public RepositoryComponent(Class<?> repoClass, RepositoryEntity entityClass, BeanManager beanManager)
     {
         if (entityClass == null)
         {
@@ -71,6 +71,7 @@ public class RepositoryComponent
         }
         this.repoClass = repoClass;
         this.entityClass = entityClass;
+        this.beanManager = beanManager;
         this.entityManagerResolver = extractEntityManagerResolver(repoClass);
         this.entityManagerFlushMode = extractEntityManagerFlushMode(repoClass);
     }
@@ -80,7 +81,7 @@ public class RepositoryComponent
     {
         if (entityManagerResolverIsNormalScope == null)
         {
-            init(BeanManagerProvider.getInstance().getBeanManager());
+            init(beanManager);
         }
     }
 
@@ -251,6 +252,11 @@ public class RepositoryComponent
     public String getCustomMethodPrefix()
     {
         return repoClass.getAnnotation(Repository.class).methodPrefix();
+    }
+    
+    public BeanManager getBeanManager()
+    {
+        return beanManager;
     }
 
 }

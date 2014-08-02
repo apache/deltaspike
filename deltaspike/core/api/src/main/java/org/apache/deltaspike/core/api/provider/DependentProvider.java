@@ -18,15 +18,17 @@
  */
 package org.apache.deltaspike.core.api.provider;
 
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.PassivationCapable;
-import javax.inject.Provider;
 import java.io.IOException;
 import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+
+import javax.enterprise.context.spi.CreationalContext;
+import javax.enterprise.inject.spi.Bean;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.PassivationCapable;
+import javax.inject.Provider;
 
 /**
  * A {@link Provider} for &#064;Dependent scoped contextual instances.
@@ -45,9 +47,12 @@ public class DependentProvider<T> implements Provider<T>, Serializable
     private T instance;
     private CreationalContext<T> creationalContext;
     private transient Bean<T> bean;
+    private transient BeanManager beanManager;
 
-    DependentProvider(Bean<T> bean, CreationalContext<T> creationalContext, T instance)
+    DependentProvider(BeanManager beanManager, Bean<T> bean, 
+        CreationalContext<T> creationalContext, T instance)
     {
+        this.beanManager = beanManager;
         this.bean = bean;
         this.creationalContext = creationalContext;
         this.instance = instance;
@@ -66,7 +71,11 @@ public class DependentProvider<T> implements Provider<T>, Serializable
      */
     public void destroy()
     {
-        if (!BeanManagerProvider.getInstance().getBeanManager().isNormalScope(bean.getScope()))
+        if (beanManager == null)
+        {
+            beanManager = BeanManagerProvider.getInstance().getBeanManager();
+        }
+        if (!beanManager.isNormalScope(bean.getScope()))
         {
             bean.destroy(instance, creationalContext);
         }

@@ -31,8 +31,8 @@ import org.junit.Test;
 
 public class QueryRootTest
 {
-    private final RepositoryComponent repo = new RepositoryComponent(SimpleRepository.class, new RepositoryEntity(Simple.class, Long.class));
-    private final RepositoryComponent repoFetchBy = new RepositoryComponent(SimpleFetchRepository.class, new RepositoryEntity(Simple.class, Long.class));
+    private final RepositoryComponent repo = new RepositoryComponent(SimpleRepository.class, new RepositoryEntity(Simple.class, Long.class), null);
+    private final RepositoryComponent repoFetchBy = new RepositoryComponent(SimpleFetchRepository.class, new RepositoryEntity(Simple.class, Long.class), null);
 
     @Test
     public void should_create_simple_query()
