@@ -28,8 +28,26 @@
 
     <groupId>org.apache.deltaspike.modules</groupId>
     <artifactId>deltaspike-partial-bean-module-api</artifactId>
+    <packaging>bundle</packaging>
 
     <name>Apache DeltaSpike Partial-Bean-Module API</name>
+
+    <properties>
+        <deltaspike.osgi.export.pkg>
+            org.apache.deltaspike.partialbean.*
+        </deltaspike.osgi.export.pkg>
+        <deltaspike.osgi.import>
+            !org.apache.deltaspike.partialbean.*,
+            *
+        </deltaspike.osgi.import>
+        <deltaspike.osgi.provide.capability>
+            org.ops4j.pax.cdi.extension;extension="deltaspike-partial-bean-api"
+        </deltaspike.osgi.provide.capability>
+        <deltaspike.osgi.require.capability>
+            org.ops4j.pax.cdi.extension; filter:="(extension=pax-cdi-extension)",
+            osgi.extender; filter:="(osgi.extender=pax.cdi)"
+        </deltaspike.osgi.require.capability>
+    </properties>
 
     <dependencies>
         <dependency>

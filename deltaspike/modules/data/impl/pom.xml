@@ -39,6 +39,14 @@
             !org.apache.deltaspike.data.impl.*,
             *
         </deltaspike.osgi.import>
+        <deltaspike.osgi.provide.capability>
+            org.ops4j.pax.cdi.extension;extension="deltaspike-data-impl"
+        </deltaspike.osgi.provide.capability>
+        <deltaspike.osgi.require.capability>
+            org.ops4j.pax.cdi.extension; filter:="(extension=pax-cdi-extension)",
+            org.ops4j.pax.cdi.extension; filter:="(extension=deltaspike-jpa-impl)",
+            osgi.extender; filter:="(osgi.extender=pax.cdi)"
+        </deltaspike.osgi.require.capability>
         <cdi.osgi.beans-managed>META-INF/beans.xml</cdi.osgi.beans-managed>
     </properties>
 
