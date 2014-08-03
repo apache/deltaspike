@@ -37,9 +37,13 @@
             org.apache.deltaspike.jpa.impl.*
         </deltaspike.osgi.export.pkg>
         <deltaspike.osgi.import>
+            javax.persistence*;version="[1.1,3.0)",
             !org.apache.deltaspike.jpa.impl.*,
             *
         </deltaspike.osgi.import>
+        <deltaspike.osgi.provide.capability>
+            org.ops4j.pax.cdi.extension;extension="deltaspike-jpa-impl"
+        </deltaspike.osgi.provide.capability>
         <cdi.osgi.beans-managed>META-INF/beans.xml</cdi.osgi.beans-managed>
     </properties>
 
