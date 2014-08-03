@@ -38,6 +38,7 @@
         </deltaspike.osgi.export.pkg>
         <deltaspike.osgi.import>
             !org.apache.deltaspike.partialbean.impl*,
+            javassist.util.proxy;resolution:=optional,
             *
         </deltaspike.osgi.import>
         <deltaspike.osgi.provide.capability>
