@@ -121,6 +121,7 @@ public class DefaultSecurityStrategy implements SecurityStrategy
     /**
      * <p>Fires a {@link org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent} for the given
      * {@link org.apache.deltaspike.security.api.authorization.AccessDeniedException}.</p>
+     * It also allows to change the default handling.
      *
      * @param originalException exception thrown by an authorizer
      * @return the original exception if the default behavior was changed and the exception is unhandled
@@ -129,16 +130,6 @@ public class DefaultSecurityStrategy implements SecurityStrategy
     {
         ExceptionToCatchEvent exceptionToCatchEvent = new ExceptionToCatchEvent(originalException);
         this.beanManager.fireEvent(exceptionToCatchEvent);
-        //the next step won't happen per default since ExceptionHandlerBroadcaster will throw the exception,
-        //because BeforeAccessDeniedExceptionHandler calls #throwOriginal
-        //but allows to suppress it via deactivating BeforeAccessDeniedExceptionHandler
-        //(or a 2nd @BeforeHandles method which overrules the default behavior
-        //(if needed)
-        if (!exceptionToCatchEvent.isHandled())
-        {
-            throw originalException;
-        }
-
-        return null;
+        return originalException;
     }
 }
