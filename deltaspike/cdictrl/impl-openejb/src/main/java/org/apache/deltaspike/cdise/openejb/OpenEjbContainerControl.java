@@ -115,7 +115,14 @@ public class OpenEjbContainerControl implements CdiContainer
     {
         if (ctxCtrl != null)
         {
-            ctxCtrl.stopContexts();
+            try
+            {
+                ctxCtrl.stopContexts();
+            }
+            catch (Exception e)
+            {
+                // contexts likely already stopped
+            }
             ctxCtrlBean.destroy(ctxCtrl, ctxCtrlCreationalContext);
         }
 

@@ -78,11 +78,24 @@ public class WeldContainerControl implements CdiContainer
     {
         if (ctxCtrl != null)
         {
-            ctxCtrl.stopContexts();
-            ctxCtrlBean.destroy(ctxCtrl, ctxCtrlCreationalContext);
+            try
+            {
+                ctxCtrl.stopContexts();
+                ctxCtrlBean.destroy(ctxCtrl, ctxCtrlCreationalContext);
+            }
+            catch (Exception e)
+            {
+                // contexts likely already stopped
+            }
         }
-
-        weld.shutdown();
+        try
+        {
+            weld.shutdown();
+        }
+        catch (Exception e)
+        {
+            // something caused weld to shutdown already.
+        }
         weld = null;
         ctxCtrl = null;
         ctxCtrlBean = null;
