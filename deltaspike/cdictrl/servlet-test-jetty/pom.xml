@@ -16,6 +16,9 @@
     <packaging>jar</packaging>
 
     <name>Apache DeltaSpike CDI Servlet-ContainerControl-Jetty-Tests</name>
+    <properties>
+        <jetty.version>9.2.2.v20140723</jetty.version>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -49,13 +52,13 @@
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
-            <version>9.2.2.v20140723</version>
+            <version>${jetty.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-servlet</artifactId>
-            <version>9.2.2.v20140723</version>
+            <version>${jetty.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

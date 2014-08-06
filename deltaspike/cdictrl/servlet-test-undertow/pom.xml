@@ -17,6 +17,10 @@
 
     <name>Apache DeltaSpike CDI Servlet-ContainerControl-Undertow-Tests</name>
 
+    <properties>
+        <undertow.version>1.1.0.Beta6</undertow.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
@@ -49,13 +53,13 @@
         <dependency>
             <groupId>io.undertow</groupId>
             <artifactId>undertow-servlet</artifactId>
-            <version>1.1.0.Beta6</version>
+            <version>${undertow.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.undertow</groupId>
             <artifactId>undertow-core</artifactId>
-            <version>1.1.0.Beta6</version>
+            <version>${undertow.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
