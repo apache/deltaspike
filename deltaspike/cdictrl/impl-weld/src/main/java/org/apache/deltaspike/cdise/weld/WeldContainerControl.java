@@ -78,6 +78,7 @@ public class WeldContainerControl implements CdiContainer
     {
         if (ctxCtrl != null)
         {
+            ctxCtrl.stopContexts();
             ctxCtrlBean.destroy(ctxCtrl, ctxCtrlCreationalContext);
         }
 
