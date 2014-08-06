@@ -72,4 +72,9 @@ public interface CdiContainer
      * @return ContextControl for the started Container. <code>null</code> if the container is not yet started
      */
     ContextControl getContextControl();
+
+    /**
+     * @return a new - dependent context control object.
+     */
+    ContextControl createContextControl();
 }
