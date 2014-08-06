@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.cdise.servlet.test.jetty;
+package org.apache.deltaspike.cdise.servlet.test;
 
 import org.apache.deltaspike.cdise.servlet.CdiServletRequestListener;
 import org.apache.deltaspike.cdise.servlet.test.EmbeddedServletContainer;

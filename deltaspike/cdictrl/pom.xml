@@ -40,7 +40,5 @@
         <module>impl-weld</module>
         <module>impl-openejb</module>
         <module>servlet</module>
-        <module>servlet-test-undertow</module>
-        <module>servlet-test-jetty</module>
     </modules>
 </project>
