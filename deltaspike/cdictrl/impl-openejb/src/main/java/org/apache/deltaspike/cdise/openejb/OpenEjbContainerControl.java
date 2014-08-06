@@ -143,9 +143,23 @@ public class OpenEjbContainerControl implements CdiContainer
     {
         if (ctxCtrl == null)
         {
-            Set<Bean<?>> beans = getBeanManager().getBeans(ContextControl.class);
-            ctxCtrlBean = (Bean<ContextControl>) getBeanManager().resolve(beans);
-            ctxCtrlCreationalContext = getBeanManager().createCreationalContext(ctxCtrlBean);
+            BeanManager beanManager = getBeanManager();
+
+            if (beanManager == null)
+            {
+                LOG.warning("If the CDI-container was started by the environment, you can't use this helper." +
+                        "Instead you can resolve ContextControl manually " +
+                        "(e.g. via BeanProvider.getContextualReference(ContextControl.class) ). " +
+                        "If the container wasn't started already, you have to use CdiContainer#boot before.");
+
+                return null;
+            }
+            Set<Bean<?>> beans = beanManager.getBeans(ContextControl.class);
+            ctxCtrlBean = (Bean<ContextControl>) beanManager.resolve(beans);
+
+            ctxCtrlCreationalContext = getBeanManager()
+                    .createCreationalContext(ctxCtrlBean);
+
             ctxCtrl = (ContextControl)
                     getBeanManager().getReference(ctxCtrlBean, ContextControl.class, ctxCtrlCreationalContext);
         }
