@@ -34,7 +34,7 @@ import java.util.Random;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Created by johnament on 8/5/14.
+ * Base test for testing embedded servlet runtimes.
  */
 public abstract class EmbeddedServletContainer
 {
