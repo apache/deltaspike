@@ -61,7 +61,7 @@ public class BridgeExceptionHandlerWrapper extends ExceptionHandlerWrapper imple
     {
         FacesContext context = FacesContext.getCurrentInstance();
 
-        if (context.getResponseComplete())
+        if (context == null || context.getResponseComplete())
         {
             return;
         }
