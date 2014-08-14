@@ -28,8 +28,20 @@
 
     <groupId>org.apache.deltaspike.modules</groupId>
     <artifactId>deltaspike-partial-bean-module-api</artifactId>
+    <packaging>bundle</packaging>
 
     <name>Apache DeltaSpike Partial-Bean-Module API</name>
+
+    <properties>
+        <deltaspike.osgi.export.pkg>
+            org.apache.deltaspike.partialbean.*
+        </deltaspike.osgi.export.pkg>
+        <deltaspike.osgi.import>
+            !org.apache.deltaspike.partialbean.*,
+            *
+        </deltaspike.osgi.import>
+        <cdi.osgi.beans-managed>META-INF/beans.xml</cdi.osgi.beans-managed>
+    </properties>
 
     <dependencies>
         <dependency>
