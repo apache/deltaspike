@@ -24,6 +24,7 @@ import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
+import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;
 import org.apache.deltaspike.jsf.api.config.view.View;
 import org.apache.deltaspike.jsf.impl.util.SecurityUtils;
@@ -134,6 +135,8 @@ public class SecurityAwareViewHandler extends ViewHandlerWrapper implements Deac
                 errorView = SecurityUtils.handleSecurityViolationWithoutNavigation(accessDeniedException);
             }
 
+            broadcastAccessDeniedException(accessDeniedException);
+
             return this.wrapped.createView(context, viewConfigResolver.getViewConfigDescriptor(errorView).getViewId());
         }
         finally
@@ -150,6 +153,19 @@ public class SecurityAwareViewHandler extends ViewHandlerWrapper implements Deac
         }
 
         return result;
+    }
+
+    protected void broadcastAccessDeniedException(ErrorViewAwareAccessDeniedException accessDeniedException)
+    {
+        AccessDeniedExceptionBroadcaster exceptionBroadcaster =
+            BeanProvider.getContextualReference(AccessDeniedExceptionBroadcaster.class);
+
+        Throwable broadcastResult = exceptionBroadcaster.broadcastAccessDeniedException(accessDeniedException);
+
+        if (broadcastResult != null)
+        {
+            throw ExceptionUtils.throwAsRuntimeException(broadcastResult);
+        }
     }
 
     private synchronized void lazyInit()

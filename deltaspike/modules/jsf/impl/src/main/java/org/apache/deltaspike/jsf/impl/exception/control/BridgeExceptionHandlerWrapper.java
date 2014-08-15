@@ -19,9 +19,7 @@
 package org.apache.deltaspike.jsf.impl.exception.control;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
-import javax.el.ELException;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.faces.FacesException;
 import javax.faces.context.ExceptionHandler;
@@ -32,8 +30,13 @@ import javax.faces.event.ExceptionQueuedEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.SystemEvent;
 
+import org.apache.deltaspike.core.api.config.view.DefaultErrorView;
 import org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
+import org.apache.deltaspike.jsf.impl.util.JsfUtils;
+import org.apache.deltaspike.jsf.impl.util.SecurityUtils;
+import org.apache.deltaspike.security.api.authorization.AccessDeniedException;
+import org.apache.deltaspike.security.api.authorization.ErrorViewAwareAccessDeniedException;
 
 public class BridgeExceptionHandlerWrapper extends ExceptionHandlerWrapper implements Deactivatable
 {
@@ -76,14 +79,23 @@ public class BridgeExceptionHandlerWrapper extends ExceptionHandlerWrapper imple
                 Throwable throwable = iterator.next().getContext().getException();
                 Throwable rootCause = getRootCause(throwable);
 
-                ExceptionToCatchEvent event = new ExceptionToCatchEvent(rootCause, exceptionQualifier);
-                event.setOptional(true);
-
-                beanManager.fireEvent(event);
-
-                if (event.isHandled())
+                if (rootCause instanceof AccessDeniedException)
                 {
+                    processAccessDeniedException(rootCause);
                     iterator.remove();
+                    continue;
+                }
+                else
+                {
+                    ExceptionToCatchEvent event = new ExceptionToCatchEvent(rootCause, exceptionQualifier);
+                    event.setOptional(true);
+
+                    beanManager.fireEvent(event);
+
+                    if (event.isHandled())
+                    {
+                        iterator.remove();
+                    }
                 }
 
                 // a handle method might redirect and set responseComplete
@@ -100,13 +112,7 @@ public class BridgeExceptionHandlerWrapper extends ExceptionHandlerWrapper imple
     @Override
     public Throwable getRootCause(Throwable throwable)
     {
-        while ((ELException.class.isInstance(throwable) || FacesException.class.isInstance(throwable) ||
-            InvocationTargetException.class.isInstance(throwable)) && throwable.getCause() != null)
-        {
-            throwable = throwable.getCause();
-        }
-
-        return throwable;
+        return JsfUtils.getRootCause(throwable);
     }
 
     @Override
@@ -124,17 +130,39 @@ public class BridgeExceptionHandlerWrapper extends ExceptionHandlerWrapper imple
             {
                 Throwable exception = getRootCause(exceptionQueuedEvent.getContext().getException());
 
-                ExceptionToCatchEvent exceptionToCatchEvent = new ExceptionToCatchEvent(exception);
-                exceptionToCatchEvent.setOptional(true);
-
-                this.beanManager.fireEvent(exceptionToCatchEvent);
-
-                if (exceptionToCatchEvent.isHandled())
+                if (exception instanceof AccessDeniedException)
                 {
-                    return;
+                    processAccessDeniedException(exception);
+                }
+                else
+                {
+                    ExceptionToCatchEvent exceptionToCatchEvent = new ExceptionToCatchEvent(exception);
+                    exceptionToCatchEvent.setOptional(true);
+
+                    this.beanManager.fireEvent(exceptionToCatchEvent);
+
+                    if (exceptionToCatchEvent.isHandled())
+                    {
+                        return;
+                    }
                 }
             }
         }
         super.processEvent(event);
+    }
+
+    private void processAccessDeniedException(Throwable throwable)
+    {
+        if (throwable instanceof ErrorViewAwareAccessDeniedException)
+        {
+            SecurityUtils.handleSecurityViolationWithoutNavigation((AccessDeniedException) throwable);
+        }
+        else
+        {
+            ErrorViewAwareAccessDeniedException securityException =
+                new ErrorViewAwareAccessDeniedException(
+                    ((AccessDeniedException)throwable).getViolations(), DefaultErrorView.class);
+            SecurityUtils.handleSecurityViolationWithoutNavigation(securityException);
+        }
     }
 }

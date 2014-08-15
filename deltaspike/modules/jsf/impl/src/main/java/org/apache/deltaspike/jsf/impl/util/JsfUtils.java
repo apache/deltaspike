@@ -25,11 +25,14 @@ import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;
 import org.apache.deltaspike.jsf.impl.listener.phase.WindowMetaData;
 import org.apache.deltaspike.jsf.impl.message.FacesMessageEntry;
 
+import javax.el.ELException;
 import javax.enterprise.context.ContextNotActiveException;
+import javax.faces.FacesException;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -41,7 +44,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public abstract class JsfUtils
 {
     private static final String SB_ADD_PARAMETER = "SB:" + JsfUtils.class + "#addParameter";
-    
+
     public static <T> T getValueOfExpression(String expression, Class<T> targetType)
     {
         FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -321,6 +324,17 @@ public abstract class JsfUtils
         {
             //TODO discuss how we handle it
         }
+    }
+
+    public static Throwable getRootCause(Throwable throwable)
+    {
+        while ((ELException.class.isInstance(throwable) || FacesException.class.isInstance(throwable) ||
+                InvocationTargetException.class.isInstance(throwable)) && throwable.getCause() != null)
+        {
+            throwable = throwable.getCause();
+        }
+
+        return throwable;
     }
 
     public static boolean isNewMessage(List<FacesMessage> facesMessages, FacesMessage messageToCheck)
