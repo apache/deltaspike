@@ -1,0 +1,25 @@
+Release Notes - Apache DeltaSpike - Version 1.0.2
+
+Bug
+
+    [DELTASPIKE-637] - duplicated handling of AccessDeniedException
+    [DELTASPIKE-672] - Wrong Bean Validation artifactId on documentation
+    [DELTASPIKE-679] - NPE in BeanManagerProvider if parentClassLoader is null
+    [DELTASPIKE-681] - Handling AccessDeniedException will run the secured method
+    [DELTASPIKE-684] - No OSGi headers in deltaspike-partial-bean-module-api
+    [DELTASPIKE-685] - Guard against null FacesContext in Exception Handler Bridge
+
+Improvement
+
+    [DELTASPIKE-506] - [perf] use a shared StringBuilder
+    [DELTASPIKE-509] - [perf] cache map in DefaultClientWindow#getQueryURLParameters
+    [DELTASPIKE-653] - Provide a platform inspecific servlet listener
+    [DELTASPIKE-665] - Add utility method to always get new context control.
+    [DELTASPIKE-666] - Improve BeanManager consistency
+    [DELTASPIKE-669] - Try to shutdown contexts when shutting down container
+    [DELTASPIKE-676] - ServletContext is available for injection before EventBridgeContextListener
+
+Task
+
+    [DELTASPIKE-641] - Document prevent double submit feature
+    [DELTASPIKE-689] - release notes for v1.0.1
