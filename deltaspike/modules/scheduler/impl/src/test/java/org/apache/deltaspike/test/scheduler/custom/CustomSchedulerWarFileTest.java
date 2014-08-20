@@ -29,6 +29,7 @@ import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.runner.RunWith;
+import org.quartz.Job;
 
 @RunWith(Arquillian.class)
 public class CustomSchedulerWarFileTest extends CustomSchedulerTest
@@ -41,6 +42,7 @@ public class CustomSchedulerWarFileTest extends CustomSchedulerTest
 
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "customSchedulerTest.jar")
                 .addPackage(CustomSchedulerWarFileTest.class.getPackage().getName())
+                .addPackage(Job.class.getPackage().getName())
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsResource(new StringAsset(MockedScheduler.class.getName()),
                         "META-INF/services/" + Scheduler.class.getName())
