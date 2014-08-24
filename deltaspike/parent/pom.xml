@@ -69,7 +69,9 @@
         <!-- Geronimo specs -->
         <geronimo-atinject-1.0-spec.version>1.0</geronimo-atinject-1.0-spec.version>
         <geronimo-jcdi-1.0-spec.version>1.0</geronimo-jcdi-1.0-spec.version>
+        <geronimo-jcdi-1.1-spec.version>1.0-SNAPSHOT</geronimo-jcdi-1.1-spec.version>
         <geronimo-interceptor-1.1-spec.version>1.0</geronimo-interceptor-1.1-spec.version>
+        <geronimo-interceptor-1.2-spec.version>1.0-SNAPSHOT</geronimo-interceptor-1.2-spec.version>
         <geronimo-servlet-2.5-spec.version>1.2</geronimo-servlet-2.5-spec.version>
         <geronimo-servlet-3.0-spec.version>1.0</geronimo-servlet-3.0-spec.version>
         <geronimo-el-2.2-spec.version>1.0.3</geronimo-el-2.2-spec.version>
@@ -134,10 +136,12 @@
         <repository>
             <id>Apache Repository</id>
             <url>https://repository.apache.org/content/repositories/releases</url>
+            <releases><enabled>true</enabled></releases>
         </repository>
         <repository>
             <id>Apache Snapshot Repository</id>
             <url>https://repository.apache.org/content/repositories/snapshots</url>
+            <snapshots><enabled>true</enabled></snapshots>
         </repository>
     </repositories>
 
@@ -659,6 +663,12 @@
                 <artifactId>myfaces-api</artifactId>
                 <version>${myfaces22.version}</version>
                 <scope>provided</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.geronimo.specs</groupId>
+                        <artifactId>geronimo-jcdi_1.0_spec</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <dependency>
