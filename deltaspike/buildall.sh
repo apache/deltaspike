@@ -31,6 +31,7 @@ mvn clean install -POWB2 -Dowb.version=2.0.0-SNAPSHOT -Dopenejb.owb.version=1.1.
 mvn clean install -PWeld -Dweld.version=1.1.10.Final | tee mvn-weld1_1_10.log
 mvn clean install  -Ptomee-build-managed -Dtomee.version=1.6.0 -Dopenejb.version=4.6.0 -Dopenejb.owb.version=1.2.1 | tee mvn-tomee_1_6_0.log
 mvn clean install  -Ptomee-build-managed -Dtomee.version=1.5.2 -Dopenejb.version=4.5.2 -Dopenejb.owb.version=1.1.8 | tee mvn-tomee_1_5_2.log
+mvn clean install  -Ptomee-build-managed -Dtomee.version=1.7.0 -Dopenejb.version=4.7.0 -Dopenejb.owb.version=1.2.6 | tee mvn-tomee_1_7_0.log
 mvn clean install -Pjbossas-build-managed-7 | tee mvn-jbossas_7.log
 
 
