@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<!-- Licensed to the Apache Software Foundation (ASF) under one or more 
+		contributor license agreements. See the NOTICE file distributed with this 
+		work for additional information regarding copyright ownership. The ASF licenses 
+		this file to you under the Apache License, Version 2.0 (the "License"); you 
+		may not use this file except in compliance with the License. You may obtain 
+		a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless 
+		required by applicable law or agreed to in writing, software distributed 
+		under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES 
+		OR CONDITIONS OF ANY KIND, either express or implied. See the License for 
+		the specific language governing permissions and limitations under the License. -->
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.apache</groupId>
+		<artifactId>apache</artifactId>
+		<version>11</version>
+	</parent>
+
+	<!-- * Please do not use this pom for other deltaspike modules. * Instead 
+		use the one from parent/pom.xml! * * This very pom.xml contains only the 
+		basic build layout * and no build-rules at all. See parent/pom.xml for all 
+		* the dependencyManagement and plugin configuration stuff. -->
+	<groupId>org.apache.deltaspike</groupId>
+	<artifactId>deltaspike-documentation</artifactId>
+	<version>1.0.3-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<name>Apache DeltaSpike - Documentation</name>
+	<description>
+      Documentation of DeltaSpike project.
+    </description>
+	<url>http://deltaspike.apache.org</url>
+
+	<properties>
+		<asciidoctor.version>0.1.4</asciidoctor.version>
+		<svn.scmPubUrl>https://svn.apache.org/repos/asf/deltaspike/site/trunk/content/documentation/</svn.scmPubUrl>
+		<svn.scmPubCheckoutDirectory>${project.build.directory}/co-site</svn.scmPubCheckoutDirectory>
+	</properties>
+
+	<distributionManagement>
+		<site>
+			<id>apache.website</id>
+			<url>${svn.scmPubUrl}</url>
+		</site>
+	</distributionManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.asciidoctor</groupId>
+				<artifactId>asciidoctor-maven-plugin</artifactId>
+				<version>${asciidoctor.version}</version>
+				<executions>
+					<execution>
+						<id>output-html</id>
+						<phase>site</phase>
+						<goals>
+							<goal>process-asciidoc</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<sourceDirectory>content</sourceDirectory>
+					<outputDirectory>${project.build.directory}/site</outputDirectory>
+					<sourceHighlighter>coderay</sourceHighlighter>
+					<backend>html</backend>
+					<templateDir>template</templateDir>
+					<eruby>erb</eruby>
+					<attributes>
+						<toc>true</toc>
+					</attributes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-scm-publish-plugin</artifactId>
+				<version>1.1</version>
+				<executions>
+					<execution>
+						<id>scm-publish</id>
+						<phase>site-deploy</phase>
+						<!-- deploy site with maven-scm-publish-plugin -->
+						<goals>
+							<goal>publish-scm</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<content>${project.reporting.outputDirectory}</content>
+					<pubScmUrl>scm:svn:${svn.scmPubUrl}</pubScmUrl>
+					<tryUpdate>true</tryUpdate>
+					<checkoutDirectory>${svn.scmPubCheckoutDirectory}</checkoutDirectory>
+					<serverId>deltaspike-site</serverId>
+				</configuration>
+			</plugin>
+			<!-- this is a hack, to make site not really run. -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+					<skipDeploy>true</skipDeploy>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
