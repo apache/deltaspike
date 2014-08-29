@@ -232,7 +232,7 @@ public interface Criteria<C, R>
      * @param value         The comparison value.
      * @return              Fluent API: Criteria instance.
      */
-    <P extends Number> Criteria<C, R> lt(SingularAttribute<? super C, P> att, P value);
+    <P extends Comparable<? super P>> Criteria<C, R> lt(SingularAttribute<? super C, P> att, P value);
 
     /**
      * Less than or equals predicate.
@@ -248,7 +248,7 @@ public interface Criteria<C, R>
      * @param value         The comparison value.
      * @return              Fluent API: Criteria instance.
      */
-    <P extends Number> Criteria<C, R> gt(SingularAttribute<? super C, P> att, P value);
+    <P extends Comparable<? super P>> Criteria<C, R> gt(SingularAttribute<? super C, P> att, P value);
 
     /**
      * Greater than or equals predicate.

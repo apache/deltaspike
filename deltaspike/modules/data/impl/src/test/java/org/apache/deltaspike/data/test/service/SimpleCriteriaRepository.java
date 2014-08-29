@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.data.test.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.deltaspike.data.api.AbstractEntityRepository;
@@ -52,6 +53,13 @@ public abstract class SimpleCriteriaRepository extends AbstractEntityRepository<
         return criteria()
                 .eq(Simple_.name, name)
                 .getAnyResult();
+    }
+
+    public List<Simple> findByTimeBetween(Date from, Date to) {
+        return criteria()
+                 .gt(Simple_.temporal, from)
+                 .lt(Simple_.temporal, to)
+                 .getResultList();
     }
 
     public Long criteriaCount(String name)

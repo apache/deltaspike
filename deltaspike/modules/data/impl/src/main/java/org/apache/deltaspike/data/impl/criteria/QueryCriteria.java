@@ -388,7 +388,7 @@ public class QueryCriteria<C, R> implements Criteria<C, R>
     }
 
     @Override
-    public <P extends Number> Criteria<C, R> lt(SingularAttribute<? super C, P> att, P value)
+    public <P extends Comparable<? super P>> Criteria<C, R> lt(SingularAttribute<? super C, P> att, P value)
     {
         add(new LessThan<C, P>(att, value), value);
         return this;
@@ -402,7 +402,7 @@ public class QueryCriteria<C, R> implements Criteria<C, R>
     }
 
     @Override
-    public <P extends Number> Criteria<C, R> gt(SingularAttribute<? super C, P> att, P value)
+    public <P extends Comparable<? super P>> Criteria<C, R> gt(SingularAttribute<? super C, P> att, P value)
     {
         add(new GreaterThan<C, P>(att, value), value);
         return this;

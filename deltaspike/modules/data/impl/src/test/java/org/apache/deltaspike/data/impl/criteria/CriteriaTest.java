@@ -26,6 +26,8 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.enterprise.inject.Produces;
@@ -355,6 +357,31 @@ public class CriteriaTest extends TransactionalTestCase
         // then
         assertNotNull(result);
         assertEquals(1l, result.longValue());
+    }
+
+    @Test
+    public void should_create_date_criteria()
+    {
+        // given
+        final String name = "should_create_date_criteria";
+        final Simple simple = new Simple(name);
+        simple.setTemporal(new Date());
+        entityManager.persist(simple);
+        entityManager.flush();
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(simple.getTemporal());
+        cal.add(Calendar.MINUTE, -1);
+        Date from = cal.getTime();
+        cal.add(Calendar.MINUTE, 2);
+        Date to = cal.getTime();
+
+        // when
+        final List<Simple> result = repo.findByTimeBetween(from, to);
+
+        // then
+        assertNotNull(result);
+        assertEquals(1, result.size());
     }
 
     @Override

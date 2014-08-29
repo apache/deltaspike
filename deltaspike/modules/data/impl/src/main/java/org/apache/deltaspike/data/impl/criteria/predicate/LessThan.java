@@ -26,7 +26,7 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.metamodel.SingularAttribute;
 
-public class LessThan<E, V extends Number> extends SingleValueBuilder<E, V>
+public class LessThan<E, V extends Comparable<? super V>> extends SingleValueBuilder<E, V>
 {
 
     public LessThan(SingularAttribute<? super E, V> att, V value)
@@ -37,7 +37,7 @@ public class LessThan<E, V extends Number> extends SingleValueBuilder<E, V>
     @Override
     public List<Predicate> build(CriteriaBuilder builder, Path<E> path)
     {
-        return Arrays.asList(builder.lt(path.get(getAtt()), getValue()));
+        return Arrays.asList(builder.lessThan(path.get(getAtt()), getValue()));
     }
 
 }
