@@ -29,7 +29,7 @@ import org.apache.deltaspike.data.impl.criteria.selection.SingularAttributeSelec
 public class Sum<P, X extends Number> extends SingularAttributeSelection<P, X>
 {
 
-    public Sum(SingularAttribute<P, X> attribute)
+    public Sum(SingularAttribute<? super P, X> attribute)
     {
         super(attribute);
     }

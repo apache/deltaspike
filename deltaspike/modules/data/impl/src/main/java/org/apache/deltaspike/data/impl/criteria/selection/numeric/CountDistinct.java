@@ -29,9 +29,9 @@ import org.apache.deltaspike.data.api.criteria.QuerySelection;
 public class CountDistinct<P> implements QuerySelection<P, Long>
 {
 
-    private final SingularAttribute<P, ?> attribute;
+    private final SingularAttribute<? super P, ?> attribute;
 
-    public CountDistinct(SingularAttribute<P, ?> attribute)
+    public CountDistinct(SingularAttribute<? super P, ?> attribute)
     {
         this.attribute = attribute;
     }

@@ -29,7 +29,7 @@ public class SubstringFromTo<P> extends SubstringFrom<P>
 
     private final int length;
 
-    public SubstringFromTo(SingularAttribute<P, String> attribute, int from, int length)
+    public SubstringFromTo(SingularAttribute<? super P, String> attribute, int from, int length)
     {
         super(attribute, from);
         this.length = length;

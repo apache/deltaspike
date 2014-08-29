@@ -71,7 +71,7 @@ public class CriteriaSupportHandler<E> extends AbstractDelegateQueryHandler<E> i
     }
 
     @Override
-    public <X> QuerySelection<E, X> attribute(SingularAttribute<E, X> attribute)
+    public <X> QuerySelection<E, X> attribute(SingularAttribute<? super E, X> attribute)
     {
         return new AttributeQuerySelection<E, X>(attribute);
     }
@@ -81,55 +81,55 @@ public class CriteriaSupportHandler<E> extends AbstractDelegateQueryHandler<E> i
     // ----------------------------------------------------------------------------
 
     @Override
-    public <N extends Number> QuerySelection<E, N> abs(SingularAttribute<E, N> attribute)
+    public <N extends Number> QuerySelection<E, N> abs(SingularAttribute<? super E, N> attribute)
     {
         return new Abs<E, N>(attribute);
     }
 
     @Override
-    public <N extends Number> QuerySelection<E, N> avg(SingularAttribute<E, N> attribute)
+    public <N extends Number> QuerySelection<E, N> avg(SingularAttribute<? super E, N> attribute)
     {
         return new Avg<E, N>(attribute);
     }
 
     @Override
-    public QuerySelection<E, Long> count(SingularAttribute<E, ?> attribute)
+    public QuerySelection<E, Long> count(SingularAttribute<? super E, ?> attribute)
     {
         return new Count<E>(attribute);
     }
 
     @Override
-    public QuerySelection<E, Long> countDistinct(SingularAttribute<E, ?> attribute)
+    public QuerySelection<E, Long> countDistinct(SingularAttribute<? super E, ?> attribute)
     {
         return new CountDistinct<E>(attribute);
     }
 
     @Override
-    public <N extends Number> QuerySelection<E, N> max(SingularAttribute<E, N> attribute)
+    public <N extends Number> QuerySelection<E, N> max(SingularAttribute<? super E, N> attribute)
     {
         return new Max<E, N>(attribute);
     }
 
     @Override
-    public <N extends Number> QuerySelection<E, N> min(SingularAttribute<E, N> attribute)
+    public <N extends Number> QuerySelection<E, N> min(SingularAttribute<? super E, N> attribute)
     {
         return new Min<E, N>(attribute);
     }
 
     @Override
-    public <N extends Number> QuerySelection<E, N> neg(SingularAttribute<E, N> attribute)
+    public <N extends Number> QuerySelection<E, N> neg(SingularAttribute<? super E, N> attribute)
     {
         return new Neg<E, N>(attribute);
     }
 
     @Override
-    public <N extends Number> QuerySelection<E, N> sum(SingularAttribute<E, N> attribute)
+    public <N extends Number> QuerySelection<E, N> sum(SingularAttribute<? super E, N> attribute)
     {
         return new Sum<E, N>(attribute);
     }
 
     @Override
-    public QuerySelection<E, Integer> modulo(SingularAttribute<E, Integer> attribute, Integer modulo)
+    public QuerySelection<E, Integer> modulo(SingularAttribute<? super E, Integer> attribute, Integer modulo)
     {
         return new Modulo<E>(attribute, modulo);
     }
@@ -139,25 +139,25 @@ public class CriteriaSupportHandler<E> extends AbstractDelegateQueryHandler<E> i
     // ----------------------------------------------------------------------------
 
     @Override
-    public QuerySelection<E, String> upper(SingularAttribute<E, String> attribute)
+    public QuerySelection<E, String> upper(SingularAttribute<? super E, String> attribute)
     {
         return new Upper<E>(attribute);
     }
 
     @Override
-    public QuerySelection<E, String> lower(SingularAttribute<E, String> attribute)
+    public QuerySelection<E, String> lower(SingularAttribute<? super E, String> attribute)
     {
         return new Lower<E>(attribute);
     }
 
     @Override
-    public QuerySelection<E, String> substring(SingularAttribute<E, String> attribute, int from)
+    public QuerySelection<E, String> substring(SingularAttribute<? super E, String> attribute, int from)
     {
         return new SubstringFrom<E>(attribute, from);
     }
 
     @Override
-    public QuerySelection<E, String> substring(SingularAttribute<E, String> attribute, int from, int length)
+    public QuerySelection<E, String> substring(SingularAttribute<? super E, String> attribute, int from, int length)
     {
         return new SubstringFromTo<E>(attribute, from, length);
     }

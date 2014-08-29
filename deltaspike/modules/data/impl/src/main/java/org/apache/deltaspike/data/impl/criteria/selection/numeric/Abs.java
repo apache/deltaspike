@@ -29,7 +29,7 @@ import org.apache.deltaspike.data.impl.criteria.selection.SingularAttributeSelec
 public class Abs<P, X extends Number> extends SingularAttributeSelection<P, X>
 {
 
-    public Abs(SingularAttribute<P, X> attribute)
+    public Abs(SingularAttribute<? super P, X> attribute)
     {
         super(attribute);
     }

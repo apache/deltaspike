@@ -31,7 +31,7 @@ public class SubstringFrom<P> extends SingularAttributeSelection<P, String>
 
     private final int from;
 
-    public SubstringFrom(SingularAttribute<P, String> attribute, int from)
+    public SubstringFrom(SingularAttribute<? super P, String> attribute, int from)
     {
         super(attribute);
         this.from = from;

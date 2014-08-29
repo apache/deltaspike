@@ -29,7 +29,7 @@ import org.apache.deltaspike.data.impl.criteria.selection.SingularAttributeSelec
 public class Upper<P> extends SingularAttributeSelection<P, String>
 {
 
-    public Upper(SingularAttribute<P, String> attribute)
+    public Upper(SingularAttribute<? super P, String> attribute)
     {
         super(attribute);
     }

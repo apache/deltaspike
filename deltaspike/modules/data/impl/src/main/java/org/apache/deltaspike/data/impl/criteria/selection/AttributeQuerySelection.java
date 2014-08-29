@@ -27,7 +27,7 @@ import javax.persistence.metamodel.SingularAttribute;
 public class AttributeQuerySelection<P, X> extends SingularAttributeSelection<P, X>
 {
 
-    public AttributeQuerySelection(SingularAttribute<P, X> attribute)
+    public AttributeQuerySelection(SingularAttribute<? super P, X> attribute)
     {
         super(attribute);
     }

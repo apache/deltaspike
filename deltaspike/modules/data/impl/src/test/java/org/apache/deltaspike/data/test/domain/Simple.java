@@ -39,7 +39,7 @@ import javax.persistence.TemporalType;
                    query = "select s from Simple s where s.id = :id and s.enabled = :enabled")
 })
 @Table(name = "SIMPLE_TABLE")
-public class Simple
+public class Simple extends SuperSimple
 {
 
     public static final String BY_NAME_LIKE = "simple.byNameLike";

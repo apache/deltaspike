@@ -29,7 +29,7 @@ import org.apache.deltaspike.data.impl.criteria.selection.SingularAttributeSelec
 public class Avg<P, X extends Number> extends SingularAttributeSelection<P, X>
 {
 
-    public Avg(SingularAttribute<P, X> attribute)
+    public Avg(SingularAttribute<? super P, X> attribute)
     {
         super(attribute);
     }

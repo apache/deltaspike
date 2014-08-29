@@ -29,7 +29,7 @@ import org.apache.deltaspike.data.impl.criteria.selection.SingularAttributeSelec
 public class Min<P, X extends Number> extends SingularAttributeSelection<P, X>
 {
 
-    public Min(SingularAttribute<P, X> attribute)
+    public Min(SingularAttribute<? super P, X> attribute)
     {
         super(attribute);
     }

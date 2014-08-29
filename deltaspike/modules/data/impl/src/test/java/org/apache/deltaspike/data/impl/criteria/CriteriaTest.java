@@ -384,6 +384,24 @@ public class CriteriaTest extends TransactionalTestCase
         assertEquals(1, result.size());
     }
 
+    @Test
+    public void should_query_with_att_from_mapped_super()
+    {
+        // given
+        final String name = "should_create_date_criteria";
+        final String superName = "super_should_create_date_criteria";
+        final Simple simple = new Simple(name);
+        simple.setSuperName(superName);
+        entityManager.persist(simple);
+        entityManager.flush();
+
+        // when
+        final Simple result = repo.findBySuperName(superName);
+
+        // then
+        assertEquals(superName, result.getSuperName());
+    }
+
     @Override
     protected EntityManager getEntityManager()
     {

@@ -31,7 +31,7 @@ public class Modulo<P> extends SingularAttributeSelection<P, Integer>
 
     private final Integer modulo;
 
-    public Modulo(SingularAttribute<P, Integer> attribute, Integer modulo)
+    public Modulo(SingularAttribute<? super P, Integer> attribute, Integer modulo)
     {
         super(attribute);
         this.modulo = modulo;

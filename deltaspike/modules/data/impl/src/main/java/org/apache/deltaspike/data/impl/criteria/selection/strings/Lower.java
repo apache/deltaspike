@@ -29,7 +29,7 @@ import org.apache.deltaspike.data.impl.criteria.selection.SingularAttributeSelec
 public class Lower<P> extends SingularAttributeSelection<P, String>
 {
 
-    public Lower(SingularAttribute<P, String> attribute)
+    public Lower(SingularAttribute<? super P, String> attribute)
     {
         super(attribute);
     }

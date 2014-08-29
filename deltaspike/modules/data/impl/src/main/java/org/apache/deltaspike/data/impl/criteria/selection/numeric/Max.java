@@ -29,7 +29,7 @@ import org.apache.deltaspike.data.impl.criteria.selection.SingularAttributeSelec
 public class Max<P, X extends Number> extends SingularAttributeSelection<P, X>
 {
 
-    public Max(SingularAttribute<P, X> attribute)
+    public Max(SingularAttribute<? super P, X> attribute)
     {
         super(attribute);
     }

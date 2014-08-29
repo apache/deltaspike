@@ -26,6 +26,7 @@ import org.apache.deltaspike.data.api.Repository;
 import org.apache.deltaspike.data.api.criteria.CriteriaSupport;
 import org.apache.deltaspike.data.test.domain.Simple;
 import org.apache.deltaspike.data.test.domain.Simple_;
+import org.apache.deltaspike.data.test.domain.SuperSimple_;
 
 @Repository
 public abstract class SimpleCriteriaRepository extends AbstractEntityRepository<Simple, Long>
@@ -60,6 +61,12 @@ public abstract class SimpleCriteriaRepository extends AbstractEntityRepository<
                  .gt(Simple_.temporal, from)
                  .lt(Simple_.temporal, to)
                  .getResultList();
+    }
+
+    public Simple findBySuperName(String superName) {
+        return criteria()
+                 .eq(SuperSimple_.superName, superName)
+                 .getSingleResult();
     }
 
     public Long criteriaCount(String name)

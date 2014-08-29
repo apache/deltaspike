@@ -61,7 +61,7 @@ public interface CriteriaSupport<E>
      * @param attribute Attribute to show up in the result selection
      * @return          {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
      */
-    <X> QuerySelection<E, X> attribute(SingularAttribute<E, X> attribute);
+    <X> QuerySelection<E, X> attribute(SingularAttribute<? super E, X> attribute);
 
     /**
      * Create a query selection for the
@@ -70,7 +70,7 @@ public interface CriteriaSupport<E>
      * @param attribute Attribute to use in the aggregate.
      * @return          {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
      */
-    <N extends Number> QuerySelection<E, N> abs(SingularAttribute<E, N> attribute);
+    <N extends Number> QuerySelection<E, N> abs(SingularAttribute<? super E, N> attribute);
 
     /**
      * Create a query selection for the
@@ -79,7 +79,7 @@ public interface CriteriaSupport<E>
      * @param attribute Attribute to use in the aggregate.
      * @return          {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
      */
-    <N extends Number> QuerySelection<E, N> avg(SingularAttribute<E, N> attribute);
+    <N extends Number> QuerySelection<E, N> avg(SingularAttribute<? super E, N> attribute);
 
     /**
      * Create a query selection for the
@@ -88,7 +88,7 @@ public interface CriteriaSupport<E>
      * @param attribute Attribute to use in the aggregate.
      * @return          {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
      */
-    QuerySelection<E, Long> count(SingularAttribute<E, ?> attribute);
+    QuerySelection<E, Long> count(SingularAttribute<? super E, ?> attribute);
 
     /**
      * Create a query selection for the
@@ -97,7 +97,7 @@ public interface CriteriaSupport<E>
      * @param attribute Attribute to use in the aggregate.
      * @return          {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
      */
-    QuerySelection<E, Long> countDistinct(SingularAttribute<E, ?> attribute);
+    QuerySelection<E, Long> countDistinct(SingularAttribute<? super E, ?> attribute);
 
     /**
      * Create a query selection for the
@@ -106,7 +106,7 @@ public interface CriteriaSupport<E>
      * @param attribute Attribute to use in the aggregate.
      * @return          {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
      */
-    <N extends Number> QuerySelection<E, N> max(SingularAttribute<E, N> attribute);
+    <N extends Number> QuerySelection<E, N> max(SingularAttribute<? super E, N> attribute);
 
     /**
      * Create a query selection for the
@@ -115,7 +115,7 @@ public interface CriteriaSupport<E>
      * @param attribute Attribute to use in the aggregate.
      * @return          {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
      */
-    <N extends Number> QuerySelection<E, N> min(SingularAttribute<E, N> attribute);
+    <N extends Number> QuerySelection<E, N> min(SingularAttribute<? super E, N> attribute);
 
     /**
      * Create a query selection for the
@@ -124,7 +124,7 @@ public interface CriteriaSupport<E>
      * @param attribute Attribute to use in the aggregate.
      * @return          {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
      */
-    <N extends Number> QuerySelection<E, N> neg(SingularAttribute<E, N> attribute);
+    <N extends Number> QuerySelection<E, N> neg(SingularAttribute<? super E, N> attribute);
 
     /**
      * Create a query selection for the
@@ -133,7 +133,7 @@ public interface CriteriaSupport<E>
      * @param attribute Attribute to use in the aggregate.
      * @return          {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
      */
-    <N extends Number> QuerySelection<E, N> sum(SingularAttribute<E, N> attribute);
+    <N extends Number> QuerySelection<E, N> sum(SingularAttribute<? super E, N> attribute);
 
     /**
      * Create a query selection for the
@@ -143,7 +143,7 @@ public interface CriteriaSupport<E>
      * @param modulo    Modulo what.
      * @return          {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
      */
-    QuerySelection<E, Integer> modulo(SingularAttribute<E, Integer> attribute, Integer modulo);
+    QuerySelection<E, Integer> modulo(SingularAttribute<? super E, Integer> attribute, Integer modulo);
 
     /**
      * Create a query selection for the
@@ -152,7 +152,7 @@ public interface CriteriaSupport<E>
      * @param attribute Attribute to uppercase.
      * @return          {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
      */
-    QuerySelection<E, String> upper(SingularAttribute<E, String> attribute);
+    QuerySelection<E, String> upper(SingularAttribute<? super E, String> attribute);
 
     /**
      * Create a query selection for the
@@ -161,7 +161,7 @@ public interface CriteriaSupport<E>
      * @param attribute Attribute to lowercase.
      * @return          {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
      */
-    QuerySelection<E, String> lower(SingularAttribute<E, String> attribute);
+    QuerySelection<E, String> lower(SingularAttribute<? super E, String> attribute);
 
     /**
      * Create a query selection for the
@@ -171,7 +171,7 @@ public interface CriteriaSupport<E>
      * @param from      Substring start.
      * @return          {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
      */
-    QuerySelection<E, String> substring(SingularAttribute<E, String> attribute, int from);
+    QuerySelection<E, String> substring(SingularAttribute<? super E, String> attribute, int from);
 
     /**
      * Create a query selection for the
@@ -182,7 +182,7 @@ public interface CriteriaSupport<E>
      * @param length    Substring length.
      * @return          {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
      */
-    QuerySelection<E, String> substring(SingularAttribute<E, String> attribute, int from, int length);
+    QuerySelection<E, String> substring(SingularAttribute<? super E, String> attribute, int from, int length);
 
     /**
      * Create a query selection for the {@link javax.persistence.criteria.CriteriaBuilder#currentDate()}.

@@ -25,14 +25,14 @@ import org.apache.deltaspike.data.api.criteria.QuerySelection;
 public abstract class SingularAttributeSelection<P, X> implements QuerySelection<P, X>
 {
 
-    protected final SingularAttribute<P, X> attribute;
+    protected final SingularAttribute<? super P, X> attribute;
 
-    public SingularAttributeSelection(SingularAttribute<P, X> attribute)
+    public SingularAttributeSelection(SingularAttribute<? super P, X> attribute)
     {
         this.attribute = attribute;
     }
 
-    public SingularAttribute<P, X> getAttribute()
+    public SingularAttribute<? super P, X> getAttribute()
     {
         return attribute;
     }
