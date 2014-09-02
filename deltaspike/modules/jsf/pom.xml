@@ -48,6 +48,17 @@
             <!-- just needed for compiling >optional< classes for jsf 2.2 jsf 2.0 and 2.1 compatibility is ensured via test-cases -->
             <version>${myfaces22.version}</version>
             <scope>provided</scope>
+            <exclusions>
+                <!-- Exclude transitive CDI API dependencies -->
+                <exclusion>
+                    <groupId>org.apache.geronimo.specs</groupId>
+                    <artifactId>geronimo-jcdi_1.0_spec</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.geronimo.specs</groupId>
+                    <artifactId>geronimo-atinject_1.0_spec</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 </project>
