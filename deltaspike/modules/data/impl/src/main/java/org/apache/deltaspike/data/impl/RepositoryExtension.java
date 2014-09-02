@@ -34,6 +34,7 @@ import javax.enterprise.inject.spi.ProcessAnnotatedType;
 
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
+import org.apache.deltaspike.data.api.AbstractEntityRepository;
 import org.apache.deltaspike.data.api.Repository;
 import org.apache.deltaspike.data.impl.meta.RepositoryComponentsFactory;
 import org.apache.deltaspike.data.impl.meta.unit.PersistenceUnits;
@@ -80,7 +81,12 @@ public class RepositoryExtension implements Extension, Deactivatable
             return;
         }
 
-        if (isRepository(event.getAnnotatedType()))
+        if (isVetoed(event.getAnnotatedType()))
+        {
+            event.veto();
+        }
+
+        else if (isRepository(event.getAnnotatedType()))
         {
             Class<X> repoClass = event.getAnnotatedType().getJavaClass();
             try
@@ -118,6 +124,11 @@ public class RepositoryExtension implements Extension, Deactivatable
         return (annotatedType.isAnnotationPresent(Repository.class) ||
                 annotatedType.getJavaClass().isAnnotationPresent(Repository.class)) &&
                 !InvocationHandler.class.isAssignableFrom(annotatedType.getJavaClass());
+    }
+
+    private <X> boolean isVetoed(AnnotatedType<X> annotated)
+    {
+        return annotated.getJavaClass().equals(AbstractEntityRepository.class);
     }
 
 }
