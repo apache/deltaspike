@@ -112,11 +112,6 @@
             <id>Weld</id>
             <dependencies>
                 <dependency>
-                    <groupId>org.apache.geronimo.specs</groupId>
-                    <artifactId>geronimo-jcdi_1.0_spec</artifactId>
-                </dependency>
-
-                <dependency>
                     <groupId>org.apache.deltaspike.cdictrl</groupId>
                     <artifactId>deltaspike-cdictrl-weld</artifactId>
                     <scope>test</scope>
@@ -125,7 +120,6 @@
                     <groupId>org.jboss.weld.se</groupId>
                     <artifactId>weld-se</artifactId>
                     <version>${weld.version}</version>
-                    <scope>test</scope>
                 </dependency>
             </dependencies>
         </profile>
