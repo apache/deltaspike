@@ -1,0 +1,84 @@
+= DeltaSpike Release Notes v1.0.2
+
+:toc:
+
+== Announcement
+
+The DeltaSpike team is proud to announce the release of v1.0.2.  See http://apache-deltaspike-incubator-discussions.2316169.n4.nabble.com/ANNOUNCE-Release-of-Apache-DeltaSpike-1-0-2-td4658671.html[our release announcement email^] for additional information.
+
+Please read our http://deltaspike.apache.org/documentation.html#getting-started[setup guide^] to add DeltaSpike to your application.
+
+== Highlights
+
+=== Code Changes
+
+  - Improvements in CDI Container Control module, in a few scenarios you could generate `NullPointerExceptions` in case of bad configuration
+  - Added a platform inspecific Servlet Listener for container control in embedded servlet runtimes
+  - Performance improvements in our JSF module
+    - Re-use of StringBuilder for ClientWindow generation
+    - Re-use of Maps for actionUrls
+  - When shutting down via `CdiContainer.shutdown` it will attempt to stop all contexts for you
+  - Improvements in JSF and Security integration, including
+    - Removed duplicate handling of exceptions
+    - Guarding against cases when `FacesContext` is null
+  - The data module now includes valid OSGi headers
+
+=== Documentation Changes
+
+Several important documentation changes went in as well
+
+  - Fix the Bean Validation module's package name when specifying the `ConstraintValidatorFactory`
+  - Document how to handle prevention of double form submission
+
+== Credits & Thanks
+
+  - Thanks to all those that contributed via https://www.openhub.net/p/DeltaSpike/contributors?query=&sort=latest_commit[OpenHub^]
+  - Thanks to those who reviewed and http://markmail.org/message/uvq62i4iioapkto2[voted^] on the release
+
+== Full Release Notes
+++++
+<h3>        Bug
+</h3>
+<ul>
+    <li>[<a href='https://issues.apache.org/jira/browse/DELTASPIKE-637'>DELTASPIKE-637</a>] -         duplicated handling of AccessDeniedException
+    </li>
+    <li>[<a href='https://issues.apache.org/jira/browse/DELTASPIKE-672'>DELTASPIKE-672</a>] -         Wrong Bean Validation artifactId on documentation
+    </li>
+    <li>[<a href='https://issues.apache.org/jira/browse/DELTASPIKE-679'>DELTASPIKE-679</a>] -         NPE in BeanManagerProvider if parentClassLoader is null
+    </li>
+    <li>[<a href='https://issues.apache.org/jira/browse/DELTASPIKE-681'>DELTASPIKE-681</a>] -         Handling AccessDeniedException will run the secured method
+    </li>
+    <li>[<a href='https://issues.apache.org/jira/browse/DELTASPIKE-684'>DELTASPIKE-684</a>] -         No OSGi headers in deltaspike-partial-bean-module-api
+    </li>
+    <li>[<a href='https://issues.apache.org/jira/browse/DELTASPIKE-685'>DELTASPIKE-685</a>] -         Guard against null FacesContext in Exception Handler Bridge
+    </li>
+</ul>
+
+<h3>        Improvement
+</h3>
+<ul>
+    <li>[<a href='https://issues.apache.org/jira/browse/DELTASPIKE-506'>DELTASPIKE-506</a>] -         [perf] use a shared StringBuilder
+    </li>
+    <li>[<a href='https://issues.apache.org/jira/browse/DELTASPIKE-509'>DELTASPIKE-509</a>] -         [perf] cache map in DefaultClientWindow#getQueryURLParameters
+    </li>
+    <li>[<a href='https://issues.apache.org/jira/browse/DELTASPIKE-653'>DELTASPIKE-653</a>] -         Provide a platform inspecific servlet listener
+    </li>
+    <li>[<a href='https://issues.apache.org/jira/browse/DELTASPIKE-665'>DELTASPIKE-665</a>] -         Add utility method to always get new context control.
+    </li>
+    <li>[<a href='https://issues.apache.org/jira/browse/DELTASPIKE-666'>DELTASPIKE-666</a>] -         Improve BeanManager consistency
+    </li>
+    <li>[<a href='https://issues.apache.org/jira/browse/DELTASPIKE-669'>DELTASPIKE-669</a>] -         Try to shutdown contexts when shutting down container
+    </li>
+    <li>[<a href='https://issues.apache.org/jira/browse/DELTASPIKE-676'>DELTASPIKE-676</a>] -         ServletContext is available for injection before EventBridgeContextListener
+    </li>
+</ul>
+
+<h3>        Task
+</h3>
+<ul>
+    <li>[<a href='https://issues.apache.org/jira/browse/DELTASPIKE-641'>DELTASPIKE-641</a>] -         Document prevent double submit feature
+    </li>
+    <li>[<a href='https://issues.apache.org/jira/browse/DELTASPIKE-689'>DELTASPIKE-689</a>] -         release notes for v1.0.2
+    </li>
+</ul>
+++++

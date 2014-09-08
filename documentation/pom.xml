@@ -63,11 +63,11 @@
 					</execution>
 				</executions>
 				<configuration>
-					<sourceDirectory>content</sourceDirectory>
+					<sourceDirectory>src/main/asciidoc</sourceDirectory>
 					<outputDirectory>${project.build.directory}/site</outputDirectory>
 					<sourceHighlighter>coderay</sourceHighlighter>
 					<backend>html</backend>
-					<templateDir>template</templateDir>
+					<templateDir>src/main/template</templateDir>
 					<eruby>erb</eruby>
 					<attributes>
 						<toc>true</toc>
