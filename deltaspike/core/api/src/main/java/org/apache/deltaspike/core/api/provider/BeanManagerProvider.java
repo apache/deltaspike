@@ -293,6 +293,10 @@ public class BeanManagerProvider implements Extension
                 {
                     bmi = new BeanManagerInfo();
                     bmpSingleton.bmInfos.put(cl, bmi);
+                    if (cl.getParent() != null)
+                    {
+                        bmpSingleton.bmInfos.put(cl.getParent(), bmi);
+                    }
                 }
             }
         }
