@@ -1,0 +1,145 @@
+= Scheduler Module
+
+:Notice: Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+[TOC]
+
+== Intro
+
+This module provides a simple integration with Quartz v2 (per default)
+or any other scheduler which supports cron-expressions for job-classes.
+
+
+== External Dependencies
+
+If you would like to use the default-integration with quartz (which is
+optional), you have to add quartz 2.x.
+
+[source,xml]
+-------------------------------------------
+<dependency>
+    <groupId>org.quartz-scheduler</groupId>
+    <artifactId>quartz</artifactId>
+    <version>2.2.1</version>
+</dependency>
+-------------------------------------------
+
+
+== @Scheduled
+
+Just annotate your Quartz-Jobs with `@Scheduled` and they will get
+picked up and passed to the scheduler automatically (during the
+bootstrapping process).
+
+[source,java]
+---------------------------------------------------------------------------------
+@Scheduled(cronExpression = "0 0/10 * * * ?")
+public class CdiAwareQuartzJob implements org.quartz.Job
+{
+    @Inject
+    private MyService service;
+
+    @Override
+    public void execute(JobExecutionContext context) throws JobExecutionException
+    {
+        //...
+    }
+}
+---------------------------------------------------------------------------------
+
+In such Quartz-jobs CDI based dependency-injection is enabled.
+Furthermore, the request- and session-scope get started (and stopped)
+per job-execution. Therefore, the container-control module (of
+DeltaSpike) is required. That can be controlled via
+`@Scheduled#startScopes` (possible values: all scopes supported by the
+container-control module as well as `{}` for 'no scopes').
+
+With 'false' for `@Scheduled#onStartup` it's even possible to
+schedule/install jobs dynamically - e.g.:
+
+[source,java]
+-------------------------------------------------------------------------------------
+@ApplicationScoped
+public class ProjectStageAwareSchedulerController
+{
+    @Inject
+    private Scheduler<Job> jobScheduler;
+
+    @Inject
+    private ProjectStage projectStage; 
+
+    public void registerJobs()
+    {
+        if (ProjectStage.Production.equals(this.projectStage))
+        {
+            //see 'false' for @Scheduled#onStartup
+            this.jobScheduler.scheduleJob(ManualCdiAwareQuartzJob.class);
+        }
+    }
+
+    @Scheduled(cronExpression = "0 0/10 * * * ?", onStartup = false)
+    public class ManualCdiAwareQuartzJob implements org.quartz.Job
+    {
+        @Inject
+        private MyService service;
+ 
+        @Override
+        public void execute(JobExecutionContext context) throws JobExecutionException
+        {
+            //...
+        }
+    }
+}
+-------------------------------------------------------------------------------------
+
+== Manual Scheduler Control
+
+This SPI allows to control the scheduler (or integrate any other
+compatible scheduler as an alternative to Quartz2)
+
+Via std. injection like
+
+[source,java]
+------------------------------------
+@Inject
+private Scheduler<Job> jobScheduler;
+------------------------------------
+
+it's possible to manually start/stop the scheduler,
+pause/resume/interrupt/check scheduled jobs, register jobs manually or
+start a job once (without registering it permanently).
+
+**Attention**:
+
+With some versions of Weld you have to use
+
+[source,java]
+------------------------------------------------------------------
+public class QuartzSchedulerProducer
+{
+    @Produces
+    @ApplicationScoped
+    protected Scheduler<Job> produceScheduler(Scheduler scheduler)
+    {
+        return scheduler;
+    }
+}
+------------------------------------------------------------------
+
+or
+
+[source,xml]
+-----------------------------------------------------------------------------
+<alternatives>
+  <class>org.apache.deltaspike.scheduler.impl.QuartzSchedulerProducer</class>
+</alternatives>
+-----------------------------------------------------------------------------
+
+to use a typed injection-point. Otherwise the deployment will fail.
+
+== Custom Scheduler
+
+It's possible to replace the default integration with Quartz. Any other
+scheduler which supports cron-expressions for job-classes can be used.
+Please have a look at `org.apache.deltaspike.test.scheduler.custom` for
+further details.

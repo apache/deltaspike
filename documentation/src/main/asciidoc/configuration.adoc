@@ -1,0 +1,297 @@
+= DeltaSpike Configuration Mechanism
+
+:Notice: Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+
+[TOC]
+
+== Configuration Basics
+
+
+The goal of the DeltaSpike configuration mechanism is to make it
+obsolete to touch released binaries for changing the configuration of
+your project. All values which are needed in your code (but should not
+be hardcoded as static final constants) can be maintained via
+DeltaSpikes own configuration mechanism in a very flexible and powerful
+way.
+
+
+=== Benefits for Production
+
+
+Once a binary like a WAR file or an EAR got created and tested, it must
+_not_ get changed anymore. The exact same binary which got created by
+the release manager will get moved to the Test system, then further
+propagated to the Staging environment and finally (if all people are
+happy with it) will get moved to the Production system. And all this
+without any changes on the binary itself!
+
+The Apache DeltaSpike configuration system makes this possible by
+providing a default configuration inside the binary and allowing to
+amend this configuration (e.g. database credentials, some URLs from
+remote REST or SOAP endpoints, etc) from outside like environment
+settings, JNDI or the current <<projectstage.adoc#,ProjectStage>>.
+
+
+=== Drop-In Configuration
+
+This mechanism also allows for dynamic configuration in case of a JAR
+drop-in. By adding some JAR to the classpath, all it's contained
+configuration will get picked up and considered in the property value
+evaluation. You could also use this mechanism to switch implementations
+of some SPI (Service Provider Interface) in your own code.
+
+=== CDI-Extension Configuration
+
+In some cases low-level configs are needed e.g. during the bootstrapping
+process of the CDI container.
+
+The good news: our DeltaSpike configuration mechanism does not rely on
+any other EE mechanism to be booted. Which means it can perfectly get
+used to even configure those parts itself. Since the mechanism doesn't
+rely on CDI it can for example be used to configure CDI-Extensions.
+
+Currently this is e.g. used to configure the value of the current <<projectstage.adoc#,ProjectStage>>, configured values which can be
+used in the expressions for `@Exclude`, 'Deactivatable', etc. DeltaSpike
+needs such a low-level approach for several features internally, but
+users can utilize it for their own needs as well. This is done by using
+the `ConfigResolver` which resolves and caches `ConfigSource`s per
+application.
+
+=== Userland Configuration
+
+DeltaSpike also provides a mechanism to inject those configured values
+using the `@ConfigProperty` CDI Qualifier.
+
+
+== ConfigResolver
+
+
+The `ConfigResolver` is the central point to pick up configured values
+in DeltaSpike.
+
+=== getPropertyValue()
+
+The method `ConfigResolver#getPropertyValue(String key)` allows to
+provide a string based key and returns the configured value as `String`,
+or `null` if no value has been found.
+
+`ConfigResolver#getAllPropertyValues(String key)` has a similar contract
+but it returns a list which might be empty if there are no configured
+values for the given key.
+
+This is a code excerpt about how to do a simple lookup in the deltaspike
+configuration:
+
+[source,java]
+-------------------------------------------------------------------------------
+String dbUserName = ConfigResolver.getPropertyValue("databaseconfig.username");
+-------------------------------------------------------------------------------
+
+
+=== getProjectStageAwarePropertyValue()
+
+The method
+`ConfigResolver#getProjectStageAwarePropertyValue(String key)` utilizes
+the <<projectstage.adoc#,DeltaSpike ProjectStage>> mechanism to allow
+configured values to depend on the current `ProjectStage` of the system
+we run on.
+
+This is done by first looking up the ProjectStage (this internally
+happens with the DeltaSpike ConfigResolver as well) and then go down the
+following lookup chain until we found a configured value.
+
+* key + '.' + projectStage , e.g. "databaseconfig.username.Production"
+* key alone , e.g. "databaseconfig.username"
+
+=== getPropertyAwarePropertyValue()
+
+The method
+`ConfigResolver#getProjectStageAwarePropertyValue(String key, String property)`
+first looks up the configured value of the given property and uses this
+value to determine the final lookup path. All those lookups take the
+<<projectstage.adoc#,DeltaSpike ProjectStage>> mechanism into account.
+
+Given we have the following code in our program:
+
+[source,java]
+--------------------------------------------------------------------------------------------------------
+String dbUserName = ConfigResolver.getPropertyAwarePropertyValue("databaseconfig.username", "dbvendor");
+--------------------------------------------------------------------------------------------------------
+
+This will end up in the following lookup sequences. First we need to
+resolve the value of the property:
+
+* propertyValue = property + '.' + projectStage, e.g. "dbvendor.Production"
+* if nothing found: propertyValue = property, e.g. "dbvendor"
+
+Let's assume we found the value 'mysql' for our dbvendor. In this case
+the following lookup chain is used until a value got found:
+
+* key + '.' + property + projectstage, e.g. "databaseconfig.username.mysql.Production"
+* key + '.' + property, e.g. "databaseconfig.username.mysql"
+* key + '.' + projectstage, e.g. "databaseconfig.username.Production"
+* key, e.g. "databaseconfig.username"
+
+
+=== handling of default values
+
+
+There is a 2nd variant of all those methods where it is possible to
+provide a default value which gets returned instead of `null` or if the
+final result is an empty String.
+
+*Performance Hint:*
+
+The only `ConfigResolver` operation which is cached is the determination
+of the `ConfigSources`. The various getPropertyValue operations are not
+cached in the ConfigResolver but might be cached in the ConfigSources.
+This makes the overall calculation a bit slower, but allows for values
+to change dynamically if someone likes to e.g. implement a
+`JmxConfigSource` (not yet part of DeltaSpike, but easily
+implementable).
+
+
+== ConfigSource
+
+A `ConfigSource` is exactly what it's name says: a source for configured
+values. The `ConfigResolver` uses all configured implementations of
+`ConfigSource` to lookup the property in question.
+
+Each 'ConfigSource' has a specified 'ordinal' which can be configured
+using the key `deltaspike_ordinal`. This ordinal get's used to determine
+the importance of the values taken from the very ConfigSource. A higher
+ordinal means that the values taken from this ConfigSource will override
+values from less important ConfigSources. This is the trick which allows
+to amend configuration from outside a binary - given those outside
+ConfigSources have a higher `deltaspike_ordinal` than the ones who
+pickup the values from within the release binaries.
+
+=== ConfigSources provided by default
+
+
+Per default there are implementations for the following config sources
+(listed in the lookup order):
+
+* System properties (deltaspike_ordinal = 400)
+* Environment properties (deltaspike_ordinal = 300)
+* JNDI values (deltaspike_ordinal = 200, the base name is "java:comp/env/deltaspike/")
+* Properties file values (apache-deltaspike.properties) (deltaspike_ordinal = 100, default filename is "META-INF/apache-deltaspike.properties")
+
+*It's possible to change this order and to add custom config sources.*
+
+*Note:* Important Hints esp. for custom implementations: - The
+config-source with the highest ordinal gets used first. - If a custom
+implementation should be invoked _before_ the default implementations,
+use an ordinal-value > 400 - If a custom implementation should be
+invoked _after_ the default implementations, use an ordinal-value < 100
+- The `ConfigResolver` performs no caching. If your custom ConfigSource
+operation is expensive, then you might think about introducing some
+caching.
+
+
+=== Reordering of the default order of Config-Sources
+
+To change the lookup order, you have to configure the ordinal in the
+corresponding config source (e.g. to change the config ordinal of the
+config source for system properties, you have to set the system property
+with the ordinal key 'deltaspike_ordinal' and the new value).
+
+Example with `/META-INF/apache-deltaspike.properties`: If the properties
+file/s should be used *before* the other implementations, you have to
+configure an ordinal > 400. That means, you have to add e.g.
+`deltaspike_ordinal=401`.
+
+Each single property file is treated as own `ConfigSource` and thus can
+have different `deltaspike_ordinal` values!
+
+*Hint:*
+
+In case of *property files* which are supported by default
+(`/META-INF/apache-deltaspike.properties`) every file is handled as
+independent config-source, but all of them have ordinal 400 by default
+(and can be reordered in a fine-grained manner).
+
+=== Custom Config-Sources
+
+
+ConfigSources are picked up using the `java.util.ServiceLoader'
+mechanism.
+
+To add a custom config-source, you have to implement the interface
+`ConfigSource` and register your implementation in a file
+`/META-INF/services/org.apache.deltaspike.core.spi.config.ConfigSource`
+by writing the fully qualified class name of the custom implementation/s
+into it.
+
+If you need dynamic ConfigSources you can also register a
+`ConfigSourceProvider` in a similar way. This is useful if you like to
+dynamically pick up multiple ConfigSources of the same kind. E.g. if you
+like to pick up all `myproject.properties` files from all the JARs in
+your classpath.
+
+Please note that a single `ConfigSource` should be either registered
+directly or via a `ConfigSourceProvider`, but never both ways.
+
+*Important Hint:*
+
+Have a look at the abstract base-implementation of `ConfigSource`
+DeltaSpike is using internally, if a custom implementation should load
+the ordinal value from the config-source like the default
+implementations provided by DeltaSpike do.
+
+==== PropertyFileConfig
+
+For registering all your own property files of a certain name in your
+classpath to get picked up as `ConfigSource`s you can also provide a
+class which implements the `PropertyFileConfig` interface.
+
+[source,java]
+---------------------------------------------------------------------
+public class MyCustomPropertyFileConfig implements PropertyFileConfig
+{
+    @Override
+    public String getPropertyFileName()
+    {
+        return "myconfig.properties";
+    }
+}
+---------------------------------------------------------------------
+
+_Note: If you are using WildFly with EAR packaging and with
+ear-subdeployments-isolated=true, then your EAR should have a deployment
+dependency to the module that contains the property file._
+
+[source,xml]
+---------------------------------------------------------------------------------------------------
+<jboss-deployment-structure>
+    <ear-subdeployments-isolated>true</ear-subdeployments-isolated>
+      <deployment>
+            <dependencies>
+            <!-- This module contains the custom PropertyFileConfig and the property file -->
+                  <module name="deployment.yourproject.ear.yoursubmodule.jar"  meta-inf="import" />
+            </dependencies>
+     </deployment>
+</jboss-deployment-structure>
+---------------------------------------------------------------------------------------------------
+
+== Type-safe configuration
+
+DeltaSpike provides a way to directly inject configured values into your
+code via the qualifier `@ConfigProperty`.
+
+------------------------------------------------------
+@ApplicationScoped
+public class SomeRandomService
+{
+    @Inject
+    @ConfigProperty(name = "endpoint.poll.interval")
+    private Integer pollInterval;
+
+    @Inject
+    @ConfigProperty(name = "endpoint.poll.servername")
+    private String pollUrl;
+
+    ...
+ }
+------------------------------------------------------

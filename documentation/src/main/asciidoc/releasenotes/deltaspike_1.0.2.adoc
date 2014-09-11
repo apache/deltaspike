@@ -6,7 +6,7 @@
 
 The DeltaSpike team is proud to announce the release of v1.0.2.  See http://apache-deltaspike-incubator-discussions.2316169.n4.nabble.com/ANNOUNCE-Release-of-Apache-DeltaSpike-1-0-2-td4658671.html[our release announcement email^] for additional information.
 
-Please read our http://deltaspike.apache.org/documentation.html#getting-started[setup guide^] to add DeltaSpike to your application.
+Please read our <<index.adoc#_getting_started,setup guide>> to add DeltaSpike to your application.
 
 == Highlights
 

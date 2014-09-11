@@ -1,0 +1,155 @@
+= Building DeltaSpike from source
+
+:Notice: Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+[TOC]
+
+== Introduction
+
+Deltaspike uses http://maven.apache.org/[maven] build tool to automate the compilation, testing and packaging of the project
+
+=== Full build
+
+-----------------
+mvn clean install
+-----------------
+
+=== Build with test
+
+
+------------------------------------------------------------------
+mvn clean install -POWB //execute the unit tests with OpenWebBeans
+or
+mvn clean install -PWeld //execute the unit tests with Weld
+------------------------------------------------------------------
+
+
+=== Integration Tests
+
+
+With the unpack Maven-Plugin all Arquillian-Tests get copied to the
+integration-test module. Together with the special integration-tests
+they get executed via a remote container. Currently we have
+configurations for the following containers.
+
+
+==== TomEE
+
+
+*Executing the Arquillian tests with Apache TomEE*
+
+---------------------------------------
+mvn clean install -Ptomee-build-managed
+---------------------------------------
+
+
+==== JBoss AS7
+
+
+===== Without existing AS7
+
+
+*Executing the Arquillian tests with JBoss AS7 (without AS7 installation)*
+
+-------------------------------------------
+mvn clean install -Pjbossas-build-managed-7
+-------------------------------------------
+
+===== With existing AS7
+
+
+Set JBoss_HOME
+
+*Executing the Arquillian tests with JBoss AS7 (AS7 installation
+required)*
+
+-------------------------------------
+mvn clean install -Pjbossas-managed-7
+-------------------------------------
+
+
+==== WildFly 8
+
+
+===== Without existing WF8
+
+
+*Executing the Arquillian tests with JBoss-WF8 (without WF8 installation)*
+
+-----------------------------------------
+mvn clean install -Pwildfly-build-managed
+-----------------------------------------
+
+
+===== With existing WF8
+
+
+Set WILDFLY_HOME
+
+*Executing the Arquillian tests with JBoss-WF8 (WF8 installation
+required)*
+
+-----------------------------------
+mvn clean install -Pwildfly-managed
+-----------------------------------
+
+
+==== GlassFish 3.1
+
+
+
+===== Without existing GF3
+
+*Executing the Arquillian tests with GF3 (without GF3 installation)*
+
+---------------------------------------------
+mvn clean install -Pglassfish-build-managed-3
+---------------------------------------------
+
+
+===== With existing GF3
+
+Install GlassFish (default setup without admin-password) and start
+GlassFish with asadmin start-domain *and* asadmin start-database
+
+*Executing the Arquillian tests with Oracle Glassfish 3.1+*
+
+----------------------------------------
+mvn clean install -Pglassfish-remote-3.1
+----------------------------------------
+
+
+==== GlassFish 4
+
+===== Without existing GF4
+
+*Executing the Arquillian tests with GF4 (without GF4 installation)*
+
+---------------------------------------------
+mvn clean install -Pglassfish-build-managed-4
+---------------------------------------------
+
+
+==== WebLogic 12c
+
+
+Install WebLogic 12c. Start Confiuration Wizard to create a new basic
+WebLogic Domain. Default options and domain name = base_domain,
+administrator user name = weblogic1, administrator password = weblogic1.
+Set WLS_HOME so that %WLS_HOME%.jar exists. Start the domain.
+
+*Executing the Arquillian tests with Oracle WebLogic 12c*
+
+----------------------------------
+mvn clean install -Pwls-remote-12c
+----------------------------------
+
+
+=== Jenkins Builds
+
+https://builds.apache.org/view/A-D/view/DeltaSpike/
+
+
+=== Sonar
+
+https://analysis.apache.org/dashboard/index/org.apache.deltaspike:deltaspike-project

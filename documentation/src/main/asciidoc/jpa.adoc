@@ -1,0 +1,512 @@
+= JPA Module
+
+:Notice: Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+[TOC]
+
+
+== @Transactional
+
+This annotation is an alternative to transactional EJBs which allows to
+execute a method within a transaction. Before it's possible to start
+using the annotation, it's required to implement a CDI producer for an
+`EntityManager` and it's needed to inject the `EntityManager` in the
+bean which uses `@Transactional`. As shown later on it's also possible
+to use multiple qualifiers for using different `EntityManager`s.
+
+*Hint:* If you are using features described by this page and the CDI
+container you are using is Weld (or OpenWebBeans in BDA mode), you have
+to enable the transaction interceptor in your beans.xml file:
+
+[source,xml]
+------------------------------------------------------------------------------------------
+<beans>
+    <interceptors>
+        <class>org.apache.deltaspike.jpa.impl.transaction.TransactionalInterceptor</class>
+    </interceptors>
+</beans>
+------------------------------------------------------------------------------------------
+
+The following example shows a simple producer for an `EntityManager` and
+the corresponding dispose-method. Producing it as request scoped bean
+means that the dispose method will be called on finishing the request.
+As an alternative it's possible to use a special scope called
+`@TransactionScoped` provided by the same DeltaSpike module.
+
+Producer for the default EntityManager (**no EE-Server**):
+
+[source,java]
+----------------------------------------------------------------------------
+//...
+public class EntityManagerProducer
+{
+    //or manual bootstrapping
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @Produces
+    @RequestScoped
+    protected EntityManager createEntityManager()
+    {
+        return this.entityManager;
+    }
+
+    protected void closeEntityManager(@Disposes EntityManager entityManager)
+    {
+        if (entityManager.isOpen())
+        {
+            entityManager.close();
+        }
+    }
+}
+----------------------------------------------------------------------------
+
+Producer for the default EntityManager (**EE-Server**):
+
+[source,java]
+-----------------------------------------------------------------------
+@ApplicationScoped
+public class EntityManagerProducer
+{
+    @PersistenceUnit
+    private EntityManagerFactory entityManagerFactory;
+
+    @Produces
+    @Default
+    @RequestScoped
+    public EntityManager create()
+    {
+        return this.entityManagerFactory.createEntityManager();
+    }
+
+    public void dispose(@Disposes @Default EntityManager entityManager)
+    {
+        if (entityManager.isOpen())
+        {
+            entityManager.close();
+        }
+    }
+}
+-----------------------------------------------------------------------
+
+The following examples show how to use the `EntityManager` produced by
+the example above.
+
+Beans with transactional method:
+
+[source,java]
+----------------------------------------
+//...
+public class TransactionalBean
+{
+    @Inject
+    private EntityManager entityManager;
+
+    @Transactional
+    public void executeInTransaction()
+    {
+        //...
+    }
+}
+----------------------------------------
+
+Simple transactional bean (all methods transactional):
+
+[source,java]
+----------------------------------------
+//...
+@Transactional
+public class TransactionalBean
+{
+    @Inject
+    private EntityManager entityManager;
+
+    //...
+}
+----------------------------------------
+
+As illustrated in the following example it's also possible to use
+`@Transactional` for stereotypes.
+
+Stereotype for transactional beans (+ usage):
+
+[source,java]
+----------------------------------------
+@Stereotype
+@Transactional
+@ApplicationScoped
+public @interface Repository
+{
+}
+
+//...
+@Repository
+public class TransactionalBean
+{
+    @Inject
+    private EntityManager entityManager;
+
+    //...
+}
+----------------------------------------
+
+Besides such simple usages, it's also supported to use qualifiers to
+access multiple persistence-units in parallel. The default qualifier for
+`@Transactional` is `@Any`. Therefore a transaction for every injected
+entity manager will be started. The example afterwards shows how to
+change this default behaviour.
+
+Producer for multiple entity managers (+ usage):
+
+[source,java]
+------------------------------------------------------------------------------------------
+//...
+public class EntityManagerProducer
+{
+    @PersistenceContext(unitName = "firstDB")
+    private EntityManager firstEntityManager;
+
+    @PersistenceContext(unitName = "secondDB")
+    private EntityManager secondEntityManager;
+
+    @Produces
+    @First
+    @RequestScoped
+    protected EntityManager createFirstEntityManager()
+    {
+        return this.firstEntityManager;
+    }
+
+    protected void closeFirstEntityManager(@Disposes @First EntityManager entityManager)
+    {
+        if (entityManager.isOpen())
+        {
+            entityManager.close();
+        }
+    }
+
+    @Produces
+    @Second
+    @RequestScoped
+    protected EntityManager createSecondEntityManager()
+    {
+        return this.secondEntityManager;
+    }
+
+    protected void closeSecondEntityManager(@Disposes @Second EntityManager entityManager)
+    {
+        if (entityManager.isOpen())
+        {
+            entityManager.close();
+        }
+    }
+}
+
+//...
+public class FirstLevelTransactionBean
+{
+    @Inject
+    private @First EntityManager firstEntityManager;
+
+    @Inject
+    private NestedTransactionBean nestedTransactionBean;
+
+    @Transactional
+    public void executeInTransaction()
+    {
+        //...
+        this.nestedTransactionBean.executeInTransaction();
+    }
+}
+
+//...
+public class NestedTransactionBean
+{
+    @Inject
+    private @Second EntityManager secondEntityManager;
+
+    @Transactional
+    public void executeInTransaction()
+    {
+        //...
+    }
+}
+------------------------------------------------------------------------------------------
+
+The following example shows how to use only the specified
+`EntityManager`/s
+
+Activating entity managers manually:
+
+[source,java]
+-----------------------------------------------------------
+public class MultiTransactionBean
+{
+    @Inject
+    private EntityManager defaultEntityManager;
+
+    @Inject
+    private @First EntityManager firstEntityManager;
+
+    @Inject
+    private @Second EntityManager secondEntityManager;
+
+    @Transactional(qualifier = Default.class)
+    public void executeInDefaultTransaction()
+    {
+    }
+
+    @Transactional(qualifier = First.class)
+    public void executeInFirstTransaction()
+    {
+    }
+
+    @Transactional(qualifier = Second.class)
+    public void executeInSecondTransaction()
+    {
+    }
+
+    @Transactional(qualifier = {First.class, Second.class})
+    public void executeInFirstAndSecondTransaction()
+    {
+    }
+}
+-----------------------------------------------------------
+
+All examples also work with nested calls. In the following example the
+transaction handling is done on the entry point (after
+FirstLevelTransactionBean#executeInTransaction).
+
+Joining existing transaction in nested call:
+
+[source,java]
+----------------------------------------------------------
+//...
+public class FirstLevelTransactionBean
+{
+    @Inject
+    private EntityManager entityManager;
+
+    @Inject
+    private NestedTransactionBean nestedTransactionBean;
+
+    @Transactional
+    public void executeInTransaction()
+    {
+        this.nestedTransactionBean.executeInTransaction();
+    }
+}
+
+//...
+public class NestedTransactionBean
+{
+    @Inject
+    private EntityManager entityManager;
+
+    @Transactional
+    public void executeInTransaction()
+    {
+        //...
+    }
+}
+----------------------------------------------------------
+
+The final transaction handling for all `EntityManager` s is also done
+after the outermost transactional method if `NestedTransactionBean` uses
+a different `EntityManager`. So it's possible to catch an exception in
+`FirstLevelTransactionBean` e.g. to try an optional path instead of an
+immediate rollback.
+
+==@TransactionScoped
+
+`@Transactional` also starts a context which is available as long as the
+transaction started by `@Transactional`. Besides other beans you can use
+this scope for the `EntityManager` itself. That means the
+`EntityManager` will be closed after leaving the method annotated with
+`@Transactional`.
+
+Producer for the default EntityManager which should be used only for one
+transaction:
+
+[source,java]
+----------------------------------------------------------------------------
+//...
+public class EntityManagerProducer
+{
+    //or manual bootstrapping
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @Produces
+    @TransactionScoped
+    protected EntityManager createEntityManager()
+    {
+        return this.entityManager;
+    }
+
+    protected void closeEntityManager(@Disposes EntityManager entityManager)
+    {
+        if (entityManager.isOpen())
+        {
+            entityManager.close();
+        }
+    }
+}
+----------------------------------------------------------------------------
+
+== Extended Persistence Contexts
+
+
+Frameworks like MyFaces Orchestra provide a feature which allows keeping
+an `EntityManager` across multiple requests. That means it isn't
+required to call `EntityManager#merge` to add detached entities to the
+context. However, several application architectures don't allow such an
+approach (due to different reasons like scalability). In theory that
+sounds nice and it works pretty well for small to medium sized projects
+esp. if an application doesn't rely on session replication in clusters.
+That also means that such an approach restricts your target environment
+from the very beginning. One of the base problems is that an
+`EntityManager` isn't serializable. Beans which are scoped in a
+normal-scoped CDI context have to be serializable. So by default it
+isn't allowed by CDI to provide a producer-method which exposes e.g. a
+conversation scoped `EntityManager` as it is. We *don't* recommend to
+use this approach and therefore it isn't available out-of-the-box.
+However, if you really need this approach to avoid calling `#merge` for
+your detached entities, it's pretty simple to add this functionality.
+
+Usage of a simple `ExtendedEntityManager`
+
+[source,java]
+------------------------------------
+@Inject
+private EntityManager entityManager;
+------------------------------------
+
+As you see the usage is the same. You *don't* have to use
+`ExtendedEntityManager` at the injection point. It's just needed in the
+producer-method:
+
+Producer for the default Extended-`EntityManager` (**no EE-Server**):
+
+[source,java]
+------------------------------------------------------------------------------------
+//...
+public class ExtendedEntityManagerProducer
+{
+    //or manual bootstrapping
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @Produces
+    @RequestScoped
+    protected ExtendedEntityManager createEntityManager()
+    {
+        return new ExtendedEntityManager(this.entityManager);
+    }
+
+    protected void closeEntityManager(@Disposes ExtendedEntityManager entityManager)
+    {
+        if (entityManager.isOpen())
+        {
+            entityManager.close();
+        }
+    }
+}
+------------------------------------------------------------------------------------
+
+Producer for the default Extended-`EntityManager` (**EE-Server**):
+
+[source,java]
+------------------------------------------------------------------------------------------
+@ApplicationScoped
+public class ExtendedEntityManagerProducer
+{
+    @PersistenceUnit
+    private EntityManagerFactory entityManagerFactory;
+
+    @Produces
+    @Default
+    @RequestScoped
+    public ExtendedEntityManager create()
+    {
+        return new ExtendedEntityManager(this.entityManagerFactory.createEntityManager());
+    }
+
+    public void dispose(@Disposes @Default ExtendedEntityManager entityManager)
+    {
+        if (entityManager.isOpen())
+        {
+            entityManager.close();
+        }
+    }
+}
+------------------------------------------------------------------------------------------
+
+Implementation of a simple `ExtendedEntityManager`:
+
+[source,java]
+-------------------------------------------------------------------------
+@Typed()
+public class ExtendedEntityManager implements EntityManager, Serializable
+{
+    private static final long serialVersionUID = 3770954229283539616L;
+
+    private transient EntityManager wrapped;
+
+    protected ExtendedEntityManager()
+    {
+    }
+
+    public ExtendedEntityManager(EntityManager wrapped)
+    {
+        this.wrapped = wrapped;
+    }
+
+    /*
+     * generated
+     */
+    //delegate all calls to this.wrapped - most IDEs allow to generate it
+}
+-------------------------------------------------------------------------
+
+This approach just works if it *doesn't come to serialization* of this
+wrapper e.g. in case of session-replication. If those beans get
+serialized, you have to overcome this restriction by storing the
+persistence-unit-name and recreate the `EntityManager` via
+`Persistence.createEntityManagerFactory(this.persistenceUnitName).createEntityManager();`
+and sync it with the database before closing it on serialization.
+Furthermore, you have to intercept some methods of the `EntityManager`
+to merge detached entities automatically if those entities get
+serialized as well. However, as mentioned before *we don't recommend*
+such an approach.
+
+== JTA Support
+
+Per default the transaction-type used by `@Transactional`is
+'RESOURCE_LOCAL'. If you configure `transaction-type="JTA"`in the
+persistence.xml, you have to enable an alternative `TransactionStrategy`
+in the beans.xml which is called
+`org.apache.deltaspike.jpa.impl.transaction.BeanManagedUserTransactionStrategy`.
+
+[source,xml]
+----------------------------------------------------------------------------------------------------
+<beans>
+    <alternatives>
+        <class>org.apache.deltaspike.jpa.impl.transaction.BeanManagedUserTransactionStrategy</class>
+    </alternatives>
+</beans>
+----------------------------------------------------------------------------------------------------
+
+If you have multiple persistence-units and you have to use both
+transaction-types or the settings for development have to be different
+than the production settings, you can use
+`org.apache.deltaspike.jpa.impl.transaction.EnvironmentAwareTransactionStrategy`
+instead.
+
+*Hint:*
+
+In case of some versions of Weld (or OpenWebBeans in BDA mode), you have
+to configure it as global-alternative instead of an `<alternatives>` in
+beans.xml. That means you have to add e.g.:
+`globalAlternatives.org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy=org.apache.deltaspike.jpa.impl.transaction.BeanManagedUserTransactionStrategy`
+to /META-INF/apache-deltaspike.properties

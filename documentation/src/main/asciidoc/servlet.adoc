@@ -1,0 +1,285 @@
+= Servlet Module
+
+:Notice: Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+[TOC]
+
+== Configuration
+
+In most cases there is no need for any additional configuration beside
+adding the required dependencies to your project, because all required
+listeners and filters are automatically registered in the container.
+
+However there are certain situations in which you will have to manually
+register the listeners and filters in your `web.xml`:
+
+* Your container doesn't support Servlet 3.0 or newer.
+* You have set `metadata-complete=true` in your `web.xml`.
+* You packaged the servlet module in the `lib` directory of an EAR archive.
+
+In these cases you will have to add the following section manually to
+your `web.xml`:
+
+[source,xml]
+-------------------------------------------------------------------------------------------------------------
+<listener>
+    <display-name>EventBridgeContextListener</display-name>
+    <listener-class>org.apache.deltaspike.servlet.impl.event.EventBridgeContextListener</listener-class>
+</listener>
+
+<listener>
+    <display-name>EventBridgeSessionListener</display-name>
+    <listener-class>org.apache.deltaspike.servlet.impl.event.EventBridgeSessionListener</listener-class>
+</listener>
+
+<listener>
+    <display-name>ServletContextHolderListener</display-name>
+    <listener-class>org.apache.deltaspike.servlet.impl.produce.ServletContextHolderListener</listener-class>
+</listener>
+
+<listener>
+    <display-name>RequestResponseHolderListener</display-name>
+    <listener-class>org.apache.deltaspike.servlet.impl.produce.RequestResponseHolderListener</listener-class>
+</listener>
+
+<filter>
+    <display-name>RequestResponseHolderFilter</display-name>
+    <filter-name>RequestResponseHolderFilter</filter-name>
+    <filter-class>org.apache.deltaspike.servlet.impl.produce.RequestResponseHolderFilter</filter-class>
+</filter>
+<filter-mapping>
+    <filter-name>RequestResponseHolderFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+</filter-mapping>
+
+<filter>
+    <display-name>EventBridgeFilter</display-name>
+    <filter-name>EventBridgeFilter</filter-name>
+    <filter-class>org.apache.deltaspike.servlet.impl.event.EventBridgeFilter</filter-class>
+</filter>
+<filter-mapping>
+    <filter-name>EventBridgeFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+</filter-mapping>
+-------------------------------------------------------------------------------------------------------------
+
+
+== Injectable Servlet objects
+
+The DeltaSpike Servlet module contains producers for many objects of a
+Servlet environment. All produces are using the special qualifier
+`@DeltaSpike` for compatibility with CDI 1.1, which supports the
+injection of some Servlet objects out of the box.
+
+The following code shows the general injection pattern to use for all objects.
+
+[source,java]
+------------------------------------
+@Inject @DeltaSpike
+private ServletObject servletObject;
+------------------------------------
+
+
+=== ServletContext
+
+The `ServletContext` is made available in the application scope. It can
+be injected into any CDI bean like this:
+
+[source,java]
+--------------------------------------
+@Inject @DeltaSpike
+private ServletContext servletContext;
+--------------------------------------
+
+
+ServletRequest / HttpServletRequest
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The `ServletRequest` is made available in the request scope. The current
+request can be injected into a CDI bean like this:
+
+[source,java]
+-------------------------------
+@Inject @DeltaSpike
+private ServletRequest request;
+-------------------------------
+
+In case of HTTP requests you can also inject the `HttpServletRequest`:
+
+[source,java]
+-----------------------------------
+@Inject @DeltaSpike
+private HttpServletRequest request;
+-----------------------------------
+
+
+=== ServletResponse / HttpServletResponse
+
+The `ServletResponse` is made available in the request scope. The
+current response can be injected into a CDI bean like this:
+
+[source,java]
+---------------------------------
+@Inject @DeltaSpike
+private ServletResponse response;
+---------------------------------
+
+In case of HTTP requests you can also inject the `HttpServletResponse`:
+
+[source,java]
+-------------------------------------
+@Inject @DeltaSpike
+private HttpServletResponse response;
+-------------------------------------
+
+
+=== HttpSession
+
+The `HttpSession` is made available in the session scope. You can inject
+the current session of a user into a CDI bean like this:
+
+[source,java]
+----------------------------
+@Inject @DeltaSpike
+private HttpSession session;
+----------------------------
+
+Please note that injecting the session this way will force the creation
+of a session.
+
+=== Principal
+
+The `Principal` is made available in the request scope. The current
+principal can be injected into a CDI bean like this:
+
+[source,java]
+----------------------------
+@Inject @DeltaSpike
+private Principal principal;
+----------------------------
+
+The `Principal` is obtained by calling `getUserPrincipal()` on the
+`HttpServletRequest`.
+
+
+== Servlet event propagation
+
+The DeltaSpike Servlet module will propagate a number of Servlet object
+lifecycle events to the CDI event bus. This allows regular CDI beans to
+observe these events and react accordingly.
+
+In most cases the event type is the object whose lifecycle is observed.
+To distinguish between construction and destruction of the corresponding
+object, DeltaSpike uses the qualifiers `@Initialized` and `@Destroyed`.
+
+The following sections will show which concrete Servlet objects are
+supported and how their lifecycle can be observed.
+
+
+=== Servlet context lifecycle events
+
+The Servlet module supports initialization and destruction events for
+the `ServletContext`. These events can for example be used to detect
+application startup or shutdown. The following code shows how these
+events can be observed:
+
+[source,java]
+-----------------------------------------------------------------------------------------
+public void onCreate(@Observes @Initialized ServletContext context) {
+    System.out.println("Initialized ServletContext: " + context.getServletContextName());
+}
+
+public void onDestroy(@Observes @Destroyed ServletContext context) {
+    System.out.println("Destroyed ServletContext: " + context.getServletContextName());
+}
+-----------------------------------------------------------------------------------------
+
+The events are emitted from a `ServletContextListener` called
+`EventBridgeContextListener`. You can disable lifecycle events for the
+`ServletContext` by deactivating the following class:
+
+-------------------------------------------------------------------
+org.apache.deltaspike.servlet.impl.event.EventBridgeContextListener
+-------------------------------------------------------------------
+
+If you manually registered the required filters and listeners, you can
+also simply remove the entry for the `EventBridgeContextListener` from
+your `web.xml` to disable the events.
+
+
+=== Request and response lifecycle events
+
+The Servlet module also supports initialization and destruction events
+for the `HttpServletRequest` and `HttpServletResponse`. These events can
+for example be used for initialization work like invoking
+`setCharacterEncoding` on the request.
+
+The following example shows how to observe lifecycle events for the
+request:
+
+[source,java]
+--------------------------------------------------------------------------------------
+public void onCreate(@Observes @Initialized HttpServletRequest request) {
+    System.out.println("Starting to process request for: " + request.getRequestURI());
+}
+
+public void onDestroy(@Observes @Destroyed HttpServletRequest request) {
+    System.out.println("Finished processing request for: " + request.getRequestURI());
+}
+--------------------------------------------------------------------------------------
+
+Observing lifecycle events for the response works the same way:
+
+[source,java]
+---------------------------------------------------------------------------
+public void onCreate(@Observes @Initialized HttpServletResponse response) {
+    System.out.println("HttpServletResponse created");
+}
+
+public void onDestroy(@Observes @Destroyed HttpServletResponse response) {
+    System.out.println("HttpServletResponse destroyed");
+}
+---------------------------------------------------------------------------
+
+All events of this category are emitted from a servlet filter called
+`EventBridgeFilter`. If you want to disable events for this category,
+just use DeltaSpike's deactivation mechanism to deactivate the following
+class:
+
+----------------------------------------------------------
+org.apache.deltaspike.servlet.impl.event.EventBridgeFilter
+----------------------------------------------------------
+
+If you manually registered the required filters and listeners you can
+also simply remove the entry for the `EventBridgeFilter` from your
+`web.xml` to disable the events.
+
+
+=== Session lifecycle events
+
+The last category of events supported by the DeltaSpike Servlet module
+are the lifecycle events for the user's HTTP session. The following
+example shows how these events can be observed from a regular CDI bean.
+
+[source,java]
+------------------------------------------------------------------
+public void onCreate(@Observes @Initialized HttpSession session) {
+    System.out.println("Session created: " + session.getId());
+}
+
+public void onDestroy(@Observes @Destroyed HttpSession session) {
+    System.out.println("Session destroyed: " + session.getId());
+}
+------------------------------------------------------------------
+
+The lifecycle events for the HTTP session are sent from a
+`HttpSessionListener` called `EventBridgeSessionListener`. To disable
+this event category, deactivate the following class:
+
+-------------------------------------------------------------------
+org.apache.deltaspike.servlet.impl.event.EventBridgeSessionListener
+-------------------------------------------------------------------
+
+If you manually registered the required filters and listeners you can
+also simply remove the entry for the `EventBridgeSessionListener` from
+your `web.xml` to disable the events.

@@ -17,7 +17,7 @@
 <link href="http://deltaspike.apache.org/resources/css/bootstrap-responsive.css" rel="stylesheet">
 
 <style type="text/css">
-<%= ::Asciidoctor::HTML5.default_coderay_stylesheet %>
+<%= ::Asciidoctor::Stylesheets.instance.coderay_stylesheet_data %>
 body {
 	padding-top: 60px;
 	padding-bottom: 40px;
@@ -82,7 +82,7 @@ body {
                 </div>
 
 				<div id="toc" class="<%= attr 'toc-class', 'toc' %>">
-       	 		<%= ::Asciidoctor::HTML5::DocumentTemplate.outline(self, (attr :toclevels, 3).to_i) %>
+       	 		<%= converter.convert_with_options @document, 'outline', :toclevels => 3  %>
        	 		<hr>	
        	 		
 				<%= document.content %>
@@ -91,10 +91,8 @@ body {
 			<hr>
 
 			<footer>
-				<p>Copyright © 2011-2014 The Apache Software Foundation,
-					Licensed under the Apache License, Version 2.0.</p>
-				<p>Apache and the Apache feather logo are trademarks of The
-					Apache Software Foundation.</p>
+				<p>Copyright © 2011-2014 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.</p>
+				<p>Apache and the Apache feather logo are trademarks of The Apache Software Foundation.</p>
 			</footer>
 
 		</div>

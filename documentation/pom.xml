@@ -35,7 +35,7 @@
 	<url>http://deltaspike.apache.org</url>
 
 	<properties>
-		<asciidoctor.version>0.1.4</asciidoctor.version>
+		<asciidoctor.version>1.5.0</asciidoctor.version>
 		<svn.scmPubUrl>https://svn.apache.org/repos/asf/deltaspike/site/trunk/content/documentation/</svn.scmPubUrl>
 		<svn.scmPubCheckoutDirectory>${project.build.directory}/co-site</svn.scmPubCheckoutDirectory>
 	</properties>

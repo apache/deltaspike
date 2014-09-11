@@ -1,0 +1,531 @@
+= DeltaSpike Security Module
+
+:Notice: Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+[TOC]
+
+== Hint
+
+If you are using features described by this page and the CDI
+container you are using is Weld (or OpenWebBeans in BDA mode), you have
+to enable the security interceptor in your beans.xml file:
+
+[source,xml]
+----------------------------------------------------------------------------------------
+<beans>
+    <interceptors>
+        <class>org.apache.deltaspike.security.impl.extension.SecurityInterceptor</class>
+    </interceptors>
+</beans>
+----------------------------------------------------------------------------------------
+
+
+SecurityBinding for class and method invocations
+------------------------------------------------
+
+This feature of the security module functions by intercepting method
+calls, and performing a security check before invocation is allowed to
+proceed.
+
+In order to use the DeltaSpike security module, you must first have
+installed the proper dependencies into your POM file. Once this is
+complete, you may proceed to create a security parameter binding
+annotation. This is what we will use to add security behavior to our
+business classes and methods.
+
+Create the SecurityBinding:
+
+[source,java]
+-----------------------------------------
+@Retention(value = RUNTIME)
+@Target({TYPE, METHOD})
+@Documented
+@SecurityBindingType
+public @interface CustomSecurityBinding {
+}
+-----------------------------------------
+
+Next, we must define an Authorizer class to implement behavior for our
+custom SecurityBindingType. This class is simply a CDI bean which
+declares a @Secures method, qualified with the security binding
+annotation we created in the first step.
+
+This method has access to the InvocationContext of the method call, so
+if we need to access parameter arguments, we can do so using the given
+context. Note that we may also inject other beans into the parameter
+list of our @Secures method.
+
+Create the Authorizer:
+
+[source,java]
+---------------------------------------------------------------------------------------------------------------------------------
+@ApplicationScoped
+public class CustomAuthorizer
+{
+    @Secures
+    @CustomSecurityBinding
+    public boolean doSecuredCheck(InvocationContext invocationContext, BeanManager manager, @LoggedIn User user) throws Exception
+    {
+        return user.isLoggedIn(); // perform security check
+    }
+}
+---------------------------------------------------------------------------------------------------------------------------------
+
+We can then use our new annotation to secure business or bean methods.
+This binding annotation may be placed on the entire class (securing all
+methods,) or on individual methods that you wish to secure.
+
+Secure a bean method:
+
+[source,java]
+----------------------------------------
+@ApplicationScoped
+public class SecuredBean1
+{
+    @CustomSecurityBinding
+    public void doSomething(Thing thing)
+    {
+        thing.doSomething();
+    }
+}
+----------------------------------------
+
+Next, we may access parameter values from the method invocation directly
+in our authorizer bean by creating custom @SecurityParameterBinding
+types; this is a simple step once we have completed the work above:
+
+Create a parameter binding annotation:
+
+[source,java]
+--------------------------------
+@Retention(value = RUNTIME)
+@Target({PARAMETER})
+@Documented
+@SecurityParameterBinding
+public @interface CurrentThing {
+}
+--------------------------------
+
+Now, when a secured method is invoked, we can inject actual parameter
+values as arguments into our authorizer method, providing domain-level
+security in our applications:
+
+Update the Authorizer to use parameter binding:
+
+[source,java]
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+@ApplicationScoped
+public class CustomAuthorizer
+{
+    @Secures
+    @CustomSecurityBinding
+    public boolean doSecuredCheck(InvocationContext invocationContext, BeanManager manager, @LoggedIn User user, @CurrentThing Thing thing) throws Exception
+    {
+        return thing.hasMember(user); // perform security check against our method parameter
+    }
+}
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Note that our business method must also be annotated.
+
+Complete the parameter binding:
+
+[source,java]
+------------------------------------------------------
+@ApplicationScoped
+public class SecuredBean1
+{
+    @CustomSecurityBinding
+    public void doSomething(@CurrentThing Thing thing)
+    {
+        thing.doSomething();
+    }
+}
+------------------------------------------------------
+
+Our method is now secured, and we are able to use given parameter values
+as part of our security authorizer!
+
+There may be cases where you may want to base your authorization logic
+on the result of the secured method and do the security check after the
+method invocation. Just use the same security binding type for that
+case:
+
+[source,java]
+----------------------------------
+@ApplicationScoped
+public class SecuredBean1
+{
+    @CustomSecurityBinding
+    public Thing loadSomething()
+    {
+        return thingLoader.load();
+    }
+}
+----------------------------------
+
+Now you need to access the return value in the authorizer method. You
+can inject it using the @SecuredReturn annotation. Update the Authorizer
+to use a secured return value:
+
+[source,java]
+---------------------------------------------------------------------------------------------------
+@ApplicationScoped
+public class CustomAuthorizer
+{
+    @Secures
+    @CustomSecurityBinding
+    public boolean doSecuredCheck(@SecuredReturn Thing thing, @LoggedIn User user) throws Exception
+    {
+        return thing.hasMember(user); // perform security check against the return value
+}
+---------------------------------------------------------------------------------------------------
+
+Now the authorization will take place after the method invocation using
+the return value of the business method.
+
+Complete the parameter binding:
+
+[source,java]
+------------------------------------------------------
+@ApplicationScoped
+public class SecuredBean1
+{
+    @CustomSecurityBinding
+    public void doSomething(@CurrentThing Thing thing)
+    {
+        thing.doSomething();
+    }
+}
+------------------------------------------------------
+
+Our method is now secured, and we are able to use given parameter values
+as part of our security authorizer!
+
+
+== Integrating 3rd party security frameworks
+
+
+=== @Secured
+
+`@Secured` is build on `@SecurityBindingType` and a very simple
+alternative to the rest of the security module. It's a basic hook to
+integrate a custom security concept, 3rd party frameworks,... . It
+doesn't provide a full blown security concept like the rest of the
+security module, but other DeltaSpike modules ensure that the security
+concepts are integrated properly (e.g. correct behaviour within custom
+scope implementations,...). It just allows to integrate other security
+frameworks easily.
+
+(In MyFaces CODI it was originally a CDI interceptor. This part changed
+a bit, because between the interceptor and `@Secured` is the
+`@SecurityBindingType` concept which triggers `@Secured` as on possible
+approach. Therefore the basic behaviour remains the same and you can
+think about it like an interceptor.)
+
+Securing all intercepted methods of a CDI bean:
+
+[source,java]
+-----------------------------------------
+//...
+@Secured(CustomAccessDecisionVoter.class)
+public class SecuredBean
+{
+    //...
+}
+-----------------------------------------
+
+or
+
+Securing specific methods:
+
+[source,java]
+---------------------------------------------
+//...
+public class SecuredBean
+{
+    @Secured(CustomAccessDecisionVoter.class)
+    public String getResult()
+    {
+        //...
+    }
+}
+---------------------------------------------
+
+=== AccessDecisionVoter
+
+This interface is (besides the `Secured` annotation) the most important
+part of the concept. Both artifact types are also the only required
+parts:
+
+[source,java]
+--------------------------------------------------------------------------------------------------------
+public class CustomAccessDecisionVoter implements AccessDecisionVoter
+{
+    @Override
+    public Set<SecurityViolation> checkPermission(AccessDecisionVoterContext accessDecisionVoterContext)
+    {
+        Method method = accessDecisionVoterContext.<InvocationContext>getSource().getMethod();
+
+        //...
+    }
+}
+--------------------------------------------------------------------------------------------------------
+
+[TODO] hint about the changed parameter/s
+
+=== SecurityViolation
+
+In case of a detected violation a `SecurityViolation` has to be added to
+the result returned by the `AccessDecisionVoter`.
+
+=== AbstractAccessDecisionVoter
+
+You can also implement the abstract class `AbstractAccessDecisionVoter`.
+This is a convenience class which allows an easier usage:
+
+Example: :::java public class CustomAccessDecisionVoter extends
+AbstractAccessDecisionVoter \{
+
+[source,java]
+-----------------------------------------------------------------------------------------
+    @Override
+    protected void checkPermission(AccessDecisionVoterContext accessDecisionVoterContext,
+            Set<SecurityViolation> violations)
+    {
+        // check for violations
+        violations.add(newSecurityViolation("access not allowed due to ..."));
+    }
+}
+-----------------------------------------------------------------------------------------
+
+
+=== @Secured and Stereotypes with custom Meta-data
+
+If there are multiple `AccessDecisionVoter` and maybe in different
+constellations, it's easier to provide an expressive CDI stereotypes for
+it. Later on that also allows to change the behaviour in a central
+place.
+
+Stereotype support of @Secured:
+
+[source,java]
+-------------------------------------------
+@Named
+@Admin
+public class MyBean implements Serializable
+{
+  //...
+}
+
+//...
+@Stereotype
+@Secured(RoleAccessDecisionVoter.class)
+public @interface Admin
+{
+}
+-------------------------------------------
+
+Furthermore, it's possible to provide custom meta-data easily.
+
+Stereotype of @Secured with custom meta-data:
+
+[source,java]
+------------------------------------------------------------------------------------------
+@Named
+@Admin(securityLevel=3)
+public class MyBean implements Serializable
+{
+  //...
+}
+
+//...
+@Stereotype
+@Secured(RoleAccessDecisionVoter.class)
+public @interface Admin
+{
+  int securityLevel();
+}
+
+@ApplicationScoped
+public class RoleAccessDecisionVoter implements AccessDecisionVoter
+{
+    private static final long serialVersionUID = -8007511215776345835L;
+
+    public Set<SecurityViolation> checkPermission(AccessDecisionVoterContext voterContext)
+    {
+        Admin admin = voterContext.getMetaDataFor(Admin.class.getName(), Admin.class);
+        int level = admin.securityLevel();
+        //...
+    }
+}
+------------------------------------------------------------------------------------------
+
+== Making intitially requested and secured page available for redirect after login
+
+DeltaSpike can be combined with pure CDI or with any other security
+frameworks (like PicketLink) to track the denied page and make it
+available after user logs in.
+
+
+=== CDI Implementation to redirect the login to the first denied page
+
+Your LoginService will fire a custom `UserLoggedInEvent`
+
+[source,java]
+------------------------------------------------------------
+public class LoginService implements Serializable {
+
+    @Inject
+    private Event<UserLoggedInEvent> userLoggedInEvent;
+
+    public Usuario login(String username, char[] password) {
+        //do the loggin process
+        userLoggedInEvent.fire(new UserLoggedInEvent());
+    }
+
+}
+------------------------------------------------------------
+
+Use @SessionScoped or @WindowScoped for AdminAccessDecisionVoter and
+store the denied page on your own.
+
+[source,java]
+--------------------------------------------------------------------------------------------------------------------------------------------------
+@SessionScoped //or @WindowScoped
+public class AdminAccessDecisionVoter extends AbstractAccessDecisionVoter {
+
+    @Inject
+    private ViewConfigResolver viewConfigResolver;
+
+    private Class<? extends ViewConfig> deniedPage = Pages.Home.class;
+
+    @Override
+    protected void checkPermission(AccessDecisionVoterContext context, Set<SecurityViolation> violations) {
+        if(loggedIn) {
+            //...
+        } else {
+            violations.add(/*...*/);
+            deniedPage = viewConfigResolver.getViewConfigDescriptor(FacesContext.getCurrentInstance().getViewRoot().getViewId()).getConfigClass();
+        }
+    }
+
+    public Class<? extends ViewConfig> getDeniedPage() {
+        try {
+            return deniedPage;
+        } finally {
+            deniedPage = Pages.Home.class;
+        }
+    }
+}
+--------------------------------------------------------------------------------------------------------------------------------------------------
+
+And in AuthenticationListener you inject AdminAccessDecisionVoter
+
+[source,java]
+----------------------------------------------------------------------------------------
+public class AuthenticationListener {
+
+    @Inject
+    private ViewNavigationHandler viewNavigationHandler;
+
+    @Inject
+    private AdminAccessDecisionVoter adminAccessDecisionVoter;
+
+    public void handleLoggedIn(@Observes UserLoggedInEvent event) {
+        this.viewNavigationHandler.navigateTo(adminAccessDecisionVoter.getDeniedPage());
+    }
+
+}
+----------------------------------------------------------------------------------------
+
+=== PicketLink Implementation to redirect the login to the first denied page
+
+Once that PicketLink handles the authentication for you, you only need
+to store the denied page and observe PicketLink `LoggedInEvent` to
+redirect you back to the denied page.
+
+Use @SessionScoped or @WindowScoped for AdminAccessDecisionVoter and
+store the denied page on your own.
+
+[source,java]
+--------------------------------------------------------------------------------------------------------------------------------------------------
+@SessionScoped //or @WindowScoped
+public class AdminAccessDecisionVoter extends AbstractAccessDecisionVoter {
+
+    @Inject
+    private ViewConfigResolver viewConfigResolver;
+
+    private Class<? extends ViewConfig> deniedPage = Pages.Home.class;
+
+    @Override
+    protected void checkPermission(AccessDecisionVoterContext context, Set<SecurityViolation> violations) {
+
+        AuthorizationChecker authorizationChecker = BeanProvider.getContextualReference(AuthorizationChecker.class);
+        boolean loggedIn = authorizationChecker.isLoggedIn();
+
+        if(loggedIn) {
+            //...
+        } else {
+            violations.add(/*...*/);
+            deniedPage = viewConfigResolver.getViewConfigDescriptor(FacesContext.getCurrentInstance().getViewRoot().getViewId()).getConfigClass();
+        }
+    }
+
+    public Class<? extends ViewConfig> getDeniedPage() {
+        try {
+            return deniedPage;
+        } finally {
+            deniedPage = Pages.Home.class;
+        }
+    }
+}
+--------------------------------------------------------------------------------------------------------------------------------------------------
+
+And in AuthenticationListener you inject AdminAccessDecisionVoter
+
+[source,java]
+----------------------------------------------------------------------------------------
+public class AuthenticationListener {
+
+    @Inject
+    private ViewNavigationHandler viewNavigationHandler;
+
+    @Inject
+    private AdminAccessDecisionVoter adminAccessDecisionVoter;
+
+    public void handleLoggedIn(@Observes LoggedInEvent event) {
+        this.viewNavigationHandler.navigateTo(adminAccessDecisionVoter.getDeniedPage());
+    }
+
+}
+----------------------------------------------------------------------------------------
+
+== AccessDecisionVoterContext
+
+Because the `AccessDecisionVoter` can be chained,
+`AccessDecisionVoterContext` allows to get the current state as well as
+the results of the security check.
+
+There are several methods that can be useful
+
+* `getState()` - Exposes the current state : INITIAL, VOTE_IN_PROGRESS, VIOLATION_FOUND, NO_VIOLATION_FOUND
+* `getViolations()` - Exposes the found violations
+* `getSource()` - Exposes e.g. the current instance of `javax.interceptor.InvocationContext` in combination with `@Secured` used as interceptor.
+* `getMetaData()` - Exposes the found meta-data e.g. the view-config-class if `@Secured` is used in combination with type-safe view-configs
+* `getMetaDataFor(String, Class<T>)` - Exposes meta-data for the given key
+
+=== SecurityStrategy SPI
+
+The `SecurityStrategy` interface allows to provide a custom
+implementation which should be used for `@Secured`. Provide a custom
+implementation as bean-class in combination with `@Alternative` or
+`@Specializes` (or as global-alternative).
+
+In case of global-alternatives an additional config needs to be added to
+`/META-INF/apache-deltaspike.properties` - e.g.:
+
+`globalAlternatives.org.apache.deltaspike.security.spi.authorization.SecurityStrategy=mypackage.CustomSecurityStrategy`
+
+**Note**: The config for global-alternatives is following the pattern:
+globalAlternatives.`<interface-name>`=`<implementation-class-name>`

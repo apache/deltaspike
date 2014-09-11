@@ -1,0 +1,416 @@
+= Test-Control Module
+
+:Notice: Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+[TOC]
+
+== Intro
+
+This module is available since version 0.6 and allows to write CDI based
+tests easily.
+
+
+== Setup
+
+Setup for the CDI implementation of your choice and the following
+test-dependencies:
+
+[source,xml]
+----------------------------------------------------------------
+<dependency>
+    <groupId>org.apache.deltaspike.modules</groupId>
+    <artifactId>deltaspike-test-control-module-api</artifactId>
+    <version>${ds.version}</version>
+    <scope>test</scope>
+</dependency>
+<dependency>
+    <groupId>org.apache.deltaspike.modules</groupId>
+    <artifactId>deltaspike-test-control-module-impl</artifactId>
+    <version>${ds.version}</version>
+    <scope>test</scope>
+</dependency>
+----------------------------------------------------------------
+
+
+=== OpenWebBeans
+
+If you are using OpenWebBeans also add the following test-dependency
+
+[source,xml]
+-----------------------------------------------------
+ <dependency>
+     <groupId>org.apache.deltaspike.cdictrl</groupId>
+     <artifactId>deltaspike-cdictrl-owb</artifactId>
+     <version>${ds.version}</version>
+     <scope>test</scope>
+ </dependency>
+-----------------------------------------------------
+
+
+=== Weld
+
+If you are using Weld also add the following test-dependency
+
+[source,xml]
+----------------------------------------------------
+<dependency>
+    <groupId>org.apache.deltaspike.cdictrl</groupId>
+    <artifactId>deltaspike-cdictrl-weld</artifactId>
+    <version>${ds.version}</version>
+    <scope>test</scope>
+</dependency>
+----------------------------------------------------
+
+
+== CdiTestRunner
+
+JUnit Test-Runner to start/stop the CDI-Container autom. (per
+test-class) and one request and session per test-method:
+
+[source,java]
+--------------------------------------------------------
+@RunWith(CdiTestRunner.class)
+public class ContainerAndInjectionControl
+{
+    @Inject
+    private ApplicationScopedBean applicationScopedBean;
+
+    @Inject
+    private SessionScopedBean sessionScopedBean;
+
+    @Inject
+    private RequestScopedBean requestScopedBean;
+
+    //test the injected beans
+}
+--------------------------------------------------------
+
+== @TestControl
+
+@TestControl allows to change the default-behavior. In the following
+case only one session for all test-methods (of the test-class) will be
+created:
+
+[source,java]
+-----------------------------------------------
+@RunWith(CdiTestRunner.class)
+@TestControl(startScopes = SessionScoped.class)
+public class CustomizedScopeHandling
+{
+    //inject beans and test them
+}
+-----------------------------------------------
+
+== CdiTestSuiteRunner
+
+JUnit Test-Suite-Runner to start/stop the CDI-Container autom. (per
+test-suite):
+
+[source,java]
+---------------------------------------
+@RunWith(CdiTestSuiteRunner.class)
+@Suite.SuiteClasses({
+    TestX.class,
+    TestY.class
+})
+public class SuiteLevelContainerControl
+{
+}
+---------------------------------------
+
+== Project-Stage Control
+
+It's possible to overrule the default-project-stage for unit-tests
+(ProjectStage.UnitTest.class):
+
+[source,java]
+---------------------------------------------------------------
+@RunWith(CdiTestRunner.class)
+@TestControl(projectStage = CustomTestStage.class)
+public class TestStageControl
+{
+    //tests here will see project-stage CustomTestStage.class
+
+    @Test
+    @TestControl(projectStage = ProjectStage.Development.class)
+    public void checkDevEnv()
+    {
+    }
+
+    //tests here will see project-stage CustomTestStage.class
+}
+---------------------------------------------------------------
+
+
+== Optional Config
+
+It's possible to set "deltaspike.testcontrol.stop_container" to "false"
+(via the std. DeltaSpike config). With that the CDI-Container will be
+started just once for all tests.
+
+
+== Hints
+
+Don't forget to add a beans.xml in the test-module (e.g.
+src/test/resources/META-INF/beans.xml).
+
+If you are using OpenWebBeans as CDI implementation and you need to test
+EJBs as well, you can use deltaspike-cdictrl-openejb +
+org.apache.openejb:openejb-core (instead of deltaspike-cdictrl-owb).
+
+
+== Optional Integrations
+
+
+=== Mock Frameworks
+
+With v0.8+ it's possible to mock CDI-Beans. Usually @Exclude (+
+project-stage) is enough, however, for some cases mocked beans might be
+easier. Therefore it's possible to create (mock-)instances manually or
+via a mocking framework and add them e.g. via `DynamicMockManager`.
+
+If you need dependency-injection in the mocked instances, you can use
+`BeanProvider.injectFields(myMockedBean);`.
+
+[source,java]
+-------------------------------------------------------------
+@RunWith(CdiTestRunner.class)
+public class MockedRequestScopedBeanTest
+{
+    @Inject
+    private RequestScopedBean requestScopedBean;
+
+    @Inject
+    private DynamicMockManager mockManager;
+
+    @Test
+    public void manualMock()
+    {
+        mockManager.addMock(new RequestScopedBean() {
+            @Override
+            public int getCount()
+            {
+                return 7;
+            }
+        });
+
+        Assert.assertEquals(7, requestScopedBean.getCount());
+        requestScopedBean.increaseCount();
+        Assert.assertEquals(7, requestScopedBean.getCount());
+    }
+}
+
+@RequestScoped
+public class RequestScopedBean
+{
+    private int count = 0;
+
+    public int getCount()
+    {
+        return count;
+    }
+
+    public void increaseCount()
+    {
+        this.count++;
+    }
+}
+-------------------------------------------------------------
+
+Using a mocking framework makes no difference for adding the mock. E.g.
+via Mockito:
+
+[source,java]
+----------------------------------------------------------------------------------
+@RunWith(CdiTestRunner.class)
+public class MockitoMockedRequestScopedBeanTest
+{
+    @Inject
+    private RequestScopedBean requestScopedBean;
+
+    @Inject
+    private DynamicMockManager mockManager;
+
+    @Test
+    public void mockitoMockAsCdiBean()
+    {
+        RequestScopedBean mockedRequestScopedBean = mock(RequestScopedBean.class);
+        when(mockedRequestScopedBean.getCount()).thenReturn(7);
+        mockManager.addMock(mockedRequestScopedBean);
+
+        Assert.assertEquals(7, requestScopedBean.getCount());
+        requestScopedBean.increaseCount();
+        Assert.assertEquals(7, requestScopedBean.getCount());
+    }
+}
+----------------------------------------------------------------------------------
+
+Since CDI implementations like OpenWebBeans use a lot of optimizations,
+it's required to handle mocks for application-scoped beans differently -
+e.g.:
+
+[source,java]
+--------------------------------------------------------------------------------------------------------------------------
+@RunWith(CdiTestRunner.class)
+public class MockedApplicationScopedBeanTest
+{
+    @Inject
+    private ApplicationScopedBean applicationScopedBean;
+
+    @BeforeClass
+    public static void init()
+    {
+        ApplicationMockManager applicationMockManager = BeanProvider.getContextualReference(ApplicationMockManager.class);
+        applicationMockManager.addMock(new MockedApplicationScopedBean());
+    }
+
+    @Test
+    public void manualMock()
+    {
+        Assert.assertEquals(14, applicationScopedBean.getCount());
+        applicationScopedBean.increaseCount();
+        Assert.assertEquals(14, applicationScopedBean.getCount());
+    }
+}
+
+@ApplicationScoped
+public class ApplicationScopedBean
+{
+    private int count = 0;
+
+    public int getCount()
+    {
+        return count;
+    }
+
+    public void increaseCount()
+    {
+        this.count++;
+    }
+}
+
+@Typed() //exclude it for the cdi type-check
+public class MockedApplicationScopedBean extends ApplicationScopedBean
+{
+    @Override
+    public int getCount()
+    {
+        return 14;
+    }
+}
+--------------------------------------------------------------------------------------------------------------------------
+
+However, `ApplicationMockManager` can be used for adding all mocks, if
+they should be active for the lifetime of the CDI-container.
+
+It's also possible to mock qualified beans. Just add the
+literal-instance(s) as additional parameter(s) - e.g.:
+
+[source,java]
+-------------------------------------------------------------
+@RunWith(CdiTestRunner.class)
+public class MockedQualifiedBeanTest
+{
+    @Inject
+    @MyQualifier
+    private QualifiedBean qualifiedBean;
+
+    @Inject
+    private DynamicMockManager mockManager;
+
+    @Test
+    public void manualMockWithQualifier()
+    {
+        mockManager.addMock(new QualifiedBean() {
+            @Override
+            public int getCount()
+            {
+                return 21;
+            }
+        }, AnnotationInstanceProvider.of(MyQualifier.class));
+
+        Assert.assertEquals(21, qualifiedBean.getCount());
+        qualifiedBean.increaseCount();
+        Assert.assertEquals(21, qualifiedBean.getCount());
+    }
+}
+-------------------------------------------------------------
+
+In some cases it's needed to use `@javax.enterprise.inject.Typed`.
+Mocking such typed beans can result in an
+`AmbiguousResolutionException`. Therefore it's needed to exclude the
+mocked implementation via `@Exclude` or `@Typed()` (or a parametrized
+constructor) and specify the target-type via `@TypedMock`.
+
+=== JSF (via MyFaces-Test)
+
+add on of
+
+* org.apache.deltaspike.testcontrol.impl.jsf.MockedJsf2TestContainer
+* org.apache.deltaspike.testcontrol.impl.jsf.MockedJsfTestContainerAdapter
+* org.apache.deltaspike.testcontrol.impl.jsf.MyFacesContainerAdapter
+* org.apache.deltaspike.testcontrol.impl.jsf.MyFacesContainerPerTestMethodAdapter
+
+as content to
+
+/META-INF/services/org.apache.deltaspike.testcontrol.spi.ExternalContainer
+
+(in your config-folder for tests e.g.: test/resources)
+
+== Mixed Tests
+
+Usually you should have one kind of tests per test-module. However, if
+you need to add e.g. a test without an external-container to your
+test-module which uses external-containers, you can annotate your test
+with:
+
+[source,java]
+---------------------------------------------
+@RunWith(CdiTestRunner.class)
+@TestControl(startExternalContainers = false)
+public class JsfContainerTest
+{
+    //...
+}
+---------------------------------------------
+
+
+== Known Restrictions
+
+=== Liquibase
+
+Liquibase invokes `#toString` in a `AfterDeploymentValidation` observer.
+*that isn't portable* and therefore you have to deactivate the
+mocking-support via:
+
+[source,java]
+----------------------------------------------------------------------------------------------------------
+public class LiquibaseAwareClassDeactivator implements ClassDeactivator {
+    @Override
+    public Boolean isActivated(Class<? extends Deactivatable> targetClass) {
+        return !"org.apache.deltaspike.testcontrol.impl.mock.MockExtension".equals(targetClass.getName());
+    }
+}
+----------------------------------------------------------------------------------------------------------
+
+and add `LiquibaseAwareClassDeactivator` to `/META-INF/apache-deltaspike.properties` - e.g.:
+
+---------------------------------------------------------------------------------------------------
+org.apache.deltaspike.core.spi.activation.ClassDeactivator=myPackage.LiquibaseAwareClassDeactivator
+---------------------------------------------------------------------------------------------------
+
+Further details are available at deactivatable.
+
+
+== SPI
+
+
+=== ExternalContainer
+
+org.apache.deltaspike.testcontrol.spi.ExternalContainer allows to
+integrate containers which get started after the CDI container.
+Currently DeltaSpike provides:
+
+* MockedJsf2TestContainer (integration with MyFaces-Test)
+
+[TODO]

@@ -1,0 +1,44 @@
+= Partial-Bean
+
+:Notice: Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+[TOC]
+
+== Usage
+
+Partial beans allow you to implement a generic handler to replace manual
+implementations of interfaces (or abstract classes).
+
+`@PartialBeanBinding` is the binding-annotation for creating a custom
+interface (/abstract class) to generic handler binding.
+
+[source,java]
+-------------------------------------------------------------------------------------
+@PartialBeanBinding
+
+@Retention(RUNTIME)
+@Target(TYPE)
+public @interface MyPartialBeanBinding {}
+
+@MyPartialBeanBinding
+//scope is optional
+public interface PartialBean
+{
+    String getValue();
+}
+
+@MyPartialBeanBinding
+@Dependent
+public class MyPartialBeanHandler implements java.lang.reflect.InvocationHandler
+{
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
+    {
+        //generic handler logic
+    }
+}
+-------------------------------------------------------------------------------------
+
+Using an abstract class as partial-bean requires javassist as an
+additional dependency and allows to implement some methods manually.
+
+Attention: Currently CDI-Interceptors can't be used for partial-beans.
