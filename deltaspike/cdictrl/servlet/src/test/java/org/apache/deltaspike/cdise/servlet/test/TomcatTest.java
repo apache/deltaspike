@@ -36,14 +36,16 @@ public class TomcatTest extends EmbeddedServletContainer
     @Override
     protected int createServer() throws Exception
     {
+        String baseDir = "target/webapp-runner";
         tomcat = new Tomcat();
         int port = super.getPort();
         tomcat.setPort(port);
-        File base = new File("target/webapp-runner");
+        File base = new File(baseDir);
         if (!base.exists())
         {
             base.mkdirs();
         }
+        tomcat.setBaseDir(baseDir);
         Context ctx = tomcat.addContext("/",base.getAbsolutePath());
         StandardContext standardContext = (StandardContext)ctx;
         standardContext.addApplicationListener(CdiServletContextListener.class.getName());
