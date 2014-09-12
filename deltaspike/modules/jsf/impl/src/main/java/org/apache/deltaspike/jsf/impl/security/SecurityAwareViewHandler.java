@@ -122,20 +122,25 @@ public class SecurityAwareViewHandler extends ViewHandlerWrapper implements Deac
             ViewConfigDescriptor errorViewDescriptor = viewConfigResolver
                     .getViewConfigDescriptor(accessDeniedException.getErrorView());
 
-            if (errorViewDescriptor != null && View.NavigationMode.REDIRECT ==
+            try
+            {
+                if (errorViewDescriptor != null && View.NavigationMode.REDIRECT ==
                     errorViewDescriptor.getMetaData(View.class).iterator().next().navigation() /*always available*/ &&
                     BeanProvider.getContextualReference(JsfModuleConfig.class)
-                            .isAlwaysUseNavigationHandlerOnSecurityViolation())
-            {
-                SecurityUtils.tryToHandleSecurityViolation(accessDeniedException);
-                errorView = errorViewDescriptor.getConfigClass();
+                        .isAlwaysUseNavigationHandlerOnSecurityViolation())
+                {
+                    SecurityUtils.tryToHandleSecurityViolation(accessDeniedException);
+                    errorView = errorViewDescriptor.getConfigClass();
+                }
+                else
+                {
+                    errorView = SecurityUtils.handleSecurityViolationWithoutNavigation(accessDeniedException);
+                }
             }
-            else
+            finally
             {
-                errorView = SecurityUtils.handleSecurityViolationWithoutNavigation(accessDeniedException);
+                broadcastAccessDeniedException(accessDeniedException);
             }
-
-            broadcastAccessDeniedException(accessDeniedException);
 
             return this.wrapped.createView(context, viewConfigResolver.getViewConfigDescriptor(errorView).getViewId());
         }
