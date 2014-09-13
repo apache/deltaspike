@@ -209,7 +209,7 @@ window.onload = function(evt) {
             jsf.ajax.addOnEvent(jsfAjaxHandler);
             
             if (window.$ && window.PrimeFaces) {
-                $(document).on('pfAjaxSuccess', pfAjaxHandler);
+                $(document).on('pfAjaxComplete', pfAjaxHandler);
             }
         }
     }
