@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.playground.windowhandling;
 
+import java.util.Date;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -29,9 +30,10 @@ import org.apache.deltaspike.jsf.spi.scope.window.ClientWindow;
 @RequestScoped
 public class ViewActionController
 {
-
     @Inject
     private ClientWindow clientWindow;
+    
+    private Date lastTimeLinkAction;
 
     @PostConstruct
     public void init()
@@ -43,5 +45,17 @@ public class ViewActionController
     {
         FacesContext context = FacesContext.getCurrentInstance();
         System.out.println("ViewActionController#action with windowId: " + clientWindow.getWindowId(context));
+    }
+
+    public Date getLastTimeLinkAction()
+    {
+        return lastTimeLinkAction;
+    }
+
+    public void linkAction()
+    {
+        FacesContext context = FacesContext.getCurrentInstance();
+        System.out.println("ViewActionController#linkAction with windowId: " + clientWindow.getWindowId(context));
+        lastTimeLinkAction = new Date();
     }
 }

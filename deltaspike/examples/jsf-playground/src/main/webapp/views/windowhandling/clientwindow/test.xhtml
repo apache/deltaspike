@@ -54,6 +54,12 @@
         <h:commandLink value="AJAX Postback with outcome" action="test.xhtml?faces-redirect=true">
             <f:ajax render="@form" execute="@this" />
         </h:commandLink>
+        <br />
+        <br />
+        Last time linkAction: #{viewActionController.lastTimeLinkAction} <br/>
+        <h:commandLink value="AJAX action" action="#{viewActionController.linkAction}">
+            <f:ajax render="@form" execute="@this" />
+        </h:commandLink>
     </h:form>
     
 </h:body>
