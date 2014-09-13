@@ -90,7 +90,7 @@ function applyWindowId() {
                             //ie handling added
                             evt = evt || window.event;
 
-                            return storeWindowTree() && oldonclick(evt);
+                            return storeWindowTree() && oldonclick.bind(this)(evt);
                         };
                     })();
                 }
