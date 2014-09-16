@@ -18,7 +18,9 @@
  */
 package org.apache.deltaspike.jsf.impl.injection.proxy;
 
+import javax.faces.FacesException;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
@@ -36,10 +38,21 @@ class DelegatingMethodHandler<T extends InvocationHandler>
     //Signature given by javassist.util.proxy.MethodHandler#invoke
     public Object invoke(Object target, Method method, Method proceedMethod, Object[] arguments) throws Throwable
     {
-        if (proceedMethod != null)
+        try
         {
-            return proceedMethod.invoke(target, arguments);
+            if (proceedMethod != null)
+            {
+                return proceedMethod.invoke(target, arguments);
+            }
+            return this.handlerInstance.invoke(target, method, arguments);
         }
-        return this.handlerInstance.invoke(target, method, arguments);
+        catch (InvocationTargetException e)
+        {
+            if (e.getCause() instanceof FacesException)
+            {
+                throw e.getCause();
+            }
+            throw e;
+        }
     }
 }
