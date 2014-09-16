@@ -1,0 +1,85 @@
+= Configure DeltaSpike in Your Projects
+
+:Notice: Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+:toc:
+
+DeltaSpike is available for use in Maven-based and Maven-independent projects. Instructions are given here for obtaining released final versions of DeltaSpike for both approaches.
+
+**Note:** You can also opt to use the lastest DeltaSpike snapshots; for more information, see <<snapshots#,Test Snapshots>>.
+
+== Configure DeltaSpike in Maven-based Projects
+DeltaSpike released versions are available from the Maven Central repository for use in Maven-based projects. This means that you do not need to modify your Maven configuration `settings.xml` file; when building projects, Maven automatically searches the online Maven Central repository for project dependencies and downloads sources to your local Maven repository. 
+
+To begin use the DeltaSpike releases from Maven Central, you simply need to configure the project `pom.xml` file for each project with information about the release version and modules you want to use. At a minimum, you must add the DeltaSpike Core module, which provides the DeltaSpike API and utility classes.
+
+. Open the project `pom.xml` file for editing
+. Add the DeltaSpike version to the list of properties
++
+[source,xml]
+----
+<properties>
+    <deltaspike.version>1.0.2</deltaspike.version>
+</properties>
+----
++
+. Add the DeltaSpike Core module to the list of dependencies
++
+[source,xml]
+----
+<dependency>
+    <groupId>org.apache.deltaspike.core</groupId>
+    <artifactId>deltaspike-core-api</artifactId>
+    <version>${deltaspike.version}</version>
+    <scope>compile</scope>
+</dependency>
+
+<dependency>
+    <groupId>org.apache.deltaspike.core</groupId>
+    <artifactId>deltaspike-core-impl</artifactId>
+    <version>${deltaspike.version}</version>
+    <scope>runtime</scope>
+</dependency>
+----
++
+. Save the `pom.xml` file changes
+
+For instructions on adding the optional DeltaSpike modules, see the relevant module page:
+
+* <<bean-validation#,Bean Validation>>
+* <<container-control#,Container Control>>
+* <<data#,Data>>
+* <<jpa#,JPA>>
+* <<jsf#,JSF>>
+* <<partial-bean#,Partial-Bean>>
+* <<scheduler#,Scheduler>>
+* <<security#,Security>>
+* <<servlet#,Servlet>>
+* <<test-control#,Test-Control>>
+
+== Configure DeltaSpike in Maven-independent Projects
+Deltaspike is provided as a set of downloadable .jar files for projects not utilizing the Maven build system. Alternatively, you can build the DeltaSpike .jar files from source; for instructions, see <<build#,Build DeltaSpike from Source>>. In both cases, you must add the DeltaSpike .jar files directly to your projects. 
+
+To use DeltaSpike without Maven from the downloadable .jar files, complete the following steps:
+
+. Download the latest `distribution-full-<version>.zip` from https://deltaspike.apache.org/download.html
+. Extract the archive contents
++
+[source,shell]
+----
+$ unzip distribution-full-<version>.zip
+----
++
+. Add the source to your project
+  .. For .war projects, copy the .jar files to `WEB-INF/lib` directory
+  .. For .ear projects, copy the .jar files to `EAR/lib directory` and add the following to `META-INF/application.xml`:
++
+[source,xml]
+----
+<library-directory>lib</library-directory>
+----
+
+== Next
+* To check whether your Java envrionment needs any additional CDI-specific configuration, see <<cdiimp#,Enable CDI For Your Java Environment>>.
+* To see ready-to-deploy example DeltaSpike applications, see <<examples#,See DeltaSpike in Action>>.
+* To understand how the various DeltaSpike modules can enhance and extend your applications, see the individual module pages.

@@ -1,0 +1,35 @@
+= Add-ons
+
+:Notice: Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+:toc:
+
+Add-ons extend the functionality of DeltaSpike and several have been developed external to the DeltaSpike project. Brief information is given here about each of the add-ons, with details of where they can be obtained from.
+
+== Monitoring
+**Replace this text!** Write 2-3 sentences in plain language making sure you answer every question:
+
+* What is the purpose of the add-on (e.g., A two-way cdi-spring bridge that allows spring-beans to be injected into cdi-beans and vice versa provided the concepts, for example qualifiers, are compatible.)?
+* When would the user use this add-on?
+* Where can the user get the add-on from (https://github.com/os890/ds-monitoring-addon )?
+* Any special instructions for using the add-on correctly?
+
+== Spring Bridge
+`ds-spring-bridge-addon` is a two-way cdi-spring bridge that allows spring-beans to be injected into cdi-beans and vice versa provided the concepts, for example qualifiers, are compatible. You can obtain this add-on from https://github.com/os890/ds-spring-bridge-addon.
+
+**Replace this text!** Write 2-3 sentences in plain language making sure you answer every question:
+
+* What is the purpose of the add-on (e.g., A two-way cdi-spring bridge that allows spring-beans to be injected into cdi-beans and vice versa provided the concepts, for example qualifiers, are compatible.)?
+* When would the user use this add-on?
+* Where can the user get the add-on from (https://github.com/os890/ds-spring-bridge-addon )?
+* Any special instructions for using the add-on correctly?
+
+== Disruptor
+This add-on creates a disruptor process for every observer method. It currently works with Apache TomEE and JBoss AS 7.
+
+**Replace this text!** Write 2-3 sentences in plain language making sure you answer every question:
+
+* What is the purpose of the add-on (e.g., A two-way cdi-spring bridge that allows spring-beans to be injected into cdi-beans and vice versa provided the concepts, for example qualifiers, are compatible.)?
+* When would the user use this add-on?
+* Where can the user get the add-on from (https://github.com/os890/ds-disruptor-addon )?
+* Any special instructions for using the add-on correctly?

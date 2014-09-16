@@ -1,0 +1,29 @@
+= Articles and Blogs
+
+:Notice: Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+:toc:
+
+You can find lots of content related to DeltaSpike with a quick internet search. But here is a list of some useful articles and blogs to get you started.
+
+If you know of useful DeltaSpike articles or blogs that are not listed, link:https://deltaspike.apache.org/community.html[let us know]. 
+
+== Ongoing
+
+* https://twitter.com/DeltaSpikeTeam[@DeltaSpikeTeam on Twitter]
+* https://twitter.com/hashtag/deltaspike[#deltaspike on Twitter]
+* http://os890.blogspot.com.au/search/label/deltaspike[os890 DeltaSpike posts]
+* http://rafabene.com/?s=deltaspike&submit=Search[Rafael Benevides DeltaSpike posts]
+* http://rmannibucau.wordpress.com/?s=deltaspike[RManiiBucau DeltaSpike posts]
+* https://struberg.wordpress.com/?s=deltaspike[Struberg DeltaSpike posts]
+
+
+== One-offs
+
+* https://blogs.oracle.com/theaquarium/entry/introducing_deltaspike_1_0[The Aquarium: Introducing DeltaSpike 1.0]
+* http://blog.arungupta.me/2014/06/deltaspike-1-0-extend-javaee-techtip32/[DeltaSpike 1.0 – Extend #JavaEE beyond #JavaEE]
+* http://www.tearsofaunicorn.com/articles/2014/06/10/configuring-deltaspike-through-environment-variables.html[Configuring Apache Deltaspike through environment variables]
+* http://blog.ctp.com/2013/11/27/bye-bye-cdi-query-hello-deltaspike-data/[Bye Bye CDI Query, Hello DeltaSpike Data]
+* http://rmannibucau.wordpress.com/2013/11/20/deltaspike-data-repositories-with-dtos/[DeltaSpike Data: repositories with DTOs!]
+* http://jaxenter.com/introducing-apache-deltaspike-42925.html[Closing the Gaps: Introducing Apache Deltaspike]
+* http://jsfcorner.blogspot.com.au/2013/01/deltaspike-jsf-message-system.html[DeltaSpike JSF message system]

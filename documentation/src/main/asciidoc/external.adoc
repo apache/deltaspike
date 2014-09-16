@@ -1,0 +1,63 @@
+= External Examples and Templates
+
+:Notice: Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+:toc:
+
+A number of DeltaSpike examples and templates have been developed external to the DeltaSpike project. These extend the DeltaSpike resources from which you can see DeltaSpike in action. Brief information is given here about each of the examples and templates, with details of where they can be obtained from.
+
+== Example: Confess 2012 Workshop Demo
+This example was prepared for the Confess workshop and demonstrates how to use DeltaSpike instead of and side-by-side with MyFaces CODI. The secured web application demonstrates presenting users with differentiating content based on their account status.
+
+**Source code:** https://github.com/confess/confess2012_deltaspike
+
+== Example: Fullstack EE6+ with DeltaSpike
+Simple example based on Java EE6+ and DeltaSpike (tested with EE6 and EE7).
+
+**Source code:** https://github.com/os890/ee6-ds-demo
+
+== Example: Fullstack CODI to DeltaSpike
+This pair of examples show how to achieve the most important MyFaces CODI features with DeltaSpike and also how to migrate a CODI project to DeltaSpike. The examples are basic, compacting core CODI features into just a few JSF pages, and are intended for deployment with TomEE. 
+
+**Source code:** https://github.com/os890/tomee_mf_stack_001
+
+* CODI version in master branch
+* Migrated DeltaSpike version in codi2ds branch
+
+== Examples: JBoss Web Framework Kit Quickstarts 
+The JBoss quickstarts are small working examples that demonstrate recommended practices for specific Java EE technology use cases. A subset of these quickstarts are dedicated to demonstrating DeltaSpike, including custom authorization restrictions using annotations, constructing and modifying beans, extending the influence of CDI using BeanManager, and deactivating DeltaSpike features.
+
+**Source code:** https://github.com/jboss-developer/jboss-wfk-quickstarts
+
+== Template: Java SE + CDI + DS
+**Replace this text!** Write 2-3 sentences in plain language making sure you answer every question:
+
+* What is the purpose of the template (e.g., This quickstart demonstrates the use of a partial bean to provide dynamic implementations of an interface, and how this might be used to provide a generic query service.)?
+* When would the user use this template (e.g., The PersonQueryService provides an example of the end user API that might be available from such a framework. Extensive code comments document the example implementation.)?
+* Where can the user get the template from (https://github.com/os890/javase-cdi-ds-project-template )?
+* Any special instructions for how to build and deploy (e.g., It does not contain any user interface; the tests must be run to verify everything is working correctly.)?
+
+== Template: JSF + CDI + DS (Servlet-Container)
+**Replace this text!** Write 2-3 sentences in plain language making sure you answer every question:
+
+* What is the purpose of the template (e.g., This quickstart demonstrates the use of a partial bean to provide dynamic implementations of an interface, and how this might be used to provide a generic query service.)?
+* When would the user use this template (e.g., The PersonQueryService provides an example of the end user API that might be available from such a framework. Extensive code comments document the example implementation.)?
+* Where can the user get the template from (https://github.com/os890/javaweb-cdi-ds-project-template )?
+* Any special instructions for how to build and deploy (e.g., It does not contain any user interface; the tests must be run to verify everything is working correctly.)?
+ 
+== Template: EJB + CDI + DS (Module)
+**Replace this text!** Write 2-3 sentences in plain language making sure you answer every question:
+
+* What is the purpose of the template (e.g., This quickstart demonstrates the use of a partial bean to provide dynamic implementations of an interface, and how this might be used to provide a generic query service.)?
+* When would the user use this template (e.g., The PersonQueryService provides an example of the end user API that might be available from such a framework. Extensive code comments document the example implementation.)?
+* Where can the user get the template from (https://github.com/os890/javaee_cdi_ejb_ds_project_template )?
+* Any special instructions for how to build and deploy (e.g., It does not contain any user interface; the tests must be run to verify everything is working correctly.)?
+
+== Template: JSF + EJB + CDI + DS (EE-Server)
+**Replace this text!** Write 2-3 sentences in plain language making sure you answer every question:
+
+* What is the purpose of the template (e.g., This quickstart demonstrates the use of a partial bean to provide dynamic implementations of an interface, and how this might be used to provide a generic query service.)?
+* When would the user use this template (e.g., The PersonQueryService provides an example of the end user API that might be available from such a framework. Extensive code comments document the example implementation.)?
+* Where can the user get the template from (https://github.com/os890/javaee_jsf_cdi_ejb_ds_project_template )?
+* Any special instructions for how to build and deploy (e.g., It does not contain any user interface; the tests must be run to verify everything is working correctly.)?
+

@@ -1,0 +1,50 @@
+= Use DeltaSpike Snapshots
+
+:Notice: Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+:toc:
+
+If you want to be at the bleeding edge, you can work with DeltaSpike snapshots. These are available from the Apache Snapshot Repository for use in Maven-based projects. To begin using them, you must configure Maven with the repository location and your projects with the snapshot version.
+
+**Warning:** Snapshots provide previews of DeltaSpike during development. Snapshots are subject to change and may not yet include all expected features of the final release. Snapshots should not be used in production environments.
+
+== Configure Maven to Use the Apache Snapshot Repository
+You must add the Apache Snapshot Repository to your Maven configuration `settings.xml` file. This ensures Maven can find the repository when it searches for your project DeltaSpike dependencies.
+
+. Open Maven configuration `settings.xml` file for editing
+. Add the Apache Snapshot Repository to the list of repositories
++
+[source,xml]
+----
+<repositories>
+    <repository>
+        <id>apache-snapshot-repository</id>
+        <url>http://repository.apache.org/snapshots/</url>
+        <releases>
+            <enabled>false</enabled>
+        </releases>
+        <snapshots>
+            <enabled>true</enabled>
+        </snapshots>
+    </repository>
+</repositories>
+----
++
+. Save the `settings.xml` file changes
+
+
+== Configure Your Project with the Snapshot Version
+
+With Maven configured for the Apache Snapshot Repository, you can specify DeltaSpike snapshot versions in your Maven-based projects.
+
+. Open the project `pom.xml` file for editing
+. Add the DeltaSpike snapshot version to the list of properties
++
+[source,xml]
+----
+<properties>
+    <deltaspike.version>1.0.3-SNAPSHOT</deltaspike.version>
+</properties>
+----
++
+. Save the `pom.xml` file changes

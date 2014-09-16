@@ -1,0 +1,53 @@
+= See DeltaSpike in Action
+
+:Notice: Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+:toc:
+
+A collection of ready-to-build Maven-based projects are provided to demonstrate the inclusion of DeltaSpike in applications. Each example showcases a different DeltaSpike feature and explores the mechanics of DeltaSpike implementation. You can use these examples to see DeltaSpike in action and learn how to add these capabilities to your own projects. The Maven-based project examples are available in `deltaspike-project-<version>-source-release.zip` and each is briefly outlined here.
+	
+To begin using the projects, complete the following steps:
+
+. link:https://deltaspike.apache.org/download.html[Download `deltaspike-project-<version>-source-release.zip`]
+. Extract the archive contents
++
+[source,shell]
+----
+$ unzip deltaspike-project-<version>-source-release.zip
+----
++
+. Build the projects
++
+[source,shell]
+----
+$ cd /path/to/deltaspike-project-<version>/examples
+$ mvn clean package
+----
+
+== jse-examples
+**Replace this text!** Write 2-3 sentences in plain language making sure you answer every question:
+
+* What is the purpose of the example (e.g., This quickstart demonstrates the use of a partial bean to provide dynamic implementations of an interface, and how this might be used to provide a generic query service.)?
+* When would the user use this example (e.g., The PersonQueryService provides an example of the end user API that might be available from such a framework. Extensive code comments document the example implementation.)?
+* Any special instructions for how to build and deploy (e.g., It does not contain any user interface; the tests must be run to verify everything is working correctly.)?
+
+== jsf-examples
+**Replace this text!** Write 2-3 sentences in plain language making sure you answer every question:
+
+* What is the purpose of the example (e.g., This quickstart demonstrates the use of a partial bean to provide dynamic implementations of an interface, and how this might be used to provide a generic query service.)?
+* When would the user use this example (e.g., The PersonQueryService provides an example of the end user API that might be available from such a framework. Extensive code comments document the example implementation.)?
+* Any special instructions for how to build and deploy (e.g., It does not contain any user interface; the tests must be run to verify everything is working correctly.)?
+
+== jsf-playground
+**Replace this text!** Write 2-3 sentences in plain language making sure you answer every question:
+
+* What is the purpose of the example (e.g., This quickstart demonstrates the use of a partial bean to provide dynamic implementations of an interface, and how this might be used to provide a generic query service.)?
+* When would the user use this example (e.g., The PersonQueryService provides an example of the end user API that might be available from such a framework. Extensive code comments document the example implementation.)?
+* Any special instructions for how to build and deploy (e.g., It does not contain any user interface; the tests must be run to verify everything is working correctly.)?
+
+== scheduler-playground
+**Replace this text!** Write 2-3 sentences in plain language making sure you answer every question:
+
+* What is the purpose of the example (e.g., This quickstart demonstrates the use of a partial bean to provide dynamic implementations of an interface, and how this might be used to provide a generic query service.)?
+* When would the user use this example (e.g., The PersonQueryService provides an example of the end user API that might be available from such a framework. Extensive code comments document the example implementation.)?
+* Any special instructions for how to build and deploy (e.g., It does not contain any user interface; the tests must be run to verify everything is working correctly.)?
