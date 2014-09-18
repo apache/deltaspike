@@ -34,6 +34,7 @@ import org.apache.deltaspike.jsf.api.config.view.Folder;
 import org.apache.deltaspike.jsf.api.config.view.View;
 import org.apache.deltaspike.jsf.impl.util.ViewConfigUtils;
 
+import javax.enterprise.inject.Stereotype;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -89,6 +90,7 @@ public class DefaultConfigNodeConverter implements ConfigNodeConverter
     {
         //TODO add qualifier support
         List<Annotation> nodeViewMetaData = new ArrayList<Annotation>();
+        List<Annotation> viewMetaDataFromStereotype = new ArrayList<Annotation>();
 
         for (Annotation annotation : metaData)
         {
@@ -96,13 +98,34 @@ public class DefaultConfigNodeConverter implements ConfigNodeConverter
             {
                 nodeViewMetaData.add(annotation);
             }
+
+            //TODO move to stereotype-util, improve it and merge it with DefaultViewConfigInheritanceStrategy
+            if (annotation.annotationType().isAnnotationPresent(Stereotype.class))
+            {
+                for (Annotation metaAnnotation : annotation.annotationType().getAnnotations())
+                {
+                    if (metaAnnotation.annotationType().isAnnotationPresent(ViewMetaData.class))
+                    {
+                        viewMetaDataFromStereotype.add(metaAnnotation);
+                    }
+                }
+            }
         }
 
-        if (inheritedMetaData == null || inheritedMetaData.isEmpty())
+        //merge meta-data of same level
+        List<Annotation> result = mergeAnnotationInstances(viewMetaDataFromStereotype, nodeViewMetaData);
+
+        if (inheritedMetaData != null && !inheritedMetaData.isEmpty())
         {
-            return nodeViewMetaData;
+            //merge meta-data with levels above
+            result = mergeAnnotationInstances(inheritedMetaData, result);
         }
 
+        return result;
+    }
+
+    private List<Annotation> mergeAnnotationInstances(List<Annotation> inheritedMetaData, List<Annotation> nodeMetaData)
+    {
         List<Annotation> mergedResult = new ArrayList<Annotation>();
 
         for (Annotation inheritedAnnotation : inheritedMetaData)
@@ -127,7 +150,7 @@ public class DefaultConfigNodeConverter implements ConfigNodeConverter
             }
             else
             {
-                Annotation currentNodeMetaData = findInResult(nodeViewMetaData, inheritedAnnotation);
+                Annotation currentNodeMetaData = findInResult(nodeMetaData, inheritedAnnotation);
                 if (currentNodeMetaData == null)
                 {
                     Annotation mergedMetaData = findInResult(mergedResult, inheritedAnnotation);
@@ -151,7 +174,7 @@ public class DefaultConfigNodeConverter implements ConfigNodeConverter
         }
 
         //add all annotations at the beginning which weren't used for the merge
-        mergedResult.addAll(0, nodeViewMetaData);
+        mergedResult.addAll(0, nodeMetaData);
         return mergedResult;
     }
 
