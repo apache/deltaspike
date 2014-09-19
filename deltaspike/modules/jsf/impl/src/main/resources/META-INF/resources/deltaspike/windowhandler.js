@@ -161,14 +161,35 @@ function assertWindowId() {
         }
     }
     else if (window.deltaspikeClientWindowRenderMode === 'LAZY') {
+        var dswid = getUrlParameter('dswid');
+        
+        // window.name is null which means that "open in new tab/window" was used
         if (!window.name || window.name.length < 1) {
-            window.name = window.deltaspikeWindowId;
+
+            // url param available?
+            if (dswid) {
+                // -- url param available, we must recreate a new windowId to be sure that it is new and valid --
+
+                // set tempWindowId to remember the current state                
+                window.name = 'tempWindowId';
+                // we remove the dswid if avilable and redirect to the same url again the create a new windowId
+                window.location = setUrlParam(window.location.href, 'dswid', null);
+            }
+            else if (window.deltaspikeWindowId) {
+                // -- no dswid in the url -> an initial request without initial redirect --
+
+                // this means that the initial redirect is disabled and we can just use the windowId as window.name
+                window.name = window.deltaspikeWindowId;
+            }
         }
         else {
-            var dswid = getUrlParameter('dswid');
-
-            if (window.name !== dswid) {
-                // redirect with current window.name / windowId
+            if (window.name === 'tempWindowId') {
+                // we triggered the windowId recreation last request - use it now!
+                window.name = dswid;
+            }
+            else if (window.name !== dswid) {
+                // window.name doesn't match requested windowId
+                // -> redirect to the same view with current window.name / windowId
                 window.location = setUrlParam(window.location.href, 'dswid', window.name);
             }
         }
