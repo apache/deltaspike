@@ -34,14 +34,16 @@
     
 <h:body>
     <h:form>
+        <ds:windowId/>
+        
         DS WindowId: #{dsWindowContext.currentWindowId}
         <br />
         <br />
-        <h:link value="GET Link" outcome="test.xhtml" />
+        <h:link value="GET Link" outcome="viewAction.xhtml" />
         <br />
         <br />
         <ds:disableClientWindow>
-            <h:link value="GET Link - surrounded by ds:disableClientWindow" outcome="test.xhtml" />
+            <h:link value="GET Link - surrounded by ds:disableClientWindow" outcome="viewAction.xhtml" />
         </ds:disableClientWindow>
         <br />
         <br />
@@ -49,7 +51,7 @@
         </h:commandLink>
         <br />
         <br />
-        <h:commandLink value="Postback with outcome" action="test.xhtml?faces-redirect=true">
+        <h:commandLink value="Postback with outcome" action="viewAction.xhtml?faces-redirect=true">
         </h:commandLink>
         <br />
         <br />
@@ -58,7 +60,7 @@
         </h:commandLink>
         <br />
         <br />
-        <h:commandLink value="AJAX Postback with outcome" action="test.xhtml?faces-redirect=true">
+        <h:commandLink value="AJAX Postback with outcome" action="viewAction.xhtml?faces-redirect=true">
             <f:ajax render="@form" execute="@this" />
         </h:commandLink>
     </h:form>
