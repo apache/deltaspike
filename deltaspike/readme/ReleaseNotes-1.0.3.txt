@@ -1,0 +1,33 @@
+Release Notes - Apache DeltaSpike - Version 1.0.3
+
+Bug
+
+    [DELTASPIKE-696] - Remove unneeded dependencies on CDICtrl Servlet
+    [DELTASPIKE-706] - Multiple CDI API versions on classpath in JSF module tests (Weld)
+    [DELTASPIKE-710] - Error using clientWindow and (p|f):ajax
+    [DELTASPIKE-717] - Exception handlers not invoked when @Secured ViewConfig is violated in an app with JSF module without a DefaultErrorView page
+    [DELTASPIKE-719] - Only one voter invoked if multiple voters are applied through a stereotype
+    [DELTASPIKE-723] - Exception bypassing on JSF conversion errors
+    [DELTASPIKE-726] - Lazy window handling doesn't recognize new windows anymore
+    [DELTASPIKE-729] - f:viewAction is executed twice with LAZY window handling mode
+
+Improvement
+
+    [DELTASPIKE-692] - workaround for tests which don't use optional classes
+    [DELTASPIKE-699] - Signature relaxing of attribute method() in CriteriaSupport
+    [DELTASPIKE-708] - Veto the AbstractEntityRepository class
+    [DELTASPIKE-712] - BeanManagerProvider : Wrap usage in parent class loaders
+
+New Feature
+
+    [DELTASPIKE-702] - Add support to GreaterThan and LessThan in criteria to dates
+
+Task
+
+    [DELTASPIKE-640] - Document Scopes in Core module
+    [DELTASPIKE-677] - document ds-security in combination with picketlink
+    [DELTASPIKE-697] - Set the baseDir to reside in the target directory for tomcat tests.
+    [DELTASPIKE-698] - re-visit glassfish4 profile
+    [DELTASPIKE-711] - Create placeholder documentation directory
+    [DELTASPIKE-716] - Migrate documentation format to asciidoc at git repo
+    [DELTASPIKE-730] - release notes for v1.0.3
