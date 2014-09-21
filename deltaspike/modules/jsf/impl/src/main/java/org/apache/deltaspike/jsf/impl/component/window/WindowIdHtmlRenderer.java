@@ -26,9 +26,11 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.render.FacesRenderer;
 import javax.faces.render.Renderer;
 import java.io.IOException;
+import javax.servlet.http.Cookie;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.spi.scope.window.WindowContext;
+import org.apache.deltaspike.jsf.impl.util.ClientWindowHelper;
 import org.apache.deltaspike.jsf.spi.scope.window.ClientWindowConfig;
 
 @FacesRenderer(componentFamily = WindowIdComponent.COMPONENT_FAMILY, rendererType = WindowIdComponent.COMPONENT_TYPE)
@@ -61,6 +63,15 @@ public class WindowIdHtmlRenderer extends Renderer
         writer.writeAttribute("type", "text/javascript", null);
         writer.write("window.deltaspikeWindowId='" + windowId + "';");
         writer.write("window.deltaspikeClientWindowRenderMode='" + mode + "';");
+        
+        // see #729
+        Object cookie = ClientWindowHelper.getRequestWindowIdCookie(context, windowId);
+        if (cookie != null && cookie instanceof Cookie)
+        {
+            Cookie servletCookie = (Cookie) cookie;
+            ClientWindowHelper.removeRequestWindowIdCookie(context, servletCookie);
+            writer.write("window.deltaspikeInitialRedirectWindowId='" + servletCookie.getValue() + "';");
+        }
 
         writer.endElement("script");
     }

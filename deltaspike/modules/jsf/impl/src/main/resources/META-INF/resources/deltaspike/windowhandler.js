@@ -168,12 +168,19 @@ function assertWindowId() {
 
             // url param available?
             if (dswid) {
-                // -- url param available, we must recreate a new windowId to be sure that it is new and valid --
+                // initial redirect case
+                // the windowId is valid - we don't need to a second request
+                if (window.deltaspikeInitialRedirectWindowId && dswid == window.deltaspikeInitialRedirectWindowId) {                    
+                    window.name = window.deltaspikeInitialRedirectWindowId;
+                }
+                else {
+                    // -- url param available, we must recreate a new windowId to be sure that it is new and valid --
 
-                // set tempWindowId to remember the current state                
-                window.name = 'tempWindowId';
-                // we remove the dswid if avilable and redirect to the same url again the create a new windowId
-                window.location = setUrlParam(window.location.href, 'dswid', null);
+                    // set tempWindowId to remember the current state                
+                    window.name = 'tempWindowId';
+                    // we remove the dswid if avilable and redirect to the same url again the create a new windowId
+                    window.location = setUrlParam(window.location.href, 'dswid', null);
+                }
             }
             else if (window.deltaspikeWindowId) {
                 // -- no dswid in the url -> an initial request without initial redirect --
@@ -197,12 +204,20 @@ function assertWindowId() {
 }
 
 function eraseRequestCookie() {
-    var requestToken = getUrlParameter('dsrid'); // random request param
-    if (requestToken) {
-        var cookieName = 'dsWindowId-' + requestToken;
-        var date = new Date();
-        date.setTime(date.getTime()-(10*24*60*60*1000)); // - 10 day
-        var expires = "; expires="+date.toGMTString();
+    
+    var date = new Date();
+    date.setTime(date.getTime()-(10*24*60*60*1000)); // - 10 day
+    var expires = ";max-age=0;expires="+date.toGMTString();
+    
+    var dsrid = getUrlParameter('dsrid'); // random request param
+    if (dsrid) {
+        var cookieName = 'dsWindowId-' + dsrid;
+        document.cookie = cookieName+"="+expires+"; path=/";
+    }
+
+    var dswid = getUrlParameter('dswid');
+    if (dswid) {
+        var cookieName = 'dsrwid-' + dswid;
         document.cookie = cookieName+"="+expires+"; path=/";
     }
 }
@@ -224,7 +239,7 @@ window.onload = function(evt) {
         try {
             (oldWindowOnLoad)? oldWindowOnLoad(evt): null;
         } finally {
-            eraseRequestCookie(); // manually erase the old dsrid cookie because Firefox doesn't do it properly
+            eraseRequestCookie(); // manually erase the old dsrid/dsrwid cookie because Firefox doesn't do it properly
             assertWindowId();
             applyWindowId();
             jsf.ajax.addOnEvent(jsfAjaxHandler);
