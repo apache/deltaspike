@@ -57,7 +57,7 @@ public class SecuredAnnotationAuthorizer
     @SuppressWarnings("UnusedDeclaration")
     public boolean doSecuredCheck(InvocationContext invocationContext) throws Exception
     {
-        Secured secured = null;
+        List<Class<? extends AccessDecisionVoter>> voterClasses = new ArrayList<Class<? extends AccessDecisionVoter>>();
 
         List<Annotation> annotatedTypeMetadata = extractMetadata(invocationContext);
 
@@ -65,7 +65,7 @@ public class SecuredAnnotationAuthorizer
         {
             if (Secured.class.isAssignableFrom(annotation.annotationType()))
             {
-                secured = (Secured) annotation;
+                voterClasses.addAll(Arrays.asList(((Secured) annotation).value()));
             }
             else if (voterContext instanceof EditableAccessDecisionVoterContext)
             {
@@ -74,12 +74,7 @@ public class SecuredAnnotationAuthorizer
             }
         }
 
-        if (secured != null)
-        {
-            Class<? extends AccessDecisionVoter>[] voterClasses = secured.value();
-
-            invokeVoters(invocationContext, Arrays.asList(voterClasses));
-        }
+        invokeVoters(invocationContext, voterClasses);
 
         //needed by @SecurityBindingType
         //X TODO check the use-cases for it
@@ -107,7 +102,7 @@ public class SecuredAnnotationAuthorizer
     private void invokeVoters(InvocationContext invocationContext,
                               List<Class<? extends AccessDecisionVoter>> accessDecisionVoters)
     {
-        if (accessDecisionVoters == null)
+        if (accessDecisionVoters.isEmpty())
         {
             return;
         }
