@@ -42,7 +42,7 @@ import java.util.Map;
  * String annotationClassName = ...;
  * Class<? extends annotation> annotationClass =
  *     (Class<? extends Annotation>) ClassUtils.getClassLoader(null).loadClass(annotationClassName);
- * Annotation a = DefaultAnnotation.of(annotationClass)
+ * Annotation a = AnnotationInstanceProvider.of(annotationClass)
  * </pre>
  */
 public class AnnotationInstanceProvider implements Annotation, InvocationHandler, Serializable
