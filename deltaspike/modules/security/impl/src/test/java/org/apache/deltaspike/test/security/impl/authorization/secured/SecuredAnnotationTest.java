@@ -94,4 +94,21 @@ public abstract class SecuredAnnotationTest
             Assert.fail("Unexpected Exception: " + e);
         }
     }
+
+    @Test
+    public void invocationOfMultipleSecuredStereotypes()
+    {
+        SecuredBean4 testBean = BeanProvider.getContextualReference(SecuredBean4.class, false);
+
+        TestAccessDecisionVoter1 voter1 = BeanProvider.getContextualReference(TestAccessDecisionVoter1.class, false);
+        TestAccessDecisionVoter2 voter2 = BeanProvider.getContextualReference(TestAccessDecisionVoter2.class, false);
+
+        Assert.assertFalse(voter1.isCalled());
+        Assert.assertFalse(voter2.isCalled());
+
+        Assert.assertEquals("result", testBean.getResult());
+
+        Assert.assertTrue(voter1.isCalled());
+        Assert.assertTrue(voter2.isCalled());
+    }
 }
