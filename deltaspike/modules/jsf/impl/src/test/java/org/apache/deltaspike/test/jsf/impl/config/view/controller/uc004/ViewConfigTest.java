@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.HashSet;
 
 /**
  * Tests for view-configs
@@ -142,7 +143,19 @@ public class ViewConfigTest
         Assert.assertEquals(1, callbackResult.size());
         Assert.assertEquals(2, callbackResult.iterator().next().size());
         Iterator<String> resultIterator = callbackResult.iterator().next().iterator();
-        Assert.assertEquals("param1", resultIterator.next());
-        Assert.assertEquals("param2", resultIterator.next());
+        //the order in the result isn't guaranteed
+        Set<String> expectedValues = new HashSet<String>();
+        expectedValues.add("param1");
+        expectedValues.add("param2");
+
+        while (resultIterator.hasNext())
+        {
+            String currentValue = resultIterator.next();
+            if (!expectedValues.remove(currentValue))
+            {
+                Assert.fail("value '" + currentValue + "' not found in the result");
+            }
+        }
+        Assert.assertTrue(expectedValues.isEmpty());
     }
 }
