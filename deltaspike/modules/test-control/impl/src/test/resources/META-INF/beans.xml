@@ -22,5 +22,6 @@
        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/beans_1_0.xsd">
     <interceptors>
         <class>org.apache.deltaspike.test.testcontrol.uc011.TestInterceptorImplementation</class>
+        <class>org.apache.deltaspike.test.testcontrol.mock.uc015.TestInterceptorImplementation</class>
     </interceptors>
 </beans>
