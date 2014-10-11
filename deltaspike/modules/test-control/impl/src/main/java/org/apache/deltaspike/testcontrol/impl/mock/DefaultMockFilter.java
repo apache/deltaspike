@@ -22,10 +22,12 @@ import org.apache.deltaspike.testcontrol.spi.mock.MockFilter;
 
 import javax.enterprise.inject.spi.Annotated;
 import javax.enterprise.inject.spi.AnnotatedMember;
+import javax.enterprise.inject.spi.AnnotatedMethod;
 import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.BeanManager;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Member;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -47,8 +49,17 @@ public class DefaultMockFilter implements MockFilter
         if (annotated instanceof AnnotatedType)
         {
             origin = ((AnnotatedType)annotated).getJavaClass();
+            Set<Annotation> annotations = new HashSet<Annotation>();
+            annotations.addAll(annotated.getAnnotations());
+
+            for (AnnotatedMethod annotatedMethod :
+                (Set<javax.enterprise.inject.spi.AnnotatedMethod>)((AnnotatedType) annotated).getMethods())
+            {
+                annotations.addAll(annotatedMethod.getAnnotations());
+            }
+
             if (isEjbOrAnnotatedTypeWithInterceptorAnnotation(
-                beanManager, annotated.getAnnotations(), origin.getName()))
+                beanManager, annotations, origin.getName()))
             {
                 return false;
             }
