@@ -60,9 +60,10 @@ public class InjectionDroneTest
                 .addPackage(MyBean.class.getPackage())
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndJsfArchive())
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeSecurityArchive())
-                .addAsManifestResource("META-INF/test.taglib.xml", "test.taglib.xml")
                 .addAsWebResource("injection/testValidatorConverterTag.xhtml", "/testValidatorConverter.xhtml")
+                .addAsWebInfResource("META-INF/test.taglib.xml", "classes/META-INF/test.taglib.xml")
                 .addAsWebInfResource("default/WEB-INF/web.xml", "web.xml")
+                .addAsWebInfResource("default/WEB-INF/faces-config.xml", "faces-config.xml")
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
