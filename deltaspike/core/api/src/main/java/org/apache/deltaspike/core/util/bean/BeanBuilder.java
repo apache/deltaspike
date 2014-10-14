@@ -28,12 +28,14 @@ import org.apache.deltaspike.core.util.metadata.builder.DummyInjectionTarget;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Alternative;
+import javax.enterprise.inject.Typed;
 import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.enterprise.inject.spi.InjectionTarget;
 import javax.inject.Named;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Arrays;
@@ -151,14 +153,23 @@ public class BeanBuilder<T>
         {
             this.scope = Dependent.class;
         }
-        for (Class<?> c = type.getJavaClass(); c != Object.class && c != null; c = c.getSuperclass())
+        if (type.isAnnotationPresent(Typed.class))
         {
-            this.types.add(c);
+            Typed typed = type.getAnnotation(Typed.class);
+            this.types.addAll(Arrays.asList(typed.value()));
+
         }
-        for (Class<?> i : type.getJavaClass().getInterfaces())
+        else
         {
-            this.types.add(i);
-        }
+            for (Class<?> c = type.getJavaClass(); c != Object.class && c != null; c = c.getSuperclass())
+            {
+                this.types.add(c);
+            }
+            for (Class<?> i : type.getJavaClass().getInterfaces())
+            {
+                this.types.add(i);
+            }
+        }        
         if (qualifiers.isEmpty())
         {
             qualifiers.add(new DefaultLiteral());
