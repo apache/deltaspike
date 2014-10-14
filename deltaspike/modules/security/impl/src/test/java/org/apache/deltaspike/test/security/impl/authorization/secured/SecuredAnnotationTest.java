@@ -74,6 +74,28 @@ public abstract class SecuredAnnotationTest
     }
 
     @Test
+    public void interceptorTestWithStereotypeWithValue()
+    {
+        SecuredBean5 testBean = BeanProvider.getContextualReference(SecuredBean5.class, false);
+
+        Assert.assertEquals("result", testBean.getResult());
+
+        try
+        {
+            testBean.getBlockedResult();
+            Assert.fail("AccessDeniedException expect, but was not thrown");
+        }
+        catch (AccessDeniedException e)
+        {
+            //expected exception
+        }
+        catch (Exception e)
+        {
+            Assert.fail("Unexpected Exception: " + e);
+        }
+    }
+
+    @Test
     public void simpleInterceptorTestOnMethods()
     {
         SecuredBean3 testBean = BeanProvider.getContextualReference(SecuredBean3.class, false);

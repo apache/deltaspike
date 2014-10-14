@@ -42,7 +42,7 @@ public abstract class SecurityUtils
     {
         Set<Annotation> securityBindingTypes = new HashSet<Annotation>();
         Class<?> cls = targetClass;
-        while (!cls.equals(Object.class))
+        while (cls != null && !cls.equals(Object.class))
         {
             for (final Annotation annotation : cls.getAnnotations())
             {
