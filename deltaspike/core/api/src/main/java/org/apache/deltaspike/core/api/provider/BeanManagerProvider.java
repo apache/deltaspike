@@ -60,7 +60,7 @@ public class BeanManagerProvider implements Extension
 {
     private static final Logger  LOG = Logger.getLogger(BeanManagerProvider.class.getName());
 
-    private static BeanManagerProvider bmpSingleton = null;
+    private static BeanManagerProvider bmpSingleton;
 
     /**
      * This data container is used for storing the BeanManager for each
@@ -72,21 +72,21 @@ public class BeanManagerProvider implements Extension
         /**
          * The BeanManager picked up via Extension loading
          */
-        private BeanManager loadTimeBm = null;
+        private BeanManager loadTimeBm;
 
         /**
          * The final BeanManagers.
          * After the container did finally boot, we first try to resolve them from JNDI,
          * and only if we don't find any BM there we take the ones picked up at startup.
          */
-        private BeanManager finalBm = null;
+        private BeanManager finalBm;
 
         /**
          * Whether the CDI Application has finally booted.
          * Please note that this is only a nearby value
          * as there is no reliable event for this status in EE6.
          */
-        private boolean booted = false;
+        private boolean booted;
     }
 
     /**
@@ -150,7 +150,7 @@ public class BeanManagerProvider implements Extension
         setBeanManagerProvider(this);
 
         BeanManagerInfo bmi = getBeanManagerInfo(ClassUtils.getClassLoader(null));
-        bmi.loadTimeBm =  beanManager;
+        bmi.loadTimeBm = beanManager;
     }
 
     /**
@@ -253,8 +253,7 @@ public class BeanManagerProvider implements Extension
             return;
         }
 
-        ClassLoader classLoader = ClassUtils.getClassLoader(null);
-        bmpSingleton.bmInfos.remove(classLoader);
+        bmpSingleton.bmInfos.remove(ClassUtils.getClassLoader(null));
     }
 
     /**
@@ -326,8 +325,7 @@ public class BeanManagerProvider implements Extension
      */
     private boolean isParentBeanManagerBooted()
     {
-        ClassLoader classLoader = ClassUtils.getClassLoader(null);
-        BeanManagerInfo parentBmi = getParentBeanManagerInfo(classLoader);
+        BeanManagerInfo parentBmi = getParentBeanManagerInfo(ClassUtils.getClassLoader(null));
 
         return parentBmi != null && parentBmi.booted;
     }
@@ -354,6 +352,5 @@ public class BeanManagerProvider implements Extension
 
         return bmi;
     }
-
 
 }

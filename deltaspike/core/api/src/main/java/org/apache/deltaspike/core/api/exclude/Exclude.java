@@ -101,5 +101,6 @@ public @interface Exclude
     /**
      * @return class of the interpreter which should be used (default leads to a simple config-property interpreter)
      */
+    @SuppressWarnings("rawtypes")
     Class<? extends ExpressionInterpreter> interpretedBy() default ExpressionInterpreter.class;
 }

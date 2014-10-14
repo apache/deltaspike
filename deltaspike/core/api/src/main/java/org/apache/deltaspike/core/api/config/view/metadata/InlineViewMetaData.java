@@ -34,7 +34,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 public @interface InlineViewMetaData
 {
-    Class<? extends TargetViewConfigProvider> targetViewConfigProvider();
+    Class<? extends TargetViewConfigProvider<?>> targetViewConfigProvider();
 
+    @SuppressWarnings("rawtypes")
     Class<? extends InlineMetaDataTransformer> inlineMetaDataTransformer() default InlineMetaDataTransformer.class;
 }

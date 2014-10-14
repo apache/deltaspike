@@ -244,12 +244,12 @@ public class PropertyLoader
         Properties mergedProperties = new Properties();
         for (Properties p : sortedProperties)
         {
-            for (Map.Entry<?,?> entry : p.entrySet())
+            for (Map.Entry<?, ?> entry : p.entrySet())
             {
                 String key = (String) entry.getKey();
                 String value = (String) entry.getValue();
 
-                if (!key.equals(ConfigSource.DELTASPIKE_ORDINAL))
+                if (!ConfigSource.DELTASPIKE_ORDINAL.equals(key))
                 {
                     // simply overwrite the old properties with the new ones.
                     mergedProperties.setProperty(key, value);
@@ -259,6 +259,5 @@ public class PropertyLoader
 
         return mergedProperties;
     }
-
 
 }

@@ -68,6 +68,8 @@ public interface ConfigDescriptor<CT /*config type*/>
      * @param executorType type of the executor which allows to get a typed result (e.g. Secured.Descriptor)
      * @return descriptor for the callback which also allows to invoke it or null if there is no callback-method
      */
+    @SuppressWarnings("rawtypes")
+    //TODO <T extends ExecutableCallbackDescriptor<?>> when major version is incremented
     <T extends ExecutableCallbackDescriptor> T getExecutableCallbackDescriptor(Class<? extends Annotation> metaDataType,
                                                                                Class<? extends T> executorType);
 
@@ -78,6 +80,8 @@ public interface ConfigDescriptor<CT /*config type*/>
      * @param executorType type of the executor which allows to get a typed result (e.g. Secured.Descriptor)
      * @return descriptor for the callback which also allows to invoke it or null if there is no callback-method
      */
+    @SuppressWarnings("rawtypes")
+    //TODO <T extends ExecutableCallbackDescriptor<?>> when major version is incremented
     <T extends ExecutableCallbackDescriptor> T getExecutableCallbackDescriptor(Class<? extends Annotation> metaDataType,
                                                                                Class<? extends Annotation> callbackType,
                                                                                Class<? extends T> executorType);

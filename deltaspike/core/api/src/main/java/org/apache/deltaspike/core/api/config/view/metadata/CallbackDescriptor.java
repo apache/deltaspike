@@ -39,17 +39,17 @@ public abstract class CallbackDescriptor
     protected List<CallbackEntry> callbacks = new ArrayList<CallbackEntry>();
     protected Class<? extends Annotation> callbackType;
 
-    protected CallbackDescriptor(Class beanClass, Class<? extends Annotation> callbackMarker)
+    protected CallbackDescriptor(Class<?> beanClass, Class<? extends Annotation> callbackMarker)
     {
         init(new Class[]{beanClass}, callbackMarker);
     }
 
-    protected CallbackDescriptor(Class[] beanClasses, Class<? extends Annotation> callbackMarker)
+    protected CallbackDescriptor(Class<?>[] beanClasses, Class<? extends Annotation> callbackMarker)
     {
         init(beanClasses, callbackMarker);
     }
 
-    protected void init(Class[] targetBeanClasses, Class<? extends Annotation> callbackMarker)
+    protected void init(Class<?>[] targetBeanClasses, Class<? extends Annotation> callbackMarker)
     {
         if (callbackMarker == null)
         {
@@ -59,7 +59,7 @@ public abstract class CallbackDescriptor
         this.callbackType = callbackMarker;
 
         //TODO discuss how deep we should scan
-        for (Class targetBeanClass : targetBeanClasses)
+        for (Class<?> targetBeanClass : targetBeanClasses)
         {
             CallbackEntry callbackEntry = new CallbackEntry(targetBeanClass, callbackMarker);
             if (!callbackEntry.callbackMethods.isEmpty())
@@ -69,9 +69,9 @@ public abstract class CallbackDescriptor
         }
     }
 
-    public Map<Class, List<Method>> getCallbackMethods()
+    public Map<Class<?>, List<Method>> getCallbackMethods()
     {
-        Map<Class, List<Method>> result = new HashMap<Class, List<Method>>(this.callbacks.size());
+        Map<Class<?>, List<Method>> result = new HashMap<Class<?>, List<Method>>(this.callbacks.size());
 
         for (CallbackEntry callbackEntry : this.callbacks)
         {
@@ -80,7 +80,7 @@ public abstract class CallbackDescriptor
         return result;
     }
 
-    protected Object getTargetObject(Class targetType)
+    protected <T> T getTargetObject(Class<T> targetType)
     {
         return BeanProvider.getContextualReference(targetType, true);
     }
@@ -101,7 +101,7 @@ public abstract class CallbackDescriptor
         private final Class<?> targetBeanClass;
         private final String beanName;
 
-        private CallbackEntry(Class beanClass, Class<? extends Annotation> callbackMarker)
+        private CallbackEntry(Class<?> beanClass, Class<? extends Annotation> callbackMarker)
         {
             this.targetBeanClass = beanClass;
 
@@ -123,10 +123,10 @@ public abstract class CallbackDescriptor
         }
 
         private void findMethodWithCallbackMarker(Class<? extends Annotation> callbackMarker,
-                                                  Class classToAnalyze,
+                                                  Class<?> classToAnalyze,
                                                   List<String> processedMethodNames)
         {
-            Class currentClass = classToAnalyze;
+            Class<?> currentClass = classToAnalyze;
 
             while (currentClass != null && !Object.class.getName().equals(currentClass.getName()))
             {
@@ -156,7 +156,7 @@ public abstract class CallbackDescriptor
                 }
 
                 //scan interfaces
-                for (Class interfaceClass : currentClass.getInterfaces())
+                for (Class<?> interfaceClass : currentClass.getInterfaces())
                 {
                     findMethodWithCallbackMarker(callbackMarker, interfaceClass, processedMethodNames);
                 }

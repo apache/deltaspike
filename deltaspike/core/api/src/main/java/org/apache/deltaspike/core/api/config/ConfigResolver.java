@@ -111,7 +111,6 @@ public final class ConfigResolver
      */
     public static void addConfigFilter(ConfigFilter configFilter)
     {
-
         List<ConfigFilter> currentConfigFilters = getConfigFilters();
         currentConfigFilters.add(configFilter);
     }
@@ -302,14 +301,12 @@ public final class ConfigResolver
      */
     public static List<String> getAllPropertyValues(String key)
     {
-        List<ConfigSource> appConfigSources =
-                sortAscending(new ArrayList<ConfigSource>(Arrays.asList(getConfigSources())));
+        List<ConfigSource> appConfigSources = sortAscending(Arrays.<ConfigSource> asList(getConfigSources()));
         List<String> result = new ArrayList<String>();
 
-        String value;
         for (ConfigSource configSource : appConfigSources)
         {
-            value = configSource.getPropertyValue(key);
+            String value = configSource.getPropertyValue(key);
 
             if (value != null)
             {
@@ -326,8 +323,7 @@ public final class ConfigResolver
 
     public static Map<String, String> getAllProperties()
     {
-        List<ConfigSource> appConfigSources =
-                sortAscending(new ArrayList<ConfigSource>(Arrays.asList(getConfigSources())));
+        List<ConfigSource> appConfigSources = sortAscending(Arrays.<ConfigSource> asList(getConfigSources()));
         Map<String, String> result = new HashMap<String, String>();
 
         for (ConfigSource configSource : appConfigSources)
@@ -428,7 +424,7 @@ public final class ConfigResolver
 
     private static String fallbackToDefaultIfEmpty(String key, String value, String defaultValue)
     {
-        if (value == null || value.length() == 0)
+        if (value == null || value.isEmpty())
         {
             LOG.log(Level.FINE, "no configured value found for key {0}, using default value {1}.",
                     new Object[]{key, defaultValue});
@@ -464,6 +460,5 @@ public final class ConfigResolver
         }
         return logValue;
     }
-
 
 }

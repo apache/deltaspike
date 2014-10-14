@@ -72,14 +72,10 @@ public @interface ViewRef
         @Override
         public ViewControllerRef convertToViewMetaData(ViewRef inlineMetaData, Class<?> sourceClass)
         {
-            String beanName = null;
 
             Named named = sourceClass.getAnnotation(Named.class);
 
-            if (named != null)
-            {
-                beanName = named.value();
-            }
+            String beanName = named == null ? null : named.value();
 
             return new ViewControllerRefLiteral(sourceClass, beanName);
         }

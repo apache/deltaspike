@@ -22,6 +22,7 @@ import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.PassivationCapable;
 import javax.inject.Provider;
+
 import java.io.IOException;
 import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
@@ -90,6 +91,7 @@ public class DependentProvider<T> implements Provider<T>, Serializable
         out.writeObject(creationalContext);
     }
 
+    @SuppressWarnings("unchecked")
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
     {
         long oldSerialId = in.readLong();

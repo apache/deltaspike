@@ -39,5 +39,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Aggregated(false)
 public @interface ViewMetaData
 {
+    @SuppressWarnings("rawtypes")
     Class<? extends ConfigPreProcessor> preProcessor() default ConfigPreProcessor.class;
 }

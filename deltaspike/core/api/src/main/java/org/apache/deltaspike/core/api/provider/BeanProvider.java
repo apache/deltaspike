@@ -29,13 +29,12 @@ import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InjectionTarget;
+
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -60,11 +59,9 @@ public final class BeanProvider
 {
     private static final Logger LOG = Logger.getLogger(BeanProvider.class.getName());
 
-    private static final boolean LOG_DEPENDENT_WARNINGS;
-    static {
-        ProjectStage ps = ProjectStageProducer.getInstance().getProjectStage();
-        LOG_DEPENDENT_WARNINGS = ps.equals(ProjectStage.Development) || ps.equals(ProjectStage.UnitTest);
-    }
+    private static final boolean LOG_DEPENDENT_WARNINGS =
+            Arrays.asList(ProjectStage.Development, ProjectStage.UnitTest).contains(
+                    ProjectStageProducer.getInstance().getProjectStage());
 
     private BeanProvider()
     {
@@ -107,7 +104,7 @@ public final class BeanProvider
      * @param type the type of the bean in question
      * @param optional if <code>true</code> it will return <code>null</code> if no bean could be found or created.
      *                 Otherwise it will throw an {@code IllegalStateException}
-     * @param qualifiers additional qualifiers which further distinct the resolved bean
+     * @param qualifiers additional qualifiers which further distinguish the resolved bean
      * @param <T> target type
      * @return the resolved Contextual Reference
      * @see #getContextualReference(Class, Annotation...)
@@ -122,13 +119,13 @@ public final class BeanProvider
     /**
      * {@link #getContextualReference(Class, Annotation...)} which returns <code>null</code> if the
      * 'optional' parameter is set to <code>true</code>.
-     * This method is intended for usage where the BeanManger is known, e.g. in Extensions.
+     * This method is intended for usage where the BeanManager is known, e.g. in Extensions.
      *
      * @param beanManager the BeanManager to use
      * @param type the type of the bean in question
      * @param optional if <code>true</code> it will return <code>null</code> if no bean could be found or created.
      *                 Otherwise it will throw an {@code IllegalStateException}
-     * @param qualifiers additional qualifiers which further distinct the resolved bean
+     * @param qualifiers additional qualifiers which further distinguish the resolved bean
      * @param <T> target type
      * @return the resolved Contextual Reference
      * @see #getContextualReference(Class, Annotation...)
@@ -239,7 +236,7 @@ public final class BeanProvider
     private static <T> T getContextualReference(Class<T> type, BeanManager beanManager, Bean<?> bean)
     {
         //noinspection unchecked
-        return getContextualReference(type, beanManager, new HashSet<Bean<?>>((Collection) Arrays.asList(bean)));
+        return getContextualReference(type, beanManager, Collections.<Bean<?>> singleton(bean));
     }
 
     /**
@@ -306,24 +303,28 @@ public final class BeanProvider
     {
         BeanManager beanManager = getBeanManager();
         Set<Bean<?>> beans = beanManager.getBeans(type, qualifiers);
-        Bean<?> bean = beanManager.resolve(beans);
-        return createDependentProvider(beanManager, type, (Bean<T>) bean);
+        @SuppressWarnings("unchecked")
+        Bean<T> bean = (Bean<T>) beanManager.resolve(beans);
+        return createDependentProvider(beanManager, type, bean);
     }
 
     public static <T> DependentProvider<T> getDependent(String name)
     {
         BeanManager beanManager = getBeanManager();
         Set<Bean<?>> beans = beanManager.getBeans(name);
-        Bean<?> bean = beanManager.resolve(beans);
-        Class beanClass = bean.getBeanClass();
+        @SuppressWarnings("unchecked")
+        Bean<T> bean = (Bean<T>) beanManager.resolve(beans);
+        @SuppressWarnings("unchecked")
+        Class<T> beanClass = (Class<T>) bean.getBeanClass();
 
-        return createDependentProvider(beanManager, (Class<T>) beanClass, (Bean<T>) bean);
+        return createDependentProvider(beanManager, beanClass, bean);
     }
 
     private static <T> DependentProvider<T> createDependentProvider(BeanManager beanManager, Class<T> type,
                                                                     Bean<T> bean)
     {
         CreationalContext<T> cc = beanManager.createCreationalContext(bean);
+        @SuppressWarnings("unchecked")
         T instance = (T) beanManager.getReference(bean, type, cc);
 
         return new DependentProvider<T>(bean, cc, instance);
@@ -375,7 +376,9 @@ public final class BeanProvider
         for (Bean<?> bean : beans)
         {
             //noinspection unchecked
-            result.add((Bean<T>) bean);
+            @SuppressWarnings("unchecked")
+            Bean<T> beanT = (Bean<T>) bean;
+            result.add(beanT);
         }
         
         return result;
@@ -401,10 +404,10 @@ public final class BeanProvider
 
         BeanManager beanManager = getBeanManager();
 
-        CreationalContext creationalContext = beanManager.createCreationalContext(null);
+        CreationalContext<T> creationalContext = beanManager.createCreationalContext(null);
 
-        AnnotatedType annotatedType = beanManager.createAnnotatedType(instance.getClass());
-        InjectionTarget injectionTarget = beanManager.createInjectionTarget(annotatedType);
+        AnnotatedType<T> annotatedType = beanManager.createAnnotatedType((Class<T>) instance.getClass());
+        InjectionTarget<T> injectionTarget = beanManager.createInjectionTarget(annotatedType);
         injectionTarget.inject(instance, creationalContext);
         return instance;
     }
@@ -413,13 +416,8 @@ public final class BeanProvider
     {
         Set<Bean<?>> result = new HashSet<Bean<?>>(beans.size());
 
-        Iterator<Bean<?>> beanIterator = beans.iterator();
-
-        Bean<?> currentBean;
-        while (beanIterator.hasNext())
+        for (Bean<?> currentBean : beans)
         {
-            currentBean = beanIterator.next();
-
             if (!Dependent.class.isAssignableFrom(currentBean.getScope()))
             {
                 result.add(currentBean);

@@ -42,7 +42,7 @@ public interface ViewConfigResolver
      * @param configClass config-class (which usually represents a folder node)
      * @return config-descriptor which represents the given config-class
      */
-    ConfigDescriptor<?> getConfigDescriptor(Class configClass);
+    ConfigDescriptor<?> getConfigDescriptor(Class<?> configClass);
 
     //TODO re-visit name (depends on other discussions)
     /**

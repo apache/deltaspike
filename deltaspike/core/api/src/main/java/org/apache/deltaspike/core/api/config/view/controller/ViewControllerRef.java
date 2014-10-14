@@ -49,7 +49,7 @@ public @interface ViewControllerRef
      *
      * @return class of the page-bean
      */
-    Class value();
+    Class<?> value();
 
     /**
      * Currently not implemented
@@ -82,7 +82,7 @@ public @interface ViewControllerRef
     //not needed outside
     static class Descriptor extends SimpleCallbackDescriptor<Void>
     {
-        protected Descriptor(Class beanClass, Class<? extends Annotation> callbackType)
+        protected Descriptor(Class<?> beanClass, Class<? extends Annotation> callbackType)
         {
             super(beanClass, callbackType);
         }

@@ -34,12 +34,12 @@ import java.util.List;
  */
 public abstract class ExecutableCallbackDescriptor<R> extends CallbackDescriptor
 {
-    protected ExecutableCallbackDescriptor(Class beanClass, Class<? extends Annotation> callbackMarker)
+    protected ExecutableCallbackDescriptor(Class<?> beanClass, Class<? extends Annotation> callbackMarker)
     {
         super(beanClass, callbackMarker);
     }
 
-    protected ExecutableCallbackDescriptor(Class[] beanClasses, Class<? extends Annotation> callbackMarker)
+    protected ExecutableCallbackDescriptor(Class<?>[] beanClasses, Class<? extends Annotation> callbackMarker)
     {
         super(beanClasses, callbackMarker);
     }
@@ -68,6 +68,7 @@ public abstract class ExecutableCallbackDescriptor<R> extends CallbackDescriptor
                         }
                     }
 
+                    @SuppressWarnings("unchecked")
                     R result = (R) callbackMethod.invoke(bean, parameters);
 
                     if (result != null)
