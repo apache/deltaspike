@@ -573,7 +573,7 @@ and `FileResourceProvider`. They can be extended as well by implementing
 the `InjectableResourceProvider` interface to allow reading from
 alternate sources, if needed (e.g. database LOBs, NoSQL storage areas).
 
-===Exception Control
+=== Exception Control
 
 Exception handling in DeltaSpike is based around the CDI eventing model.
 While the implementation of exception handlers may not be the same as a

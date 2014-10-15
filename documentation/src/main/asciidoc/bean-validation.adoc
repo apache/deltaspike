@@ -7,13 +7,14 @@
 == Introduction
 
 The main feature of the Bean Validation module is to provide CDI
-integration in to `ConstraintValidator`\`s. This allows you to inject CDI
+integration in to `ConstraintValidator` `s. This allows you to inject CDI
 objects, EJBs etc in to your validators.
 
 === Scoping
 
 
-`ConstraintValidator`\`s will inherit whatever scope as defined in the bean class. 
+`ConstraintValidator` `s will inherit whatever scope as defined in the bean class.
+
 Inherently, a `ConstraintValidator` may be invoked by multiple threads so please keep that in mind when using them. 
 You should consider using at least `RequestScoped` validators.
 
