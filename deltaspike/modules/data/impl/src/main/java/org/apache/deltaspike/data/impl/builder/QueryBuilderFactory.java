@@ -26,6 +26,8 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.enterprise.inject.spi.BeanManager;
+
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.api.provider.DependentProvider;
 import org.apache.deltaspike.data.api.QueryResult;
@@ -52,7 +54,8 @@ public class QueryBuilderFactory implements Serializable
 
     public QueryBuilder build(RepositoryMethod method, CdiQueryInvocationContext context)
     {
-        DependentProvider<QueryBuilder> builder = BeanProvider.getDependent(
+        BeanManager beanManager = method.getRepository().getBeanManager();
+        DependentProvider<QueryBuilder> builder = BeanProvider.getDependent(beanManager,
                 QueryBuilder.class, LITERALS.get(method.getMethodType()));
         context.addDestroyable(new DependentProviderDestroyable(builder));
         if (method.returns(QueryResult.class))

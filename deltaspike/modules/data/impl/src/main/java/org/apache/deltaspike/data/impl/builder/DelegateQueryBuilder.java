@@ -71,7 +71,7 @@ public class DelegateQueryBuilder extends QueryBuilder
     private DelegateQueryHandler selectDelegate(CdiQueryInvocationContext context)
     {
         Set<Bean<DelegateQueryHandler>> beans = BeanProvider
-                .getBeanDefinitions(DelegateQueryHandler.class, true, true);
+                .getBeanDefinitions(DelegateQueryHandler.class, true, true, beanManager);
         for (Bean<DelegateQueryHandler> bean : beans)
         {
             if (contains(bean.getBeanClass(), context.getMethod()))
@@ -84,7 +84,8 @@ public class DelegateQueryBuilder extends QueryBuilder
                     context.addDestroyable(new BeanDestroyable<DelegateQueryHandler>(bean, instance, cc));
                     return instance;
                 }
-                return (DelegateQueryHandler) BeanProvider.getContextualReference(bean.getBeanClass());
+                return (DelegateQueryHandler) BeanProvider.getContextualReference(beanManager,
+                    bean.getBeanClass(), false);
             }
         }
         return null;

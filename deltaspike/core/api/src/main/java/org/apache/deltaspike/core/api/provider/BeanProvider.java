@@ -305,6 +305,12 @@ public final class BeanProvider
     public static <T> DependentProvider<T> getDependent(Class<T> type, Annotation... qualifiers)
     {
         BeanManager beanManager = getBeanManager();
+        return getDependent(beanManager, type, qualifiers);
+    }
+
+    public static <T> DependentProvider<T> getDependent(BeanManager beanManager, Class<T> type, 
+        Annotation... qualifiers)
+    {
         Set<Bean<?>> beans = beanManager.getBeans(type, qualifiers);
         Bean<?> bean = beanManager.resolve(beans);
         return createDependentProvider(beanManager, type, (Bean<T>) bean);
@@ -326,7 +332,7 @@ public final class BeanProvider
         CreationalContext<T> cc = beanManager.createCreationalContext(bean);
         T instance = (T) beanManager.getReference(bean, type, cc);
 
-        return new DependentProvider<T>(bean, cc, instance);
+        return new DependentProvider<T>(beanManager, bean, cc, instance);
     }
 
     /**
@@ -348,7 +354,7 @@ public final class BeanProvider
         return getBeanDefinitions(type, optional, includeDefaultScopedBeans, beanManager);
     }
     
-    private static <T> Set<Bean<T>> getBeanDefinitions(Class<T> type,
+    public static <T> Set<Bean<T>> getBeanDefinitions(Class<T> type,
                                                        boolean optional,
                                                        boolean includeDefaultScopedBeans,
                                                        BeanManager beanManager)
