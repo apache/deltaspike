@@ -75,8 +75,15 @@ public @interface ViewRef
 
             Named named = sourceClass.getAnnotation(Named.class);
 
-            String beanName = named == null ? null : named.value();
-
+            String beanName;
+            if (named == null)
+            {
+                beanName = null;
+            }
+            else
+            {
+                beanName = named.value();
+            }
             return new ViewControllerRefLiteral(sourceClass, beanName);
         }
     }

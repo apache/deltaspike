@@ -59,9 +59,13 @@ public final class BeanProvider
 {
     private static final Logger LOG = Logger.getLogger(BeanProvider.class.getName());
 
-    private static final boolean LOG_DEPENDENT_WARNINGS =
-            Arrays.asList(ProjectStage.Development, ProjectStage.UnitTest).contains(
-                    ProjectStageProducer.getInstance().getProjectStage());
+    private static final boolean LOG_DEPENDENT_WARNINGS;
+    static
+    {
+        LOG_DEPENDENT_WARNINGS =
+                Arrays.asList(ProjectStage.Development, ProjectStage.UnitTest).contains(
+                        ProjectStageProducer.getInstance().getProjectStage());
+    }
 
     private BeanProvider()
     {
