@@ -71,30 +71,6 @@ public class ContainerCtrlTckTest
         cc.shutdown();
     }
 
-    @Test
-    public void testSimpleContainerBoot()
-    {
-        CdiContainer cc = CdiContainerLoader.getCdiContainer();
-        Assert.assertNotNull(cc);
-
-        cc.boot();
-        cc.getContextControl().startContexts();
-
-        BeanManager bm = cc.getBeanManager();
-        Assert.assertNotNull(bm);
-
-        Set<Bean<?>> beans = bm.getBeans(CarRepair.class);
-        Bean<?> bean = bm.resolve(beans);
-
-        CarRepair carRepair = (CarRepair) bm.getReference(bean, CarRepair.class, bm.createCreationalContext(bean));
-        Assert.assertNotNull(carRepair);
-
-        Assert.assertNotNull(carRepair.getCar());
-        Assert.assertNotNull(carRepair.getCar().getUser());
-
-        cc.shutdown();
-    }
-
     /**
      * Stops and starts: application-, session- and request-scope.
      * <p/>
