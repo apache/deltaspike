@@ -28,51 +28,42 @@ import org.apache.deltaspike.security.api.authorization.Secured;
 
 public interface Pages extends ViewConfig
 {
-
     @View(navigation = NavigationMode.REDIRECT, viewParams = ViewParameterMode.INCLUDE)
-    public interface RedirectedPages extends ViewConfig
+    interface RedirectedPages extends ViewConfig
     {
     }
 
     @Secured(DenyAllAccessDecisionVoter.class)
-    public interface SecuredPages extends ViewConfig
+    interface SecuredPages extends ViewConfig
     {
-
     }
 
     @Folder(name = "./viewconfig/")
-    public interface ViewConfigFolder extends ViewConfig
+    interface ViewConfigFolder extends ViewConfig
     {
 
-        public class RedirectedPage implements RedirectedPages
+        class RedirectedPage implements RedirectedPages
         {
-
         }
 
-        public class ViewConfigPage implements RedirectedPages
+        class ViewConfigPage implements RedirectedPages
         {
-
         }
 
         @NavigationParameter.List({
                 @NavigationParameter(key = "param1", value = "Hey, I come from a navigation parameter"),
                 @NavigationParameter(key = "param2", value = "Hey, It's an interpolated value: #{myBean.aValue}")
         })
-        public class NavigationParameterPage implements RedirectedPages
+        class NavigationParameterPage implements RedirectedPages
         {
-
         }
 
-        public class SecuredPage implements SecuredPages
+        class SecuredPage implements SecuredPages
         {
-
         }
         
-        public class AllowedPage implements ViewConfig
+        class AllowedPage implements ViewConfig
         {
-
         }
-
     }
-
 }
