@@ -134,7 +134,7 @@ public class ConverterAndValidatorProxyExtension implements Extension, Deactivat
     {
         try
         {
-            if (beanClass.getMethod("get" + name) != null || beanClass.getMethod("is") + name != null)
+            if (beanClass.getMethod("get" + name) != null || beanClass.getMethod("is" + name) != null)
             {
                 return true;
             }
