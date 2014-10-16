@@ -317,7 +317,7 @@ a different `EntityManager`. So it's possible to catch an exception in
 `FirstLevelTransactionBean` e.g. to try an optional path instead of an
 immediate rollback.
 
-==@TransactionScoped
+== @TransactionScoped
 
 `@Transactional` also starts a context which is available as long as the
 transaction started by `@Transactional`. Besides other beans you can use
