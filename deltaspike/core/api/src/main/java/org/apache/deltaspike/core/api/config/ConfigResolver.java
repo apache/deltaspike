@@ -301,7 +301,9 @@ public final class ConfigResolver
      */
     public static List<String> getAllPropertyValues(String key)
     {
-        List<ConfigSource> appConfigSources = sortAscending(Arrays.<ConfigSource> asList(getConfigSources()));
+        // must use a new list because Arrays.asList() is resistant to sorting on some JVMs:
+        List<ConfigSource> appConfigSources = sortAscending(new ArrayList<ConfigSource>(
+                Arrays.<ConfigSource> asList(getConfigSources())));
         List<String> result = new ArrayList<String>();
 
         for (ConfigSource configSource : appConfigSources)
@@ -323,7 +325,9 @@ public final class ConfigResolver
 
     public static Map<String, String> getAllProperties()
     {
-        List<ConfigSource> appConfigSources = sortAscending(Arrays.<ConfigSource> asList(getConfigSources()));
+        // must use a new list because Arrays.asList() is resistant to sorting on some JVMs:
+        List<ConfigSource> appConfigSources = sortAscending(new ArrayList<ConfigSource>(
+                Arrays.<ConfigSource> asList(getConfigSources())));
         Map<String, String> result = new HashMap<String, String>();
 
         for (ConfigSource configSource : appConfigSources)
