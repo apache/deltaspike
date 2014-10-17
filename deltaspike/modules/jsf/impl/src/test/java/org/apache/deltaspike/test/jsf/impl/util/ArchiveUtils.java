@@ -53,6 +53,7 @@ public class ArchiveUtils
                 .addPackages(true, "org.jboss.arquillian.graphene")
                 .addPackages(true, "org.jboss.arquillian.ajocado")
                 .addPackages(true, "org.openqa.selenium")
+                .addPackages(true, "javassist")
                 .addPackage(WebProfileCategory.class.getPackage());
 
         JavaArchive[] coreArchives = ShrinkWrapArchiveUtil.getArchives(null

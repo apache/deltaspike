@@ -141,7 +141,12 @@
             <type>pom</type>
             <scope>test</scope>
         </dependency>
-
+		<dependency>
+			<groupId>org.javassist</groupId>
+			<artifactId>javassist</artifactId>
+			<version>3.18.2-GA</version>
+			<scope>test</scope>
+		</dependency>
     </dependencies>
 
 
