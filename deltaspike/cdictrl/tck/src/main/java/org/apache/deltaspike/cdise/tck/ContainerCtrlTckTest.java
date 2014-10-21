@@ -20,13 +20,19 @@ package org.apache.deltaspike.cdise.tck;
 
 
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.enterprise.context.ContextNotActiveException;
+import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 
 import org.apache.deltaspike.cdise.api.CdiContainer;
 import org.apache.deltaspike.cdise.api.CdiContainerLoader;
+import org.apache.deltaspike.cdise.api.ContextControl;
 import org.apache.deltaspike.cdise.tck.beans.Car;
 import org.apache.deltaspike.cdise.tck.beans.CarRepair;
 import org.apache.deltaspike.cdise.tck.beans.TestUser;
@@ -43,6 +49,8 @@ import org.junit.Test;
  */
 public class ContainerCtrlTckTest
 {
+    private static final Logger log = Logger.getLogger(ContainerCtrlTckTest.class.getName());
+    private static final int NUM_THREADS = 100;
 
     @Rule
     public VersionControlRule versionControlRule = new VersionControlRule();
@@ -67,6 +75,80 @@ public class ContainerCtrlTckTest
 
         Assert.assertNotNull(carRepair.getCar());
         Assert.assertNotNull(carRepair.getCar().getUser());
+
+        cc.shutdown();
+    }
+
+    @Test
+    public void testParallelThreadExecution() throws Exception
+    {
+        final CdiContainer cc = CdiContainerLoader.getCdiContainer();
+        Assert.assertNotNull(cc);
+
+        cc.boot();
+        cc.getContextControl().startContexts();
+
+        final BeanManager bm = cc.getBeanManager();
+        Assert.assertNotNull(bm);
+
+        final AtomicInteger numErrors = new AtomicInteger(0);
+
+        Runnable runnable = new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                ContextControl contextControl = cc.getContextControl();
+                contextControl.startContext(SessionScoped.class);
+                contextControl.startContext(RequestScoped.class);
+
+
+                Set<Bean<?>> beans = bm.getBeans(CarRepair.class);
+                Bean<?> bean = bm.resolve(beans);
+
+                CarRepair carRepair = (CarRepair)
+                        bm.getReference(bean, CarRepair.class, bm.createCreationalContext(bean));
+                Assert.assertNotNull(carRepair);
+
+                try
+                {
+                    for (int i = 0; i < 100000; i++)
+                    {
+                        // we need the threads doing something ;)
+                        Assert.assertNotNull(carRepair.getCar());
+                        Assert.assertNotNull(carRepair.getCar().getUser());
+                        Assert.assertNotNull(carRepair.getCar().getUser().getName());
+                    }
+                }
+                catch (Exception e)
+                {
+                    log.log(Level.SEVERE, "An exception happened on a new worker thread", e);
+                    numErrors.incrementAndGet();
+                }
+                contextControl.stopContext(RequestScoped.class);
+                contextControl.stopContext(SessionScoped.class);
+            }
+        };
+
+
+        Thread[] threads = new Thread[NUM_THREADS];
+        for (int i = 0 ; i < NUM_THREADS; i++)
+        {
+            threads[i] = new Thread(runnable);
+        }
+
+        for (int i = 0 ; i < NUM_THREADS; i++)
+        {
+            threads[i].start();
+        }
+
+        for (int i = 0 ; i < NUM_THREADS; i++)
+        {
+            threads[i].join();
+        }
+
+        Assert.assertEquals("An error happened while executing parallel threads", 0, numErrors.get());
+
 
         cc.shutdown();
     }
