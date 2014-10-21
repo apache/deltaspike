@@ -120,50 +120,22 @@ public class WeldContextControl implements ContextControl
      */
     private void startApplicationScope()
     {
-        try
-        {
-            getContextController().startApplicationScope();
-        }
-        catch (IllegalStateException ise)
-        {
-            // weld throws an ISE if the context was already started...
-        }
+        getContextController().startApplicationScope();
     }
 
     private void startSessionScope()
     {
-        try
-        {
-            getContextController().startSessionScope();
-        }
-        catch (IllegalStateException ise)
-        {
-            // weld throws an ISE if the context was already started...
-        }
+        getContextController().startSessionScope();
     }
 
     private void startConversationScope()
     {
-        try
-        {
-            getContextController().startConversationScope(null);
-        }
-        catch (IllegalStateException ise)
-        {
-            // weld throws an ISE if the context was already started...
-        }
+        getContextController().startConversationScope(null);
     }
 
     private void startRequestScope()
     {
-        try
-        {
-            getContextController().startRequestScope();
-        }
-        catch (IllegalStateException ise)
-        {
-            // weld throws an ISE if the context was already started...
-        }
+        getContextController().startRequestScope();
     }
 
     /*
@@ -172,62 +144,27 @@ public class WeldContextControl implements ContextControl
 
     private void stopApplicationScope()
     {
-        try
-        {
-            getContextController().stopApplicationScope();
-        }
-        catch (IllegalStateException ise)
-        {
-            // weld throws an ISE if the context was already stopped...
-        }
+        getContextController().stopApplicationScope();
     }
 
     private void stopSessionScope()
     {
-        try
-        {
-            getContextController().stopSessionScope();
-        }
-        catch (IllegalStateException ise)
-        {
-            // weld throws an ISE if the context was already stopped...
-        }
+        getContextController().stopSessionScope();
     }
 
     private void stopConversationScope()
     {
-        try
-        {
-            getContextController().stopConversationScope();
-        }
-        catch (IllegalStateException ise)
-        {
-            // weld throws an ISE if the context was already stopped...
-        }
+        getContextController().stopConversationScope();
     }
 
     private void stopRequestScope()
     {
-        try
-        {
-            getContextController().stopRequestScope();
-        }
-        catch (IllegalStateException ise)
-        {
-            // weld throws an ISE if the context was already stopped...
-        }
+        getContextController().stopRequestScope();
     }
 
     private void stopSingletonScope()
     {
-        try
-        {
-            getContextController().stopSingletonScope();
-        }
-        catch (IllegalStateException ise)
-        {
-            // weld throws an ISE if the context was already stopped...
-        }
+        getContextController().stopSingletonScope();
     }
 
     private ContextController getContextController()

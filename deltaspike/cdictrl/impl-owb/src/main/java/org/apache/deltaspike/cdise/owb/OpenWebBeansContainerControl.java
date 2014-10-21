@@ -89,6 +89,7 @@ public class OpenWebBeansContainerControl implements CdiContainer
                 // contexts likely already stopped
             }
             ctxCtrlBean.destroy(ctxCtrl, ctxCtrlCreationalContext);
+            ctxCtrl = null;
         }
 
         if (lifecycle != null) 

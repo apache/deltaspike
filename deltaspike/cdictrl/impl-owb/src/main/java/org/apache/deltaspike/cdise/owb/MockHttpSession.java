@@ -143,4 +143,12 @@ public class MockHttpSession implements HttpSession
     {
         return sessionId != null ? sessionId.hashCode() : 0;
     }
+
+    @Override
+    public String toString()
+    {
+        return "MockHttpSession{" +
+                "sessionId='" + sessionId + '\'' +
+                '}';
+    }
 }

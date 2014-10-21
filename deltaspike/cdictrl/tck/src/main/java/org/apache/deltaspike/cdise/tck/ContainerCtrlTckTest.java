@@ -50,7 +50,7 @@ import org.junit.Test;
 public class ContainerCtrlTckTest
 {
     private static final Logger log = Logger.getLogger(ContainerCtrlTckTest.class.getName());
-    private static final int NUM_THREADS = 100;
+    private static final int NUM_THREADS = 10;
 
     @Rule
     public VersionControlRule versionControlRule = new VersionControlRule();
@@ -92,41 +92,41 @@ public class ContainerCtrlTckTest
         Assert.assertNotNull(bm);
 
         final AtomicInteger numErrors = new AtomicInteger(0);
+        final ContextControl contextControl = cc.getContextControl();
 
         Runnable runnable = new Runnable()
         {
             @Override
             public void run()
             {
-                ContextControl contextControl = cc.getContextControl();
-                contextControl.startContext(SessionScoped.class);
-                contextControl.startContext(RequestScoped.class);
-
-
-                Set<Bean<?>> beans = bm.getBeans(CarRepair.class);
-                Bean<?> bean = bm.resolve(beans);
-
-                CarRepair carRepair = (CarRepair)
-                        bm.getReference(bean, CarRepair.class, bm.createCreationalContext(bean));
-                Assert.assertNotNull(carRepair);
-
                 try
                 {
+                    contextControl.startContext(SessionScoped.class);
+                    contextControl.startContext(RequestScoped.class);
+
+
+                    Set<Bean<?>> beans = bm.getBeans(CarRepair.class);
+                    Bean<?> bean = bm.resolve(beans);
+
+                    CarRepair carRepair = (CarRepair)
+                            bm.getReference(bean, CarRepair.class, bm.createCreationalContext(bean));
+                    Assert.assertNotNull(carRepair);
+
                     for (int i = 0; i < 100000; i++)
                     {
                         // we need the threads doing something ;)
                         Assert.assertNotNull(carRepair.getCar());
                         Assert.assertNotNull(carRepair.getCar().getUser());
-                        Assert.assertNotNull(carRepair.getCar().getUser().getName());
+                        Assert.assertNull(carRepair.getCar().getUser().getName());
                     }
+                    contextControl.stopContext(RequestScoped.class);
+                    contextControl.stopContext(SessionScoped.class);
                 }
-                catch (Exception e)
+                catch (Throwable e)
                 {
                     log.log(Level.SEVERE, "An exception happened on a new worker thread", e);
                     numErrors.incrementAndGet();
                 }
-                contextControl.stopContext(RequestScoped.class);
-                contextControl.stopContext(SessionScoped.class);
             }
         };
 

@@ -26,6 +26,8 @@ import javax.enterprise.context.SessionScoped;
 import javax.inject.Singleton;
 
 import java.lang.annotation.Annotation;
+import java.util.WeakHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.deltaspike.cdise.api.ContextControl;
 import org.apache.webbeans.config.WebBeansContext;
@@ -38,6 +40,10 @@ import org.apache.webbeans.spi.ContextsService;
 @SuppressWarnings("UnusedDeclaration")
 public class OpenWebBeansContextControl implements ContextControl
 {
+
+    private static WeakHashMap<ContextsService, AtomicInteger> sessionRefCounters
+        = new WeakHashMap<ContextsService, AtomicInteger>();
+
     @Override
     public void startContexts()
     {
@@ -149,6 +155,7 @@ public class OpenWebBeansContextControl implements ContextControl
         {
             mockSession = OwbHelper.getMockSession();
         }
+        incrementSessionRefCount(contextsService);
         contextsService.startContext(SessionScoped.class, mockSession);
     }
 
@@ -203,7 +210,10 @@ public class OpenWebBeansContextControl implements ContextControl
         {
             mockSession = OwbHelper.getMockSession();
         }
-        contextsService.endContext(SessionScoped.class, mockSession);
+        if (decrementSessionRefCount(contextsService))
+        {
+            contextsService.endContext(SessionScoped.class, mockSession);
+        }
     }
 
     private void stopRequestScope()
@@ -225,4 +235,34 @@ public class OpenWebBeansContextControl implements ContextControl
         WebBeansContext webBeansContext = WebBeansContext.currentInstance();
         return webBeansContext.getContextsService();
     }
+
+
+    private synchronized void incrementSessionRefCount(ContextsService contextsService)
+    {
+        AtomicInteger sessionRefCounter = sessionRefCounters.get(contextsService);
+        if (sessionRefCounter == null)
+        {
+            sessionRefCounter = new AtomicInteger(1);
+            sessionRefCounters.put(contextsService, sessionRefCounter);
+        }
+        else
+        {
+            sessionRefCounter.incrementAndGet();
+        }
+    }
+
+    /**
+     * @return true if the refCounter is back to zero
+     */
+    private synchronized boolean decrementSessionRefCount(ContextsService contextsService)
+    {
+        AtomicInteger sessionRefCounter = sessionRefCounters.get(contextsService);
+        if (sessionRefCounter == null)
+        {
+            return false;
+        }
+
+        return sessionRefCounter.decrementAndGet() <= 0;
+    }
+
 }
