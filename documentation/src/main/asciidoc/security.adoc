@@ -284,11 +284,11 @@ the result returned by the `AccessDecisionVoter`.
 You can also implement the abstract class `AbstractAccessDecisionVoter`.
 This is a convenience class which allows an easier usage:
 
-Example: :::java public class CustomAccessDecisionVoter extends
-AbstractAccessDecisionVoter \{
-
 [source,java]
 -----------------------------------------------------------------------------------------
+public class CustomAccessDecisionVoter extends AbstractAccessDecisionVoter
+{
+
     @Override
     protected void checkPermission(AccessDecisionVoterContext accessDecisionVoterContext,
             Set<SecurityViolation> violations)
