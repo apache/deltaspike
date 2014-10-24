@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Map;
 
+import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.ExceptionUtils;
@@ -75,11 +76,15 @@ public class DefaultClientWindowConfig implements ClientWindowConfig, Serializab
     private ProjectStage projectStage;
 
     private ClientWindowRenderMode defaultClientWindowRenderMode;
+    private int maxWindowContextCount;
 
     @PostConstruct
     protected void init()
     {
         this.defaultClientWindowRenderMode = this.jsfModuleConfig.getDefaultWindowMode();
+
+        String maxCount = ConfigResolver.getPropertyValue("deltaspike.scope.window.max-count", "" + 64);
+        this.maxWindowContextCount = Integer.parseInt(maxCount);
     }
 
     @Override
@@ -234,5 +239,11 @@ public class DefaultClientWindowConfig implements ClientWindowConfig, Serializab
     public String getClientWindowResourceLocation()
     {
         return DEFAULT_WINDOW_HANDLER_HTML_FILE;
+    }
+
+    @Override
+    public int getMaxWindowContextCount()
+    {
+        return this.maxWindowContextCount;
     }
 }

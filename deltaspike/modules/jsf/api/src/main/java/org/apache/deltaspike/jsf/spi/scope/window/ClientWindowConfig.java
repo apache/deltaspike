@@ -86,4 +86,10 @@ public interface ClientWindowConfig
      */
     String getClientWindowHtml();
 
+    /**
+     * Restricts the number of active windows.
+     *
+     * @return limit for active windows
+     */
+    int getMaxWindowContextCount();
 }
