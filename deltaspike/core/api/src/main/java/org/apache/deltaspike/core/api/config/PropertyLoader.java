@@ -35,13 +35,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * <p>Utility class to load configuration properties via a list of
- * artibrary property files by a well defined order.</p>
+ * Utility class to load configuration properties via arbitrary property files in a well defined order.
  *
- * <p>This will also pick up property files which are post-fixed with
- * a -$projectStage.properties </p>
- * <p>User configurations should start with 'configuration.ordinal'
- * greater than 100.</p>
+ * <p>
+ * This will also pick up property files with names suffixed with {@code -<project stage>}, e.g.
+ * myconfig-Production.properties.</p>
+ * <p>
+ * User configurations should have {@code deltaspike_ordinal} as the first property, with a value greater than
+ * 100.</p>
  *
  */
 public class PropertyLoader
@@ -61,24 +62,25 @@ public class PropertyLoader
     }
 
     /**
-     * <p>Look for all property files with the given name (e.g. 'myconfig.properties') in
-     * the classpath. Then load all properties files and sort them by their ascending
-     * configuration order and apply them in this order.</p>
+     * Looks for all properties files with the given name in the classpath, loads them in ascending order determined by
+     * their ordinal and merges them.
      *
-     * <p>The idea is to be able to 'override' properties by just providing
-     * a new properties file with the same name but a higher 'deltaspike_ordinal'
-     * than the old one.</p>
+     * <p>
+     * The idea is to be able to override properties by just providing a new properties file with the same name but a
+     * higher 'deltaspike_ordinal' than the old one.</p>
      *
-     * <p>If a property file defines no 'configuration.ordinal' property than a default
-     * value of {@link #CONFIGURATION_ORDINAL_DEFAULT_VALUE} is assumed. Any sensitive
-     * default which is provided by the system parsing for the configuration should
-     * have a 'configuration.ordinal' value lower than 10. In most cases a value of 1</p>
+     * <p>
+     * If a property file defines no 'deltaspike_ordinal' property than a default value of
+     * {@link #CONFIGURATION_ORDINAL_DEFAULT_VALUE} is assumed. Any sensitive default which is provided by the system
+     * parsing for the configuration should have a 'deltaspike_ordinal' value lower than 10. In most cases a value of
+     * 1.</p>
      *
-     * <p>If 2 property files have the same ordinal 'configuraiton.order' the outcome
-     * is not really defined. The Properties file which got found first will be
-     * processed first and thus get overwritten by the one found later.</p> 
+     * <p>
+     * If two property files have the same 'deltaspike_ordinal', their order is undefined. The Properties file which
+     * gets found first will be processed first and thus gets overwritten by the one found later.</p>
      *
      * @param propertyFileName the name of the properties file, without the extension '.properties'
+     *
      * @return the final property values
      */
     public static synchronized Properties getProperties(String propertyFileName)
@@ -205,7 +207,7 @@ public class PropertyLoader
     }
 
     /**
-     * Determine the 'configuration.ordinal' of the given properties.
+     * Determine the 'deltaspike_ordinal' of the given properties.
      * {@link #CONFIGURATION_ORDINAL_DEFAULT_VALUE} if
      * {@link ConfigSource#DELTASPIKE_ORDINAL} is not set in the
      * Properties file.

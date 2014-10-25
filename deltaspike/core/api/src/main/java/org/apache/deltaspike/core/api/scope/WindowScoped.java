@@ -30,7 +30,7 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * Beans which use this scope are bound to a application window (or browser tab).
+ * Beans in this scope are bound to an application window (or browser tab).
  */
 @Target( { METHOD,TYPE,FIELD } )
 @Retention(RUNTIME)

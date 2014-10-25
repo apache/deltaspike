@@ -23,24 +23,27 @@ import java.util.List;
 
 /**
  * Central context for handling dynamic messages.
- * Instances of this type are mutable but also {@link Cloneable}.
- * If you need a new instance, then use {@link Object#clone()}
+ * <br/>
+ * Instances of this type are mutable but also {@link Cloneable}. If you need a new instance, then use
+ * {@link Object#clone()}.
  */
 public interface MessageContext extends LocaleResolver, Serializable, Cloneable
 {
     /**
-     * Clones the current MessageContext
+     * Clones the current MessageContext.
      */
     MessageContext clone();
 
     /**
-     * @return message based on the current context modifiable via a fluent api
+     * @return a message based on the current context modifiable via a fluent API
      */
     Message message();
 
     /**
-     * Allows to add a message-source instance which can be used by a {@link MessageResolver}
-     * @param messageSource message-source to add
+     * Configures a message source instance for use by a {@link MessageResolver}.
+     *
+     * @param messageSource message source to add
+     *
      * @return the instance of the current message context builder
      */
     MessageContext messageSource(String... messageSource);
@@ -79,7 +82,7 @@ public interface MessageContext extends LocaleResolver, Serializable, Cloneable
     LocaleResolver getLocaleResolver();
 
     /**
-     * @return list of registered message-sources
+     * @return list of registered message sources
      */
     List<String> getMessageSources();
 }

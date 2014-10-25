@@ -21,18 +21,17 @@ package org.apache.deltaspike.core.api.config;
 import java.io.Serializable;
 
 /**
- * <p>Marker interface for all type-safe framework configs.</p>
+ * Marker interface for all classes used for configuration of DeltaSpike itself.
  *
- * <p>All DeltaSpike Configuration objects implement this interface
- * so they can be found more easily. There is no other
+ * <p>
+ * All DeltaSpike configuration objects implement this interface so they can be found more easily. There is no other
  * functionality implied with this interface.</p>
  *
- * <p>DeltaSpike uses a <i>Typesafe Configuration</i> approach.
- * Instead of writing a properties file or XML, you just implement
- * one of the configuration interfaces which will then be picked up as
- * CDI bean. If there is already a default configuration for
- * some functionality in DeltaSpike, you can use &#064;Specializes or
- * &#064;Alternative to change those.</p>
+ * <p>
+ * DeltaSpike uses a <i>type-safe configuration</i> approach. Instead of writing a properties file or XML, you just
+ * implement one of the configuration interfaces which will then be picked up as a CDI bean. If there is already a
+ * default configuration for some functionality in DeltaSpike, you can use &#064;Specializes or &#064;Alternative to
+ * change those.</p>
  */
 public interface DeltaSpikeConfig extends Serializable
 {

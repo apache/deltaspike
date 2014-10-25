@@ -19,7 +19,7 @@
 package org.apache.deltaspike.core.api.interpreter;
 
 /**
- * Base implementation for simple (property) expressions
+ * Base implementation for simple (property) expressions.
  *
  * Supported operations:<p/>
  * <ul>

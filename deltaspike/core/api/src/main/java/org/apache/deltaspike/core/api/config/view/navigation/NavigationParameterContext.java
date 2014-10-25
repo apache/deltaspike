@@ -22,7 +22,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 /**
- * Can be used to add parameters dynamically to the final navigation string
+ * Can be used to add parameters dynamically to the final navigation string.
  */
 public interface NavigationParameterContext extends Serializable
 {

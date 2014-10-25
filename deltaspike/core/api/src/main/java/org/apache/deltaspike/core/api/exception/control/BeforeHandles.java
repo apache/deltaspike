@@ -27,10 +27,15 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Marker annotation for a method to be considered an Exception Handler, handles the exception in the BEFORE
- * traversal of the exception chain. Handlers are typically in the form of
- * <code>public void ... (@BeforeHandles ... CaughtException<...> ...)</code> methods.
- * If a method has a return type, it is ignored.
+ * Marker annotation for a method to be considered an Exception Handler, handles the exception in the BEFORE traversal
+ * of the exception chain.
+ * <p>
+ * Handlers methods typically have this form:<br />
+ * <pre>public void handle(@BeforeHandles <i>@OptionalQualifier</i> ExceptionEvent&lt;<i>TypeOfTheException</i>&gt; evt)
+ * </pre>.
+ * </p>
+ *
+ * If a handler method has a return type, it is ignored.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
@@ -38,7 +43,8 @@ import java.lang.annotation.Target;
 public @interface BeforeHandles
 {
     /**
-     * Precedence relative to callbacks for the same type
+     * Precedence relative to callbacks for the same type. Handler with a higher ordinal is invoked before a handler
+     * with a lower ordinal.
      */
     int ordinal() default 0;
 }

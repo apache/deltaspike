@@ -20,7 +20,7 @@
 package org.apache.deltaspike.core.api.exception.control;
 
 /**
- * Flow control enum.  Used in the dispatcher to determine how to markHandled.
+ * Enum of exception handling states. Used in the dispatcher to determine how to markHandled.
  */
 public enum ExceptionHandlingFlow
 {

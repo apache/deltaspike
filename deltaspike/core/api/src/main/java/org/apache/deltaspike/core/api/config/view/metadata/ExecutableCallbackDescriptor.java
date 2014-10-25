@@ -26,9 +26,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Specialized {@link CallbackDescriptor}
- * which provides {@link #execute} only for concrete descriptors, but doesn't expose it (-> can't get used by accident).
- * Concrete implementations can provide type-safe versions of it, but delegate the final execution to {@link #execute}.
+ * Specialized {@link CallbackDescriptor} which provides {@link #execute} only for concrete descriptors, but doesn't
+ * expose it (and can't get used by accident). Concrete implementations can provide type-safe versions of it, but
+ * delegate the final execution to {@link #execute}.
  *
  * @param <R> return type
  */

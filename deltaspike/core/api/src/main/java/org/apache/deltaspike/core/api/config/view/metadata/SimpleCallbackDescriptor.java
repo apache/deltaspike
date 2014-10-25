@@ -22,8 +22,8 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 
 /**
- * {@link ExecutableCallbackDescriptor} for simple callback-methods without (supported) parameters,
- * which exposes #execute without parameters.
+ * {@link ExecutableCallbackDescriptor} for simple callback methods without (supported) parameters, which exposes
+ * #execute without parameters.
  *
  * @param <R> return type
  */

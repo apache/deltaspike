@@ -18,11 +18,6 @@
  */
 package org.apache.deltaspike.core.api.config.view.controller;
 
-/**
- * Specifies one or more page-beans via the type-safe view-config.
- * Such page beans support e.g. the view-controller annotations.
- */
-
 import org.apache.deltaspike.core.api.config.view.metadata.SimpleCallbackDescriptor;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewMetaData;
 import org.apache.deltaspike.core.spi.config.view.ConfigPreProcessor;
@@ -36,6 +31,10 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+/**
+ * Specifies one or more view-controllers for the view-config which has this annotation applied. View-controllers can
+ * handle callbacks like {@link InitView}, {@link PreRenderView}, etc.
+ */
 //don't use @Inherited
 @Target(TYPE)
 @Retention(RUNTIME)
@@ -45,19 +44,17 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface ViewControllerRef
 {
     /**
-     * Class of the page-bean
+     * Class of the view-controller.
      *
-     * @return class of the page-bean
+     * @return class of the view-controller
      */
     Class<?> value();
 
     /**
-     * Currently not implemented
+     * Currently not implemented. 
+     * Optional name of the view-controller.
      *
-     *
-     * Optional name of the page-bean
-     *
-     * @return name of the page-bean
+     * @return name of the view-controller
      */
     //TODO
     String name() default "";

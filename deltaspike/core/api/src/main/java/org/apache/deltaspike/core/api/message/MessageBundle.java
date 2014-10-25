@@ -26,42 +26,42 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * <p>Marker annotation for a message-bundle interface which provides type-safe messages.</p>
+ * Marker annotation for a message-bundle interface which provides type-safe messages.
  *
- * <p>This annotation must only be used on interfaces.
- * If this annotation gets used on a concrete class, a deployment error results!</p>
+ * <p>
+ * This annotation must only be used on interfaces. If this annotation gets used on a concrete class, a deployment error
+ * results!</p>
  *
  * <h3>Type-safe Messages</h3>
- * <p>Each method on an interface annotated with <code>&#064;MessageBundle</code>
- * will form a type-safe message. The message lookup key
- * (resource bundle key) can either be defined by annotating those methods
- * with &#064;{@link MessageTemplate}) or by convention. if no &#064;{@link MessageTemplate}
- * annotation is used on a method, the case sensitive method-name name
- * will be used as resource key.</p>
+ * <p>
+ * Each method on an interface annotated with <code>&#064;MessageBundle</code> will form a type-safe message. The
+ * message lookup key (resource bundle key) can either be defined by annotating those methods with
+ * &#064;{@link MessageTemplate}) or by convention. if no &#064;{@link MessageTemplate} annotation is used on a method,
+ * the case sensitive method name name will be used as resource key.</p>
  *
  * <h3>Message Parameters</h3>
- * <p>The parameters of the declared methods will be automatically passed
- * as message parameters to the {@link org.apache.deltaspike.core.api.message.MessageResolver}.
- * Please note that all passed parameters should be {@link java.io.Serializable}.
- * If a parameter is not Serializable, we will instead store the <code>toString()</code>
+ * <p>
+ * The parameters of the declared methods will be automatically passed as message parameters to the
+ * {@link org.apache.deltaspike.core.api.message.MessageResolver}. Please note that all passed parameters should be
+ * {@link java.io.Serializable}. If a parameter is not Serializable, we will instead store the <code>toString()</code>
  * of the passed parameter.</p>
  *
  *
  * <h3>Message Sources</h3>
- * <p>The {@link java.util.ResourceBundle} or other resource lookup source which might be used is
- * determined by the {@link org.apache.deltaspike.core.api.message.MessageResolver}
- * in conjunction with
- * {@link org.apache.deltaspike.core.api.message.MessageContext#messageSource(String...)}.
- * The fully qualified class name of the interface annotated with
- * &#064;MessageBundle will automatically be registered as additional
+ * <p>
+ * The {@link java.util.ResourceBundle} or other resource lookup source which might be used is determined by the
+ * {@link org.apache.deltaspike.core.api.message.MessageResolver} in conjunction with
+ * {@link org.apache.deltaspike.core.api.message.MessageContext#messageSource(String...)}. The fully qualified class
+ * name of the interface annotated with &#064;MessageBundle will automatically be registered as additional
  * <code>messageSource</code> for those messages.</p>
  *
+ * <p>
+ * <code>&#064;MessageBundle</code> can be combined with {@link MessageContextConfig} to further customize the
+ * message resolution and processing.</p>
  *
- * <p><code>&#064;MessageBundle</code> can be combined with {@link MessageContextConfig}
- * to further customize the message-resolution and processing process.</p>
- *
- * <p>Debug hint: Set a breakpoint in <code>MessageBundleInvocationHandler#invoke</code>.
- * This will get called for every message bundle invocation.</p>
+ * <p>
+ * Debug hint: Set a breakpoint in <code>MessageBundleInvocationHandler#invoke</code>. This will get called for every
+ * message bundle invocation.</p>
  */
 @Target({ TYPE })
 @Retention(RUNTIME)

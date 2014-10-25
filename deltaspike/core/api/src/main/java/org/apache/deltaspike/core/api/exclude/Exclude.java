@@ -36,64 +36,73 @@ import java.lang.annotation.Target;
  * &#064;Exclude(onExpression="[my custom expression syntax]", interpretedBy=CustomExpressionInterpreter.class)
  * </pre>
  *
- * <p/>
- * examples:
- * <p/>
- * <p>the following bean gets excluded in any case</p>
+ * <b>Examples:</b>
+ * <br/>
+ * <ul>
+ * <li>
+ * The following bean gets excluded in any case
  * <pre>
  * &#064;Exclude
  * public class NoBean {}
  * </pre>
+ * </li>
  *
- * <p/>
- * <p>the following bean gets excluded in case of project-stage development</p>
+ * <li>
+ * The following bean gets excluded when the ProjectStage is 'Development'
  * <pre>
  * &#064;Exclude(ifProjectStage = ProjectStage.Development.class)
  * public class ProductionBean {}
  * </pre>
+ * </li>
  *
- * <p/>
- * <p>the following bean gets excluded in every case except of project-stage development</p>
+ * <li>
+ * The following bean gets excluded in every case except when then ProjectStage is 'Development'
  * <pre>
  * &#064;Exclude(exceptIfProjectStage = ProjectStage.Development.class)
  * public class DevBean {}
  * </pre>
+ * </li>
  *
- * <p/>
- * <p>the following bean gets excluded if the expression evaluates to true.
- * that means there is a configured property called 'myProper' with the value 'myValue'</p>
+ * <li>
+ * The following bean gets excluded if the expression evaluates to true, which means there is a configured property
+ * called 'myProperty' with the value 'myValue'
  * <pre>
  * &#064;Exclude(onExpression="myProperty==myValue")
  * public class ProductionBean {}
  * </pre>
+ * </li>
  *
- * <p/>
- * <p>the following bean gets excluded if the expression evaluates to true</p>
+ * <li>The following bean gets excluded if the expression evaluates to true
+ * <pre>
  * &#064;Exclude(onExpression="[my custom expression syntax]", interpretedBy=CustomExpressionInterpreter.class)
  * public class ProductionBean {}
+ * </pre>
+ * </li>
+ * </ul>
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE })
 public @interface Exclude
 {
     /**
-     * The {@link org.apache.deltaspike.core.api.projectstage.ProjectStage}s
-     * which lead to deactivating this bean.
-     * If the current ProjectStage is in this list, the bean will get vetoed.
+     * The {@link org.apache.deltaspike.core.api.projectstage.ProjectStage}s which lead to deactivating this bean. If
+     * the current ProjectStage is in this list, the bean will get vetoed.
+     *
      * @return 1-n project-stages which are not allowed for the annotated artifact
      */
     Class<? extends ProjectStage>[] ifProjectStage() default { };
 
     /**
-     * The {@link org.apache.deltaspike.core.api.projectstage.ProjectStage}s
-     * which lead to activating this bean.
-     * If the current ProjectStage is not in this list, the bean will get vetoed.
+     * The {@link org.apache.deltaspike.core.api.projectstage.ProjectStage}s which lead to activating this bean. If the
+     * current ProjectStage is not in this list, the bean will get vetoed.
+     *
      * @return 1-n project-stages which are allowed for the annotated artifact
      */
     Class<? extends ProjectStage>[] exceptIfProjectStage() default { };
 
     /**
-     * Expression which signals if the annotated bean should be deactivated or not
+     * Expression which signals if the annotated bean should be deactivated or not.
+     *
      * @return expression-string which will be interpreted
      */
     String onExpression() default "";

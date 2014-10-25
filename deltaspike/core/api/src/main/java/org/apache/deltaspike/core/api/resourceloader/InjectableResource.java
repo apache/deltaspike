@@ -30,6 +30,27 @@ import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.ElementType.METHOD;
 
+/**
+ * Qualifier which enables simple injection of resources into beans, eliminating the need to deal with their loading.
+ *
+ * <p>
+ * <b>Example:</b>
+ * <pre>
+ * &#064;Inject
+ * &#064;InjectableResource("myfile.properties")
+ * private Properties props;
+ *
+ * &#064;Inject
+ * &#064;InjectableResource("config.xml")
+ * private InputStream inputStream;
+ * </pre>
+ *
+ * This can be used to read files, from classpath or the file system, using two default implementations:
+ * ClasspathResourceProvider and FileResourceProvider. They can be extended as well by implementing the
+ * InjectableResourceProvider interface to allow reading from alternate sources, if needed (e.g. database LOBs, NoSQL
+ * storage areas).
+ * </p>
+ */
 @Target( { TYPE, METHOD, PARAMETER, FIELD })
 @Retention(value = RetentionPolicy.RUNTIME)
 @Documented
