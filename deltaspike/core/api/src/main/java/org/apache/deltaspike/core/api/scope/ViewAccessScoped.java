@@ -30,10 +30,8 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * The scope is active as long as it's bean is accessed by a view.
- * Basically &#064;ViewAccessScoped is a DeltaSpike Conversation which
- * automatically gets ended when the next view tree gets restored
- * without hitting the bean.
+ * The scope is active as long as its bean is accessed by a view. Basically &#064;ViewAccessScoped is a DeltaSpike
+ * Conversation which automatically gets ended when the next view tree gets restored without hitting the bean.
  */
 @Target( { METHOD,TYPE,FIELD } )
 @Retention(RUNTIME)

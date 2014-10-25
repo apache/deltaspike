@@ -26,29 +26,26 @@ import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * <p>Provides the message(-template) for type-safe messages.</p>
+ * Provides the message (template) for type-safe messages.
  *
- * <p>This only works on interfaces which are annotated with
- * {@link MessageBundle}.</p>
+ * <p>
+ * This only works on interfaces which are annotated with {@link MessageBundle}.</p>
  *
- * <p>Depending on the {@link org.apache.deltaspike.core.api.message.MessageResolver}
- * this message-template value might be used as key to lookup internationalized values
- * from a {@link java.util.ResourceBundle}.</p>
+ * <p>
+ * Depending on the {@link org.apache.deltaspike.core.api.message.MessageResolver} this message template value might be
+ * used as key to lookup internationalized values from a {@link java.util.ResourceBundle}.</p>
  *
- * <p>A MessageTemplate value which starts and ends with bracelets '{', '}' will
- * be interpreted as key for resolving from a ResourceBundle or any other lookup mechanism
- * determined by the {@link org.apache.deltaspike.core.api.message.MessageResolver}.
- * A small example:
+ * <p>
+ * A MessageTemplate value which starts and ends with brackets '{', '}' will be interpreted as key for resolving from a
+ * ResourceBundle or any other lookup mechanism determined by the
+ * {@link org.apache.deltaspike.core.api.message.MessageResolver}. A small example:
  * <pre>
  * &#064;MessageTemplate("{welcome_to}")
- * </pre>
- * This will lookup a <code>welcome_to = Hello to Aruba</code> from the configured
- * resource bundle.
+ * </pre> This will lookup a <code>welcome_to = Hello to Aruba</code> from the configured resource bundle.
  * </p>
  *
- *
- * <p>MessageTemplate values without '{', '}' bracelets will be directly used
- * without resource lookup</p>
+ * <p>
+ * MessageTemplate values without '{', '}' bracelets will be directly used without resource lookup.</p>
  */
 @Target(METHOD)
 @Retention(RUNTIME)

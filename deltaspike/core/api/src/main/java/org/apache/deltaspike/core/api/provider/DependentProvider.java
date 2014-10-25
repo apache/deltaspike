@@ -30,14 +30,14 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 /**
- * A {@link Provider} for &#064;Dependent scoped contextual instances.
- * We need this to be apble to properly clean them up when they are not
- * needed anymore via the {@link #destroy()} method.
+ * A {@link Provider} for &#064;Dependent scoped contextual instances. We need this to be able to properly clean them up
+ * when they are not needed anymore via the {@link #destroy()} method.
  *
  * Instances of this class can be retrieved using the {@link BeanProvider}.
  *
- * Instances of this class are Serializable if the wrapped contextual instance
- * is Serializable.
+ * Instances of this class are Serializable if the wrapped contextual instance is Serializable.
+ *
+ * @see BeanProvider#getDependent(java.lang.Class, java.lang.annotation.Annotation...)
  */
 public class DependentProvider<T> implements Provider<T>, Serializable
 {

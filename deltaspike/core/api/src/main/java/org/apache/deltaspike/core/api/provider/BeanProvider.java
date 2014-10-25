@@ -41,17 +41,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * <p>This class contains utility methods to resolve contextual references
- * in situations where no injection is available because the
- * current class is not managed by the CDI Container. This can happen
- * in e.g. a JPA-2.0 EntityListener, a ServletFilter, a Spring managed
- * Bean, etc.</p>
+ * This class contains utility methods for resolution of contextual references in situations where no injection is
+ * available because the current class is not managed by the CDI Container. This can happen in e.g. a JPA 2.0
+ * EntityListener, a ServletFilter, a Spring managed Bean, etc.
  *
- * <p><b>Attention:</b> This method is intended for being used in user code at runtime.
- * If this method gets used during Container boot (in an Extension), non-portable
- * behaviour results. The CDI specification only allows injection of the
- * BeanManager during CDI-Container boot time.</p>
+ * <p>
+ * <b>Attention:</b> This approach is intended for use in user code at runtime. If BeanProvider is used during Container
+ * boot (in an Extension), non-portable behaviour results. The CDI specification only allows injection of the
+ * BeanManager during CDI container boot time.</p>
  *
+ * @see DependentProvider
  * @see BeanManagerProvider
  */
 @Typed()
@@ -73,26 +72,26 @@ public final class BeanProvider
     }
 
     /**
-     * <p>Get a Contextual Reference by its type and qualifiers.
-     * You can use this method to get contextual references of a given type.
-     * A 'Contextual Reference' is a proxy which will automatically resolve
-     * the correct contextual instance when you access any method.</p>
+     * Get a Contextual Reference by its type and qualifiers. You can use this method to get contextual references of a
+     * given type. A "Contextual Reference" is a proxy which will automatically resolve the correct contextual instance
+     * when you access any method.
      *
-     * <p><b>Attention:</b> You shall not use this method to manually resolve a
-     * &#064;Dependent bean! The reason is that this contextual instances do usually
-     * live in the well-defined lifecycle of their injection point (the bean they got
-     * injected into). But if we manually resolve a &#064;Dependent bean, then it does <b>not</b>
-     * belong to such a well defined lifecycle (because &#064;Dependent it is not
-     * &#064;NormalScoped) and thus will not automatically be
+     * <p>
+     * <b>Attention:</b> You shall not use this method to manually resolve a &#064;Dependent bean! The reason is that
+     * contextual instances usually live in the well-defined lifecycle of their injection point (the bean they got
+     * injected into). But if we manually resolve a &#064;Dependent bean, then it does <b>not</b> belong to such well
+     * defined lifecycle (because &#064;Dependent is not &#064;NormalScoped) and thus will not be automatically
      * destroyed at the end of the lifecycle. You need to manually destroy this contextual instance via
      * {@link javax.enterprise.context.spi.Contextual#destroy(Object, javax.enterprise.context.spi.CreationalContext)}.
-     * Thus you also need to manually store the CreationalContext and the Bean you
-     * used to create the contextual instance which this method will not provide.</p>
+     * Thus you also need to manually store the CreationalContext and the Bean you used to create the contextual
+     * instance.</p>
      *
-     * @param type the type of the bean in question
+     * @param type       the type of the bean in question
      * @param qualifiers additional qualifiers which further distinct the resolved bean
-     * @param <T> target type
+     * @param <T>        target type
+     *
      * @return the resolved Contextual Reference
+     *
      * @throws IllegalStateException if the bean could not be found.
      * @see #getContextualReference(Class, boolean, Annotation...)
      */
@@ -102,15 +101,17 @@ public final class BeanProvider
     }
 
     /**
-     * {@link #getContextualReference(Class, Annotation...)} which returns <code>null</code> if the
-     * 'optional' parameter is set to <code>true</code>.
+     * {@link #getContextualReference(Class, Annotation...)} which returns <code>null</code> if the 'optional' parameter
+     * is set to <code>true</code>.
      *
-     * @param type the type of the bean in question
-     * @param optional if <code>true</code> it will return <code>null</code> if no bean could be found or created.
-     *                 Otherwise it will throw an {@code IllegalStateException}
-     * @param qualifiers additional qualifiers which further distinguish the resolved bean
-     * @param <T> target type
+     * @param type       the type of the bean in question
+     * @param optional   if <code>true</code> it will return <code>null</code> if no bean could be found or created.
+     *                   Otherwise it will throw an {@code IllegalStateException}
+     * @param qualifiers additional qualifiers which distinguish the resolved bean
+     * @param <T>        target type
+     *
      * @return the resolved Contextual Reference
+     *
      * @see #getContextualReference(Class, Annotation...)
      */
     public static <T> T getContextualReference(Class<T> type, boolean optional, Annotation... qualifiers)
@@ -121,17 +122,18 @@ public final class BeanProvider
     }
 
     /**
-     * {@link #getContextualReference(Class, Annotation...)} which returns <code>null</code> if the
-     * 'optional' parameter is set to <code>true</code>.
-     * This method is intended for usage where the BeanManager is known, e.g. in Extensions.
+     * {@link #getContextualReference(Class, Annotation...)} which returns <code>null</code> if the 'optional' parameter
+     * is set to <code>true</code>. This method is intended for usage where the BeanManger is known, e.g. in Extensions.
      *
      * @param beanManager the BeanManager to use
-     * @param type the type of the bean in question
-     * @param optional if <code>true</code> it will return <code>null</code> if no bean could be found or created.
-     *                 Otherwise it will throw an {@code IllegalStateException}
-     * @param qualifiers additional qualifiers which further distinguish the resolved bean
-     * @param <T> target type
+     * @param type        the type of the bean in question
+     * @param optional    if <code>true</code> it will return <code>null</code> if no bean could be found or created.
+     *                    Otherwise it will throw an {@code IllegalStateException}
+     * @param qualifiers  additional qualifiers which further distinct the resolved bean
+     * @param <T>         target type
+     *
      * @return the resolved Contextual Reference
+     *
      * @see #getContextualReference(Class, Annotation...)
      */
     public static <T> T getContextualReference(BeanManager beanManager,
@@ -156,14 +158,16 @@ public final class BeanProvider
     }
 
     /**
-     * <p>Get a Contextual Reference by its EL Name.
-     * This only works for beans with the &#064;Named annotation.</p>
+     * Get a Contextual Reference by its EL Name. This only works for beans with the &#064;Named annotation.
      *
-     * <p><b>Attention:</b> please see the notes on manually resolving &#064;Dependent bean
-     * in {@link #getContextualReference(Class, boolean, java.lang.annotation.Annotation...)}!</p>
+     * <p>
+     * <b>Attention:</b> please see the notes on manually resolving &#064;Dependent beans in
+     * {@link #getContextualReference(Class, java.lang.annotation.Annotation...)}!</p>
      *
-     * @param name     the EL name of the bean
+     * @param name the EL name of the bean
+     *
      * @return the resolved Contextual Reference
+     *
      * @throws IllegalStateException if the bean could not be found.
      * @see #getContextualReference(String, boolean)
      */
@@ -173,15 +177,16 @@ public final class BeanProvider
     }
 
     /**
-     * <p>Get a Contextual Reference by its EL Name.
-     * This only works for beans with the &#064;Named annotation.</p>
+     * Get a Contextual Reference by its EL Name. This only works for beans with the &#064;Named annotation.
      *
-     * <p><b>Attention:</b> please see the notes on manually resolving &#064;Dependent bean
-     * in {@link #getContextualReference(Class, boolean, java.lang.annotation.Annotation...)}!</p>
+     * <p>
+     * <b>Attention:</b> please see the notes on manually resolving &#064;Dependent beans in
+     * {@link #getContextualReference(Class, java.lang.annotation.Annotation...)}!</p>
      *
      * @param name     the EL name of the bean
      * @param optional if <code>true</code> it will return <code>null</code> if no bean could be found or created.
      *                 Otherwise it will throw an {@code IllegalStateException}
+     *
      * @return the resolved Contextual Reference
      */
     public static Object getContextualReference(String name, boolean optional)
@@ -190,19 +195,19 @@ public final class BeanProvider
     }
 
     /**
-     * <p>Get a Contextual Reference by its EL Name.
-     * This only works for beans with the &#064;Named annotation.</p>
+     * Get a Contextual Reference by its EL Name. This only works for beans with the &#064;Named annotation.
      *
-     * <p><b>Attention:</b> please see the notes on manually resolving &#064;Dependent bean
-     * in {@link #getContextualReference(Class, boolean, java.lang.annotation.Annotation...)}!</p>
+     * <p>
+     * <b>Attention:</b> please see the notes on manually resolving &#064;Dependent beans in
+     * {@link #getContextualReference(Class, java.lang.annotation.Annotation...)}!</p>
      *
-     *
-     * @param name the EL name of the bean
+     * @param name     the EL name of the bean
      * @param optional if <code>true</code> it will return <code>null</code> if no bean could be found or created.
      *                 Otherwise it will throw an {@code IllegalStateException}
-     * @param type the type of the bean in question - use {@link #getContextualReference(String, boolean)}
-     *             if the type is unknown e.g. in dyn. use-cases
-     * @param <T> target type
+     * @param type     the type of the bean in question - use {@link #getContextualReference(String, boolean)} if the
+     *                 type is unknown e.g. in dyn. use-cases
+     * @param <T>      target type
+     *
      * @return the resolved Contextual Reference
      */
     public static <T> T getContextualReference(String name, boolean optional, Class<T> type)
@@ -227,9 +232,14 @@ public final class BeanProvider
     /**
      * Get the Contextual Reference for the given bean.
      *
+     * <p>
+     * <b>Attention:</b> please see the notes on manually resolving &#064;Dependent beans in
+     * {@link #getContextualReference(Class, java.lang.annotation.Annotation...)}!</p>
+     *
      * @param type the type of the bean in question
-     * @param bean bean-definition for the contextual-reference
-     * @param <T> target type
+     * @param bean bean definition for the contextual reference
+     * @param <T>  target type
+     *
      * @return the resolved Contextual Reference
      */
     public static <T> T getContextualReference(Class<T> type, Bean<T> bean)
@@ -244,23 +254,23 @@ public final class BeanProvider
     }
 
     /**
-     * <p>Get a list of Contextual References by type independent of the qualifier
-     * (including dependent scoped beans).
+     * Get a list of Contextual References by type, regardless of qualifiers (including dependent scoped beans).
      *
-     * You can use this method to get all contextual references of a given type.
-     * A 'Contextual Reference' is a proxy which will automatically resolve
-     * the correct contextual instance when you access any method.</p>
+     * You can use this method to get all contextual references of a given type. A 'Contextual Reference' is a proxy
+     * which will automatically resolve the correct contextual instance when you access any method.
      *
-     * <p><b>Attention:</b> please see the notes on manually resolving &#064;Dependent bean
-     * in {@link #getContextualReference(Class, boolean, java.lang.annotation.Annotation...)}!</p>
-     * <p><b>Attention:</b> This will also return instances of beans for which an Alternative
-     * exists! The &#064;Alternative resolving is only done via {@link BeanManager#resolve(java.util.Set)}
-     * which we cannot use in this case!</p>
+     * <p>
+     * <b>Attention:</b> please see the notes on manually resolving &#064;Dependent beans in
+     * {@link #getContextualReference(Class, java.lang.annotation.Annotation...)}!</p>
+     * <p>
+     * <b>Attention:</b> This will also return instances of beans for which an Alternative exists! The &#064;Alternative
+     * resolving is only done via {@link BeanManager#resolve(java.util.Set)} which we cannot use in this case!</p>
      *
-     * @param type the type of the bean in question
-     * @param optional if <code>true</code> it will return an empty list if no bean could be found or created.
-     *                 Otherwise it will throw an {@code IllegalStateException}
-     * @param <T> target type
+     * @param type     the type of the bean in question
+     * @param optional if <code>true</code> it will return an empty list if no bean could be found or created. Otherwise
+     *                 it will throw an {@code IllegalStateException}
+     * @param <T>      target type
+     *
      * @return the resolved list of Contextual Reference or an empty-list if optional is true
      */
     public static <T> List<T> getContextualReferences(Class<T> type, boolean optional)
@@ -269,20 +279,22 @@ public final class BeanProvider
     }
 
     /**
-     * <p>Get a list of Contextual References by type independent of the qualifier.
+     * Get a list of Contextual References by type, regardless of the qualifier.
      *
-     * Further details are available at {@link #getContextualReferences(Class, boolean)}
-     * <p><b>Attention:</b> please see the notes on manually resolving &#064;Dependent bean
-     * in {@link #getContextualReference(Class, boolean, java.lang.annotation.Annotation...)}!</p>
-     * <p><b>Attention:</b> This will also return instances of beans for which an Alternative
-     * exists! The &#064;Alternative resolving is only done via {@link BeanManager#resolve(java.util.Set)}
-     * which we cannot use in this case!</p>
+     * Further details are available at {@link #getContextualReferences(Class, boolean)}.
+     * <p>
+     * <b>Attention:</b> please see the notes on manually resolving &#064;Dependent bean in
+     * {@link #getContextualReference(Class, java.lang.annotation.Annotation...)}!</p>
+     * <p>
+     * <b>Attention:</b> This will also return instances of beans for which an Alternative exists! The &#064;Alternative
+     * resolving is only done via {@link BeanManager#resolve(java.util.Set)} which we cannot use in this case!</p>
      *
-     * @param type the type of the bean in question
-     * @param optional if <code>true</code> it will return an empty list if no bean could be found or created.
-     *                 Otherwise it will throw an {@code IllegalStateException}
+     * @param type                      the type of the bean in question
+     * @param optional                  if <code>true</code> it will return an empty list if no bean could be found or
+     *                                  created. Otherwise it will throw an {@code IllegalStateException}
      * @param includeDefaultScopedBeans specifies if dependent scoped beans should be included in the result
-     * @param <T> target type
+     * @param <T>                       target type
+     *
      * @return the resolved list of Contextual Reference or an empty-list if optional is true
      */
     public static <T> List<T> getContextualReferences(Class<T> type,
@@ -335,14 +347,15 @@ public final class BeanProvider
     }
 
     /**
-     * Get a set of {@link Bean} definitions by type independent of the qualifier.
+     * Get a set of {@link Bean} definitions by type, regardless of qualifiers.
      *
-     * @param type the type of the bean in question
-     * @param optional if <code>true</code> it will return an empty set if no bean could be found.
-     *                 Otherwise it will throw an {@code IllegalStateException}
-     * @param includeDefaultScopedBeans specifies if dependent scoped beans should be included in the result
-     * @param <T> target type
-     * @return the resolved set of {@link Bean} definitions or an empty-set if optional is true
+     * @param type                      the type of the bean in question
+     * @param optional                  if <code>true</code> it will return an empty set if no bean could be found.
+     *                                  Otherwise it will throw an {@code IllegalStateException}
+     * @param includeDefaultScopedBeans specifies whether dependent scoped beans should be included in the result
+     * @param <T>                       target type
+     *
+     * @return the resolved set of {@link Bean} definitions or an empty set if optional is true
      */
     public static <T> Set<Bean<T>> getBeanDefinitions(Class<T> type,
                                                       boolean optional,
@@ -389,13 +402,14 @@ public final class BeanProvider
     }
     
     /**
-     * Allows to perform dependency injection for instances which aren't managed by CDI.
+     * Performs dependency injection on an instance. Useful for instances which aren't managed by CDI.
      * <p/>
-     * Attention:<br/>
+     * <b>Attention:</b><br/>
      * The resulting instance isn't managed by CDI; only fields annotated with @Inject get initialized.
      *
      * @param instance current instance
-     * @param <T> current type
+     * @param <T>      current type
+     *
      * @return instance with injected fields (if possible - or null if the given instance is null)
      */
     @SuppressWarnings("unchecked")
@@ -453,9 +467,8 @@ public final class BeanProvider
     }
 
     /**
-     * Log a warning if the produced creational instance is of
-     * Scope &#064;Dependent as we cannot properly cleanup
-     * the contextual instance afterwards.
+     * Log a warning if the given bean is of &#064;Dependent scope as we cannot properly clean up the contextual
+     * instance afterwards.
      */
     private static void logWarningIfDependent(Bean<?> bean)
     {
@@ -467,8 +480,9 @@ public final class BeanProvider
     }
 
     /**
-     * Internal method to resolve the BeanManager via the {@link BeanManagerProvider}
-     * @return current bean-manager
+     * Internal method to resolve the BeanManager via the {@link BeanManagerProvider}.
+     *
+     * @return current BeanManager
      */
     private static BeanManager getBeanManager()
     {

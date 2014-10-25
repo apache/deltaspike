@@ -21,14 +21,14 @@ package org.apache.deltaspike.core.api.config.view.navigation;
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
 
 /**
- * Allows to trigger manual navigation via the type-safe {@link ViewConfig} approach.
+ * A type-safe {@link ViewConfig}-based NavigationHandler wrapper.
  */
 public interface ViewNavigationHandler
 {
     /**
      * Triggers navigation to the given view.
      *
-     * @param targetView the view which is the navigation target
+     * @param targetView the navigation target
      */
     void navigateTo(Class<? extends ViewConfig> targetView);
 }

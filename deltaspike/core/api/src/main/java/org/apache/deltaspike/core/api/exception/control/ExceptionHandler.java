@@ -27,6 +27,9 @@ import java.lang.annotation.Target;
 
 /**
  * Marker for types containing Exception Handler methods.
+ *
+ * @see BeforeHandles
+ * @see Handles
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

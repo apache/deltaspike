@@ -27,7 +27,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * A file based resource provider, looking for a file based on the name.
+ * A file-based resource provider, looking for a file based on the name.
  */
 @ApplicationScoped
 public class FileResourceProvider extends AbstractResourceProvider

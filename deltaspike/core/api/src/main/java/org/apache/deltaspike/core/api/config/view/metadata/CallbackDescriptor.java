@@ -31,8 +31,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Basic descriptor for a given class and callback-type.
- * It finds and caches the method/s of the given class which are annotated with the given callback-type.
+ * Basic descriptor for a given class and callback type. It finds and caches the method(s) of the given class which are
+ * annotated with the given callback-type.
  */
 public abstract class CallbackDescriptor
 {

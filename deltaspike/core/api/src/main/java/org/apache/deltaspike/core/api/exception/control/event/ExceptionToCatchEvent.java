@@ -27,7 +27,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Entry point event into the Catch system.  This object is nearly immutable, the only mutable portion
+ * Entry point event into the Exception Control system.  This object is nearly immutable, the only mutable portion
  * is the handled flag.
  */
 @SuppressWarnings("CdiManagedBeanInconsistencyInspection")
@@ -84,9 +84,10 @@ public class ExceptionToCatchEvent implements Serializable
     }
 
     /**
-     * Test to see if the exception has been handled via Solder Catch.
+     * Test to see if the exception has already been processed by an
+     * {@link org.apache.deltaspike.core.api.exception.control.ExceptionHandler}.
      *
-     * @return test if the exception has been through Solder Catch handling.
+     * @return true if the exception has already been processed by a handler; false otherwise
      */
     public boolean isHandled()
     {

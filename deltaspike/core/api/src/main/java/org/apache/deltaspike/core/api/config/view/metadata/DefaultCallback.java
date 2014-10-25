@@ -25,38 +25,44 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+/**
+ * A ConfigDescriptor can contain CallbackDescriptors or ExecutableCallbackDescriptors. An ExecutableCallbackDescriptor
+ * can reference one or more callback method(s). If there is only one callback type, it's possible to annotate it with
+ * {@code @DefaultCallback}. That eliminates the need for a special marker annotation for the target method.
+ *
+ * If there are multiple callback types, it's necessary to use custom annotations as marker for the target method (e.g.
+ * see {@code @Secured} vs. {@code @ViewControllerRef}).
+ *
+ * <pre>
+ * {@code
+ * ViewConfigDescriptor viewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(SomePage.class);
+ *
+ * viewConfigDescriptor.getExecutableCallbackDescriptor(
+ *   Secured.class, Secured.Descriptor.class).execute(accessDecisionVoterContext);
+ * }</pre> is short for
+ * <pre>
+ * {@code
+ * viewConfigDescriptor.getExecutableCallbackDescriptor(
+ *   Secured.class, DefaultCallback.class, Secured.Descriptor.class).execute(accessDecisionVoterContext);
+ * }</pre>
+ *
+ * whereas e.g.
+ * <pre>
+ * {@code
+ * viewConfigDescriptor.getExecutableCallbackDescriptor(
+ *   ViewControllerRef.class, PreRenderView.class, ViewControllerRef.Descriptor.class).execute();
+ * }</pre> or just
+ * <pre>
+ * {@code
+ * viewConfigDescriptor.getExecutableCallbackDescriptor(
+ *   ViewControllerRef.class, PreRenderView.class, SimpleCallbackDescriptor.class).execute();
+ * }</pre> are needed to call @PreRenderView callbacks specifically (instead of the others like @InitView which are also
+ * bound to @ViewControllerRef).
+ */
+//TODO find a better name
 @Target( METHOD )
 @Retention(RUNTIME)
 @Documented
-
-/**
- * A ConfigDescriptor can contain CallbackDescriptors in general as well as ExecutableCallbackDescriptors.
- * An ExecutableCallbackDescriptor can reference one or multiple callback-method/s. If there is only one callback type,
- * it's possible to annotate it with @DefaultCallback.
- * That allows to handle it in an easier fashion
- * (= without providing a special marker (-annotation) for the target method).
- *
- * If there are multiple callback types, it's needed to use custom annotations as marker for the target method.
- * (e.g. see @Secured vs. @ViewControllerBean)
- *
- * ViewConfigDescriptor viewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(PageConfig.class);
- * viewConfigDescriptor.getExecutableCallbackDescriptor(
- *   Secured.class, Secured.Descriptor.class).execute(accessDecisionVoterContext);
- * is short for
- * viewConfigDescriptor.getExecutableCallbackDescriptor(
- *   Secured.class, DefaultCallback.class, Secured.Descriptor.class).execute(accessDecisionVoterContext);
- *
- * whereas e.g.
- * viewConfigDescriptor.getExecutableCallbackDescriptor(
- *   ViewControllerBean.class, PreRenderView.class, ViewControllerBean.ViewControllerDescriptor.class).execute();
- * or just
- * viewConfigDescriptor.getExecutableCallbackDescriptor(
- * ViewControllerBean.class, PreRenderView.class, SimpleCallbackDescriptor.class).execute();
- *
- * are needed to call only @PreRenderView callbacks
- * (and not the others like @InitView which are also bound to @ViewControllerBean)
- */
-//TODO find a better name
-public @interface DefaultCallback
+public @interface DefaultCallback 
 {
 }

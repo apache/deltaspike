@@ -35,7 +35,10 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * Allows to reference a view-config
+ * A reference to a view-config, applied on a view-controller. The opposite direction of {@link ViewControllerRef}.
+ *
+ * ViewRef annotation instances are not present at runtime as metadata, they are instead transformed to
+ * ViewControllerRef instances during deployment.
  */
 
 @Target({ TYPE, METHOD })
@@ -52,9 +55,9 @@ public @interface ViewRef
     }
 
     /**
-     * Specifies the pages via type-safe {@link ViewConfig}.
+     * Specifies the views to bind to the view-controller.
      *
-     * @return views which should be aware of the bean or observer
+     * @return {@link ViewConfig}s of views bound to the view-controller
      */
     @Nonbinding Class<? extends ViewConfig>[] config();
 

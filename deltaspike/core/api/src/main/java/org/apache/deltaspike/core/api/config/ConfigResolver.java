@@ -39,11 +39,20 @@ import org.apache.deltaspike.core.util.ProjectStageProducer;
 import org.apache.deltaspike.core.util.ServiceUtils;
 
 /**
- * <p>Resolve the configuration via their well defined ordinals.</p>
+ * The main entry point to the DeltaSpike configuration mechanism.
  *
- * <p>You can provide your own lookup paths by implementing
- * and registering additional {@link PropertyFileConfig} or
+ * <p>
+ * Resolves configured values of properties by going through the list of configured {@link ConfigSource}s and using the
+ * one with the highest ordinal. If multiple {@link ConfigSource}s have the same ordinal, their order is undefined.</p>
+ *
+ * <p>
+ * You can provide your own lookup paths by implementing and registering additional {@link PropertyFileConfig} or
  * {@link ConfigSource} or {@link ConfigSourceProvider} implementations.</p>
+ *
+ * <p>
+ * The resolved configuration is also accessible by simple injection using the {@link ConfigProperty} qualifier.</p>
+ *
+ * @see <a href="http://deltaspike.apache.org/documentation/configuration.html">DeltaSpike Configuration Mechanism</a>
  */
 @Typed()
 public final class ConfigResolver
@@ -96,7 +105,7 @@ public final class ConfigResolver
     }
 
     /**
-     * Clear all ConfigSources for the current ClassLoader
+     * Clear all ConfigSources for the current ClassLoader.
      */
     public static synchronized void freeConfigSources()
     {
@@ -104,9 +113,9 @@ public final class ConfigResolver
     }
 
     /**
-     * Add a {@link ConfigFilter} to the ConfigResolver.
-     * This will only affect the current WebApp
-     * (or more precisely the current ClassLoader and it's children).
+     * Add a {@link ConfigFilter} to the ConfigResolver. This will only affect the current WebApp (or more precisely the
+     * current ClassLoader and it's children).
+     *
      * @param configFilter
      */
     public static void addConfigFilter(ConfigFilter configFilter)
@@ -132,14 +141,14 @@ public final class ConfigResolver
     }
 
     /**
-     * Resolve the property value by going through the list of configured {@link ConfigSource}s
-     * and use the one with the highest priority. If no configured value has been found that
-     * way we will use the defaultValue.
+     * {@link #getPropertyValue(java.lang.String)} which returns the provided default value if no configured value can
+     * be found (<code>null</code> or empty).
      *
-     * @param key the property key.
-     * @param defaultValue will be used if no configured value for the key could be found.
-     * @return the configured property value from the {@link ConfigSource} with the highest ordinal or
-     *         the defaultValue if there is no value explicitly configured.
+     * @param key          the property key
+     * @param defaultValue fallback value
+     *
+     * @return the configured property value from the {@link ConfigSource} with the highest ordinal or the defaultValue
+     *         if there is no value explicitly configured
      */
     public static String getPropertyValue(String key, String defaultValue)
     {
@@ -149,12 +158,12 @@ public final class ConfigResolver
     }
 
     /**
-     * Resolve the property value by going through the list of configured {@link ConfigSource}s
-     * and use the one with the highest priority.
+     * Resolves the value configured for the given key.
      *
-     * @param key the property key.
-     * @return the configured property value from the {@link ConfigSource} with the highest ordinal or
-     * null if there is no configured value for it.
+     * @param key the property key
+     *
+     * @return the configured property value from the {@link ConfigSource} with the highest ordinal or null if there is
+     *         no configured value for it
      */
     public static String getPropertyValue(String key)
     {
@@ -180,18 +189,22 @@ public final class ConfigResolver
     }
 
     /**
-     * <p>Search for the configured value in all {@link ConfigSource}s and take the
-     * current {@link org.apache.deltaspike.core.api.projectstage.ProjectStage}
-     * into account.</p>
+     * Resolves the value configured for the given key in the current
+     * {@link org.apache.deltaspike.core.api.projectstage.ProjectStage}.
      *
-     * <p>It first will search if there is a configured value of the given key prefixed
-     * with the current ProjectStage (e.g. 'myproject.myconfig.Production') and if this didn't
-     * find anything it will lookup the given key without any prefix.</p>
+     * <p>
+     * First, it will search for a value configured for the given key suffixed with the current ProjectStage (e.g.
+     * 'myproject.myconfig.Production'), and in case this value is not found (null or empty), it will look up the given
+     * key without any suffix.</p>
      *
-     * <p><b>Attention</b> This method must only be used after all ConfigSources
-     * got registered and it also must not be used to determine the ProjectStage itself.</p>
+     * <p>
+     * <b>Attention</b> This method must only be used after all ConfigSources got registered and it also must not be
+     * used to determine the ProjectStage itself.</p>
+     *
      * @param key
-     * @return the configured value or if non found the defaultValue
+     *
+     * @return the value configured for {@code <given key>.<current project stage>}, or just the configured value of
+     *         {@code <given key>} if the project-stage-specific value is not found (null or empty)
      *
      */
     public static String getProjectStageAwarePropertyValue(String key)
@@ -207,10 +220,12 @@ public final class ConfigResolver
         return value;
     }
     /**
-     * {@link #getProjectStageAwarePropertyValue(String)} which returns the defaultValue
-     * if the property is <code>null</code> or empty.
+     * {@link #getProjectStageAwarePropertyValue(String)} which returns the provided default value if no configured
+     * value can be found (<code>null</code> or empty).
+     *
      * @param key
-     * @param defaultValue
+     * @param defaultValue fallback value
+     *
      * @return the configured value or if non found the defaultValue
      *
      */
@@ -222,37 +237,42 @@ public final class ConfigResolver
     }
 
     /**
-     * <p>Search for the configured value in all {@link ConfigSource}s and take the
-     * current {@link org.apache.deltaspike.core.api.projectstage.ProjectStage}
-     * and the value configured for the given property into account.</p>
+     * Resolves the value configured for the given key, parameterized by the current
+     * {@link org.apache.deltaspike.core.api.projectstage.ProjectStage} and by the value of a second property.
      *
-     * <p>The first step is to resolve the value of the given property. This will
-     * take the current ProjectStage into account. E.g. given the property is 'dbvendor'
-     * and the ProjectStage is 'UnitTest', the first lookup is
-     * <ul><li>'dbvendor.UnitTest'</li></ul>.
-     * If this value is not found then we will do a 2nd lookup for
-     * <ul><li>'dbvendor'</li></ul></p>
+     * <p>
+     * <b>Example:</b><br/>
+     * Suppose the current ProjectStage is {@code UnitTest} and we are looking for the value of {@code datasource}
+     * parameterized by the configured {@code dbvendor}.
+     * </p>
+     * <p>
+     * The first step is to resolve the value of the second property, {@code dbvendor}. This will also take the current
+     * ProjectStage into account. The following lookup is performed:
+     * <ul><li>dbvendor.UnitTest</li></ul>
+     * and if this value is not found then we will do a 2nd lookup for
+     * <ul><li>dbvendor</li></ul></p>
      *
-     * <p>If a value was found for the given property (e.g. dbvendor = 'mysql'
-     * then we will use this value to lookup in the following order until we
-     * found a non-null value. If there was no value found for the property
-     * we will only do the key+ProjectStage and key lookup.
-     * In the following sample 'dataSource' is used as key parameter:
-     *
+     * <p>
+     * If a value was found for the second property (e.g. dbvendor = 'mysql') then we will use its value for the main
+     * lookup. If no value is found for the parameterized key {@code <key>.<second property value>.<project stage>}, we
+     * will do the {@code <key>.<second property value>}, then {@code <key>.<project stage>} and finally a {@code <key>}
+     * lookup:
      * <ul>
-     *      <li>'datasource.mysql.UnitTest'</li>
-     *      <li>'datasource.mysql'</li>
-     *      <li>'datasource.UnitTest'</li>
-     *      <li>'datasource'</li>
+     * <li>datasource.mysql.UnitTest</li>
+     * <li>datasource.mysql</li>
+     * <li>datasource.UnitTest</li>
+     * <li>datasource</li>
      * </ul>
      * </p>
      *
+     * <p>
+     * <b>Attention</b> This method must only be used after all ConfigSources got registered and it also must not be
+     * used to determine the ProjectStage itself.</p>
      *
-     * <p><b>Attention</b> This method must only be used after all ConfigSources
-     * got registered and it also must not be used to determine the ProjectStage itself.</p>
      * @param key
-     * @param property the property to look up first
-     * @return the configured value or if non found the defaultValue
+     * @param property the property to look up first and use as the parameter for the main lookup
+     *
+     * @return the configured value or null if no value is found for any of the key variants
      *
      */
     public static String getPropertyAwarePropertyValue(String key, String property)
@@ -274,15 +294,21 @@ public final class ConfigResolver
         return value;
     }
 
-    /*
-     * <p><b>Attention</b> This method must only be used after all ConfigSources
-     * got registered and it also must not be used to determine the ProjectStage itself.</p>
+    /**
+     * {@link #getPropertyAwarePropertyValue(java.lang.String, java.lang.String)} which returns the provided default
+     * value if no configured value can be found (<code>null</code> or empty).
+     *
+     * <p>
+     * <b>Attention</b> This method must only be used after all ConfigSources got registered and it also must not be
+     * used to determine the ProjectStage itself.</p>
+     *
      * @param key
-     * @param property the property to look up first
-     * @param defaultValue
+     * @param property     the property to look up first and use as the parameter for the main lookup
+     * @param defaultValue fallback value
+     *
      * @return the configured value or if non found the defaultValue
      *
-    */
+     */
     public static String getPropertyAwarePropertyValue(String key, String property, String defaultValue)
     {
         String value = getPropertyAwarePropertyValue(key, property);
@@ -291,12 +317,12 @@ public final class ConfigResolver
     }
 
     /**
-     * Resolve all values for the given key, from all registered ConfigSources ordered by their
-     * ordinal value in ascending ways. If more {@link ConfigSource}s have the same ordinal, their
-     * order is undefined.
+     * Resolve all values for the given key.
      *
-     * @param key under which configuration is stored
-     * @return List with all found property values, sorted in ascending order of their ordinal.
+     * @param key
+     *
+     * @return a List of all found property values, sorted by their ordinal in ascending order
+     *
      * @see org.apache.deltaspike.core.spi.config.ConfigSource#getOrdinal()
      */
     public static List<String> getAllPropertyValues(String key)
@@ -323,6 +349,13 @@ public final class ConfigResolver
         return result;
     }
 
+    /**
+     * Returns a Map of all properties from all scannable config sources. The values of the properties reflect the
+     * values that would be obtained by a call to {@link #getPropertyValue(java.lang.String)}, that is, the value of the
+     * property from the ConfigSource with the highest ordinal.
+     *
+     * @see ConfigSource#isScannable()
+     */
     public static Map<String, String> getAllProperties()
     {
         // must use a new list because Arrays.asList() is resistant to sorting on some JVMs:

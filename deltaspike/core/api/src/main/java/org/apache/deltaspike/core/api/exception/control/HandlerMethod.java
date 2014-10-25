@@ -27,7 +27,7 @@ import java.lang.reflect.Type;
 import java.util.Set;
 
 /**
- * Meta data interface about an exception handler. It is the responsibility of the
+ * Metadata interface for an exception handler method. It is the responsibility of the
  * implementation to support {@link javax.enterprise.inject.spi.InjectionPoint}s and to
  * validate those {@link javax.enterprise.inject.spi.InjectionPoint}s.
  *
@@ -59,7 +59,8 @@ public interface HandlerMethod<T extends Throwable>
     void notify(ExceptionEvent<T> event, BeanManager beanManager) throws Exception;
 
     /**
-     * Obtains the precedence of the handler, relative to other handlers for the same type.
+     * Obtains the precedence of the handler, relative to other handlers for the same type. Handler with a higher
+     * ordinal is invoked before a handler with a lower ordinal.
      */
     int getOrdinal();
 

@@ -24,28 +24,26 @@ import java.util.Locale;
 import org.apache.deltaspike.core.api.config.DeltaSpikeConfig;
 
 /**
- * <p>Implementations are responsible to replace placeholders
- * in a message with the final value.</p>
+ * Implementations are responsible to replace placeholders in a message with the final value.
  *
- * <p>An application can provide an own implementation as
- * &#064;Alternative.</p>
+ * <p>
+ * An application can provide a custom implementation as &#064;Alternative.</p>
  *
- * <p>A simple implementation which uses the
- * {@link String#format(java.util.Locale, String, Object...)}
- * will be used by default.</p>
+ * <p>
+ * A simple implementation which uses the {@link String#format(java.util.Locale, String, Object...)} will be used by
+ * default.</p>
  */
 public interface MessageInterpolator extends Serializable, DeltaSpikeConfig
 {
     /**
-     * replaces the arguments of the given message with the given arguments
+     * Replaces the arguments of the given message with the given arguments.
      *
-     * instead of a MessageContextAware interface. we need it to avoid expensive operations like locking or deep cloning
      * @param messageText the message text which has to be interpolated
-     * @param arguments a list of numbered and/or named arguments for the current message
-     * @param locale to use for the formatting
-     * @return the final (interpolated) message text
-     *         if it was possible to replace the parameters with the given arguments
-     *         the unmodified messageText otherwise
+     * @param arguments   a list of numbered and/or named arguments for the current message
+     * @param locale      to use for the formatting
+     *
+     * @return the final (interpolated) message text if it was possible to replace the parameters with the given
+     *         arguments, or the unmodified messageText otherwise
      */
     String interpolate(String messageText, Serializable[] arguments, Locale locale);
 }

@@ -34,27 +34,26 @@ import org.apache.deltaspike.core.util.ClassUtils;
 
 
 /**
- * <p>This class provides access to the {@link BeanManager}
- * by registering the current {@link BeanManager} in an extension and
- * making it available via a singleton factory for the current application.</p>
- * <p>This is really handy if you like to access CDI functionality
- * from places where no injection is available.</p>
- * <p>If a simple but manual bean-lookup is needed, it's easier to use the {@link BeanProvider}.</p>
- * <p/>
- * <p>As soon as an application shuts down, the reference to the {@link BeanManager} will be removed.<p>
- * <p/>
- * <p>Usage:<p/>
- * <pre>
- * BeanManager bm = BeanManagerProvider.getInstance().getBeanManager();
- * 
- * </pre>
+ * This class provides access to the {@link BeanManager} by registering the current {@link BeanManager} in an extension
+ * and making it available via a singleton factory for the current application.
  *
- * <p><b>Attention:</b> This method is intended for being used in user code at runtime.
- * If this method gets used during Container boot (in an Extension), non-portable
- * behaviour results. During bootstrapping an Extension shall &#064;Inject BeanManager to get
- * access to the underlying BeanManager (see e.g. {@link #cleanupFinalBeanManagers} ).
- * This is the only way to guarantee to get the right
- * BeanManager in more complex Container scenarios.</p>
+ * <p>This is really handy when you need to access CDI functionality from places where no injection is available.</p>
+ *
+ * <p>If a simple but manual bean lookup is needed, it's easier to use the {@link BeanProvider}.</p>
+ * 
+ * <p>As soon as an application shuts down, the reference to the {@link BeanManager} is removed.</p>
+ * 
+ * <p>
+ * Usage:
+
+ * <pre>
+ * BeanManager bm = BeanManagerProvider.getInstance().getBeanManager();</pre>
+ * </p>
+ * <p>
+ * <b>Attention:</b> This approach is intended for use in user code at runtime. If BeanManagerProvider is used during
+ * Container boot (in an Extension), non-portable behaviour results. During bootstrapping, an Extension shall
+ * &#064;Inject BeanManager to get access to the underlying BeanManager (see e.g. {@link #cleanupFinalBeanManagers}).
+ * This is the only way to guarantee that the right BeanManager is obtained in more complex Container scenarios.</p>
  */
 public class BeanManagerProvider implements Extension
 {
@@ -63,44 +62,42 @@ public class BeanManagerProvider implements Extension
     private static BeanManagerProvider bmpSingleton;
 
     /**
-     * This data container is used for storing the BeanManager for each
-     * WebApplication. This is needed in EAR or other multi-webapp scenarios
-     * if the DeltaSpike classes (jars) are provided in a shared ClassLoader.
+     * This data container is used for storing the BeanManager for each web application. This is needed in EAR or other
+     * multi-webapp scenarios when the DeltaSpike classes (jars) are provided in a shared ClassLoader.
      */
     private static class BeanManagerInfo
     {
         /**
-         * The BeanManager picked up via Extension loading
+         * The BeanManager picked up via Extension loading.
          */
         private BeanManager loadTimeBm;
 
         /**
-         * The final BeanManagers.
-         * After the container did finally boot, we first try to resolve them from JNDI,
-         * and only if we don't find any BM there we take the ones picked up at startup.
+         * The final BeanManager. After the container did finally boot, we first try to resolve them from JNDI, and only
+         * if we don't find any BM there we take the ones picked up at startup.
          */
         private BeanManager finalBm;
 
         /**
-         * Whether the CDI Application has finally booted.
-         * Please note that this is only a nearby value
-         * as there is no reliable event for this status in EE6.
+         * Whether the CDI Application has finally booted. Please note that this is only a nearby value as there is no
+         * reliable event for this status in EE6.
          */
         private boolean booted;
     }
 
     /**
-     * <p>The BeanManagerInfo for the current ClassLoader.</p>
+     * The BeanManagerInfo for the current ClassLoader.
+     * 
      * <p><b>Attention:</b> This instance must only be used through the {@link #bmpSingleton} singleton!</p>
      */
     private volatile Map<ClassLoader, BeanManagerInfo> bmInfos = new ConcurrentHashMap<ClassLoader, BeanManagerInfo>();
 
     /**
-     * Returns if the {@link BeanManagerProvider} has been initialized.
-     * Usually it isn't needed to call this method in application code.
-     * It's e.g. useful for other frameworks to check if DeltaSpike and the CDI container in general have been started.
+     * Indicates whether the {@link BeanManagerProvider} has been initialized. Usually it's not necessary to call this
+     * method in application code. It's useful e.g. for other frameworks to check if DeltaSpike and the CDI container in
+     * general have been started.
      *
-     * @return true if the bean-manager-provider is ready to be used
+     * @return true if the BeanManagerProvider is ready to be used
      */
     public static boolean isActive()
     {
@@ -108,11 +105,11 @@ public class BeanManagerProvider implements Extension
     }
 
     /**
-     * Allows to get the current provider instance which provides access to the current {@link BeanManager}
+     * Returns the current provider instance which provides access to the current {@link BeanManager}.
      *
-     * @throws IllegalStateException if the {@link BeanManagerProvider} isn't ready to be used.
-     * That's the case if the environment isn't configured properly and therefore the {@link AfterBeanDiscovery}
-     * hasn't be called before this method gets called.
+     * @throws IllegalStateException if the {@link BeanManagerProvider} isn't ready to be used. That's the case if the
+     *                               environment isn't configured properly and therefore the {@link AfterBeanDiscovery}
+     *                               hasn't been called before this method gets called.
      * @return the singleton BeanManagerProvider
      */
     public static BeanManagerProvider getInstance()
@@ -138,9 +135,9 @@ public class BeanManagerProvider implements Extension
     }
 
     /**
-     * It basically doesn't matter which of the system events we use,
-     * but basically we use the {@link AfterBeanDiscovery} event since it allows to use the
-     * {@link BeanManagerProvider} for all events which occur after the {@link AfterBeanDiscovery} event.
+     * It doesn't really matter which of the system events is used to obtain the BeanManager, but
+     * {@link AfterBeanDiscovery} has been chosen since it allows all events which occur after the
+     * {@link AfterBeanDiscovery} to use the {@link BeanManagerProvider}.
      *
      * @param afterBeanDiscovery event which we don't actually use ;)
      * @param beanManager        the BeanManager we store and make available.
@@ -154,10 +151,11 @@ public class BeanManagerProvider implements Extension
     }
 
     /**
-     * The active {@link BeanManager} for the current application (/{@link ClassLoader}). This method will throw an
-     * {@link IllegalStateException} if the BeanManager cannot be found.
+     * The active {@link BeanManager} for the current application (current {@link ClassLoader}). This method will throw
+     * an {@link IllegalStateException} if the BeanManager cannot be found.
      *
-     * @return the current bean-manager, never <code>null</code>
+     * @return the current BeanManager, never <code>null</code>
+     *
      * @throws IllegalStateException if the BeanManager cannot be found
      */
     public BeanManager getBeanManager()
@@ -213,18 +211,13 @@ public class BeanManagerProvider implements Extension
     }
 
     /**
-     * By cleaning the final BeanManager map after the Deployment got Validated,
-     * we prevent premature loading of information from JNDI in cases where the
-     * container might not be fully setup yet.
+     * By cleaning the final BeanManager map after the deployment gets validated, premature loading of information from
+     * JNDI is prevented in cases where the container might not be fully setup yet.
      *
-     * This might happen if someone uses the BeanManagerProvider during Extension
-     * startup. This should generally avoided but instead you should just use
-     * an injected BeanManager in your Extension and propagate the BeanManager
-     * via setters.
+     * This might happen if the BeanManagerProvider is used in an extension during CDI bootstrap. This should be
+     * generally avoided. Instead, an injected BeanManager should be used in Extensions and propagated using setters.
      *
-     * In EARs with multiple webapps you might get different Extensions per WAR.
-     * This depends on the container you use. By resetting <i>all</i> known
-     * BeanManagerInfos we try to
+     * In EARs with multiple webapps, each WAR might get a different Extension. This depends on the container used.
      */
     public void cleanupFinalBeanManagers(@Observes AfterDeploymentValidation adv)
     {
@@ -241,9 +234,9 @@ public class BeanManagerProvider implements Extension
     }
 
     /**
-     * Cleanup on container shutdown
+     * Cleanup on container shutdown.
      *
-     * @param beforeShutdown cdi shutdown event
+     * @param beforeShutdown CDI shutdown event
      */
     public void cleanupStoredBeanManagerOnShutdown(@Observes BeforeShutdown beforeShutdown)
     {
@@ -277,7 +270,7 @@ public class BeanManagerProvider implements Extension
     }
 
     /**
-     * Get or create the BeanManagerInfo for the given ClassLoader
+     * Get or create the BeanManagerInfo for the given ClassLoader.
      */
     private BeanManagerInfo getBeanManagerInfo(ClassLoader cl)
     {
@@ -304,10 +297,11 @@ public class BeanManagerProvider implements Extension
     }
 
     /**
-     * This function exists to prevent findbugs to complain about
-     * setting a static member from a non-static function.
+     * This function exists to prevent findbugs from complaining about setting a static member from a non-static
+     * function.
      *
      * @param beanManagerProvider the bean-manager-provider which should be used if there isn't an existing provider
+     *
      * @return the first BeanManagerProvider
      */
     private static BeanManagerProvider setBeanManagerProvider(BeanManagerProvider beanManagerProvider)
@@ -321,7 +315,7 @@ public class BeanManagerProvider implements Extension
     }
 
     /**
-     * @return whether a BeanManagerInfo for a parent classloader is available and has the booted flag set.
+     * @return whether a BeanManagerInfo for a parent ClassLoader is available and has the booted flag set.
      */
     private boolean isParentBeanManagerBooted()
     {
@@ -331,10 +325,10 @@ public class BeanManagerProvider implements Extension
     }
 
     /**
-     * This method recurses into the parent ClassLoaders and will check if a
-     * BeanManagerInfo for it exists.
-     * @return the BeanManagerInfo of the parent ClassLoader hierarchy if any exists,
-     *         or <code>null</code> if there is no {@link BeanManagerInfo} for the ClassLoaders in the hierarchy.
+     * This method recurses into the parent ClassLoaders and checks whether a BeanManagerInfo for it exists.
+     *
+     * @return the BeanManagerInfo of the parent ClassLoader hierarchy if any exists, or <code>null</code> if there is
+     *         no {@link BeanManagerInfo} for the ClassLoaders in the hierarchy.
      */
     private BeanManagerInfo getParentBeanManagerInfo(ClassLoader classLoader)
     {

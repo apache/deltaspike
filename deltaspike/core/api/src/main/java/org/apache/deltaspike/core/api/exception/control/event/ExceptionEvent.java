@@ -20,8 +20,8 @@
 package org.apache.deltaspike.core.api.exception.control.event;
 
 /**
- * Payload for an exception to be handled.  Implementations of this interface should not expose internals and remain
- * immutable for this contract.
+ * Payload for an exception to be handled. Implementations of this interface should not expose internals and should
+ * remain immutable.
  *
  * @param <T> Exception type this event represents
  */
