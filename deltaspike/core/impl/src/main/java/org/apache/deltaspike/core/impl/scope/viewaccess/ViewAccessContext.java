@@ -18,19 +18,23 @@
  */
 package org.apache.deltaspike.core.impl.scope.viewaccess;
 
-import java.lang.annotation.Annotation;
-import java.util.Map;
-import javax.enterprise.context.spi.Contextual;
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.PassivationCapable;
 import org.apache.deltaspike.core.api.scope.ViewAccessScoped;
 import org.apache.deltaspike.core.impl.scope.window.WindowContextImpl;
+import org.apache.deltaspike.core.spi.scope.viewaccess.ViewAccessContextManager;
 import org.apache.deltaspike.core.util.context.AbstractContext;
 import org.apache.deltaspike.core.util.context.ContextualInstanceInfo;
 import org.apache.deltaspike.core.util.context.ContextualStorage;
 
-public class ViewAccessContext extends AbstractContext
+import javax.enterprise.context.spi.Contextual;
+import javax.enterprise.context.spi.CreationalContext;
+import javax.enterprise.inject.Typed;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.PassivationCapable;
+import java.lang.annotation.Annotation;
+import java.util.Map;
+
+@Typed()
+public class ViewAccessContext extends AbstractContext implements ViewAccessContextManager
 {
     private static final String KEY = "VAS"; //TODO re-visit key (e.g. view-id instead of using one big storage)
 
@@ -112,32 +116,37 @@ public class ViewAccessContext extends AbstractContext
 
     public void onProcessingViewFinished(String view)
     {
+        close(view, false);
+    }
+
+    public void close(String view, boolean force)
+    {
         // ignore if WindowContext isn't active - our ViewAccessViewHistory is WindowScoped
         if (!windowContext.isActive())
         {
             return;
         }
-        
+
         // destroy beans only if the view has been changed
-        if (!view.equals(viewAccessViewHistory.getLastView()))
+        if (force || !view.equals(viewAccessViewHistory.getLastView()))
         {
             viewAccessViewHistory.setLastView(view);
             
-            destroyExpiredBeans();
+            destroyExpiredBeans(force);
         }
         
         // clear history after each rendering process
         viewAccessBeanAccessHistory.getAccessedBeans().clear();
     }
     
-    private void destroyExpiredBeans()
+    private void destroyExpiredBeans(boolean force)
     {
         ContextualStorage storage = viewAccessBeanHolder.getContextualStorage(beanManager, KEY, false);
         if (storage != null)
         {
             for (Map.Entry<Object, ContextualInstanceInfo<?>> storageEntry : storage.getStorage().entrySet())
             {
-                if (!viewAccessBeanAccessHistory.getAccessedBeans().contains((String) storageEntry.getKey()))
+                if (force || !viewAccessBeanAccessHistory.getAccessedBeans().contains((String) storageEntry.getKey()))
                 {
                     Contextual bean = storage.getBean(storageEntry.getKey());
                     AbstractContext.destroyBean(bean, storageEntry.getValue());
@@ -145,5 +154,11 @@ public class ViewAccessContext extends AbstractContext
                 }
             }
         }
+    }
+
+    @Override
+    public void close()
+    {
+        close(null, true);
     }
 }
