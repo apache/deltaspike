@@ -52,6 +52,8 @@ public class ViewConfigAwareNavigationHandler extends NavigationHandler
 
     private NavigationParameterContext navigationParameterContext;
 
+    private ViewConfigResolver viewConfigResolver;
+
     /**
      * Constructor which allows to use the given {@link NavigationHandler}
      *
@@ -66,7 +68,7 @@ public class ViewConfigAwareNavigationHandler extends NavigationHandler
     @Override
     public void handleNavigation(FacesContext facesContext, String fromAction, String outcome)
     {
-        initBeanManager();
+        lazyInit();
         if (outcome != null && outcome.contains("."))
         {
             String originalOutcome = outcome;
@@ -84,7 +86,7 @@ public class ViewConfigAwareNavigationHandler extends NavigationHandler
                 {
                     if (DefaultErrorView.class.getName().equals(originalOutcome))
                     {
-                        entry = JsfUtils.getViewConfigResolver().getDefaultErrorViewConfigDescriptor();
+                        entry = this.viewConfigResolver.getDefaultErrorViewConfigDescriptor();
                     }
                 }
 
@@ -108,7 +110,7 @@ public class ViewConfigAwareNavigationHandler extends NavigationHandler
 
                             loadedClass = loadedClass.getSuperclass();
                         }
-                        entry = JsfUtils.getViewConfigResolver()
+                        entry = this.viewConfigResolver
                                 .getViewConfigDescriptor((Class<? extends ViewConfig>) loadedClass);
                     }
                 }
@@ -219,15 +221,13 @@ public class ViewConfigAwareNavigationHandler extends NavigationHandler
             return viewConfigDescriptor;
         }
 
-        return JsfUtils.getViewConfigResolver().getViewConfigDescriptor(navigateEvent.getToView());
+        return this.viewConfigResolver.getViewConfigDescriptor(navigateEvent.getToView());
     }
 
     private PreViewConfigNavigateEvent firePreViewConfigNavigateEvent(String oldViewId,
                                                                       ViewConfigDescriptor newViewConfigDescriptor)
     {
-        ViewConfigResolver viewConfigResolver = JsfUtils.getViewConfigResolver();
-
-        ViewConfigDescriptor oldViewConfigDescriptor = viewConfigResolver.getViewConfigDescriptor(oldViewId);
+        ViewConfigDescriptor oldViewConfigDescriptor = this.viewConfigResolver.getViewConfigDescriptor(oldViewId);
 
         PreViewConfigNavigateEvent navigateEvent;
 
@@ -246,13 +246,23 @@ public class ViewConfigAwareNavigationHandler extends NavigationHandler
         return navigateEvent;
     }
 
-    private void initBeanManager()
+    private void lazyInit()
+    {
+        if (this.beanManager == null)
+        {
+            init();
+        }
+    }
+
+    private synchronized void init()
     {
         if (this.beanManager == null)
         {
             this.beanManager = BeanManagerProvider.getInstance().getBeanManager();
             this.navigationParameterContext =
                     BeanProvider.getContextualReference(NavigationParameterContext.class);
+            this.viewConfigResolver =
+                    BeanProvider.getContextualReference(ViewConfigResolver.class);
         }
     }
 }
