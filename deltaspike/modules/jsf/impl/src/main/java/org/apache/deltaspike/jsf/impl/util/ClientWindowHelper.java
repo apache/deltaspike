@@ -112,6 +112,11 @@ public abstract class ClientWindowHelper
                             entry.getValue());
                 }
 
+                if (targetUrl.contains("dswid=&"))
+                {
+                    //remove empty dswid parameter
+                    targetUrl = targetUrl.replace("dswid=&", "");
+                }
                 return targetUrl;
             }
         }
