@@ -30,7 +30,6 @@ import javax.servlet.http.Cookie;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.spi.scope.window.WindowContext;
-import org.apache.deltaspike.jsf.impl.scope.window.DefaultClientWindow;
 import org.apache.deltaspike.jsf.impl.util.ClientWindowHelper;
 import org.apache.deltaspike.jsf.spi.scope.window.ClientWindowConfig;
 
@@ -42,6 +41,7 @@ public class WindowIdHtmlRenderer extends Renderer
 {
     private volatile WindowContext windowContext;
     private volatile ClientWindowConfig clientWindowConfig;
+    private int maxWindowIdCount = 10;
 
     /**
      * 'deltaspikeJsWindowId' will be used to:
@@ -61,9 +61,9 @@ public class WindowIdHtmlRenderer extends Renderer
         //already ensured by DefaultClientWindow
         //just to ensure that we don't get a security issue in case of a customized client-window implementation
         //will never happen usually -> no real overhead
-        if (windowId != null && windowId.length() > DefaultClientWindow.SECURE_ID_LENGTH)
+        if (windowId != null && windowId.length() > this.maxWindowIdCount)
         {
-            windowId = windowId.substring(0, DefaultClientWindow.SECURE_ID_LENGTH);
+            windowId = windowId.substring(0, this.maxWindowIdCount);
         }
 
         String mode = getClientWindowConfig().getClientWindowRenderMode(context).name();
@@ -95,6 +95,7 @@ public class WindowIdHtmlRenderer extends Renderer
                 if (windowContext == null)
                 {
                     windowContext = BeanProvider.getContextualReference(WindowContext.class);
+                    maxWindowIdCount = ClientWindowHelper.getMaxWindowIdLength();
                 }
             }
         }
