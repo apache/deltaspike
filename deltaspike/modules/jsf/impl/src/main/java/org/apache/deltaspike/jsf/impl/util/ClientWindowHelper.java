@@ -61,7 +61,8 @@ public abstract class ClientWindowHelper
   
         url = JsfUtils.addRequestParameters(externalContext, url, true);
         //TODO check if it isn't better to fix addRequestParameters itself
-        url = facesContext.getExternalContext().encodeActionURL(url);
+        //only #encodeResourceURL is portable currently
+        url = facesContext.getExternalContext().encodeResourceURL(url);
 
         // see #729
         addRequestWindowIdCookie(facesContext, newWindowId);
