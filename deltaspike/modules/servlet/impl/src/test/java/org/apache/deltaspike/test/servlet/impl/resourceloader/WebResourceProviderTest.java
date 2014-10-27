@@ -48,7 +48,6 @@ public class WebResourceProviderTest
     public static WebArchive getDeployment()
     {
         return ShrinkWrap.create(WebArchive.class, WebResourceProviderTest.class.getSimpleName() + ".war")
-                .addClass(WebResourceProvider.class)
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndServletModuleArchive())
                 .addAsWebInfResource(new StringAsset("<beans/>"), "beans.xml")
                 .addAsWebResource(new StringAsset("foobar"), "foobar.txt")
