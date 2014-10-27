@@ -20,7 +20,6 @@ package org.apache.deltaspike.data.impl.util.jpa;
 
 import static java.lang.Thread.currentThread;
 import static java.lang.reflect.Proxy.newProxyInstance;
-import static org.apache.deltaspike.data.test.util.TestDeployments.finalizeDeployment;
 import static org.apache.deltaspike.data.test.util.TestDeployments.initDeployment;
 import static org.junit.Assert.assertEquals;
 
@@ -53,7 +52,7 @@ public class QueryStringExtractorFactoryTest
     @Deployment
     public static Archive<?> deployment()
     {
-        return finalizeDeployment(QueryStringExtractorFactoryTest.class, initDeployment());
+        return initDeployment();
     }
 
     @Test

@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.data.impl.meta.unit;
 
-import static org.apache.deltaspike.data.test.util.TestDeployments.finalizeDeployment;
 import static org.apache.deltaspike.data.test.util.TestDeployments.initDeployment;
 import static org.junit.Assert.assertEquals;
 
@@ -46,7 +45,7 @@ public class OrmXmlBasedRepositoryTest extends TransactionalTestCase
     @Deployment
     public static Archive<?> deployment()
     {
-        return finalizeDeployment(OrmXmlBasedRepositoryTest.class, initDeployment("(.*mapped.*)|(.*test.*)")
+        return initDeployment("(.*mapped.*)|(.*test.*)")
                 .addClasses(MappedOneRepository.class)
                 .addAsLibraries(
                         ShrinkWrap.create(JavaArchive.class, "domain.jar")
@@ -55,7 +54,7 @@ public class OrmXmlBasedRepositoryTest extends TransactionalTestCase
                 )
                 .addAsWebInfResource("test-mapped-persistence.xml",
                         ArchivePaths.create("classes/META-INF/persistence.xml"))
-                .addAsWebInfResource("test-default-orm.xml", ArchivePaths.create("classes/META-INF/orm.xml")));
+                .addAsWebInfResource("test-default-orm.xml", ArchivePaths.create("classes/META-INF/orm.xml"));
     }
 
     @Produces

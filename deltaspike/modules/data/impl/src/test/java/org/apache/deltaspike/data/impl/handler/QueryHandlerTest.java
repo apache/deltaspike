@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.data.impl.handler;
 
-import static org.apache.deltaspike.data.test.util.TestDeployments.finalizeDeployment;
 import static org.apache.deltaspike.data.test.util.TestDeployments.initDeployment;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -54,10 +53,9 @@ public class QueryHandlerTest extends TransactionalTestCase
     @Deployment
     public static Archive<?> deployment()
     {
-        return finalizeDeployment(QueryHandlerTest.class,
-                initDeployment()
-                    .addClasses(SimpleRepository.class, Simple2Repository.class)
-                    .addPackage(Simple.class.getPackage()));
+        return initDeployment()
+                .addClasses(SimpleRepository.class, Simple2Repository.class)
+                .addPackage(Simple.class.getPackage());
     }
 
     @Inject

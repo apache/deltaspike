@@ -118,24 +118,6 @@ public abstract class TestDeployments
         return addDependencies(archive);
     }
 
-    public static Archive<?> finalizeDeployment(Class<?> testClass, WebArchive archive)
-    {
-        if (CdiContainerUnderTest.is("wls-.*"))
-        {
-            archive.addClass(testClass); // see https://issues.jboss.org/browse/ARQ-659
-            EnterpriseArchive ear = ShrinkWrap.create(EnterpriseArchive.class, "test.ear")
-                    .addAsModule(archive);
-            ear.addAsLibraries(Maven.resolver()
-                    .resolve("hsqldb:hsqldb:1.8.0.10")
-                    .withTransitivity()
-                    .asFile());
-            addToEarManifestIfExists(ear, "weblogic-application.xml");
-            addToEarManifestIfExists(ear, "TestDS-jdbc.xml");
-            return ear;
-        }
-        return archive;
-    }
-
     public static Package[] createImplPackages()
     {
         return new Package[] {

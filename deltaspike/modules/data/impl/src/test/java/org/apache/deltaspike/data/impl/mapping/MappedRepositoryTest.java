@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.data.impl.mapping;
 
-import static org.apache.deltaspike.data.test.util.TestDeployments.finalizeDeployment;
 import static org.apache.deltaspike.data.test.util.TestDeployments.initDeployment;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -55,17 +54,16 @@ public class MappedRepositoryTest extends TransactionalTestCase
     @Deployment
     public static Archive<?> deployment()
     {
-        return finalizeDeployment(MappedRepositoryTest.class,
-                initDeployment()
-                    .addClasses(
-                            SimpleMappedRepository.class,
-                            SimpleMappedDtoRepository.class,
-                            SimpleMapper.class,
-                            WrappedMapper.class,
-                            SimpleQueryInOutMapper.class)
-                    .addPackages(false,
-                            Simple.class.getPackage(),
-                            SimpleDto.class.getPackage()));
+        return initDeployment()
+                .addClasses(
+                        SimpleMappedRepository.class,
+                        SimpleMappedDtoRepository.class,
+                        SimpleMapper.class,
+                        WrappedMapper.class,
+                        SimpleQueryInOutMapper.class)
+                .addPackages(false,
+                        Simple.class.getPackage(),
+                        SimpleDto.class.getPackage());
     }
 
     @Inject

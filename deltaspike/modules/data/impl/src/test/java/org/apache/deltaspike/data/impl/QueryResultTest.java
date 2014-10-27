@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.data.impl;
 
-import static org.apache.deltaspike.data.test.util.TestDeployments.finalizeDeployment;
 import static org.apache.deltaspike.data.test.util.TestDeployments.initDeployment;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -57,10 +56,9 @@ public class QueryResultTest extends TransactionalTestCase
     @Deployment
     public static Archive<?> deployment()
     {
-        return finalizeDeployment(QueryResultTest.class,
-                initDeployment()
-                    .addClasses(SimpleRepository.class)
-                    .addPackage(Simple.class.getPackage()));
+        return initDeployment()
+                .addClasses(SimpleRepository.class)
+                .addPackage(Simple.class.getPackage());
     }
 
     @Inject

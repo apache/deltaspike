@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.data.impl.handler;
 
-import static org.apache.deltaspike.data.test.util.TestDeployments.finalizeDeployment;
 import static org.apache.deltaspike.data.test.util.TestDeployments.initDeployment;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -50,10 +49,9 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
     @Deployment
     public static Archive<?> deployment()
     {
-        return finalizeDeployment(EntityRepositoryHandlerTest.class,
-                initDeployment()
-                    .addClasses(ExtendedRepositoryInterface.class)
-                    .addPackage(Simple.class.getPackage()));
+        return initDeployment()
+                .addClasses(ExtendedRepositoryInterface.class)
+                .addPackage(Simple.class.getPackage());
     }
 
     @Inject
@@ -102,7 +100,7 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
         // when
         simple = repo.saveAndFlush(simple);
         Simple fetch = (Simple) entityManager
-                .createNativeQuery("select * from simple_table where id = ?", Simple.class)
+                .createNativeQuery("select * from SIMPLE_TABLE where id = ?", Simple.class)
                 .setParameter(1, simple.getId())
                 .getSingleResult();
 

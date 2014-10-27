@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.data.impl.handler;
 
-import static org.apache.deltaspike.data.test.util.TestDeployments.finalizeDeployment;
 import static org.apache.deltaspike.data.test.util.TestDeployments.initDeployment;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -43,10 +42,9 @@ public class EntityManagerDelegateHandlerTest extends TransactionalTestCase
     @Deployment
     public static Archive<?> deployment()
     {
-        return finalizeDeployment(EntityRepositoryHandlerTest.class,
-                initDeployment()
-                    .addClasses(ExtendedRepositoryInterface.class)
-                    .addPackage(Simple.class.getPackage()));
+        return initDeployment()
+                .addClasses(ExtendedRepositoryInterface.class)
+                .addPackage(Simple.class.getPackage());
     }
 
     @Inject

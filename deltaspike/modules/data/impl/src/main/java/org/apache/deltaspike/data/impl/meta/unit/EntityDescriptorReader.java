@@ -43,7 +43,7 @@ public class EntityDescriptorReader extends DescriptorReader
             Descriptor desc = read(baseUrl, PersistenceUnit.DEFAULT_ORM_PATH);
             return readFromDocument(desc.getDocument());
         }
-        catch (IllegalArgumentException e)
+        catch (Exception e)
         {
             return new MappingFile(Collections.<EntityDescriptor> emptyList(),
                     Collections.<MappedSuperclassDescriptor> emptyList());

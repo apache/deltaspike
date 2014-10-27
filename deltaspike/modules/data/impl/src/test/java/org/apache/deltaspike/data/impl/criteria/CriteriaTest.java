@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.data.impl.criteria;
 
-import static org.apache.deltaspike.data.test.util.TestDeployments.finalizeDeployment;
 import static org.apache.deltaspike.data.test.util.TestDeployments.initDeployment;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -56,10 +55,9 @@ public class CriteriaTest extends TransactionalTestCase
     @Deployment
     public static Archive<?> deployment()
     {
-        return finalizeDeployment(CriteriaTest.class,
-                initDeployment()
-                    .addClasses(SimpleCriteriaRepository.class, ParentRepository.class, Statistics.class)
-                    .addPackage(Simple.class.getPackage()));
+        return initDeployment()
+                .addClasses(SimpleCriteriaRepository.class, ParentRepository.class, Statistics.class)
+                .addPackage(Simple.class.getPackage());
     }
 
     @Inject

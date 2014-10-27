@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.data.impl.audit;
 
-import static org.apache.deltaspike.data.test.util.TestDeployments.finalizeDeployment;
 import static org.apache.deltaspike.data.test.util.TestDeployments.initDeployment;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -45,11 +44,10 @@ public class AuditEntityListenerTest extends TransactionalTestCase
     @Deployment
     public static Archive<?> deployment()
     {
-        return finalizeDeployment(AuditEntityListenerTest.class,
-                initDeployment()
-                    .addPackage(AuditEntityListener.class.getPackage())
-                    .addAsWebInfResource("test-orm.xml", ArchivePaths.create("classes/META-INF/orm.xml"))
-                    .addPackage(AuditedEntity.class.getPackage()));
+        return initDeployment()
+                .addPackage(AuditEntityListener.class.getPackage())
+                .addAsWebInfResource("test-orm.xml", ArchivePaths.create("classes/META-INF/orm.xml"))
+                .addPackage(AuditedEntity.class.getPackage());
     }
 
     @PersistenceContext

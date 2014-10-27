@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.data.impl.spi;
 
-import static org.apache.deltaspike.data.test.util.TestDeployments.finalizeDeployment;
 import static org.apache.deltaspike.data.test.util.TestDeployments.initDeployment;
 import static org.junit.Assert.assertNotNull;
 
@@ -45,12 +44,11 @@ public class CdiQuerySpiTest extends TransactionalTestCase
     @Deployment
     public static Archive<?> deployment()
     {
-        return finalizeDeployment(CdiQuerySpiTest.class,
-                initDeployment()
-                    .addClasses(MySimpleRepository.class,
-                            MyEntityRepository.class,
-                            MyEntityRepositoryDelegate.class)
-                    .addPackage(Simple.class.getPackage()));
+        return initDeployment()
+                .addClasses(MySimpleRepository.class,
+                        MyEntityRepository.class,
+                        MyEntityRepositoryDelegate.class)
+                .addPackage(Simple.class.getPackage());
     }
 
     @Produces

@@ -18,8 +18,6 @@
  */
 package org.apache.deltaspike.data.impl.meta.unit;
 
-import static java.lang.Thread.currentThread;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -27,16 +25,20 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.deltaspike.data.impl.util.cl.AggregatedClassLoader;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 abstract class DescriptorReader
 {
+    private static final Logger log = Logger.getLogger(DescriptorReader.class.getName());
 
     private final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
@@ -47,7 +49,14 @@ abstract class DescriptorReader
         while (urls.hasMoreElements())
         {
             URL u = urls.nextElement();
-            result.add(readFromUrl(u));
+            try
+            {
+                result.add(readFromUrl(u));
+            }
+            catch (Exception e)
+            {
+                log.log(Level.WARNING, "Could not load " + resource + " from " + u, e);
+            }
         }
         return Collections.unmodifiableList(result);
     }
@@ -59,10 +68,6 @@ abstract class DescriptorReader
 
     Descriptor readFromUrl(URL url) throws IOException
     {
-        if (!exists(url))
-        {
-            throw new IllegalArgumentException("URL does not exist: " + url);
-        }
         InputStream stream = url.openStream();
         try
         {
@@ -90,7 +95,7 @@ abstract class DescriptorReader
             URL url = new URL(baseUrl + resource);
             return readFromUrl(url);
         }
-        catch (IllegalArgumentException e)
+        catch (Exception e)
         {
             return readFromClassPath(resource);
         }
@@ -104,19 +109,7 @@ abstract class DescriptorReader
 
     ClassLoader classLoader()
     {
-        return currentThread().getContextClassLoader();
-    }
-
-    boolean exists(URL url)
-    {
-        try
-        {
-            return url != null && url.openConnection() != null && url.openConnection().getContentLength() > 0;
-        }
-        catch (IOException e)
-        {
-            return false;
-        }
+        return AggregatedClassLoader.newInstance();
     }
 
 }
