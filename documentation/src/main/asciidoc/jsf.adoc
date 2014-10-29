@@ -205,6 +205,27 @@ of the windowId to all links of all child components:
 <h:link value="Link with windowId" outcome="target.xhtml"/>
 -------------------------------------------------------------------
 
+==== Number of active windows
+
+By default, DeltaSpike allows `1024` active windows per session. Anyway, this number is reduced inside this JSF module to `64` for JSF applications. Once that the limit number of active windows is reached, DeltaSpike will drop the oldest active window.
+
+You can change the default value by setting the property `deltaspike.scope.window.max-count` using  <<configuration.adoc#_configsources_provided_by_default, DeltaSpike configuration mechanism>>.
+
+You can also provide this value via:
+
+[source,java]
+-----------------------------------------------------------------------------------
+@Specializes
+public class MyClientWindowConfig extends DefaultClientWindowConfig
+{
+
+    @Override
+    public int getMaxWindowContextCount()
+    {
+        // return the max active windows per session
+    }
+}
+-----------------------------------------------------------------------------------
 
 ==== Switch Mode
 
@@ -283,7 +304,8 @@ public class PreferencesBean implements Serializable
 }
 ----------------------------------------------------
 
-=== @ViewAccessScoped (since 0.6)
+
+=== @ViewAccessScoped
 
 In case of conversations you have to un-scope beans manually (or they
 will be terminated automatically after a timeout). However, sometimes
