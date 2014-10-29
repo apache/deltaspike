@@ -57,6 +57,6 @@ public class CdiServletRequestListener implements ServletRequestListener
     private ContextControl getContextControl()
     {
         CdiContainer container = CdiContainerLoader.getCdiContainer();
-        return container.createContextControl();
+        return container.getContextControl();
     }
 }

@@ -73,8 +73,4 @@ public interface CdiContainer
      */
     ContextControl getContextControl();
 
-    /**
-     * @return a new - dependent context control object.
-     */
-    ContextControl createContextControl();
 }

@@ -130,27 +130,4 @@ public class WeldContainerControl implements CdiContainer
         return ctxCtrl;
     }
 
-    @Override
-    public ContextControl createContextControl()
-    {
-        BeanManager beanManager = getBeanManager();
-
-        if (beanManager == null)
-        {
-            LOG.warning("If the CDI-container was started by the environment, you can't use this helper." +
-                    "Instead you can resolve ContextControl manually " +
-                    "(e.g. via BeanProvider.getContextualReference(ContextControl.class) ). " +
-                    "If the container wasn't started already, you have to use CdiContainer#boot before.");
-
-            return null;
-        }
-        Set<Bean<?>> beans = beanManager.getBeans(ContextControl.class);
-        Bean<ContextControl> depCtxCtrlBean = (Bean<ContextControl>) beanManager.resolve(beans);
-
-        CreationalContext<ContextControl> depCtxCtrlCreationalContext = getBeanManager()
-                .createCreationalContext(ctxCtrlBean);
-
-        return (ContextControl)
-                getBeanManager().getReference(depCtxCtrlBean, ContextControl.class, depCtxCtrlCreationalContext);
-    }
 }
