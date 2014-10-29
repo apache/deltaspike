@@ -72,13 +72,10 @@ public class InjectionDroneTest
     public void testValidator() throws MalformedURLException
     {
         driver.get(new URL(contextPath, "testValidatorConverter.xhtml").toString());
-        System.out.println("Antes do Click:" + driver.getPageSource());
         WebElement convertedValue = driver.findElement(By.id("validator:stringValue"));
         convertedValue.sendKeys("DeltaSpike");
         WebElement testConveterButton = driver.findElement(By.id("validator:testValidatorButton"));
         testConveterButton.click();
-        System.out.println("*****************************");
-        System.out.println("Depois do Click:" + driver.getPageSource());
         Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("messages"), "Worked").apply(driver));
     }
 
