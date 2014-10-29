@@ -26,8 +26,6 @@ import javax.enterprise.context.SessionScoped;
 import javax.inject.Singleton;
 
 import java.lang.annotation.Annotation;
-import java.util.WeakHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.deltaspike.cdise.api.ContextControl;
 import org.apache.webbeans.config.WebBeansContext;
@@ -41,8 +39,13 @@ import org.apache.webbeans.spi.ContextsService;
 public class OpenWebBeansContextControl implements ContextControl
 {
 
-    private static WeakHashMap<ContextsService, AtomicInteger> sessionRefCounters
-        = new WeakHashMap<ContextsService, AtomicInteger>();
+    /**
+     * we cannot directly link to MockHttpSession as this would lead to
+     * NoClassDefFound errors for cases where no servlet-api is on the classpath.
+     * E.g in pure SE environments.
+     */
+    private static ThreadLocal<Object> mockSessions = new ThreadLocal<Object>();
+
 
     @Override
     public void startContexts()
@@ -153,9 +156,14 @@ public class OpenWebBeansContextControl implements ContextControl
         Object mockSession = null;
         if (isServletApiAvailable())
         {
-            mockSession = OwbHelper.getMockSession();
+            mockSession = mockSessions.get();
+            if (mockSession == null)
+            {
+                // we simply use the ThreadName as 'sessionId'
+                mockSession = OwbHelper.getMockSession(Thread.currentThread().getName());
+                mockSessions.set(mockSession);
+            }
         }
-        incrementSessionRefCount(contextsService);
         contextsService.startContext(SessionScoped.class, mockSession);
     }
 
@@ -208,12 +216,11 @@ public class OpenWebBeansContextControl implements ContextControl
         Object mockSession = null;
         if (isServletApiAvailable())
         {
-            mockSession = OwbHelper.getMockSession();
+            mockSession = mockSessions.get();
+            mockSessions.set(null);
+            mockSessions.remove();
         }
-        if (decrementSessionRefCount(contextsService))
-        {
-            contextsService.endContext(SessionScoped.class, mockSession);
-        }
+        contextsService.endContext(SessionScoped.class, mockSession);
     }
 
     private void stopRequestScope()
@@ -236,33 +243,5 @@ public class OpenWebBeansContextControl implements ContextControl
         return webBeansContext.getContextsService();
     }
 
-
-    private synchronized void incrementSessionRefCount(ContextsService contextsService)
-    {
-        AtomicInteger sessionRefCounter = sessionRefCounters.get(contextsService);
-        if (sessionRefCounter == null)
-        {
-            sessionRefCounter = new AtomicInteger(1);
-            sessionRefCounters.put(contextsService, sessionRefCounter);
-        }
-        else
-        {
-            sessionRefCounter.incrementAndGet();
-        }
-    }
-
-    /**
-     * @return true if the refCounter is back to zero
-     */
-    private synchronized boolean decrementSessionRefCount(ContextsService contextsService)
-    {
-        AtomicInteger sessionRefCounter = sessionRefCounters.get(contextsService);
-        if (sessionRefCounter == null)
-        {
-            return false;
-        }
-
-        return sessionRefCounter.decrementAndGet() <= 0;
-    }
 
 }

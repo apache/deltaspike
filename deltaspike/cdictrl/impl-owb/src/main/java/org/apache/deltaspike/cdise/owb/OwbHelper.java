@@ -30,9 +30,9 @@ public class OwbHelper
         // just to prevent initialisation
     }
 
-    public static Object getMockSession()
+    public static Object getMockSession(String sessionId)
     {
-        return new MockHttpSession("mockSession1");
+        return new MockHttpSession(sessionId);
     }
 
     public static Object getMockServletContextEvent()
