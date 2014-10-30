@@ -94,7 +94,11 @@ public class DefaultMockFilter implements MockFilter
             return Boolean.parseBoolean(ConfigResolver.getPropertyValue(
                 "deltaspike.testcontrol.mock-support.allow_mocked_producers", Boolean.FALSE.toString()));
         }
-        return true;
+        else
+        {
+            return Boolean.parseBoolean(ConfigResolver.getPropertyValue(
+                "deltaspike.testcontrol.mock-support.allow_mocked_beans", Boolean.FALSE.toString()));
+        }
     }
 
     protected boolean isEjbOrAnnotatedTypeWithInterceptorAnnotation(BeanManager beanManager,
