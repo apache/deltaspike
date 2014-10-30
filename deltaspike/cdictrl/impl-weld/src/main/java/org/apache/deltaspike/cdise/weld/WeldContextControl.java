@@ -161,14 +161,9 @@ public class WeldContextControl implements ContextControl
         {
             rcHolder = new RequestContextHolder(requestContextFactory.get(), new HashMap<String, Object>());
             requestContexts.set(rcHolder);
+            rcHolder.getBoundRequestContext().associate(rcHolder.getRequestMap());
+            rcHolder.getBoundRequestContext().activate();
         }
-        else
-        {
-            throw new IllegalStateException(RequestScoped.class.getName() + " started already");
-        }
-
-        rcHolder.getBoundRequestContext().associate(rcHolder.getRequestMap());
-        rcHolder.getBoundRequestContext().activate();
     }
 
     void stopRequestScope()
