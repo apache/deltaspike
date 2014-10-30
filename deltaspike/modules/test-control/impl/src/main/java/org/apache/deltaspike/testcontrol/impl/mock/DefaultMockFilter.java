@@ -18,9 +18,12 @@
  */
 package org.apache.deltaspike.testcontrol.impl.mock;
 
+import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.testcontrol.spi.mock.MockFilter;
 
+import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.Annotated;
+import javax.enterprise.inject.spi.AnnotatedField;
 import javax.enterprise.inject.spi.AnnotatedMember;
 import javax.enterprise.inject.spi.AnnotatedMethod;
 import javax.enterprise.inject.spi.AnnotatedType;
@@ -45,6 +48,11 @@ public class DefaultMockFilter implements MockFilter
     @Override
     public boolean isMockedImplementationSupported(BeanManager beanManager, Annotated annotated)
     {
+        if (!isMockSupportEnabled(annotated))
+        {
+            return false;
+        }
+
         Class origin = null;
         if (annotated instanceof AnnotatedType)
         {
@@ -76,6 +84,17 @@ public class DefaultMockFilter implements MockFilter
         }
 
         return origin != null && !isInternalPackage(origin.getPackage().getName());
+    }
+
+    protected boolean isMockSupportEnabled(Annotated annotated)
+    {
+        if ((annotated instanceof AnnotatedMethod || annotated instanceof AnnotatedField) &&
+                annotated.getAnnotation(Produces.class) != null)
+        {
+            return Boolean.parseBoolean(ConfigResolver.getPropertyValue(
+                "deltaspike.testcontrol.mock-support.allow_mocked_producers", Boolean.FALSE.toString()));
+        }
+        return true;
     }
 
     protected boolean isEjbOrAnnotatedTypeWithInterceptorAnnotation(BeanManager beanManager,
