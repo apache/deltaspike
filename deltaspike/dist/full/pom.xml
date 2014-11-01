@@ -23,7 +23,7 @@
     <parent>
     <groupId>org.apache.deltaspike.distribution</groupId>
     <artifactId>distributions-project</artifactId>
-        <version>1.0.4-SNAPSHOT</version>
+        <version>1.1.0</version>
     </parent>
 
     <artifactId>distribution-full</artifactId>
