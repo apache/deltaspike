@@ -1,0 +1,38 @@
+Release Notes - Apache DeltaSpike - Version 1.1.0
+
+Bug
+
+    [DELTASPIKE-732] - Servlet API module needs beans.xml
+    [DELTASPIKE-733] - Documentation: CSS missing for https
+    [DELTASPIKE-736] - MockAwareInjectionTargetWrapper breaks interceptors in unit tests
+    [DELTASPIKE-738] - ViewConfigTest relies on ordering of elements in a HashSet
+    [DELTASPIKE-739] - BeanBuilder#readFromType should respect @Typed
+    [DELTASPIKE-742] - validateBindings fails with owb for secured-stereotypes with values
+    [DELTASPIKE-744] - check is-prefix of converter-/validator-methods
+    [DELTASPIKE-748] - Fix DS Security AbstractAccessDecisionVoter documentation
+    [DELTASPIKE-752] - ensure a secure maximum length of the window-id
+    [DELTASPIKE-753] - Initial redirect does not encode URL
+    [DELTASPIKE-754] - Empty dswid-paramter causes infinite redirects
+    [DELTASPIKE-757] - Create tests for WindowContextQuotaHandler
+    [DELTASPIKE-764] - missing cleanup in EmbeddedServletContainer
+
+Improvement
+
+    [DELTASPIKE-544] - api for a fine-grained control of @ViewAccessScoped beans
+    [DELTASPIKE-735] - allow multiple stereotypes annotated with @Secured
+    [DELTASPIKE-755] - cache proxy to ViewConfigResolver
+    [DELTASPIKE-763] - check usage of disabled feature
+
+New Feature
+
+    [DELTASPIKE-751] - WindowContextQuotaHandler
+
+Task
+
+    [DELTASPIKE-725] - tests for converter/validator injection
+    [DELTASPIKE-741] - set default version of tomee to 1.7.0
+    [DELTASPIKE-758] - Document WindowContextQuotaHandler
+    [DELTASPIKE-761] - mocked producers can't be portable in any case
+    [DELTASPIKE-762] - disable mock-support per default
+    [DELTASPIKE-765] - release notes for v1.1.0
+
