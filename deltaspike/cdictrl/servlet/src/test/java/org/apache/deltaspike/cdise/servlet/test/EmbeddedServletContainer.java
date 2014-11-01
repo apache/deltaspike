@@ -64,7 +64,15 @@ public abstract class EmbeddedServletContainer
         cdiContainer.getContextControl().startContexts();
         int port = createServer();
         testRead(port);
-        shutdown();
+
+        try
+        {
+            shutdown();
+        }
+        finally
+        {
+            cdiContainer.shutdown(); //also calls #stopContexts
+        }
     }
 
     private void testRead(int port) throws Exception
