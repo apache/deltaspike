@@ -164,10 +164,24 @@ org.apache.openejb:openejb-core (instead of deltaspike-cdictrl-owb).
 
 === Mock Frameworks
 
-With v0.8+ it's possible to mock CDI-Beans. Usually @Exclude (+
+Since v1 it's possible to mock CDI-Beans. Usually @Exclude (+
 project-stage) is enough, however, for some cases mocked beans might be
 easier. Therefore it's possible to create (mock-)instances manually or
 via a mocking framework and add them e.g. via `DynamicMockManager`.
+
+*Attention:*
+Mocking CDI beans isn't supported for every feature of CDI and/or
+every implementation version. E.g. we can't mock intercepted CDI beans and
+with some implementations mocking specialized beans fails.
+Usually all features are active per default, however,
+due to those reasons we deactivated this feature per default.
+You can enable it by adding
+
+`deltaspike.testcontrol.mock-support.allow_mocked_beans=true`
+and/or
+`deltaspike.testcontrol.mock-support.allow_mocked_producers=true`
+
+to `/META-INF/apache-deltaspike.properties` in your test-folder.
 
 If you need dependency-injection in the mocked instances, you can use
 `BeanProvider.injectFields(myMockedBean);`.
