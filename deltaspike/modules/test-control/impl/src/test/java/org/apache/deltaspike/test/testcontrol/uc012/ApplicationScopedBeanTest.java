@@ -59,12 +59,12 @@ public class ApplicationScopedBeanTest
 
         if (value == 0)
         {
-            throw new IllegalStateException("new application-scoped bean was created");
+            throw new IllegalStateException("new application-scoped bean instance was created");
         }
 
         if (nextValue == 1)
         {
-            throw new IllegalStateException("new application-scoped bean was created");
+            throw new IllegalStateException("new application-scoped bean instance was created");
         }
     }
 }
