@@ -207,7 +207,28 @@ public final class BeanProvider
      */
     public static <T> T getContextualReference(String name, boolean optional, Class<T> type)
     {
-        BeanManager beanManager = getBeanManager();
+        return getContextualReference(getBeanManager(), name, optional, type);
+    }
+
+    /**
+     * <p>Get a Contextual Reference by its EL Name.
+     * This only works for beans with the &#064;Named annotation.</p>
+     *
+     * <p><b>Attention:</b> please see the notes on manually resolving &#064;Dependent bean
+     * in {@link #getContextualReference(Class, boolean, java.lang.annotation.Annotation...)}!</p>
+     *
+     *
+     * @param beanManager the BeanManager to use
+     * @param name the EL name of the bean
+     * @param optional if <code>true</code> it will return <code>null</code> if no bean could be found or created.
+     *                 Otherwise it will throw an {@code IllegalStateException}
+     * @param type the type of the bean in question - use {@link #getContextualReference(String, boolean)}
+     *             if the type is unknown e.g. in dyn. use-cases
+     * @param <T> target type
+     * @return the resolved Contextual Reference
+     */
+    public static <T> T getContextualReference(BeanManager beanManager, String name, boolean optional, Class<T> type)
+    {
         Set<Bean<?>> beans = beanManager.getBeans(name);
 
         if (beans == null || beans.isEmpty())
