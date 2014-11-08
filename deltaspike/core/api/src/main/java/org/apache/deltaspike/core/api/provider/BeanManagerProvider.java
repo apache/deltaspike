@@ -26,10 +26,13 @@ import javax.enterprise.inject.spi.BeforeShutdown;
 import javax.enterprise.inject.spi.Extension;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.util.ClassUtils;
 
 
@@ -60,7 +63,39 @@ public class BeanManagerProvider implements Extension
 {
     private static final Logger  LOG = Logger.getLogger(BeanManagerProvider.class.getName());
 
+    //for CDI 1.1+ delegation
+    private static final Method CDI_CURRENT_METHOD;
+    private static final Method CDI_CURRENT_BEAN_MANAGER_METHOD;
+
     private static BeanManagerProvider bmpSingleton;
+
+    static
+    {
+        Class cdiClass = ClassUtils.tryToLoadClassForName("javax.enterprise.inject.spi.CDI");
+
+        Method resolvedCdiCurrentMethod = null;
+        Method resolvedCdiBeanManagerMethod = null;
+        //only init methods if a cdi 1.1+ container is available and the delegation-mode isn't deactivated.
+        //deactivation is e.g. useful if owb is used in "parallel mode" in a weld-based server.
+        if (cdiClass != null && !"false".equalsIgnoreCase(
+            ConfigResolver.getPropertyValue("deltaspike.bean-manager.delegate_to_container", Boolean.TRUE.toString())))
+        {
+
+            try
+            {
+                resolvedCdiCurrentMethod = cdiClass.getDeclaredMethod("current");
+                resolvedCdiBeanManagerMethod = cdiClass.getDeclaredMethod("getBeanManager");
+            }
+            catch (Exception e)
+            {
+                LOG.log(Level.SEVERE, "Couldn't get method from " + cdiClass.getName(), e);
+            }
+        }
+
+        //null if no init happened e.g. due to CDI 1.0 or deactivated delegation-mode
+        CDI_CURRENT_METHOD = resolvedCdiCurrentMethod;
+        CDI_CURRENT_BEAN_MANAGER_METHOD = resolvedCdiBeanManagerMethod;
+    }
 
     /**
      * This data container is used for storing the BeanManager for each
@@ -162,6 +197,13 @@ public class BeanManagerProvider implements Extension
      */
     public BeanManager getBeanManager()
     {
+        BeanManager result = resolveBeanManagerViaStaticHelper();
+
+        if (result != null)
+        {
+            return result;
+        }
+
         BeanManagerInfo bmi = getBeanManagerInfo(ClassUtils.getClassLoader(null));
 
         // warn the user if he tries to use the BeanManager before container startup
@@ -178,7 +220,7 @@ public class BeanManagerProvider implements Extension
             }
         }
 
-        BeanManager result = bmi.finalBm;
+        result = bmi.finalBm;
 
         if (result == null)
         {
@@ -274,6 +316,23 @@ public class BeanManagerProvider implements Extension
             //workaround didn't work -> return null
             return null;
         }
+    }
+
+    private BeanManager resolveBeanManagerViaStaticHelper()
+    {
+        if (CDI_CURRENT_METHOD != null && CDI_CURRENT_BEAN_MANAGER_METHOD != null)
+        {
+            try
+            {
+                Object cdiCurrentObject = CDI_CURRENT_METHOD.invoke(null);
+                return (BeanManager) CDI_CURRENT_BEAN_MANAGER_METHOD.invoke(cdiCurrentObject);
+            }
+            catch (Throwable t)
+            {
+                LOG.log(Level.FINEST, "failed to delegate bean-manager lookup -> fallback to default.", t);
+            }
+        }
+        return null;
     }
 
     /**
