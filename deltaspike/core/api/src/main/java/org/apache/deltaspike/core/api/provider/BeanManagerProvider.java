@@ -78,7 +78,7 @@ public class BeanManagerProvider implements Extension
         //only init methods if a cdi 1.1+ container is available and the delegation-mode isn't deactivated.
         //deactivation is e.g. useful if owb is used in "parallel mode" in a weld-based server.
         if (cdiClass != null && !"false".equalsIgnoreCase(
-            ConfigResolver.getPropertyValue("deltaspike.bean-manager.delegate_to_container", Boolean.FALSE.toString())))
+            ConfigResolver.getPropertyValue("deltaspike.bean-manager.delegate_to_container", Boolean.TRUE.toString())))
         {
 
             try
@@ -197,13 +197,6 @@ public class BeanManagerProvider implements Extension
      */
     public BeanManager getBeanManager()
     {
-        BeanManager result = resolveBeanManagerViaStaticHelper();
-
-        if (result != null)
-        {
-            return result;
-        }
-
         BeanManagerInfo bmi = getBeanManagerInfo(ClassUtils.getClassLoader(null));
 
         // warn the user if he tries to use the BeanManager before container startup
@@ -220,7 +213,7 @@ public class BeanManagerProvider implements Extension
             }
         }
 
-        result = bmi.finalBm;
+        BeanManager result = bmi.finalBm;
 
         if (result == null)
         {
@@ -231,6 +224,14 @@ public class BeanManagerProvider implements Extension
                 {
                     // first we look for a BeanManager from JNDI
                     result = resolveBeanManagerViaJndi();
+
+                    // needs to be here to get a better performance and
+                    // even in ee7 containers we can't rely on that lookup as a primary strategy
+                    // (esp. in case of EAR based applications)
+                    if (result == null)
+                    {
+                        result = resolveBeanManagerViaStaticHelper();
+                    }
 
                     if (result == null)
                     {
