@@ -78,7 +78,7 @@ public class BeanManagerProvider implements Extension
         //only init methods if a cdi 1.1+ container is available and the delegation-mode isn't deactivated.
         //deactivation is e.g. useful if owb is used in "parallel mode" in a weld-based server.
         if (cdiClass != null && !"false".equalsIgnoreCase(
-            ConfigResolver.getPropertyValue("deltaspike.bean-manager.delegate_to_container", Boolean.TRUE.toString())))
+            ConfigResolver.getPropertyValue("deltaspike.bean-manager.delegate_lookup", Boolean.TRUE.toString())))
         {
 
             try
