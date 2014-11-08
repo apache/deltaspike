@@ -149,6 +149,15 @@ BeanManager beanManager = BeanManagerProvider.getInstance().getBeanManager();
 //if CDI based injection is not available.
 -----------------------------------------------------------------------------
 
+`BeanManagerProvider` uses an own approach to find the correct `BeanManager`,
+because a portable API for it is only available since CDI 1.1.
+However, once you are using CDI 1.1+ DeltaSpike delegates the lookup to the CDI container
+instead of using its own approach.
+If you migrate from CDI 1.0 to a later version of CDI and you would like to keep
+the lookup strategy you used before, you can deactivate the delegation to the container by adding
+`deltaspike.bean-manager.delegate_lookup=false` to your config-source
+(e.g. in `/META-INF/apache-deltaspike.properties`).
+
 === Type-safe ProjectStage
 
 
@@ -1041,7 +1050,7 @@ public class CustomClassDeactivator implements ClassDeactivator
 }
 --------------------------------------------------------------------------
 
-now, we can use the file /META-INF/apache-deltaspike.properties (or any
+now, we can use the file `/META-INF/apache-deltaspike.properties` (or any
 other <<configuration.adoc#_configsources_provided_by_default,ConfigSource>>) with the following key/value:
 
 ------------------------------------------------------------------------------------------
