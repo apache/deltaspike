@@ -21,7 +21,9 @@ package org.apache.deltaspike.jsf.impl.scope.mapped;
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
+import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
+import org.apache.deltaspike.jsf.impl.util.JsfUtils;
 
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AnnotatedType;
@@ -57,6 +59,12 @@ public class MappedJsf2ScopeExtension implements Extension, Deactivatable
                 javax.enterprise.context.SessionScoped.class);
         this.mappedJsfScopes.put(javax.faces.bean.RequestScoped.class,
                 javax.enterprise.context.RequestScoped.class);
+
+        if (JsfUtils.isViewScopeDelegationEnabled())
+        {
+            this.mappedJsfScopes.put(javax.faces.bean.ViewScoped.class,
+                ClassUtils.tryToLoadClassForName("javax.faces.view.ViewScoped"));
+        }
     }
 
     protected void init(@Observes BeforeBeanDiscovery beforeBeanDiscovery)
