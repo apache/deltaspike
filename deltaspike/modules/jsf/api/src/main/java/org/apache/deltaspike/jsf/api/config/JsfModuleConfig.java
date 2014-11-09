@@ -140,7 +140,13 @@ public class JsfModuleConfig implements DeltaSpikeConfig
             return false;
         }
 
-        String configuredWindowHandling = FacesContext.getCurrentInstance().getExternalContext()
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+
+        if (facesContext == null) // can happen in case of a very simple test-setup without a mocked jsf container
+        {
+            return false;
+        }
+        String configuredWindowHandling = facesContext.getExternalContext()
                                 .getInitParameter(CLIENT_WINDOW_CONFIG_KEY);
 
         return !(configuredWindowHandling == null || "none".equalsIgnoreCase(configuredWindowHandling.trim()));
