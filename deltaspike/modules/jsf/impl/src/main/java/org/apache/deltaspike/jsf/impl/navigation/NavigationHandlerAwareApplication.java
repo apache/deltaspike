@@ -21,6 +21,7 @@ package org.apache.deltaspike.jsf.impl.navigation;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.ExceptionUtils;
+import org.apache.deltaspike.jsf.impl.util.JsfUtils;
 
 import javax.faces.application.Application;
 import javax.faces.application.ApplicationWrapper;
@@ -83,7 +84,16 @@ public class NavigationHandlerAwareApplication extends ApplicationWrapper implem
             navigationHandlerWrapperClass =
                 ClassUtils.tryToLoadClassForName(
                     "org.apache.deltaspike.jsf.impl.navigation.DeltaSpikeNavigationHandlerWrapper");
-            manualNavigationHandlerWrapperMode = false;
+
+            if (navigationHandlerWrapperClass != null)
+            {
+                manualNavigationHandlerWrapperMode = false;
+            }
+            else
+            {
+                JsfUtils.logWrongModuleUsage(NavigationHandlerAwareApplication.class.getName());
+                manualNavigationHandlerWrapperMode = true;
+            }
         }
         else
         {

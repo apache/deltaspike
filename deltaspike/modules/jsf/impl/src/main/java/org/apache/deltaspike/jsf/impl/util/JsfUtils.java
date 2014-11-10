@@ -42,6 +42,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public abstract class JsfUtils
 {
@@ -361,5 +363,14 @@ public abstract class JsfUtils
     {
         return ClassUtils.tryToLoadClassForName("javax.faces.view.ViewScoped") != null && !"false".equalsIgnoreCase(
             ConfigResolver.getPropertyValue("deltaspike.scope.view.delegate", Boolean.TRUE.toString()));
+    }
+
+    public static void logWrongModuleUsage(String name)
+    {
+        Logger.getLogger(name).log(
+            Level.WARNING, "You are using the JSF module for JSF 2.0/2.1 with JSF 2.2+ which " +
+                "might cause issues in your application in different areas. Please upgrade " +
+                    "org.apache.deltaspike.modules:deltaspike-jsf-module-impl-ee6 to " +
+                        "org.apache.deltaspike.modules:deltaspike-jsf-module-impl");
     }
 }
