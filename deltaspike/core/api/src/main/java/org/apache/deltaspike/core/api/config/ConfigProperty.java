@@ -32,88 +32,75 @@ import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * <p>This Qualifier allows to use the DeltaSpike configuration mechanism
- * via simple injection.</p>
- *
- * <p>Example 1:
+ * This Qualifier allows simple injection of configuration properties through the DeltaSpike configuration 
+ * mechanism.
+ * <p>
+ * A default implementation is provided in DeltaSpike for basic String injection points:
  * <pre>
  *   &#064;Inject &#064;ConfigProperty(name=&quot;locationId&quot;)
  *   private String locationId;
  * </pre>
  * </p>
- *
- * <p>Example 2 (the type-safe alternative):
+ * <p>
+ * It's possible to use config properties in a type-safe manner, which requires a custom producer:
  *
  * <pre>
- *   &#064;Target({ FIELD, METHOD })
+ *   &#064;Target({FIELD, METHOD})
  *   &#064;Retention(RUNTIME)
  *   &#064;ConfigProperty(name = "locationId")
- *   // alternative to null check in the producer:
- *   // &#064;ConfigProperty(name = "locationId", defaultValue = "LOCATION_X")
  *   &#064;Qualifier
- *   public &#064;interface Location
- *   {
+ *   public &#064;interface Location {
  *   }
  * </pre>
- * </p>
  *
- * Depending on the producer it's possible to use a String or a custom type like an enum at the injection point.
- * <p/>
- * With a String:
  * <pre>
  *   &#064;Location
  *   private String locationId;
  * </pre>
  *
- * With a custom type:
- * <pre>
- *   &#064;Inject
- *   &#064;Location
- *   private LocationId locationId;
- * </pre>
- * <p>In any case a custom producer is needed.
- * {@link org.apache.deltaspike.core.spi.config.BaseConfigPropertyProducer} can be used as an base for custom
- * producers.
- * Producer for the configured String:
- * <pre>
+ *  <pre>
  *   &#064;ApplicationScoped
- *   public class CustomConfigPropertyProducer extends BaseConfigPropertyProducer
- *   {
+ *   public class CustomConfigPropertyProducer extends BaseConfigPropertyProducer {
  *     &#064;Produces
  *     &#064;Dependent
  *     &#064;Location
- *     public String produceLocationId(InjectionPoint injectionPoint)
- *     {
+ *     public String produceLocationId(InjectionPoint injectionPoint) {
  *       String configuredValue = getStringPropertyValue(injectionPoint);
- *       if (configuredValue == null)
- *       {
+ *       if (configuredValue == null) {
  *         return null;
  *       }
  *       return configuredValue;
  *     }
  *   }
  * </pre>
+ * </p>
+ * <p>
+ * Producers can be implemented to support other types of injection points:
+ * <pre>
+ *   &#064;Inject
+ *   &#064;Location
+ *   private LocationId locationId;
+ * </pre>
  *
- * Producer for a custom type:
  * <pre>
  *   &#064;ApplicationScoped
- *   public class CustomConfigPropertyProducer extends BaseConfigPropertyProducer
- *   {
+ *   public class CustomConfigPropertyProducer extends BaseConfigPropertyProducer {
  *     &#064;Produces
  *     &#064;Dependent
  *     &#064;Location
- *     public LocationId produceLocationId(InjectionPoint injectionPoint)
- *     {
+ *     public LocationId produceLocationId(InjectionPoint injectionPoint) {
  *       String configuredValue = getStringPropertyValue(injectionPoint);
- *       if (configuredValue == null)
- *       {
+ *       if (configuredValue == null) {
  *         return null;
  *       }
  *       return LocationId.valueOf(configuredValue.trim().toUpperCase());
  *     }
  *   }
  * </pre>
- *
+ * </p>
+ * For custom producer implementations, {@link org.apache.deltaspike.core.spi.config.BaseConfigPropertyProducer} can
+ * be used as the base class.
+ * 
  * @see org.apache.deltaspike.core.api.config.ConfigResolver
  * @see org.apache.deltaspike.core.spi.config.BaseConfigPropertyProducer
  */
@@ -124,13 +111,13 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface ConfigProperty
 {
     /**
-     * This constant is a workaround for the java restriction that Annotation values
-     * cannot be set to null. Do not use this String in your configuration...
+     * This constant is a workaround for the java restriction that Annotation values cannot be set to null. Do not use
+     * this String in your configuration.
      */
     String NULL = "org.apache.deltaspike.NullValueMarker";
 
     /**
-     * Name/key of the property
+     * Name/key of the property.
      * @return name of the property
      */
     @Nonbinding
@@ -138,6 +125,7 @@ public @interface ConfigProperty
 
     /**
      * <b>Optional</b> default value.
+     *
      * @return the default value which should be used if no config value could be found
      */
     @Nonbinding

@@ -20,11 +20,9 @@ package org.apache.deltaspike.core.api.config.view;
 
 /**
  * Abstract class which marks an error view.
- * <p/>
- * It's an abstract class instead of an interface,
- * because you can use it for navigation (which is restricted to classes).
- * (Since only the final page should be a class and for the rest it's recommended to use interfaces,
- * it isn't a problem/restriction.)
+ *
+ * It's an abstract class instead of an interface, because it can be used for navigation (which is restricted to
+ * classes).
  */
 public abstract class DefaultErrorView implements ViewConfig
 {

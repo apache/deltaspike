@@ -26,8 +26,8 @@ import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * View-controller annotation for page-beans.
- * Methods annotated with this annotation will be invoked as soon as a view has been initialized.
+ * Callback annotation for view-controllers. Methods annotated with this annotation will be invoked as soon as a view
+ * has been initialized.
  */
 @Target(METHOD)
 @Retention(RUNTIME)

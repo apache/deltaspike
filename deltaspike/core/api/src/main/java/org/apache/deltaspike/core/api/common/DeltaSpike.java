@@ -29,7 +29,7 @@ import java.lang.annotation.Target;
 import javax.inject.Qualifier;
 
 /**
- * Common qualifier to manage co-existence of DeltaSpike features and JavaEE features.
+ * Common qualifier to manage co-existence of DeltaSpike features and Java EE features.
  */
 @Target( { TYPE, METHOD, PARAMETER, FIELD })
 @Retention(value = RetentionPolicy.RUNTIME)

@@ -28,6 +28,17 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+/**
+ * Provides the ability to apply metadata to a view-config "remotely" &ndash; from a
+ * different place than the view-config itself (and with different syntax and a different annotation).
+ *
+ * <p>
+ * <b>For example</b>, the @ViewControllerRef (main) vs. @ViewRef (inline) &ndash; the @ViewControllerRef is applied
+ * directly on a view-config and references a view-controller, but there's also @ViewRef, which has the same purpose,
+ * but is applied in reverse &ndash; on a view-controller, referencing a view-config.
+ * </p>
+ */
+
 @Target({ ANNOTATION_TYPE })
 @Retention(RUNTIME)
 @Documented

@@ -32,8 +32,9 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * This annotation can be used as interceptor for JSF action methods as an alternative for
- * {@link org.apache.deltaspike.core.api.config.view.navigation.NavigationParameterContext}.
+ * Used on JSF action methods, this adds navigation parameters (key-value pairs) to the resulting navigation string.
+ * Alternatively, {@link org.apache.deltaspike.core.api.config.view.navigation.NavigationParameterContext} can be used
+ * to add the parameters.
  */
 @Target({ METHOD, TYPE })
 @Retention(RUNTIME)
@@ -45,14 +46,14 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface NavigationParameter
 {
     /**
-     * Key of the parameter
+     * Key of the parameter.
      *
      * @return name of the key
      */
     @Nonbinding String key();
 
     /**
-     * Value or EL-Expression of the parameter
+     * Value of the parameter, a plain String or an EL expression.
      *
      * @return ref or expression
      */
@@ -64,7 +65,7 @@ public @interface NavigationParameter
 
     //TODO add special support for list-annotations (add value automatically)
     /**
-     * Allows to specify multiple parameters (@see ViewParameter)
+     * A container for multiple NavigationParameters.
      */
     @ViewMetaData
     @Aggregated(true)
@@ -72,7 +73,7 @@ public @interface NavigationParameter
     public static @interface List
     {
         /**
-         * 1-n parameters
+         * One or more navigation parameters.
          *
          * @return parameters
          */

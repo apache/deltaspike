@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * A classpath based resource provider
+ * A classpath-based resource provider.
  */
 @ApplicationScoped
 public class ClasspathResourceProvider extends AbstractResourceProvider

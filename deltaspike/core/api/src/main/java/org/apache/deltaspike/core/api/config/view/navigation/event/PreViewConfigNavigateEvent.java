@@ -21,8 +21,8 @@ package org.apache.deltaspike.core.api.config.view.navigation.event;
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
 
 /**
- * Event will be fired before the navigation (from and to a view-config based page) occurs.
- * With {@link #navigateTo(Class)} it's possible to change the navigation target.
+ * This event is fired before a navigation from/to a view-config-based page occurs. With {@link #navigateTo(Class)} it's
+ * possible to change the navigation target.
  */
 public class PreViewConfigNavigateEvent
 {
@@ -30,7 +30,7 @@ public class PreViewConfigNavigateEvent
     private Class<? extends ViewConfig> toView;
 
     /**
-     * Constructor for creating the event for the given source and target view
+     * Constructor for creating the event for the given source and target view.
      *
      * @param fromView source-view
      * @param toView   target-view
@@ -62,7 +62,7 @@ public class PreViewConfigNavigateEvent
     }
 
     /**
-     * Allows to change the navigation target.
+     * Changes the navigation target.
      *
      * @param toView new navigation target
      */

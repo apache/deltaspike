@@ -19,8 +19,8 @@
 package org.apache.deltaspike.core.api.projectstage;
 
 /**
- * Marker interface for {@link ProjectStage} implementations which are used for tests.
- * E.g. used to enable logging in all 'testing' ProjectStages.
+ * Marker interface for {@link ProjectStage} implementations which are used for tests. E.g. used to enable logging in
+ * all 'testing' ProjectStages.
  */
 public interface TestStage
 {

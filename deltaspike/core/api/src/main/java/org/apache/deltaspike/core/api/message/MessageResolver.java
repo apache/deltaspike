@@ -21,7 +21,7 @@ package org.apache.deltaspike.core.api.message;
 import java.io.Serializable;
 
 /**
- * Implementations have to resolve the text stored for a given key in the message-source they are aware of.
+ * Implementations have to resolve the text stored for a given key in the message source they are aware of.
  * Implementations should always be &#064;Dependent scoped!
  */
 public interface MessageResolver extends Serializable
@@ -30,11 +30,12 @@ public interface MessageResolver extends Serializable
 
     /**
      *
-     * @param messageContext messageContext which should be used
-     * @param messageTemplate the message key (or in-lined text) of the current message
-     * @param category the sub-category of the message, e.g. 'longText'. Can be <code>null</code>
-     * @return the final but not interpolated message text
-     *         or <code>null</code> if an error happened or the resource could not be resolved.
+     * @param messageContext  messageContext which should be used
+     * @param messageTemplate the message key (or inline text) of the current message
+     * @param category        the category of the message, e.g. 'longText'. Can be <code>null</code>
+     *
+     * @return the final but not interpolated message text or <code>null</code> if an error happened or the resource
+     *         could not be resolved.
      */
     String getMessage(MessageContext messageContext, String messageTemplate, String category);
 }
