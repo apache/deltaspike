@@ -45,6 +45,11 @@
     </description>
     <url>http://deltaspike.apache.org</url>
 
+    <properties>
+		<svn.scmPubUrl>https://svn.apache.org/repos/asf/deltaspike/site/trunk/content/javadoc/${project.version}</svn.scmPubUrl>
+		<svn.scmPubCheckoutDirectory>${project.build.directory}/co-site</svn.scmPubCheckoutDirectory>
+	</properties>
+
     <scm>
         <connection>scm:git:https://git-wip-us.apache.org/repos/asf/deltaspike.git</connection>
         <developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/deltaspike.git</developerConnection>
@@ -109,7 +114,73 @@
                         </execution>
                     </executions>
                 </plugin>
-            </plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<configuration>
+						<charset>UTF-8</charset>
+						<additionalJOption>-Xdoclint:none</additionalJOption>
+						<excludePackageNames>org.apache.deltaspike.example.*:org.apache.deltaspike.playground*:org.apache.deltaspike.test.*:org.apache.deltaspike.cdise.tck*:org.apache.deltaspike.cdise.servlet*:*impl*</excludePackageNames>
+						<groups>
+							<group>
+								<title>Core Module</title>
+								<packages>org.apache.deltaspike.core.*</packages>
+							</group>
+							<group>
+								<title>Bean Validation Module</title>
+								<packages>org.apache.deltaspike.beanvalidation*</packages>
+							</group>
+							<group>
+								<title>Container Control Module</title>
+								<packages>org.apache.deltaspike.cdise.api*</packages>
+							</group>
+							<group>
+								<title>Data Module</title>
+								<packages>org.apache.deltaspike.data.*</packages>
+							</group>
+							<group>
+								<title>JPA Module</title>
+								<packages>org.apache.deltaspike.jpa.*</packages>
+							</group>
+							<group>
+								<title>JSF Module</title>
+								<packages>org.apache.deltaspike.jsf.*</packages>
+							</group>
+							<group>
+								<title>Partial Bean Module</title>
+								<packages>org.apache.deltaspike.partialbean.*</packages>
+							</group>
+							<group>
+								<title>Scheduler Module</title>
+								<packages>org.apache.deltaspike.scheduler.*</packages>
+							</group>
+							<group>
+								<title>Security Module</title>
+								<packages>org.apache.deltaspike.security.*</packages>
+							</group>
+							<group>
+								<title>Servlet Module</title>
+								<packages>org.apache.deltaspike.servlet.*</packages>
+							</group>
+							<group>
+								<title>Test Control Module</title>
+								<packages>org.apache.deltaspike.testcontrol.*</packages>
+							</group>
+						</groups>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-scm-publish-plugin</artifactId>
+					<configuration>
+						<content>${project.reporting.outputDirectory}/apidocs</content>
+						<pubScmUrl>scm:svn:${svn.scmPubUrl}</pubScmUrl>
+						<tryUpdate>true</tryUpdate>
+						<checkoutDirectory>${svn.scmPubCheckoutDirectory}</checkoutDirectory>
+						<serverId>deltaspike-site</serverId>
+					</configuration>
+				</plugin>
+			</plugins>
         </pluginManagement>
     </build>
 
