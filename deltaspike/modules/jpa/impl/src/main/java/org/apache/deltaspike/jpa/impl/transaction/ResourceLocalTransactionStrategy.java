@@ -118,6 +118,7 @@ public class ResourceLocalTransactionStrategy implements TransactionStrategy
 
                 if (!transaction.isActive())
                 {
+                    beforeBegin(invocationContext, entityManagerEntry, transaction);
                     transaction.begin();
                 }
                 else if (isOutermostInterceptor)
@@ -126,7 +127,7 @@ public class ResourceLocalTransactionStrategy implements TransactionStrategy
                 }
 
                 //don't move it before EntityTransaction#begin() and invoke it in any case
-                beforeProceed(entityManagerEntry);
+                beforeProceed(invocationContext, entityManagerEntry, transaction);
             }
 
             return invocationContext.proceed();
@@ -240,10 +241,12 @@ public class ResourceLocalTransactionStrategy implements TransactionStrategy
                                     // last chance to check it (again)
                                     if (commitFailed || transaction.getRollbackOnly())
                                     {
+                                        beforeRollback(invocationContext, currentEntityManagerEntry, transaction);
                                         transaction.rollback();
                                     }
                                     else
                                     {
+                                        beforeCommit(invocationContext, currentEntityManagerEntry, transaction);
                                         transaction.commit();
                                     }
                                 }
@@ -251,6 +254,10 @@ public class ResourceLocalTransactionStrategy implements TransactionStrategy
                                 {
                                     firstException = e;
                                     commitFailed = true;
+                                }
+                                finally
+                                {
+                                    afterProceed(invocationContext,currentEntityManagerEntry, firstException);
                                 }
                             }
                         }
@@ -265,10 +272,55 @@ public class ResourceLocalTransactionStrategy implements TransactionStrategy
 
             if (commitFailed && firstException != null /*null if just #getRollbackOnly is true*/)
             {
-                //noinspection ThrowFromFinallyBlock
-                throw firstException;
+                throwException(firstException);
             }
         }
+    }
+
+    protected void beforeBegin(InvocationContext invocationContext,
+                               EntityManagerEntry entityManagerEntry,
+                               EntityTransaction transaction)
+    {
+        //override if needed
+    }
+
+    protected void beforeProceed(InvocationContext invocationContext,
+                                 EntityManagerEntry entityManagerEntry,
+                                 EntityTransaction transaction)
+    {
+        //override if needed
+    }
+
+    protected void beforeCommit(InvocationContext invocationContext,
+                                EntityManagerEntry entityManagerEntry,
+                                EntityTransaction transaction)
+    {
+        //override if needed
+    }
+
+    protected void beforeRollback(InvocationContext invocationContext,
+                                  EntityManagerEntry entityManagerEntry,
+                                  EntityTransaction transaction)
+    {
+        //override if needed
+    }
+
+    /**
+     * @param invocationContext current invocation-context
+     * @param entityManagerEntry current entity-manager entry
+     * @param exception the exception which occurred or null if everything went fine
+     */
+    protected void afterProceed(InvocationContext invocationContext,
+                                EntityManagerEntry entityManagerEntry,
+                                Exception exception)
+    {
+        //override if needed
+    }
+
+    protected void throwException(Exception exception) throws Exception
+    {
+        //override if needed
+        throw exception;
     }
 
     //allows to use a custom tx-controller in a custom strategy
@@ -316,11 +368,6 @@ public class ResourceLocalTransactionStrategy implements TransactionStrategy
     protected EntityTransaction getTransaction(EntityManagerEntry entityManagerEntry)
     {
         return entityManagerEntry.getEntityManager().getTransaction();
-    }
-
-    protected void beforeProceed(EntityManagerEntry entityManagerEntry)
-    {
-        //override if needed
     }
 
     private EntityManager resolveEntityManagerForQualifier(Class<? extends Annotation> emQualifier)

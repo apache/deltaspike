@@ -22,6 +22,7 @@ import org.apache.deltaspike.jpa.impl.transaction.context.EntityManagerEntry;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Alternative;
+import javax.interceptor.InvocationContext;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.lang.annotation.Annotation;
@@ -99,11 +100,13 @@ public class EnvironmentAwareTransactionStrategy extends BeanManagedUserTransact
     }
 
     @Override
-    protected void beforeProceed(EntityManagerEntry entityManagerEntry)
+    protected void beforeProceed(InvocationContext invocationContext,
+                                 EntityManagerEntry entityManagerEntry,
+                                 EntityTransaction transaction)
     {
         if (isInJtaTransaction())
         {
-            super.beforeProceed(entityManagerEntry);
+            super.beforeProceed(invocationContext, entityManagerEntry, transaction);
         }
     }
 

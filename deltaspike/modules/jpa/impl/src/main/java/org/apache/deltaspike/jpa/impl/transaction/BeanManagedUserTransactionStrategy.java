@@ -27,6 +27,7 @@ import org.apache.deltaspike.jpa.impl.transaction.context.EntityManagerEntry;
 import javax.annotation.Resource;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Alternative;
+import javax.interceptor.InvocationContext;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.transaction.Status;
@@ -156,11 +157,14 @@ public class BeanManagedUserTransactionStrategy extends ResourceLocalTransaction
      * {@link BeanManagedUserTransactionStrategy.UserTransactionAdapter#begin()}
      * will only executed once, but {@link javax.persistence.EntityManager#joinTransaction()}
      * needs to be called for every {@link EntityManager}.
-     *
+     * @param invocationContext current invocation-context
      * @param entityManagerEntry entry of the current entity-manager
+     * @param transaction current JTA transaction wrapped in an EntityTransaction adapter
      */
     @Override
-    protected void beforeProceed(EntityManagerEntry entityManagerEntry)
+    protected void beforeProceed(InvocationContext invocationContext,
+                                 EntityManagerEntry entityManagerEntry,
+                                 EntityTransaction transaction)
     {
         entityManagerEntry.getEntityManager().joinTransaction();
     }
