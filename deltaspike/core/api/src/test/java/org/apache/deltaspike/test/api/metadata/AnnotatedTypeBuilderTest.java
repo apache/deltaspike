@@ -148,4 +148,16 @@ public class AnnotatedTypeBuilderTest
             }
         }
     }
+
+    @Test
+    public void buildValidAnnotationAnnotatedType()
+    {
+        final AnnotatedTypeBuilder<Small> builder = new AnnotatedTypeBuilder<Small>();
+        builder.readFromType(Small.class);
+        final AnnotatedType<Small> smallAnnotatedType = builder.create();
+
+        assertThat(smallAnnotatedType.getMethods().size(), is(1));
+        assertThat(smallAnnotatedType.getConstructors().size(), is(0));
+        assertThat(smallAnnotatedType.getFields().size(), is(0));
+    }
 }
