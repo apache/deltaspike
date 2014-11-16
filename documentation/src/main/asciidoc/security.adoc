@@ -6,13 +6,14 @@
 
 == Hint
 
-If you are using features described by this page and the CDI
-container you are using is Weld (or OpenWebBeans in BDA mode), you have
+*Hint:* If you are using features described by this page with CDI 1.0
+(or DeltaSpike up to v1.1.0 with CDI 1.1+), you have
 to enable the security interceptor in your beans.xml file:
 
 [source,xml]
 ----------------------------------------------------------------------------------------
 <beans>
+    <!-- Not needed with CDI 1.1+ and DeltaSpike v1.1.1+ -->
     <interceptors>
         <class>org.apache.deltaspike.security.impl.extension.SecurityInterceptor</class>
     </interceptors>

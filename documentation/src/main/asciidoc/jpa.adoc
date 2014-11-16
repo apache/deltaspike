@@ -14,13 +14,14 @@ using the annotation, it's required to implement a CDI producer for an
 bean which uses `@Transactional`. As shown later on it's also possible
 to use multiple qualifiers for using different `EntityManager`s.
 
-*Hint:* If you are using features described by this page and the CDI
-container you are using is Weld (or OpenWebBeans in BDA mode), you have
+*Hint:* If you are using features described by this page with CDI 1.0
+(or DeltaSpike up to v1.1.0 with CDI 1.1+), you have
 to enable the transaction interceptor in your beans.xml file:
 
 [source,xml]
 ------------------------------------------------------------------------------------------
 <beans>
+    <!-- Not needed with CDI 1.1+ and DeltaSpike v1.1.1+ -->
     <interceptors>
         <class>org.apache.deltaspike.jpa.impl.transaction.TransactionalInterceptor</class>
     </interceptors>
