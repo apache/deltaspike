@@ -23,3 +23,4 @@ org.apache.deltaspike.core.impl.exception.control.extension.ExceptionControlExte
 org.apache.deltaspike.core.impl.config.ConfigurationExtension
 org.apache.deltaspike.core.impl.jmx.MBeanExtension
 org.apache.deltaspike.core.impl.scope.DeltaSpikeContextExtension
+org.apache.deltaspike.core.impl.interceptor.GlobalInterceptorExtension
