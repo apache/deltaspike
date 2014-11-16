@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.core.impl.interceptor;
 
+import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.core.util.ClassUtils;
@@ -57,7 +58,9 @@ public class GlobalInterceptorExtension implements Deactivatable, Extension
             ClassUtils.tryToLoadClassForName("javax.enterprise.inject.spi.AfterTypeDiscovery") != null)
         {
             Map<String, Object> defaultValueMap = new HashMap<String, Object>();
-            defaultValueMap.put("value", 0);
+            int priorityValue = Integer.parseInt(
+                ConfigResolver.getPropertyValue("deltaspike.interceptor.priority", "0"));
+            defaultValueMap.put("value", priorityValue);
             priorityAnnotationInstance = AnnotationInstanceProvider.of(priorityAnnotationClass, defaultValueMap);
         }
     }
