@@ -197,17 +197,23 @@ public class BeanManagerProvider implements Extension
     {
         BeanManagerInfo bmi = getBeanManagerInfo(ClassUtils.getClassLoader(null));
 
-        // warn the user if he tries to use the BeanManager before container startup
         if (!bmi.booted)
         {
-            if (!isParentBeanManagerBooted())
-            {
-                LOG.warning("When using the BeanManager to retrieve Beans before the Container is started," +
-                        " non-portable behaviour results!");
+            // warn the user if he tries to use the BeanManager before container startup
+            LOG.warning("When using the BeanManager to retrieve Beans before the Container is started," +
+                    " non-portable behaviour results!");
 
-                // reset the flag to only issue the warning once.
-                // this is a workaround for some containers which mess up EAR handling.
-                bmi.booted = true;
+
+            // This is a workaround for some containers with messed up EAR handling.
+            // Those containers might boot up with the shared ear ClassLoader
+            // and later run the WARs with their own child ClassLoaders.
+            if (bmi.loadTimeBm == null)
+            {
+                BeanManagerInfo parentBmi = getParentBeanManagerInfo(ClassUtils.getClassLoader(null));
+                if (parentBmi != null)
+                {
+                    bmi.loadTimeBm = parentBmi.loadTimeBm;
+                }
             }
         }
 
@@ -375,16 +381,6 @@ public class BeanManagerProvider implements Extension
     }
 
     /**
-     * @return whether a BeanManagerInfo for a parent ClassLoader is available and has the booted flag set.
-     */
-    private boolean isParentBeanManagerBooted()
-    {
-        BeanManagerInfo parentBmi = getParentBeanManagerInfo(ClassUtils.getClassLoader(null));
-
-        return parentBmi != null && parentBmi.booted;
-    }
-
-    /**
      * This method recurses into the parent ClassLoaders and checks whether a BeanManagerInfo for it exists.
      *
      * @return the BeanManagerInfo of the parent ClassLoader hierarchy if any exists, or <code>null</code> if there is
@@ -393,7 +389,7 @@ public class BeanManagerProvider implements Extension
     private BeanManagerInfo getParentBeanManagerInfo(ClassLoader classLoader)
     {
         ClassLoader parentClassLoader = classLoader.getParent();
-        if (parentClassLoader == null || parentClassLoader.equals(ClassLoader.getSystemClassLoader()))
+        if (parentClassLoader == null)
         {
             return null;
         }
@@ -401,6 +397,7 @@ public class BeanManagerProvider implements Extension
         BeanManagerInfo bmi = getBeanManagerInfo(parentClassLoader);
         if (bmi == null)
         {
+            // recursive call up to the root ClassLoader
             bmi = getParentBeanManagerInfo(parentClassLoader);
         }
 
