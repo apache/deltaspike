@@ -48,7 +48,8 @@ public class DefaultConfigSourceProvider implements ConfigSourceProvider
         configSources.add(new EnvironmentPropertyConfigSource());
         configSources.add(new LocalJndiConfigSource());
 
-        EnvironmentPropertyConfigSourceProvider epcsp = new EnvironmentPropertyConfigSourceProvider(PROPERTY_FILE_NAME);
+        EnvironmentPropertyConfigSourceProvider epcsp =
+            new EnvironmentPropertyConfigSourceProvider(PROPERTY_FILE_NAME, true);
         configSources.addAll(epcsp.getConfigSources());
     }
 

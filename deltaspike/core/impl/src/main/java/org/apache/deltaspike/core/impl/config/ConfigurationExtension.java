@@ -110,11 +110,13 @@ public class ConfigurationExtension implements Extension, Deactivatable
      */
     private List<ConfigSource> createPropertyConfigSource(Class<? extends PropertyFileConfig> propertyFileConfigClass)
     {
+        String fileName = "";
         try
         {
             PropertyFileConfig propertyFileConfig = propertyFileConfigClass.newInstance();
+            fileName = propertyFileConfig.getPropertyFileName();
             EnvironmentPropertyConfigSourceProvider environmentPropertyConfigSourceProvider
-                = new EnvironmentPropertyConfigSourceProvider(propertyFileConfig.getPropertyFileName());
+                = new EnvironmentPropertyConfigSourceProvider(fileName, propertyFileConfig.isOptional());
 
             return environmentPropertyConfigSourceProvider.getConfigSources();
         }
@@ -128,6 +130,10 @@ public class ConfigurationExtension implements Extension, Deactivatable
             throw new RuntimeException(CANNOT_CREATE_CONFIG_SOURCE_FOR_CUSTOM_PROPERTY_FILE_CONFIG +
                     propertyFileConfigClass.getName(), e);
         }
+        catch (IllegalStateException e)
+        {
+            throw new IllegalStateException(
+                propertyFileConfigClass.getName() + " points to an invalid file: '" + fileName + "'", e);
+        }
     }
-
 }

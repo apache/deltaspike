@@ -30,4 +30,10 @@ public class MyCustomPropertyFileConfig implements PropertyFileConfig
     {
         return "myconfig.properties";
     }
+
+    @Override
+    public boolean isOptional()
+    {
+        return false;
+    }
 }

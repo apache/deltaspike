@@ -33,4 +33,10 @@ public class CustomPropertyFileConfig implements PropertyFileConfig
     {
         return "META-INF/location.properties";
     }
+
+    @Override
+    public boolean isOptional()
+    {
+        return false;
+    }
 }

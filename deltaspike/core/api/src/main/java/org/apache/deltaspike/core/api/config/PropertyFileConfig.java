@@ -44,4 +44,9 @@ public interface PropertyFileConfig extends DeltaSpikeConfig
      * @return the full file name (including path) of the property files to pick up.
      */
     String getPropertyFileName();
+
+    /**
+     * @return true if the file is optional, false if the specified file has to be in place.
+     */
+    boolean isOptional();
 }

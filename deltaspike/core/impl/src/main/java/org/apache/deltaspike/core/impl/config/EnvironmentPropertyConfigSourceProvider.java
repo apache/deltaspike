@@ -40,11 +40,16 @@ class EnvironmentPropertyConfigSourceProvider implements ConfigSourceProvider
 
     private List<ConfigSource> configSources = new ArrayList<ConfigSource>();
 
-    EnvironmentPropertyConfigSourceProvider(String propertyFileName)
+    EnvironmentPropertyConfigSourceProvider(String propertyFileName, boolean optional)
     {
         try
         {
             Enumeration<URL> propertyFileUrls = PropertyFileUtils.resolvePropertyFiles(propertyFileName);
+
+            if (!optional && !propertyFileUrls.hasMoreElements())
+            {
+                throw new IllegalStateException(propertyFileName + " wasn't found.");
+            }
 
             while (propertyFileUrls.hasMoreElements())
             {
