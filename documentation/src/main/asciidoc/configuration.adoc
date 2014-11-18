@@ -235,6 +235,11 @@ For registering all your own property files of a certain name in your
 classpath to get picked up as `ConfigSource`s you can also provide a
 class which implements the `PropertyFileConfig` interface.
 
+The method `isOptional` indicates whether your custom property file is mandatory.
+If a mandatory property file is not found during deployment, DeltaSpike throws
+an `IllegalStateException` and stops the deployment.
+
+
 [source,java]
 ---------------------------------------------------------------------
 public class MyCustomPropertyFileConfig implements PropertyFileConfig
@@ -243,6 +248,12 @@ public class MyCustomPropertyFileConfig implements PropertyFileConfig
     public String getPropertyFileName()
     {
         return "myconfig.properties";
+    }
+
+    @Override
+    public boolean isOptional()
+    {
+        return false;
     }
 }
 ---------------------------------------------------------------------
