@@ -44,10 +44,15 @@ public class CdiTestSuiteRunner extends Suite
      * e.g.:
      * deltaspike.testcontrol.test-container.config-file=META-INF/dsTestContainerBootConfig.properties
      */
-    private static final String CUSTOM_TEST_CONTAINER_CONFIG_FILE_KEY =
+    public static final String CUSTOM_TEST_CONTAINER_CONFIG_FILE_KEY =
         "deltaspike.testcontrol.test-container.config-file";
 
-    private static final String DEFAULT_TEST_CONTAINER_CONFIG_FILE_NAME =
+    /**
+     * Default resource location of the property file which gets used
+     * for the container bootstrap.
+     * This value can be overridden by using {@link #CUSTOM_TEST_CONTAINER_CONFIG_FILE_KEY}
+     */
+    public static final String DEFAULT_TEST_CONTAINER_CONFIG_FILE_NAME =
         "META-INF/apache-deltaspike_test-container";
 
     private static final boolean STOP_CONTAINER;
