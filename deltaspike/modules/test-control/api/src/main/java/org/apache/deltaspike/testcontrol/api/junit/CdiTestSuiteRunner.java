@@ -40,10 +40,15 @@ import java.util.logging.Logger;
 public class CdiTestSuiteRunner extends Suite
 {
     /**
-     * The configuration switch to define the configuration properties file.
+     * Configuration key to define a custom configuration properties file-name.
+     * e.g.:
+     * deltaspike.testcontrol.test-container.config-file_name=META-INF/dsTestContainerBootConfig.properties
      */
-    public static final String TEST_RUNNER_CONFIG_KEY = "deltaspike.testcontrol.boot_config";
-    private static final String TEST_RUNNER_DEFAULT_CONFIG_NAME = "META-INF/apache-deltaspike_test-container";
+    private static final String CUSTOM_TEST_CONTAINER_CONFIG_FILE_NAME_KEY =
+        "deltaspike.testcontrol.test-container.config-file_name";
+
+    private static final String DEFAULT_TEST_CONTAINER_CONFIG_FILE_NAME =
+        "META-INF/apache-deltaspike_test-container";
 
     private static final boolean STOP_CONTAINER;
 
@@ -196,7 +201,7 @@ public class CdiTestSuiteRunner extends Suite
     public static Properties getTestContainerConfig()
     {
         String cdiTestRunnerConfig = ConfigResolver.getProjectStageAwarePropertyValue(
-            TEST_RUNNER_CONFIG_KEY, TEST_RUNNER_DEFAULT_CONFIG_NAME);
+            CUSTOM_TEST_CONTAINER_CONFIG_FILE_NAME_KEY, DEFAULT_TEST_CONTAINER_CONFIG_FILE_NAME);
         return PropertyLoader.getProperties(cdiTestRunnerConfig);
     }
 }
