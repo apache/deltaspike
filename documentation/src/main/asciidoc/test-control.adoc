@@ -159,6 +159,36 @@ EJBs as well, you can use deltaspike-cdictrl-openejb +
 org.apache.openejb:openejb-core (instead of deltaspike-cdictrl-owb).
 
 
+== Optional Config
+
+Since DeltaSpike 1.2 it's possible to provide a config for the underlying test-container.
+However, currently only the adapter for OpenEJB embedded (available in CDI-Control) supports it out-of-the-box.
+To pass properties to the underlying test-container,
+you have to add `/META-INF/apache-deltaspike_test-container.properties`
+to the resources-directory of your test-classpath.
+The content of the file are key/value pairs which get passed to the container.
+Therefore, it's a config which isn't used by DeltaSpike itself
+(it's just forwarded (as it is) to the underlying test-container).
+
+=== Reconfigure the config-file name/location
+
+If you would like to point to an existing config-file, you have to add e.g.
+
+[source,Properties]
+---------------------------------------------------------------
+deltaspike.testcontrol.test-container.config-file=META-INF/existingConfig.properties
+---------------------------------------------------------------
+
+to `/META-INF/apache-deltaspike.properties`.
+
+If you would like to do it per project-stage, you can use e.g.:
+
+[source,Properties]
+---------------------------------------------------------------
+deltaspike.testcontrol.test-container.config-file.UnitTest=META-INF/unit-test/existingConfig.properties
+---------------------------------------------------------------
+
+
 == Optional Integrations
 
 
