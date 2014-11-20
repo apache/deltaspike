@@ -37,8 +37,10 @@ import java.util.logging.Logger;
 @SuppressWarnings("UnusedDeclaration")
 public class CdiTestSuiteRunner extends Suite
 {
+
     private static final boolean STOP_CONTAINER;
-    private static boolean containerStarted; //TODO
+
+    private static volatile boolean containerStarted; //TODO
 
     private final Class<?> testSuiteClass;
 
@@ -86,7 +88,7 @@ public class CdiTestSuiteRunner extends Suite
 
         if (!containerStarted)
         {
-            container.boot();
+            container.boot(CdiTestRunner.getTestContainerConfig());
             containerStarted = true;
         }
 
@@ -105,6 +107,7 @@ public class CdiTestSuiteRunner extends Suite
             }
         }
     }
+
 
     public static boolean isContainerStarted()
     {

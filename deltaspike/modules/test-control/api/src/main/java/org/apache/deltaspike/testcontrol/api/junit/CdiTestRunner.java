@@ -23,6 +23,7 @@ import org.apache.deltaspike.cdise.api.CdiContainer;
 import org.apache.deltaspike.cdise.api.CdiContainerLoader;
 import org.apache.deltaspike.cdise.api.ContextControl;
 import org.apache.deltaspike.core.api.config.ConfigResolver;
+import org.apache.deltaspike.core.api.config.PropertyLoader;
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
@@ -57,6 +58,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 import java.util.Stack;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -64,8 +66,23 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * A JUnit test runner to start up with a CDI or embedded JavaEE container.
+ *
+ * <p>If the underlying container supports it you can even pass in  a property file
+ * to the bootstrap. You can configure the name of the configuration file via a
+ * {@link org.apache.deltaspike.core.api.config.ConfigResolver} property named
+ * <code>cdiTestRunnerConfig</code>. By default the name of the config file is
+ * <code>cdiTestRunnerConfig.properties</code>.</p>
+ */
 public class CdiTestRunner extends BlockJUnit4ClassRunner
 {
+    /**
+     * The configuration switch to define the configuration properties file.
+     * By default the property file which gets loaded has the exactly same name.
+     */
+    public static final String TEST_RUNNER_CONFIG = "cdiTestRunnerConfig";
+
     private static final Logger LOGGER = Logger.getLogger(CdiTestRunner.class.getName());
 
     private static final boolean USE_TEST_CLASS_AS_CDI_BEAN;
@@ -120,6 +137,14 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
             }
         });
     }
+
+    public static Properties getTestContainerConfig()
+    {
+        String cdiTestRunnerConfig =
+                ConfigResolver.getProjectStageAwarePropertyValue(TEST_RUNNER_CONFIG, TEST_RUNNER_CONFIG);
+        return PropertyLoader.getProperties(cdiTestRunnerConfig);
+    }
+
 
     @Override
     public void run(RunNotifier runNotifier)
@@ -452,7 +477,7 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
             {
                 if (!CdiTestSuiteRunner.isContainerStarted())
                 {
-                    container.boot();
+                    container.boot(getTestContainerConfig());
                     setContainerStarted();
 
                     bootExternalContainers(testClass);
