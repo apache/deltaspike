@@ -21,6 +21,7 @@ package org.apache.deltaspike.testcontrol.api.junit;
 import org.apache.deltaspike.cdise.api.CdiContainer;
 import org.apache.deltaspike.cdise.api.CdiContainerLoader;
 import org.apache.deltaspike.core.api.config.ConfigResolver;
+import org.apache.deltaspike.core.api.config.PropertyLoader;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.Failure;
@@ -31,12 +32,18 @@ import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.RunnerBuilder;
 
 import java.util.List;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @SuppressWarnings("UnusedDeclaration")
 public class CdiTestSuiteRunner extends Suite
 {
+    /**
+     * The configuration switch to define the configuration properties file.
+     */
+    public static final String TEST_RUNNER_CONFIG_KEY = "deltaspike.testcontrol.boot_config";
+    private static final String TEST_RUNNER_DEFAULT_CONFIG_NAME = "META-INF/apache-deltaspike_test-container";
 
     private static final boolean STOP_CONTAINER;
 
@@ -88,7 +95,7 @@ public class CdiTestSuiteRunner extends Suite
 
         if (!containerStarted)
         {
-            container.boot(CdiTestRunner.getTestContainerConfig());
+            container.boot(getTestContainerConfig());
             containerStarted = true;
         }
 
@@ -184,5 +191,12 @@ public class CdiTestSuiteRunner extends Suite
                 this.logger.setLevel(level);
             }
         }
+    }
+
+    public static Properties getTestContainerConfig()
+    {
+        String cdiTestRunnerConfig = ConfigResolver.getProjectStageAwarePropertyValue(
+            TEST_RUNNER_CONFIG_KEY, TEST_RUNNER_DEFAULT_CONFIG_NAME);
+        return PropertyLoader.getProperties(cdiTestRunnerConfig);
     }
 }
