@@ -18,24 +18,60 @@
  */
 package org.apache.deltaspike.test.testcontrol.uc013;
 
+import org.apache.deltaspike.core.api.config.ConfigResolver;
+import org.apache.deltaspike.core.api.projectstage.ProjectStage;
+import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.test.category.SeCategory;
+import org.apache.deltaspike.testcontrol.api.TestControl;
+import org.apache.deltaspike.testcontrol.api.junit.CdiTestRunner;
 import org.apache.deltaspike.testcontrol.api.junit.CdiTestSuiteRunner;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
+
+import java.lang.reflect.Field;
 
 //Usually NOT needed! Currently only needed due to our arquillian-setup
 @Category(SeCategory.class)
 
 
 
+@RunWith(CdiTestRunner.class)
 public class ContainerConfigTest
 {
+    @Before
+    public void resetConfig()
+    {
+        //TODO discuss an api to reset the ConfigResolver
+        try
+        {
+            Field projectStageField = ConfigResolver.class.getDeclaredField("projectStage");
+            projectStageField.setAccessible(true);
+            projectStageField.set(null, null);
+        }
+        catch (Exception e)
+        {
+            throw ExceptionUtils.throwAsRuntimeException(e);
+        }
+    }
+
     @Test
-    public void configForTestContainer()
+    @TestControl(projectStage = ProjectStage.UnitTest.class) //just for internal tests
+    public void configForTestContainerStageUnitTest()
     {
         Assert.assertNotNull(CdiTestSuiteRunner.getTestContainerConfig());
         Assert.assertEquals("jdbc:hsqldb:mem:demoDB",
+            CdiTestSuiteRunner.getTestContainerConfig().getProperty("demoDatabase.JdbcUrl"));
+    }
+
+    @Test
+    @TestControl(projectStage = ProjectStage.IntegrationTest.class) //just for internal tests
+    public void configForTestContainerStageIntegrationTest()
+    {
+        Assert.assertNotNull(CdiTestSuiteRunner.getTestContainerConfig());
+        Assert.assertEquals("jdbc:hsqldb:file:demoDB",
             CdiTestSuiteRunner.getTestContainerConfig().getProperty("demoDatabase.JdbcUrl"));
     }
 }
