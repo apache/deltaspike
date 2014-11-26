@@ -4,19 +4,40 @@
 
 :toc:
 
-== Background: Portable CDI Extensions
-Contexts and Dependency Injection (CDI) for Java EE (link:https://jcp.org/en/jsr/detail?id=299[JSR 299]) was introduced as part of Java EE6. It defines a collection of Java services that provides the foundation for frameworks, extensions, and integration with other technologies.
 
-Portable CDI extensions extend CDI implementations and improve existing Java EE APIs by enabling integration of different technologies. They can be used with any spec-compliant CDI implementation, such as JBoss Weld or Apache OpenWebBeans. The CDI container manages start and stop procedures, web beans, lifecycles, and injections. This means portable CDI extension injections can be handled by the container instead of the user.
+== Background
 
-== About DeltaSpike
-DeltaSpike is a collection of portable CDI extensions. These ready-to-use modules are created by the community and provide a method of integrating tested API extensions into your Java projects.
+=== CDI
+Java Contexts and Dependency Injection for the Java EE platform (link:https://jcp.org/en/jsr/detail?id=299[JSR 299]), abbreviated to CDI, was introduced as part of Java EE6. The core features of CDI are as follows:
+
+* improved stateful object lifecycles with an additional context named _Conversation_ that encompasses a series of requests within one session and lifecycle management by the container according to well-defined contexts
+* dependency injection conducted in a type-safe manner, with type checking conducted at compilation time so errors are exposed earlier and debugging is easier
+* event notification facility for object interaction
+* a better approach for interceptors with annotations binding interceptors to objects and with a new interceptor named _decorator_ that knows about individual bean attributes through inheritence and is more appropriate for use in solving business problems
+* a Service Provider Interface (SPI) for developing portable extensions to the CDI container
+
+CDI is a link:https://jcp.org/en/home/index[Java Community Process (JCP)] standard. All Java EE6 compliant application servers must provide support for CDI. link:http://weld.cdi-spec.org/[JBoss Weld] is a reference implementation of the CDI specification and other spec-compliant implementations exist such as link:http://openwebbeans.apache.org/[Apache OpenWebBeans (OWB)]. While CDI is a Java EE6 essential, CDI can also be used in Java SE environments with the aid of standalone CDI implementations.
+
+=== Portable CDI Extensions
+The CDI Service Provider Interface (SPI) is exposed to enable extension of the CDI feature set by third-parties. Portable CDI extensions extend CDI implementations and improve existing Java EE APIs by enabling integration of different technologies. 
+
+As set out in the CDI specification, a portable CDI extenstion may integrate with a CDI container as follows:
+ 
+* providing its own beans, interceptors and decorators to the container
+* injecting dependencies into its own objects using the dependency injection service
+* providing a context implementation for a custom scope
+* augmenting or overriding the annotation-based metadata with metadata from some other source
+
+As indicated by the name, _portable_ CDI extensions can be used with any spec-compliant CDI implementation.
+
+== About Apache DeltaSpike
+Apache DeltaSpike is a collection of portable CDI extensions. These ready-to-use modules enable you to integrate tested API extensions into your Java projects.
 
 DeltaSpike consists of a core module and a number of optional modules for providing additional enterprise functionality to your applications. The modules include features for enhanced security with type-safe control over method invocations, integration with schedulers, injection of CDI objects into validators, and a transactional context and scope. DeltaSpike also provides boot and shutdown control over CDI containers in Java SE applications.
 
-As portable CDI extensions, DeltaSpike requires a CDI implementation and supports both JBoss Weld and Apache OpenWebBeans. DeltaSpike has also been tested on a range of application servers and containers that provide these CDI implementations, such as Apache TomEE, JBoss AS, WildFly, Oracle GlassFish, and Jetty. 
+As a CDI extension, DeltaSpike must be used in conjunction with a CDI implementation and supports both JBoss Weld and Apache OpenWebBeans. DeltaSpike has been tested on a range of application servers and containers that utilize these CDI implementations, such as Apache TomEE, JBoss AS, WildFly, Oracle GlassFish, and Jetty.
 
-In addition to the portable CDI extension modules, DeltaSpike provides a number of examples to assist you in understanding how to use and get the most from this technology.
+In addition to the portable CDI extension modules, DeltaSpike provides a number of examples to show you how to use and get the most from this technology.
 
 == Features of DeltaSpike
 
