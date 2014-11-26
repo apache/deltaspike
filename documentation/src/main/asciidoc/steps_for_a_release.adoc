@@ -1,0 +1,217 @@
+= Steps for a Release
+
+:Notice: Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+[TOC]
+
+== Preparations
+
+ - Heads up on the mailing-lists
+
+e.g.:
+
+-----------------------------------------------------------------------------------------------------------------------
+first steps for the next release
+
+hi @ all,
+
+if there are no objections, i'll start with the first steps for the next release (review, documentation,...).
+it would be great to start with the release procedure next week.
+
+regards,
+[name]
+-----------------------------------------------------------------------------------------------------------------------
+
+ - Check the documentation
+ - Check https://analysis.apache.org/dashboard/index/87921
+ - Check diff with tag of [version-1]
+ - Check the jenkins builds
+ - Create release notes and commit them to deltaspike/readme/ (format [ReleaseNotes][version].txt)
+
+
+test at least:
+
+-----------------------------------------------------------------------------------------------------------------------
+mvn clean install -POWB
+mvn clean install -PWeld
+mvn clean install -Prat
+mvn clean install -Ptomee-build-managed
+mvn clean install -Pjbossas-build-managed-7
+mvn clean install -Pwildfly-build-managed
+mvn clean install -Pglassfish-build-managed-3
+-----------------------------------------------------------------------------------------------------------------------
+
+deploy a demo app esp. with jsf-impl-ee6 to an ee6 server and check the logs (if there are no optional ee7+ classes)
+(https://github.com/os890/ee6-ds-demo can be used for it e.g.)
+
+== First steps
+
+-----------------------------------------------------------------------------------------------------------------------
+//install a version of git which is compatible with the release-plugin (e.g. v1.8.3.2)
+git checkout -b deltaspike-[release version]
+
+mvn release:prepare -Pdistribution -DreleaseProfiles=distribution
+
+//hint: don't use -DdryRun=true -- since it can break the next step
+mvn release:perform -Pdistribution -DreleaseProfiles=distribution
+
+//!!!check the created commits including user-name and email
+
+//login to https://repository.apache.org/ and go to "Staging Repositories"
+//check esp. .../org/apache/deltaspike/deltaspike-project/[version]/deltaspike-project-[version]-source-release.zip
+//close the repository
+
+//push the release-branch and tag to a 3rd party git repo
+git remote add vote https://github.com/[user]/deltaspike-vote
+git push -u vote master
+git push vote deltaspike-[release version]
+git push vote --tags
+-----------------------------------------------------------------------------------------------------------------------
+
+= Vote
+
+== Start the vote
+
+e.g.:
+
+
+-----------------------------------------------------------------------------------------------------------------------
+[VOTE] Release of Apache DeltaSpike [version]
+
+
+Hi,
+
+I was running the needed tasks to get the ... release of Apache DeltaSpike out.
+The artifacts are deployed to Nexus [1] (and [2]).
+
+The tag is available at [3] and will get pushed to the ASF repository once the vote passed.
+
+Please take a look at the ... artifacts and vote!
+
+Please note:
+This vote is "majority approval" with a minimum of three +1 votes (see [4]).
+
+------------------------------------------------
+[ ] +1 for community members who have reviewed the bits
+[ ] +0
+[ ] -1 for fatal flaws that should cause these bits not to be released, and why..............
+------------------------------------------------
+
+Thanks,
+[name]
+
+[1] https://repository.apache.org/content/repositories/...
+[2] https://repository.apache.org/content/repositories/.../org/apache/deltaspike/deltaspike-project/[version]/deltaspike-project-[version]-source-release.zip
+[3] https://github.com/[user]/deltaspike-vote/tree/deltaspike-project-[version]
+[4] http://www.apache.org/foundation/voting.html#ReleaseVotes
+-----------------------------------------------------------------------------------------------------------------------
+
+= Announce the vote
+
+ - Create a link to the release notes at http://s.apache.org (format DeltaSpike_[version])
+ - Tweet about the vote via @DeltaSpikeTeam.
+
+= Perform the final release
+
+== Close the vote
+
+After 72 hours close the vote.
+
+e.g.:
+
+
+-----------------------------------------------------------------------------------------------------------------------
+Result (was: Re: [VOTE] Release of Apache DeltaSpike [version])
+
+thank you for voting!
+
+X binding +1 votes (pmc):
+[list]
+
+Y non-binding +1 votes:
+[list]
+
+Z -1 votes
+[list]
+-----------------------------------------------------------------------------------------------------------------------
+
+
+If the binding majority approved the vote continue.
+
+ - Login to https://repository.apache.org/ and release the repository
+ - Merge release branch into master and push the branch and tag to the ASF repository
+
+
+Always do a merge in this case (not a rebase):
+
+
+-----------------------------------------------------------------------------------------------------------------------
+git checkout master
+git merge deltaspike-[version]
+git push origin deltaspike-[version]
+git push origin deltaspike-project-[version]
+git push origin master
+-----------------------------------------------------------------------------------------------------------------------
+
+
+ - Create the release at jira
+ - Close the corresponding tickets of the version
+ - Wait some hours and check http://repo2.maven.org/maven2/org/apache/deltaspike
+
+
+
+== Upload artifacts
+
+-----------------------------------------------------------------------------------------------------------------------
+svn co https://dist.apache.org/repos/dist/release/deltaspike
+mkdir [version]
+//add and commit the artifacts (at least *source-release.zip + asc, md5, sha1)
+-----------------------------------------------------------------------------------------------------------------------
+
+== Update download links
+
+/deltaspike/site/trunk/content/download.mdtext
+
+== Announce the Release
+
+=== E-Mails
+
+
+-----------------------------------------------------------------------------------------------------------------------
+[ANNOUNCE] Release of Apache DeltaSpike [version]
+
+The Apache DeltaSpike team is pleased to announce the 6th release of DeltaSpike.
+
+Apache DeltaSpike is not a CDI-container, but a portable CDI extension.
+
+Documentation:
+http://deltaspike.apache.org/documentation.html
+
+Download:
+http://deltaspike.apache.org/download.html
+
+Release Notes:
+http://s.apache.org/DeltaSpike_06
+
+Enjoy!
+
+[name]
+-----------------------------------------------------------------------------------------------------------------------
+
+Write the e-mails to:
+
+ - announce@apache.org
+ - dev@deltaspike.apache.org
+ - users@deltaspike.apache.org
+
+=== Twitter
+
+e.g.:
+
+-----------------------------------------------------------------------------------------------------------------------
+[ANNOUNCE] The Apache #DeltaSpike team is pleased to announce http://s.apache.org/DeltaSpike_[version]. Feel free to test it! Feedback is very welcome!
+-----------------------------------------------------------------------------------------------------------------------
+
+=== News
+
+Add the release to http://deltaspike.apache.org/news.html
