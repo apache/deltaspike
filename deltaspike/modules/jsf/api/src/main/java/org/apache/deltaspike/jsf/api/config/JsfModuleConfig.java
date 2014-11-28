@@ -38,6 +38,8 @@ public class JsfModuleConfig implements DeltaSpikeConfig
 
     private static final long serialVersionUID = -487295181899986237L;
 
+    protected Boolean delegatedWindowHandlingEnabled;
+
     protected JsfModuleConfig()
     {
     }
@@ -109,11 +111,26 @@ public class JsfModuleConfig implements DeltaSpikeConfig
      */
     public ClientWindowConfig.ClientWindowRenderMode getDefaultWindowMode()
     {
-        if (isDelegatedWindowHandlingEnabled())
+        if (this.delegatedWindowHandlingEnabled == null)
+        {
+            lazyInitDelegatedWindowHandlingEnabled();
+        }
+
+        if (this.delegatedWindowHandlingEnabled)
         {
             return ClientWindowConfig.ClientWindowRenderMode.DELEGATED;
         }
         return null;
+    }
+
+    protected synchronized void lazyInitDelegatedWindowHandlingEnabled()
+    {
+        if (this.delegatedWindowHandlingEnabled != null)
+        {
+            return;
+        }
+
+        this.delegatedWindowHandlingEnabled = isDelegatedWindowHandlingEnabled();
     }
 
     /**
