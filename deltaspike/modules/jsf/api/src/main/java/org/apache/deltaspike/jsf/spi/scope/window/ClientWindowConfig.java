@@ -19,12 +19,13 @@
 package org.apache.deltaspike.jsf.spi.scope.window;
 
 import javax.faces.context.FacesContext;
+import java.io.Serializable;
 
 /**
  * Configuration for ClientWindow handler which is used
  * to determine the correct windowId for &#063;WindowScoped beans.
  */
-public interface ClientWindowConfig
+public interface ClientWindowConfig extends Serializable
 {
     public enum ClientWindowRenderMode
     {

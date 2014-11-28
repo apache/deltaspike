@@ -25,7 +25,6 @@ import javax.inject.Inject;
 import javax.servlet.http.Cookie;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
 import java.util.Map;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
@@ -42,7 +41,7 @@ import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;
  * provide a completely new implementation as &#064;Alternative.</p>
  */
 @SessionScoped
-public class DefaultClientWindowConfig implements ClientWindowConfig, Serializable
+public class DefaultClientWindowConfig implements ClientWindowConfig
 {
     /**
      * We will set a cookie with this very name if a noscript link got clicked by the user
