@@ -1,0 +1,35 @@
+Release Notes - Apache DeltaSpike - Version 1.2.0
+
+Bug
+
+    [DELTASPIKE-745] - cdictr-weld ContextControl.startContext doesn't properly start RequestScoped context
+    [DELTASPIKE-749] - Doc: Security: Making intitially requested and secured page available for redirect after login
+    [DELTASPIKE-750] - No error message if the filename provided PropertyFileConfig implementation isn't found.
+    [DELTASPIKE-771] - BeanManagerProvider#getBeanManagerInfo(ClassLoader) wipes out info for parent CL
+    [DELTASPIKE-781] - AnnotatedTypeImpl doesn't work for Annotation AnnotatedType
+    [DELTASPIKE-782] - BeanManager lookup fails when BeanManager created in parent classloader and in SE mode
+
+Improvement
+
+    [DELTASPIKE-770] - Overload BeanProvider#getContextualReference with (BeanManager, String, boolean. Class) variant
+    [DELTASPIKE-773] - improved testability of @WindowScoped beans
+    [DELTASPIKE-780] - support more advanced cases by extending existing transaction-strategies
+    [DELTASPIKE-785] - Make CdiTestRunner pick up container configuration from properties file
+    [DELTASPIKE-789] - ClientWindowConfig should extend Serializable
+    [DELTASPIKE-790] - cache result for JsfModuleConfig#isDelegatedWindowHandlingEnabled
+
+New Feature
+
+    [DELTASPIKE-769] - add @Priority dyn. to deltaspike interceptors to avoid the manual config
+    [DELTASPIKE-772] - use CDI#current if supported
+    [DELTASPIKE-774] - map javax.faces.bean.ViewScoped to javax.faces.view.ViewScoped
+    [DELTASPIKE-776] - check correct module usage
+
+Task
+
+    [DELTASPIKE-649] - re-visit wls profile
+    [DELTASPIKE-767] - Review javadoc in core/api
+    [DELTASPIKE-777] - Create and publish Javadocs section
+    [DELTASPIKE-778] - add duke's choice award badge to the site
+    [DELTASPIKE-786] - migrate documentation about release preparation to asciidoc
+    [DELTASPIKE-791] - release notes for v1.2.0
