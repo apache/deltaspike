@@ -17,4 +17,4 @@
 # specific language governing permissions and limitations
 # under the License.
 #####################################################################################
-mvn clean javadoc:aggregate scm-publish:publish-scm -Ppublish-javadoc
+mvn clean javadoc:aggregate scm-publish:publish-scm
