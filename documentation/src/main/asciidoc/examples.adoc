@@ -4,7 +4,7 @@
 
 :toc:
 
-A collection of ready-to-build Maven-based projects are provided to demonstrate the inclusion of DeltaSpike in applications. Each example showcases a different DeltaSpike feature and explores the mechanics of DeltaSpike implementation. You can use these examples to see DeltaSpike in action and learn how to add these capabilities to your own projects. The Maven-based project examples are available in `deltaspike-project-<version>-source-release.zip` and each is briefly outlined here.
+A collection of ready-to-build Maven-based projects are provided to demonstrate the inclusion of DeltaSpike in applications. Each example showcases a different DeltaSpike feature and explores the mechanics of DeltaSpike implementation. You can use these examples to see DeltaSpike in action and learn how to add these capabilities to your own projects. The Maven-based project examples are available in `deltaspike-project-<version>-source-release.zip`.
 	
 To begin using the projects, complete the following steps:
 
@@ -23,31 +23,3 @@ $ unzip deltaspike-project-<version>-source-release.zip
 $ cd /path/to/deltaspike-project-<version>/examples
 $ mvn clean package
 ----
-
-== jse-examples
-**Replace this text!** Write 2-3 sentences in plain language making sure you answer every question:
-
-* What is the purpose of the example (e.g., This quickstart demonstrates the use of a partial bean to provide dynamic implementations of an interface, and how this might be used to provide a generic query service.)?
-* When would the user use this example (e.g., The PersonQueryService provides an example of the end user API that might be available from such a framework. Extensive code comments document the example implementation.)?
-* Any special instructions for how to build and deploy (e.g., It does not contain any user interface; the tests must be run to verify everything is working correctly.)?
-
-== jsf-examples
-**Replace this text!** Write 2-3 sentences in plain language making sure you answer every question:
-
-* What is the purpose of the example (e.g., This quickstart demonstrates the use of a partial bean to provide dynamic implementations of an interface, and how this might be used to provide a generic query service.)?
-* When would the user use this example (e.g., The PersonQueryService provides an example of the end user API that might be available from such a framework. Extensive code comments document the example implementation.)?
-* Any special instructions for how to build and deploy (e.g., It does not contain any user interface; the tests must be run to verify everything is working correctly.)?
-
-== jsf-playground
-**Replace this text!** Write 2-3 sentences in plain language making sure you answer every question:
-
-* What is the purpose of the example (e.g., This quickstart demonstrates the use of a partial bean to provide dynamic implementations of an interface, and how this might be used to provide a generic query service.)?
-* When would the user use this example (e.g., The PersonQueryService provides an example of the end user API that might be available from such a framework. Extensive code comments document the example implementation.)?
-* Any special instructions for how to build and deploy (e.g., It does not contain any user interface; the tests must be run to verify everything is working correctly.)?
-
-== scheduler-playground
-**Replace this text!** Write 2-3 sentences in plain language making sure you answer every question:
-
-* What is the purpose of the example (e.g., This quickstart demonstrates the use of a partial bean to provide dynamic implementations of an interface, and how this might be used to provide a generic query service.)?
-* When would the user use this example (e.g., The PersonQueryService provides an example of the end user API that might be available from such a framework. Extensive code comments document the example implementation.)?
-* Any special instructions for how to build and deploy (e.g., It does not contain any user interface; the tests must be run to verify everything is working correctly.)?

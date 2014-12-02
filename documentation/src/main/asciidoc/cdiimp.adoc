@@ -4,7 +4,7 @@
 
 :toc:
 
-DeltaSpike requires a CDI implementation to be available in the Java environment that your projects are deployed to. The implementation provides the CDI essentials, managing dependency injection and contextual lifecycles. link:http://weld.cdi-spec.org/[JBoss Weld] and link:http://openwebbeans.apache.org/[Apache OpenWebBeans (OWB)] are two widely used CDI implementations. Dependent on the Java environment you choose, some setup may be necessary as detailed here.
+DeltaSpike requires a CDI implementation to be available in the Java environment where your projects are deployed. The implementation provides the CDI essentials, managing dependency injection and contextual lifecycles. link:http://weld.cdi-spec.org/[JBoss Weld] and link:http://openwebbeans.apache.org/[Apache OpenWebBeans (OWB)] are two widely used CDI implementations. Dependent on the Java environment you choose, some setup may be necessary as detailed here.
 
 == Java EE6+ Containers
 CDI is part of Java EE6 and later so CDI implementations are included as standard in Java EE6+ compliant environments. There is no additional CDI configuration needed besides including the CDI-obligatory `beans.xml` file in your project.
@@ -23,7 +23,9 @@ DeltaSpike provides a dedicated Container Control module to enable applications 
 
 Instructions are provided here for adding the required resources to both Maven-based and Maven-independent projects and subsequently booting the CDI container from your project source code.
 
-=== Declare Dependencies for Maven-based Projects
+=== 1. Declare CDI Dependencies 
+
+==== Option A: Declare Dependencies for Maven-based Projects
 For Maven-based projects, the Container Control module is available in Maven Central together with the other DeltaSpike modules. You must configure your project to use the DeltaSpike Container Control API and one of the CDI container-specific modules.
 
 . Open the project `pom.xml` file for editing
@@ -41,10 +43,9 @@ For Maven-based projects, the Container Control module is available in Maven Cen
 +
 . Add CDI container dependencies for one of the container options listed here
 
-==== Option A: For JBoss Weld
-
-. Open the project `pom.xml` file for editing
-. Add the JBoss Weld version to the list of properties, replacing the version as desired
++
+.For JBoss Weld
+a. Add the JBoss Weld version to the list of properties, replacing the version as desired
 +
 [source,xml]
 ----
@@ -53,7 +54,7 @@ For Maven-based projects, the Container Control module is available in Maven Cen
 </properties>
 ----
 +
-. Add the JBoss Weld dependency to the list of dependencies
+b. Add the JBoss Weld dependency to the list of dependencies
 +
 [source,xml]
 ----
@@ -65,7 +66,7 @@ For Maven-based projects, the Container Control module is available in Maven Cen
 </dependency>
 ----
 +
-. Add the DeltaSpike Weld-specific Container Control module to the list of dependencies
+c. Add the DeltaSpike Weld-specific Container Control module to the list of dependencies
 +
 [source,xml]
 ----
@@ -76,18 +77,10 @@ For Maven-based projects, the Container Control module is available in Maven Cen
     <scope>runtime</scope>
 </dependency>
 ----
-+
-. Save the `pom.xml` file changes
-. Download all required dependencies
-+
-----
-mvn clean install
-----
 
-==== Option B: For Apache OpenWebBeans
-
-. Open the project `pom.xml` file for editing
-. Add the Apache OpenWebBeans version to the list of properties, replacing the version as desired
++
+.For Apache OpenWebBeans
+a. Add the Apache OpenWebBeans version to the list of properties, replacing the version as desired
 +
 [source,xml]
 ----
@@ -96,7 +89,7 @@ mvn clean install
 </properties>
 ----
 +
-. Add the Apache OpenWebBeans dependencies to the list of dependencies
+b. Add the Apache OpenWebBeans dependencies to the list of dependencies
 +
 [source,xml]
 ----
@@ -115,7 +108,7 @@ mvn clean install
 </dependency>
 ----
 +
-. Add the DeltaSpike Apache OpenWebBeans-specific Container Control module to the list of dependencies
+c. Add the DeltaSpike Apache OpenWebBeans-specific Container Control module to the list of dependencies
 +
 [source,xml]
 ----
@@ -126,7 +119,7 @@ mvn clean install
     <scope>runtime</scope>
 </dependency>
 ----
-+
+
 . Save the `pom.xml` file changes
 . Download all required dependencies
 +
@@ -134,12 +127,12 @@ mvn clean install
 mvn clean install
 ----
 
-=== Declare Dependencies for Maven-independent Projects
+==== Option B: Declare Dependencies for Maven-independent Projects
 For Maven-independent projects, the Container Control module is distributed together with the other DeltaSpike modules in `distribution-fill-<version>.zip`. You must add two of the files from the `cdictrl` directory to your project, namely `deltaspike-cdictrl-api.jar` and the .jar file that corresponds to the CDI container you have chosen. Add these files to the project `WEB-INF/lib` or `EAR/lib` directory for .war and .ear projects respectively.
 
-=== Start the CDI Container from Your Project
+=== 2. Start the CDI Container from Your Project
 To start a CDI container in your application, you must instantiate a `CdiContainer` object and call the `#boot` method. When `#boot` is called, the `CdiContainer` scans CDI-enabled
-archives for beans and CDI extensions. An example is given in the code snippet here. Before the application exits, `#shutdown` must be called to correctly destroy all beans.
+archives for beans and CDI extensions. Before the application exits, `#shutdown` must be called to correctly destroy all beans. An example is given in the code snippet here.
 
 [source,java]
 ----
@@ -174,7 +167,7 @@ public class MainApp {
         CdiContainer cdiContainer = CdiContainerLoader.getCdiContainer();
         cdiContainer.boot();
 
-        // Starting the application-context allows to use @ApplicationScoped beans
+        // Starting the application-context enables use of @ApplicationScoped beans
         ContextControl contextControl = cdiContainer.getContextControl();
         contextControl.startContext(ApplicationScoped.class);
 
@@ -185,7 +178,7 @@ public class MainApp {
 }
 ----
 
-To resolve project beans, you can use the DeltaSpike `BeanProvider` class. Whether `EchoService` is a concrete implementation or just an interface depends on the application. In the case that it is an interface, the corresponding implementation is resolved. The resolved bean is a standard CDI bean and it can be used for all CDI concepts, such as @Inject, in the class without further uses of `BeanProvider`. An example of resolving the bean without qualifiers is given in the code snippet here.
+To resolve project beans, you can use the DeltaSpike `BeanProvider` class. Whether `EchoService` is a concrete implementation or just an interface depends on the application. In the case that it is an interface, the corresponding implementation is resolved. The resolved bean is a standard CDI bean and it can be used for all CDI concepts, such as `@Inject`, in the class without further uses of `BeanProvider`. An example of resolving the bean without qualifiers is given in the code snippet here.
 
 [source,java]
 ----

@@ -6,9 +6,9 @@
 
 DeltaSpike is available for use in Maven-based and Maven-independent projects. Instructions are given here for obtaining released final versions of DeltaSpike for both approaches.
 
-**Note:** You can also opt to use the lastest DeltaSpike snapshots; for more information, see <<snapshots#,Test Snapshots>>.
+**Note:** You can also opt to use the lastest DeltaSpike snapshots; for more information, see <<snapshots#,Use DeltaSpike Snapshots>>.
 
-== Configure DeltaSpike in Maven-based Projects
+== Option A: Configure DeltaSpike in Maven-based Projects
 DeltaSpike released versions are available from the Maven Central repository for use in Maven-based projects. This means that you do not need to modify your Maven configuration `settings.xml` file; when building projects, Maven automatically searches the online Maven Central repository for project dependencies and downloads sources to your local Maven repository. 
 
 To begin use the DeltaSpike releases from Maven Central, you simply need to configure the project `pom.xml` file for each project with information about the release version and modules you want to use. At a minimum, you must add the DeltaSpike Core module, which provides the DeltaSpike API and utility classes.
@@ -57,7 +57,7 @@ For instructions on adding the optional DeltaSpike modules, see the relevant mod
 * <<servlet#,Servlet>>
 * <<test-control#,Test-Control>>
 
-== Configure DeltaSpike in Maven-independent Projects
+== Option B: Configure DeltaSpike in Maven-independent Projects
 Deltaspike is provided as a set of downloadable .jar files for projects not utilizing the Maven build system. Alternatively, you can build the DeltaSpike .jar files from source; for instructions, see <<build#,Build DeltaSpike from Source>>. In both cases, you must add the DeltaSpike .jar files directly to your projects. 
 
 To use DeltaSpike without Maven from the downloadable .jar files, complete the following steps:
@@ -71,8 +71,8 @@ $ unzip distribution-full-<version>.zip
 ----
 +
 . Add the source to your project
-  .. For .war projects, copy the .jar files to `WEB-INF/lib` directory
-  .. For .ear projects, copy the .jar files to `EAR/lib directory` and add the following to `META-INF/application.xml`:
+a. For .war projects, copy the .jar files to the `WEB-INF/lib` directory
+b. For .ear projects, copy the .jar files to the `EAR/lib directory` and add the following to `META-INF/application.xml`:
 +
 [source,xml]
 ----
@@ -80,6 +80,6 @@ $ unzip distribution-full-<version>.zip
 ----
 
 == Next
-* To check whether your Java envrionment needs any additional CDI-specific configuration, see <<cdiimp#,Enable CDI For Your Java Environment>>.
+* To check whether your Java environment needs any additional CDI-specific configuration, see <<cdiimp#,Enable CDI For Your Java Environment>>.
 * To see ready-to-deploy example DeltaSpike applications, see <<examples#,See DeltaSpike in Action>>.
 * To understand how the various DeltaSpike modules can enhance and extend your applications, see the individual module pages.
