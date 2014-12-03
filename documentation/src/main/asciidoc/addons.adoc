@@ -7,29 +7,16 @@
 Add-ons extend the functionality of DeltaSpike and several have been developed external to the DeltaSpike project. Brief information is given here about each of the add-ons, with details of where they can be obtained from.
 
 == Monitoring
-**Replace this text!** Write 2-3 sentences in plain language making sure you answer every question:
+`ds-monitoring-addon` provides simple monitoring for several common use-cases (exceptions, performance, audits), collecting information about the monitored method-invocations during a request and enabling you to process the entries based on your requirements. For more information about its use and implementation, see http://os890.blogspot.com.au/2014/04/add-on-monitoring-lite-with-deltaspike.html[os890: [add-on\] monitoring lite with deltaspike].
 
-* What is the purpose of the add-on (e.g., A two-way cdi-spring bridge that allows spring-beans to be injected into cdi-beans and vice versa provided the concepts, for example qualifiers, are compatible.)?
-* When would the user use this add-on?
-* Where can the user get the add-on from (https://github.com/os890/ds-monitoring-addon )?
-* Any special instructions for using the add-on correctly?
+**Source code:** https://github.com/os890/ds-monitoring-addon
 
 == Spring Bridge
-`ds-spring-bridge-addon` is a two-way cdi-spring bridge that allows spring-beans to be injected into cdi-beans and vice versa provided the concepts, for example qualifiers, are compatible. You can obtain this add-on from https://github.com/os890/ds-spring-bridge-addon.
+`ds-spring-bridge-addon` is a two-way cdi-spring bridge that allows spring-beans to be injected into cdi-beans and vice versa provided the concepts, for example qualifiers, are compatible. For more information about its use and implementation, see http://os890.blogspot.com.au/2013/12/add-on-spring-bridge-with-deltaspike.html[os890: [add-on\] spring-bridge with deltaspike].
 
-**Replace this text!** Write 2-3 sentences in plain language making sure you answer every question:
-
-* What is the purpose of the add-on (e.g., A two-way cdi-spring bridge that allows spring-beans to be injected into cdi-beans and vice versa provided the concepts, for example qualifiers, are compatible.)?
-* When would the user use this add-on?
-* Where can the user get the add-on from (https://github.com/os890/ds-spring-bridge-addon )?
-* Any special instructions for using the add-on correctly?
+**Source code:** https://github.com/os890/ds-spring-bridge-addon.
 
 == Disruptor
-This add-on creates a disruptor process for every observer method. It currently works with Apache TomEE and JBoss AS 7.
+`ds-disruptor-addon` improves CDI synchronous event-processing performance by creating a disruptor process for every observer method, enabling CDI synchronous events in conjunction with asynchronous observers. This add-on currently works with Apache TomEE and JBoss AS 7. For more information about its use and implementation, see http://os890.blogspot.com.au/2014/05/faster-cdi-like-events.html[os890: [add-on\] fast event processing with disruptor + deltaspike].
 
-**Replace this text!** Write 2-3 sentences in plain language making sure you answer every question:
-
-* What is the purpose of the add-on (e.g., A two-way cdi-spring bridge that allows spring-beans to be injected into cdi-beans and vice versa provided the concepts, for example qualifiers, are compatible.)?
-* When would the user use this add-on?
-* Where can the user get the add-on from (https://github.com/os890/ds-disruptor-addon )?
-* Any special instructions for using the add-on correctly?
+**Source code:** https://github.com/os890/ds-disruptor-addon

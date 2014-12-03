@@ -8,6 +8,7 @@
 ** <<cdiimp#,Enable CDI For Your Java Environment>>
 ** <<examples#,See DeltaSpike in Action>>
 * Use Individual Modules
+** <<modules#,Overview of DeltaSpike Modules>>
 ** <<core#,Core>>
 ** <<bean-validation#,Bean Validation>>
 ** <<container-control#,Container Control>>
@@ -20,11 +21,12 @@
 ** <<servlet#,Servlet>>
 ** <<test-control#,Test-Control>>
 * Advanced Information
-** <<build#,Build DeltaSpike from Source>>
+** <<build#,Build and Test DeltaSpike from Source>>
 ** <<snapshots#,Use DeltaSpike Snapshots>>
 ** link:https://deltaspike.apache.org/migration-guide.html[Migrate to DeltaSpike]
+** <<source#,Contribute to the DeltaSpike Source>>
 ** <<spi#,DeltaSpike Service Provider Interface (SPI)>>
-* More Resources
+* Access More DeltaSpike Resources
 ** <<articles#,Articles and Blogs>>
 ** <<addons#,Add-ons>>
 ** <<external#,External Examples>>

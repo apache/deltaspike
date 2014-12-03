@@ -89,4 +89,4 @@ In addition to the portable CDI extension modules, DeltaSpike provides a number 
 *Type-safe Project-Stages:* Compared to project-stages in JSF, DeltaSpike provides a type-safe, but still extensible approach which can be used in CDI based applications.
 
 == Next
-For instructions on how to start using DeltaSpike, see <<configure#,Configure DeltaSpike in Your Projects>>.
+For instructions on how to start using DeltaSpike, see <<configure#,Configure DeltaSpike in Your Projects>> and <<cdiimp#,Enable CDI For Your Java Environment>>.

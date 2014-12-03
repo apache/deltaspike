@@ -82,4 +82,4 @@ b. For .ear projects, copy the .jar files to the `EAR/lib directory` and add the
 == Next
 * To check whether your Java environment needs any additional CDI-specific configuration, see <<cdiimp#,Enable CDI For Your Java Environment>>.
 * To see ready-to-deploy example DeltaSpike applications, see <<examples#,See DeltaSpike in Action>>.
-* To understand how the various DeltaSpike modules can enhance and extend your applications, see the individual module pages.
+* To understand how the various DeltaSpike modules can enhance and extend your applications, see <<modules#,Overview of DeltaSpike Modules>> and the individual module pages.

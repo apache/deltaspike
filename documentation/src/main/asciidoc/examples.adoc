@@ -23,3 +23,7 @@ $ unzip deltaspike-project-<version>-source-release.zip
 $ cd /path/to/deltaspike-project-<version>/examples
 $ mvn clean package
 ----
+
+== Next
+* To see more ready-to-deploy DeltaSpike examples and templates, see <<external#,External Examples>>.
+* To read how DeltaSpike is being used by developers, see <<articles#,Articles and Blogs>>.

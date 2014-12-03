@@ -1,74 +1,65 @@
-= Get Source and compile it
+= Contribute to the DeltaSpike Source
 
 :Notice: Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
 :toc:
 
-== Introduction
+If you are looking to contribute to the DeltaSpike source, you must start with the latest version of the code base. DeltaSpike source is stored in the Apache Git repository at https://git-wip-us.apache.org/repos/asf/deltaspike.git
 
-== SCM / Repository
+It is also important that you follow the git workflows we have established for the project to ensure efficient and clean collaboration as detailed here.
 
-We are using GIT as a Version Control System. The official GIT
-repository of the project is available
-https://git-wip-us.apache.org/repos/asf/deltaspike.git[here].
+== 1. Get the Source
 
-
-=== Initial 'checkout'
-
-----------------------------------------------------------------
+. Checkout the source
++
+[source]
+----
 git clone https://git-wip-us.apache.org/repos/asf/deltaspike.git
-----------------------------------------------------------------
-
-=== Update existing clone
-
------------------
-git pull --rebase
------------------
-
-
-=== Read-only Mirrors
-
-==== GitHub-Mirror
-
-----------------------------------------------
+----
++
+or for a read-only mirror version
++
+[source]
+----
 git clone https://github.com/apache/deltaspike
-----------------------------------------------
+----
++
+. Update the repository clone
++
+[source]
+----
+git pull --rebase
+----
 
-More information can be found https://help.github.com/articles/which-remote-url-should-i-use[here].
-
-=== GIT Workflow
-
-We follow an link:../suggested-git-workflows.html[unified GIT workflow] to
-keep the commit history straight and therefore simple and clean. General
-details about GIT at Apache are available
-http://wiki.apache.org/couchdb/Git_At_Apache_Guide[here] and at
-http://git-wip-us.apache.org.
-
-*Hint:*
-
-If you are new to Git you might like to try the
-http://git.or.cz/course/svn.html[Git guide for subversion users] or have
-a look at the http://git-scm.com/book[Git community book].
-
-== Build
-
-So now you probably want to **`build the code`**. So follow the
-instructions <<build.adoc#,here>>
-
-== Tools / IDE
+== 2. Make Additions and Changes to the Source
 
 Commits (and in the best case also patches), have to follow our
 "formatting rules". The following section provides settings for IDEs
 used by us.
 
-
 === IntelliJ
 
 link:http://deltaspike.apache.org/resources/files/settings.jar[Attached] you can find the settings
 for formatting the source code. Import them via File | Import
-Settings...
+Settings
 
 === Eclipse
 
 For Eclipse you can use this
 link:http://deltaspike.apache.org/resources/files/deltaspike-code-conventions.xml[Code Formatter Profile]. Import it via Window | Preferences | Java | Code Style | Formatter
+
+== 3. Build the Source
+Always build and test your changes before you make pull requests to the DeltaSpike repository. For instructions on building the source and running Arquillian tests, see <<build#,Build and Test DeltaSpike from Source>>.
+
+
+== 4. Make a Pull Request
+Ensure your commits and pull requests follow the our established https://deltaspike.apache.org/suggested-git-workflows.html[DeltaSpike GIT workflow].
+
+== Git Resources
+For general information about Git and using Git, see the following:
+
+* http://wiki.apache.org/couchdb/Git_At_Apache_Guide[Git At Apache Guide]
+* http://git-wip-us.apache.org[Git at The ASF]
+* http://git.or.cz/course/svn.html[Git - SVN Crash Course]
+* http://git-scm.com/book[Pro Git]
+* https://help.github.com/articles/which-remote-url-should-i-use[GitHub: Which remote URL should I use?]
