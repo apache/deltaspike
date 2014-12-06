@@ -168,9 +168,18 @@ mkdir [version]
 //add and commit the artifacts (at least *source-release.zip + asc, md5, sha1)
 -----------------------------------------------------------------------------------------------------------------------
 
-== Update download links
+== Check downloads
 
-/deltaspike/site/trunk/content/download.mdtext
+ - http://www.eu.apache.org/dist/deltaspike
+ - http://www.us.apache.org/dist/deltaspike
+
+== Update site content
+
+via CMS:
+
+ - Update download links: http://deltaspike.apache.org/download.html
+ - Update news: http://deltaspike.apache.org/news.html
+ - Update version: http://deltaspike.apache.org/index.html
 
 == Announce the Release
 
@@ -211,7 +220,3 @@ e.g.:
 -----------------------------------------------------------------------------------------------------------------------
 [ANNOUNCE] The Apache #DeltaSpike team is pleased to announce http://s.apache.org/DeltaSpike_[version]. Feel free to test it! Feedback is very welcome!
 -----------------------------------------------------------------------------------------------------------------------
-
-=== News
-
-Add the release to http://deltaspike.apache.org/news.html
