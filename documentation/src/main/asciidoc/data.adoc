@@ -287,6 +287,26 @@ public abstract class PersonRepository extends AbstractEntityRepository<Person, 
 }
 -------------------------------------------------------------------------------------
 
+==== Deactivating Repositories
+
+Repositories can be deactivated creating a <<spi.adoc#_classdeactivator,ClassDeactivator>>.
+
+The `EntityRepository` interface implements the <<core.adoc#_deactivatable,Deactivatable>> interface allowing it to be used in the ClassDeactivator.
+
+If your repository don't implement `EntityRepository` and you want to deactivate it, you will need to implement the <<core.adoc#_deactivatable,Deactivatable>>  interface yourself.
+
+[source,java]
+----------------------------------------
+@Repository(forEntity = Person.class)
+public abstract class PersonRepository implements Deactivatable {
+    ...
+}
+
+@Repository(forEntity = Person.class)
+public interface PersonRepository implements Deactivatable{
+    ...
+}    
+----------------------------------------
 
 === Using Multiple `EntityManager`
 

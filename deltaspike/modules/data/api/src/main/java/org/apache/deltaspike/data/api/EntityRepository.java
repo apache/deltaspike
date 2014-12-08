@@ -23,13 +23,15 @@ import java.util.List;
 
 import javax.persistence.metamodel.SingularAttribute;
 
+import org.apache.deltaspike.core.spi.activation.Deactivatable;
+
 /**
  * Base Repository interface. All methods are implemented by the CDI extension.
  *
  * @param <E>   Entity type.
  * @param <PK>  Primary key type.
  */
-public interface EntityRepository<E, PK extends Serializable>
+public interface EntityRepository<E, PK extends Serializable> extends Deactivatable
 {
 
     /**

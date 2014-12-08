@@ -74,6 +74,7 @@ public class RepositoryExtension implements Extension, Deactivatable
         PersistenceUnits.instance().init();
     }
 
+    @SuppressWarnings("unchecked")
     <X> void processAnnotatedType(@Observes ProcessAnnotatedType<X> event)
     {
         if (!isActivated)
@@ -93,6 +94,12 @@ public class RepositoryExtension implements Extension, Deactivatable
             {
                 log.log(Level.FINER, "getHandlerClass: Repository annotation detected on {0}",
                         event.getAnnotatedType());
+                if (Deactivatable.class.isAssignableFrom(repoClass)
+                        && !ClassDeactivationUtils.isActivated((Class<? extends Deactivatable>) repoClass))
+                {
+                    log.log(Level.FINER, "Class {0} is Deactivated", repoClass);
+                    return;
+                }
                 RepositoryComponentsFactory.instance().add(repoClass);
             }
             catch (RepositoryDefinitionException e)
