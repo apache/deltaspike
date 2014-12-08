@@ -50,7 +50,7 @@ public class ViewAccessScopedAwareNavigationHandler extends NavigationHandler im
 
         this.navigationHandler.handleNavigation(context, fromAction, outcome);
         
-        if (viewId != null)
+        if (viewId != null && context.isPostback() /*need for supporting view-actions correctly - see DELTASPIKE-795*/)
         {
             lazyInit();
 
