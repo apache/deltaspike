@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<!-- Licensed to the Apache Software Foundation (ASF) under one or more 
-		contributor license agreements. See the NOTICE file distributed with this 
-		work for additional information regarding copyright ownership. The ASF licenses 
-		this file to you under the Apache License, Version 2.0 (the "License"); you 
-		may not use this file except in compliance with the License. You may obtain 
-		a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless 
-		required by applicable law or agreed to in writing, software distributed 
-		under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES 
-		OR CONDITIONS OF ANY KIND, either express or implied. See the License for 
+	<!-- Licensed to the Apache Software Foundation (ASF) under one or more
+		contributor license agreements. See the NOTICE file distributed with this
+		work for additional information regarding copyright ownership. The ASF licenses
+		this file to you under the Apache License, Version 2.0 (the "License"); you
+		may not use this file except in compliance with the License. You may obtain
+		a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless
+		required by applicable law or agreed to in writing, software distributed
+		under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES
+		OR CONDITIONS OF ANY KIND, either express or implied. See the License for
 		the specific language governing permissions and limitations under the License. -->
 	<modelVersion>4.0.0</modelVersion>
 
@@ -19,25 +19,25 @@
 		<version>11</version>
 	</parent>
 
-	<!-- * Please do not use this pom for other deltaspike modules. * Instead 
-		use the one from parent/pom.xml! * * This very pom.xml contains only the 
-		basic build layout * and no build-rules at all. See parent/pom.xml for all 
+	<!-- * Please do not use this pom for other deltaspike modules. * Instead
+		use the one from parent/pom.xml! * * This very pom.xml contains only the
+		basic build layout * and no build-rules at all. See parent/pom.xml for all
 		* the dependencyManagement and plugin configuration stuff. -->
 	<groupId>org.apache.deltaspike</groupId>
-	<artifactId>deltaspike-documentation</artifactId>
+	<artifactId>deltaspike-site</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<name>Apache DeltaSpike - Documentation</name>
+	<name>Apache DeltaSpike - Site</name>
 	<description>
-      Documentation of DeltaSpike project.
+    DeltaSpike website
     </description>
 	<url>http://deltaspike.apache.org</url>
 
 	<properties>
 		<asciidoctor.version>1.5.0</asciidoctor.version>
-		<svn.scmPubUrl>https://svn.apache.org/repos/asf/deltaspike/site/trunk/content/documentation/</svn.scmPubUrl>
-		<svn.scmPubUrlStaging>https://svn.apache.org/repos/asf/deltaspike/site/trunk/content/staging/documentation/</svn.scmPubUrlStaging>
+		<svn.scmPubUrl>https://svn.apache.org/repos/asf/deltaspike/site/trunk/content/</svn.scmPubUrl>
+		<svn.scmPubUrlStaging>https://svn.apache.org/repos/asf/deltaspike/site/trunk/content/staging/</svn.scmPubUrlStaging>
 		<svn.scmPubCheckoutDirectory>${project.build.directory}/co-site</svn.scmPubCheckoutDirectory>
 	</properties>
 
@@ -73,7 +73,7 @@
 					<preserveDirectories>true</preserveDirectories>
 					<attributes>
 						<toc>true</toc>
-            <basedir>..</basedir>
+            <basedir>.</basedir>
 					</attributes>
 				</configuration>
 			</plugin>
@@ -95,6 +95,7 @@
 					<content>${project.reporting.outputDirectory}</content>
 					<pubScmUrl>scm:svn:${svn.scmPubUrl}</pubScmUrl>
 					<tryUpdate>true</tryUpdate>
+          <skipDeletedFiles>true</skipDeletedFiles>
 					<checkoutDirectory>${svn.scmPubCheckoutDirectory}</checkoutDirectory>
 					<serverId>deltaspike-site</serverId>
 				</configuration>

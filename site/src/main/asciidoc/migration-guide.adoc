@@ -1,0 +1,127 @@
+= Migrate from MyFaces CODI-Core to DeltaSpike
+
+:Notice: Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+[TOC]
+
+
+== Introduction
+
+
+
+== Apache MyFaces CODI to Apache DeltaSpike
+
+=== Example Overview
+
+
+* http://s.apache.org/xA[Fullstack CODI to DeltaSpike @ os890]
+
+
+=== Basically unchanged parts
+
+
+Here you can see features which were added and the concept itself didn't change (only the packages, config keys,...)
+
+==== Project-stage
+
+
+Only the config key changed (TODO)
+
+
+==== Deactivatable and ClassDeactivator
+
+
+The concept hasn't changed.
+
+
+==== CodiConfig
+
+
+The concept hasn't changed.
+
+
+==== Annotation literals
+
+
+The concept hasn't changed. We just added further implementations.
+
+
+==== BeanManagerProvider
+
+
+The concept hasn't changed. We just splitted the functionality. The util
+methods are available in BeanProvider and their name and signature have
+been unified.
+
+
+=== Extended concepts
+
+
+Here you can see features which were added and the concept itself
+changed a bit or got merged with concepts from Seam3
+
+
+==== ConfiguredValueResolver
+
+
+Here we added more flexibility (esp. re-ordering the default lookup
+mechanisms). See `ConfigResolver`, `ConfigSourceProvider` and
+`ConfigSource`.
+
+
+==== ProjectStageActivated and ExpressionActivated
+
+
+We merged them with a feature of Seam3 and now it's called `@Exclude`.
+That means the basic functionality is still in place (nothing was
+removed), but the logic is now inverse.
+
+
+==== DefaultAnnotation
+
+
+(In progress) We merge it with a similar helper of Seam-Solder to
+provide custom values for annotation attributes.
+
+
+=== Postponed concepts
+
+We couldn't agree on these features. If you find them useful, please
+contact the mailing-list. If we see that users need it for reasons we
+might haven't seen so far, we will discuss it again.
+
+
+==== BeanNames
+
+
+
+=== Dropped concepts
+
+
+
+==== Java 1.5 Support
+
+
+
+=== JSF Module
+
+
+==== Type-safe view config
+
+
+* Changed names
+* Annotations are optional
+
+... (TODO)
+
+
+== JBoss Seam2 to Apache DeltaSpike
+
+
+(TODO)
+
+
+== JBoss Seam3 to Apache DeltaSpike
+
+
+(TODO)

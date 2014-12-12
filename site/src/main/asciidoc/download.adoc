@@ -1,0 +1,82 @@
+= Download
+
+:Notice: Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+[TOC]
+
+
+== Latest Release
+
+
+v1.2.0
+
+
+== Binary Distribution
+
+
+* http://www.apache.org/dyn/closer.cgi/deltaspike/1.2.0/distribution-full-1.2.0.zip[distribution-full-1.2.0.zip]
+* http://www.apache.org/dist/deltaspike/1.2.0/distribution-full-1.2.0.zip.asc[distribution-full-1.2.0.zip.asc]
+* http://www.apache.org/dist/deltaspike/1.2.0/distribution-full-1.2.0.zip.md5[distribution-full-1.2.0.zip.md5]
+* http://www.apache.org/dist/deltaspike/1.2.0/distribution-full-1.2.0.zip.sha1[distribution-full-1.2.0.zip.sha1]
+
+* http://www.apache.org/dyn/closer.cgi/deltaspike/1.2.0/distribution-full-1.2.0.tar.gz[distribution-full-1.2.0.tar.gz]
+* http://www.apache.org/dist/deltaspike/1.2.0/distribution-full-1.2.0.tar.gz.asc[distribution-full-1.2.0.tar.gz.asc]
+* http://www.apache.org/dist/deltaspike/1.2.0/distribution-full-1.2.0.tar.gz.md5[distribution-full-1.2.0.tar.gz.md5]
+* http://www.apache.org/dist/deltaspike/1.2.0/distribution-full-1.2.0.tar.gz.sha1[distribution-full-1.2.0.tar.gz.sha1]
+
+
+== Source Distribution
+
+
+* http://www.apache.org/dyn/closer.cgi/deltaspike/1.2.0/deltaspike-project-1.2.0-source-release.zip[deltaspike-project-1.2.0-source-release.zip]
+* http://www.apache.org/dist/deltaspike/1.2.0/deltaspike-project-1.2.0-source-release.zip.asc[deltaspike-project-1.2.0-source-release.zip.asc]
+* http://www.apache.org/dist/deltaspike/1.2.0/deltaspike-project-1.2.0-source-release.zip.md5[deltaspike-project-1.2.0-source-release.zip.md5]
+* http://www.apache.org/dist/deltaspike/1.2.0/deltaspike-project-1.2.0-source-release.zip.sha1[deltaspike-project-1.2.0-source-release.zip.sha1]
+
+
+== Maven Dependencies
+
+
+Details are available http://deltaspike.apache.org/documentation/#_project_configuration_without_maven[here].
+
+
+== Previous Releases
+
+
+See http://archive.apache.org/dist/deltaspike/[Release-Archive]
+
+
+== Verifying Releases
+
+
+It is essential that you verify the integrity of any downloaded files
+using the PGP or MD5 signatures. For more information on signing
+artifacts and why we do it, check out the
+http://www.apache.org/dev/release-signing.html[Release Signing FAQ].
+
+The PGP signatures can be verified using PGP or GPG. First download the
+http://www.apache.org/dist/deltaspike/KEYS[KEYS] as well as the asc
+signature file for the artifact. Make sure you get these files from the
+http://www.apache.org/dist/deltaspike/[main distribution directory],
+rather than from a
+http://www.apache.org/dyn/closer.cgi/deltaspike/[mirror]. Then verify
+the signatures using e.g.:
+
+------------------------------------------------------
+$ pgpk -a KEYS
+$ pgpv deltaspike-project-1.2.0-source-release.zip.asc
+------------------------------------------------------
+
+or
+
+-----------------------------------------------------
+$ pgp -ka KEYS
+$ pgp deltaspike-project-1.2.0-source-release.zip.asc
+-----------------------------------------------------
+
+or
+
+--------------------------------------------------------------
+$ gpg --import KEYS
+$ gpg --verify deltaspike-project-1.2.0-source-release.zip.asc
+--------------------------------------------------------------

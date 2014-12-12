@@ -1,0 +1,68 @@
+= Documentation
+
+:Notice: Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+[TOC]
+
+
+== Sources
+
+link:/documentation/[DeltaSpike Documentation] is available with link:documentation/source.html[DeltaSpike Source].
+
+== Format
+
+The format used for DeltaSpike documentation is http://www.methods.co.nz/asciidoc/[ASCIIDOC] because it's easily
+exportable to PDF, HTML, and it's also easy to contribute. It can be used to export also to epub and also be used to write books
+
+== Rendering documentation as HTML
+
+
+_Requirenment:_ Have http://maven.apache.org/[Maven] installed.
+
+If you cloned the source repository and want to render the documentation
+as HTML, you just need to run the following command:
+
+----------------------------
+$ cd REPO_ROOT/documentation
+$ mvn site
+----------------------------
+
+The generate documentation will be available at `REPO_ROOT/documentation/target/site`
+
+== Contribute
+
+
+If you would like to submit a documentation patch through Jira, you can
+have a look at the <<suggested-git-workflows#,suggested approach>>.
+
+== Publish procedure (for committers only)
+
+
+If you're a committer and want to publish the documentation at http://deltaspike.apache.org/documentation/[DeltaSpike Site] you have do the following steps:
+
+Put the following information in your ~/.m2/settings.xml file
+
+[source,xml]
+--------------------------------------
+<server>
+  <id>deltaspike-site</id>
+  <username><YOUR_USERNAME></username>
+  <password><YOUR_PASSWORD></password>
+</server>
+--------------------------------------
+
+To publish to http://deltaspike.apache.org/staging/documentation[staging area], run:
+
+----------------------------
+$ mvn clean site-deploy -P staging
+----------------------------
+
+To publish to http://deltaspike.apache.org/staging/documentation[production area], run:
+
+-----------------
+$ mvn clean site-deploy
+-----------------
+
+Then run:
+
+After log in to https://cms.apache.org/deltaspike/publish and click on the `Submit` button.

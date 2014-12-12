@@ -68,9 +68,9 @@ git push vote deltaspike-[release version]
 git push vote --tags
 -----------------------------------------------------------------------------------------------------------------------
 
-= Vote
+== Vote
 
-== Start the vote
+=== Start the vote
 
 e.g.:
 
@@ -106,14 +106,14 @@ Thanks,
 [4] http://www.apache.org/foundation/voting.html#ReleaseVotes
 -----------------------------------------------------------------------------------------------------------------------
 
-= Announce the vote
+== Announce the vote
 
  - Create a link to the release notes at http://s.apache.org (format DeltaSpike_[version])
  - Tweet about the vote via @DeltaSpikeTeam.
 
-= Perform the final release
+== Perform the final release
 
-== Close the vote
+=== Close the vote
 
 After 72 hours close the vote.
 
@@ -160,7 +160,7 @@ git push origin master
 
 
 
-== Upload artifacts
+=== Upload artifacts
 
 -----------------------------------------------------------------------------------------------------------------------
 svn co https://dist.apache.org/repos/dist/release/deltaspike
@@ -168,12 +168,12 @@ mkdir [version]
 //add and commit the artifacts (at least *source-release.zip + asc, md5, sha1)
 -----------------------------------------------------------------------------------------------------------------------
 
-== Check downloads
+=== Check downloads
 
  - http://www.eu.apache.org/dist/deltaspike
  - http://www.us.apache.org/dist/deltaspike
 
-== Update site content
+=== Update site content
 
 via CMS:
 
@@ -181,9 +181,9 @@ via CMS:
  - Update news: http://deltaspike.apache.org/news.html
  - Update version: http://deltaspike.apache.org/index.html
 
-== Announce the Release
+=== Announce the Release
 
-=== E-Mails
+==== E-Mails
 
 
 -----------------------------------------------------------------------------------------------------------------------
@@ -213,7 +213,7 @@ Write the e-mails to:
  - dev@deltaspike.apache.org
  - users@deltaspike.apache.org
 
-=== Twitter
+==== Twitter
 
 e.g.:
 

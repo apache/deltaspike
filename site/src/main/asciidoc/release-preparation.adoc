@@ -1,0 +1,28 @@
+= Reviewing an Apache Release
+
+:Notice: Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+[TOC]
+
+
+== Introduction
+
+
+Once a Release has been staged on http://repository.apache.org it must
+be reviewed by each PMC member *before* casting his VOTE.
+
+The following points need to be checked:
+
+* is the GPG signature fine?
+* is there a source archive?
+* can the source archive really be built?
+* is there a correct LICENSE and NOTICE file in each artifact (both
+source and binary artifacts)?
+* does the NOTICE file contain all necessary attributions?
+* check the dependencies. We must not have any GPL dependencies and LGPL
+only if they are optional, etc! See
+http://www.apache.org/legal/3party.html
+* do all the tests work?
+* if there is a TCK to run, does it succeed?
+* if there is a tag in the SCM, does it contain reproduceable sources?
+

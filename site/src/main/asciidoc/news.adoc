@@ -1,0 +1,292 @@
+= Apache DeltaSpike News 
+
+:Notice: Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+[TOC]
+
+
+== Overview
+
+=== 13th Release (1.2.0) (30.11.2014)
+
+The Apache DeltaSpike team is pleased to announce the 13th release
+(v1.2.0).
+
+The http://s.apache.org/DeltaSpike_1.2.0[release notes] contains 22 JIRA tickets.
+
+
+
+=== New PMC Member (20.11.2014)
+
+Thomas Andraschko joined our PMC.
+
+
+
+=== 12th Release (1.1.0) (01.11.2014)
+
+
+The Apache DeltaSpike team is pleased to announce the 12th release (v1.1.0).
+
+The http://s.apache.org/DeltaSpike_1.1.0[release notes] contains 24 JIRA tickets.
+
+
+=== Duke's Choice Award (28.09.2014)
+
+We won a https://blogs.oracle.com/java/entry/2014_duke_s_choice_award[Duke's Choice Award]!
+
+
+=== 11th Release (1.0.3) (21.09.2014)
+
+
+The Apache DeltaSpike team is pleased to announce the 11th release (v1.0.3).
+
+The http://s.apache.org/DeltaSpike_1.0.3[release notes] contains 20 JIRA tickets.
+
+
+=== 10th Release (1.0.2) (17.08.2014)
+
+The Apache DeltaSpike team is pleased to announce the 10th release (v1.0.2).
+
+The http://s.apache.org/DeltaSpike_1.0.2[release notes] contains 15 JIRA tickets.
+
+
+=== 9th Release (1.0.1) (13.07.2014)
+
+
+The Apache DeltaSpike team is pleased to announce the 9th release (v1.0.1).
+
+The http://s.apache.org/DeltaSpike_1.0.1[release notes] contains 18 JIRA tickets.
+
+=== 8th Release (1.0.0) (14.06.2014)
+
+
+The Apache DeltaSpike team is pleased to announce the 8th release (v1.0.0).
+
+The http://s.apache.org/DeltaSpike_1.0.0[release notes] contains 48 JIRA tickets.
+
+=== New Committer (18.05.2014)
+
+Rafael Benevides joined our development community.
+
+
+=== 7th Release (0.7) (03.05.2014)
+
+
+The Apache DeltaSpike team is pleased to announce the 7th release (v0.7).
+
+The http://s.apache.org/DS-0.7-RNotes[release notes] contains 35 JIRA tickets.
+
+
+=== 6th Release (0.6) (20.03.2014)
+
+The Apache DeltaSpike team is pleased to announce the 6th release (v0.6).
+
+The http://s.apache.org/DS-0.6-RNotes[release notes] contains 102 JIRA tickets.
+
+
+=== New Committer (14.12.2013)
+
+Thomas Andraschko joined our development community.
+
+
+=== 5th Release (0.5) (18.09.2013)
+
+
+The Apache DeltaSpike team is pleased to announce the 5th release (v0.5).
+
+The http://s.apache.org/DS-0.5-RNotes[release notes] contains 29 JIRA tickets.
+
+
+=== 4th Release (0.4) (31.05.2013)
+
+
+The Apache DeltaSpike team is pleased to announce the fourth release (v0.4). 
+This is our first release as a top level project!
+
+The http://s.apache.org/DS-0.4-RNotes[release notes] contains a large list of bug fixes and new features.
+
+
+=== Graduation (28.05.2013)
+
+
+The Apache DeltaSpike team is pleased to announce that we have complete graduation as a top level project.
+
+
+=== 3rd Release (0.3 incubating) (22.08.2012)
+
+
+The Apache DeltaSpike team is pleased to announce the second release (v0.3-incubating).
+
+The http://s.apache.org/DeltaSpike_03incubating[release notes] contains 104 JIRA tickets.
+
+
+=== New Committer (21.08.2012)
+
+Bolesław Dawidowicz joined our development community.
+
+
+=== New Committers (11.07.2012)
+
+
+Charles Moulliard and Romain Manni-Bucau joined our development community.
+
+
+=== Apache CMS (30.05.2012)
+
+The setup of the project-site in Apache CMS started.
+
+
+=== 2nd Release (0.2 incubating) (22.04.2012)
+
+
+The Apache DeltaSpike team is pleased to announce the second release (v0.2-incubating).
+
+The http://s.apache.org/DeltaSpike_02incubating[release notes] contains 61 JIRA tickets.
+
+
+=== 1st Release (0.1 incubating) (10.02.2012)
+
+The Apache DeltaSpike team is pleased to http://s.apache.org/cTt[announce] the first release (v0.1-incubating).
+
+The first release contains about 5 000 lines of code (including tests and 10 000 including comments). The http://s.apache.org/DeltaSpike_01incubating[release notes] contains 42 JIRA tickets.
+
+
+=== Execution of integration tests with remote servers (01.02.2012)
+
+
+C4J helps us with nightly builds which deploy our integration tests to remote-servers (AS7 and GF3).
+
+=== New Committer (29.01.2012)
+
+
+Lukasz Lenart joined our development community.
+
+
+=== New Committer (28.01.2012)
+
+Christian Kaltepoth joined our development community.
+
+
+=== New Committer (27.01.2012)
+
+
+Rudy De Busscher joined our development community.
+
+
+=== Nabble Mirror (21.01.2012)
+
+
+Dan Allen created a http://s.apache.org/deltaspike-dev_nabble[Nabble mirror] for the dev-list (based on http://incubator.apache.org/mail/deltaspike-dev/)
+
+
+=== New Committers (13.01.2012)
+
+Dan Allen and Lincoln Baxter III are our first committers after the initial committers.
+
+
+=== GitHub Mirror (12.01.2012)
+
+
+The infra team created our mirror (https://github.com/apache/incubator-deltaspike)
+
+
+=== Creation of the Status Page (30.12.2011)
+
+
+We created an initial version of our status page (http://incubator.apache.org/guides/website.html)
+
+
+=== Nightly builds (29.12.2011)
+
+
+The infra team added the GIT plugin to Jenkins and we created build jobs for nightly builds which get deployed to
+https://repository.apache.org/content/groups/snapshots/org/apache/deltaspike/
+
+
+=== Sonar build (29.12.2011)
+
+Gavin McDonald did the Sonar setup
+(https://analysis.apache.org/dashboard/index/org.apache.deltaspike:deltaspike-project)
+
+
+=== First Commit (22.12.2011)
+
+The infra team created our GIT repository and we made the first commit.
+
+
+=== First JIRA ticket (13.12.2011)
+
+
+We created our JIRA project and filed the first ticket.
+
+
+=== First report 12.2011 (12.12.2011)
+
+We submitted the first report to
+http://wiki.apache.org/incubator/December2011
+
+
+=== Twitter Account
+
+
+We created our Twitter account https://twitter.com/deltaspiketeam[@DeltaSpikeTeam]
+
+
+=== Mailing-lists (8.12.2011)
+
+Matt Benson created our https://s.apache.org/Kpg[mailing-lists].
+
+
+=== Vote closed (7.12.2011)
+
+
+The vote to join the incubator was closed. There were 8 binding +1
+votes, 3 non-binding +1 votes and no -1 votes. In parallel several other
+folks showed up and told us that they are interested to join the effort.
+
+We start with the following initial committers (and therefore PPMC
+members):
+
+* Andy Gibson
+* Antoine Sabot-Durand
+* Arne Limburg
+* Brian Leathem
+* Cody Lerum
+* David Blevins
+* George Gastaldi
+* Gerhard Petracek
+* Jakob Korherr
+* Jason Porter
+* John Ament
+* Jozef Hartinger
+* Ken Finnigan
+* Marius Bogoevici
+* Mark Struberg
+* Matthias Wessendorf
+* Pete Muir
+* Pete Royle
+* Rick Hightower
+* Shane Bryzak
+* Stuart Douglas
+
+Our mentors are:
+
+* David Blevins
+* Gerhard Petracek
+* Jim Jagielski
+* Mark Struberg
+* Matt Benson
+* Matthias Wessendorf
+
+
+=== Vote to join the Incubator (4.12.2011)
+
+
+Gerhard Petracek started the official http://s.apache.org/h8[vote].
+
+
+=== Proposal (30.11.2011)
+
+
+After some discussions between the teams (of Apache MyFaces CODI, Seam3 and CDISource), Mark Struberg submitted the
+http://wiki.apache.org/incubator/DeltaSpikeProposal[proposal]. Since Spike couldn't be used as project-name, we agreed on DeltaSpike as initial code name (delta because it closes several gaps).

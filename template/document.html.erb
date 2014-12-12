@@ -46,21 +46,19 @@ body {
 					data-target=".nav-collapse"> <span class="icon-bar"></span> <span
 					class="icon-bar"></span> <span class="icon-bar"></span>
 				</a> <a class="brand logocolor"
-					href="http://deltaspike.apache.org/index.html">Apache
-					DeltaSpike</a>
+					href="http://deltaspike.apache.org/index.html">Apache DeltaSpike []</a>
 				<div class="nav-collapse">
 					<ul class="nav">
 						<li class="active"><a
-							href="http://deltaspike.apache.org/index.html">Home</a></li>
-						<li><a href="http://deltaspike.apache.org/documentation">Documentation</a></li>
-						<li><a href="http://deltaspike.apache.org/javadoc.html">Javadoc</a></li>
-						<li><a href="http://deltaspike.apache.org/documentation/source.html">Source</a></li>
-						<li><a href="http://deltaspike.apache.org/download.html">Download</a></li>
-						<li><a href="http://deltaspike.apache.org/community.html">Community</a></li>
+							href="index.html">Home</a></li>
+						<li><a href="<%= (attr :basedir) %>/documentation">Documentation</a></li>
+						<li><a href="<%= (attr :basedir) %>/javadoc.html">Javadoc</a></li>
+						<li><a href="<%= (attr :basedir) %>/documentation/source.html">Source</a></li>
+						<li><a href="<%= (attr :basedir) %>/download.html">Download</a></li>
+						<li><a href="<%= (attr :basedir) %>/community.html">Community</a></li>
 						<!-- <li><a href="./support.html">Support</a></li>  -->
-						<li><a href="http://deltaspike.apache.org/news.html">News</a></li>
-						<li><a
-							href="http://deltaspike.apache.org/migration-guide.html">Migration</a></li>
+						<li><a href="<%= (attr :basedir) %>/news.html">News</a></li>
+						<li><a href="<%= (attr :basedir) %>/migration-guide.html">Migration</a></li>
 					</ul>
 				</div>
 				<!--/.nav-collapse -->
@@ -82,7 +80,7 @@ body {
                 </div>
 
 				<div id="toc" class="<%= attr 'toc-class', 'toc' %>">
-       	 		<%= converter.convert_with_options @document, 'outline', :toclevels => 3  %>
+       	 		<%= converter.convert_with_options @document, 'outline', :toclevels => 4  %>
        	 		<hr>	
        	 		
 				<%= document.content %>

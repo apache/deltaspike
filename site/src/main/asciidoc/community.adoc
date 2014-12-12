@@ -1,0 +1,149 @@
+= Community
+
+:Notice: Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+[TOC]
+
+
+== Introduction
+
+
+== Users
+
+
+If you are a new user and you would like to start using DeltaSpike, you
+can have a look at the link:documentation/[Documentation] and 
+mailto:users-subscribe@deltaspike.apache.org[subscribe] our
+mailto:users@deltaspike.apache.org[mailing list for users]. If you have
+troubles to find the information you are looking for, you can also ask
+in our link:#_irc[IRC-Channel].
+
+Furthermore, you can check our link:#_mailing_lists[mail-archives].
+
+Before you file a ticket in our
+https://issues.apache.org/jira/browse/DELTASPIKE[Jira], please ask on
+the mailing list if it's a known issue in case of a bug or if there is
+an ongoing discussion in case of a feature.
+
+You are very welcome to follow our twitter account
+http://twitter.com/DeltaSpikeTeam[@DeltaSpikeTeam] and spread the
+word of DeltaSpike with Tweets, Blog-Entries,...
+
+
+== Getting Involved
+
+
+Everybody is welcome to get involved with our community. You can find
+general information at http://apache.org/foundation/getinvolved.html and
+http://apache.org/foundation/how-it-works.html. The following sections
+provides some details about the different levels of getting involved.
+
+If you want to contribute with link:/documentation/[DeltaSpike
+Documentation], please read the <<documentation#,instructions
+about the Documentation>> that adresses how to contribute, render and
+publish it.
+
+
+=== Contributors
+
+
+Before you get a committer you have to contribute to our effort. E.g.
+you can help users, participate in discussions on the dev list, submit
+patches,... . Therefore, it's essential to file a/n
+http://www.apache.org/licenses/icla.txt[(I)CLA] or
+http://www.apache.org/licenses/cla-corporate.txt[CLA] and send it to
+secretary at apache dot org (or fax it) as early as possible.
+
+If you would like to submit a patch through Jira, you can have a look at
+the link:suggested-git-workflows.html[suggested approach].
+
+Here is the contributors/committers page:
+link:contributors.html[Contributors].
+
+
+=== Committers
+
+
+Before you read this section, please ensure that you have read the
+contributor section. All of you are welcome to join our development
+effort. mailto:dev-subscribe@deltaspike.apache.org[Subscribe] our
+mailto:dev@deltaspike.apache.org[mailing list for developers] and start
+contributing and help users.
+
+Optionally mailto:commits-subscribe@deltaspike.apache.org[subscribe] our
+mailto:commits@deltaspike.apache.org[mailing list for commits].
+
+Furthermore, you can check our
+link:#_mailing_lists[mail-archives].
+
+Further details are available at http://www.apache.org/dev/.
+
+
+== Mailing lists
+
+[.table]
+[cols="6*<", options="header"] 
+|===
+|List (Address) 
+|Subscribe 
+|Unsubscribe 
+|Archive 
+|Mirrors
+|
+
+|mailto:users@deltaspike.apache.org[User List]
+|mailto:users-subscribe@deltaspike.apache.org[Subscribe]
+|mailto:users-unsubscribe@deltaspike.apache.org[Unsubscribe]
+|http://mail-archives.apache.org/mod_mbox/deltaspike-users/[Archive]
+|http://apache-deltaspike-discussions.2316169.n4.nabble.com/[Nabble]
+|http://markmail.org/search/?q=list%3Aorg.apache.deltaspike-users+order%3Adate-backward[MarkMail]
+
+|mailto:dev@deltaspike.apache.org[Developer List]
+|mailto:dev-subscribe@deltaspike.apache.org[Subscribe]
+|mailto:dev-unsubscribe@deltaspike.apache.org[Unsubscribe]
+|http://mail-archives.apache.org/mod_mbox/deltaspike-dev/[Archive]
+|http://apache-deltaspike-discussions.2316169.n4.nabble.com/[Nabble]
+|http://markmail.org/search/?q=list%3Aorg.apache.deltaspike-dev+order%3Adate-backward[MarkMail]
+
+|mailto:commits@deltaspike.apache.org[Committer List]
+|mailto:commits-subscribe@deltaspike.apache.org[Subscribe]
+|mailto:commits-unsubscribe@deltaspike.apache.org[Unsubscribe]
+|http://mail-archives.apache.org/mod_mbox/deltaspike-commits/[Archive]
+|
+|
+|
+
+|===
+
+== JIRA
+
+Any kind of issue has to be filed in our
+https://issues.apache.org/jira/browse/DELTASPIKE[issue-tracker]. If you
+have any question, you can ask us (e.g. via the mailing list for users).
+
+
+== Spread the word
+
+
+You are very welcome e.g. to write blog entries, tweet (#DeltaSpike)
+about the project or just follow our twitter account
+http://twitter.com/DeltaSpikeTeam[@DeltaSpikeTeam], ...
+
+
+== IRC
+
+
+Usually discussions happen on the mailing list. Some informal
+discussions take place in our IRC-Channel
+irc://irc.freenode.net/deltaspike
+
+-------------------------------------
+//with the irssi command-line client:
+$ irssi
+
+> /connect irc.freenode.net
+> /join #deltaspike
+-------------------------------------
+
+If you are new to IRC you can use the pre-configures web-client you can
+find http://people.apache.org/~gpetracek/deltaspike/freenode.html[here].

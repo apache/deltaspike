@@ -17,10 +17,10 @@ Notice:    Licensed to the Apache Software Foundation (ASF) under one
            specific language governing permissions and limitations
            under the License.
 
-DeltaSpike documentation
--------------------------
+DeltaSpike site
+---------------
 
-DeltaSpike documentation uses [Asciidoc](http://www.methods.co.nz/asciidoc/). You're welcome to contribute.
+DeltaSpike site uses [Asciidoc](http://www.methods.co.nz/asciidoc/). You're welcome to contribute.
 
 License
 -------
@@ -30,7 +30,7 @@ See the LICENSE file for the full license text.
 Publish procedure
 -----------------
 
-To publish the documentation at [DeltaSpike Site](http://deltaspike.apache.org/) you have do the following steps:
+To publish the site content at [DeltaSpike Site](http://deltaspike.apache.org/) you have do the following steps:
 
 Put the following information in your ~/.m2/settings.xml file
 
@@ -40,11 +40,11 @@ Put the following information in your ~/.m2/settings.xml file
       <password><YOUR_PASSWORD></password>
     </server>
 
-To publish to [staging area](http://deltaspike.apache.org/staging/documentation), run:
+To publish to [staging area](http://deltaspike.apache.org/staging/), run:
 
     mvn clean site-deploy -Pstaging
 
-To publish to [production area](http://deltaspike.apache.org/documentation), run:
+To publish to [production area](http://deltaspike.apache.org/), run:
 
     mvn clean site-deploy
 
