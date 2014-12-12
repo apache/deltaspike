@@ -4,33 +4,45 @@
 
 :toc:
 
-== Introduction
+== Overview
+The Bean Validation module provides CDI integration for bean validation. It enables the creation of CDI-aware `ConstraintValidator` methods that can use business objects (EJBs, ManagedBeans) to support validation needs.
 
-The main feature of the Bean Validation module is to provide CDI
-integration in to `ConstraintValidator` `s. This allows you to inject CDI
-objects, EJBs etc in to your validators.
+== Configure Your Projects
+The configuration information provided here is for Maven-based projects and it assumes that you have already declared the DeltaSpike version and DeltaSpike Core module for your projects, as detailed in <<configure#, Configure DeltaSpike in Your Projects>>. For Maven-independent projects, see <<configure#config-maven-indep,Configure DeltaSpike in Maven-independent Projects>>.
+
+=== Declare Bean Validation Module Dependencies
+Add the Bean Validation module to the list of dependencies in the project `pom.xml` file using this code snippet:
+
+[source,xml]
+----
+<dependency>
+    <groupId>org.apache.deltaspike.modules</groupId>
+    <artifactId>deltaspike-bean-validation-module-impl</artifactId>
+    <version>${deltaspike.version}</version>
+    <scope>runtime</scope>
+</dependency>
+----
+
+== Use the Module Features
 
 === Scoping
 
+A `ConstraintValidator` inherits the scope defined in the bean class.
 
-`ConstraintValidator` `s will inherit whatever scope as defined in the bean class.
-
-Inherently, a `ConstraintValidator` may be invoked by multiple threads so please keep that in mind when using them. 
-You should consider using at least `RequestScoped` validators.
-
+NOTE: A `ConstraintValidator` may be invoked by multiple threads. For this reason, you should consider using at least `RequestScoped` validators.
 
 === Code Requirements
 
 There are no compile dependencies to use the Bean Validation module. You
-simply need to override the factory, either in Java:
+simply need to override the factory. Then you can build your `ConstraintValidator` based on CDI programming rules.
 
+.Overriding in Java
 [source,java]
 -------------------------------------------------------------------------
 Validation.byDefaultProvider().configure().constraintValidatorFactory(new CDIAwareConstraintValidatorFactory()).buildValidatorFactory()
 -------------------------------------------------------------------------
 
-Or in XML:
-
+.Overriding in XML
 [source,xml]
 --------------------------------------------------------------------------------
 <validation-config xmlns="http://jboss.org/xml/ns/javax/validation/configuration"
@@ -39,6 +51,3 @@ Or in XML:
     <constraint-validator-factory>org.apache.deltaspike.beanvalidation.impl.CDIAwareConstraintValidatorFactory</constraint-validator-factory>
 </validation-config>
 --------------------------------------------------------------------------------
-
-And then you can simply build your `ConstraintValidator`s based on CDI
-programming rules.

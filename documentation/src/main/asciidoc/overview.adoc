@@ -49,7 +49,7 @@ In addition to the portable CDI extension modules, DeltaSpike provides a number 
 
 *Injectable resources:* Configuration, resource bundles,... are easy to inject when using CDI and Apache DeltaSpike.
 
-*@Exclude annotation:* it's possible to annotate beans which should be ignored by CDI even if they are in a CDI enabled archive on Java EE 6/CDI 1.0 environment where you can't use @Vetoed or a veto based on project-stages or expressions is needed.
+*@Exclude annotation:* it is possible to annotate beans which should be ignored by CDI even if they are in a CDI enabled archive on Java EE 6/CDI 1.0 environment where you cais not use @Vetoed or a veto based on ProjectStages or expressions is needed.
 
 **Scheduling tasks**: Async processes in a non Java EE 7 environment.
 
@@ -76,7 +76,7 @@ In addition to the portable CDI extension modules, DeltaSpike provides a number 
 
 *New CDI scopes:* TransactionScoped, WindowScoped, ViewScoped, ViewAccess scope, Grouped conversion scope
 
-*Container Control & Test Control:* Java SE with CDI, all with a unifying API. Start, stop, add classes to a running CDI container.
+*Container Control and Test Control:* Java SE with CDI, all with a unifying API. Start, stop, add classes to a running CDI container.
 
 *Data Module:* An out of the box entity framework solution complete with support for container or application managed persistence contexts, as well as JDBC.
 
@@ -86,7 +86,7 @@ In addition to the portable CDI extension modules, DeltaSpike provides a number 
 
 *Type-safe i18n messages:* Localized messages are easy to use with an interface and a resource bundle, no more boilerplate and your messages now have context within the code.
 
-*Type-safe Project-Stages:* Compared to project-stages in JSF, DeltaSpike provides a type-safe, but still extensible approach which can be used in CDI based applications.
+*Type-safe ProjectStages:* Compared to ProjectStages in JSF, DeltaSpike provides a type-safe, but still extensible approach which can be used in CDI based applications.
 
 == Next
 For instructions on how to start using DeltaSpike, see <<configure#,Configure DeltaSpike in Your Projects>> and <<cdiimp#,Enable CDI For Your Java Environment>>.

@@ -1,15 +1,60 @@
-= JSF
+= JSF Module
 
 :Notice: Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
 :toc:
 
-== Multi-Window Handling
+== Overview
+The JSF module provides CDI integration with JSF, with type-safe view config, multi-window handling, new scopes (WindowScoped, ViewScope, ViewAccessScoped, GroupedConversationScoped) and integration with DeltaSpike “core” messages and exception handling.
 
-=== Intro
+== Configure Your Projects
+The configuration information provided here is for Maven-based projects and it assumes that you have already declared the DeltaSpike version and DeltaSpike Core module for your projects, as detailed in <<configure#, Configure DeltaSpike in Your Projects>>. For Maven-independent projects, see <<configure#config-maven-indep,Configure DeltaSpike in Maven-independent Projects>>.
 
+=== Declare JSF Module Dependencies
+Add the JSF module to the list of dependencies in the project `pom.xml` file using this code snippet:
 
-==== Historic Considerations
+[source,xml]
+----
+<dependency>
+    <groupId>org.apache.deltaspike.modules</groupId>
+    <artifactId>deltaspike-jsf-module-api</artifactId>
+    <version>${deltaspike.version}</version>
+    <scope>compile</scope>
+</dependency>
+
+<dependency>
+    <groupId>org.apache.deltaspike.modules</groupId>
+    <artifactId>deltaspike-jsf-module-impl</artifactId>
+    <version>${deltaspike.version}</version>
+    <scope>runtime</scope>
+</dependency>
+----
+
+Some EE6 servers cannot handle optional classes. From DeltaSpike 1.0.1, if you do not like the corresponding log entries during startup or the deployment fails, you can use an alternative impl-module (instead of deltaspike-jsf-module-impl):
+
+[source,xml]
+----
+<dependency>
+    <groupId>org.apache.deltaspike.modules</groupId>
+    <artifactId>deltaspike-jsf-module-impl-ee6</artifactId>
+    <version>${deltaspike.version}</version>
+    <scope>runtime</scope>
+</dependency>
+----
+
+== Use the Module Features
+
+.Support of EAR deployments
+IMPORTANT: Before using features described by this page, please ensure that you are
+aware of
+https://issues.apache.org/jira/browse/DELTASPIKE-335[DELTASPIKE-335] and
+the corresponding impact.
+
+=== Multi-Window Handling
+
+==== Background
+
+===== Historic Considerations
 
 Until the end of the 1990s web browsers are usually single threaded and
 only had one window. But in the last years browsers supporting multiple
@@ -19,8 +64,7 @@ server side. Sadly browser windows still lack of a native windowId, thus
 maintaining web application data in @SessionScoped backing beans is
 still used in most of the cases.
 
-
-==== How JSF-2 changed the world
+===== How JSF-2 Changed the World
 
 The MyFaces Orchestra community did a good summary about the various
 ways to handle multiple window support in JSF Applications. Those
@@ -31,8 +75,7 @@ requests. Due to the new JSF-2 ability to use bookmarkable URLs and deep
 links, a typical JSF-2 application contains much more GET links than we
 used to see in JSF-1, thus we have far more href links to cope with.
 
-
-==== Standard windowId Handling
+===== Standard windowId Handling
 
 With a classical approach we would not be able to simply add a windowId
 parameter to such links because if the user would open the link in a new
@@ -49,9 +92,9 @@ destroy their information) while rendering the page, which means this is
 not feasible as general solution.
 
 
-=== Available modes
+==== Available Modes
 
-==== CLIENTWINDOW
+===== CLIENTWINDOW
 
 Each GET request results in an intermediate small html page which checks
 if the browser tab fits the requested windowId. When the windowId is
@@ -61,12 +104,12 @@ dsRid/windowId will be added. On the server side, the verified windowId
 will be extracted from the cookie. For POST request detection, the
 windowId will be added as hidden input to all forms.
 
-===== Advantage
+====== Advantage
 
 * Covers all edge cases
 
 
-===== Disadvantage
+====== Disadvantage
 
 * Having the windowhandler.html site rendered between requests sometimes
 leads to some 'flickering' if the destination page takes some time to
@@ -83,9 +126,9 @@ parse a request and decide upon the UserAgent or any other information
 if a client will get an intermediate page or if he gets the result page
 directly.
 
-===== Change windowhandler.html
+====== Change windowhandler.html
 
-To customize the look & feel of the windowhandler.html, you can simply
+To customize the look and feel of the windowhandler.html, you can simply
 provide a own via:
 
 [source,java]
@@ -101,7 +144,7 @@ public class MyClientWindowConfig extends DefaultClientWindowConfig
 }
 -------------------------------------------------------------------
 
-==== LAZY
+===== LAZY
 
 Always appends the windowId to all, from JSF generated, URLs. On the
 first GET request without a windowId, it will generate a new windowId
@@ -109,15 +152,15 @@ and redirect, with the windowId in the URL, to the same view again. The
 current windowId will be stored in the `window.name` variable on the
 client side. For all further requests, a lazy check will be performed to
 check if the windowId in the URL is matching with the `window.name`. If
-it's not matching, the view will be refreshed with the right windowId in
+it is not matching, the view will be refreshed with the right windowId in
 the URL.
 
 
-===== Advantage
+====== Advantage
 
 * No windowhandler.html / loading screen required
 
-===== Disadvantage
+====== Disadvantage
 
 * It could happen that 2 tabs will share the same windowId for 1 request
 because the `LAZY` mode will check lazily, after rendering the view, if
@@ -125,7 +168,7 @@ the windowId matches the `window.name`. Therefore it could happen that
 @ViewAccessScoped or other scopes will unintentionally be destroyed.
 
 
-===== Workflow example
+====== Workflow Example
 
 First GET request with windowId
 
@@ -156,31 +199,31 @@ Further GET request without windowId
 from `window.name`
 
 
-==== NONE
+===== NONE
 
 Any window or browser tab detection will be disabled for the current
 request. Scopes like @WindowScoped, @GroupedConversationScoped or
 @ViewAccessScoped will not work. This is also the default mode if the
-current request doesn't support Javascript or if the user agent is a
+current request doesis not support Javascript or if the user agent is a
 bot/crawler.
 
 
-==== DELEGATED
+===== DELEGATED
 
 Delegates the complete window handling to the new JSF 2.2 ClientWindow
 (if not disabled).
 
 
-==== CUSTOM
+===== CUSTOM
 
 Enables to use an complete own
 `org.apache.deltaspike.jsf.spi.scope.window.ClientWindow`
 implementation.
 
 
-=== Configuration
+==== Configuration
 
-==== ds:windowId
+===== ds:windowId
 
 The component `ds:windowId`
 (`xmlns:ds="http://deltaspike.apache.org/jsf"`) is required to enable
@@ -190,7 +233,7 @@ mode. The best way, to apply it for all views, is to add this component
 to all of your templates.
 
 
-==== ds:disableClientWindow
+===== ds:disableClientWindow
 
 Similiar to JSF 2.2' `disableClientWindow` attribute,
 `ds:disableClientWindow` provides the ability to disable the rendering
@@ -204,7 +247,7 @@ of the windowId to all links of all child components:
 <h:link value="Link with windowId" outcome="target.xhtml"/>
 -------------------------------------------------------------------
 
-==== Number of active windows
+===== Number of Active Windows
 
 By default, DeltaSpike allows `1024` active windows per session. Anyway, this number is reduced inside this JSF module to `64` for JSF applications. Once that the limit number of active windows is reached, DeltaSpike will drop the oldest active window.
 
@@ -226,7 +269,7 @@ public class MyClientWindowConfig extends DefaultClientWindowConfig
 }
 -----------------------------------------------------------------------------------
 
-==== Switch Mode
+===== Switch Mode
 
 To switch the mode, just provide a
 `org.apache.deltaspike.jsf.api.config.JsfModuleConfig` and overwrite
@@ -246,11 +289,11 @@ public class MyJsfModuleConfig extends JsfModuleConfig
 ---------------------------------------------------------------------------
 
 
-==== Provide a custom ClientWindow
+===== Provide a Custom ClientWindow
 
 If you would like to provide an custom
 `org.apache.deltaspike.jsf.spi.scope.window.ClientWindow`
-implementation, you can just do it e.g. via CDI alternatives:
+implementation, you can just do it, for example, via CDI alternatives:
 
 [source,java]
 ---------------------------------------------------
@@ -261,7 +304,7 @@ public class MyClientWindow implements ClientWindow
 }
 ---------------------------------------------------
 
-Don't forget to set the `ClientWindowRenderMode` to 'CUSTOM' via the
+Dois not forget to set the `ClientWindowRenderMode` to 'CUSTOM' via the
 `JsfModuleConfig`:
 
 [source,java]
@@ -277,21 +320,21 @@ public class MyJsfModuleConfig extends JsfModuleConfig
 }
 ---------------------------------------------------------------------------
 
-=== Based Scopes
+==== Based Scopes
 
 * @WindowScoped
 * @ViewAccessScoped
 * @GroupedConversationScoped
 
 
-== Scopes
+=== Scopes
 
-=== @WindowScoped
+==== @WindowScoped
 
 The window-scope is like a session per window. That means that the data
 is bound to a window/tab and it not shared between windows (like the
 session scope does). Usually you need the window-scope instead of the
-session-scope. There aren't a lot of use-cases which need shared data
+session-scope. There areis not a lot of use-cases which need shared data
 between windows.
 
 [source,java]
@@ -304,7 +347,7 @@ public class PreferencesBean implements Serializable
 ----------------------------------------------------
 
 
-=== @ViewAccessScoped
+==== @ViewAccessScoped
 
 In case of conversations you have to un-scope beans manually (or they
 will be terminated automatically after a timeout). However, sometimes
@@ -312,10 +355,10 @@ you need beans with a lifetime which is as long as needed and as short
 as possible - which are terminated automatically (as soon as possible).
 In such an use-case you can use this scope. The simple rule is, as long
 as the bean is referenced by a page - the bean will be available for the
-next page (if it's used again the bean will be forwarded again). It is
-important that it's based on the view-id of a page (it isn't based on
-the request) so e.g. Ajax requests don't trigger a cleanup if the
-request doesn't access all view-access scoped beans of the page. That's
+next page (if it is used again the bean will be forwarded again). It is
+important that it is based on the view-id of a page (it isis not based on
+the request) so, for example, Ajax requests dois not trigger a cleanup if the
+request doesis not access all view-access scoped beans of the page. That's
 also the reason for the name @__View__AccessScoped.
 
 [source,java]
@@ -327,25 +370,23 @@ public class WizardBean implements Serializable
 }
 -----------------------------------------------
 
-Hint: @ViewAccessScoped beans are best used in conjunction with the
+TIP: @ViewAccessScoped beans are best used in conjunction with the
 `CLIENTWINDOW` window handling, which ensures a clean browser-tab
 separation without touching the old windowId. Otherwise a 'open in new
 tab' on a page with a @ViewAccessScoped bean might cause the termination
 (and re-initialization) of that bean.
 
-=== @GroupedConversationScoped (since 0.6)
+==== @GroupedConversationScoped (From DeltaSpike 0.6)
 
 See (Grouped-)Conversations
 
-
-=== @ViewScoped
+==== @ViewScoped
 
 DeltaSpike provides an CDI context for the JSF 2.0/2.1
 @javax.faces.bean.ViewScoped. You can simply annotate your bean with
 @javax.faces.bean.ViewScoped and @Named.
 
-
-=== JSF 2.0 Scopes
+==== JSF 2.0 Scopes
 
 JSF 2.0 introduced new annotations as well as a new scope - the View
 Scope. CODI allows to use all the CDI mechanisms in beans annotated
@@ -359,11 +400,11 @@ with:
 Furthermore, the managed-bean annotation (javax.faces.bean.ManagedBean)
 is mapped to @Named from CDI.
 
-All these annotations are mapped automatically. So you won't face
+All these annotations are mapped automatically. So you wois not face
 issues, if you import a JSF 2 annotation instead of the corresponding
 CDI annotation.
 
-== Integration with DeltaSpike type-safe messages
+=== Integration with DeltaSpike Type-safe Messages
 
 You can use <<core.adoc#_messages_i18n,DeltaSpike type-safe messages>>
 with JSF to provide i18n messages and test to an JSF appplicaton.
@@ -374,12 +415,11 @@ messages (Section 2.5.2.4 of the JSF specification contains the list of
 all JSF default messages that could be override.).
 
 DeltaSpike can also reuse the same file to provide type-safe messages so
-you don't have to use the naming convention nor `@MessageContextConfig`.
+you dois not have to use the naming convention nor `@MessageContextConfig`.
 If there is a config for supported locales it will be checked as well
 and fallback to the configured default locale.
 
-Example:
-
+.Example
 [source,java]
 ------------------------------------------------------------------------------------------------------------
 @MessageBundle
@@ -420,8 +460,7 @@ welcome_to_deltaspike=Welcome to DeltaSpike
 javax.faces.component.UIInput.REQUIRED = {0}: Please enter a value
 ------------------------------------------------------------------------------------------------------------
 
-On faces-config.xml file:
-
+.Faces-config.xml File
 [source,xml]
 --------------------------------------------------------------------------------------------
 <faces-config>
@@ -431,10 +470,9 @@ On faces-config.xml file:
 </faces-config>
 --------------------------------------------------------------------------------------------
 
+=== Type-safe View-Configs
 
-== Type-safe View-Configs
-
-=== Intro
+==== Intro
 
 Type-safe view-configs are static configs which can be used in
 combination with every view-technology which is based on Java. Currently
@@ -445,64 +483,59 @@ located here.)
 
 Thanks to features like multiple (meta-data-)inheritance via interfaces,
 it provides a powerful approach to bind meta-data to one or multiple
-views. In case of the JSF integration it's possible to provide e.g.
+views. In case of the JSF integration it is possible to provide, for example,
 type-safe meta-data for security, navigation, callbacks for
 view-controllers. Beyond configuring view (/pages) via this concept,
-it's also possible to use the (view-)config classes for type-safe
-navigation. Since it's std. Java, you can benefit from any Java-IDE and
-you don't need special IDE-Addons to use it efficiently.
+it is also possible to use the (view-)config classes for type-safe
+navigation. Since it is standard Java, you can benefit from any Java-IDE and
+you dois not need special IDE-Addons to use it efficiently.
 
 Even the concepts provided by modules (of DeltaSpike itself) are based
-on the basic API provided by the Core. So it's possible to introduce
+on the basic API provided by the Core. So it is possible to introduce
 custom concepts the same way DeltaSpike itself does.
 
-
-=== Motivation
+==== Motivation
 
 Instead of learning the concepts and rules of view-configs provided by
 DeltaSpike, it might be easier for simple demos to just type some
 simple(r) strings. So why should you use something which is slightly
 more work **initially**?
 
-*The short answer is:*
+*The short answer is:* It gives a good return in case of real applications (especially beyond simple demos).
 
-It gives a good return in case of real applications (esp. beyond simple demos).
+*The long answer is:* You can benefit from it from the first second:
 
-*The long answer is:*
-
-You can benefit from it from the first second:
-
-* It's type-safe ->
-** the Java compiler ensures that you don't have typos at the final usages (and the rest can be checked during bootstrapping of the application)
+* It is type-safe
+** the Java compiler ensures that you dois not have typos at the final usages (and the rest can be checked during bootstrapping of the application)
 ** you can benefit from the auto.complete features of any modern Java IDE.
-* If you change the name of a file/folder, you need only one (easy) code-change in a single place and your (std. Java-) IDE will do the rest for you (= update all usages) without a special plug-in
-* It's possible to restrict the navigation target -> you can ensure that the navigation target is still the intended one (e.g. after a refactoring)
+* If you change the name of a file/folder, you need only one (easy) code-change in a single place and your (standard Java-) IDE will do the rest for you (= update all usages) without a special plug-in
+* It is possible to restrict the navigation target -> you can ensure that the navigation target is still the intended one (e.g. after a refactoring)
 * You can configure meta-data in a central place (which can get inherited via *multiple* inheritance based on Java interfaces)
 * Easier for developers to find usages
 * Allows easy(er) refactorings and maintenance
-* You can use your IDE more efficiently esp. in large projects (there are some users who initially switched to it, because their tools for displaying the config they had before open large config files very slowly...)
-* Modern Java IDEs show inheritance of interfaces and classes in a nice way. Since the view-config is based on std. classes and interfaces, you can benefit from it easily.
+* You can use your IDE more efficiently especially in large projects (there are some users who initially switched to it, because their tools for displaying the config they had before open large config files very slowly...)
+* Modern Java IDEs show inheritance of interfaces and classes in a nice way. Since the view-config is based on standard classes and interfaces, you can benefit from it easily.
 
 Advantages which are planned for later (= currently not supported):
 
-* It's possible to check if the configured folders and files really exist during/after the bootstrapping phase of the application (currently it isn't implemented, but it's possible to do it).
-* It's also easy(er) for tools (IDE plugins,...) to validate it
-* It's possible to validate the config (if the corresponding path (view or folder) really exists (after v0.5 it's done out-of-the-box)
+* It is possible to check if the configured folders and files really exist during/after the bootstrapping phase of the application (currently it is not implemented, but it is possible to do it).
+* It is also easy(er) for tools (IDE plugins,...) to validate it
+* It is possible to validate the config (if the corresponding path (view or folder) really exists (after v0.5 it is done out-of-the-box)
 
 If you are still not convinced, you just have to try it. You will see how your daily workflow benefits from it pretty soon.
 
-=== Bean-discovery-mode annotated
+==== Bean-discovery-mode Annotated
 
 CDI 1.1 introduced a concept called bean-discovery-mode. If you would
-like to use the mode `annotated`, please have a look at the hint at
+like to use the mode `annotated`, please have a look at the tip at
 @ViewConfigRoot
 
-=== Basic API usages
+==== Basic API Usages
 
 While reading this section keep the following simple rules in mind:
 Meta-data gets inherited along the path of Java inheritance
 File-/Folder- paths are build based on nesting classes and interfaces
-Usually users don't need to be aware of all descriptors, SPIs,... which
+Usually users dois not need to be aware of all descriptors, SPIs,... which
 are described by this documentation.
 
 There are a lot of possibilities to configure views and some of them are
@@ -519,10 +552,10 @@ public class MyPage implements ViewConfig
 }
 -----------------------------------------
 
-Since it's a class (and not an interface) it's autom. recognized as
+Since it is a class (and not an interface), it is automatically recognized as
 config for a page (and not a folder) and the default settings get
 applied during bootstrapping. In case of JSF you can use it for
-navigation e.g. via action-methods.
+navigation, for example, via action-methods.
 
 [source,java]
 -----------------------------------------------
@@ -547,7 +580,7 @@ public class MyPage implements ViewConfig
 }
 -----------------------------------------
 
-But it's also possible to reflect the folder structure via nesting of
+But it is also possible to reflect the folder structure via nesting of
 interfaces and classes. An example for it is:
 
 [source,java]
@@ -566,17 +599,17 @@ public interface Pages
 In case of the JSF integration it leads to the following view-ids:
 /pages/index.xhtml /pages/adminArea/index.xhtml
 
-Like the optional `@View` for pages represented by the classes, it's
+Like the optional `@View` for pages represented by the classes, it is
 possible to use the optional `@Folder` annotation for directories
 represented by the (nested) interfaces.
 
-Furthermore, it's possible to inherit meta-data along with the normal
+Furthermore, it is possible to inherit meta-data along with the normal
 inheritance.
 
 In the following example `Pages.Admin.Index`, `Pages.Admin.Home` and
 `Pages.Admin.Statistics.Home` inherit the meta-data from `Pages.Admin`
 because they implement the interface whereas
-`Pages.Admin.Statistics.Index` doesn't. However, `Pages.Admin.Home`
+`Pages.Admin.Statistics.Index` doesis not. However, `Pages.Admin.Home`
 overrides `View#navigation`. During the bootstrapping process the
 meta-data gets merged and at runtime you only see the final result
 (which is cached).
@@ -608,7 +641,7 @@ public interface Pages
 ------------------------------------------------------
 
 In this case `Pages.Admin.Statistics` is just an interface to reflect
-the folder structure. For sure it's also possible that it extends an
+the folder structure. For sure it is also possible that it extends an
 existing view-config interface and other folders and/or pages inherit
 its meta-data (like `Pages.Admin`).
 
@@ -625,17 +658,17 @@ public Class<? extends Pages.Admin> toNextPage()
 }
 ------------------------------------------------
 
-==== File (@View) and Folder (@Folder) paths
+===== File (@View) and Folder (@Folder) Paths
 
 `@View` as well as `@Folder` are optional annotations. `@Folder` is only
 needed for using a different folder-name or for marking folder configs
-if they don't inherit from
+if they dois not inherit from
 `org.apache.deltaspike.core.api.config.view.ViewConfig` *nor* have a
 view-config for a page nested into them (like Pages.Wizard1.Step1). If
-it isn't used explicitly, it gets added automatically (so you can query
-the meta-data at runtime even in cases you haven't placed the
+it isis not used explicitly, it gets added automatically (so you can query
+the meta-data at runtime even in cases you haveis not placed the
 annotations explicitly). `@View` allows to customize a bit more and it
-also gets added automatically if it isn't used explicitly. Whereas
+also gets added automatically if it isis not used explicitly. Whereas
 `@Folder` gets added to all nested interfaces (above a view-config class
 - like Pages and Pages.Wizard1), `@View` only gets added to classes
 which in-/directly inherit from
@@ -678,12 +711,12 @@ To customize it you can use `@Folder#name`, `@View#basePath`,
 `@View#name` and `@View#extension` (or you register custom
 `NameBuilder`s inline or globally).
 
-===== @Folder#name
+====== @Folder#name
 
 The rules are pretty simple. You will get what you write. There are only
 two additional features:
 
-* You don't have to care about duplicated '/' (e.g. /folder1//folder2/step1.xhtml would get corrected auto. to /folder1/folder2/step1.xhtml)
+* You dois not have to care about duplicated '/' (e.g. /folder1//folder2/step1.xhtml would get corrected auto. to /folder1/folder2/step1.xhtml)
 * With "." at the beginning (e.g. "./") you can keep the path before.
 
 The following example
@@ -713,9 +746,9 @@ leads to the following paths:
 * /w1/step1.xhtml
 * /pages/w2/step1.xhtml
 
-===== @View
+====== @View
 
-The same naming rules apply to `@View#basePath`. However, it's only
+The same naming rules apply to `@View#basePath`. However, it is only
 valid to be used at view-config nodes which represent pages (-> classes
 and not interfaces). On interfaces always use `@Folder`
 (`@View#basePath` will get ignored there).
@@ -785,21 +818,21 @@ interface Pages extends ViewConfig
 It leads to the same paths, but in addition `@View#navigation` gets
 inherited along the inheritance path.
 
-==== Navigation Parameters
+===== Navigation Parameters
 
 Since the view-config is static, an approach to add parameters is
 needed. The following part shows different possibilities to add
 parameters which end up in the final URL after '?' (in case of the
-integration with JSF). It isn't needed to add all (types of) parameters
-that way. Some get added autom. based on special meta-data (e.g.
+integration with JSF). It isis not needed to add all (types of) parameters
+that way. Some get added automatically based on special meta-data (e.g.
 `@View#navigation` and `@View#viewParams`). Instead of adding
-`"faces-redirect=true"` manually it's done for you as soon as you are
+`"faces-redirect=true"` manually it is done for you as soon as you are
 using `@View(navigation = REDIRECT)`. The same goes for
 `"includeViewParams=true"` and `@View(viewParams = INCLUDE)`.
 
-==== Static Configuration via @NavigationParameter
+===== Static Configuration via @NavigationParameter
 
-In some cases it's needed to add an information in any case. So you can
+In some cases, it is needed to add an information in any case. So you can
 annotate the view-config class with `@NavigationParameter`. Supported
 values are static strings or EL-expressions.
 
@@ -818,7 +851,7 @@ public interface Pages extends ViewConfig
 }
 ---------------------------------------------------------------------------
 
-Instead of using parameters in any case, it's also possible to configure
+Instead of using parameters in any case, it is also possible to configure
 them statically for particular methods:
 
 [source,java]
@@ -843,9 +876,9 @@ public class PageBean
 }
 -----------------------------------------------------------------------
 
-===== Dynamic Configuration via NavigationParameterContext
+====== Dynamic Configuration via NavigationParameterContext
 
-Instead of using parameters in a static fashion (as shown above), it's
+Instead of using parameters in a static fashion (as shown above), it is
 also possible to add them dynamically (e.g. in case of special
 conditions).
 
@@ -873,21 +906,21 @@ public class PageBean
 }
 --------------------------------------------------------------------------------------
 
-==== Security Integration via @Secured
+===== Security Integration via @Secured
 
 This annotation is a custom view-meta-data provided by the
-Security-module which allows to integrate 3rd party frameworks (or
+Security-module which allows to integrate third-party frameworks (or
 custom approaches) to secure pages as well as whole folders. You can
 annotate specific parts or a marker-interface.
 `CustomAccessDecisionVoter` used in the following example can be any
 implementation of
 `org.apache.deltaspike.security.api.authorization.AccessDecisionVoter`
-and needs to be a std. CDI bean which means you can use
+and needs to be a standard CDI bean which means you can use
 dependecy-injection to trigger any kind of security check. All parts
 which inherit from `SecuredPages` (`Pages.Admin`, `Pages.Admin.Index`
 and `Pages.Admin.Home`) are protected by `CustomAccessDecisionVoter`.
 
-(It's easy to check this hierarchy in a modern Java-IDE. Only for
+(It is easy to check this hierarchy in a modern Java-IDE. Only for
 displaying the final meta-data for every node in the IDE a special
 plug-in would be needed.)
 
@@ -911,7 +944,7 @@ public interface Pages extends ViewConfig
 }
 -----------------------------------------------
 
-For sure it's also possible to use it without a special interface. In
+For sure it is also possible to use it without a special interface. In
 this case you would need:
 
 [source,java]
@@ -954,7 +987,7 @@ public interface Pages extends ViewConfig
 -------------------------------------------------
 
 
-==== View-Controller Callbacks via @ViewControllerRef
+===== View-Controller Callbacks via @ViewControllerRef
 
 This annotation is a custom view-meta-data provided by the JSF-module
 which allows to configure beans which should act as view-controllers.
@@ -981,12 +1014,11 @@ public class MyPageController
 }
 ------------------------------------------
 
-Since v0.7 it's possible to observe exceptions thrown by a
+From DeltaSpike 0.7, it is possible to observe exceptions thrown by a
 @PreRenderView callback and use your configured Default-Error-View to
 display the exception.
 
-Example:
-
+.Example
 [source,java]
 --------------------------------------------------------------------------------------------------------------
 @ExceptionHandler
@@ -1006,15 +1038,14 @@ public class ErrorViewAwareExceptionHandler {
 }
 --------------------------------------------------------------------------------------------------------------
 
-==== Referencing Views via @ViewRef
+===== Referencing Views via @ViewRef
 
 With `@ViewControllerRef#value` you can annotate a view-config class to
 bind (/reference) a controller to it. `@ViewRef#config` allows the same
 in the other direction. Use an existing view-config to reference one or
 many view/s.
 
-That means e.g.
-
+.Example
 [source,java]
 ----------------------------------------------------
 public interface Pages extends ViewConfig
@@ -1036,12 +1067,11 @@ public class IndexController implements Serializable
 }
 ----------------------------------------------------
 
-leads to the invocation of the pre-render-view logic before
-/pages/page1.xhtml gets rendered (and it won't be called for other
+The above example leads to the invocation of the pre-render-view logic before
+/pages/page1.xhtml gets rendered (and it wois not be called for other
 pages).
 
-
-==== Using the (optional) ViewNavigationHandler
+===== Using the (Optional) ViewNavigationHandler
 
 With JSF you typically navigate with the action-method bound to a
 command-component. However, also JSF supports manual navigation via
@@ -1050,8 +1080,7 @@ command-component. However, also JSF supports manual navigation via
 type-safe view-configs which is easier to use (and can be used also for
 other (supported) view technology).
 
-A simple example is:
-
+.Simple Example
 [source,java]
 -----------------------------------------------------------------
 public interface Pages {
@@ -1076,12 +1105,11 @@ Also in this case (optional) meta-data will be used for the navigation
 process, since `ViewNavigationHandler` just delegates to the active
 navigation-handler (of JSF).
 
+===== Configuring a Default Error-View
 
-==== Configuring a Default Error-View
-
-It's possible to mark one view-config class as default error-view. That
+It is possible to mark one view-config class as default error-view. That
 means in case of errors it will be used as navigation target
-automatically. Furthermore, it's also possible to use it in your code
+automatically. Furthermore, it is also possible to use it in your code
 instead of hardcoding your error-view across the whole application.
 
 In case of
@@ -1095,7 +1123,7 @@ public interface Pages {
 }
 ------------------------------------------------------
 
-it's possible to navigate with `DefaultErrorView.class` instead of
+it is possible to navigate with `DefaultErrorView.class` instead of
 hardcoding it to `Pages.CustomErrorPage.class`.
 
 [source,java]
@@ -1137,14 +1165,13 @@ public class AnyController
 
 However, in case of JSF you have to ensure that you are at a valid point
 in the JSF request-lifecycle for a navigation, because invocation gets
-transformed to a std. (implicit) JSF navigation.
+transformed to a standard (implicit) JSF navigation.
 
-==== Using @Matches
+===== Using @Matches
 
 This annotation is currently not integrated. [TODO]
 
-
-==== Using ViewConfigResolver
+===== Using ViewConfigResolver
 
 If you would like to query view-meta-data yourself (for whatever
 reason), you can do that with `ViewConfigResolver`.
@@ -1190,23 +1217,23 @@ public class ApiDemoBean
 }
 ----------------------------------------------------------------------------------------------------------------------------------------
 
-For folders it's optional to implement the `ViewConfig` interface,
+For folders it is optional to implement the `ViewConfig` interface,
 therefore you see 2 different types of API. `#getConfigDescriptor` as
 the general API and `#getViewConfigDescriptor` which is specific for
 pages (which have to implement the `ViewConfig` interface).
 
 *Besides* translating a config class to the final path of the folder or
-page, it's possible to get the implicitly as well as explicitly
+page, it is possible to get the implicitly as well as explicitly
 configured (view-)meta-data and get and/or execute configured callbacks.
 
-=== Advanced API usages
+==== Advanced API Usages
 
 [TODO]
 
-==== Creating Custom Meta-Data via @ViewMetaData
+===== Creating Custom Meta-Data via @ViewMetaData
 
 This meta-annotation allows to create custom view-meta-data which can be
-used for view-configs. Per default meta-data of a lower level overrides
+used for view-configs. By default meta-data of a lower level overrides
 meta-data on a higher level which has the same type. That can be
 customized via annotating the final annotation as a whole via
 `@Aggregated(true)`.
@@ -1231,13 +1258,12 @@ ViewConfigDescriptor viewConfigDescriptor = viewConfigResolver.getViewConfigDesc
 List<InfoPage> metaDataList = viewConfigDescriptor.getMetaData(InfoPage.class)
 ----------------------------------------------------------------------------------------------------------
 
-==== Creating Custom Meta-Data via @Stereotype
+===== Creating Custom Meta-Data via @Stereotype
 
 Like with CDI itself you can encapsulate multiple view meta-data
 annotation in one annotation.
 
-e.g.:
-
+.Example
 [source,java]
 -------------------------------------------------------------
 @Target({TYPE})
@@ -1252,17 +1278,17 @@ e.g.:
 Instead of using the same combination of annotations in multiple places,
 you can use the stereotype annotation. If you query the meta-data at
 runtime (see `ViewConfigDescriptor#getMetaData`), you can access
-`@Secured` as well as `@View` (in the example above). however, you won't
+`@Secured` as well as `@View` (in the example above). however, you wois not
 see `@MySecuredView` itself at runtime, because stereotype annotations
-are per default transparent.
+are by default transparent.
 
-Since v1.0.1+ it's possible to access such stereotype annotations as
+From DeltaSpike 1.0.1, it is possible to access such stereotype annotations as
 well, once you annotate them with `@ViewMetaData`.
 
 
-==== Creating Custom Callbacks via @ViewMetaData
+===== Creating Custom Callbacks via @ViewMetaData
 
-Via a custom ConfigPreProcessor it's possible to register custom
+Via a custom ConfigPreProcessor it is possible to register custom
 callbacks dynamically. The following listing shows a view-config which
 adds a simple callback including the corresponding `ConfigPreProcessor`
 and `ExecutableCallbackDescriptor`.
@@ -1315,103 +1341,94 @@ List<Set<String> /*return type of one callback*/> callbackResult =
         .execute("param1", "param2");
 ------------------------------------------------------------------------------------------------------------------
 
-It's also possible do register different callback-types per
+It is also possible do register different callback-types per
 view-meta-data. An example can be found at `ViewControllerRef` which
 registers different callback-types for `InitView`, `PreViewAction`,
-`PreRenderView` and `PostRenderView`. In this case it's needed to use
+`PreRenderView` and `PostRenderView`. In this case it is needed to use
 the type of the callback (= class of the annotation) as additional
 parameter for `#getExecutableCallbackDescriptor`.
 
 
-==== Creating Custom inline Meta-Data via @InlineViewMetaData
+===== Creating Custom inline Meta-Data via @InlineViewMetaData
 
 This annotation can be used for view-meta-data which can be placed on
-other classes than view-config-classes. It's used e.g. for `@ViewRef`.
-Via a `TargetViewConfigProvider` it's possible to point to the
+other classes than view-config-classes. It is used, for example, for `@ViewRef`.
+Via a `TargetViewConfigProvider` it is possible to point to the
 view-config the meta-data should get applied to and via
-`InlineMetaDataTransformer` it's possible to convert it to a different
+`InlineMetaDataTransformer` it is possible to convert it to a different
 meta-data-representation (which allows that at runtime you only have to
 support one side since the inline-meta-data was converted to the same
 meta-data representation which is used for the normal view-meta-data).
 
 
-=== Path-Validation
+==== Path-Validation
 
 DeltaSpike (after v0.5) validates your configs out-of-the-box. The
 application will fail to start, if there is an invalid config (e.g. a
 view-config without a corresponding view). Right now the validation is
 restricted to folders and view-ids with .xhtml or .jsp as suffix. Other
-view-ids (e.g. *.faces) don't get checked. In such cases a custom
+view-ids (e.g. *.faces) dois not get checked. In such cases a custom
 validator can be used (e.g. based on `ViewConfigPathValidator`).
 
 To disable the view-config (path) validation, add a `ClassDeactivator`
 which restricts
 `org.apache.deltaspike.jsf.impl.config.view.ViewConfigPathValidator`.
 
-
-=== View-Config SPI
+==== View-Config SPI
 
 [TODO]
 
-
-==== ConfigDescriptorValidator
+===== ConfigDescriptorValidator
 
 Allows to validate the final view-config descriptors before they get
-deployed. Since the config-descriptor contains e.g. the final path, it's
+deployed. Since the config-descriptor contains, for example, the final path, it is
 also possible to validate if the corresponding file exists. Use
 `@ViewConfigRoot` to configure 1-n validators.
 
-==== ConfigNodeConverter
+===== ConfigNodeConverter
 
 Allows to provide custom strategies to process the nodes of the built
 config-tree. Use `@ViewConfigRoot` to configure a custom converter.
 
-
-==== ConfigPreProcessor
+===== ConfigPreProcessor
 
 Allows to change the found meta-data (e.g. replace default values,
 callbacks,...) or the `ViewConfigNode` itself.
 
-
-==== InlineMetaDataTransformer
-
+===== InlineMetaDataTransformer
 
 Allows to transform an annotation annotated with `@InlineViewMetaData`
 to an annotation annotated with `@ViewMetaData`. This transformer is
 optional and only needed if it should result in the same at runtime, but
 the inline-meta-data needs a different syntax via a different annotation
-(compared to the view-config meta-data). See e.g. `@ViewRef` vs.
+(compared to the view-config meta-data). See for example `@ViewRef` vs.
 `@ViewControllerRef`.
 
+===== TargetViewConfigProvider
 
-==== TargetViewConfigProvider
-
-Allows to provide a custom reference to `ViewConfig` classes (see e.g.
+Allows to provide a custom reference to `ViewConfig` classes (see for example
 `@InlineViewMetaData` and `@ViewRef`)
 
+===== ViewConfigInheritanceStrategy
 
-==== ViewConfigInheritanceStrategy
-
-Allows to customize the inheritance-strategy for meta-data. E.g.
-inheritance via std. java inheritance vs. inheritance via nested
+Allows to customize the inheritance-strategy for meta-data. For example,
+inheritance via standard java inheritance vs. inheritance via nested
 interfaces. Use `@ViewConfigRoot` to configure a custom
 inheritance-strategy.
 
-
-==== ViewConfigNode
+===== ViewConfigNode
 
 Node-type used for building the meta-data-tree during the bootstrapping
 process.
 
-
-==== @ViewConfigRoot
+===== @ViewConfigRoot
 
 Optional annotation which allows to provide custom implementations. Only
 annotate one `ViewConfig` class which represents the root node.
 
 If you are using CDI 1.1+ with bean-discovery-mode `annotated`, you can
 use `@ViewConfigRoot` in combination with `@ApplicationScoped` as marker
-annotations. Since DeltaSpike 1.0.1 this combination allows to add all
+annotations. From DeltaSpike 1.0.1, this combination allows to add all
 nested interfaces and classes and therefore no additional annotations
 (required by bean-discovery-mode `annotated`) are needed. Minimal
 example:
@@ -1426,33 +1443,31 @@ public interface Pages extends ViewConfig
 }
 -----------------------------------------
 
-
-=== Activation of custom naming conventions
+==== Activation of Custom Naming Conventions
 
 DeltaSpike allows to customize the default naming convention via
 `View.DefaultBasePathBuilder` and/or `View.DefaultFileNameBuilder`
-and/or `View.DefaultExtensionBuilder`. It's possible to change it for
+and/or `View.DefaultExtensionBuilder`. It is possible to change it for
 one usage via `View.basePathBuilder` and/or `View.fileNameBuilder`
 and/or `View.extensionBuilder` or globally via the config mechanism
 provided by DeltaSpike. The same is supported for folders via
 `Folder.DefaultFolderNameBuilder`. In this case changing only one usage
 is possible via `Folder.folderNameBuilder`.
 
+=== (Grouped-)Conversations
 
-== (Grouped-)Conversations
+Available from DeltaSpike 0.6.
 
-Available with all versions after 0.5.
-
-DeltaSpike conversations are based on the window-scope. Therefore, don't
+DeltaSpike conversations are based on the window-scope. Therefore, dois not
 forget to add the `ds:windowId`
 (`xmlns:ds="http://deltaspike.apache.org/jsf"`) component in case of
 `ClientWindowConfig#CLIENTWINDOW` to your page(/template) and ensure
-that the window-handling works properly (otherwise conversations won't
+that the window-handling works properly (otherwise conversations wois not
 work correctly). The base principle is similar to CODI-Conversations.
 CODI users just have to ensure that they have to add `ds:windowId` and
 the names are slightly different.
 
-First of all it's important to mention that DeltaSpike starts (grouped)
+First of all, it is important to mention that DeltaSpike starts (grouped)
 conversations automatically as soon as you access conversation scoped
 beans. Furthermore, the invocation of `GroupedConversation#close` leads
 to an immediate termination of the conversation.
@@ -1469,17 +1484,16 @@ public class DemoBean1 implements Serializable
  ... leads to a conversation which contains just one bean with the group
 DemoBean1.
 
-Hint: If you would like to use the bean within your JSF pages, you have
+TIP: If you would like to use the bean within your JSF pages, you have
 to add `@Named` (javax.inject.Named ).
 
-(In case of CDI std. conversations there is just one big conversation
+(In case of CDI standard conversations there is just one big conversation
 which contains all conversation scoped beans.) The grouped conversations
 provided by DeltaSpike are completely different. By default every
 conversation scoped bean exists in an "isolated" conversation. That
 means there are several parallel conversations within the same window.
 
-Example - Separated DeltaSpike conversations:
-
+.Separated DeltaSpike Conversations
 [source,java]
 ----------------------------------------------
 @GroupedConversationScoped
@@ -1495,14 +1509,13 @@ public class DemoBean3 implements Serializable
 }
 ----------------------------------------------
 
- ... leads to two independent conversations in the same window (context).
+The above example leads to two independent conversations in the same window (context).
 If you close the conversation of DemoBean2, the conversation of
 DemoBean3 is still active. If you have an use-case (e.g. a wizard) which
 uses multiple beans which are linked together very tightly, you can
 create a type-safe conversation group.
 
-Example - Grouped conversation scoped beans:
-
+.Grouped Conversation Scoped Beans
 [source,java]
 ----------------------------------------------
 interface Wizard1 {}
@@ -1527,11 +1540,10 @@ logical group of beans. Technically `@ConversationGroup` is just a CDI
 qualifier. Internally DeltaSpike uses this information to identify a
 conversation. In the previous example both beans exist in the same
 conversation (group). If you terminate the conversation group, both
-beans will be destroyed. If you don't use `@ConversationGroup`
+beans will be destroyed. If you dois not use `@ConversationGroup`
 explicitly, DeltaSpike uses the class of the bean as conversation group.
 
-Example - Injecting a conversation scoped bean with an explicit group:
-
+.Injecting a Conversation Scoped Bean with an Explicit Group
 [source,java]
 ------------------------------------
 //...
@@ -1547,14 +1559,13 @@ public class CustomBean1
 }
 ------------------------------------
 
-Since `@ConversationGroup` is a std. CDI qualifier you have to use it at
-the injection point. You have to do that esp. because it's possible to
+Since `@ConversationGroup` is a standard CDI qualifier you have to use it at
+the injection point. You have to do that especially because it is possible to
 create beans of the same type which exist in different groups (e.g. via
 producer methods).
 
-Example - Producer methods which produce conversation scoped beans with
-different groups:
-
+.Producer Methods which Produce Conversation Scoped Beans with
+Different Groups
 [source,java]
 ------------------------------------------------
 interface Group1 {}
@@ -1580,16 +1591,15 @@ public class CustomBean2
 }
 ------------------------------------------------
 
-=== Terminating Conversations
+==== Terminating Conversations
 
 You can inject the conversation via `@Inject` and use it to terminate
 the conversation immediately or you inject the
 `GroupedConversationManager` which can be used to terminate a given
 conversation (group). All conversations within a window are closed
-autom., once `WindowContext#closeWindow` gets called for the window.
+automatically, once `WindowContext#closeWindow` gets called for the window.
 
-Example - Injecting and using the current conversation:
-
+.Injecting and Using the Current Conversation
 [source,java]
 --------------------------------------------------------------------------------------------------------------------
 @GroupedConversationScoped
@@ -1621,8 +1631,7 @@ public class DemoBean7 implements Serializable
 }
 --------------------------------------------------------------------------------------------------------------------
 
-Example - Injecting and using the explicitly grouped conversation:
-
+.Injecting and Using the Explicitly Grouped Conversation
 [source,java]
 ----------------------------------------------------------------------------------------------------------------------
 interface Wizard2 {}
@@ -1658,9 +1667,7 @@ public class DemoBean9 implements Serializable
 }
 ----------------------------------------------------------------------------------------------------------------------
 
-Example - Terminating a grouped conversation outside of the
-conversation:
-
+.Terminating a Grouped Conversation Outside of the Conversation
 [source,java]
 -------------------------------------------------------------------------------------------------------------------------
 //...
@@ -1678,8 +1685,7 @@ public class DemoBean10 implements Serializable
 }
 -------------------------------------------------------------------------------------------------------------------------
 
-Example - Terminate all conversations:
-
+.Terminate All Conversations
 [source,java]
 -------------------------------------------------------------------------------------------------------------------------
 //...
@@ -1697,29 +1703,28 @@ public class DemoBean11 implements Serializable
 }
 -------------------------------------------------------------------------------------------------------------------------
 
-Hint: DeltaSpike conversations get closed/restarted immediately instead
-of keeping them until the end of the request like std. conversations do,
-because the behaviour of std. conversations breaks a lot of use-cases.
+TIP: DeltaSpike conversations get closed/restarted immediately instead
+of keeping them until the end of the request like standard conversations do,
+because the behaviour of standard conversations breaks a lot of use-cases.
 However, if you really need to keep them until the end of the request,
 you can close them in a `@PostRenderView` callback.
 
-=== Sub-Conversation-Groups
+==== Sub-Conversation-Groups
 
 Due to the parallel conversation concept of DeltaSpike there is no need
 of something like nested conversations. Just use them in parallel and
-terminate them in a fine-granular way as soon as you don't need them any
+terminate them in a fine-granular way as soon as you dois not need them any
 longer. As described above, you can terminate a whole
-conversation-group. However, sometimes it's essential to have subgroups
+conversation-group. However, sometimes it is essential to have subgroups
 if you need to end just a part of an use-case instead of all beans
 related to an use-case. A sub-group is just a class or an interface used
 to identify a bunch of beans within a group. To terminate such a
-sub-group, it's just needed to pass the class/interface to the
+sub-group, it is just needed to pass the class/interface to the
 corresponding API for terminating a conversation. The sub-group gets
-detected autom. and instead of terminating a whole conversation-group,
+detected automatically and instead of terminating a whole conversation-group,
 the beans of the sub-group get un-scoped.
 
-Example - Explicitly listing beans of a sub-group:
-
+.Explicitly Listing Beans of a Sub-group
 [source,java]
 --------------------------------------------------------------------------------
 public class MyGroup{}
@@ -1745,8 +1750,7 @@ public class MySubGroup extends MyGroup {}
 public class MySubGroup {}
 --------------------------------------------------------------------------------
 
-Example - Terminating a sub-group:
-
+.Terminating a Sub-group
 [source,java]
 ------------------------------------------------------------------
 @Inject
@@ -1762,8 +1766,7 @@ the group or you specify it via the `@ConversationSubGroup#of`. With
 the sub-group. If you have a lot of such beans or you would like to form
 (sub-)use-case oriented groups, you can use implicit groups:
 
-Example - Implicit sub-group:
-
+.Implicit Sub-group
 [source,java]
 ------------------------------------------------------------------------
 public interface Wizard {}
@@ -1788,21 +1791,20 @@ In the listing above all beans which implement the Wizard interface will
 be closed as soon as you close the ImplicitSubGroup.
 
 
-== Injection in JSF Artifacts (TODO)
+=== Injection in JSF Artifacts (TODO)
 
-=== Converter & Validator
+==== Converter and Validator
 
-=== PhaseListener
+==== PhaseListener
 
 
-== Event broadcasting
+=== Event broadcasting
 
-=== BeforeJsfRequest / AfterJsfRequest (TODO)
+==== BeforeJsfRequest / AfterJsfRequest (TODO)
 
-=== BeforePhase / AfterPhase (TODO)
+==== BeforePhase / AfterPhase (TODO)
 
-=== JSF SystemEvents
-
+==== JSF SystemEvents
 
 Following JSF SystemEvents can be observed via CDI:
 
@@ -1810,8 +1812,7 @@ Following JSF SystemEvents can be observed via CDI:
 * javax.faces.event.PreDestroyApplicationEvent
 * javax.faces.event.ExceptionQueuedEvent
 
-Example:
-
+.Example
 [source,java]
 -------------------------------------------------------------------
 @ApplicationScoped
@@ -1824,17 +1825,15 @@ public class ApplicationConfig
 }
 -------------------------------------------------------------------
 
-Intergration with Exception Control (since 0.6)
------------------------------------------------
+=== Intergration with Exception Control (from DeltaSpike 0.6)
 
 Whenever a unhandled exception occurs within the JSF lifecycle, our JSF
 ExceptionHandler provides a integration to the DeltaSpike Exception
 Control.
 
+==== Examples
 
-=== Examples
-
-==== Basic
+===== Basic
 
 -----------------------------------------------------------------------------
 @ExceptionHandler
@@ -1850,7 +1849,7 @@ public class ApplicationExceptionHandler
 }
 -----------------------------------------------------------------------------
 
-==== Redirect
+===== Redirect
 
 [source,java]
 -----------------------------------------------------------------------------------------------------------------------------------
@@ -1870,9 +1869,9 @@ public class ApplicationExceptionHandler
 }
 -----------------------------------------------------------------------------------------------------------------------------------
 
-=== Using a custom qualifier for JSF Exceptions
+==== Using a Custom Qualifier for JSF Exceptions
 
-In some cases, it's required to differentiate exceptions from JSF and
+In some cases, it is required to differentiate exceptions from JSF and
 normal exceptions. This is possible via a CDI qualifier:
 
 [source,java]
@@ -1910,10 +1909,10 @@ public class ApplicationExceptionHandler
 }
 -----------------------------------------------------------------------------------------------------------------------------------
 
-== Double-Submit prevention
+=== Double-Submit Prevention
 
 To avoid that the same content of a form gets submitted and therefore
-processed multiple times, it's possible to use the tag
+processed multiple times, it is possible to use the tag
 `<ds:preventDoubleSubmit/>`. As usual for DeltaSpike JSF-tags, the `ds`
 namespace is `http://deltaspike.apache.org/jsf`. Just add this tag
 within every JSF form-tag, you would like to safeguard.
@@ -1935,16 +1934,8 @@ within every JSF form-tag, you would like to safeguard.
 </html>
 --------------------------------------------------
 
-== Support of EAR deployments
-
-Before using features described by this page, please ensure that you are
-aware of
-https://issues.apache.org/jira/browse/DELTASPIKE-335[DELTASPIKE-335] and
-the corresponding impact.
-
-
-== Hints
+=== Tips
 
 Using errorView, DefaultErrorView or ViewNavigationHandler will fail
-with Weld versions below 1.1.10 due to
+with Weld versions older than 1.1.10 due to
 https://issues.jboss.org/browse/WELD-1178[WELD-1178].

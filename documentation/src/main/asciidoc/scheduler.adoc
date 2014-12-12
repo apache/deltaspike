@@ -4,28 +4,48 @@
 
 :toc:
 
-== Intro
+== Overview
+The Scheduler module provides simple integration with Quartz v2 (default) or any other scheduler that supports cron-expressions for job-classes.
 
-This module provides a simple integration with Quartz v2 (per default)
-or any other scheduler which supports cron-expressions for job-classes.
+== Configure Your Projects
+The configuration information provided here is for Maven-based projects and it assumes that you have already declared the DeltaSpike version and DeltaSpike Core module for your projects, as detailed in <<configure#, Configure DeltaSpike in Your Projects>>. For Maven-independent projects, see <<configure#config-maven-indep,Configure DeltaSpike in Maven-independent Projects>>.
 
-
-== External Dependencies
-
-If you would like to use the default-integration with quartz (which is
-optional), you have to add quartz 2.x.
+=== 1. Declare Scheduler Module Dependencies
+Add the Scheduler module to the list of dependencies in the project `pom.xml` file using this code snippet:
 
 [source,xml]
--------------------------------------------
+----
+<dependency>
+    <groupId>org.apache.deltaspike.modules</groupId>
+    <artifactId>deltaspike-scheduler-module-api</artifactId>
+    <version>${deltaspike.version}</version>
+    <scope>compile</scope>
+</dependency>
+
+<dependency>
+    <groupId>org.apache.deltaspike.modules</groupId>
+    <artifactId>deltaspike-scheduler-module-impl</artifactId>
+    <version>${deltaspike.version}</version>
+    <scope>runtime</scope>
+</dependency>
+----
+
+=== 2. Declare External Dependencies
+
+By default, the Scheduler module looks to integrate with Quartz. If this is the scheduler you would like to use, add Quartz 2.x to the list of project dependencies using this code snippet:
+
+[source,xml]
+----
 <dependency>
     <groupId>org.quartz-scheduler</groupId>
     <artifactId>quartz</artifactId>
     <version>2.2.1</version>
 </dependency>
--------------------------------------------
+----
 
+== Use the Module Features
 
-== @Scheduled
+=== @Scheduled
 
 Just annotate your Quartz-Jobs with `@Scheduled` and they will get
 picked up and passed to the scheduler automatically (during the
@@ -54,9 +74,10 @@ DeltaSpike) is required. That can be controlled via
 `@Scheduled#startScopes` (possible values: all scopes supported by the
 container-control module as well as `{}` for 'no scopes').
 
-With 'false' for `@Scheduled#onStartup` it's even possible to
-schedule/install jobs dynamically - e.g.:
+With 'false' for `@Scheduled#onStartup`, it is even possible to
+schedule/install jobs dynamically.
 
+.Example
 [source,java]
 -------------------------------------------------------------------------------------
 @ApplicationScoped
@@ -92,12 +113,12 @@ public class ProjectStageAwareSchedulerController
 }
 -------------------------------------------------------------------------------------
 
-== Manual Scheduler Control
+=== Manual Scheduler Control
 
-This SPI allows to control the scheduler (or integrate any other
+Th SPI allows to control the scheduler (or integrate any other
 compatible scheduler as an alternative to Quartz2)
 
-Via std. injection like
+Via standard injection like
 
 [source,java]
 ------------------------------------
@@ -105,13 +126,11 @@ Via std. injection like
 private Scheduler<Job> jobScheduler;
 ------------------------------------
 
-it's possible to manually start/stop the scheduler,
+it is possible to manually start/stop the scheduler,
 pause/resume/interrupt/check scheduled jobs, register jobs manually or
 start a job once (without registering it permanently).
 
-**Attention**:
-
-With some versions of Weld you have to use
+**Attention**: To use a typed injection-point and avoid deployment failure with some versions of Weld, you must use
 
 [source,java]
 ------------------------------------------------------------------
@@ -135,11 +154,7 @@ or
 </alternatives>
 -----------------------------------------------------------------------------
 
-to use a typed injection-point. Otherwise the deployment will fail.
+=== Custom Scheduler
 
-== Custom Scheduler
-
-It's possible to replace the default integration with Quartz. Any other
-scheduler which supports cron-expressions for job-classes can be used.
-Please have a look at `org.apache.deltaspike.test.scheduler.custom` for
-further details.
+It is possible to replace the default integration with Quartz. Any scheduler that supports cron-expressions for job-classes can be used.
+For more information, see http://org.apache.deltaspike.test.scheduler.custom.

@@ -4,69 +4,101 @@
 
 :toc:
 
-== Intro
+== Overview
+The Test-Control module enables you to write CDI-based tests easily. Calls to stop and start the CDI container are built into the Test-Control API, with simplified commands for customizing the management of contexts and other aspects during testing.
 
-This module is available since version 0.6 and allows to write CDI based
-tests easily.
+== Configure Your Projects
+The configuration information provided here is for Maven-based projects and it assumes that you have already declared the DeltaSpike version and DeltaSpike Core module for your projects, as detailed in <<configure#, Configure DeltaSpike in Your Projects>>. For Maven-independent projects, see <<configure#config-maven-indep,Configure DeltaSpike in Maven-independent Projects>>.
 
-
-== Setup
-
-Setup for the CDI implementation of your choice and the following
-test-dependencies:
+=== 1. Declare Test-Control Module Dependencies
+Add the Test-Control module to the list of dependencies in the project `pom.xml` file using this code snippet:
 
 [source,xml]
-----------------------------------------------------------------
+----
 <dependency>
     <groupId>org.apache.deltaspike.modules</groupId>
     <artifactId>deltaspike-test-control-module-api</artifactId>
-    <version>${ds.version}</version>
+    <version>${deltaspike.version}</version>
     <scope>test</scope>
 </dependency>
+
 <dependency>
     <groupId>org.apache.deltaspike.modules</groupId>
     <artifactId>deltaspike-test-control-module-impl</artifactId>
-    <version>${ds.version}</version>
+    <version>${deltaspike.version}</version>
     <scope>test</scope>
 </dependency>
-----------------------------------------------------------------
+----
 
+=== 2. Declare CDI Implemetation-specific Test-Control Module Dependencies
 
-=== OpenWebBeans
+The Test-Control module uses the Container-Control module, requiring a implementation-specific Container Control module to be declared in the project `pom.xml` file. Choose the appropriate option from those listed here.
 
-If you are using OpenWebBeans also add the following test-dependency
+==== OpenWebBeans
+
+If you are using OpenWebBeans, add the OpenWebBeans-specific Container Control module to the list of dependencies:
 
 [source,xml]
 -----------------------------------------------------
  <dependency>
      <groupId>org.apache.deltaspike.cdictrl</groupId>
      <artifactId>deltaspike-cdictrl-owb</artifactId>
-     <version>${ds.version}</version>
+     <version>${deltaspike.version}</version>
      <scope>test</scope>
  </dependency>
 -----------------------------------------------------
 
+==== Weld
 
-=== Weld
-
-If you are using Weld also add the following test-dependency
+If you are using Weld, add the Weld-specific Container Control module to the list of dependencies:
 
 [source,xml]
 ----------------------------------------------------
 <dependency>
     <groupId>org.apache.deltaspike.cdictrl</groupId>
     <artifactId>deltaspike-cdictrl-weld</artifactId>
-    <version>${ds.version}</version>
+    <version>${deltaspike.version}</version>
     <scope>test</scope>
 </dependency>
 ----------------------------------------------------
 
+==== OpenEJB
 
-== CdiTestRunner
+If you are using OpenWebBeans as the CDI implementation and you need to test
+EJBs as well, add the OpenEJB-specific Container Control module to the list 
+of dependencies instead of the OpenWebBeans-specific Container Control module:
 
-JUnit Test-Runner to start/stop the CDI-Container autom. (per
-test-class) and one request and session per test-method:
+[source,xml]
+----------------------------------------------------
+<dependency>
+    <groupId>org.apache.deltaspike.cdictrl</groupId>
+    <artifactId>deltaspike-cdictrl-openejb</artifactId>
+    <version>${deltaspike.version}</version>
+    <scope>test</scope>
+</dependency>
 
+<dependency>
+    <groupId>org.apache.openejb</groupId>
+    <artifactId>openejb-core</artifactId>
+    <version>${openejb.version}</version>
+    <scope>test</scope>
+</dependency>
+----------------------------------------------------
+
+=== 3. Complete Additional Project Configuration
+
+Add a `beans.xml` file in the project test module (e.g. src/test/resources/META-INF/beans.xml).
+
+== Use the Module Features
+
+=== Automated Container Booting and Shutdown
+
+==== CdiTestRunner
+
+Start and stop the CDI container automatically per test class with CdiTestRunner, a JUnit Test-Runner. 
+This also starts and stops one request and session per test-method.
+
+.Example of CdiTestRunner Usage
 [source,java]
 --------------------------------------------------------
 @RunWith(CdiTestRunner.class)
@@ -85,27 +117,11 @@ public class ContainerAndInjectionControl
 }
 --------------------------------------------------------
 
-== @TestControl
+==== CdiTestSuiteRunner
 
-@TestControl allows to change the default-behavior. In the following
-case only one session for all test-methods (of the test-class) will be
-created:
+Extend automated CDI container start and stop actions to whole test suites with CdiTestSuiteRunner, a JUnit Test-Suite-Runner.
 
-[source,java]
------------------------------------------------
-@RunWith(CdiTestRunner.class)
-@TestControl(startScopes = SessionScoped.class)
-public class CustomizedScopeHandling
-{
-    //inject beans and test them
-}
------------------------------------------------
-
-== CdiTestSuiteRunner
-
-JUnit Test-Suite-Runner to start/stop the CDI-Container autom. (per
-test-suite):
-
+.Example of CdiTestSuiteRunner Usage
 [source,java]
 ---------------------------------------
 @RunWith(CdiTestSuiteRunner.class)
@@ -118,18 +134,41 @@ public class SuiteLevelContainerControl
 }
 ---------------------------------------
 
-== Project-Stage Control
+==== Optional Shutdown Configuration
 
-It's possible to overrule the default-project-stage for unit-tests
-(ProjectStage.UnitTest.class):
+You can set `deltaspike.testcontrol.stop_container` to `false` (via the standard DeltaSpike config), resulting in the CDI Container being started just once for all tests.
 
+=== Test Customization
+
+==== @TestControl
+
+Customize the default behavior of CdiTestRunner with @TestControl. In the following
+case only one session for all test-methods (of the test-class) will be
+created.
+
+.Example of @TestControl Usage
+[source,java]
+-----------------------------------------------
+@RunWith(CdiTestRunner.class)
+@TestControl(startScopes = SessionScoped.class)
+public class CustomizedScopeHandling
+{
+    //inject beans and test them
+}
+-----------------------------------------------
+
+==== ProjectStage Control
+
+Override the default ProjectStage for unit tests with `ProjectStage.UnitTest.class`.
+
+.Example of projectStage Usage
 [source,java]
 ---------------------------------------------------------------
 @RunWith(CdiTestRunner.class)
 @TestControl(projectStage = CustomTestStage.class)
 public class TestStageControl
 {
-    //tests here will see project-stage CustomTestStage.class
+    //tests here will see ProjectStage CustomTestStage.class
 
     @Test
     @TestControl(projectStage = ProjectStage.Development.class)
@@ -137,42 +176,24 @@ public class TestStageControl
     {
     }
 
-    //tests here will see project-stage CustomTestStage.class
+    //tests here will see ProjectStage CustomTestStage.class
 }
 ---------------------------------------------------------------
 
+=== Optional Configuration
 
-== Optional Config
-
-It's possible to set "deltaspike.testcontrol.stop_container" to "false"
-(via the std. DeltaSpike config). With that the CDI-Container will be
-started just once for all tests.
-
-
-== Hints
-
-Don't forget to add a beans.xml in the test-module (e.g.
-src/test/resources/META-INF/beans.xml).
-
-If you are using OpenWebBeans as CDI implementation and you need to test
-EJBs as well, you can use deltaspike-cdictrl-openejb +
-org.apache.openejb:openejb-core (instead of deltaspike-cdictrl-owb).
-
-
-== Optional Config
-
-Since DeltaSpike 1.2 it's possible to provide a config for the underlying test-container.
+From DeltaSpike 1.2, it is possible to provide a configuration for the underlying test-container.
 However, currently only the adapter for OpenEJB embedded (available in CDI-Control) supports it out-of-the-box.
 To pass properties to the underlying test-container,
 you have to add `/META-INF/apache-deltaspike_test-container.properties`
 to the resources-directory of your test-classpath.
 The content of the file are key/value pairs which get passed to the container.
-Therefore, it's a config which isn't used by DeltaSpike itself
-(it's just forwarded (as it is) to the underlying test-container).
+Therefore, it is a configuration which isis not used by DeltaSpike itself
+(it is just forwarded (as it is) to the underlying test-container).
 
-=== Reconfigure the config-file name/location
+==== Reconfigure the config-file Name or Location
 
-If you would like to point to an existing config-file, you have to add e.g.
+If you would like to point to an existing config-file, you have to add for example:
 
 [source,Properties]
 ---------------------------------------------------------------
@@ -181,7 +202,7 @@ deltaspike.testcontrol.test-container.config-file=META-INF/existingConfig.proper
 
 to `/META-INF/apache-deltaspike.properties`.
 
-If you would like to do it per project-stage, you can use e.g.:
+If you would like to do it per ProjectStage, you can use for example:
 
 [source,Properties]
 ---------------------------------------------------------------
@@ -189,22 +210,20 @@ deltaspike.testcontrol.test-container.config-file.UnitTest=META-INF/unit-test/ex
 ---------------------------------------------------------------
 
 
-== Optional Integrations
+=== Optional Integrations
 
+==== Mock Frameworks
 
-=== Mock Frameworks
+From DeltaSpike 1.0, it is possible to mock CDI-Beans. Usually @Exclude (+
+ProjectStage) is enough, however, for some cases mocked beans might be
+easier. Therefore it is possible to create (mock-)instances manually or
+via a mocking framework and add them, for example, via `DynamicMockManager`.
 
-Since v1 it's possible to mock CDI-Beans. Usually @Exclude (+
-project-stage) is enough, however, for some cases mocked beans might be
-easier. Therefore it's possible to create (mock-)instances manually or
-via a mocking framework and add them e.g. via `DynamicMockManager`.
-
-*Attention:*
-Mocking CDI beans isn't supported for every feature of CDI and/or
-every implementation version. E.g. we can't mock intercepted CDI beans and
+**Attention:** Mocking CDI beans isis not supported for every feature of CDI and/or
+every implementation version. For example, we cais not mock intercepted CDI beans and
 with some implementations mocking specialized beans fails.
-Usually all features are active per default, however,
-due to those reasons we deactivated this feature per default.
+Usually all features are active by default, however,
+due to those reasons we deactivated this feature by default.
 You can enable it by adding
 
 `deltaspike.testcontrol.mock-support.allow_mocked_beans=true`
@@ -261,9 +280,9 @@ public class RequestScopedBean
 }
 -------------------------------------------------------------
 
-Using a mocking framework makes no difference for adding the mock. E.g.
-via Mockito:
+Using a mocking framework makes no difference for adding the mock.
 
+.Example via Mockito
 [source,java]
 ----------------------------------------------------------------------------------
 @RunWith(CdiTestRunner.class)
@@ -290,8 +309,7 @@ public class MockitoMockedRequestScopedBeanTest
 ----------------------------------------------------------------------------------
 
 Since CDI implementations like OpenWebBeans use a lot of optimizations,
-it's required to handle mocks for application-scoped beans differently -
-e.g.:
+it is required to handle mocks for application-scoped beans differently, for example:
 
 [source,java]
 --------------------------------------------------------------------------------------------------------------------------
@@ -347,8 +365,8 @@ public class MockedApplicationScopedBean extends ApplicationScopedBean
 However, `ApplicationMockManager` can be used for adding all mocks, if
 they should be active for the lifetime of the CDI-container.
 
-It's also possible to mock qualified beans. Just add the
-literal-instance(s) as additional parameter(s) - e.g.:
+It is also possible to mock qualified beans. Just add the
+literal-instance(s) as additional parameter(s), for example:
 
 [source,java]
 -------------------------------------------------------------
@@ -380,13 +398,13 @@ public class MockedQualifiedBeanTest
 }
 -------------------------------------------------------------
 
-In some cases it's needed to use `@javax.enterprise.inject.Typed`.
+In some cases it is necessary to use `@javax.enterprise.inject.Typed`.
 Mocking such typed beans can result in an
-`AmbiguousResolutionException`. Therefore it's needed to exclude the
+`AmbiguousResolutionException`. Therefore it is necessary to exclude the
 mocked implementation via `@Exclude` or `@Typed()` (or a parametrized
 constructor) and specify the target-type via `@TypedMock`.
 
-=== JSF (via MyFaces-Test)
+==== JSF (via MyFaces-Test)
 
 add on of
 
@@ -399,12 +417,12 @@ as content to
 
 /META-INF/services/org.apache.deltaspike.testcontrol.spi.ExternalContainer
 
-(in your config-folder for tests e.g.: test/resources)
+(in your config-folder for tests, e.g. test/resources)
 
-== Mixed Tests
+=== Mixed Tests
 
 Usually you should have one kind of tests per test-module. However, if
-you need to add e.g. a test without an external-container to your
+you need to add, for example, a test without an external-container to your
 test-module which uses external-containers, you can annotate your test
 with:
 
@@ -419,12 +437,12 @@ public class JsfContainerTest
 ---------------------------------------------
 
 
-== Known Restrictions
+=== Known Restrictions
 
-=== Liquibase
+==== Liquibase
 
 Liquibase invokes `#toString` in a `AfterDeploymentValidation` observer.
-*that isn't portable* and therefore you have to deactivate the
+*that isis not portable* and therefore you have to deactivate the
 mocking-support via:
 
 [source,java]
@@ -437,7 +455,7 @@ public class LiquibaseAwareClassDeactivator implements ClassDeactivator {
 }
 ----------------------------------------------------------------------------------------------------------
 
-and add `LiquibaseAwareClassDeactivator` to `/META-INF/apache-deltaspike.properties` - e.g.:
+and add `LiquibaseAwareClassDeactivator` to `/META-INF/apache-deltaspike.properties`, for example:
 
 ---------------------------------------------------------------------------------------------------
 org.apache.deltaspike.core.spi.activation.ClassDeactivator=myPackage.LiquibaseAwareClassDeactivator
@@ -445,11 +463,9 @@ org.apache.deltaspike.core.spi.activation.ClassDeactivator=myPackage.LiquibaseAw
 
 Further details are available at deactivatable.
 
+=== SPI
 
-== SPI
-
-
-=== ExternalContainer
+==== ExternalContainer
 
 org.apache.deltaspike.testcontrol.spi.ExternalContainer allows to
 integrate containers which get started after the CDI container.

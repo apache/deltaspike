@@ -1,50 +1,69 @@
-= DeltaSpike Security Module
+= Security Module
 
 :Notice: Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
 :toc:
 
-== Hint
+== Overview
+The Security module provides intercept and security checking on method calls. This module also enables integration of third-party security frameworks and custom security concepts.
 
-*Hint:* If you are using features described by this page with CDI 1.0
-(or DeltaSpike up to v1.1.0 with CDI 1.1+), you have
-to enable the security interceptor in your beans.xml file:
+== Configure Your Projects
+The configuration information provided here is for Maven-based projects and it assumes that you have already declared the DeltaSpike version and DeltaSpike Core module for your projects, as detailed in <<configure#, Configure DeltaSpike in Your Projects>>. For Maven-independent projects, see <<configure#config-maven-indep,Configure DeltaSpike in Maven-independent Projects>>.
+
+=== 1. Declare Security Module Dependencies
+Add the Security module to the list of dependencies in the project `pom.xml` file using this code snippet:
 
 [source,xml]
-----------------------------------------------------------------------------------------
+----
+<dependency>
+    <groupId>org.apache.deltaspike.modules</groupId>
+    <artifactId>deltaspike-security-module-api</artifactId>
+    <version>${deltaspike.version}</version>
+    <scope>compile</scope>
+</dependency>
+
+<dependency>
+    <groupId>org.apache.deltaspike.modules</groupId>
+    <artifactId>deltaspike-security-module-impl</artifactId>
+    <version>${deltaspike.version}</version>
+    <scope>runtime</scope>
+</dependency>
+----
+
+=== 2. Enable the Security Interceptor
+For CDI 1.0 (or DeltaSpike v1.1.0 and earlier together with CDI 1.1+), you must enable the security interceptor in the project `beans.xml` file:
+
+[source,xml]
+----
 <beans>
     <!-- Not needed with CDI 1.1+ and DeltaSpike v1.1.1+ -->
     <interceptors>
         <class>org.apache.deltaspike.security.impl.extension.SecurityInterceptor</class>
     </interceptors>
 </beans>
-----------------------------------------------------------------------------------------
+----
 
+== Use the Module Features
 
-SecurityBinding for class and method invocations
-------------------------------------------------
-
-This feature of the security module functions by intercepting method
-calls, and performing a security check before invocation is allowed to
-proceed.
+=== SecurityBinding for Class and Method Invocations
+This feature of the Security module intercepts method calls and performs a security check before invocation is allowed to proceed.
 
 In order to use the DeltaSpike security module, you must first have
-installed the proper dependencies into your POM file. Once this is
+installed the proper dependencies into the `pom.xml` file. Once this is
 complete, you may proceed to create a security parameter binding
 annotation. This is what we will use to add security behavior to our
 business classes and methods.
 
-Create the SecurityBinding:
-
+.Create the SecurityBinding
 [source,java]
------------------------------------------
+----
 @Retention(value = RUNTIME)
 @Target({TYPE, METHOD})
 @Documented
 @SecurityBindingType
 public @interface CustomSecurityBinding {
 }
------------------------------------------
+----
 
 Next, we must define an Authorizer class to implement behavior for our
 custom SecurityBindingType. This class is simply a CDI bean which
@@ -56,8 +75,7 @@ if we need to access parameter arguments, we can do so using the given
 context. Note that we may also inject other beans into the parameter
 list of our @Secures method.
 
-Create the Authorizer:
-
+.Create the Authorizer
 [source,java]
 ---------------------------------------------------------------------------------------------------------------------------------
 @ApplicationScoped
@@ -76,8 +94,7 @@ We can then use our new annotation to secure business or bean methods.
 This binding annotation may be placed on the entire class (securing all
 methods,) or on individual methods that you wish to secure.
 
-Secure a bean method:
-
+.Secure a Bean Method
 [source,java]
 ----------------------------------------
 @ApplicationScoped
@@ -95,8 +112,7 @@ Next, we may access parameter values from the method invocation directly
 in our authorizer bean by creating custom @SecurityParameterBinding
 types; this is a simple step once we have completed the work above:
 
-Create a parameter binding annotation:
-
+.Create a Parameter Binding Annotation
 [source,java]
 --------------------------------
 @Retention(value = RUNTIME)
@@ -111,8 +127,7 @@ Now, when a secured method is invoked, we can inject actual parameter
 values as arguments into our authorizer method, providing domain-level
 security in our applications:
 
-Update the Authorizer to use parameter binding:
-
+.Update the Authorizer to use Parameter Binding
 [source,java]
 ------------------------------------------------------------------------------------------------------------------------------------------------------------
 @ApplicationScoped
@@ -129,8 +144,7 @@ public class CustomAuthorizer
 
 Note that our business method must also be annotated.
 
-Complete the parameter binding:
-
+.Complete the Parameter Binding
 [source,java]
 ------------------------------------------------------
 @ApplicationScoped
@@ -185,8 +199,7 @@ public class CustomAuthorizer
 Now the authorization will take place after the method invocation using
 the return value of the business method.
 
-Complete the parameter binding:
-
+.Complete the Parameter Binding
 [source,java]
 ------------------------------------------------------
 @ApplicationScoped
@@ -204,15 +217,14 @@ Our method is now secured, and we are able to use given parameter values
 as part of our security authorizer!
 
 
-== Integrating 3rd party security frameworks
+=== Integrating Third-party Security Frameworks
 
-
-=== @Secured
+==== @Secured
 
 `@Secured` is build on `@SecurityBindingType` and a very simple
-alternative to the rest of the security module. It's a basic hook to
-integrate a custom security concept, 3rd party frameworks,... . It
-doesn't provide a full blown security concept like the rest of the
+alternative to the rest of the security module. It is a basic hook to
+integrate a custom security concept, third-party frameworks, etc. It
+doesis not provide a full blown security concept like the rest of the
 security module, but other DeltaSpike modules ensure that the security
 concepts are integrated properly (e.g. correct behaviour within custom
 scope implementations,...). It just allows to integrate other security
@@ -224,8 +236,7 @@ a bit, because between the interceptor and `@Secured` is the
 approach. Therefore the basic behaviour remains the same and you can
 think about it like an interceptor.)
 
-Securing all intercepted methods of a CDI bean:
-
+.Securing All Intercepted Methods of a CDI Bean
 [source,java]
 -----------------------------------------
 //...
@@ -236,10 +247,7 @@ public class SecuredBean
 }
 -----------------------------------------
 
-or
-
-Securing specific methods:
-
+.Securing Specific Methods
 [source,java]
 ---------------------------------------------
 //...
@@ -253,7 +261,7 @@ public class SecuredBean
 }
 ---------------------------------------------
 
-=== AccessDecisionVoter
+==== AccessDecisionVoter
 
 This interface is (besides the `Secured` annotation) the most important
 part of the concept. Both artifact types are also the only required
@@ -273,9 +281,9 @@ public class CustomAccessDecisionVoter implements AccessDecisionVoter
 }
 --------------------------------------------------------------------------------------------------------
 
-[TODO] hint about the changed parameter/s
+[TODO] tip about the changed parameter/s
 
-=== SecurityViolation
+==== SecurityViolation
 
 In case of a detected violation a `SecurityViolation` has to be added to
 the result returned by the `AccessDecisionVoter`.
@@ -301,15 +309,14 @@ public class CustomAccessDecisionVoter extends AbstractAccessDecisionVoter
 -----------------------------------------------------------------------------------------
 
 
-=== @Secured and Stereotypes with custom Meta-data
+==== @Secured and Stereotypes with Custom Meta-data
 
 If there are multiple `AccessDecisionVoter` and maybe in different
-constellations, it's easier to provide an expressive CDI stereotypes for
+constellations, it is easier to provide an expressive CDI stereotypes for
 it. Later on that also allows to change the behaviour in a central
 place.
 
-Stereotype support of @Secured:
-
+.Stereotype Support of @Secured
 [source,java]
 -------------------------------------------
 @Named
@@ -327,10 +334,9 @@ public @interface Admin
 }
 -------------------------------------------
 
-Furthermore, it's possible to provide custom meta-data easily.
+Furthermore, it is possible to provide custom meta-data easily.
 
-Stereotype of @Secured with custom meta-data:
-
+.Stereotype of @Secured with Custom Meta-data
 [source,java]
 ------------------------------------------------------------------------------------------
 @Named
@@ -362,14 +368,14 @@ public class RoleAccessDecisionVoter implements AccessDecisionVoter
 }
 ------------------------------------------------------------------------------------------
 
-== Making intitially requested and secured page available for redirect after login
+=== Making Intitially Requested and Secured Page available for Redirect after Login
 
 DeltaSpike can be combined with pure CDI or with any other security
 frameworks (like PicketLink) to track the denied page and make it
 available after user logs in.
 
 
-=== CDI Implementation to redirect the login to the first denied page
+==== CDI Implementation to Redirect the Login to the First Denied Page
 
 Your LoginService will fire a custom `UserLoggedInEvent`
 
@@ -440,7 +446,7 @@ public class AuthenticationListener {
 }
 ----------------------------------------------------------------------------------------
 
-=== PicketLink Implementation to redirect the login to the first denied page
+==== PicketLink Implementation to Redirect the Login to the First Denied Page
 
 Once that PicketLink handles the authentication for you, you only need
 to store the denied page and observe PicketLink `LoggedInEvent` to
@@ -502,7 +508,7 @@ public class AuthenticationListener {
 }
 ----------------------------------------------------------------------------------------
 
-== AccessDecisionVoterContext
+=== AccessDecisionVoterContext
 
 Because the `AccessDecisionVoter` can be chained,
 `AccessDecisionVoterContext` allows to get the current state as well as
@@ -512,21 +518,24 @@ There are several methods that can be useful
 
 * `getState()` - Exposes the current state : INITIAL, VOTE_IN_PROGRESS, VIOLATION_FOUND, NO_VIOLATION_FOUND
 * `getViolations()` - Exposes the found violations
-* `getSource()` - Exposes e.g. the current instance of `javax.interceptor.InvocationContext` in combination with `@Secured` used as interceptor.
-* `getMetaData()` - Exposes the found meta-data e.g. the view-config-class if `@Secured` is used in combination with type-safe view-configs
+* `getSource()` - Exposes, for example, the current instance of `javax.interceptor.InvocationContext` in combination with `@Secured` used as interceptor.
+* `getMetaData()` - Exposes the found meta-data, for example the view-config-class if `@Secured` is used in combination with type-safe view-configs
 * `getMetaDataFor(String, Class<T>)` - Exposes meta-data for the given key
 
-=== SecurityStrategy SPI
+==== SecurityStrategy SPI
 
 The `SecurityStrategy` interface allows to provide a custom
 implementation which should be used for `@Secured`. Provide a custom
 implementation as bean-class in combination with `@Alternative` or
 `@Specializes` (or as global-alternative).
 
-In case of global-alternatives an additional config needs to be added to
-`/META-INF/apache-deltaspike.properties` - e.g.:
+In case of global-alternatives an additional configuration needs to be added to
+`/META-INF/apache-deltaspike.properties`.
 
-`globalAlternatives.org.apache.deltaspike.security.spi.authorization.SecurityStrategy=mypackage.CustomSecurityStrategy`
+.Example
+----
+globalAlternatives.org.apache.deltaspike.security.spi.authorization.SecurityStrategy=mypackage.CustomSecurityStrategy
+----
 
-**Note**: The config for global-alternatives is following the pattern:
+TIP: The configuration for global-alternatives is following the pattern:
 globalAlternatives.`<interface-name>`=`<implementation-class-name>`

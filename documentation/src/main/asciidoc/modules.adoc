@@ -9,15 +9,15 @@ DeltaSpike consists of ready-to-use modules. These include a core module and a n
 [cols="1,1,2a"]
 .DeltaSpike Modules
 |===
-|<<core#,Core>> | Required | For the essential API and util classes
+|<<core#,Core>> | Required | For fundamental and defining DeltaSpike API and utility classes
 |<<bean-validation#,Bean Validation>> | Optional | For adding CDI support in Bean Validation, enabling creation of CDI aware `ConstraintValidator` methods that can use business objects (EJBs, ManagedBeans) to support validation needs
-|<<container-control#,Container Control>> | Optional |
+|<<container-control#,Container Control>> | Optional | For CDI container booting and shutdown and associated context lifecycle management
 |<<data#,Data>> | Optional | For an enhanced JPA experience with declarative queries, reducing boilerplate to a minimum
-|<<jpa#,JPA>> | Optional |
-|<<jsf#,JSF>> | Optional |
-|<<partial-bean#,Partial-Bean>> | Optional |
-|<<scheduler#,Scheduler>> | Optional | For simple integration with Quartz v2 (per default) or any other scheduler which supports cron-expressions for job-classes
-|<<security#,Security>> | Optional | For intercept and check security
+|<<jpa#,JPA>> | Optional | For transactional context and scope
+|<<jsf#,JSF>> | Optional | For CDI integration with JSF, with type-safe view config, multi-window handling, new scopes (WindowScoped, ViewScope, ViewAccessScoped, GroupedConversationScoped) and integration with DeltaSpike “core” messages and exception handling
+|<<partial-bean#,Partial-Bean>> | Optional | For implementing a generic handler to replace manual implementations of interfaces (or abstract classes)
+|<<scheduler#,Scheduler>> | Optional | For simple integration with Quartz v2 (default) or any other scheduler that supports cron-expressions for job-classes
+|<<security#,Security>> | Optional | For intercept and security checking on method calls
 |<<servlet#,Servlet>> | Optional | For integration with the Java Servlet API, enabling injection of common servlet objects and propagation of servlet events to the CDI event bus
-|<<test-control#,Test-Control>> | Optional | For easily writing CDI based tests
+|<<test-control#,Test-Control>> | Optional | For writing CDI-based tests easily
 |===

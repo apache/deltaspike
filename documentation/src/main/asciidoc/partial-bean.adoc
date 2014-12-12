@@ -1,10 +1,40 @@
-= Partial-Bean
+= Partial-Bean Module
 
 :Notice: Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
 :toc:
 
-== Usage
+== Overview
+The Partial-Bean module provides means for implementing a generic handler to replace manual implementations of interfaces (or abstract classes).
+
+== Configure Your Projects
+The configuration information provided here is for Maven-based projects and it assumes that you have already declared the DeltaSpike version and DeltaSpike Core module for your projects, as detailed in <<configure#, Configure DeltaSpike in Your Projects>>. For Maven-independent projects, see <<configure#config-maven-indep,Configure DeltaSpike in Maven-independent Projects>>.
+
+=== Declare Partial-Bean Module Dependencies
+Add the Partial-Bean module to the list of dependencies in the project `pom.xml` file using this code snippet:
+
+[source,xml]
+----
+<dependency>
+    <groupId>org.apache.deltaspike.modules</groupId>
+    <artifactId>deltaspike-partial-bean-module-api</artifactId>
+    <version>${deltaspike.version}</version>
+    <scope>compile</scope>
+</dependency>
+
+<dependency>
+    <groupId>org.apache.deltaspike.modules</groupId>
+    <artifactId>deltaspike-partial-bean-module-impl</artifactId>
+    <version>${deltaspike.version}</version>
+    <scope>runtime</scope>
+</dependency>
+----
+
+== Use the Module Features
+
+IMPORTANT: Currently CDI Interceptors cannot be used for partial-beans.
+
+=== @PartialBeanBinding
 
 Partial beans allow you to implement a generic handler to replace manual
 implementations of interfaces (or abstract classes).
@@ -40,5 +70,3 @@ public class MyPartialBeanHandler implements java.lang.reflect.InvocationHandler
 
 Using an abstract class as partial-bean requires javassist as an
 additional dependency and allows to implement some methods manually.
-
-Attention: Currently CDI-Interceptors can't be used for partial-beans.

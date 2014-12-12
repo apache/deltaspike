@@ -1,52 +1,41 @@
-= Container & Control
+= Container Control Module
 
 :Notice: Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
 :toc:
 
-== Introduction
+== Overview
+The Container Control module provides CDI container booting and shutdown, crucial for CDI use in Java SE6+ environments, and associated context lifecycle management. The module abstracts individual CDI container implementations, ensuring projects are container-independent.
 
-There are basically two parts:
+== Configure Your Projects
+The configuration information provided here is for Maven-based projects and it assumes that you have already declared the DeltaSpike version and DeltaSpike Core module for your projects, as detailed in <<configure#, Configure DeltaSpike in Your Projects>>. For Maven-independent projects, see <<configure#config-maven-indep,Configure DeltaSpike in Maven-independent Projects>>.
 
-* The `CdiContainer` interface allows to boot and shutdown the CDI container in SE applications.
-* The `ContextControl` interface allows to control the life-cycle of the built-in contexts of the CDI container.
+=== Declare Container Control Module Dependencies
+Add the Container Control module to the list of dependencies in the project `pom.xml` file using this code snippet:
+
+[source,xml]
+----
+<dependency>
+    <groupId>org.apache.deltaspike.cdictrl</groupId>
+    <artifactId>deltaspike-cdictrl-api</artifactId>
+    <version>${deltaspike.version}</version>
+    <scope>compile</scope>
+</dependency>
+----
+
+== Use the Module Features
 
 === CdiContainer
+The `CdiContainer` interface provides booting and shutdown of the CDI containers from deployed applications, with `CdiContainerLoader` a simple factory providing access to the underlying `CdiContainer` implementation.
 
-You can use the `CdiContainerLoader` as a simple factory to gain access
-to the underlying `CdiContainer` implementation. This is of little
-interest for Java EE applications since the CDI Container already gets
-properly booted and shut down by the Servlet container integration.
+This is useful to Java SE6+ applications in which a standalone CDI implementation must be provided and booted and shutdown by the application. Booting and shutdown of the CDI container for Java EE and servlet containers is managed by the servlet container integration.
 
-[source,java]
-------------------------------------------------------------------------------------
-// this will give you a CdiContainer for Weld or OWB, depending on the jar you added
-CdiContainer cdiContainer = CdiContainerLoader.getCdiContainer();
+For instructions and examples on using this feature in your projects, see <<cdiimp#javase6,Enable CDI For Your Java Environment: Java SE6+>>.
 
-// now we gonna boot the CDI container. This will trigger the classpath scan, etc
-cdiContainer.boot();
+=== ContextControl Usage
+The `ContextControl` interface provides life-cycle control of the CDI container built-in contexts. This includes starting and stoping built-in standard contexts like `@RequestScoped`, `@ConversationScoped`, and `@SessionScoped`. It is provided as an `@Dependent` bean and can be injected in the classic CDI way. This feature can be used and is helpful in all Java environments, including Java SE, as illustrated here.
 
-// and finally we like to start all built-in contexts
-cdiContainer.getContextControl().startContexts();
-
-// now we can use CDI in our SE application.
-// And there is not a single line of OWB or Weld specific code in your project!
-
-// finally we gonna stop the container
-cdiContainer.shutdown();
-------------------------------------------------------------------------------------
-
-=== ContextControl usage
-
-
-The `ContextControl` interface allows you to start and stop built-in
-standard Contexts like `@RequestScoped`, `@ConversationScoped`,
-`@SessionScoped`, etc. It is provided as `@Dependent` bean and can get
-injected in the classic CDI way. This is not only usable in Java SE
-projects but also very helpful in Servlets and Java EE containers.
-
-*Restarting the RequestContext in unit tests*
-
+==== Restart the RequestContext in Unit Tests
 In unit testing it can be necessary to test with attached and also with
 detached JPA entities. A very common approach for JPA is the
 http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Web_Server/1.0/html/Hibernate_Entity_Manager_Reference_Guide/transactions.html[entitymanager-per-request
@@ -54,8 +43,7 @@ approach] and thus have a producer method which creates a @RequestScoped
 EntityManager. Since a single unit test is usually treated as one
 ‘request’ a problem arises detaching entities.
 
-Using ContextControl to detach entities:
-
+.Using ContextControl to Detach Entities
 [source,java]
 ---------------------------------------------------------------------------------------
 @Test
@@ -66,28 +54,26 @@ public void testMyBusinessLogic()
 
     ContextControl ctxCtrl = BeanProvider.getContextualReference(ContextControl.class);
 
-    //stopping the request context will dispose the @RequestScoped EntityManager
+    //stop the RequestContext to dispose of the @RequestScoped EntityManager
     ctxCtrl.stopContext(RequestScoped.class);
 
-    // and now immediately restart the context again
+    //immediately restart the context again
     ctxCtrl.startContext(RequestScoped.class);
 
-    // the entity 'em' is now in a detached state!
+    //the entity 'em' is now in a detached state!
     doSomeStuffWithTheDetachedEntity(em);
 }
 ---------------------------------------------------------------------------------------
 
-Attaching a Request Context to a new thread in EE
-
+==== Attach a RequestContext to a New Thread in EE
 Accessing the `@RequestScoped` bean in a new thread will result in a
-`ContextNotActiveException`. The request-context usually gets started
+`ContextNotActiveException`. The RequestContext usually gets started
 for a particular thread via a simple `ServletRequestListener`. So "no
 servlet-request" means that there is no Servlet-Context for the current
 (/new) Thread. You might face such issues, if you would like to reuse
-business services in e.g. a Quartz Job.
+business services in for example a Quartz Job.
 
-Controlling the request-context for a Quartz-Job:
-
+.Using ContextControl to Control the RequestContext for a Quartz-Job
 [source,java]
 ---------------------------------------------------------------------------------------------
 public class CdiJob implements org.quartz.Job
@@ -113,8 +99,7 @@ public class CdiJob implements org.quartz.Job
 ---------------------------------------------------------------------------------------------
 
 === Embedded Servlet Support
-
-Starting with 1.0.2, you can use DeltaSpike to power embedded Servlet
+From DeltaSpike 1.0.2, you can use DeltaSpike to power embedded Servlet
 runtimes. This work is done via Servlet Listeners. The configuration is
 specific to each container, below are some examples.
 
@@ -125,7 +110,7 @@ containers this is all you need. For Tomcat specifically, you need to
 use `CdiServletContextListener` which registers the
 `CdiServletRequestListener`.
 
-The main usecase for this feature is for lightweight embedded runtimes,
+The main use case for this feature is for lightweight embedded runtimes,
 microservices. For each of these, it is assumed that you are using the
 following start up code somewhere:
 
@@ -181,7 +166,6 @@ server.start();
 --------------------------------------------------------------------------------------------------------
 
 ==== Tomcat
-
 
 For Tomcat, you need to register the `CdiServletContextListener` instead
 of the `CdiServletRequestListener`. It is added as an

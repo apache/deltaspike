@@ -6,7 +6,7 @@
 
 DeltaSpike is available for use in Maven-based and Maven-independent projects. Instructions are given here for obtaining released final versions of DeltaSpike for both approaches.
 
-**Note:** You can also opt to use the lastest DeltaSpike snapshots; for more information, see <<snapshots#,Use DeltaSpike Snapshots>>.
+NOTE: You can also opt to use the lastest DeltaSpike snapshots; for more information, see <<snapshots#,Use DeltaSpike Snapshots>>.
 
 == Option A: Configure DeltaSpike in Maven-based Projects
 DeltaSpike released versions are available from the Maven Central repository for use in Maven-based projects. This means that you do not need to modify your Maven configuration `settings.xml` file; when building projects, Maven automatically searches the online Maven Central repository for project dependencies and downloads sources to your local Maven repository. 
@@ -19,7 +19,7 @@ To begin use the DeltaSpike releases from Maven Central, you simply need to conf
 [source,xml]
 ----
 <properties>
-    <deltaspike.version>1.0.2</deltaspike.version>
+    <deltaspike.version>1.2.0</deltaspike.version>
 </properties>
 ----
 +
@@ -44,6 +44,8 @@ To begin use the DeltaSpike releases from Maven Central, you simply need to conf
 +
 . Save the `pom.xml` file changes
 
+TIP: The API is scoped for compile time and implementation only included for runtime, assisting to prevent you from inadvertantly depending on an implementation class.
+
 For instructions on adding the optional DeltaSpike modules, see the relevant module page:
 
 * <<bean-validation#,Bean Validation>>
@@ -57,6 +59,7 @@ For instructions on adding the optional DeltaSpike modules, see the relevant mod
 * <<servlet#,Servlet>>
 * <<test-control#,Test-Control>>
 
+[[config-maven-indep]]
 == Option B: Configure DeltaSpike in Maven-independent Projects
 Deltaspike is provided as a set of downloadable .jar files for projects not utilizing the Maven build system. Alternatively, you can build the DeltaSpike .jar files from source; for instructions, see <<build#,Build DeltaSpike from Source>>. In both cases, you must add the DeltaSpike .jar files directly to your projects. 
 

@@ -2,7 +2,7 @@
 
 :Notice: Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
-[TOC]
+:toc:
 
 == Preparations
 
@@ -41,7 +41,7 @@ mvn clean install -Pwildfly-build-managed
 mvn clean install -Pglassfish-build-managed-3
 -----------------------------------------------------------------------------------------------------------------------
 
-deploy a demo app esp. with jsf-impl-ee6 to an ee6 server and check the logs (if there are no optional ee7+ classes)
+deploy a demo app especially with jsf-impl-ee6 to an ee6 server and check the logs (if there are no optional ee7+ classes)
 (https://github.com/os890/ee6-ds-demo can be used for it e.g.)
 
 == First steps
@@ -52,7 +52,7 @@ git checkout -b deltaspike-[release version]
 
 mvn release:prepare -Pdistribution -DreleaseProfiles=distribution
 
-//hint: don't use -DdryRun=true -- since it can break the next step
+//hint: dois not use -DdryRun=true -- since it can break the next step
 mvn release:perform -Pdistribution -DreleaseProfiles=distribution
 
 //!!!check the created commits including user-name and email
@@ -61,7 +61,7 @@ mvn release:perform -Pdistribution -DreleaseProfiles=distribution
 //check esp. .../org/apache/deltaspike/deltaspike-project/[version]/deltaspike-project-[version]-source-release.zip
 //close the repository
 
-//push the release-branch and tag to a 3rd party git repo
+//push the release-branch and tag to a third-party git repo
 git remote add vote https://github.com/[user]/deltaspike-vote
 git push -u vote master
 git push vote deltaspike-[release version]
@@ -70,7 +70,7 @@ git push vote --tags
 
 == Vote
 
-=== Start the vote
+=== Start the Vote
 
 e.g.:
 
@@ -106,14 +106,14 @@ Thanks,
 [4] http://www.apache.org/foundation/voting.html#ReleaseVotes
 -----------------------------------------------------------------------------------------------------------------------
 
-== Announce the vote
+== Announce the Vote
 
  - Create a link to the release notes at http://s.apache.org (format DeltaSpike_[version])
  - Tweet about the vote via @DeltaSpikeTeam.
 
 == Perform the final release
 
-=== Close the vote
+=== Close the Vote
 
 After 72 hours close the vote.
 
@@ -159,8 +159,7 @@ git push origin master
  - Wait some hours and check http://repo2.maven.org/maven2/org/apache/deltaspike
 
 
-
-=== Upload artifacts
+=== Upload Artifacts
 
 -----------------------------------------------------------------------------------------------------------------------
 svn co https://dist.apache.org/repos/dist/release/deltaspike
@@ -168,7 +167,7 @@ mkdir [version]
 //add and commit the artifacts (at least *source-release.zip + asc, md5, sha1)
 -----------------------------------------------------------------------------------------------------------------------
 
-=== Check downloads
+=== Check Downloads
 
  - http://www.eu.apache.org/dist/deltaspike
  - http://www.us.apache.org/dist/deltaspike
@@ -183,7 +182,7 @@ via CMS:
 
 === Announce the Release
 
-==== E-Mails
+==== E-mails
 
 
 -----------------------------------------------------------------------------------------------------------------------

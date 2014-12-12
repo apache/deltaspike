@@ -7,12 +7,12 @@
 == Introduction
 
 Project stages allow to use implementations depending on the current
-environment. E.g. you can implement a bean which creates sample-data for
-system tests which gets activated only in case of project-stage
+environment. For example, you can implement a bean which creates sample-data for
+system tests which gets activated only in case of ProjectStage
 `SystemTest`.
 
-_Besides custom project-stages_ it's possible to use the following
-pre-defined project-stages:
+_Besides custom ProjectStages_ it is possible to use the following
+pre-defined ProjectStages:
 
 * UnitTest
 * Development
@@ -22,14 +22,14 @@ pre-defined project-stages:
 * Production
 
 The core provides a pluggable and type-safe approach for using project
-stages in a project (it's also used within the framework). Furthermore,
-`@Exclude` allows to use e.g. i mplementations annotated with
-`javax.enterprise.inject.Alternative` for specific project-stages.
-Besides the out-of-the-box project-stages it's possible to implement
-_custom but type-safe_ project-stages which will be exposed by
+stages in a project (it is also used within the framework). Furthermore,
+`@Exclude` allows use of, for example, implementations annotated with
+`javax.enterprise.inject.Alternative` for specific ProjectStages.
+Besides the out-of-the-box ProjectStages it is possible to implement
+_custom but type-safe_ ProjectStages which will be exposed by
 DeltaSpike.
 
-Resolving and using the Project-Stage:
+Resolving and using the ProjectStage:
 
 [source,java]
 -------------------------------------------------------------------------------
@@ -44,13 +44,13 @@ boolean isDevProjectStage = ProjectStage.Development.equals(this.projectStage);
 
 === Custom Project Stages
 
-It's possible to provide custom project stage implementations.
+It is possible to provide custom project stage implementations.
 Therefore, you have to provide an implementation of the
 `ProjectStageHolder` interface. In this class you nest the custom
-project-stage implementations which have to be
-`public static final class` and it's required to extend `ProjectStage`.
-It's required to provide a `public static final` instance even though,
-you won't use it directly.
+ProjectStage implementations which have to be
+`public static final class` and it is required to extend `ProjectStage`.
+It is required to provide a `public static final` instance even though,
+you wois not use it directly.
 
 ProjectStageHolder for custom project stage implementations:
 
@@ -85,24 +85,25 @@ customProjectStage = CustomProjectStageHolder.CustomProjectStage;
 ----------------------------------------------------------------------------
 
 
-=== ProjectStageProducer (for 3rd party portable extensions)
+=== ProjectStageProducer (for Third-party Portable Extensions)
 
 `ProjectStageProducer` provides the producer method which allows to
-inject the current project-stage. However, in some cases it's needed to
-use project-stages also during the bootstrapping process of the CDI
-container and you can't use injection. In such cases you can use
+inject the current ProjectStage. However, in some cases it is needed to
+use ProjectStages also during the bootstrapping process of the CDI
+container and you cais not use injection. In such cases you can use
 `ProjectStageProducer.getInstance().getProjectStage()` to resolve the
-current project-stage. This helper also contains helpers for unit-tests
-- e.g. `#setProjectStage`. However, those methods shouldn't be needed
-for users (we just need them for testing different project-stage
+current ProjectStage. This helper also contains helpers for unit-tests
+- e.g. `#setProjectStage`. However, those methods shouldis not be needed
+for users (we just need them for testing different ProjectStage
 scenarios).
 
-==== Setting the active ProjectStage
+==== Setting the Active ProjectStage
 
 For setting the ProjectStage which shall get used in your application
 you can specify it in a few ways. The underlying mechanism used to
-determine the string is the ConfigResolver. E.g.:
+determine the string is the ConfigResolver.
 
+.Example
 ------------------------------------------------
 -Dorg.apache.deltaspike.ProjectStage=Development
 ------------------------------------------------

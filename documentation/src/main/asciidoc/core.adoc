@@ -1,45 +1,48 @@
-= Core
+= Core Module
 
 :Notice: Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
 :toc:
 
-== Core - API
+== Overview
+The Core module provides fundamental and defining DeltaSpike API and utility classes. As such, this module must be included in every project that uses DeltaSpike.
 
+== Configure Your Projects
 
-=== DeltaSpike Configuration
+Instructions for configuring your Maven-based and Maven-independent projects to use the DeltaSpike Core module are detailed in <<configure#, Configure DeltaSpike in Your Projects>> as part of the general instructions for configuring your projects for DeltaSpike.
 
+== Use the Module Features
 
-This is described in an own chapter solely targeting our <<configuration.adoc#,configuration>> mechanics, API and SPI.
+=== Core - API
 
-=== BeanProvider
+==== DeltaSpike Configuration
+This is described in a separate page solely targeting <<configuration.adoc#,configuration>> mechanics, API and SPI.
 
+==== BeanProvider
 
 The `BeanProvider` is a class which provides (static) util methods which
-allow to lookup beans if it isn't possible to inject them via `@Inject`
+allow to lookup beans if it is not possible to inject them via `@Inject`
 or if the lookup depends on dynamic conditions. Instead of using the
 term 'bean', the term 'contextual instance' is used because that's the
 term used by CDI itself.
 
 The following example shows a simple lookup. With the second parameter
-it's possible to specify if the contextual instance is optional. If it
-isn't expected that the contextual instance is optional, but no instance
+it is possible to specify if the contextual instance is optional. If it
+is not expected that the contextual instance is optional, but no instance
 has been found, an `IllegalStateException` will be thrown.
 
-Resolving a simple contextual instance:
-
+.Resolving a Simple Contextual Instance
 [source,java]
 -------------------------------------------------------------------------
 MyBean myBean = BeanProvider.getContextualReference(MyBean.class, false);
 -------------------------------------------------------------------------
 
 Pass `true` as second argument, if you look for an implementation of the
-given interface and an implementation isn't required or it isn't
+given interface and an implementation is not required or it is not
 required that there is an instance with the given qualifier (see the
 qualifier example for further details).
 
-Resolving an optional contextual instance:
-
+.Resolving an Optional Contextual Instance
 [source,java]
 ---------------------------------------------------------------------------------------------------------
 MyServiceInterface optionalService = BeanProvider.getContextualReference(MyServiceInterface.class, true);
@@ -49,8 +52,7 @@ Optionally you can provide a qualifier for the contextual instance in
 question. CDI qualifiers are annotations, therefore you need to
 implement a corresponding literal for providing an instance.
 
-Literal implementation for '@MyQualifier':
-
+.Literal Implementation for '@MyQualifier'
 [source,java]
 ---------------------------------------------------------------------------------------------
 import javax.enterprise.util.AnnotationLiteral;
@@ -62,10 +64,9 @@ public class MyQualifierLiteral extends AnnotationLiteral<MyQualifier> implement
 ---------------------------------------------------------------------------------------------
 
 The following example will return a contextual instance with the
-qualifier `@MyQualifier`
+qualifier `@MyQualifier`.
 
-Resolving a simple contextual instance with qualifier:
-
+.Resolving a Simple Contextual Instance with Qualifier
 [source,java]
 ---------------------------------------------------------------------------------------------------
 MyBean myBean = BeanProvider.getContextualReference(MyBean.class, false, new MyQualifierLiteral());
@@ -75,68 +76,62 @@ The `@Named` qualifier has a special role and allows to specify a string
 based name (e.g. for referencing CDI beans in EL-expressions). However,
 the following examples show how to do a manual lookup by name.
 
-Resolving a simple contextual instance by name:
-
+.Resolving a Simple Contextual Instance by Name
 [source,java]
 ---------------------------------------------------------------------
 Object myBean = BeanProvider.getContextualReference("myBean", false);
 ---------------------------------------------------------------------
 
-Resolving a simple contextual instance by name and expected type:
-
+.Resolving a Simple Contextual Instance by Name and Expected Type
 [source,java]
 -----------------------------------------------------------------------------------
 MyBean myBean = BeanProvider.getContextualReference("myBean", false, MyBean.class);
 -----------------------------------------------------------------------------------
 
-Sometimes it's essential to resolve all contextual instances which
-implement e.g. an interface or all beans with the same type but a
+Sometimes it is essential to resolve all contextual instances which
+implement for example an interface or all beans with the same type but a
 different qualifier. The following example shows how to do such a lookup
 which returns all contextual instances (independent of the scope -> also
 dependent scoped instances).
 
-Resolving all contextual instances of a given type:
-
+.Resolving All Contextual Instances of a Given Type
 [source,java]
 ---------------------------------------------------------------------------------------------------------------
 List<MyServiceInterface> myServiceList = BeanProvider.getContextualReferences(MyServiceInterface.class, false);
 ---------------------------------------------------------------------------------------------------------------
 
 Since dependent scoped beans have a special role in CDI (you have to
-destroy them manually - esp. if you get them via a manual lookup), you
+destroy them manually - especially if you get them via a manual lookup), you
 can also call the previous util method with an additional parameter to
 filter dependent scoped instances.
 
-Resolving all contextual instances of a given type without dependent
-scoped instances:
-
+.Resolving All Contextual Instances of a Given Type without Dependent
+Scoped Instances
 [source,java]
 ----------------------------------------------------------------------------------------------------------------------
 List<MyServiceInterface> myServiceList = BeanProvider.getContextualReferences(MyServiceInterface.class, false, false);
 ----------------------------------------------------------------------------------------------------------------------
 
-Furthermore, it's possible to trigger the injection of fields of any
-given instance, if it wasn't done by the container (e.g. because the
+Furthermore, it is possible to trigger the injection of fields of any
+given instance, if it was not done by the container (e.g. because the
 class is in a jar-file without beans.xml) and `@Inject` is used for 1-n
 fields.
 
-Manually inject fields:
-
+.Manually Inject Fields
 [source,java]
 ------------------------------------
 BeanProvider.injectFields(myObject);
 ------------------------------------
 
-=== BeanManagerProvider
+==== BeanManagerProvider
 
 This mechanism provides access to the `BeanManager` by registering the
 current `BeanManager` during the startup. This is really handy if you
 like to access CDI functionality from places where no CDI based
 injection is available. If a simple but manual bean-lookup is needed,
-it's easier to use the `BeanProvider`.
+it is easier to use the `BeanProvider`.
 
-Resolving the Bean-Manager:
-
+.Resolving the BeanManager
 [source,java]
 -----------------------------------------------------------------------------
 //in most cases the following works without problems:
@@ -149,8 +144,8 @@ BeanManager beanManager = BeanManagerProvider.getInstance().getBeanManager();
 //if CDI based injection is not available.
 -----------------------------------------------------------------------------
 
-`BeanManagerProvider` uses an own approach to find the correct `BeanManager`,
-because a portable API for it is only available since CDI 1.1.
+`BeanManagerProvider` uses a different approach to find the correct `BeanManager`,
+because a portable API for it has only been available from CDI 1.1.
 However, once you are using CDI 1.1+ DeltaSpike delegates the lookup to the CDI container
 instead of using its own approach.
 If you migrate from CDI 1.0 to a later version of CDI and you would like to keep
@@ -158,21 +153,18 @@ the lookup strategy you used before, you can deactivate the delegation to the co
 `deltaspike.bean-manager.delegate_lookup=false` to your config-source
 (e.g. in `/META-INF/apache-deltaspike.properties`).
 
-=== Type-safe ProjectStage
-
+==== Type-safe ProjectStage
 
 The DeltaSpike <<projectstage.adoc#,ProjectStage>> mechanism allows to
 use configuration and implementations depending on the server
 environment you currently run on.
 
-=== @Exclude
+==== @Exclude
 
-
-With `@Exclude` it's possible to annotate beans which should be ignored
+With `@Exclude` it is possible to annotate beans which should be ignored
 by CDI even if they are in a CDI enabled archive.
 
-Excluding a bean in any case:
-
+.Excluding a Bean in any Case
 [source,java]
 -------------------
 @Exclude
@@ -181,8 +173,7 @@ public class NoBean
 }
 -------------------
 
-Excluding a bean in case of project-stage development:
-
+.Excluding a Bean in Case of ProjectStageDevelopment
 [source,java]
 ---------------------------------------------------------
 @Exclude(ifProjectStage = ProjectStage.Development.class)
@@ -191,8 +182,7 @@ public class MyBean
 }
 ---------------------------------------------------------
 
-Excluding a bean if the project-stage is different from development:
-
+.Excluding a Bean if the pProjectStageis Different from Development
 [source,java]
 ---------------------------------------------------------------
 @Exclude(exceptIfProjectStage = ProjectStage.Development.class)
@@ -202,10 +192,9 @@ public class MyDevBean
 ---------------------------------------------------------------
 
 The following usage allows to exclude a bean based on a configured value
-(see the <<configuration.adocl#_configsources_provided_by_default,supported config sources>>).
+(see the <<configuration.adocl#_configsources_provided_by_default,supported configuration sources>>).
 
-Excluding a bean based on an expression which eval. to true:
-
+.Excluding a Bean based on an Expression which Evaluates to True
 [source,java]
 -------------------------------------
 @Exclude(onExpression = "db==prodDB")
@@ -214,12 +203,11 @@ public class DevDbBean
 }
 -------------------------------------
 
-By default a simple syntax is supported ([TODO]), however, it's possible
+By default a simple syntax is supported ([TODO]), however, it is possible
 to provide a custom `ExpressionInterpreter` for interpreting custom
 expressions.
 
-Excluding a bean based on a custom expression:
-
+.Excluding a Bean based on a Custom Expression
 [source,java]
 ------------------------------------------------------------------------------------------
 @Exclude(onExpression = "db eq prodDB", interpretedBy = SimpleExpressionInterpreter.class)
@@ -241,17 +229,16 @@ public class SimpleExpressionInterpreter implements ExpressionInterpreter<String
 }
 ------------------------------------------------------------------------------------------
 
-In several cases it's also useful to combine this feature with the
+In several cases it is also useful to combine this feature with the
 `@Alternative` annotation provided by CDI.
 
-In addition to the following snippet, it's required to configure the
-implementation as alternative in the beans.xml file. This config entry
-won't be changed e.g. for different environments, because it just gets
-active if it isn't excluded during the bootstrapping process.
+In addition to the following snippet, it is required to configure the
+implementation as alternative in the beans.xml file. This configuration entry
+will not be changed, for example for different environments, because it just gets
+active if it is not excluded during the bootstrapping process.
 
-Excluding an alternative implementation if the project-stage is
-different from development:
-
+.Excluding an Alternative Implementation if the pProjectStageis
+Different from Development
 [source,java]
 ---------------------------------------------------------------
 @Exclude(exceptIfProjectStage = ProjectStage.Development.class)
@@ -261,11 +248,11 @@ public class MyDevBean
 }
 ---------------------------------------------------------------
 
-==== Custom ExpressionInterpreter
+===== Custom ExpressionInterpreter
 
-Per default only a very simple and limited syntax is supported. In real
+By default only a very simple and limited syntax is supported. In real
 projects there are usually quite concrete requirements. Since it would
-be very complex to support most of them, it's easier for users to
+be very complex to support most of them, it is easier for users to
 implement an optimized syntax. For such cases a custom
 ExpressionInterpreter is needed:
 
@@ -290,7 +277,7 @@ public class ConfigAwareExpressionInterpreter implements ExpressionInterpreter<S
 
         if (values.length != 2)
         {
-            throw new IllegalArgumentException("'" + expression + "' isn't a supported syntax");
+            throw new IllegalArgumentException("'" + expression + "' is not a supported syntax");
         }
 
         String configuredValue = ConfigResolver.getPropertyValue(values[0], null);
@@ -301,18 +288,17 @@ public class ConfigAwareExpressionInterpreter implements ExpressionInterpreter<S
 }
 ----------------------------------------------------------------------------------------------------
 
-=== Type-safe View-Config
+==== Type-safe View-Config
 
 
 TODO (Overview)
 
-=== Literals
+==== Literals
 
 Literals allow the instantiation of annotations by extending the
 abstract class 'javax.enterprise.util.AnnotationLiteral'
 
-*Example*
-
+.Example
 [source,java]
 ----------------------------------------------------------------------------------------------
 public abstract class PayByQualifier
@@ -322,7 +308,7 @@ public abstract class PayByQualifier
  PayBy paybyCheque = new PayByQualifier() { public PaymentMethod value() { return CHEQUE; } };
 ----------------------------------------------------------------------------------------------
 
-DeltaSpike provides many annotation literals that you can use - e.g.:
+DeltaSpike provides many annotation literals that you can use, including the following:
 
 * AlternativeLiteral
 * AnyLiteral
@@ -339,13 +325,12 @@ DeltaSpike provides many annotation literals that you can use - e.g.:
 * SpecializesLiteral
 * TypedLiteral
 
-=== Messages & I18n
+==== Messages and I18n
 
 The following implementation is the minimal effort to use type-safe
 messages (which are hardcoded in this case).
 
-*Simple type-safe message*
-
+.Simple Type-safe Message
 [source,java]
 ---------------------------------------------
 @MessageBundle
@@ -361,8 +346,7 @@ a lookup in the default message bundle. The default bundle has the same
 name as the interface (but .properties instead of .java (/.class) as
 file extension).
 
-*Internationalized type-safe message*
-
+.Internationalized Type-safe Message
 [source,java]
 -----------------------------------------------------------------
 @MessageBundle
@@ -388,8 +372,7 @@ welcome_to_deltaspike=Welcome to DeltaSpike
 The following implementation uses the key `welcome_to_deltaspike` to do
 a lookup in a custom message bundle known by `CustomMessageResolver`.
 
-*Internationalized type-safe message*
-
+.Internationalized Type-safe Message
 [source,java]
 --------------------------------------------------------------------
 @MessageBundle
@@ -407,8 +390,7 @@ public interface SimpleMessage
 The following implementation shows the usage of an internationalized
 simple type-safe message.
 
-*Internationalized type-safe message with parameter/s*
-
+.Internationalized Type-safe Message with Parameter/s
 [source,java]
 ----------------------------------------------------------------------------
 @MessageBundle
@@ -434,11 +416,9 @@ public class MyBean
 }
 ----------------------------------------------------------------------------
 
-=== Dynamic Message Builder
+==== Dynamic Message Builder
 
-
-==== Creating message instances
-
+===== Creating Message Instances
 
 The following implementation creates an instance of `Message` for the
 key `hello`. The final text will be resolved and interpolated lazily.
@@ -466,7 +446,7 @@ public class MyBean
 }
 ---------------------------------------------------------------------------------------------
 
-Besides the static config via `@MessageContextConfig#messageSource`, you
+Besides the static configuration via `@MessageContextConfig#messageSource`, you
 can also specify the message sources dynamically.
 
 [source,java]
@@ -491,14 +471,13 @@ org/apache/deltaspike/example/message/Messages_de.properties
 hello=Hello %s from %s
 --------------------------------------------------------------------------------------------------------------------
 
-==== Customizing the message context
+===== Customizing the Message Context
 
-
-===== MessageResolver
+====== MessageResolver
 
 A message-resolver is responsible for creating the message-text based on
 the message-descriptor (key or inline-text), the current locale (and in
-some cases the message-payload). (The supported format e.g. if it's
+some cases the message-payload). (The supported format, for example, if it is
 required to escape a key, if inline-text is supported,... depends on the
 concrete implementation.) In case of a message-key, the message-resolver
 has to transform it to the message-text by looking it up in a message
@@ -506,7 +485,7 @@ source like a resource-bundle.
 
 *Configuration of a message-resolver*
 
-Besides the static config via `@MessageContextConfig#messageResolver`,
+Besides the static configuration via `@MessageContextConfig#messageResolver`,
 you can use it dynamically via passing a custom message-resolver
 instance to the current messageContext:
 
@@ -523,14 +502,14 @@ Message message = this.messageContext.messageResolver(new CustomMessageResolver(
 The result of a `MessageResolver` is the message-text. The text might
 contain placeholders which are processed by a `MessageInterpolator`
 
-===== MessageInterpolator
+====== MessageInterpolator
 
 A `MessageInterpolator` replaces the placeholders in a message-text with
 the arguments of the message.
 
 *Configuration of a message-interpolator*
 
-Besides the static config via
+Besides the static configuration via
 `@MessageContextConfig#messageInterpolator, you can use it dynamically
 via passing a custom message-interpolator instance to the current
 messageContext:
@@ -544,15 +523,15 @@ private MessageContext messageContext;
 Message message = this.messageContext.messageInterpolator(new CustomMessageInterpolator()).message();
 -----------------------------------------------------------------------------------------------------
 
-===== LocaleResolver
+====== LocaleResolver
 
-A locale resolver provides the current locale. The locale is e.g. used
+A locale resolver provides the current locale. The locale is, for example, used
 to by a `MessageResolver` to choose the correct language for the
 message-text.
 
 *Configuration of a locale-resolver*
 
-Besides the static config via `@MessageContextConfig#localeResolver, you
+Besides the static configuration via `@MessageContextConfig#localeResolver, you
 can use it dynamically via passing a custom locale-resolver instance to
 the current messageContext:
 
@@ -564,7 +543,7 @@ private MessageContext messageContext;
 Message message = this.messageContext.localeResolver(new CustomLocaleResolver()).message();
 -------------------------------------------------------------------------------------------
 
-=== Injecting Resources
+==== Injecting Resources
 
 DeltaSpike has simple APIs for performing basic resource loading and
 property file reading.
@@ -582,7 +561,7 @@ and `FileResourceProvider`. They can be extended as well by implementing
 the `InjectableResourceProvider` interface to allow reading from
 alternate sources, if needed (e.g. database LOBs, NoSQL storage areas).
 
-=== Exception Control
+==== Exception Control
 
 Exception handling in DeltaSpike is based around the CDI eventing model.
 While the implementation of exception handlers may not be the same as a
@@ -603,7 +582,7 @@ developer. In most cases, you register an exception handler simply by
 annotating a handler method. Alternatively, you can handle an exception
 programmatically, just as you would observe an event in CDI.
 
-==== Usage
+===== Usage
 
 The entire exception handling process starts with an event. This helps
 keep your application minimally coupled to DeltaSpike, but also allows
@@ -613,7 +592,7 @@ for your application Events provide this delicate balance. Firing the
 event is the main way of starting the exception handling proccess.
 
 Manually firing an event to use DeltaSpike's exception handling is
-primarily used in your own try/catch blocks. It's very painless and also
+primarily used in your own try/catch blocks. It is very painless and also
 easy. Let's examine a sample that might exist inside of a simple
 business logic lookup into an inventory database:
 
@@ -641,8 +620,7 @@ your class for use later within a try/catch block.
 The event is fired with a new instance of `ExceptionToCatchEvent`
 constructed with the exception to be handled.
 
-==== Exception handlers
-
+===== Exception Handlers
 
 As an application developer (i.e., an end user of DeltaSpike's exception
 handling), you'll be focused on writing exception handlers. An exception
@@ -681,7 +659,7 @@ methods which have a parameter which is an instance of
 `ExceptionEvent<T extends Throwable>` annotated with the `@Handles`
 annotation.
 
-===== @ExceptionHandler
+====== @ExceptionHandler
 
 The `@ExceptionHandler` annotation is simply a marker annotation that
 instructs the DeltaSpike exception handling CDI extension to scan the
@@ -699,7 +677,7 @@ public class MyHandlers {}
 That's all there is to it. Now we can begin defining exception handling
 methods on this bean.
 
-===== @Handles and @BeforeHandles
+====== @Handles and @BeforeHandles
 
 `@Handles` is a method parameter annotation that designates a method as
 an exception handler. Exception handler methods are registered on beans
@@ -728,14 +706,14 @@ public class MyHandlers
 The `@Handles` annotation on the first parameter designates this method
 as an exception handler (though it is not required to be the first
 parameter). This parameter must be of type
-`ExceptionEvent<T extends Throwable>`, otherwise it's detected as a
+`ExceptionEvent<T extends Throwable>`, otherwise it is detected as a
 definition error. The type parameter designates which exception the
 method should handle. This method is notified of all exceptions
 (requested by the base exception type `Throwable`).
 
 The `ExceptionEvent` instance provides access to information about the
 exception and can be used to control exception handling flow. In this
-case, it's used to read the current exception being handled in the
+case, it is used to read the current exception being handled in the
 exception chain, as returned by `getException()`.
 
 This handler does not modify the invocation of subsequent handlers, as
@@ -806,7 +784,7 @@ unchecked exceptions. Should a handler throw an unchecked exception it
 will propagate up the stack and all handling done via DeltaSpike will
 cease. Any exception that was being handled will be lost.
 
-===== Ordinal
+====== Ordinal
 
 When DeltaSpike finds more than one handler for the same exception type,
 it orders the handlers by ordinal. Handlers with higher ordinal are
@@ -842,16 +820,16 @@ invoke (until a handler marks exception as handled):
 5.  If multiple handlers for same type, invoke handlers with higher ordinal first
 6.  Continue above steps for each exception in stack
 
-==== Exception Chain Processing
+===== Exception Chain Processing
 
-When an exception is thrown, chances are it's nested (wrapped) inside
+When an exception is thrown, chances are it is nested (wrapped) inside
 other exceptions. (If you've ever examined a server log, you'll
 appreciate this fact). The collection of exceptions in its entirety is
 termed an exception chain.
 
 The outermost exception of an exception chain (e.g., EJBException,
 ServletException, etc) is probably of little use to exception handlers.
-That's why DeltaSpike doesn't simply pass the exception chain directly
+That's why DeltaSpike does not simply pass the exception chain directly
 to the exception handlers. Instead, it intelligently unwraps the chain
 and treats the root exception cause as the primary exception.
 
@@ -889,7 +867,7 @@ the handlers for `EJBException` from being invoked, which is a good
 thing since what useful information can really be obtained from
 `EJBException`?
 
-==== APIs for exception information and flow control
+===== APIs for Exception Information and Flow Control
 
 There are two APIs provided by DeltaSpike that should be familiar to
 application developers:
@@ -897,7 +875,7 @@ application developers:
 * `ExceptionEvent`
 * `ExceptionStackEvent`
 
-===== ExceptionEvent
+====== ExceptionEvent
 
 In addition to providing information about the exception being handled,
 the `ExceptionEvent` object contains methods to control the exception
@@ -922,35 +900,27 @@ the current cause.
 invoked
 
 Once a handler is invoked it is muted, meaning it will not be run again
-for that exception chain, unless it's explicitly marked as unmuted via
+for that exception chain, unless it is explicitly marked as unmuted via
 the `unmute()` method on `ExceptionEvent`.
 
-=== Scopes
+==== Scopes
 
 DeltaSpike Core provides the API and SPI for several scopes. Currently
 all scopes are only implemented in the <<jsf.adoc#_scopes,JSF module>>.
 
+===== @WindowScoped
 
-==== @WindowScoped
+===== @ViewAccessScoped
 
+===== @GroupedConversationScoped
 
+==== Creating a Custom CDI Scope
 
-==== @ViewAccessScoped
+To create a custom CDI scope to match your needs, complete the following steps:
 
-
-@GroupedConversationScoped
-^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-
-=== Creating a custom CDI Scope
-
-
-If you want to create a custom CDI scope to match your needs, you will
-need to follow these steps:
-
-First, create an Annotation with annotated with @javax.inject.Scope;
-Example:
-
+1. Create an Annotation with annotated with @javax.inject.Scope;
++
+.Example
 [source,java]
 ----------------------------------------------------------------
 @Scope
@@ -958,10 +928,10 @@ Example:
 @Target({ElementType.TYPE,ElementType.METHOD,ElementType.FIELD})
 public @interface ACustomScope {}
 ----------------------------------------------------------------
-
-Second, create an Extension to add the scope and a context for it.
-Example:
-
++
+2. Create an Extension to add the scope and a context for it.
++
+.Example
 [source,java]
 ---------------------------------------------------------------------------------------
 public class ACustomScopeExtension implements Extension, Serializable {
@@ -975,10 +945,11 @@ public class ACustomScopeExtension implements Extension, Serializable {
     }
 }
 ---------------------------------------------------------------------------------------
-
-Implement a javax.enterprise.context.spi.Context interface to hold the
-javax.enterprise.inject.spi.Bean instances according to your needs
-
++
+3. Implement a javax.enterprise.context.spi.Context interface to hold the
+javax.enterprise.inject.spi.Bean instances according to your needs.
++
+.Example
 [source,java]
 -----------------------------------------------------------------------------------------------------
 public class ACustomScopeContext implements Context, Serializable {
@@ -1021,8 +992,7 @@ public class ACustomScopeContext implements Context, Serializable {
 }
 -----------------------------------------------------------------------------------------------------
 
-=== Deactivatable
-
+==== Deactivatable
 
 DeltaSpike allows you to deactivate its own Extensions. You just need to
 implement your <<spi.adoc#_classdeactivator,ClassDeactivator>>.
@@ -1050,14 +1020,14 @@ public class CustomClassDeactivator implements ClassDeactivator
 }
 --------------------------------------------------------------------------
 
-now, we can use the file `/META-INF/apache-deltaspike.properties` (or any
+Now, we can use the file `/META-INF/apache-deltaspike.properties` (or any
 other <<configuration.adoc#_configsources_provided_by_default,ConfigSource>>) with the following key/value:
 
 ------------------------------------------------------------------------------------------
 org.apache.deltaspike.core.spi.activation.ClassDeactivator=org.test.CustomClassDeactivator
 ------------------------------------------------------------------------------------------
 
-== Core - Utils
+=== Core - Utils
 
 
 DeltaSpike provides many utility-classes (no constructor / static
@@ -1065,7 +1035,7 @@ methods) that can be useful for your project.
 
 Below you can find an information about these classes.
 
-=== ArraysUtils
+==== ArraysUtils
 
 
 A collection of utilities for working with Arrays
@@ -1074,7 +1044,7 @@ A collection of utilities for working with Arrays
 objects, the last object in the array will be placed in resultant set.
 
 
-=== BeanUtils
+==== BeanUtils
 
 A set of utility methods for working with beans.
 
@@ -1082,7 +1052,7 @@ A set of utility methods for working with beans.
 * `#extractAnnotation` - Extract the annotations.
 * `#createInjectionPoints` - Given a method, and the bean on which the method is declared, create a collection of injection points representing the parameters of the method.
 
-=== ClassDeactivationUtils
+==== ClassDeactivationUtils
 
 
 Helper methods for `ClassDeactivator`
@@ -1091,14 +1061,14 @@ Helper methods for `ClassDeactivator`
 
 To add a custom `ClassDeactivator` add `org.apache.deltaspike.core.spi.activation.ClassDeactivator=my.CustomClassDeactivator` to `META-INF\apache-deltaspike.properties`. Or configure it via a custom `ConfigSource`.
 
-=== ExceptionUtils
+==== ExceptionUtils
 
 Helper methods to deal with Exceptions
 
 * `#throwAsRuntimeException` - helper which allows to use a trick to throw a catched checked exception without a wrapping exception.
 * `#changeAndThrowException` - helper which allows to use a trick to throw a cached checked exception without a wrapping exception.
 
-=== PropertyFileUtils
+==== PropertyFileUtils
 
 Helper methods for Property files
 
@@ -1107,14 +1077,14 @@ Helper methods for Property files
 * `#getResourceBundle` - Return the ResourceBundle for the current default Locale.
 
 
-=== ProxyUtils
+==== ProxyUtils
 
 Helper for CDI proxies
 
 * `#getUnproxiedClass` - Return class of the real implementation.
 * `#isProxiedClass` - Analyses if the given class is a generated proxy class.
 
-=== StringUtils
+==== StringUtils
 
 A collection of utilities for working with Strings.
 

@@ -35,22 +35,22 @@ settings, JNDI or the current <<projectstage.adoc#,ProjectStage>>.
 === Drop-In Configuration
 
 This mechanism also allows for dynamic configuration in case of a JAR
-drop-in. By adding some JAR to the classpath, all it's contained
+drop-in. By adding some JAR to the classpath, all its contained
 configuration will get picked up and considered in the property value
 evaluation. You could also use this mechanism to switch implementations
 of some SPI (Service Provider Interface) in your own code.
 
 === CDI-Extension Configuration
 
-In some cases low-level configs are needed e.g. during the bootstrapping
+In some cases low-level configs are needed, for example during the bootstrapping
 process of the CDI container.
 
 The good news: our DeltaSpike configuration mechanism does not rely on
 any other EE mechanism to be booted. Which means it can perfectly get
-used to even configure those parts itself. Since the mechanism doesn't
+used to even configure those parts itself. Since the mechanism does not
 rely on CDI it can for example be used to configure CDI-Extensions.
 
-Currently this is e.g. used to configure the value of the current <<projectstage.adoc#,ProjectStage>>, configured values which can be
+Currently this is, for example, used to configure the value of the current <<projectstage.adoc#,ProjectStage>>, configured values which can be
 used in the expressions for `@Exclude`, 'Deactivatable', etc. DeltaSpike
 needs such a low-level approach for several features internally, but
 users can utilize it for their own needs as well. This is done by using
@@ -133,27 +133,25 @@ the following lookup chain is used until a value got found:
 * key, e.g. "databaseconfig.username"
 
 
-=== handling of default values
-
+=== Handling of Default Values
 
 There is a 2nd variant of all those methods where it is possible to
 provide a default value which gets returned instead of `null` or if the
 final result is an empty String.
 
-*Performance Hint:*
-
-The only `ConfigResolver` operation which is cached is the determination
+.Performance Hint
+TIP: The only `ConfigResolver` operation which is cached is the determination
 of the `ConfigSources`. The various getPropertyValue operations are not
 cached in the ConfigResolver but might be cached in the ConfigSources.
 This makes the overall calculation a bit slower, but allows for values
-to change dynamically if someone likes to e.g. implement a
+to change dynamically if someone likes to for example implement a
 `JmxConfigSource` (not yet part of DeltaSpike, but easily
 implementable).
 
 
 == ConfigSource
 
-A `ConfigSource` is exactly what it's name says: a source for configured
+A `ConfigSource` is exactly what its name says: a source for configured
 values. The `ConfigResolver` uses all configured implementations of
 `ConfigSource` to lookup the property in question.
 
@@ -166,10 +164,10 @@ to amend configuration from outside a binary - given those outside
 ConfigSources have a higher `deltaspike_ordinal` than the ones who
 pickup the values from within the release binaries.
 
-=== ConfigSources provided by default
+=== ConfigSources Provided by Default
 
 
-Per default there are implementations for the following config sources
+By default there are implementations for the following configuration sources
 (listed in the lookup order):
 
 * System properties (deltaspike_ordinal = 400)
@@ -177,42 +175,38 @@ Per default there are implementations for the following config sources
 * JNDI values (deltaspike_ordinal = 200, the base name is "java:comp/env/deltaspike/")
 * Properties file values (apache-deltaspike.properties) (deltaspike_ordinal = 100, default filename is "META-INF/apache-deltaspike.properties")
 
-*It's possible to change this order and to add custom config sources.*
+*It is possible to change this order and to add custom configuration sources.*
 
-*Note:* Important Hints esp. for custom implementations: - The
-config-source with the highest ordinal gets used first. - If a custom
+.Important Tips Especially for Custom Implementations
+TIP: - The config-source with the highest ordinal gets used first. - If a custom
 implementation should be invoked _before_ the default implementations,
-use an ordinal-value > 400 - If a custom implementation should be
-invoked _after_ the default implementations, use an ordinal-value < 100
+use an ordinal-value > 400. - If a custom implementation should be
+invoked _after_ the default implementations, use an ordinal-value < 100.
 - The `ConfigResolver` performs no caching. If your custom ConfigSource
 operation is expensive, then you might think about introducing some
 caching.
 
-
-=== Reordering of the default order of Config-Sources
+=== Reordering of the Default Order of ConfigSources
 
 To change the lookup order, you have to configure the ordinal in the
-corresponding config source (e.g. to change the config ordinal of the
-config source for system properties, you have to set the system property
+corresponding configuration source (e.g. to change the configuration ordinal of the
+configuration source for system properties, you have to set the system property
 with the ordinal key 'deltaspike_ordinal' and the new value).
 
 Example with `/META-INF/apache-deltaspike.properties`: If the properties
 file/s should be used *before* the other implementations, you have to
-configure an ordinal > 400. That means, you have to add e.g.
+configure an ordinal > 400. That means, you have to add for example
 `deltaspike_ordinal=401`.
 
 Each single property file is treated as own `ConfigSource` and thus can
 have different `deltaspike_ordinal` values!
 
-*Hint:*
-
-In case of *property files* which are supported by default
+NOTE: In case of *property files* which are supported by default
 (`/META-INF/apache-deltaspike.properties`) every file is handled as
 independent config-source, but all of them have ordinal 400 by default
 (and can be reordered in a fine-grained manner).
 
-=== Custom Config-Sources
-
+=== Custom ConfigSources
 
 ConfigSources are picked up using the `java.util.ServiceLoader'
 mechanism.
@@ -225,16 +219,14 @@ into it.
 
 If you need dynamic ConfigSources you can also register a
 `ConfigSourceProvider` in a similar way. This is useful if you like to
-dynamically pick up multiple ConfigSources of the same kind. E.g. if you
+dynamically pick up multiple ConfigSources of the same kind. For example, if you
 like to pick up all `myproject.properties` files from all the JARs in
 your classpath.
 
 Please note that a single `ConfigSource` should be either registered
 directly or via a `ConfigSourceProvider`, but never both ways.
 
-*Important Hint:*
-
-Have a look at the abstract base-implementation of `ConfigSource`
+TIP: Have a look at the abstract base-implementation of `ConfigSource`
 DeltaSpike is using internally, if a custom implementation should load
 the ordinal value from the config-source like the default
 implementations provided by DeltaSpike do.
@@ -274,7 +266,7 @@ dependency to the module that contains the property file._
 </jboss-deployment-structure>
 ---------------------------------------------------------------------------------------------------
 
-== Type-safe configuration
+== Type-safe Configuration
 
 DeltaSpike provides a way to directly inject configured values into your
 code via the qualifier `@ConfigProperty`.

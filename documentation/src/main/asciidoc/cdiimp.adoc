@@ -16,6 +16,7 @@ Apache OpenWebBeans (OWB) is integrated in Java EE containers including Apache T
 == Java EE5 and Servlet Containers
 CDI implementations are not distributed with Java EE5 application servers or Servlet-only environments such as Apache TomCat and Eclipse Jetty. You can use CDI in these environments by embedding a standalone CDI implementation. Both JBoss Weld and Apache OpenWebBeans can be used for this task; for more information, see the corresponding CDI implementation documentation.
 
+[[javase6]]
 == Java SE6+
 CDI is not part of Java SE but it can still be used. JBoss Weld and Apache OpenWebBeans implementations can be used to act as dependency injection bean managers but the respective containers must be booted manually.
 

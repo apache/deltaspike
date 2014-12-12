@@ -8,7 +8,7 @@ The DeltaSpike source (modules and examples) is provided for inspection, contrib
 
 In all cases, to obtain the DeltaSpike source, link:https://deltaspike.apache.org/download.html[download] `deltaspike-project-<version>-source-release.zip` and extract the contents.
 	
-**Note:** You can also obtain the DeltaSpike source from the project Git repository. The repository is subject to change and it can be used for contributing but should not be used in production environments. For more information, see <<source#,Contribute to the DeltaSpike Source>>. 
+NOTE: You can also obtain the DeltaSpike source from the project Git repository. The repository is subject to change and it can be used for contributing but should not be used in production environments. For more information, see <<source#,Contribute to the DeltaSpike Source>>. 
 
 == Build without CDI Implementation Tests
 DeltaSpike can be built without executing tests against a CDI implementation, with the following commands:

@@ -4,7 +4,33 @@
 
 :toc:
 
-== Configuration
+== Overview
+The Servlet module provides CDI integration with the Java Servlet API. It enables injection of common servlet objects and propagation of servlet events to the CDI event bus.
+
+== Configure Your Projects
+The configuration information provided here is for Maven-based projects and it assumes that you have already declared the DeltaSpike version and DeltaSpike Core module for your projects, as detailed in <<configure#, Configure DeltaSpike in Your Projects>>. For Maven-independent projects, see <<configure#config-maven-indep,Configure DeltaSpike in Maven-independent Projects>>.
+
+=== 1. Declare Servlet Module Dependencies
+Add the Servlet module to the list of dependencies in the project `pom.xml` file using this code snippet:
+
+[source,xml]
+----
+<dependency>
+    <groupId>org.apache.deltaspike.modules</groupId>
+    <artifactId>deltaspike-servlet-module-api</artifactId>
+    <version>${deltaspike.version}</version>
+    <scope>compile</scope>
+</dependency>
+
+<dependency>
+    <groupId>org.apache.deltaspike.modules</groupId>
+    <artifactId>deltaspike-servlet-module-impl</artifactId>
+    <version>${deltaspike.version}</version>
+    <scope>runtime</scope>
+</dependency>
+----
+
+== 2. Configure Listeners and Filters
 
 In most cases there is no need for any additional configuration beside
 adding the required dependencies to your project, because all required
@@ -13,12 +39,11 @@ listeners and filters are automatically registered in the container.
 However there are certain situations in which you will have to manually
 register the listeners and filters in your `web.xml`:
 
-* Your container doesn't support Servlet 3.0 or newer.
+* Your container doesis not support Servlet 3.0 or newer.
 * You have set `metadata-complete=true` in your `web.xml`.
 * You packaged the servlet module in the `lib` directory of an EAR archive.
 
-In these cases you will have to add the following section manually to
-your `web.xml`:
+In these cases you will have to add the following section manually to the project `web.xml`:
 
 [source,xml]
 -------------------------------------------------------------------------------------------------------------
@@ -63,8 +88,9 @@ your `web.xml`:
 </filter-mapping>
 -------------------------------------------------------------------------------------------------------------
 
+== Use the Module Features
 
-== Injectable Servlet objects
+=== Injectable Servlet Objects
 
 The DeltaSpike Servlet module contains producers for many objects of a
 Servlet environment. All produces are using the special qualifier
@@ -79,8 +105,7 @@ The following code shows the general injection pattern to use for all objects.
 private ServletObject servletObject;
 ------------------------------------
 
-
-=== ServletContext
+==== ServletContext
 
 The `ServletContext` is made available in the application scope. It can
 be injected into any CDI bean like this:
@@ -91,9 +116,7 @@ be injected into any CDI bean like this:
 private ServletContext servletContext;
 --------------------------------------
 
-
-ServletRequest / HttpServletRequest
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+==== ServletRequest / HttpServletRequest
 
 The `ServletRequest` is made available in the request scope. The current
 request can be injected into a CDI bean like this:
@@ -113,7 +136,7 @@ private HttpServletRequest request;
 -----------------------------------
 
 
-=== ServletResponse / HttpServletResponse
+==== ServletResponse / HttpServletResponse
 
 The `ServletResponse` is made available in the request scope. The
 current response can be injected into a CDI bean like this:
@@ -132,8 +155,7 @@ In case of HTTP requests you can also inject the `HttpServletResponse`:
 private HttpServletResponse response;
 -------------------------------------
 
-
-=== HttpSession
+==== HttpSession
 
 The `HttpSession` is made available in the session scope. You can inject
 the current session of a user into a CDI bean like this:
@@ -147,7 +169,7 @@ private HttpSession session;
 Please note that injecting the session this way will force the creation
 of a session.
 
-=== Principal
+==== Principal
 
 The `Principal` is made available in the request scope. The current
 principal can be injected into a CDI bean like this:
@@ -161,10 +183,9 @@ private Principal principal;
 The `Principal` is obtained by calling `getUserPrincipal()` on the
 `HttpServletRequest`.
 
+=== Servlet Event Propagation
 
-== Servlet event propagation
-
-The DeltaSpike Servlet module will propagate a number of Servlet object
+The DeltaSpike Servlet module propagates a number of Servlet object
 lifecycle events to the CDI event bus. This allows regular CDI beans to
 observe these events and react accordingly.
 
@@ -172,11 +193,10 @@ In most cases the event type is the object whose lifecycle is observed.
 To distinguish between construction and destruction of the corresponding
 object, DeltaSpike uses the qualifiers `@Initialized` and `@Destroyed`.
 
-The following sections will show which concrete Servlet objects are
+The following sections shows which concrete Servlet objects are
 supported and how their lifecycle can be observed.
 
-
-=== Servlet context lifecycle events
+==== Servlet Context Lifecycle Events
 
 The Servlet module supports initialization and destruction events for
 the `ServletContext`. These events can for example be used to detect
@@ -198,6 +218,7 @@ The events are emitted from a `ServletContextListener` called
 `EventBridgeContextListener`. You can disable lifecycle events for the
 `ServletContext` by deactivating the following class:
 
+[source,java]
 -------------------------------------------------------------------
 org.apache.deltaspike.servlet.impl.event.EventBridgeContextListener
 -------------------------------------------------------------------
@@ -206,8 +227,7 @@ If you manually registered the required filters and listeners, you can
 also simply remove the entry for the `EventBridgeContextListener` from
 your `web.xml` to disable the events.
 
-
-=== Request and response lifecycle events
+==== Request and Response Lifecycle Events
 
 The Servlet module also supports initialization and destruction events
 for the `HttpServletRequest` and `HttpServletResponse`. These events can
@@ -246,6 +266,7 @@ All events of this category are emitted from a servlet filter called
 just use DeltaSpike's deactivation mechanism to deactivate the following
 class:
 
+[source,java]
 ----------------------------------------------------------
 org.apache.deltaspike.servlet.impl.event.EventBridgeFilter
 ----------------------------------------------------------
@@ -254,8 +275,7 @@ If you manually registered the required filters and listeners you can
 also simply remove the entry for the `EventBridgeFilter` from your
 `web.xml` to disable the events.
 
-
-=== Session lifecycle events
+==== Session Lifecycle Events
 
 The last category of events supported by the DeltaSpike Servlet module
 are the lifecycle events for the user's HTTP session. The following
@@ -276,6 +296,7 @@ The lifecycle events for the HTTP session are sent from a
 `HttpSessionListener` called `EventBridgeSessionListener`. To disable
 this event category, deactivate the following class:
 
+[source,java]
 -------------------------------------------------------------------
 org.apache.deltaspike.servlet.impl.event.EventBridgeSessionListener
 -------------------------------------------------------------------

@@ -6,7 +6,7 @@
 
 If you want to be at the bleeding edge, you can work with DeltaSpike snapshots. These are available from the Apache Snapshot Repository for use in Maven-based projects. To begin using them, you must configure Maven with the repository location and your projects with the snapshot version.
 
-**Warning:** Snapshots provide previews of DeltaSpike during development. Snapshots are subject to change and may not yet include all expected features of the final release. Snapshots should not be used in production environments.
+WARNING: Snapshots provide previews of DeltaSpike during development. Snapshots are subject to change and may not yet include all expected features of the final release. Snapshots should not be used in production environments.
 
 == 1. Configure Maven to Use the Apache Snapshot Repository
 You must add the Apache Snapshot Repository to your Maven configuration `settings.xml` file. This ensures Maven can find the repository when it searches for your project DeltaSpike dependencies.

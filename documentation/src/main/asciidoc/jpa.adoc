@@ -4,37 +4,63 @@
 
 :toc:
 
-== @Transactional
+== Overview
+The JPA module provides a transactional context and scope, enabling execution of methods within transactions.
 
-This annotation is an alternative to transactional EJBs which allows to
-execute a method within a transaction. Before it's possible to start
-using the annotation, it's required to implement a CDI producer for an
-`EntityManager` and it's needed to inject the `EntityManager` in the
-bean which uses `@Transactional`. As shown later on it's also possible
-to use multiple qualifiers for using different `EntityManager`s.
+== Configure Your Projects
+The configuration information provided here is for Maven-based projects and it assumes that you have already declared the DeltaSpike version and DeltaSpike Core module for your projects, as detailed in <<configure#, Configure DeltaSpike in Your Projects>>. For Maven-independent projects, see <<configure#config-maven-indep,Configure DeltaSpike in Maven-independent Projects>>.
 
-*Hint:* If you are using features described by this page with CDI 1.0
-(or DeltaSpike up to v1.1.0 with CDI 1.1+), you have
-to enable the transaction interceptor in your beans.xml file:
+=== 1. Declare JPA Module Dependencies
+Add the JPA module to the list of dependencies in the project `pom.xml` file using this code snippet:
 
 [source,xml]
-------------------------------------------------------------------------------------------
+----
+<dependency>
+    <groupId>org.apache.deltaspike.modules</groupId>
+    <artifactId>deltaspike-jpa-module-api</artifactId>
+    <version>${deltaspike.version}</version>
+    <scope>compile</scope>
+</dependency>
+
+<dependency>
+    <groupId>org.apache.deltaspike.modules</groupId>
+    <artifactId>deltaspike-jpa-module-impl</artifactId>
+    <version>${deltaspike.version}</version>
+    <scope>runtime</scope>
+</dependency>
+----
+
+=== 2. Enable the Transaction Interceptor
+For CDI 1.0 (or DeltaSpike v1.1.0 and earlier together with CDI 1.1+), you must enable the transaction interceptor in the project `beans.xml` file:
+
+[source,xml]
+----
 <beans>
     <!-- Not needed with CDI 1.1+ and DeltaSpike v1.1.1+ -->
     <interceptors>
         <class>org.apache.deltaspike.jpa.impl.transaction.TransactionalInterceptor</class>
     </interceptors>
 </beans>
-------------------------------------------------------------------------------------------
+----
+
+== Use the Module Features
+
+=== @Transactional
+
+This annotation is an alternative to transactional EJBs which allows to
+execute a method within a transaction. Before it is possible to start
+using the annotation, it is required to implement a CDI producer for an
+`EntityManager` and it is needed to inject the `EntityManager` in the
+bean which uses `@Transactional`. As shown later on, it is also possible
+to use multiple qualifiers for using different `EntityManager`s.
 
 The following example shows a simple producer for an `EntityManager` and
 the corresponding dispose-method. Producing it as request scoped bean
 means that the dispose method will be called on finishing the request.
-As an alternative it's possible to use a special scope called
+As an alternative it is possible to use a special scope called
 `@TransactionScoped` provided by the same DeltaSpike module.
 
-Producer for the default EntityManager (**no EE-Server**):
-
+.Producer for the Default EntityManager (**no EE-Server**)
 [source,java]
 ----------------------------------------------------------------------------
 //...
@@ -61,8 +87,7 @@ public class EntityManagerProducer
 }
 ----------------------------------------------------------------------------
 
-Producer for the default EntityManager (**EE-Server**):
-
+.Producer for the Default EntityManager (**EE-Server**)
 [source,java]
 -----------------------------------------------------------------------
 @ApplicationScoped
@@ -92,8 +117,7 @@ public class EntityManagerProducer
 The following examples show how to use the `EntityManager` produced by
 the example above.
 
-Beans with transactional method:
-
+.Beans with Transactional Method
 [source,java]
 ----------------------------------------
 //...
@@ -110,8 +134,7 @@ public class TransactionalBean
 }
 ----------------------------------------
 
-Simple transactional bean (all methods transactional):
-
+.Simple Transactional Bean (All Methods are Transactional)
 [source,java]
 ----------------------------------------
 //...
@@ -125,11 +148,10 @@ public class TransactionalBean
 }
 ----------------------------------------
 
-As illustrated in the following example it's also possible to use
+As illustrated in the following example it is also possible to use
 `@Transactional` for stereotypes.
 
-Stereotype for transactional beans (+ usage):
-
+.Stereotype for Transactional Beans (+ Usage)
 [source,java]
 ----------------------------------------
 @Stereotype
@@ -150,14 +172,13 @@ public class TransactionalBean
 }
 ----------------------------------------
 
-Besides such simple usages, it's also supported to use qualifiers to
+Besides such simple usages, it is also supported to use qualifiers to
 access multiple persistence-units in parallel. The default qualifier for
 `@Transactional` is `@Any`. Therefore a transaction for every injected
 entity manager will be started. The example afterwards shows how to
 change this default behaviour.
 
-Producer for multiple entity managers (+ usage):
-
+.Producer for Multiple Entity Managers (+ Usage)
 [source,java]
 ------------------------------------------------------------------------------------------
 //...
@@ -236,8 +257,7 @@ public class NestedTransactionBean
 The following example shows how to use only the specified
 `EntityManager`/s
 
-Activating entity managers manually:
-
+.Activating Entity Managers Manually
 [source,java]
 -----------------------------------------------------------
 public class MultiTransactionBean
@@ -277,8 +297,7 @@ All examples also work with nested calls. In the following example the
 transaction handling is done on the entry point (after
 FirstLevelTransactionBean#executeInTransaction).
 
-Joining existing transaction in nested call:
-
+.Joining Existing Transaction in Nested Call
 [source,java]
 ----------------------------------------------------------
 //...
@@ -313,11 +332,11 @@ public class NestedTransactionBean
 
 The final transaction handling for all `EntityManager` s is also done
 after the outermost transactional method if `NestedTransactionBean` uses
-a different `EntityManager`. So it's possible to catch an exception in
-`FirstLevelTransactionBean` e.g. to try an optional path instead of an
+a different `EntityManager`. So it is possible to catch an exception in
+`FirstLevelTransactionBean`, for example, to try an optional path instead of an
 immediate rollback.
 
-== @TransactionScoped
+=== @TransactionScoped
 
 `@Transactional` also starts a context which is available as long as the
 transaction started by `@Transactional`. Besides other beans you can use
@@ -325,9 +344,8 @@ this scope for the `EntityManager` itself. That means the
 `EntityManager` will be closed after leaving the method annotated with
 `@Transactional`.
 
-Producer for the default EntityManager which should be used only for one
-transaction:
-
+.Producer for the Default EntityManager which should be Used Only for One
+Transaction
 [source,java]
 ----------------------------------------------------------------------------
 //...
@@ -354,40 +372,36 @@ public class EntityManagerProducer
 }
 ----------------------------------------------------------------------------
 
-== Extended Persistence Contexts
-
+=== Extended Persistence Contexts
 
 Frameworks like MyFaces Orchestra provide a feature which allows keeping
-an `EntityManager` across multiple requests. That means it isn't
+an `EntityManager` across multiple requests. That means it is not
 required to call `EntityManager#merge` to add detached entities to the
-context. However, several application architectures don't allow such an
+context. However, several application architectures do not allow such an
 approach (due to different reasons like scalability). In theory that
 sounds nice and it works pretty well for small to medium sized projects
-esp. if an application doesn't rely on session replication in clusters.
+especially if an application does not rely on session replication in clusters.
 That also means that such an approach restricts your target environment
 from the very beginning. One of the base problems is that an
-`EntityManager` isn't serializable. Beans which are scoped in a
+`EntityManager` is not serializable. Beans which are scoped in a
 normal-scoped CDI context have to be serializable. So by default it
-isn't allowed by CDI to provide a producer-method which exposes e.g. a
-conversation scoped `EntityManager` as it is. We *don't* recommend to
-use this approach and therefore it isn't available out-of-the-box.
+is not allowed by CDI to provide a producer-method which exposes, for example, a
+conversation scoped `EntityManager` as it is. We *do not* recommend this approach and therefore it is not available out-of-the-box.
 However, if you really need this approach to avoid calling `#merge` for
-your detached entities, it's pretty simple to add this functionality.
+your detached entities, it is pretty simple to add this functionality.
 
-Usage of a simple `ExtendedEntityManager`
-
+.Usage of a Simple `ExtendedEntityManager`
 [source,java]
 ------------------------------------
 @Inject
 private EntityManager entityManager;
 ------------------------------------
 
-As you see the usage is the same. You *don't* have to use
-`ExtendedEntityManager` at the injection point. It's just needed in the
+As you see the usage is the same. You *do not* have to use
+`ExtendedEntityManager` at the injection point. It is just needed in the
 producer-method:
 
-Producer for the default Extended-`EntityManager` (**no EE-Server**):
-
+.Producer for the Default Extended-`EntityManager` (**no EE-Server**)
 [source,java]
 ------------------------------------------------------------------------------------
 //...
@@ -414,8 +428,7 @@ public class ExtendedEntityManagerProducer
 }
 ------------------------------------------------------------------------------------
 
-Producer for the default Extended-`EntityManager` (**EE-Server**):
-
+.Producer for the Default Extended-`EntityManager` (**EE-Server**)
 [source,java]
 ------------------------------------------------------------------------------------------
 @ApplicationScoped
@@ -442,8 +455,7 @@ public class ExtendedEntityManagerProducer
 }
 ------------------------------------------------------------------------------------------
 
-Implementation of a simple `ExtendedEntityManager`:
-
+.Implementation of a Simple `ExtendedEntityManager`
 [source,java]
 -------------------------------------------------------------------------
 @Typed()
@@ -469,22 +481,22 @@ public class ExtendedEntityManager implements EntityManager, Serializable
 }
 -------------------------------------------------------------------------
 
-This approach just works if it *doesn't come to serialization* of this
-wrapper e.g. in case of session-replication. If those beans get
+This approach just works if it *does not come to serialization* of this
+wrapper, for example in case of session-replication. If those beans get
 serialized, you have to overcome this restriction by storing the
 persistence-unit-name and recreate the `EntityManager` via
 `Persistence.createEntityManagerFactory(this.persistenceUnitName).createEntityManager();`
 and sync it with the database before closing it on serialization.
 Furthermore, you have to intercept some methods of the `EntityManager`
 to merge detached entities automatically if those entities get
-serialized as well. However, as mentioned before *we don't recommend*
+serialized as well. However, as mentioned before *we do not recommend*
 such an approach.
 
-== JTA Support
+=== JTA Support
 
-Per default the transaction-type used by `@Transactional`is
-'RESOURCE_LOCAL'. If you configure `transaction-type="JTA"`in the
-persistence.xml, you have to enable an alternative `TransactionStrategy`
+By default the transaction-type used by `@Transactional` is
+`RESOURCE_LOCAL`. If you configure `transaction-type="JTA"` in the
+persistence.xml file, you have to enable an alternative `TransactionStrategy`
 in the beans.xml which is called
 `org.apache.deltaspike.jpa.impl.transaction.BeanManagedUserTransactionStrategy`.
 
@@ -503,10 +515,9 @@ than the production settings, you can use
 `org.apache.deltaspike.jpa.impl.transaction.EnvironmentAwareTransactionStrategy`
 instead.
 
-*Hint:*
-
-In case of some versions of Weld (or OpenWebBeans in BDA mode), you have
+NOTE: In case of some versions of Weld (or OpenWebBeans in BDA mode), you have
 to configure it as global-alternative instead of an `<alternatives>` in
-beans.xml. That means you have to add e.g.:
-`globalAlternatives.org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy=org.apache.deltaspike.jpa.impl.transaction.BeanManagedUserTransactionStrategy`
-to /META-INF/apache-deltaspike.properties
+beans.xml. That means you have to add, for example,
+`globalAlternatives.org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy 
+=org.apache.deltaspike.jpa.impl.transaction.BeanManagedUserTransactionStrategy`
+to `/META-INF/apache-deltaspike.properties`
