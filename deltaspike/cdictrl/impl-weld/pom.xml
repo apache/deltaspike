@@ -41,7 +41,7 @@
 
         <dependency>
             <groupId>org.jboss.weld.se</groupId>
-            <artifactId>weld-se</artifactId>
+            <artifactId>weld-se-core</artifactId>
             <version>${weld.version}</version>
             <scope>provided</scope>
         </dependency>

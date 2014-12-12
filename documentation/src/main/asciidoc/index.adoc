@@ -429,7 +429,7 @@ with the version of your choice or use:
 
 <dependency>
     <groupId>org.jboss.weld.se</groupId>
-    <artifactId>weld-se</artifactId>
+    <artifactId>weld-se-core</artifactId>
     <version>${weld.version}</version>
     <scope>runtime</scope>
 </dependency>
