@@ -65,6 +65,13 @@ public class TestConfigSource implements ConfigSource
         props.put("testkey4.encrypted", "value");
         props.put("testkey4.password", "mysecretvalue");
 
+        props.put("deltaspike.test.string-value", "configured");
+        props.put("deltaspike.test.integer-value", "5");
+        props.put("deltaspike.test.float-value", "-1.1");
+        props.put("deltaspike.test.boolean-value", Boolean.FALSE.toString());
+        props.put("deltaspike.test.class-value", "org.apache.deltaspike.test.api.config.TestConfigSource");
+        props.put("deltaspike.test.date-value", "" + System.currentTimeMillis());
+        props.put("deltaspike.test.invalid-value", "wrong");
     }
 
     @Override

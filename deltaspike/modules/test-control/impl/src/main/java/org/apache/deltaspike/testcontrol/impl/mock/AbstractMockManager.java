@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.testcontrol.impl.mock;
 
-import org.apache.deltaspike.core.api.config.ConfigResolver;
+import org.apache.deltaspike.testcontrol.api.junit.TestBaseConfig;
 import org.apache.deltaspike.testcontrol.api.mock.DynamicMockManager;
 import org.apache.deltaspike.testcontrol.api.mock.TypedMock;
 
@@ -35,15 +35,13 @@ public abstract class AbstractMockManager implements DynamicMockManager
     public void addMock(Object mockInstance, Annotation... qualifiers)
     {
         //check if this method gets used without changing the default-config
-        if (!Boolean.parseBoolean(ConfigResolver.getPropertyValue(
-            "deltaspike.testcontrol.mock-support.allow_mocked_beans", Boolean.FALSE.toString())) &&
-                !Boolean.parseBoolean(ConfigResolver.getPropertyValue(
-                    "deltaspike.testcontrol.mock-support.allow_mocked_producers", Boolean.FALSE.toString())))
+        if (!TestBaseConfig.Mock.ALLOW_MOCKED_BEANS.getValue() &&
+            !TestBaseConfig.Mock.ALLOW_MOCKED_PRODUCERS.getValue())
         {
             throw new IllegalStateException("The support for mocked CDI-Beans is disabled " +
                 "due to a reduced portability across different CDI-implementations. " +
-                "Please set 'deltaspike.testcontrol.mock-support.allow_mocked_beans' and/or " +
-                "'deltaspike.testcontrol.mock-support.allow_mocked_producers' to 'true' " +
+                "Please set '" + TestBaseConfig.Mock.ALLOW_MOCKED_BEANS.getKey() + "' and/or '" +
+                TestBaseConfig.Mock.ALLOW_MOCKED_PRODUCERS.getKey() + "' to 'true' " +
                 "(in 'META-INF/apache-deltaspike.properties') on your test-classpath.");
         }
 

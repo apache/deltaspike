@@ -22,7 +22,6 @@ import junit.framework.Assert;
 import org.apache.deltaspike.cdise.api.CdiContainer;
 import org.apache.deltaspike.cdise.api.CdiContainerLoader;
 import org.apache.deltaspike.cdise.api.ContextControl;
-import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
@@ -83,10 +82,7 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
 
     static
     {
-        //default is false to improve the compatibility with @Before and @After
-        String useTestClassAsCdiBeanValue =
-                ConfigResolver.getPropertyValue("deltaspike.testcontrol.use_test_class_as_cdi_bean", "false");
-        USE_TEST_CLASS_AS_CDI_BEAN = Boolean.parseBoolean(useTestClassAsCdiBeanValue);
+        USE_TEST_CLASS_AS_CDI_BEAN = TestBaseConfig.Container.USE_TEST_CLASS_AS_CDI_BEAN.getValue();
     }
 
     private static ThreadLocal<Boolean> automaticScopeHandlingActive = new ThreadLocal<Boolean>();

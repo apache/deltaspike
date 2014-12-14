@@ -63,9 +63,7 @@ public class CdiTestSuiteRunner extends Suite
 
     static
     {
-        String stopContainerConfigValue =
-                ConfigResolver.getPropertyValue("deltaspike.testcontrol.stop_container", "true");
-        STOP_CONTAINER = Boolean.parseBoolean(stopContainerConfigValue.trim());
+        STOP_CONTAINER = TestBaseConfig.Container.STOP_CONTAINER.getValue();
     }
 
     public CdiTestSuiteRunner(Class<?> klass, RunnerBuilder builder) throws InitializationError

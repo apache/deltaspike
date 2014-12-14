@@ -18,12 +18,12 @@
  */
 package org.apache.deltaspike.jsf.api.config.view;
 
-import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.config.view.metadata.SkipMetaDataMerge;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewMetaData;
 import org.apache.deltaspike.core.spi.config.view.ConfigPreProcessor;
 import org.apache.deltaspike.core.spi.config.view.ViewConfigNode;
 import org.apache.deltaspike.core.util.ClassUtils;
+import org.apache.deltaspike.jsf.api.config.base.JsfBaseConfig;
 import org.apache.deltaspike.jsf.api.literal.FolderLiteral;
 import org.apache.deltaspike.jsf.util.NamingConventionUtils;
 
@@ -114,7 +114,7 @@ public @interface Folder
             if (DefaultFolderNameBuilder.class.equals(folder.folderNameBuilder()))
             {
                 String customDefaultFolderNameBuilderClassName =
-                        ConfigResolver.getPropertyValue(DefaultFolderNameBuilder.class.getName(), null);
+                    JsfBaseConfig.ViewConfig.CUSTOM_DEFAULT_FOLDER_NAME_BUILDER.getValue();
 
                 if (customDefaultFolderNameBuilderClassName != null)
                 {

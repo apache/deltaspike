@@ -19,8 +19,8 @@
 
 package org.apache.deltaspike.jsf.api.literal;
 
-import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.util.ClassUtils;
+import org.apache.deltaspike.jsf.api.config.base.JsfBaseConfig;
 import org.apache.deltaspike.jsf.api.config.view.View;
 
 import javax.enterprise.util.AnnotationLiteral;
@@ -63,7 +63,7 @@ public class ViewLiteral extends AnnotationLiteral<View> implements View
         }
 
         final String customDefaultBasePathBuilderClassName =
-                ConfigResolver.getPropertyValue(DefaultBasePathBuilder.class.getName(), null);
+            JsfBaseConfig.ViewConfig.CUSTOM_DEFAULT_BASE_PATH_BUILDER.getValue();
 
         if (customDefaultBasePathBuilderClassName != null)
         {
@@ -76,7 +76,7 @@ public class ViewLiteral extends AnnotationLiteral<View> implements View
 
 
         final String customDefaultFileNameBuilderClassName =
-                ConfigResolver.getPropertyValue(DefaultFileNameBuilder.class.getName(), null);
+            JsfBaseConfig.ViewConfig.CUSTOM_DEFAULT_FILE_NAME_BUILDER.getValue();
 
         if (customDefaultFileNameBuilderClassName != null)
         {
@@ -89,7 +89,7 @@ public class ViewLiteral extends AnnotationLiteral<View> implements View
 
 
         final String customDefaultExtensionBuilderClassName =
-                ConfigResolver.getPropertyValue(DefaultExtensionBuilder.class.getName(), null);
+            JsfBaseConfig.ViewConfig.CUSTOM_DEFAULT_EXTENSION_BUILDER.getValue();
 
         if (customDefaultExtensionBuilderClassName != null)
         {

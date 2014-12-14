@@ -27,11 +27,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;
+import org.apache.deltaspike.jsf.api.config.base.JsfBaseConfig;
 
 /**
  * <p>Default implementation of {@link ClientWindowConfig}.
@@ -81,9 +81,7 @@ public class DefaultClientWindowConfig implements ClientWindowConfig
     protected void init()
     {
         this.defaultClientWindowRenderMode = this.jsfModuleConfig.getDefaultWindowMode();
-
-        String maxCount = ConfigResolver.getPropertyValue("deltaspike.scope.window.max-count", "" + 64);
-        this.maxWindowContextCount = Integer.parseInt(maxCount);
+        this.maxWindowContextCount = JsfBaseConfig.Scope.Window.MAX_COUNT.getValue();
     }
 
     @Override

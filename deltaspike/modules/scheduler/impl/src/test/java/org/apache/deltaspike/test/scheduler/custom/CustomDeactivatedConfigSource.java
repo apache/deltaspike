@@ -20,8 +20,7 @@ package org.apache.deltaspike.test.scheduler.custom;
 
 import org.apache.deltaspike.core.spi.activation.ClassDeactivator;
 import org.apache.deltaspike.core.spi.config.ConfigSource;
-import org.apache.deltaspike.scheduler.impl.QuartzScheduler;
-import org.apache.deltaspike.scheduler.impl.SchedulerExtension;
+import org.apache.deltaspike.scheduler.impl.SchedulerBaseConfig;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,10 +29,10 @@ public class CustomDeactivatedConfigSource implements ConfigSource
 {
     private Map<String, String> config = new HashMap<String, String>()
     {{
-            put(SchedulerExtension.JOB_CLASS_CONFIG_KEY, CustomJob.class.getName());
-            put(QuartzScheduler.START_SCOPES_KEY,"false");
+            put(SchedulerBaseConfig.Job.JOB_CLASS_NAME.getKey(), CustomJob.class.getName());
+            put(SchedulerBaseConfig.Lifecycle.START_SCOPES_PER_JOB.getKey(), Boolean.FALSE.toString());
             put(ClassDeactivator.class.getName(), QuartzDeactivator.class.getName());
-        }};
+    }};
 
     @Override
     public int getOrdinal()

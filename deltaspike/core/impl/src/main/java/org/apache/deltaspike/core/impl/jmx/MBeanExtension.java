@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.core.impl.jmx;
 
+import org.apache.deltaspike.core.api.config.base.CoreBaseConfig;
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.jmx.JmxBroadcaster;
 import org.apache.deltaspike.core.api.jmx.MBean;
@@ -121,8 +122,7 @@ public class MBeanExtension implements Extension, Deactivatable
         final Annotation[] qualifiers = qualifiers(bean.getAnnotatedBeanClass(), bm);
         final DynamicMBeanWrapper mbean = new DynamicMBeanWrapper(clazz, normalScoped, qualifiers);
         final MBeanServer server = mBeanServer();
-        if (server.isRegistered(objectName)
-                && "true".equals(ConfigResolver.getPropertyValue("deltaspike.mbean.auto-unregister", "true")))
+        if (server.isRegistered(objectName) && CoreBaseConfig.MBean.AUTO_UNREGISTER.getValue())
         {
             server.unregisterMBean(objectName);
         }

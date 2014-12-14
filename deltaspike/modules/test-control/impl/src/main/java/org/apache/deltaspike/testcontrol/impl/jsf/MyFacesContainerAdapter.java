@@ -60,7 +60,7 @@ public class MyFacesContainerAdapter implements TestAware, ExternalContainer
                 if (testConfig == null || DEFAULT_TEST_CONFIG_LITERAL.webappResourcePath().equals(
                     testConfig.webappResourcePath()))
                 {
-                    return ConfigResolver.getPropertyValue("deltaspike.testcontrol.mf.test.webapp_resource_path", "");
+                    return MyFacesTestBaseConfig.WEBAPP_RESOURCE_PATH.getValue();
                 }
                 return testConfig.webappResourcePath();
             }

@@ -19,8 +19,8 @@
 
 package org.apache.deltaspike.jsf.api.literal;
 
-import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.util.ClassUtils;
+import org.apache.deltaspike.jsf.api.config.base.JsfBaseConfig;
 import org.apache.deltaspike.jsf.api.config.view.Folder;
 
 import javax.enterprise.util.AnnotationLiteral;
@@ -48,7 +48,7 @@ public class FolderLiteral extends AnnotationLiteral<Folder> implements Folder
         }
 
         final String customDefaultFolderNameBuilderClassName =
-                ConfigResolver.getPropertyValue(Folder.DefaultFolderNameBuilder.class.getName(), null);
+            JsfBaseConfig.ViewConfig.CUSTOM_DEFAULT_FOLDER_NAME_BUILDER.getValue();
 
         if (customDefaultFolderNameBuilderClassName != null)
         {

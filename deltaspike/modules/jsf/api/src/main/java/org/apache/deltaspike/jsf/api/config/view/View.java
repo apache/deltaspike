@@ -18,12 +18,12 @@
  */
 package org.apache.deltaspike.jsf.api.config.view;
 
-import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.config.view.metadata.SkipMetaDataMerge;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewMetaData;
 import org.apache.deltaspike.core.spi.config.view.ConfigPreProcessor;
 import org.apache.deltaspike.core.spi.config.view.ViewConfigNode;
 import org.apache.deltaspike.core.util.ClassUtils;
+import org.apache.deltaspike.jsf.api.config.base.JsfBaseConfig;
 import org.apache.deltaspike.jsf.api.literal.ViewLiteral;
 import org.apache.deltaspike.jsf.util.NamingConventionUtils;
 
@@ -242,7 +242,7 @@ public @interface View
             if (DefaultBasePathBuilder.class.equals(view.basePathBuilder()))
             {
                 String customDefaultBasePathBuilderClassName =
-                        ConfigResolver.getPropertyValue(DefaultBasePathBuilder.class.getName(), null);
+                    JsfBaseConfig.ViewConfig.CUSTOM_DEFAULT_BASE_PATH_BUILDER.getValue();
 
                 if (customDefaultBasePathBuilderClassName != null)
                 {
@@ -267,7 +267,7 @@ public @interface View
             if (DefaultFileNameBuilder.class.equals(view.fileNameBuilder()))
             {
                 String customDefaultFileNameBuilderClassName =
-                        ConfigResolver.getPropertyValue(DefaultFileNameBuilder.class.getName(), null);
+                    JsfBaseConfig.ViewConfig.CUSTOM_DEFAULT_FILE_NAME_BUILDER.getValue();
 
                 if (customDefaultFileNameBuilderClassName != null)
                 {
@@ -292,7 +292,7 @@ public @interface View
             if (DefaultExtensionBuilder.class.equals(view.extensionBuilder()))
             {
                 String customDefaultExtensionBuilderClassName =
-                        ConfigResolver.getPropertyValue(DefaultExtensionBuilder.class.getName(), null);
+                    JsfBaseConfig.ViewConfig.CUSTOM_DEFAULT_EXTENSION_BUILDER.getValue();
 
                 if (customDefaultExtensionBuilderClassName != null)
                 {

@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.scheduler.impl;
 
-import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.quartz.Job;
@@ -33,9 +32,7 @@ public class CdiAwareJobFactory implements JobFactory
 
     public CdiAwareJobFactory()
     {
-        String defaultJobFactoryName =
-            ConfigResolver.getPropertyValue("deltaspike.scheduler.DefaultJobFactory",
-                "org.quartz.simpl.PropertySettingJobFactory");
+        String defaultJobFactoryName = SchedulerBaseConfig.Job.DEFAULT_JOB_FACTORY_CLASS_NAME.getValue();
 
         defaultFactory = ClassUtils.tryToInstantiateClassForName(defaultJobFactoryName, JobFactory.class);
     }

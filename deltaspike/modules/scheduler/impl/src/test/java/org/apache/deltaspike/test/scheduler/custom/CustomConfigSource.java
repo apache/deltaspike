@@ -20,7 +20,7 @@ package org.apache.deltaspike.test.scheduler.custom;
 
 import org.apache.deltaspike.core.spi.activation.ClassDeactivator;
 import org.apache.deltaspike.core.spi.config.ConfigSource;
-import org.apache.deltaspike.scheduler.impl.SchedulerExtension;
+import org.apache.deltaspike.scheduler.impl.SchedulerBaseConfig;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +29,7 @@ public class CustomConfigSource implements ConfigSource
 {
     private Map<String, String> config = new HashMap<String, String>()
     {{
-        put(SchedulerExtension.JOB_CLASS_CONFIG_KEY, CustomJob.class.getName());
+        put(SchedulerBaseConfig.Job.JOB_CLASS_NAME.getKey(), CustomJob.class.getName());
         put(ClassDeactivator.class.getName(), QuartzDeactivator.class.getName());
     }};
 

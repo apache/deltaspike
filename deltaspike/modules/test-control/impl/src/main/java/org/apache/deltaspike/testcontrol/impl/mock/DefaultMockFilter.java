@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.testcontrol.impl.mock;
 
-import org.apache.deltaspike.core.api.config.ConfigResolver;
+import org.apache.deltaspike.testcontrol.api.junit.TestBaseConfig;
 import org.apache.deltaspike.testcontrol.spi.mock.MockFilter;
 
 import javax.enterprise.inject.Produces;
@@ -91,13 +91,11 @@ public class DefaultMockFilter implements MockFilter
         if ((annotated instanceof AnnotatedMethod || annotated instanceof AnnotatedField) &&
                 annotated.getAnnotation(Produces.class) != null)
         {
-            return Boolean.parseBoolean(ConfigResolver.getPropertyValue(
-                "deltaspike.testcontrol.mock-support.allow_mocked_producers", Boolean.FALSE.toString()));
+            return TestBaseConfig.Mock.ALLOW_MOCKED_PRODUCERS.getValue();
         }
         else
         {
-            return Boolean.parseBoolean(ConfigResolver.getPropertyValue(
-                "deltaspike.testcontrol.mock-support.allow_mocked_beans", Boolean.FALSE.toString()));
+            return TestBaseConfig.Mock.ALLOW_MOCKED_BEANS.getValue();
         }
     }
 

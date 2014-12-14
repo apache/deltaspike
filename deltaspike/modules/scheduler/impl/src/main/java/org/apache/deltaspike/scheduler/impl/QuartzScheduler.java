@@ -19,7 +19,6 @@
 package org.apache.deltaspike.scheduler.impl;
 
 import org.apache.deltaspike.cdise.api.ContextControl;
-import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.ExceptionUtils;
@@ -56,8 +55,6 @@ import java.util.logging.Logger;
 //vetoed class (see SchedulerExtension)
 public class QuartzScheduler implements Scheduler<Job>
 {
-    public static final String START_SCOPES_KEY = "deltaspike.scheduler.start_scopes_for_jobs";
-
     private static final Logger LOG = Logger.getLogger(QuartzScheduler.class.getName());
     private static final Scheduled DEFAULT_SCHEDULED_LITERAL = AnnotationInstanceProvider.of(Scheduled.class);
 
@@ -128,17 +125,13 @@ public class QuartzScheduler implements Scheduler<Job>
         try
         {
             this.scheduler = schedulerFactory.getScheduler();
-            final String startScopes = ConfigResolver
-                    .getPropertyValue(START_SCOPES_KEY, "true");
-            if ("true".equalsIgnoreCase(startScopes))
+            if (SchedulerBaseConfig.Lifecycle.START_SCOPES_PER_JOB.getValue())
             {
                 this.scheduler.getListenerManager().addJobListener(new InjectionAwareJobListener());
             }
             if (!this.scheduler.isStarted())
             {
-                String delayedStart =
-                    ConfigResolver.getPropertyValue("deltaspike.scheduler.delayed_start_in_seconds", "1");
-                this.scheduler.startDelayed(Integer.parseInt(delayedStart));
+                this.scheduler.startDelayed(SchedulerBaseConfig.Lifecycle.DELAYED_START_IN_SECONDS.getValue());
             }
         }
         catch (SchedulerException e)
@@ -150,8 +143,7 @@ public class QuartzScheduler implements Scheduler<Job>
     protected ResourceBundle loadCustomQuartzConfig()
     {
         //don't use quartz.properties as default-value
-        String configFile =
-            ConfigResolver.getPropertyValue("deltaspike.scheduler.quartz_config-file", "quartz");
+        String configFile = SchedulerBaseConfig.SCHEDULER_CONFIG_FILE.getValue();
         return PropertyFileUtils.getResourceBundle(configFile);
     }
 
@@ -162,9 +154,7 @@ public class QuartzScheduler implements Scheduler<Job>
         {
             if (this.scheduler != null && this.scheduler.isStarted())
             {
-                String forceStop = ConfigResolver.getPropertyValue("deltaspike.scheduler.force_stop", "true");
-
-                this.scheduler.shutdown(Boolean.parseBoolean(forceStop));
+                this.scheduler.shutdown(SchedulerBaseConfig.Lifecycle.FORCE_STOP.getValue());
                 this.scheduler = null;
             }
         }

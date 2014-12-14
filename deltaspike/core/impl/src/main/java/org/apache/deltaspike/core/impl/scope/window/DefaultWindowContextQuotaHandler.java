@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.core.impl.scope.window;
 
-import org.apache.deltaspike.core.api.config.ConfigResolver;
+import org.apache.deltaspike.core.api.config.base.CoreBaseConfig;
 import org.apache.deltaspike.core.spi.scope.window.WindowContextQuotaHandler;
 
 import javax.annotation.PostConstruct;
@@ -41,8 +41,7 @@ public class DefaultWindowContextQuotaHandler implements WindowContextQuotaHandl
     @PostConstruct
     protected void init()
     {
-        String maxCount = ConfigResolver.getPropertyValue("deltaspike.scope.window.max-count", "" + 1024);
-        this.maxWindowContextCount = Integer.parseInt(maxCount);
+        this.maxWindowContextCount = CoreBaseConfig.Scope.Window.MAX_COUNT.getValue();
     }
 
     public synchronized /*no issue due to session-scoped instance*/ void checkWindowContextQuota(String windowId)
