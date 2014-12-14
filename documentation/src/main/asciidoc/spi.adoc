@@ -17,7 +17,7 @@ To deactivate a class it is required to implement `ClassDeactivator`. Returning 
 IMPORTANT: Due to the ordinal feature of the low-level configuration approach it is possible that a class-deactivator with a higher ordinal, for example used in a concrete project, can re-activate a deactivated implementation.
 
 *Please note* that you might have to deactivate the parts of the add-on or third-party CDI extension which relies on its own implementation. Therefore, you should **be really careful with re-activation**.) The implementation should be stateless because the result will be cached and
-as soon as everything is initialized the class-deactivators wois not be used any longer.
+as soon as everything is initialized the class-deactivators will not be used any longer.
 
 === ClassDeactivator
 

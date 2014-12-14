@@ -50,7 +50,7 @@ Therefore, you have to provide an implementation of the
 ProjectStage implementations which have to be
 `public static final class` and it is required to extend `ProjectStage`.
 It is required to provide a `public static final` instance even though,
-you wois not use it directly.
+you will not use it directly.
 
 ProjectStageHolder for custom project stage implementations:
 

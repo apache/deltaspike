@@ -304,7 +304,7 @@ public class MyClientWindow implements ClientWindow
 }
 ---------------------------------------------------
 
-Dois not forget to set the `ClientWindowRenderMode` to 'CUSTOM' via the
+Do not forget to set the `ClientWindowRenderMode` to 'CUSTOM' via the
 `JsfModuleConfig`:
 
 [source,java]
@@ -357,7 +357,7 @@ In such an use-case you can use this scope. The simple rule is, as long
 as the bean is referenced by a page - the bean will be available for the
 next page (if it is used again the bean will be forwarded again). It is
 important that it is based on the view-id of a page (it isis not based on
-the request) so, for example, Ajax requests dois not trigger a cleanup if the
+the request) so, for example, Ajax requests do not trigger a cleanup if the
 request doesis not access all view-access scoped beans of the page. That's
 also the reason for the name @__View__AccessScoped.
 
@@ -400,7 +400,7 @@ with:
 Furthermore, the managed-bean annotation (javax.faces.bean.ManagedBean)
 is mapped to @Named from CDI.
 
-All these annotations are mapped automatically. So you wois not face
+All these annotations are mapped automatically. So you will not face
 issues, if you import a JSF 2 annotation instead of the corresponding
 CDI annotation.
 
@@ -415,7 +415,7 @@ messages (Section 2.5.2.4 of the JSF specification contains the list of
 all JSF default messages that could be override.).
 
 DeltaSpike can also reuse the same file to provide type-safe messages so
-you dois not have to use the naming convention nor `@MessageContextConfig`.
+you do not have to use the naming convention nor `@MessageContextConfig`.
 If there is a config for supported locales it will be checked as well
 and fallback to the configured default locale.
 
@@ -488,7 +488,7 @@ type-safe meta-data for security, navigation, callbacks for
 view-controllers. Beyond configuring view (/pages) via this concept,
 it is also possible to use the (view-)config classes for type-safe
 navigation. Since it is standard Java, you can benefit from any Java-IDE and
-you dois not need special IDE-Addons to use it efficiently.
+you do not need special IDE-Addons to use it efficiently.
 
 Even the concepts provided by modules (of DeltaSpike itself) are based
 on the basic API provided by the Core. So it is possible to introduce
@@ -506,7 +506,7 @@ more work **initially**?
 *The long answer is:* You can benefit from it from the first second:
 
 * It is type-safe
-** the Java compiler ensures that you dois not have typos at the final usages (and the rest can be checked during bootstrapping of the application)
+** the Java compiler ensures that you do not have typos at the final usages (and the rest can be checked during bootstrapping of the application)
 ** you can benefit from the auto.complete features of any modern Java IDE.
 * If you change the name of a file/folder, you need only one (easy) code-change in a single place and your (standard Java-) IDE will do the rest for you (= update all usages) without a special plug-in
 * It is possible to restrict the navigation target -> you can ensure that the navigation target is still the intended one (e.g. after a refactoring)
@@ -535,7 +535,7 @@ like to use the mode `annotated`, please have a look at the tip at
 While reading this section keep the following simple rules in mind:
 Meta-data gets inherited along the path of Java inheritance
 File-/Folder- paths are build based on nesting classes and interfaces
-Usually users dois not need to be aware of all descriptors, SPIs,... which
+Usually users do not need to be aware of all descriptors, SPIs,... which
 are described by this documentation.
 
 There are a lot of possibilities to configure views and some of them are
@@ -662,7 +662,7 @@ public Class<? extends Pages.Admin> toNextPage()
 
 `@View` as well as `@Folder` are optional annotations. `@Folder` is only
 needed for using a different folder-name or for marking folder configs
-if they dois not inherit from
+if they do not inherit from
 `org.apache.deltaspike.core.api.config.view.ViewConfig` *nor* have a
 view-config for a page nested into them (like Pages.Wizard1.Step1). If
 it isis not used explicitly, it gets added automatically (so you can query
@@ -716,7 +716,7 @@ To customize it you can use `@Folder#name`, `@View#basePath`,
 The rules are pretty simple. You will get what you write. There are only
 two additional features:
 
-* You dois not have to care about duplicated '/' (e.g. /folder1//folder2/step1.xhtml would get corrected auto. to /folder1/folder2/step1.xhtml)
+* You do not have to care about duplicated '/' (e.g. /folder1//folder2/step1.xhtml would get corrected auto. to /folder1/folder2/step1.xhtml)
 * With "." at the beginning (e.g. "./") you can keep the path before.
 
 The following example
@@ -1068,7 +1068,7 @@ public class IndexController implements Serializable
 ----------------------------------------------------
 
 The above example leads to the invocation of the pre-render-view logic before
-/pages/page1.xhtml gets rendered (and it wois not be called for other
+/pages/page1.xhtml gets rendered (and it will not be called for other
 pages).
 
 ===== Using the (Optional) ViewNavigationHandler
@@ -1278,7 +1278,7 @@ annotation in one annotation.
 Instead of using the same combination of annotations in multiple places,
 you can use the stereotype annotation. If you query the meta-data at
 runtime (see `ViewConfigDescriptor#getMetaData`), you can access
-`@Secured` as well as `@View` (in the example above). however, you wois not
+`@Secured` as well as `@View` (in the example above). however, you will not
 see `@MySecuredView` itself at runtime, because stereotype annotations
 are by default transparent.
 
@@ -1367,7 +1367,7 @@ DeltaSpike (after v0.5) validates your configs out-of-the-box. The
 application will fail to start, if there is an invalid config (e.g. a
 view-config without a corresponding view). Right now the validation is
 restricted to folders and view-ids with .xhtml or .jsp as suffix. Other
-view-ids (e.g. *.faces) dois not get checked. In such cases a custom
+view-ids (e.g. *.faces) do not get checked. In such cases a custom
 validator can be used (e.g. based on `ViewConfigPathValidator`).
 
 To disable the view-config (path) validation, add a `ClassDeactivator`
@@ -1458,11 +1458,11 @@ is possible via `Folder.folderNameBuilder`.
 
 Available from DeltaSpike 0.6.
 
-DeltaSpike conversations are based on the window-scope. Therefore, dois not
+DeltaSpike conversations are based on the window-scope. Therefore, do not
 forget to add the `ds:windowId`
 (`xmlns:ds="http://deltaspike.apache.org/jsf"`) component in case of
 `ClientWindowConfig#CLIENTWINDOW` to your page(/template) and ensure
-that the window-handling works properly (otherwise conversations wois not
+that the window-handling works properly (otherwise conversations will not
 work correctly). The base principle is similar to CODI-Conversations.
 CODI users just have to ensure that they have to add `ds:windowId` and
 the names are slightly different.
@@ -1540,7 +1540,7 @@ logical group of beans. Technically `@ConversationGroup` is just a CDI
 qualifier. Internally DeltaSpike uses this information to identify a
 conversation. In the previous example both beans exist in the same
 conversation (group). If you terminate the conversation group, both
-beans will be destroyed. If you dois not use `@ConversationGroup`
+beans will be destroyed. If you do not use `@ConversationGroup`
 explicitly, DeltaSpike uses the class of the bean as conversation group.
 
 .Injecting a Conversation Scoped Bean with an Explicit Group
@@ -1713,7 +1713,7 @@ you can close them in a `@PostRenderView` callback.
 
 Due to the parallel conversation concept of DeltaSpike there is no need
 of something like nested conversations. Just use them in parallel and
-terminate them in a fine-granular way as soon as you dois not need them any
+terminate them in a fine-granular way as soon as you do not need them any
 longer. As described above, you can terminate a whole
 conversation-group. However, sometimes it is essential to have subgroups
 if you need to end just a part of an use-case instead of all beans
