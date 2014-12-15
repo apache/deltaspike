@@ -30,6 +30,7 @@ import javax.enterprise.inject.spi.Annotated;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.interceptor.InvocationContext;
 
+import org.apache.deltaspike.core.util.AnnotationUtils;
 import org.apache.deltaspike.core.util.metadata.builder.ParameterValueRedefiner;
 import org.apache.deltaspike.security.api.authorization.SecuredReturn;
 import org.apache.deltaspike.security.api.authorization.SecurityParameterBinding;
@@ -92,6 +93,24 @@ public class SecurityParameterValueRedefiner implements ParameterValueRedefiner
                         for (Annotation annotation : requiredBindingAnnotations)
                         {
                             if (businessParameterAnnotations.contains(annotation))
+                            {
+                                return invocation.getParameters()[i];
+                            }
+                        }
+
+                        Set<Integer> hashCodesOfBusinessParameterAnnotations =
+                            new HashSet<Integer>(businessParameterAnnotations.size());
+
+                        for (Annotation annotation : businessParameterAnnotations)
+                        {
+                            hashCodesOfBusinessParameterAnnotations.add(
+                                AnnotationUtils.getQualifierHashCode(annotation));
+                        }
+                        //2nd try (detailed check)
+                        for (Annotation annotation : requiredBindingAnnotations)
+                        {
+                            if (hashCodesOfBusinessParameterAnnotations.contains(
+                                AnnotationUtils.getQualifierHashCode(annotation)))
                             {
                                 return invocation.getParameters()[i];
                             }

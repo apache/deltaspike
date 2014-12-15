@@ -21,8 +21,11 @@ package org.apache.deltaspike.core.util;
 
 import javax.enterprise.inject.Typed;
 import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.util.Nonbinding;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.util.Arrays;
 
 @Typed()
 public abstract class AnnotationUtils
@@ -74,5 +77,100 @@ public abstract class AnnotationUtils
             }
         }
         return null;
+    }
+
+    //based on org.apache.webbeans.container.BeanCacheKey#getQualifierHashCode
+    public static int getQualifierHashCode(Annotation annotation)
+    {
+        Class annotationClass = annotation.annotationType();
+
+        int hashCode = getTypeHashCode(annotationClass);
+
+        for (Method member : annotationClass.getDeclaredMethods())
+        {
+            if (member.isAnnotationPresent(Nonbinding.class))
+            {
+                continue;
+            }
+
+            final Object annotationMemberValue;
+            try
+            {
+                annotationMemberValue = ReflectionUtils.invokeMethod(annotation, member, Object.class, true);
+            }
+            catch (IllegalAccessException e)
+            {
+                throw ExceptionUtils.throwAsRuntimeException(e);
+            }
+
+            final int arrayValue;
+            if (annotationMemberValue.getClass().isArray())
+            {
+                Class<?> annotationMemberType = annotationMemberValue.getClass().getComponentType();
+                if (annotationMemberType.isPrimitive())
+                {
+                    if (Long.TYPE == annotationMemberType)
+                    {
+                        arrayValue = Arrays.hashCode((long[]) annotationMemberValue);
+                    }
+                    else if (Integer.TYPE == annotationMemberType)
+                    {
+                        arrayValue = Arrays.hashCode((int[]) annotationMemberValue);
+                    }
+                    else if (Short.TYPE == annotationMemberType)
+                    {
+                        arrayValue = Arrays.hashCode((short[]) annotationMemberValue);
+                    }
+                    else if (Double.TYPE == annotationMemberType)
+                    {
+                        arrayValue = Arrays.hashCode((double[]) annotationMemberValue);
+                    }
+                    else if (Float.TYPE == annotationMemberType)
+                    {
+                        arrayValue = Arrays.hashCode((float[]) annotationMemberValue);
+                    }
+                    else if (Boolean.TYPE == annotationMemberType)
+                    {
+                        arrayValue = Arrays.hashCode((boolean[]) annotationMemberValue);
+                    }
+                    else if (Byte.TYPE == annotationMemberType)
+                    {
+                        arrayValue = Arrays.hashCode((byte[]) annotationMemberValue);
+                    }
+                    else if (Character.TYPE == annotationMemberType)
+                    {
+                        arrayValue = Arrays.hashCode((char[]) annotationMemberValue);
+                    }
+                    else
+                    {
+                        arrayValue = 0;
+                    }
+                }
+                else
+                {
+                    arrayValue = Arrays.hashCode((Object[]) annotationMemberValue);
+                }
+            }
+            else
+            {
+                arrayValue = annotationMemberValue.hashCode();
+            }
+
+            hashCode = 29 * hashCode + arrayValue;
+            hashCode = 29 * hashCode + member.getName().hashCode();
+        }
+
+        return hashCode;
+    }
+
+    private static int getTypeHashCode(Type type)
+    {
+        int typeHash = type.hashCode();
+        if (typeHash == 0 && type instanceof Class)
+        {
+            return ((Class)type).getName().hashCode();
+        }
+
+        return typeHash;
     }
 }
