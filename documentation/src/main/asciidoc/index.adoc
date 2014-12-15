@@ -27,6 +27,6 @@
 ** <<source#,Contribute to the DeltaSpike Source>>
 ** <<spi#,DeltaSpike Service Provider Interface (SPI)>>
 * Access More DeltaSpike Resources
-** <<articles#,Articles and Blogs>>
-** <<addons#,Add-ons>>
-** <<external#,External Examples>>
+** link:http://deltaspike.apache.org/articles.html[Articles and Blogs]
+** link:http://deltaspike.apache.org/addons.html[Add-ons]
+** link:https://deltaspike.apache.org/external.html[External Examples]
