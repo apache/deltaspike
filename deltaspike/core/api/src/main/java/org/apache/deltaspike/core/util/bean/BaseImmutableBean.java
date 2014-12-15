@@ -21,6 +21,7 @@ package org.apache.deltaspike.core.util.bean;
 
 import org.apache.deltaspike.core.api.literal.DefaultLiteral;
 import org.apache.deltaspike.core.util.ArraysUtils;
+import org.apache.deltaspike.core.util.metadata.InjectionPointWrapper;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.spi.Bean;
@@ -149,7 +150,22 @@ public abstract class BaseImmutableBean<T> implements Bean<T>
         }
         else
         {
-            this.injectionPoints = new HashSet<InjectionPoint>(injectionPoints);
+            // Check for null Beans, wrap if there isn't one -- DELTASPIKE-400
+            final HashSet<InjectionPoint> ips = new HashSet<InjectionPoint>(injectionPoints.size());
+
+            for (InjectionPoint ip : injectionPoints)
+            {
+                if (ip.getBean() == null)
+                {
+                    ips.add(new InjectionPointWrapper(ip, this));
+                }
+                else
+                {
+                    ips.add(ip);
+                }
+            }
+
+            this.injectionPoints = ips;
         }
 
         this.alternative = alternative;
