@@ -74,6 +74,7 @@
 					<attributes>
 						<toc>true</toc>
             <basedir>.</basedir>
+            <icons>font</icons>
 					</attributes>
 				</configuration>
 			</plugin>
