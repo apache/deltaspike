@@ -47,11 +47,24 @@ public class SecurityParameterWithNonbindingMemberTest
                 .addAsWebInfResource(ArchiveUtils.getBeansXml(), "beans.xml");
     }
 
-    @Test(expected = AccessDeniedException.class)
+    @Test
+    //don't use expected = AccessDeniedException.class
+    //(reason: with some adapters it would lead to an ArquillianProxyException)
     public void securityParameterWithNonbindingMember()
     {
         SecuredBean testBean = BeanProvider.getContextualReference(SecuredBean.class, false);
-        testBean.getResult(new ParameterValue(false));
-        Assert.fail();
+        try
+        {
+            testBean.getResult(new ParameterValue(false));
+            Assert.fail("AccessDeniedException expect, but was not thrown");
+        }
+        catch (AccessDeniedException e)
+        {
+            //expected exception
+        }
+        catch (Exception e)
+        {
+            Assert.fail("Unexpected Exception: " + e);
+        }
     }
 }
