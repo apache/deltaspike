@@ -37,4 +37,8 @@ public class ViewAccessScopedBeanX implements Serializable
     {
         this.value = value;
     }
+
+    public void viewAction()
+    {
+    }
 }
