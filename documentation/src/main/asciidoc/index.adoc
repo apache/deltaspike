@@ -6,7 +6,7 @@
 ** <<overview#,Overview of DeltaSpike>>
 ** <<configure#,Configure DeltaSpike in Your Projects>>
 ** <<cdiimp#,Enable CDI For Your Java Environment>>
-** <<examples#,See DeltaSpike in Action>>
+** link:http://deltaspike.apache.org/examples.html[See DeltaSpike in Action]
 * Use Individual Modules
 ** <<modules#,Overview of DeltaSpike Modules>>
 ** <<core#,Core>>

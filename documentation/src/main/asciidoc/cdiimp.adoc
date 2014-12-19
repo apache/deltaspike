@@ -189,4 +189,4 @@ EchoService echoService = BeanProvider.getContextualReference(EchoService.class,
 == Next
 * For more information about the Container Control module, see <<container-control#,Container Control Module>>.
 * To understand how the various DeltaSpike modules can enhance and extend your applications, see <<modules#,Overview of DeltaSpike Modules>> and the individual module pages.
-* To see ready-to-deploy example DeltaSpike applications, see <<examples#,See DeltaSpike in Action>>.
+* To see ready-to-deploy example DeltaSpike applications, see link:http://deltaspike.apache.org/examples.html[See DeltaSpike in Action].
