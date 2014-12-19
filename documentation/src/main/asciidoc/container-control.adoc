@@ -35,6 +35,17 @@ For instructions and examples on using this feature in your projects, see <<cdii
 === ContextControl Usage
 The `ContextControl` interface provides life-cycle control of the CDI container built-in contexts. This includes starting and stoping built-in standard contexts like `@RequestScoped`, `@ConversationScoped`, and `@SessionScoped`. It is provided as an `@Dependent` bean and can be injected in the classic CDI way. This feature can be used and is helpful in all Java environments, including Java SE, as illustrated here.
 
+=== Procedure for builing Uber jar
+Uber jar or executable jar can created by using the maven shade plugin. Some things you needs to be aware of when you use it.
+
+* Multiple `beans.xml` and `javax.enterprise.inject.spi.Extension` files needs to be merged into the final jar using a transformer.
+[source,xml]
+----
+<transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+----
+* The _asm:asm:3.3.1_ transitive dependency of OpenWebBeans isn't properly included in the Uber jar.  Add it as a project dependency if you use OWB. (Only needed for OWB 1.1.8 !)
+* Some frameworks, like logging frameworks, aren't CDI compatible.  So you need to exclude them from scanning. Use for example the `scan` feature of Weld to define which packages needs to be excluded.
+
 ==== Restart the RequestContext in Unit Tests
 In unit testing it can be necessary to test with attached and also with
 detached JPA entities. A very common approach for JPA is the
