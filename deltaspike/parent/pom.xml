@@ -52,14 +52,14 @@
         <weld.version>1.1.28.Final</weld.version>
 
         <!-- for cdictrl-openejb -->
-        <openejb.version>4.7.1</openejb.version>
+        <openejb.version>4.7.0</openejb.version>
         <openejb.owb.version>${owb.version}</openejb.owb.version>
 
 
         <!-- testing stuff -->
         <junit.version>4.10</junit.version>
         <arquillian.version>1.0.2.Final</arquillian.version>
-        <tomee.version>1.7.1</tomee.version>
+        <tomee.version>1.7.0</tomee.version>
 
         <!-- JSF-2.0 implementations-->
         <myfaces2.version>2.0.14</myfaces2.version>
