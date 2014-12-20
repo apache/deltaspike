@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.apache.deltaspike.modules</groupId>
         <artifactId>jpa-module-project</artifactId>
-        <version>1.2.1-SNAPSHOT</version>
+        <version>1.2.1</version>
     </parent>
 
     <groupId>org.apache.deltaspike.modules</groupId>
