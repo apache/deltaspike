@@ -24,8 +24,8 @@
 #####################################################################################
 
 rm mvn-*log
-mvn clean install -POWB -Dowb.version=1.1.8 | tee mvn-owb1_1_8.log
-mvn clean install -POWB -Dowb.version=1.2.6 -Dopenejb.owb.version=1.1.8 | tee mvn-owb1_2_6.log
+mvn clean install -POWB -Dowb.version=1.1.8 -Dopenejb.owb.version=1.2.6 | tee mvn-owb1_1_8.log
+mvn clean install -POWB -Dowb.version=1.2.6 -Dopenejb.owb.version=1.2.6 | tee mvn-owb1_2_6.log
 mvn clean install -POWB -Dowb.version=1.2.7 -Dopenejb.owb.version=1.1.8 | tee mvn-owb1_2_7.log
 mvn clean install -POWB15 -Dowb.version=1.5.0-SNAPSHOT -Dopenejb.owb.version=1.2.7 | tee mvn-owb1.5.0.log
 mvn clean install -PWeld -Dweld.version=1.1.10.Final | tee mvn-weld1_1_10.log
