@@ -19,7 +19,7 @@ To begin use the DeltaSpike releases from Maven Central, you simply need to conf
 [source,xml]
 ----
 <properties>
-    <deltaspike.version>1.2.0</deltaspike.version>
+    <deltaspike.version>1.2.1</deltaspike.version>
 </properties>
 ----
 +

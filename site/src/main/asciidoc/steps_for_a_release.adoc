@@ -27,7 +27,7 @@ regards,
  - Check diff with tag of [version-1]
  - Check the jenkins builds
  - Create release notes and commit them to deltaspike/readme/ (format [ReleaseNotes][version].txt)
-
+ - Update version number in documentation/src/main/asciidoc/configure.adoc
 
 test at least:
 
