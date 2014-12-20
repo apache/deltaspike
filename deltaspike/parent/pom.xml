@@ -48,13 +48,18 @@
 
     <properties>
         <java.version>1.6</java.version>
-        <owb.version>1.1.8</owb.version>
-        <weld.version>1.1.19.Final</weld.version>
+        <owb.version>1.2.7</owb.version>
+        <weld.version>1.1.28.Final</weld.version>
+
+        <!-- for cdictrl-openejb -->
+        <openejb.version>4.7.1</openejb.version>
+        <openejb.owb.version>${owb.version}</openejb.owb.version>
+
 
         <!-- testing stuff -->
         <junit.version>4.10</junit.version>
         <arquillian.version>1.0.2.Final</arquillian.version>
-        <tomee.version>1.7.0</tomee.version>
+        <tomee.version>1.7.1</tomee.version>
 
         <!-- JSF-2.0 implementations-->
         <myfaces2.version>2.0.14</myfaces2.version>
@@ -69,9 +74,9 @@
         <!-- Geronimo specs -->
         <geronimo-atinject-1.0-spec.version>1.0</geronimo-atinject-1.0-spec.version>
         <geronimo-jcdi-1.0-spec.version>1.0</geronimo-jcdi-1.0-spec.version>
-        <geronimo-jcdi-1.1-spec.version>1.0-SNAPSHOT</geronimo-jcdi-1.1-spec.version>
+        <geronimo-jcdi-1.1-spec.version>1.0-alpha-1</geronimo-jcdi-1.1-spec.version>
         <geronimo-interceptor-1.1-spec.version>1.0</geronimo-interceptor-1.1-spec.version>
-        <geronimo-interceptor-1.2-spec.version>1.0-SNAPSHOT</geronimo-interceptor-1.2-spec.version>
+        <geronimo-interceptor-1.2-spec.version>1.0-alpha-1</geronimo-interceptor-1.2-spec.version>
         <geronimo-servlet-2.5-spec.version>1.2</geronimo-servlet-2.5-spec.version>
         <geronimo-servlet-3.0-spec.version>1.0</geronimo-servlet-3.0-spec.version>
         <geronimo-el-2.2-spec.version>1.0.3</geronimo-el-2.2-spec.version>

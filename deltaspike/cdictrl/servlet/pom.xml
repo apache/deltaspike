@@ -162,7 +162,7 @@
 
         <profile>
             <!-- use this profile to compile and test DeltaSpike with Apache OpenWebBeans 2.x -->
-            <id>OWB2</id>
+            <id>OWB15</id>
             <dependencies>
                 <dependency>
                     <groupId>org.apache.deltaspike.cdictrl</groupId>

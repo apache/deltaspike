@@ -32,11 +32,6 @@
 
     <name>Apache DeltaSpike CDI OpenEJB-ContainerControl</name>
 
-    <properties>
-        <openejb.version>4.5.1</openejb.version>
-        <openejb.owb.version>${owb.version}</openejb.owb.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.apache.deltaspike.cdictrl</groupId>
@@ -56,7 +51,6 @@
             <version>${openejb.version}</version>
             <scope>provided</scope>
         </dependency>
-
     </dependencies>
 
     <dependencyManagement>
