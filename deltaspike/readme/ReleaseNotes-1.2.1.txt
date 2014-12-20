@@ -1,0 +1,32 @@
+Release Notes - Apache DeltaSpike - Version 1.2.1
+
+Sub-task
+
+    [DELTASPIKE-796] - test view-actions in combination with @ViewAccessScoped
+
+Bug
+
+    [DELTASPIKE-400] - BeanBuilder should set the bean of the InjectionPoints
+    [DELTASPIKE-792] - Fix javadoc -Xdoclint:none for JDK < 8
+    [DELTASPIKE-795] - ViewAccessScope gets destroyed in combination with f:viewAction
+    [DELTASPIKE-799] - Do not depend on Weld uberjar
+    [DELTASPIKE-800] - Update documentation to 1.2.0
+    [DELTASPIKE-801] - Security: SecurityParameterValueRedefiner doesnt recognize @Nonbinding
+
+Improvement
+
+    [DELTASPIKE-588] - Repositories from Data module should be deactivatable
+    [DELTASPIKE-660] - OSGi support for DeltaSpike Data and its dependencies
+    [DELTASPIKE-690] - Documentation donation from RedHat
+    [DELTASPIKE-722] - Migrate non-documentation pages from markdown to asciidoc
+    [DELTASPIKE-775] - provide a type-safe approach for low-level configs
+    [DELTASPIKE-798] - Support for uber-jar creation in SE support
+
+Task
+
+    [DELTASPIKE-635] - Document last TODOs in the JSF module documentation
+    [DELTASPIKE-794] - update release steps
+    [DELTASPIKE-797] - deploy javadoc for v1.2.0 to the cms
+    [DELTASPIKE-802] - update OWB and Weld to use the latest CDI-1.0 compatible versions by default
+    [DELTASPIKE-803] - exclude ee7 tests for ee6 servers
+    [DELTASPIKE-804] - prepare v1.2.1
