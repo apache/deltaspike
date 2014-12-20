@@ -1167,10 +1167,6 @@ However, in case of JSF you have to ensure that you are at a valid point
 in the JSF request-lifecycle for a navigation, because invocation gets
 transformed to a standard (implicit) JSF navigation.
 
-===== Using @Matches
-
-This annotation is currently not integrated. [TODO]
-
 ===== Using ViewConfigResolver
 
 If you would like to query view-meta-data yourself (for whatever
@@ -1227,8 +1223,6 @@ page, it is possible to get the implicitly as well as explicitly
 configured (view-)meta-data and get and/or execute configured callbacks.
 
 ==== Advanced API Usages
-
-[TODO]
 
 ===== Creating Custom Meta-Data via @ViewMetaData
 
@@ -1375,8 +1369,6 @@ which restricts
 `org.apache.deltaspike.jsf.impl.config.view.ViewConfigPathValidator`.
 
 ==== View-Config SPI
-
-[TODO]
 
 ===== ConfigDescriptorValidator
 
@@ -1791,18 +1783,96 @@ In the listing above all beans which implement the Wizard interface will
 be closed as soon as you close the ImplicitSubGroup.
 
 
-=== Injection in JSF Artifacts (TODO)
+=== Injection in JSF Artifacts
 
 ==== Converter and Validator
 
+Per default the JSF module of DeltaSpike handles JSF converters and validators as std. CDI beans and
+therefore it's possible to use injection, lifecycle-callbacks, scope-annotations,...
+the same way as with any other CDI bean.
+The usage is the same as for `PhaseListener` s.
+
 ==== PhaseListener
+
+Once a std. JSF-`PhaseListener` is annotated with `@org.apache.deltaspike.jsf.api.listener.phase.JsfPhaseListener`,
+that `PhaseListener` gets active without additional config in `faces-config.xml`.
+Since such `PhaseListener` s are std. CDI beans,
+it's possible to use injection, lifecycle-callbacks as well as scope-annotations
+the same way as with any other CDI bean.
+Furthermore, it's possible to order `PhaseListener` s via `ordinal`.
+DeltaSpike itself uses it internally e.g. in case of `DoubleSubmitAwarePhaseListener` which looks like:
+
+.Example
+[source,java]
+------------------------------------------------------------------------
+@JsfPhaseListener(ordinal = 9000)
+public class DoubleSubmitAwarePhaseListener implements PhaseListener, Deactivatable
+{
+    @Inject
+    private PostRequestTokenManager postRequestTokenManager;
+
+    @Override
+    public void beforePhase(PhaseEvent event)
+    {
+        //...
+    }
+
+    @Override
+    public void afterPhase(PhaseEvent event)
+    {
+        //...
+    }
+
+    @Override
+    public PhaseId getPhaseId()
+    {
+        return PhaseId.RESTORE_VIEW;
+    }
+}
+------------------------------------------------------------------------
 
 
 === Event broadcasting
 
-==== BeforeJsfRequest / AfterJsfRequest (TODO)
+==== Observe Faces-Requests
 
-==== BeforePhase / AfterPhase (TODO)
+It is possible to observe JSF-Requests via `@Observes` in combination with
+`@org.apache.deltaspike.core.api.lifecycle.Initialized` or
+`@org.apache.deltaspike.core.api.lifecycle.Destroyed` as qualifier for `javax.faces.context.FacesContext`.
+
+Such observer-methods look e.g. like:
+
+.Example
+[source,java]
+------------------------------------------------------------------------
+public void onBeforeFacesRequest(@Observes @Initialized FacesContext facesContext) {
+    //...
+}
+
+public void onAfterFacesRequest(@Observes @Destroyed FacesContext facesContext) {
+    //...
+}
+------------------------------------------------------------------------
+
+==== BeforePhase / AfterPhase
+
+It is possible to observe JSF request-lifecycle phase-events via `@Observes` in combination with
+`@org.apache.deltaspike.jsf.api.listener.phase.BeforePhase` or
+`@org.apache.deltaspike.jsf.api.listener.phase.AfterPhase` as qualifier for `javax.faces.event.PhaseEvent`.
+
+Such observer-methods look e.g. like:
+
+.Example
+[source,java]
+------------------------------------------------------------------------
+public void onPhaseStart(@Observes @BeforePhase(JsfPhaseId.ANY_PHASE) PhaseEvent event) {
+    //...
+}
+
+public void onPhaseEnd(@Observes @AfterPhase(JsfPhaseId.ANY_PHASE) PhaseEvent event) {
+    //...
+}
+------------------------------------------------------------------------
 
 ==== JSF SystemEvents
 
