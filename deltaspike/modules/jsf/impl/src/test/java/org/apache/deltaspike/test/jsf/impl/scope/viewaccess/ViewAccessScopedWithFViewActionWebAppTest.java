@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.jsf.impl.scope.viewaccess;
 
-import org.apache.deltaspike.test.category.WebProfileCategory;
+import org.apache.deltaspike.test.category.WebEE7ProfileCategory;
 import org.apache.deltaspike.test.jsf.impl.scope.viewaccess.beans.ViewAccessScopedBeanX;
 import org.apache.deltaspike.test.jsf.impl.scope.viewaccess.beans.ViewAccessScopedBeanY;
 import org.apache.deltaspike.test.jsf.impl.util.ArchiveUtils;
@@ -44,8 +44,8 @@ import java.net.URL;
 
 @WarpTest
 @RunWith(Arquillian.class)
-@Category(WebProfileCategory.class)
-public class iewAccessScopedWithFViewActionWebAppTest
+@Category(WebEE7ProfileCategory.class)
+public class ViewAccessScopedWithFViewActionWebAppTest
 {
     @Drone
     private WebDriver driver;
@@ -56,7 +56,7 @@ public class iewAccessScopedWithFViewActionWebAppTest
     @Deployment
     public static WebArchive deploy()
     {
-        String simpleName = iewAccessScopedWithFViewActionWebAppTest.class.getSimpleName();
+        String simpleName = ViewAccessScopedWithFViewActionWebAppTest.class.getSimpleName();
         String archiveName = simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1);
 
         return ShrinkWrap

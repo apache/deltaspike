@@ -163,6 +163,7 @@
                             <!-- Ignore these groups because they don't work with embedded OWB -->
                             <excludedGroups>
                                 org.apache.deltaspike.test.category.WebProfileCategory,
+                                org.apache.deltaspike.test.category.WebEE7ProfileCategory,
                                 org.apache.deltaspike.test.category.FullProfileCategory,
                                 org.apache.deltaspike.test.category.EnterpriseArchiveProfileCategory
                             </excludedGroups>
@@ -234,6 +235,7 @@
                             <!-- Ignore these groups because they don't work with embedded OWB -->
                             <excludedGroups>
                                 org.apache.deltaspike.test.category.WebProfileCategory,
+                                org.apache.deltaspike.test.category.WebEE7ProfileCategory,
                                 org.apache.deltaspike.test.category.FullProfileCategory,
                                 org.apache.deltaspike.test.category.EnterpriseArchiveProfileCategory
                             </excludedGroups>
@@ -321,6 +323,7 @@
                             <!-- Ignore these groups because they don't work with embedded Weld -->
                             <excludedGroups>
                                 org.apache.deltaspike.test.category.WebProfileCategory,
+                                org.apache.deltaspike.test.category.WebEE7ProfileCategory,
                                 org.apache.deltaspike.test.category.FullProfileCategory,
                                 org.apache.deltaspike.test.category.EnterpriseArchiveProfileCategory
                             </excludedGroups>
@@ -489,6 +492,7 @@
                             there are currently issues with arquillian. if a test isn't restricted to an environment,
                             no category is used for the test-class. -->
                             <excludedGroups>
+                                org.apache.deltaspike.test.category.WebEE7ProfileCategory,
                                 org.apache.deltaspike.test.category.SeCategory
                             </excludedGroups>
                         </configuration>
@@ -568,6 +572,7 @@
                             no category is used for the test-class. -->
                             <excludedGroups>
                                 org.apache.deltaspike.test.category.FullProfileCategory,
+                                org.apache.deltaspike.test.category.WebEE7ProfileCategory,
                                 org.apache.deltaspike.test.category.SeCategory
                             </excludedGroups>
                         </configuration>
@@ -641,6 +646,7 @@
                             no category is used for the test-class. -->
                             <excludedGroups>
                                 org.apache.deltaspike.test.category.FullProfileCategory,
+                                org.apache.deltaspike.test.category.WebEE7ProfileCategory,
                                 org.apache.deltaspike.test.category.SeCategory
                             </excludedGroups>
                         </configuration>
@@ -731,6 +737,7 @@
                             no category is used for the test-class. -->
                             <excludedGroups>
                                 org.apache.deltaspike.test.category.FullProfileCategory,
+                                org.apache.deltaspike.test.category.WebEE7ProfileCategory,
                                 org.apache.deltaspike.test.category.SeCategory
                             </excludedGroups>
                         </configuration>
@@ -1027,6 +1034,7 @@
                             there are currently issues with arquillian. if a test isn't restricted to an environment,
                             no category is used for the test-class. -->
                             <excludedGroups>
+                                org.apache.deltaspike.test.category.WebEE7ProfileCategory,
                                 org.apache.deltaspike.test.category.SeCategory
                             </excludedGroups>
                         </configuration>
@@ -1082,6 +1090,7 @@
                      no category is used for the test-class. -->
                             <excludedGroups>
                                 org.apache.deltaspike.test.category.FullProfileCategory,
+                                org.apache.deltaspike.test.category.WebEE7ProfileCategory,
                                 org.apache.deltaspike.test.category.SeCategory
                             </excludedGroups>
                         </configuration>
@@ -1144,6 +1153,7 @@
                             there are currently issues with arquillian. if a test isn't restricted to an environment,
                             no category is used for the test-class. -->
                             <excludedGroups>
+                                org.apache.deltaspike.test.category.WebEE7ProfileCategory,
                                 org.apache.deltaspike.test.category.SeCategory
                             </excludedGroups>
                         </configuration>
