@@ -7,6 +7,14 @@
 
 == Overview
 
+=== 14th Release (1.2.1) (20.12.2014)
+
+The Apache DeltaSpike team is pleased to announce the 14th release
+(v1.2.1).
+
+The http://s.apache.org/DeltaSpike_1.2.1[release notes] contains 19 JIRA tickets.
+
+
 === 13th Release (1.2.0) (30.11.2014)
 
 The Apache DeltaSpike team is pleased to announce the 13th release
