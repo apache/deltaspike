@@ -182,7 +182,7 @@ public class MyBean
 }
 ---------------------------------------------------------
 
-.Excluding a Bean if the pProjectStageis Different from Development
+.Excluding a Bean if the ProjectStage is different from Development
 [source,java]
 ---------------------------------------------------------------
 @Exclude(exceptIfProjectStage = ProjectStage.Development.class)
@@ -229,16 +229,14 @@ public class SimpleExpressionInterpreter implements ExpressionInterpreter<String
 }
 ------------------------------------------------------------------------------------------
 
-In several cases it is also useful to combine this feature with the
-`@Alternative` annotation provided by CDI.
+In several cases it is also useful to combine this feature with the `@Alternative` annotation provided by CDI.
 
 In addition to the following snippet, it is required to configure the
 implementation as alternative in the beans.xml file. This configuration entry
 will not be changed, for example for different environments, because it just gets
 active if it is not excluded during the bootstrapping process.
 
-.Excluding an Alternative Implementation if the pProjectStageis
-Different from Development
+.Excluding an Alternative implementation if the ProjectStage is different from Development
 [source,java]
 ---------------------------------------------------------------
 @Exclude(exceptIfProjectStage = ProjectStage.Development.class)
