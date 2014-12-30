@@ -6,14 +6,12 @@
 
 == Latest version
 
-* link:/javadoc/1.2.1-SNAPSHOT/[1.2.1-SNAPSHOT]
+* link:/javadoc/{latestSnapshot}/[{latestSnapshot}]
 
 
-== Stable Releases
+== Stable Release
 
-* link:/javadoc/1.2.0/[1.2.0]
-* link:/javadoc/1.1.0/[1.1.0]
-
+* link:/javadoc/{latestStable}/[{latestStable}]
 
 == Contribute
 

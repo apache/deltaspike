@@ -7,30 +7,30 @@
 == Latest Release
 
 
-v1.2.1
+v{latestStable}
 
 
 == Binary Distribution
 
 
-* http://www.apache.org/dyn/closer.cgi/deltaspike/1.2.1/distribution-full-1.2.1.zip[distribution-full-1.2.1.zip]
-* http://www.apache.org/dist/deltaspike/1.2.1/distribution-full-1.2.1.zip.asc[distribution-full-1.2.1.zip.asc]
-* http://www.apache.org/dist/deltaspike/1.2.1/distribution-full-1.2.1.zip.md5[distribution-full-1.2.1.zip.md5]
-* http://www.apache.org/dist/deltaspike/1.2.1/distribution-full-1.2.1.zip.sha1[distribution-full-1.2.1.zip.sha1]
+* http://www.apache.org/dyn/closer.cgi/deltaspike/{latestStable}/distribution-full-{latestStable}.zip[distribution-full-{latestStable}.zip]
+* http://www.apache.org/dist/deltaspike/{latestStable}/distribution-full-{latestStable}.zip.asc[distribution-full-{latestStable}.zip.asc]
+* http://www.apache.org/dist/deltaspike/{latestStable}/distribution-full-{latestStable}.zip.md5[distribution-full-{latestStable}.zip.md5]
+* http://www.apache.org/dist/deltaspike/{latestStable}/distribution-full-{latestStable}.zip.sha1[distribution-full-{latestStable}.zip.sha1]
 
-* http://www.apache.org/dyn/closer.cgi/deltaspike/1.2.1/distribution-full-1.2.1.tar.gz[distribution-full-1.2.1.tar.gz]
-* http://www.apache.org/dist/deltaspike/1.2.1/distribution-full-1.2.1.tar.gz.asc[distribution-full-1.2.1.tar.gz.asc]
-* http://www.apache.org/dist/deltaspike/1.2.1/distribution-full-1.2.1.tar.gz.md5[distribution-full-1.2.1.tar.gz.md5]
-* http://www.apache.org/dist/deltaspike/1.2.1/distribution-full-1.2.1.tar.gz.sha1[distribution-full-1.2.1.tar.gz.sha1]
+* http://www.apache.org/dyn/closer.cgi/deltaspike/{latestStable}/distribution-full-{latestStable}.tar.gz[distribution-full-{latestStable}.tar.gz]
+* http://www.apache.org/dist/deltaspike/{latestStable}/distribution-full-{latestStable}.tar.gz.asc[distribution-full-{latestStable}.tar.gz.asc]
+* http://www.apache.org/dist/deltaspike/{latestStable}/distribution-full-{latestStable}.tar.gz.md5[distribution-full-{latestStable}.tar.gz.md5]
+* http://www.apache.org/dist/deltaspike/{latestStable}/distribution-full-{latestStable}.tar.gz.sha1[distribution-full-{latestStable}.tar.gz.sha1]
 
 
 == Source Distribution
 
 
-* http://www.apache.org/dyn/closer.cgi/deltaspike/1.2.1/deltaspike-project-1.2.1-source-release.zip[deltaspike-project-1.2.1-source-release.zip]
-* http://www.apache.org/dist/deltaspike/1.2.1/deltaspike-project-1.2.1-source-release.zip.asc[deltaspike-project-1.2.1-source-release.zip.asc]
-* http://www.apache.org/dist/deltaspike/1.2.1/deltaspike-project-1.2.1-source-release.zip.md5[deltaspike-project-1.2.1-source-release.zip.md5]
-* http://www.apache.org/dist/deltaspike/1.2.1/deltaspike-project-1.2.1-source-release.zip.sha1[deltaspike-project-1.2.1-source-release.zip.sha1]
+* http://www.apache.org/dyn/closer.cgi/deltaspike/{latestStable}/deltaspike-project-{latestStable}-source-release.zip[deltaspike-project-{latestStable}-source-release.zip]
+* http://www.apache.org/dist/deltaspike/{latestStable}/deltaspike-project-{latestStable}-source-release.zip.asc[deltaspike-project-{latestStable}-source-release.zip.asc]
+* http://www.apache.org/dist/deltaspike/{latestStable}/deltaspike-project-{latestStable}-source-release.zip.md5[deltaspike-project-{latestStable}-source-release.zip.md5]
+* http://www.apache.org/dist/deltaspike/{latestStable}/deltaspike-project-{latestStable}-source-release.zip.sha1[deltaspike-project-{latestStable}-source-release.zip.sha1]
 
 
 == Maven Dependencies
@@ -63,19 +63,19 @@ the signatures using e.g.:
 
 ------------------------------------------------------
 $ pgpk -a KEYS
-$ pgpv deltaspike-project-1.2.1-source-release.zip.asc
+$ pgpv deltaspike-project-{latestStable}-source-release.zip.asc
 ------------------------------------------------------
 
 or
 
 -----------------------------------------------------
 $ pgp -ka KEYS
-$ pgp deltaspike-project-1.2.1-source-release.zip.asc
+$ pgp deltaspike-project-{latestStable}-source-release.zip.asc
 -----------------------------------------------------
 
 or
 
 --------------------------------------------------------------
 $ gpg --import KEYS
-$ gpg --verify deltaspike-project-1.2.1-source-release.zip.asc
+$ gpg --verify deltaspike-project-{latestStable}-source-release.zip.asc
 --------------------------------------------------------------

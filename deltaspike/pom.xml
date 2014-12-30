@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 <!--
     Licensed to the Apache Software Foundation (ASF) under one
     or more contributor license agreements.  See the NOTICE file
@@ -21,41 +22,30 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.apache</groupId>
-        <artifactId>apache</artifactId>
-        <version>14</version>
+        <groupId>org.apache.deltaspike</groupId>
+        <artifactId>deltaspike-root</artifactId>
+        <version>1.2.2-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <!--
+    <!-- 
      * Please do not use this pom for other deltaspike modules.
      * Instead use the one from parent/pom.xml!
      *
-     * This very pom.xml contains only the basic build layout
+     * This very pom.xml contains only the basic build layout 
      * and no build-rules at all. See parent/pom.xml for all
-     * the dependencyManagement and plugin configuration stuff.
+     * the dependencyManagement and plugin configuration stuff. 
     -->
     <groupId>org.apache.deltaspike</groupId>
     <artifactId>deltaspike-project</artifactId>
     <version>1.2.2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Apache DeltaSpike</name>
+    <name>Apache DeltaSpike Sources</name>
     <description>
         Apache DeltaSpike CDI Extensions.
     </description>
     <url>http://deltaspike.apache.org</url>
-
-    <properties>
-        <svn.scmPubUrl>https://svn.apache.org/repos/asf/deltaspike/site/trunk/content/javadoc/${project.version}</svn.scmPubUrl>
-        <svn.scmPubCheckoutDirectory>${project.build.directory}/co-site</svn.scmPubCheckoutDirectory>
-    </properties>
-
-    <scm>
-        <connection>scm:git:https://git-wip-us.apache.org/repos/asf/deltaspike.git</connection>
-        <developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/deltaspike.git</developerConnection>
-        <url>https://git-wip-us.apache.org/repos/asf/deltaspike.git</url>
-        <tag>HEAD</tag>
-    </scm>
 
     <modules>
         <module>checkstyle-rules</module>
@@ -127,46 +117,46 @@
                                 <title>Core Module</title>
                                 <packages>org.apache.deltaspike.core.*</packages>
                             </group>
-                        <group>
-                            <title>Bean Validation Module</title>
-                            <packages>org.apache.deltaspike.beanvalidation*</packages>
-                        </group>
-                        <group>
-                            <title>Container Control Module</title>
-                            <packages>org.apache.deltaspike.cdise.api*</packages>
-                        </group>
-                        <group>
-                            <title>Data Module</title>
-                            <packages>org.apache.deltaspike.data.*</packages>
-                        </group>
-                        <group>
-                            <title>JPA Module</title>
-                            <packages>org.apache.deltaspike.jpa.*</packages>
-                        </group>
-                        <group>
-                            <title>JSF Module</title>
-                            <packages>org.apache.deltaspike.jsf.*</packages>
-                        </group>
-                        <group>
-                            <title>Partial Bean Module</title>
-                            <packages>org.apache.deltaspike.partialbean.*</packages>
-                        </group>
-                        <group>
-                            <title>Scheduler Module</title>
-                            <packages>org.apache.deltaspike.scheduler.*</packages>
-                        </group>
-                        <group>
-                            <title>Security Module</title>
-                            <packages>org.apache.deltaspike.security.*</packages>
-                        </group>
-                        <group>
-                            <title>Servlet Module</title>
-                            <packages>org.apache.deltaspike.servlet.*</packages>
-                        </group>
-                        <group>
-                            <title>Test Control Module</title>
-                            <packages>org.apache.deltaspike.testcontrol.*</packages>
-                        </group>
+                            <group>
+                                <title>Bean Validation Module</title>
+                                <packages>org.apache.deltaspike.beanvalidation*</packages>
+                            </group>
+                            <group>
+                                <title>Container Control Module</title>
+                                <packages>org.apache.deltaspike.cdise.api*</packages>
+                            </group>
+                            <group>
+                                <title>Data Module</title>
+                                <packages>org.apache.deltaspike.data.*</packages>
+                            </group>
+                            <group>
+                                <title>JPA Module</title>
+                                <packages>org.apache.deltaspike.jpa.*</packages>
+                            </group>
+                            <group>
+                                <title>JSF Module</title>
+                                <packages>org.apache.deltaspike.jsf.*</packages>
+                            </group>
+                            <group>
+                                <title>Partial Bean Module</title>
+                                <packages>org.apache.deltaspike.partialbean.*</packages>
+                            </group>
+                            <group>
+                                <title>Scheduler Module</title>
+                                <packages>org.apache.deltaspike.scheduler.*</packages>
+                            </group>
+                            <group>
+                                <title>Security Module</title>
+                                <packages>org.apache.deltaspike.security.*</packages>
+                            </group>
+                            <group>
+                                <title>Servlet Module</title>
+                                <packages>org.apache.deltaspike.servlet.*</packages>
+                            </group>
+                            <group>
+                                <title>Test Control Module</title>
+                                <packages>org.apache.deltaspike.testcontrol.*</packages>
+                            </group>
                         </groups>
                     </configuration>
                 </plugin>
@@ -207,7 +197,7 @@
         </profile>
 
         <profile>
-            <!-- It disables javadoc doclint for JDK > 8-->
+            <!-- It disables javadoc doclint for JDK > 8 -->
             <id>javadoc-xdoclint-disable-jdk8+</id>
             <activation>
                 <jdk>[1.8,)</jdk>
@@ -222,7 +212,7 @@
                                 <additionalJOption>-Xdoclint:none</additionalJOption>
                             </configuration>
                         </plugin>
-                     </plugins>
+                    </plugins>
                 </pluginManagement>
             </build>
         </profile>
