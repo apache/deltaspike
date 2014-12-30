@@ -40,10 +40,10 @@ With Maven configured for the Apache Snapshot Repository, you can specify DeltaS
 . Open the project `pom.xml` file for editing
 . Add the DeltaSpike snapshot version to the list of properties
 +
-[source,xml]
+[source,xml,subs="+attributes"]
 ----
 <properties>
-    <deltaspike.version>1.0.3-SNAPSHOT</deltaspike.version>
+    <deltaspike.version>{latestSnapshot}</deltaspike.version>
 </properties>
 ----
 +

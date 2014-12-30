@@ -4,6 +4,7 @@
 
 :toc:
 
+
 DeltaSpike is available for use in Maven-based and Maven-independent projects. Instructions are given here for obtaining released final versions of DeltaSpike for both approaches.
 
 NOTE: You can also opt to use the lastest DeltaSpike snapshots; for more information, see <<snapshots#,Use DeltaSpike Snapshots>>.
@@ -16,10 +17,10 @@ To begin use the DeltaSpike releases from Maven Central, you simply need to conf
 . Open the project `pom.xml` file for editing
 . Add the DeltaSpike version to the list of properties
 +
-[source,xml]
+[source,xml,subs="+attributes"]
 ----
 <properties>
-    <deltaspike.version>1.2.1</deltaspike.version>
+    <deltaspike.version>{latestStable}</deltaspike.version>
 </properties>
 ----
 +

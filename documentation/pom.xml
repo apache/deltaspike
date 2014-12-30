@@ -39,6 +39,8 @@
 		<svn.scmPubUrl>https://svn.apache.org/repos/asf/deltaspike/site/trunk/content/documentation/</svn.scmPubUrl>
 		<svn.scmPubUrlStaging>https://svn.apache.org/repos/asf/deltaspike/site/trunk/content/staging/documentation/</svn.scmPubUrlStaging>
 		<svn.scmPubCheckoutDirectory>${project.build.directory}/co-site</svn.scmPubCheckoutDirectory>
+    <version.deltaspike.latest.stable>1.2.1</version.deltaspike.latest.stable>
+    <version.deltaspike.latest.snapshot>1.2.2-SNAPSHOT</version.deltaspike.latest.snapshot>
 	</properties>
 
 	<distributionManagement>
@@ -75,6 +77,8 @@
 						<toc>true</toc>
             <basedir>..</basedir>
             <icons>font</icons>
+            <latestStable>${version.deltaspike.latest.stable}</latestStable>
+            <latestSnapshot>${version.deltaspike.latest.snapshot}</latestSnapshot>
 					</attributes>
 				</configuration>
 			</plugin>
