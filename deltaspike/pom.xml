@@ -44,6 +44,10 @@
     <name>Apache DeltaSpike Sources</name>
     <description>Apache DeltaSpike CDI Extensions.</description>
     <url>http://deltaspike.apache.org</url>
+    
+    <properties>
+        <svn.scmPubUrl>https://svn.apache.org/repos/asf/deltaspike/site/trunk/content/javadoc/${project.version}</svn.scmPubUrl>
+    </properties>
 
     <modules>
         <module>checkstyle-rules</module>
