@@ -61,6 +61,7 @@ rather than from a
 http://www.apache.org/dyn/closer.cgi/deltaspike/[mirror]. Then verify
 the signatures using e.g.:
 
+[subs="+attributes"]
 ------------------------------------------------------
 $ pgpk -a KEYS
 $ pgpv deltaspike-project-{latestStable}-source-release.zip.asc
@@ -68,6 +69,7 @@ $ pgpv deltaspike-project-{latestStable}-source-release.zip.asc
 
 or
 
+[subs="+attributes"]
 -----------------------------------------------------
 $ pgp -ka KEYS
 $ pgp deltaspike-project-{latestStable}-source-release.zip.asc
@@ -75,6 +77,7 @@ $ pgp deltaspike-project-{latestStable}-source-release.zip.asc
 
 or
 
+[subs="+attributes"]
 --------------------------------------------------------------
 $ gpg --import KEYS
 $ gpg --verify deltaspike-project-{latestStable}-source-release.zip.asc
