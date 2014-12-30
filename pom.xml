@@ -29,7 +29,7 @@
 
     <!-- 
      * Please do not use this pom for other deltaspike modules.
-     * Instead use the one from parent/pom.xml!
+     * Instead use the one from deltaspike/parent/pom.xml!
      *
      * This very pom.xml contains only the basic build layout 
      * and no build-rules at all. See parent/pom.xml for all

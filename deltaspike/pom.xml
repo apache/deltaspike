@@ -42,9 +42,7 @@
     <packaging>pom</packaging>
 
     <name>Apache DeltaSpike Sources</name>
-    <description>
-        Apache DeltaSpike CDI Extensions.
-    </description>
+    <description>Apache DeltaSpike CDI Extensions.</description>
     <url>http://deltaspike.apache.org</url>
 
     <modules>
@@ -104,7 +102,7 @@
                         </execution>
                     </executions>
                 </plugin>
-
+                <!-- Javadoc plugin -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
@@ -160,6 +158,7 @@
                         </groups>
                     </configuration>
                 </plugin>
+                <!-- Publish Javadoc online -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-scm-publish-plugin</artifactId>

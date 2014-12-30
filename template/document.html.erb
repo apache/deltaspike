@@ -12,7 +12,24 @@
 
 <title><%= document.name %></title>
 
-<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements.  See the NOTICE file distributed with this work for additional information regarding copyright ownership.  The ASF licenses this file to you under the Apache License, Version 2.0 (the &quot;License&quot;); you may not use this file except in compliance with the License.  You may obtain a copy of the License at . http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
 
 <!-- Styles -->
 
@@ -24,83 +41,82 @@
 <%= ::Asciidoctor::Stylesheets.instance.coderay_stylesheet_data %>
 
 body {
-	padding-top: 60px;
-	padding-bottom: 40px;
+  padding-top: 60px;
+  padding-bottom: 40px;
 }
 </style>
+
 <script type="text/javascript">
 
-	  var _gaq = _gaq || [];
-	  _gaq.push(['_setAccount', 'UA-36103647-1']);
-	  _gaq.push(['_trackPageview']);
-	
-	  (function() {
-		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-	  })();
-	
-	</script>
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-36103647-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+
+  </script>
 </head>
 
 <body>
 
-	<div class="navbar navbar-fixed-top">
-		<div class="navbar-inner">
-			<div class="container">
-				<a class="btn btn-navbar" data-toggle="collapse"
-					data-target=".nav-collapse"> <span class="icon-bar"></span> <span
-					class="icon-bar"></span> <span class="icon-bar"></span>
-				</a> <a class="brand logocolor"
-					href="<%= (attr :basedir) %>/index.html">Apache DeltaSpike</a>
-				<div class="nav-collapse">
-					<ul class="nav">
-						<li class="active"><a
-							href="<%= (attr :basedir) %>/index.html">Home</a></li>
-						<li><a href="<%= (attr :basedir) %>/documentation">Documentation</a></li>
-						<li><a href="<%= (attr :basedir) %>/javadoc.html">Javadoc</a></li>
-						<li><a href="<%= (attr :basedir) %>/documentation/source.html">Source</a></li>
-						<li><a href="<%= (attr :basedir) %>/download.html">Download</a></li>
-						<li><a href="<%= (attr :basedir) %>/community.html">Community</a></li>
-						<!-- <li><a href="./support.html">Support</a></li>  -->
-						<li><a href="<%= (attr :basedir) %>/news.html">News</a></li>
-						<li><a href="<%= (attr :basedir) %>/migration-guide.html">Migration</a></li>
-					</ul>
-				</div>
-				<!--/.nav-collapse -->
-				<form id="search-form" action="http://www.google.com/search"
-					method="get" class="navbar-search pull-right">
-					<input value="deltaspike.apache.org" name="sitesearch"
-						type="hidden"> <input class="search-query" name="q"
-						id="query" type="text">
-				</form>
-			</div>
-		</div>
-	</div>
+  <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <a class="btn btn-navbar" data-toggle="collapse"
+          data-target=".nav-collapse"> <span class="icon-bar"></span> <span
+          class="icon-bar"></span> <span class="icon-bar"></span>
+        </a>
+        <a class="brand logocolor" href="<%= (attr :sitebasedir) %>/index.html">Apache DeltaSpike</a>
+        <div class="nav-collapse">
+          <ul class="nav">
+            <li class="active"><a href="<%= (attr :sitebasedir) %>/index.html">Home</a></li>
+            <li><a href="<%= (attr :sitebasedir) %>/documentation">Documentation</a></li>
+            <li><a href="<%= (attr :sitebasedir) %>/javadoc.html">Javadoc</a></li>
+            <li><a href="<%= (attr :sitebasedir) %>/documentation/source.html">Source</a></li>
+            <li><a href="<%= (attr :sitebasedir) %>/download.html">Download</a></li>
+            <li><a href="<%= (attr :sitebasedir) %>/community.html">Community</a></li>
+            <!-- <li><a href="./support.html">Support</a></li>  -->
+            <li><a href="<%= (attr :sitebasedir) %>/news.html">News</a></li>
+            <li><a href="<%= (attr :sitebasedir) %>/migration-guide.html">Migration</a></li>
+          </ul>
+        </div>
+        <!--/.nav-collapse -->
+        <form id="search-form" action="http://www.google.com/search"
+          method="get" class="navbar-search pull-right">
+          <input value="deltaspike.apache.org" name="sitesearch"
+            type="hidden"> <input class="search-query" name="q"
+            id="query" type="text">
+        </form>
+      </div>
+    </div>
+  </div>
 
-	<div class="container">
-		<div class="row">
-			<div class="span12">
-				<div class="page-title">
-			    <h1><%= document.name %></h1>
-                </div>
+  <div class="container">
+    <div class="row">
+      <div class="span12">
+        <div class="page-title">
+          <h1><%= document.name %></h1>
+        </div>
 
-				<div id="toc" class="<%= attr 'toc-class', 'toc' %>">
-       	 		<%= converter.convert_with_options @document, 'outline', :toclevels => 4  %>
-       	 		<hr>	
-       	 		
-				<%= document.content %>
-			</div>
+        <div id="toc" class="<%= attr 'toc-class', 'toc' %>">
+            <%= converter.convert_with_options @document, 'outline', :toclevels => 4  %>
+            <hr>
+            <%= document.content %>
+        </div>
 
-			<hr>
+        <hr>
 
-			<footer>
-				<p>Copyright © 2011-2014 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.</p>
-				<p>Apache and the Apache feather logo are trademarks of The Apache Software Foundation.</p>
-			</footer>
-
-		</div>
-		<!-- /.container -->
-
+        <footer>
+          <p>Copyright © 2011-2014 The Apache Software Foundation,
+            Licensed under the Apache License, Version 2.0.</p>
+          <p>Apache and the Apache feather logo are trademarks of The Apache Software Foundation.</p>
+        </footer>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

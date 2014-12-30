@@ -34,9 +34,7 @@
     <packaging>pom</packaging>
 
     <name>Apache DeltaSpike Site</name>
-    <description>
-    DeltaSpike website
-  </description>
+    <description>Website content of DeltaSpike project.</description>
     <url>http://deltaspike.apache.org</url>
 
     <properties>
@@ -44,15 +42,9 @@
         <svn.scmPubUrlStaging>https://svn.apache.org/repos/asf/deltaspike/site/trunk/content/staging/</svn.scmPubUrlStaging>
     </properties>
 
-    <distributionManagement>
-        <site>
-            <id>apache.website</id>
-            <url>${svn.scmPubUrl}</url>
-        </site>
-    </distributionManagement>
-
     <build>
         <plugins>
+            <!-- Configure ASCIIDOC plugin -->
             <plugin>
                 <groupId>org.asciidoctor</groupId>
                 <artifactId>asciidoctor-maven-plugin</artifactId>
@@ -67,10 +59,13 @@
                 </executions>
                 <configuration>
                     <attributes>
-                        <basedir>.</basedir>
+                        <!-- Site Base Dir relative path -->
+                        <sitebasedir>.</sitebasedir>
                     </attributes>
                 </configuration>
             </plugin>
+
+            <!-- Publish site content -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-scm-publish-plugin</artifactId>

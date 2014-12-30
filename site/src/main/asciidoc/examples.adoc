@@ -4,23 +4,23 @@
 
 :toc:
 
-A collection of ready-to-build Maven-based projects are provided to demonstrate the inclusion of DeltaSpike in applications. Each example showcases a different DeltaSpike feature and explores the mechanics of DeltaSpike implementation. You can use these examples to see DeltaSpike in action and learn how to add these capabilities to your own projects. The Maven-based project examples are available in `deltaspike-project-<version>-source-release.zip`.
+A collection of ready-to-build Maven-based projects are provided to demonstrate the inclusion of DeltaSpike in applications. Each example showcases a different DeltaSpike feature and explores the mechanics of DeltaSpike implementation. You can use these examples to see DeltaSpike in action and learn how to add these capabilities to your own projects. The Maven-based project examples are available in `deltaspike-project-{latestStable}-source-release.zip`.
 	
 To begin using the projects, complete the following steps:
 
-. link:https://deltaspike.apache.org/download.html[Download `deltaspike-project-<version>-source-release.zip`]
+. link:https://deltaspike.apache.org/download.html[Download `deltaspike-project-{latestStable}-source-release.zip`]
 . Extract the archive contents
 +
-[source,shell]
+[subs="+attributes"]
 ----
-$ unzip deltaspike-project-<version>-source-release.zip
+$ unzip deltaspike-project-{latestStable}-source-release.zip
 ----
 +
 . Build the projects
 +
-[source,shell]
+[subs="+attributes"]
 ----
-$ cd /path/to/deltaspike-project-<version>/examples
+$ cd /path/to/deltaspike-project-{latestStable}/examples
 $ mvn clean package
 ----
 
