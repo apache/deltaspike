@@ -6,6 +6,30 @@
 
 A number of DeltaSpike examples and templates have been developed external to the DeltaSpike project. These extend the DeltaSpike resources from which you can see DeltaSpike in action. Brief information is given here about the examples and templates, with details of where they can be obtained from.
 
+== Presentations
+
+=== Apache DeltaSpike
+Presentation about Apache DeltaSpike
+
+**Slides:** http://www.slideshare.net/os890/apache-deltaspike
+
+=== MyFaces CODI and JBoss Seam3 become Apache DeltaSpike
+These slides show how to use type-safe mechanisms provided by MyFaces CODI for developing JSF applications which are more type-safe and easier to maintain as well as common pitfalls. Beyond that there is an basic overview of Apache DeltaSpike.
+
+**Slides:** http://www.slideshare.net/os890/myfaces-codi-and-jboss-seam3-become-apache-deltaspike
+
+=== Migrating a JSF-Based Web Application from Spring 3 to Java EE 7 and CDI
+This talk is a detailed case study about the migration of a JSF-based web application from Spring 3 to Java EE 7 and CDI. It is presented at the JavaOne 2014 conference. 
+
+**Slides:** http://www.slideshare.net/MarioLeanderReimer/migrating-a-jsfbased-web-application-from-spring-3-to-java-ee-7-and-cdi
+
+**Video:** https://parleys.com/play/543faae5e4b06e1184ae423a/about
+
+=== Flexibilitaet mit CDI und Apache DeltaSpike
+DE Presentation about DeltaSpike
+
+**Slides:** http://www.slideshare.net/os890/flexibilitaet-mit-cdi-und-apache-delta-spike
+
 == Examples
 
 === Confess 2012 Workshop Demo
@@ -30,6 +54,16 @@ This pair of examples show how to achieve the most important MyFaces CODI featur
 The JBoss quickstarts are small working examples that demonstrate recommended practices for specific Java EE technology use cases. A subset of these quickstarts are dedicated to demonstrating DeltaSpike, including custom authorization restrictions using annotations, constructing and modifying beans, extending the influence of CDI using BeanManager, and deactivating DeltaSpike features.
 
 **Source code:** https://github.com/jboss-developer/jboss-wfk-quickstarts
+
+=== DeltaSpike Examples
+A collection of example applications demonstrating the features of the DeltaSpike project.
+
+**Source code:** https://github.com/rsmeral/deltaspike-examples
+
+=== DeltaSpike microblog example
+PT_BR application that shows a microblog using DeltaSpike
+
+**Source code:** https://github.com/rafabene/demo_deltaspike
 
 == Templates
 === Java SE + CDI + DS
