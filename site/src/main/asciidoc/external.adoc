@@ -8,6 +8,18 @@ A number of DeltaSpike examples and templates have been developed external to th
 
 == Presentations
 
+=== DeltaSpike: CDI extensions of the world, unite!
+Several popular CDI extension frameworks like Seam 3 and MyFaces CODI have faded out over the years. But not to worry - their functionality is taken over by projects like Picketlink, Agorava, and mainly DeltaSpike, a new Apache project that wants CDI extension authors to unite in an effort to make the life of web application developers easier. Even without a five year plan! 
+
+**Slides:** http://devconf.cz/filebrowser/download/414
+
+**Video:** https://www.youtube.com/watch?v=2FUNpzd1Nb8
+
+=== Apache DeltaSpike: The CDI Toolbox
+In this session, we’ll start by presenting the DeltaSpike toolbox and show how it helps you to develop for CDI. Then we’ll describe the major extensions included in Deltaspike, including  'configuration', 'scheduling' and 'data'.
+
+**Event:** http://www.meetup.com/JBoss-User-Group-Worldwide/events/218755922/
+
 === Apache DeltaSpike
 Presentation about Apache DeltaSpike
 
