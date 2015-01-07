@@ -18,6 +18,8 @@
  */
 package org.apache.deltaspike.data.impl.handler;
 
+import java.util.Stack;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 
@@ -25,27 +27,39 @@ import javax.enterprise.inject.Produces;
 public class CdiQueryContextHolder
 {
 
-    private final ThreadLocal<CdiQueryInvocationContext> context = new ThreadLocal<CdiQueryInvocationContext>();
+    private final ThreadLocal<Stack<CdiQueryInvocationContext>> contextStack =
+            new ThreadLocal<Stack<CdiQueryInvocationContext>>();
 
     public void set(CdiQueryInvocationContext context)
     {
-        this.context.set(context);
+        if (contextStack.get() == null)
+        {
+            contextStack.set(new Stack<CdiQueryInvocationContext>());
+        }
+        contextStack.get().push(context);
     }
 
     @Produces
     public CdiQueryInvocationContext get()
     {
-        return context.get();
+        if (contextStack.get() != null && !contextStack.get().isEmpty())
+        {
+            return contextStack.get().peek();
+        }
+        return null;
     }
 
     public void dispose()
     {
-        CdiQueryInvocationContext ctx = context.get();
-        if (ctx != null)
+        if (contextStack.get() != null && !contextStack.get().isEmpty())
         {
+            CdiQueryInvocationContext ctx = contextStack.get().pop();
             ctx.cleanup();
         }
-        context.remove();
+        if (contextStack.get() != null && contextStack.get().isEmpty())
+        {
+            contextStack.remove();
+        }
     }
 
 }
