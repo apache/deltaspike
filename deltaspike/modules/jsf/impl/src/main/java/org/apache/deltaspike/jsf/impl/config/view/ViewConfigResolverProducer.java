@@ -27,10 +27,13 @@ import javax.inject.Inject;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.logging.Logger;
 
 @ApplicationScoped
 public class ViewConfigResolverProducer
 {
+    private static final Logger LOG = Logger.getLogger(ViewConfigResolverProducer.class.getName());
+
     @Inject
     private ViewConfigExtension viewConfigExtension;
 
@@ -49,15 +52,28 @@ public class ViewConfigResolverProducer
     {
         if (!viewConfigExtension.isActivated())
         {
-            return new DefaultViewConfigResolver(
-                new FolderConfigNode(
-                    null, null, new HashSet<Annotation>()), null, null, new ArrayList<ConfigDescriptorValidator>());
+            return createEmptyDefaultViewConfigResolver();
         }
 
         if (!viewConfigExtension.isTransformed()) //esp. for easier unit-tests
         {
             viewConfigExtension.transformMetaDataTree();
         }
-        return viewConfigExtension.getViewConfigResolver();
+        ViewConfigResolver viewConfigResolver = viewConfigExtension.getViewConfigResolver();
+
+        if (viewConfigResolver == null)
+        {
+            LOG.warning("It wasn't possible to create a ViewConfigResolver");
+            viewConfigResolver = createEmptyDefaultViewConfigResolver();
+        }
+
+        return viewConfigResolver;
+    }
+
+    private DefaultViewConfigResolver createEmptyDefaultViewConfigResolver()
+    {
+        return new DefaultViewConfigResolver(
+            new FolderConfigNode(
+                null, null, new HashSet<Annotation>()), null, null, new ArrayList<ConfigDescriptorValidator>());
     }
 }
