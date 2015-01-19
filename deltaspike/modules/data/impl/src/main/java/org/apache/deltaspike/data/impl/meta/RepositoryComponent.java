@@ -201,22 +201,25 @@ public class RepositoryComponent
         }
     }
 
-    private Set<Class<?>> collectClasses()
-    {
+    private Set<Class<?>> collectClasses() {
         Set<Class<?>> result = new HashSet<Class<?>>();
-        Class<?> current = repoClass;
-        while (!Object.class.equals(current) && current != null)
-        {
-            result.add(current);
-            Class<?>[] interfaces = current.getInterfaces();
-            if (interfaces != null)
-            {
-                result.addAll(Arrays.asList(interfaces));
-            }
-            current = current.getSuperclass();
-        }
-        log.log(Level.FINER, "collectClasses(): Found {0} for {1}", new Object[] { result, repoClass });
+        collectClasses(repoClass, result);
+
+        log.log(Level.FINER, "collectClasses(): Found {0} for {1}", new Object[]{result, repoClass});
         return result;
+    }
+
+    private void collectClasses(Class<?> cls, Set<Class<?>> result) {
+        if (cls == null || Object.class == cls) {
+            return;
+        }
+
+        result.add(cls);
+        for (Class<?> child : cls.getInterfaces()) {
+            collectClasses(child, result);
+        }
+
+        collectClasses(cls.getSuperclass(), result);
     }
 
     private Class<? extends EntityManagerResolver> extractEntityManagerResolver(Class<?> clazz)
