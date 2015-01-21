@@ -463,6 +463,27 @@ org.apache.deltaspike.core.spi.activation.ClassDeactivator=myPackage.LiquibaseAw
 
 Further details are available at deactivatable.
 
+==== Gradle
+
+Gradle by default does not put resources and compiled sources in to the same directory.
+When running a test using Gradle, this means your classes will not be in bean archives as
+defined by the CDI spec.  To work around this, you need to set your main and test directories
+for resources to point to where the compiled code lives.  This is an example of how to do that:
+
+[source,groovy]
+----------------------------------------------------------------------------------------------------------
+sourceSets {
+    main {
+        output.resourcesDir = 'build/classes/main'
+        output.classesDir   = 'build/classes/main'
+    }
+    test {
+        output.resourcesDir = 'build/classes/test'
+        output.classesDir   = 'build/classes/test'
+    }
+}
+----------------------------------------------------------------------------------------------------------
+
 === SPI
 
 ==== ExternalContainer
