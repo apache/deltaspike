@@ -112,6 +112,7 @@ public class CountQueryPostProcessor implements JpaQueryPostProcessor
             int selectIndex = lower.indexOf("select");
             int fromIndex = lower.indexOf("from");
             int whereIndex = lower.indexOf("where");
+            int orderByIndex = lower.indexOf("order by");
             if (selectIndex >= 0)
             {
                 select = query.substring("select".length(), fromIndex);
@@ -120,6 +121,10 @@ public class CountQueryPostProcessor implements JpaQueryPostProcessor
             {
                 from = query.substring(fromIndex, whereIndex);
                 where = query.substring(whereIndex);
+                if (orderByIndex > 0)
+                {
+                    where = where.substring(0, orderByIndex - whereIndex);
+                }
             }
             else
             {

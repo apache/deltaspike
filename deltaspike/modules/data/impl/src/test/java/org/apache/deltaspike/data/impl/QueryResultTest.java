@@ -298,6 +298,21 @@ public class QueryResultTest extends TransactionalTestCase
     }
 
     @Test
+    public void should_count_with_orderby()
+    {
+        // given
+        final String name = "testCountWithOrderBy";
+        builder.createSimple(name);
+        builder.createSimple(name);
+
+        // when
+        long result = repo.findByQueryWithOrderBy(name).count();
+
+        // then
+        assertEquals(2L, result);
+    }
+
+    @Test
     public void should_query_optional()
     {
         // given

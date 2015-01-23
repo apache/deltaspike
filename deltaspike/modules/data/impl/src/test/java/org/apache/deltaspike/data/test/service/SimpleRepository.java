@@ -71,6 +71,9 @@ public abstract class SimpleRepository extends AbstractEntityRepository<Simple, 
     @Query("select count(s) from Simple s where s.name = ?1")
     public abstract Long findCountByQuery(String name);
 
+    @Query("select s from Simple s where s.name = ?1 order by s.counter desc")
+    public abstract QueryResult<Simple> findByQueryWithOrderBy(String name);
+
     public abstract Simple findByNameAndEnabled(String name, Boolean enabled);
 
     public abstract Simple findOptionalByName(String name);
