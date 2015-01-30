@@ -8,17 +8,24 @@ A number of DeltaSpike examples and templates have been developed external to th
 
 == Presentations
 
+=== Apache DeltaSpike: The CDI toolbox
+CDI portable extensions are one of greatest features of Java EE allowing the platform to be extended in a clean and portable way. But allowing extension is just part of the story. CDI opens the door to a whole new eco-system for Java EE, but it’s not the role of the specification to create these extensions. 
+Apache DeltaSpike is the project that leads this brand new eco-system by providing useful extension modules for CDI applications as well as tools to ease the creation of new ones.
+In this session, we’ll start by presenting the DeltaSpike toolbox and show how it helps you to develop for CDI. Then we’ll describe the major extensions included in Deltaspike, including  'configuration', 'scheduling' and 'data'.
+
+
+**Slides:** http://www.slideshare.net/antoinesd/apache-deltaspike-the-cdi-toolbox
+
+**Video:** https://www.youtube.com/watch?v=QbNdFvNPvVU
+
+**Event:** http://www.meetup.com/JBoss-User-Group-Worldwide/events/218755922/
+
 === DeltaSpike: CDI extensions of the world, unite!
 Several popular CDI extension frameworks like Seam 3 and MyFaces CODI have faded out over the years. But not to worry - their functionality is taken over by projects like Picketlink, Agorava, and mainly DeltaSpike, a new Apache project that wants CDI extension authors to unite in an effort to make the life of web application developers easier. Even without a five year plan! 
 
 **Slides:** http://devconf.cz/filebrowser/download/414
 
 **Video:** https://www.youtube.com/watch?v=2FUNpzd1Nb8
-
-=== Apache DeltaSpike: The CDI Toolbox
-In this session, we’ll start by presenting the DeltaSpike toolbox and show how it helps you to develop for CDI. Then we’ll describe the major extensions included in Deltaspike, including  'configuration', 'scheduling' and 'data'.
-
-**Event:** http://www.meetup.com/JBoss-User-Group-Worldwide/events/218755922/
 
 === Apache DeltaSpike
 Presentation about Apache DeltaSpike
@@ -37,8 +44,8 @@ This talk is a detailed case study about the migration of a JSF-based web applic
 
 **Video:** https://parleys.com/play/543faae5e4b06e1184ae423a/about
 
-=== Flexibilitaet mit CDI und Apache DeltaSpike
-DE Presentation about DeltaSpike
+=== [de] Flexibilitaet mit CDI und Apache DeltaSpike
+Presentation about DeltaSpike
 
 **Slides:** http://www.slideshare.net/os890/flexibilitaet-mit-cdi-und-apache-delta-spike
 
@@ -72,10 +79,17 @@ A collection of example applications demonstrating the features of the DeltaSpik
 
 **Source code:** https://github.com/rsmeral/deltaspike-examples
 
-=== DeltaSpike microblog example
-PT_BR application that shows a microblog using DeltaSpike
+=== [pt-BR] DeltaSpike microblog example
+Application that shows a microblog using DeltaSpike
 
 **Source code:** https://github.com/rafabene/demo_deltaspike
+
+== Magazines
+
+=== [pt-BR] Brazilian Java Magazine
+Apache DeltaSpike: CDI Programável
+
+**Online article:** http://www.devmedia.com.br/apache-deltaspike-cdi-programavel/31982
 
 == Templates
 === Java SE + CDI + DS
