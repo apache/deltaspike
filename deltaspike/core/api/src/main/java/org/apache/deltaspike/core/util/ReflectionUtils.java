@@ -403,14 +403,9 @@ public abstract class ReflectionUtils
         return rawType != null && rawType.isPrimitive();
     }
 
-    public static int calculateHashCodeOfAnnotation(Annotation annotation, boolean ignoreNonbindingMembers)
+    public static int calculateHashCodeOfAnnotation(Annotation annotation, boolean skipNonbindingMembers)
     {
         Class annotationClass = annotation.annotationType();
-
-        if (annotationClass == null)
-        {
-            return calculateHashCodeOfType(annotation.annotationType());
-        }
 
         // the hashCode of an Annotation is calculated solely via the hashCodes
         // of it's members. If there are no members, it is 0.
@@ -425,7 +420,7 @@ public abstract class ReflectionUtils
 
         for (Method member : members)
         {
-            if (ignoreNonbindingMembers && member.isAnnotationPresent(Nonbinding.class))
+            if (skipNonbindingMembers && member.isAnnotationPresent(Nonbinding.class))
             {
                 // ignore the non binding
                 continue;
