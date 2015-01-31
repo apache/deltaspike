@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.security.impl.util;
 
+import org.apache.deltaspike.core.util.ReflectionUtils;
 import org.apache.deltaspike.security.api.authorization.SecurityBindingType;
 import org.apache.deltaspike.security.api.authorization.SecurityParameterBinding;
 
@@ -72,7 +73,7 @@ public abstract class SecurityUtils
         }
 
         List<Annotation> result = getAllAnnotations(annotation.annotationType().getAnnotations(),
-            new HashSet<Class<? extends Annotation>>());
+            new HashSet<Integer>());
 
         for (Annotation foundAnnotation : result)
         {
@@ -87,7 +88,7 @@ public abstract class SecurityUtils
     public static Annotation resolveSecurityBindingType(Annotation annotation)
     {
         List<Annotation> result = getAllAnnotations(annotation.annotationType().getAnnotations(),
-            new HashSet<Class<? extends Annotation>>());
+            new HashSet<Integer>());
 
         for (Annotation foundAnnotation : result)
         {
@@ -108,7 +109,7 @@ public abstract class SecurityUtils
         }
 
         List<Annotation> result = getAllAnnotations(annotation.annotationType().getAnnotations(),
-            new HashSet<Class<? extends Annotation>>());
+            new HashSet<Integer>());
 
         for (Annotation foundAnnotation : result)
         {
@@ -120,8 +121,7 @@ public abstract class SecurityUtils
         return false;
     }
 
-    public static List<Annotation> getAllAnnotations(Annotation[] annotations,
-                                                     Set<Class<? extends Annotation>> annotationPath)
+    public static List<Annotation> getAllAnnotations(Annotation[] annotations, Set<Integer> annotationPath)
     {
         List<Annotation> result = new ArrayList<Annotation>();
 
@@ -134,15 +134,24 @@ public abstract class SecurityUtils
                 continue;
             }
 
-            result.add(annotation);
-
-            if (!annotationPath.contains(annotation.annotationType()))
+            int annotationHashCode = hashCodeOfAnnotation(annotation);
+            if (!annotationPath.contains(annotationHashCode))
             {
-                annotationPath.add(annotation.annotationType());
+                result.add(annotation);
+                annotationPath.add(annotationHashCode);
                 result.addAll(getAllAnnotations(annotation.annotationType().getAnnotations(), annotationPath));
             }
         }
 
         return result;
+    }
+
+    private static int hashCodeOfAnnotation(Annotation annotation)
+    {
+        //with using System#identityHashCode instead, we could detect the real instances
+        //-> that would lead to multiple entries in the result which look the same (same type and members)
+
+        //to detect real cycles, nonbinding members aren't ignored here
+        return ReflectionUtils.calculateHashCodeOfAnnotation(annotation, false);
     }
 }

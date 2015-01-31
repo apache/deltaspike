@@ -94,14 +94,7 @@ public abstract class AnnotationUtils
             }
 
             final Object annotationMemberValue;
-            try
-            {
-                annotationMemberValue = ReflectionUtils.invokeMethod(annotation, member, Object.class, true);
-            }
-            catch (IllegalAccessException e)
-            {
-                throw ExceptionUtils.throwAsRuntimeException(e);
-            }
+            annotationMemberValue = ReflectionUtils.invokeMethod(annotation, member, Object.class, true);
 
             final int arrayValue;
             if (annotationMemberValue.getClass().isArray())

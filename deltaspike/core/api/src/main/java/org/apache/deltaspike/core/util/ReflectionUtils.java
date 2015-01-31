@@ -20,7 +20,9 @@
 package org.apache.deltaspike.core.util;
 
 import javax.enterprise.inject.Typed;
+import javax.enterprise.util.Nonbinding;
 import java.io.Serializable;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
@@ -30,6 +32,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.WildcardType;
 import java.security.AccessController;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -44,6 +47,8 @@ import org.apache.deltaspike.core.util.securitymanaged.SetAccessiblePrivilegedAc
 @Typed()
 public abstract class ReflectionUtils
 {
+    private static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
+
     private ReflectionUtils()
     {
         // prevent instantiation
@@ -170,7 +175,7 @@ public abstract class ReflectionUtils
     public static <T> T invokeMethod(Object instance, 
                                      Method method, Class<T> expectedReturnType,
                                      boolean setAccessible,
-                                     Object... args) throws IllegalAccessException, IllegalArgumentException
+                                     Object... args)
     {
         if (setAccessible && !method.isAccessible())
         {
@@ -396,5 +401,112 @@ public abstract class ReflectionUtils
     {
         Class<?> rawType = getRawType(type);
         return rawType != null && rawType.isPrimitive();
+    }
+
+    public static int calculateHashCodeOfAnnotation(Annotation annotation, boolean ignoreNonbindingMembers)
+    {
+        Class annotationClass = annotation.annotationType();
+
+        if (annotationClass == null)
+        {
+            return calculateHashCodeOfType(annotation.annotationType());
+        }
+
+        // the hashCode of an Annotation is calculated solely via the hashCodes
+        // of it's members. If there are no members, it is 0.
+        // thus we first need to get the annotation-class hashCode
+        int hashCode = calculateHashCodeOfType(annotationClass);
+
+        // and now add the hashCode of all it's Nonbinding members
+        // the following algorithm is defined by the Annotation class definition
+        // see the JavaDoc for Annotation!
+        // we only change it so far that we skip evaluating @Nonbinding members
+        final Method[] members = annotationClass.getDeclaredMethods();
+
+        for (Method member : members)
+        {
+            if (ignoreNonbindingMembers && member.isAnnotationPresent(Nonbinding.class))
+            {
+                // ignore the non binding
+                continue;
+            }
+
+            // Member value
+            final Object object = invokeMethod(annotation, member, Object.class, true, EMPTY_OBJECT_ARRAY);
+            final int value;
+            if (object.getClass().isArray())
+            {
+                Class<?> type = object.getClass().getComponentType();
+                if (type.isPrimitive())
+                {
+                    if (Long.TYPE == type)
+                    {
+                        value = Arrays.hashCode((long[]) object);
+                    }
+                    else if (Integer.TYPE == type)
+                    {
+                        value = Arrays.hashCode((int[])object);
+                    }
+                    else if (Short.TYPE == type)
+                    {
+                        value = Arrays.hashCode((short[])object);
+                    }
+                    else if (Double.TYPE == type)
+                    {
+                        value = Arrays.hashCode((double[])object);
+                    }
+                    else if (Float.TYPE == type)
+                    {
+                        value = Arrays.hashCode((float[])object);
+                    }
+                    else if (Boolean.TYPE == type)
+                    {
+                        value = Arrays.hashCode((boolean[])object);
+                    }
+                    else if (Byte.TYPE == type)
+                    {
+                        value = Arrays.hashCode((byte[])object);
+                    }
+                    else if (Character.TYPE == type)
+                    {
+                        value = Arrays.hashCode((char[])object);
+                    }
+                    else
+                    {
+                        value = 0;
+                    }
+                }
+                else
+                {
+                    value = Arrays.hashCode((Object[])object);
+                }
+            }
+            else
+            {
+                value = object.hashCode();
+            }
+
+            hashCode = 29 * hashCode + value;
+            hashCode = 29 * hashCode + member.getName().hashCode();
+        }
+
+        return hashCode;
+    }
+
+    /**
+     * We need this method as some weird JVMs return 0 as hashCode for classes.
+     * In that case we return the hashCode of the String.
+     */
+    public static int calculateHashCodeOfType(Type type)
+    {
+        int typeHash = type.hashCode();
+        if (typeHash == 0 && type instanceof Class)
+        {
+            return ((Class)type).getName().hashCode();
+            // the type.toString() is always the same: "java.lang.Class@<hexid>"
+            // was: return type.toString().hashCode();
+        }
+
+        return typeHash;
     }
 }

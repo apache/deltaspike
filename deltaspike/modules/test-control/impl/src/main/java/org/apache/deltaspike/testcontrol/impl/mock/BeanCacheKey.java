@@ -18,6 +18,8 @@
  */
 package org.apache.deltaspike.testcontrol.impl.mock;
 
+import org.apache.deltaspike.core.util.ReflectionUtils;
+
 import javax.enterprise.util.Nonbinding;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
@@ -29,7 +31,6 @@ import java.util.Comparator;
 //class from OWB
 public class BeanCacheKey
 {
-    private static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
     private static final Comparator<Annotation> ANNOTATION_COMPARATOR = new AnnotationComparator();
 
     private final Type type;
@@ -128,28 +129,11 @@ public class BeanCacheKey
     }
 
     /**
-     * We need this method as some weird JVMs return 0 as hashCode for classes.
-     * In that case we return the hashCode of the String.
-     */
-    private int getTypeHashCode(Type type)
-    {
-        int typeHash = type.hashCode();
-        if (typeHash == 0 && type instanceof Class)
-        {
-            return ((Class)type).getName().hashCode();
-            // the type.toString() is always the same: "java.lang.Class@<hexid>"
-            // was: return type.toString().hashCode();
-        }
-
-        return typeHash;
-    }
-
-    /**
      * Compute the HashCode. This should be called only in the constructor.
      */
     private int computeHashCode()
     {
-        int computedHashCode = 31 * getTypeHashCode(type);
+        int computedHashCode = 31 * ReflectionUtils.calculateHashCodeOfType(type);
         if (qualifier != null)
         {
             computedHashCode = 31 * computedHashCode + getQualifierHashCode(qualifier);
@@ -169,92 +153,7 @@ public class BeanCacheKey
      */
     private int getQualifierHashCode(Annotation a)
     {
-        Class annotationClass = getAnnotationClass(a.getClass());
-
-        if (annotationClass == null)
-        {
-            return getTypeHashCode(a.getClass());
-        }
-
-        // the hashCode of an Annotation is calculated solely via the hashCodes
-        // of it's members. If there are no members, it is 0.
-        // thus we first need to get the annotation-class hashCode
-        int hashCode = getTypeHashCode(annotationClass);
-
-        // and now add the hashCode of all it's Nonbinding members
-        // the following algorithm is defined by the Annotation class definition
-        // see the JavaDoc for Annotation!
-        // we only change it so far that we skip evaluating @Nonbinding members
-        final Method[] members = annotationClass.getDeclaredMethods();
-
-        for (Method member : members)
-        {
-            if (member.isAnnotationPresent(Nonbinding.class))
-            {
-                // ignore the non binding
-                continue;
-            }
-
-            // Member value
-            final Object object = callMethod(a, member);
-            final int value;
-            if (object.getClass().isArray())
-            {
-                Class<?> type = object.getClass().getComponentType();
-                if (type.isPrimitive())
-                {
-                    if (Long.TYPE == type)
-                    {
-                        value = Arrays.hashCode((long[]) object);
-                    }
-                    else if (Integer.TYPE == type)
-                    {
-                        value = Arrays.hashCode((int[])object);
-                    }
-                    else if (Short.TYPE == type)
-                    {
-                        value = Arrays.hashCode((short[])object);
-                    }
-                    else if (Double.TYPE == type)
-                    {
-                        value = Arrays.hashCode((double[])object);
-                    }
-                    else if (Float.TYPE == type)
-                    {
-                        value = Arrays.hashCode((float[])object);
-                    }
-                    else if (Boolean.TYPE == type)
-                    {
-                        value = Arrays.hashCode((boolean[])object);
-                    }
-                    else if (Byte.TYPE == type)
-                    {
-                        value = Arrays.hashCode((byte[])object);
-                    }
-                    else if (Character.TYPE == type)
-                    {
-                        value = Arrays.hashCode((char[])object);
-                    }
-                    else
-                    {
-                        value = 0;
-                    }
-                }
-                else
-                {
-                    value = Arrays.hashCode((Object[])object);
-                }
-            }
-            else
-            {
-                value = object.hashCode();
-            }
-
-            hashCode = 29 * hashCode + value;
-            hashCode = 29 * hashCode + member.getName().hashCode();
-        }
-
-        return hashCode;
+        return ReflectionUtils.calculateHashCodeOfAnnotation(a, true);
     }
 
     /**
@@ -263,39 +162,6 @@ public class BeanCacheKey
     private boolean qualifierEquals(Annotation qualifier1, Annotation qualifier2)
     {
         return ANNOTATION_COMPARATOR.compare(qualifier1, qualifier2) == 0;
-    }
-
-    private static Class getAnnotationClass(Class a)
-    {
-        for (Class i : a.getInterfaces())
-        {
-            if (i.isAnnotation())
-            {
-                return i;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Helper method for calculating the hashCode of an annotation.
-     */
-    private static Object callMethod(Object instance, Method method)
-    {
-        try
-        {
-            if (!method.isAccessible())
-            {
-                method.setAccessible(true);
-            }
-
-            return method.invoke(instance, EMPTY_OBJECT_ARRAY);
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException("Exception in method call : " + method.getName(), e);
-        }
-
     }
 
     /**
@@ -365,8 +231,8 @@ public class BeanCacheKey
                     {
                         return c;
                     }
-                    final Object value1 = callMethod(annotation1, member1[i]);
-                    final Object value2 = callMethod(annotation2, member2[j]);
+                    final Object value1 = ReflectionUtils.invokeMethod(annotation1, member1[i], Object.class, true);
+                    final Object value2 = ReflectionUtils.invokeMethod(annotation2, member2[j], Object.class, true);
                     assert value1.getClass().equals(value2.getClass());
 
                     if (value1 instanceof Comparable)

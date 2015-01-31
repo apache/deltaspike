@@ -32,19 +32,29 @@ public class SecurityUtilsTest
     public void directCycleDetection()
     {
         List<Annotation> result = SecurityUtils.getAllAnnotations(
-            DirectCycle.class.getAnnotations(), new HashSet<Class<? extends Annotation>>());
+            DirectCycle.class.getAnnotations(), new HashSet<Integer>());
 
         Assert.assertNotNull(result);
-        Assert.assertEquals(2, result.size());
+        Assert.assertEquals(1, result.size());
     }
 
     @Test
     public void indirectCycleDetection()
     {
         List<Annotation> result = SecurityUtils.getAllAnnotations(
-            IndirectCycle.class.getAnnotations(), new HashSet<Class<? extends Annotation>>());
+            IndirectCycle.class.getAnnotations(), new HashSet<Integer>());
 
         Assert.assertNotNull(result);
-        Assert.assertEquals(4, result.size());
+        Assert.assertEquals(3, result.size());
+    }
+
+    @Test
+    public void indirectCycleDetection6()
+    {
+        List<Annotation> result = SecurityUtils.getAllAnnotations(
+            IndirectCycleWithAnnotationMemberValues.class.getAnnotations(), new HashSet<Integer>());
+
+        Assert.assertNotNull(result);
+        Assert.assertEquals(6, result.size());
     }
 }
