@@ -34,10 +34,7 @@ import javax.inject.Inject;
 import javax.interceptor.InvocationContext;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Authorizer implementation for the {@link @Secured} annotation
@@ -87,8 +84,10 @@ public class SecuredAnnotationAuthorizer
 
         Method method = invocationContext.getMethod();
 
-        result.addAll(SecurityUtils.getAllAnnotations(method.getAnnotations()));
-        result.addAll(SecurityUtils.getAllAnnotations(method.getDeclaringClass().getAnnotations()));
+        result.addAll(SecurityUtils.getAllAnnotations(method.getAnnotations(),
+            new HashSet<Class<? extends Annotation>>()));
+        result.addAll(SecurityUtils.getAllAnnotations(method.getDeclaringClass().getAnnotations(),
+            new HashSet<Class<? extends Annotation>>()));
 
         return result;
     }

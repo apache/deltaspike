@@ -71,7 +71,8 @@ public abstract class SecurityUtils
             return true;
         }
 
-        List<Annotation> result = getAllAnnotations(annotation.annotationType().getAnnotations());
+        List<Annotation> result = getAllAnnotations(annotation.annotationType().getAnnotations(),
+            new HashSet<Class<? extends Annotation>>());
 
         for (Annotation foundAnnotation : result)
         {
@@ -85,7 +86,8 @@ public abstract class SecurityUtils
 
     public static Annotation resolveSecurityBindingType(Annotation annotation)
     {
-        List<Annotation> result = getAllAnnotations(annotation.annotationType().getAnnotations());
+        List<Annotation> result = getAllAnnotations(annotation.annotationType().getAnnotations(),
+            new HashSet<Class<? extends Annotation>>());
 
         for (Annotation foundAnnotation : result)
         {
@@ -105,7 +107,8 @@ public abstract class SecurityUtils
             return true;
         }
 
-        List<Annotation> result = getAllAnnotations(annotation.annotationType().getAnnotations());
+        List<Annotation> result = getAllAnnotations(annotation.annotationType().getAnnotations(),
+            new HashSet<Class<? extends Annotation>>());
 
         for (Annotation foundAnnotation : result)
         {
@@ -117,7 +120,8 @@ public abstract class SecurityUtils
         return false;
     }
 
-    public static List<Annotation> getAllAnnotations(Annotation[] annotations)
+    public static List<Annotation> getAllAnnotations(Annotation[] annotations,
+                                                     Set<Class<? extends Annotation>> annotationPath)
     {
         List<Annotation> result = new ArrayList<Annotation>();
 
@@ -131,7 +135,12 @@ public abstract class SecurityUtils
             }
 
             result.add(annotation);
-            result.addAll(getAllAnnotations(annotation.annotationType().getAnnotations()));
+
+            if (!annotationPath.contains(annotation.annotationType()))
+            {
+                annotationPath.add(annotation.annotationType());
+                result.addAll(getAllAnnotations(annotation.annotationType().getAnnotations(), annotationPath));
+            }
         }
 
         return result;
