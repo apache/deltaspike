@@ -96,7 +96,7 @@ public abstract class AbstractContext implements Context
     {
         if (creationalContext == null)
         {
-            return null;
+            return get(bean);
         }
         
         checkActive();
