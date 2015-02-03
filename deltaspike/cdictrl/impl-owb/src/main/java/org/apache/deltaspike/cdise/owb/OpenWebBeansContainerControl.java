@@ -129,4 +129,10 @@ public class OpenWebBeansContainerControl implements CdiContainer
         }
         return ctxCtrl;
     }
+
+    @Override
+    public String toString()
+    {
+        return "OpenWebBeansContainerControl";
+    }
 }
