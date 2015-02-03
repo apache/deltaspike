@@ -20,12 +20,15 @@ package org.apache.deltaspike.cdise.weld;
 
 import org.apache.deltaspike.cdise.api.CdiContainer;
 import org.apache.deltaspike.cdise.api.ContextControl;
+import org.jboss.weld.Container;
 import org.jboss.weld.environment.se.Weld;
 import org.jboss.weld.environment.se.WeldContainer;
+import org.jboss.weld.util.reflection.Formats;
 
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
+
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -130,4 +133,10 @@ public class WeldContainerControl implements CdiContainer
         return ctxCtrl;
     }
 
+
+    @Override
+    public String toString()
+    {
+        return "WeldContainerControl [Weld " + Formats.version(Container.class.getPackage()) + ']';
+    }
 }
