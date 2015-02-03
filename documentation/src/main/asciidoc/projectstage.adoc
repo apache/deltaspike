@@ -42,7 +42,7 @@ boolean isDevProjectStage = ProjectStage.Development.equals(this.projectStage);
 -------------------------------------------------------------------------------
 
 
-=== Custom Project Stages
+== Custom Project Stages
 
 It is possible to provide custom project stage implementations.
 Therefore, you have to provide an implementation of the
@@ -69,7 +69,8 @@ public class CustomProjectStageHolder implements ProjectStageHolder
 
 Configure your custom `ProjectStageHolder` in
 `META-INF/services/org.apache.deltaspike.core.api.projectstage.ProjectStageHolder`.
-The file has to provide the _fully qualified_ class name of the custom
+
+NOTE: The file has to provide the _fully qualified_ class name of the custom
 implementation of the `ProjectStageHolder` interface.
 
 Usage of a custom project stage:
@@ -85,7 +86,18 @@ customProjectStage = CustomProjectStageHolder.CustomProjectStage;
 ----------------------------------------------------------------------------
 
 
-=== ProjectStageProducer (for Third-party Portable Extensions)
+== Setting the active ProjectStage
+
+For setting the ProjectStage which shall get used in your application
+you can specify it in a few ways. The underlying mechanism used to
+determine the string is the ConfigResolver.
+
+.Example
+------------------------------------------------
+-Dorg.apache.deltaspike.ProjectStage=Development
+------------------------------------------------
+
+== ProjectStageProducer (for Third-party Portable Extensions)
 
 `ProjectStageProducer` provides the producer method which allows to
 inject the current ProjectStage. However, in some cases it is needed to
@@ -96,14 +108,3 @@ current ProjectStage. This helper also contains helpers for unit-tests
 - e.g. `#setProjectStage`. However, those methods shouldis not be needed
 for users (we just need them for testing different ProjectStage
 scenarios).
-
-==== Setting the Active ProjectStage
-
-For setting the ProjectStage which shall get used in your application
-you can specify it in a few ways. The underlying mechanism used to
-determine the string is the ConfigResolver.
-
-.Example
-------------------------------------------------
--Dorg.apache.deltaspike.ProjectStage=Development
-------------------------------------------------

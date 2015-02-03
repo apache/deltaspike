@@ -155,9 +155,9 @@ the lookup strategy you used before, you can deactivate the delegation to the co
 
 ==== Type-safe ProjectStage
 
-The DeltaSpike <<projectstage.adoc#,ProjectStage>> mechanism allows to
-use configuration and implementations depending on the server
-environment you currently run on.
+The DeltaSpike <<projectstage.adoc#,ProjectStage>> mechanism allows to use configuration and implementations depending on the server environment you currently run on.
+
+DeltaSpike provides some pre-defined <<projectstage.adoc#_introduction,ProjectStages>> but it's also possible to create your own <<projectstage.adoc#_custom_project_stages,Custom Project Stage>>, Please, check the <<projectstage.adoc#,DeltaSpike ProjectStage>> page for more details.
 
 ==== @Exclude
 
