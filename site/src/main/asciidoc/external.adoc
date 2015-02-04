@@ -91,6 +91,13 @@ Apache DeltaSpike: CDI Programável
 
 **Online article:** http://www.devmedia.com.br/apache-deltaspike-cdi-programavel/31982
 
+== Interviews
+
+=== [pt-BR] InfoQ Brazil
+Apache DeltaSpike, a API de extensions do CDI
+
+**Online interview:** http://www.infoq.com/br/interviews/entrevista-rafael-benevides-delta-spike
+
 == Templates
 === Java SE + CDI + DS
 **Source code:** https://github.com/os890/javase-cdi-ds-project-template
