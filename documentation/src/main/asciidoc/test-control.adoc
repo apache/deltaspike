@@ -419,6 +419,81 @@ as content to
 
 (in your config-folder for tests, e.g. test/resources)
 
+=== Using jersey-test with test-control
+
+Jersey-test starts jetty which answers requests in a separated thread. Since ds test-control just handles the thread of the test itself, it's needed to integrate jetty and jersey with the cdi-container. Usually that's done via a ServletRequestListener - the following part describes an alternative approach for jersey-test:
+
+[source,java]
+-------------------------------------------------------------------------------------------
+//use: -Djersey.config.test.container.factory=custom.CdiAwareJettyTestContainerFactory
+
+@RunWith(CdiTestRunner.class)
+public class SimpleCdiAndJaxRsTest extends JerseyTest
+{
+  //...
+}
+-------------------------------------------------------------------------------------------
+or
+[source,java]
+-------------------------------------------------------------------------------------------
+public class CdiAwareJerseyTest extends JerseyTest
+{
+    static
+    {
+        System.setProperty("jersey.config.test.container.factory", CdiAwareJettyTestContainerFactory.class.getName());
+    }
+}
+
+@RunWith(CdiTestRunner.class)
+public class SimpleCdiAndJaxRsTest extends CdiAwareJerseyTest
+{
+    //...
+}
+-------------------------------------------------------------------------------------------
+[source,java]
+-------------------------------------------------------------------------------------------
+public class CdiAwareJettyTestContainerFactory implements TestContainerFactory
+{
+    @Override
+    public TestContainer create(final URI baseUri, final DeploymentContext context) throws IllegalArgumentException
+    {
+        return new CdiAwareJettyTestContainer(baseUri, context);
+    }
+}
+-------------------------------------------------------------------------------------------
+
+CdiAwareJettyTestContainer is a copy of JettyTestContainerFactory.JettyTestContainer but with
+
+[source,java]
+-------------------------------------------------------------------------------------------
+HandlerWrapper cdiHandlerWrapper = new CdiAwareHandlerWrapper();
+cdiHandlerWrapper.setHandler(this.server.getHandler());
+this.server.setHandler(cdiHandlerWrapper);
+-------------------------------------------------------------------------------------------
+after the line with JettyHttpContainerFactory#createServer
+[source,java]
+-------------------------------------------------------------------------------------------
+//activate the request-context e.g. via:
+public class CdiAwareHandlerWrapper extends HandlerWrapper
+{
+    @Override
+    public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
+    {
+        CdiContainer cdiContainer = CdiContainerLoader.getCdiContainer();
+
+        try
+        {
+            cdiContainer.getContextControl().startContext(RequestScoped.class);
+            super.handle(target, baseRequest, request, response);
+        }
+        finally
+        {
+            cdiContainer.getContextControl().stopContext(RequestScoped.class);
+        }
+    }
+}
+-------------------------------------------------------------------------------------------
+
 === Mixed Tests
 
 Usually you should have one kind of tests per test-module. However, if
