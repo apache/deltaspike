@@ -83,6 +83,12 @@ public class DefaultMockFilter implements MockFilter
             }
         }
 
+        if (origin != null && origin.getPackage() == null)
+        {
+            LOG.warning("Please don't use the default-package for " + origin.getName());
+            return true;
+        }
+
         return origin != null && !isInternalPackage(origin.getPackage().getName());
     }
 
