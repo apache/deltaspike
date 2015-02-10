@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.test.core.api.partialbean.uc001;
 
+import org.apache.deltaspike.core.util.ServiceUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -36,5 +37,13 @@ public abstract class PartialBeanAsInterfaceTest
         Assert.assertEquals("partial-test-false", result);
 
         //TODO test pre-destroy callback
+    }
+
+    @Test
+    public void spi() {
+        Assert.assertTrue(ServiceUtils.loadServiceImplementations(MyInterface.class).iterator().hasNext());
+
+        Assert.assertEquals("test",
+            ServiceUtils.loadServiceImplementations(MyInterface.class).iterator().next().getValue());
     }
 }

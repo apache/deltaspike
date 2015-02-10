@@ -202,7 +202,7 @@
                 <dependency>
                     <groupId>org.apache.openwebbeans.arquillian</groupId>
                     <artifactId>owb-arquillian-standalone</artifactId>
-                    <version>1.2.0</version>
+                    <version>${owb.version}</version>
                     <scope>test</scope>
                 </dependency>
 
