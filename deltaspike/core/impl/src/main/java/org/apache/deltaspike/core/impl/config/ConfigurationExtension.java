@@ -26,13 +26,18 @@ import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.config.PropertyFileConfig;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.spi.config.ConfigSource;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
+import org.apache.deltaspike.core.util.ClassUtils;
 
 /**
  * This extension handles {@link org.apache.deltaspike.core.api.config.PropertyFileConfig}s
@@ -43,11 +48,23 @@ public class ConfigurationExtension implements Extension, Deactivatable
     private static final String CANNOT_CREATE_CONFIG_SOURCE_FOR_CUSTOM_PROPERTY_FILE_CONFIG =
         "Cannot create ConfigSource for custom property-file config ";
 
+    /**
+     * This is a trick for EAR scenarios in some containers.
+     * They e.g. boot up the shared EAR lib with the ear ClassLoader.
+     * Thus any {@link org.apache.deltaspike.core.api.config.PropertyFileConfig} configuration will just get
+     * activated for this very single EAR ClassLoader but <em>not</em> for all the webapps.
+     * But if I have a property file in a jar in the shared EAR lib then I most likely also like to get it
+     * if I call this from my webapp (TCCL).
+     * So we also automatically register all the PropertyFileConfigs we found in the 'parent BeanManager'
+     * as well.
+     */
+    private static Map<ClassLoader, List<Class<? extends PropertyFileConfig>>> detectedParentPropertyFileConfigs
+        = new ConcurrentHashMap<ClassLoader, List<Class<? extends PropertyFileConfig>>>();
+
     private boolean isActivated = true;
 
-    private List<Class<? extends PropertyFileConfig>> configSourcesClasses
+    private List<Class<? extends PropertyFileConfig>> propertyFileConfigClasses
         = new ArrayList<Class<?  extends PropertyFileConfig>>();
-
 
     @SuppressWarnings("UnusedDeclaration")
     protected void init(@Observes BeforeBeanDiscovery beforeBeanDiscovery)
@@ -74,7 +91,7 @@ public class ConfigurationExtension implements Extension, Deactivatable
             return;
         }
 
-        configSourcesClasses.add(pcsClass);
+        propertyFileConfigClasses.add(pcsClass);
     }
 
     @SuppressWarnings("UnusedDeclaration")
@@ -85,15 +102,60 @@ public class ConfigurationExtension implements Extension, Deactivatable
             return;
         }
 
-        List<ConfigSource> configSources = new ArrayList<ConfigSource>();
+        // create a local copy with all the collected PropertyFileConfig
+        Set<Class<? extends PropertyFileConfig>> allPropertyFileConfigClasses
+            = new HashSet<Class<? extends PropertyFileConfig>>(this.propertyFileConfigClasses);
 
-        for (Class<? extends PropertyFileConfig> propertyFileConfigClass : configSourcesClasses)
+        // now add any PropertyFileConfigs from a 'parent BeanManager'
+        // we start with the current TCCL
+        ClassLoader currentClassLoader = ClassUtils.getClassLoader(null);
+        addParentPropertyFileConfigs(currentClassLoader, allPropertyFileConfigClasses);
+
+        // now let's add our own PropertyFileConfigs to the detected ones.
+        // because maybe WE are a parent BeanManager ourselves!
+        if (!this.propertyFileConfigClasses.isEmpty())
+        {
+            detectedParentPropertyFileConfigs.put(currentClassLoader, this.propertyFileConfigClasses);
+        }
+
+        // collect all the ConfigSources from our PropertyFileConfigs
+        List<ConfigSource> configSources = new ArrayList<ConfigSource>();
+        for (Class<? extends PropertyFileConfig> propertyFileConfigClass : allPropertyFileConfigClasses)
         {
             configSources.addAll(createPropertyConfigSource(propertyFileConfigClass));
         }
 
+
         // finally add all
         ConfigResolver.addConfigSources(configSources);
+    }
+
+    /**
+     * Add all registered PropertyFileConfigs which got picked up in a parent ClassLoader already
+     */
+    private void addParentPropertyFileConfigs(ClassLoader currentClassLoader,
+                                              Set<Class<? extends PropertyFileConfig>> propertyFileConfigClasses)
+    {
+        if (currentClassLoader.getParent() == null)
+        {
+            return;
+        }
+
+        for (Map.Entry<ClassLoader, List<Class<? extends PropertyFileConfig>>> classLoaderListEntry :
+                detectedParentPropertyFileConfigs.entrySet())
+        {
+            if (currentClassLoader.getParent().equals(classLoaderListEntry.getKey()))
+            {
+                // if this is the direct parent ClassLoader then lets add those PropertyFileConfigs.
+                propertyFileConfigClasses.addAll(classLoaderListEntry.getValue());
+
+                // even check further parents
+                addParentPropertyFileConfigs(classLoaderListEntry.getKey(), propertyFileConfigClasses);
+
+                // and be done. There can only be a single parent CL...
+                return;
+            }
+        }
     }
 
     /**
@@ -103,6 +165,7 @@ public class ConfigurationExtension implements Extension, Deactivatable
     public void freeConfigSources(@Observes BeforeShutdown bs)
     {
         ConfigResolver.freeConfigSources();
+        detectedParentPropertyFileConfigs.remove(ClassUtils.getClassLoader(null));
     }
 
     /**

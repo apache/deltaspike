@@ -34,6 +34,17 @@ package org.apache.deltaspike.core.api.config;
  * <p>
  * Please note that the configuration will only be available after the boot is finished. This means that you cannot use
  * this configuration inside a CDI Extension before the boot is finished!</p>
+ *
+ * <p><b>Attention:</b> When using this logic inside an EAR then you might get
+ * different behaviour depending on the Java EE
+ * server you are using. Some EE container use a different ClassLoader to bootstrap
+ * the application than later to serve Requests.
+ * In that case we would register the ConfigSources on the <em>wrong</em> ConfigResolver
+ * (means we register it to the wrong ClassLoader). If you did hit such an application server
+ * then you might need to switch back to manually register the
+ * {@link org.apache.deltaspike.core.spi.config.ConfigSource} or
+ * {@link org.apache.deltaspike.core.spi.config.ConfigSourceProvider} via the
+ * {@link java.util.ServiceLoader} mechanism described there.</p>.
  */
 public interface PropertyFileConfig extends DeltaSpikeConfig
 {
