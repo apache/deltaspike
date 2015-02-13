@@ -172,7 +172,30 @@ public abstract class PartialBeanProxyFactory
 
             currentClass = currentClass.getSuperclass();
         }
+        
+        // sort out method with same signature (see uc008)
+        ArrayList<Method> duplicates = new ArrayList<Method>();
+        for (Method outer : methods)
+        {
+            for (Method inner : methods)
+            {
+                if (inner != outer
+                        && hasSameSignature(outer, inner)
+                        && !(duplicates.contains(outer) || duplicates.contains(inner)))
+                {
+                    duplicates.add(inner);
+                }
+            }
+        }
+        methods.removeAll(duplicates);
 
         return methods.toArray(new Method[methods.size()]);
+    }
+    
+    private static boolean hasSameSignature(Method a, Method b)
+    {
+        return a.getName().equals(b.getName())
+                && a.getReturnType().equals(b.getReturnType())
+                && Arrays.equals(a.getParameterTypes(), b.getParameterTypes());
     }
 }
