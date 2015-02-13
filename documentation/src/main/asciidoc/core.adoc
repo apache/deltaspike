@@ -1050,6 +1050,14 @@ A set of utility methods for working with beans.
 * `#extractAnnotation` - Extract the annotations.
 * `#createInjectionPoints` - Given a method, and the bean on which the method is declared, create a collection of injection points representing the parameters of the method.
 
+
+==== ContextUtils
+
+A set of utility methods for working with contexts.
+
+* `#isContextActive` - Checks if the context for the scope annotation is active.
+
+
 ==== ClassDeactivationUtils
 
 
