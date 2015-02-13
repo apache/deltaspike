@@ -16,22 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.api.partialbean.uc004;
+package org.apache.deltaspike.test.core.api.partialbean.shared;
 
-import org.apache.deltaspike.test.core.api.partialbean.shared.TestPartialBeanBinding;
+import org.apache.deltaspike.partialbean.api.PartialBeanBinding;
 
-import javax.enterprise.context.ApplicationScoped;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-@TestPartialBeanBinding
-@ApplicationScoped
-public abstract class ApplicationScopedPartialBean extends AbstractSuper
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
+@PartialBeanBinding
+
+@Retention(RUNTIME)
+@Target(TYPE)
+public @interface ThrowExceptionPartialBeanBinding
 {
-    private int count;
-
-    public abstract String getResult();
-
-    public int getManualResult()
-    {
-        return count++;
-    }
 }

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.api.partialbean.uc004;
+package org.apache.deltaspike.test.core.api.partialbean.uc005;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.test.core.api.partialbean.shared.TestPartialBeanBinding;
@@ -29,15 +29,23 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
 public class ScopedPartialBeanTest
 {
+    private static final String CONTAINER_OWB_1_2_x_BEFORE_1_2_8 = "owb-1\\.2\\.[0-7]";
+
     @Deployment
     public static WebArchive war()
     {
+        if (CdiContainerUnderTest.is(CONTAINER_OWB_1_2_x_BEFORE_1_2_8))
+        {
+            return ShrinkWrap.create(WebArchive.class, "empty.war");
+        }
+
         String simpleName = ScopedPartialBeanTest.class.getSimpleName();
         String archiveName = simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1);
 
@@ -57,28 +65,21 @@ public class ScopedPartialBeanTest
     @Test
     public void testPartialBeanWithApplicationScope() throws Exception
     {
-        String result = BeanProvider.getContextualReference(ApplicationScopedPartialBean.class).getResult();
+        // this test is known to not work under OWB 1.2.0 till 1.2.7 - see OWB #1036
+        Assume.assumeTrue(!CdiContainerUnderTest.is(CONTAINER_OWB_1_2_x_BEFORE_1_2_8));
+
+        String result = BeanProvider.getContextualReference(ApplicationScopedPartialBean.class).willFail();
 
         Assert.assertEquals("partial-test-false", result);
+
+        String result2 = BeanProvider.getContextualReference(ApplicationScopedPartialBean.class).willFail2();
+
+        Assert.assertEquals("partial-test-false", result2);
 
         int count = BeanProvider.getContextualReference(ApplicationScopedPartialBean.class).getManualResult();
         Assert.assertEquals(0, count);
 
         count = BeanProvider.getContextualReference(ApplicationScopedPartialBean.class).getManualResult();
         Assert.assertEquals(1, count);
-    }
-
-    @Test
-    public void testPartialBeanWithDependentScope() throws Exception
-    {
-        String result = BeanProvider.getContextualReference(DependentScopedPartialBean.class).getResult();
-
-        Assert.assertEquals("partial-test-false", result);
-
-        int count = BeanProvider.getContextualReference(DependentScopedPartialBean.class).getManualResult();
-        Assert.assertEquals(0, count);
-
-        count = BeanProvider.getContextualReference(DependentScopedPartialBean.class).getManualResult();
-        Assert.assertEquals(0, count);
     }
 }

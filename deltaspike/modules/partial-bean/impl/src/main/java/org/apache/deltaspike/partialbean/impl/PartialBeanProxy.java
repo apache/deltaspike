@@ -19,28 +19,10 @@
 package org.apache.deltaspike.partialbean.impl;
 
 import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
 
-/**
- * Handler used for partial-beans which are abstract-classes.
- * At runtime it will be called from {@link MethodHandlerProxy} as instance of javassist.util.proxy.MethodHandler
- */
-class PartialBeanAbstractMethodHandler<T extends InvocationHandler>
+public interface PartialBeanProxy
 {
-    private final T handlerInstance;
-
-    PartialBeanAbstractMethodHandler(T handlerInstance)
-    {
-        this.handlerInstance = handlerInstance;
-    }
-
-    //Signature given by javassist.util.proxy.MethodHandler#invoke
-    public Object invoke(Object target, Method method, Method proceedMethod, Object[] arguments) throws Throwable
-    {
-        if (proceedMethod != null)
-        {
-            return proceedMethod.invoke(target, arguments);
-        }
-        return this.handlerInstance.invoke(target, method, arguments);
-    }
+    void setHandler(InvocationHandler handler);
+    
+    InvocationHandler getHandler();
 }

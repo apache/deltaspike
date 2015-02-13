@@ -1,4 +1,5 @@
 /*
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -16,22 +17,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.api.partialbean.uc004;
+package org.apache.deltaspike.test.core.api.partialbean.uc006;
 
-import org.apache.deltaspike.test.core.api.partialbean.shared.TestPartialBeanBinding;
-
-import javax.enterprise.context.ApplicationScoped;
-
-@TestPartialBeanBinding
-@ApplicationScoped
-public abstract class ApplicationScopedPartialBean extends AbstractSuper
+public abstract class AbstractSuper<T> extends AbstractSuperSuper
 {
-    private int count;
+    abstract T willFail2() throws ClassNotFoundException, NoSuchMethodException, NoSuchFieldException;
 
-    public abstract String getResult();
-
-    public int getManualResult()
+    @Override
+    public String willFail3() throws ClassNotFoundException, NoSuchMethodException, NoSuchFieldException
     {
-        return count++;
+        return "willFail3";
     }
 }

@@ -20,7 +20,6 @@ package org.apache.deltaspike.test.core.api.partialbean.uc002;
 
 import org.apache.deltaspike.test.core.api.partialbean.shared.TestPartialBeanBinding;
 import org.apache.deltaspike.test.core.api.partialbean.util.ArchiveUtils;
-import org.apache.deltaspike.test.utils.CdiContainerUnderTest;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -54,16 +53,6 @@ public class PartialBeanAsAbstractClassTest
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndPartialBeanArchive())
                 .addAsLibraries(testJar)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
-
-        if (CdiContainerUnderTest.is("owb-.*")   ||
-            CdiContainerUnderTest.is("tomee-.*") ||
-            CdiContainerUnderTest.is("wildfly-.*") ||
-            CdiContainerUnderTest.is("glassfish-.*"))
-        {
-            JavaArchive javassistJar = ShrinkWrap.create(JavaArchive.class, "dsjavassist.jar")
-                    .addPackages(true, "javassist");
-            webArchive.addAsLibrary(javassistJar);
-        }
 
         return webArchive;
     }

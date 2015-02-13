@@ -16,15 +16,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.api.partialbean.uc004;
-
-import org.apache.deltaspike.test.core.api.partialbean.shared.TestPartialBeanBinding;
+package org.apache.deltaspike.test.core.api.partialbean.uc005;
 
 import javax.enterprise.context.ApplicationScoped;
 
+import org.apache.deltaspike.test.core.api.partialbean.shared.TestPartialBeanBinding;
+
 @TestPartialBeanBinding
 @ApplicationScoped
-public abstract class ApplicationScopedPartialBean extends AbstractSuper
+public abstract class ApplicationScopedPartialBean extends AbstractSuper implements SuperInterface
 {
     private int count;
 

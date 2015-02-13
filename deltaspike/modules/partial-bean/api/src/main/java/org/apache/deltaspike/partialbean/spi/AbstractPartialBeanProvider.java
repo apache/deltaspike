@@ -16,22 +16,28 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.api.partialbean.uc004;
+package org.apache.deltaspike.partialbean.spi;
 
-import org.apache.deltaspike.test.core.api.partialbean.shared.TestPartialBeanBinding;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.enterprise.context.ApplicationScoped;
-
-@TestPartialBeanBinding
-@ApplicationScoped
-public abstract class ApplicationScopedPartialBean extends AbstractSuper
+public abstract class AbstractPartialBeanProvider implements PartialBeanProvider
 {
-    private int count;
-
-    public abstract String getResult();
-
-    public int getManualResult()
+    private final ArrayList<PartialBeanDescriptor> descriptors = new ArrayList<PartialBeanDescriptor>();
+    
+    @Override
+    public List<PartialBeanDescriptor> get()
     {
-        return count++;
+        return descriptors;
+    }
+    
+    protected void add(PartialBeanDescriptor partialBeanDescriptor)
+    {
+        descriptors.add(partialBeanDescriptor);
+    }
+    
+    protected void add(PartialBeanBuilder partialBeanBuilder)
+    {
+        descriptors.add(partialBeanBuilder.create());
     }
 }

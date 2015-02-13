@@ -16,22 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.api.partialbean.uc004;
+package org.apache.deltaspike.test.core.api.partialbean.uc007;
 
+import org.apache.deltaspike.partialbean.spi.AbstractPartialBeanProvider;
+import org.apache.deltaspike.partialbean.spi.PartialBeanBuilder;
 import org.apache.deltaspike.test.core.api.partialbean.shared.TestPartialBeanBinding;
+import org.apache.deltaspike.test.core.api.partialbean.shared.TestPartialBeanHandler;
 
-import javax.enterprise.context.ApplicationScoped;
-
-@TestPartialBeanBinding
-@ApplicationScoped
-public abstract class ApplicationScopedPartialBean extends AbstractSuper
+public class TestPartialBeanProvider extends AbstractPartialBeanProvider
 {
-    private int count;
-
-    public abstract String getResult();
-
-    public int getManualResult()
+    public TestPartialBeanProvider()
     {
-        return count++;
+        add(new PartialBeanBuilder(TestPartialBeanBinding.class, TestPartialBeanHandler.class, PartialBean.class));
     }
 }

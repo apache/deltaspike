@@ -18,6 +18,8 @@
  */
 package org.apache.deltaspike.test.core.api.partialbean.util;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import org.apache.deltaspike.test.utils.ShrinkWrapArchiveUtil;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 
@@ -29,15 +31,26 @@ public abstract class ArchiveUtils
 
     public static JavaArchive[] getDeltaSpikeCoreAndPartialBeanArchive()
     {
-        String[] excludedFiles;
+        ArrayList<JavaArchive> result = new ArrayList<JavaArchive>();
 
-        excludedFiles = new String[]{"META-INF.apache-deltaspike.properties"};
+        JavaArchive[] temp;
 
-        return ShrinkWrapArchiveUtil.getArchives(null,
+        temp = ShrinkWrapArchiveUtil.getArchives(null,
                 "META-INF/beans.xml",
-                new String[]{"org.apache.deltaspike.core",
+                new String[] { "org.apache.deltaspike.core",
                         "org.apache.deltaspike.test.category",
-                        "org.apache.deltaspike.partialbean"}, excludedFiles,
+                        "org.apache.deltaspike.partialbean" },
+                new String[] { "META-INF.apache-deltaspike.properties" },
                 "ds-core_and_partial-bean");
+        result.addAll(Arrays.asList(temp));
+
+        temp = ShrinkWrapArchiveUtil.getArchives(null,
+                "META-INF/MANIFEST.MF",
+                new String[] { "org.objectweb.asm" },
+                new String[] { },
+                "asm");
+        result.addAll(Arrays.asList(temp));
+
+        return result.toArray(new JavaArchive[result.size()]);
     }
 }

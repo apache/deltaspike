@@ -16,12 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.api.partialbean.uc004;
+package org.apache.deltaspike.test.core.api.partialbean.uc006;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.test.core.api.partialbean.shared.TestPartialBeanBinding;
 import org.apache.deltaspike.test.core.api.partialbean.util.ArchiveUtils;
-import org.apache.deltaspike.test.utils.CdiContainerUnderTest;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -38,15 +37,15 @@ public class ScopedPartialBeanTest
     @Deployment
     public static WebArchive war()
     {
-        String simpleName = ScopedPartialBeanTest.class.getSimpleName();
-        String archiveName = simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1);
+        final String simpleName = ScopedPartialBeanTest.class.getSimpleName();
+        final String archiveName = simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1);
 
-        JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, archiveName + ".jar")
+        final JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, archiveName + ".jar")
                 .addPackage(ScopedPartialBeanTest.class.getPackage())
                 .addPackage(TestPartialBeanBinding.class.getPackage())
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
-        WebArchive webArchive =  ShrinkWrap.create(WebArchive.class, archiveName + ".war")
+        final WebArchive webArchive =  ShrinkWrap.create(WebArchive.class, archiveName + ".war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndPartialBeanArchive())
                 .addAsLibraries(testJar)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
@@ -57,28 +56,20 @@ public class ScopedPartialBeanTest
     @Test
     public void testPartialBeanWithApplicationScope() throws Exception
     {
-        String result = BeanProvider.getContextualReference(ApplicationScopedPartialBean.class).getResult();
+        ApplicationScopedPartialBean bean = BeanProvider.getContextualReference(ApplicationScopedPartialBean.class);
+        bean.getManualResult();
 
-        Assert.assertEquals("partial-test-false", result);
+        Assert.assertEquals("willFail3", bean.willFail3());
 
-        int count = BeanProvider.getContextualReference(ApplicationScopedPartialBean.class).getManualResult();
-        Assert.assertEquals(0, count);
+        try
+        {
+            BeanProvider.getContextualReference(ApplicationScopedPartialBean.class).willFail2();
 
-        count = BeanProvider.getContextualReference(ApplicationScopedPartialBean.class).getManualResult();
-        Assert.assertEquals(1, count);
-    }
-
-    @Test
-    public void testPartialBeanWithDependentScope() throws Exception
-    {
-        String result = BeanProvider.getContextualReference(DependentScopedPartialBean.class).getResult();
-
-        Assert.assertEquals("partial-test-false", result);
-
-        int count = BeanProvider.getContextualReference(DependentScopedPartialBean.class).getManualResult();
-        Assert.assertEquals(0, count);
-
-        count = BeanProvider.getContextualReference(DependentScopedPartialBean.class).getManualResult();
-        Assert.assertEquals(0, count);
+            Assert.fail("#willFail2 should actually throw a ClassNotFoundException");
+        }
+        catch (Exception e)
+        {
+            Assert.assertEquals(e.getClass(), ClassNotFoundException.class);
+        }
     }
 }

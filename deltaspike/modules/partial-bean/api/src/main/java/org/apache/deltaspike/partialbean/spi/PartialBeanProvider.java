@@ -16,22 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.api.partialbean.uc004;
+package org.apache.deltaspike.partialbean.spi;
 
-import org.apache.deltaspike.test.core.api.partialbean.shared.TestPartialBeanBinding;
+import java.util.List;
+import org.apache.deltaspike.core.spi.activation.Deactivatable;
 
-import javax.enterprise.context.ApplicationScoped;
-
-@TestPartialBeanBinding
-@ApplicationScoped
-public abstract class ApplicationScopedPartialBean extends AbstractSuper
+/**
+ * The PartialBeanProvider allows to register a partial bean in BeforeBeanDiscovery as a completely new AnnotatedType,
+ * to enable interceptors on the provided partial beans.
+ *
+ * Partial beans which will be collected later in ProcessAnnotatedType can't be intercepted.
+ *
+ * If other/new partial beans will be found later via ProcessAnnotatedType, they will be merged with the early provided
+ * partial beans from the PartialBeanProvider's.
+ */
+public interface PartialBeanProvider extends Deactivatable
 {
-    private int count;
-
-    public abstract String getResult();
-
-    public int getManualResult()
-    {
-        return count++;
-    }
+    List<PartialBeanDescriptor> get();
 }

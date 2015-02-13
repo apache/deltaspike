@@ -16,27 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.partialbean.impl;
+package org.apache.deltaspike.test.core.api.partialbean.shared;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import javax.enterprise.context.ApplicationScoped;
 
-//This indirection to create a proxy for javassist.util.proxy.MethodHandler is used as intermediate approach.
-//Further details see comments in PartialBeanLifecycle
-public class MethodHandlerProxy implements InvocationHandler
+@ThrowExceptionPartialBeanBinding
+@ApplicationScoped
+public class ThrowExceptionPartialBeanHandler implements InvocationHandler
 {
-    private PartialBeanAbstractMethodHandler partialBeanMethodHandler;
-
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
     {
-        //hardcoding the following parameters is ok since MethodHandlerProxy is only used for
-        //javassist.util.proxy.MethodHandler which has one method with those parameters.
-        return partialBeanMethodHandler.invoke(args[0], (Method)args[1], (Method)args[2], (Object[])args[3]);
-    }
-
-    void setPartialBeanMethodHandler(PartialBeanAbstractMethodHandler partialBeanMethodHandler)
-    {
-        this.partialBeanMethodHandler = partialBeanMethodHandler;
+        throw new ClassNotFoundException();
     }
 }
