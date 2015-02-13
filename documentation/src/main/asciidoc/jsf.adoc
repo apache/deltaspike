@@ -1931,7 +1931,7 @@ public class ApplicationExceptionHandler
         FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(...); // or ExternalContext etc.
 
         // required - "stops" the JSF lifecycle
-        FacesContext.getCurrentInstance().setResponseComplete();
+        FacesContext.getCurrentInstance().responseComplete();
 
         // no other JSF ExceptionHandler should handle this exception...
         event.handled();
@@ -1971,7 +1971,7 @@ public class ApplicationExceptionHandler
         FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(...); // or ExternalContext etc.
 
         // required - "stops" the JSF lifecycle
-        FacesContext.getCurrentInstance().setResponseComplete();
+        FacesContext.getCurrentInstance().responseComplete();
 
         // no other JSF ExceptionHandler should handle this exception...
         event.handled();
