@@ -90,10 +90,17 @@ public abstract class PartialBeanProxyFactory
      */
     private static Method[] findNotImplementedMethods(Class<?> clazz)
     {
-        List<Method> methods = new ArrayList<Method>(Arrays.asList(clazz.getMethods()));
+        List<Method> methods = new ArrayList<Method>();
         for (Method method : clazz.getDeclaredMethods())
         {
-            if (!methods.contains(method))
+            if (!containsMethodWithSameSignature(method, methods))
+            {
+                methods.add(method);
+            }
+        }
+        for (Method method : clazz.getMethods())
+        {
+            if (!containsMethodWithSameSignature(method, methods))
             {
                 methods.add(method);
             }
@@ -105,16 +112,16 @@ public abstract class PartialBeanProxyFactory
         {
             if (Modifier.isAbstract(currentSuperClass.getModifiers()))
             {
-                for (Method method : currentSuperClass.getMethods())
+                for (Method method : currentSuperClass.getDeclaredMethods())
                 {
-                    if (!methods.contains(method))
+                    if (!containsMethodWithSameSignature(method, methods))
                     {
                         methods.add(method);
                     }
                 }
-                for (Method method : currentSuperClass.getDeclaredMethods())
+                for (Method method : currentSuperClass.getMethods())
                 {
-                    if (!methods.contains(method))
+                    if (!containsMethodWithSameSignature(method, methods))
                     {
                         methods.add(method);
                     }
@@ -172,24 +179,21 @@ public abstract class PartialBeanProxyFactory
 
             currentClass = currentClass.getSuperclass();
         }
-        
-        // sort out method with same signature (see uc008)
-        ArrayList<Method> duplicates = new ArrayList<Method>();
-        for (Method outer : methods)
-        {
-            for (Method inner : methods)
-            {
-                if (inner != outer
-                        && hasSameSignature(outer, inner)
-                        && !(duplicates.contains(outer) || duplicates.contains(inner)))
-                {
-                    duplicates.add(inner);
-                }
-            }
-        }
-        methods.removeAll(duplicates);
 
         return methods.toArray(new Method[methods.size()]);
+    }
+    
+    private static boolean containsMethodWithSameSignature(Method method, List<Method> methods)
+    {
+        for (Method currentMethod : methods)
+        {
+            if (hasSameSignature(currentMethod, method))
+            {
+                return true;
+            }
+        }
+        
+        return false;
     }
     
     private static boolean hasSameSignature(Method a, Method b)
