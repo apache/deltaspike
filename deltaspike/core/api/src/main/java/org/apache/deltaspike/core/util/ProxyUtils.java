@@ -76,7 +76,7 @@ public abstract class ProxyUtils
         {
             for (Class<?> currentInterface : proxyClass.getInterfaces())
             {
-                if (proxyClass.getName().startsWith(iface.getName()))
+                if (proxyClass.getName().startsWith(currentInterface.getName()))
                 {
                     result.add(currentInterface);
                 }
