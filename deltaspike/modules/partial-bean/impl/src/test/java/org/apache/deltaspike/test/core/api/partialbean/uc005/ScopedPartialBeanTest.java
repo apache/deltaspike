@@ -37,11 +37,13 @@ import org.junit.runner.RunWith;
 public class ScopedPartialBeanTest
 {
     private static final String CONTAINER_OWB_1_2_x_BEFORE_1_2_8 = "owb-1\\.2\\.[0-7]";
+    private static final String CONTAINER_TOMEE_1_7_x = "tomee-1\\.7\\..*";
 
     @Deployment
     public static WebArchive war()
     {
-        if (CdiContainerUnderTest.is(CONTAINER_OWB_1_2_x_BEFORE_1_2_8))
+        if (CdiContainerUnderTest.is(CONTAINER_OWB_1_2_x_BEFORE_1_2_8)
+                || CdiContainerUnderTest.is(CONTAINER_TOMEE_1_7_x))
         {
             return ShrinkWrap.create(WebArchive.class, "empty.war");
         }
@@ -66,7 +68,8 @@ public class ScopedPartialBeanTest
     public void testPartialBeanWithApplicationScope() throws Exception
     {
         // this test is known to not work under OWB 1.2.0 till 1.2.7 - see OWB #1036
-        Assume.assumeTrue(!CdiContainerUnderTest.is(CONTAINER_OWB_1_2_x_BEFORE_1_2_8));
+        Assume.assumeTrue(!CdiContainerUnderTest.is(CONTAINER_OWB_1_2_x_BEFORE_1_2_8)
+                && !CdiContainerUnderTest.is(CONTAINER_TOMEE_1_7_x));
 
         String result = BeanProvider.getContextualReference(ApplicationScopedPartialBean.class).willFail();
 
