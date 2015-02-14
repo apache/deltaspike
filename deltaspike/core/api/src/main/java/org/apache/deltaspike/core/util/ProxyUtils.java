@@ -74,7 +74,13 @@ public abstract class ProxyUtils
         
         if (isInterfaceProxy(proxyClass))
         {
-            result.addAll(Arrays.asList(proxyClass.getInterfaces()));
+            for (Class<?> currentInterface : proxyClass.getInterfaces())
+            {
+                if (proxyClass.getName().startsWith(iface.getName()))
+                {
+                    result.add(currentInterface);
+                }
+            }
         }
         else
         {
@@ -101,9 +107,9 @@ public abstract class ProxyUtils
         
         if (proxyClass.getName().contains("$$"))
         {
-            for (Class<?> iface : interfaces)
+            for (Class<?> currentInterface : interfaces)
             {
-                if (proxyClass.getName().startsWith(iface.getName()))
+                if (proxyClass.getName().startsWith(currentInterface.getName()))
                 {
                     return true;
                 }
