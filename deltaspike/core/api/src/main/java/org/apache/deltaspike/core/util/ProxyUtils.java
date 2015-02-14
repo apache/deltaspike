@@ -104,6 +104,11 @@ public abstract class ProxyUtils
             return true;
         }
         
+        if (proxyClass.getSuperclass() != null && !proxyClass.getSuperclass().equals(Object.class))
+        {
+            return false;
+        }
+        
         if (proxyClass.getName().contains("$$"))
         {
             for (Class<?> currentInterface : interfaces)
