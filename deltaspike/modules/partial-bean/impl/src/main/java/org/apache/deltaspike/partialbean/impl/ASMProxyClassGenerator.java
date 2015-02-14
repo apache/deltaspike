@@ -195,7 +195,7 @@ public abstract class ASMProxyClassGenerator
 
         Label tryBlockStart = exceptionTypes.length > 0 ? mg.mark() : null;
 
-        mg.push(proxyType);
+        mg.push(Type.getType(method.getDeclaringClass()));
 
         // the following code generates the bytecode for this line of Java:
         // Method method = <proxy>.class.getMethod("add", new Class[] { <array of function argument classes> });
