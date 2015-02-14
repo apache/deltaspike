@@ -185,6 +185,11 @@ public abstract class PartialBeanProxyFactory
     
     private static boolean containsMethodWithSameSignature(Method method, List<Method> methods)
     {
+        if (methods.contains(method))
+        {
+            return true;
+        }
+        
         for (Method currentMethod : methods)
         {
             if (hasSameSignature(currentMethod, method))
