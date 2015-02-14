@@ -41,11 +41,14 @@ public abstract class ProxyUtils
      */
     public static Class getUnproxiedClass(Class currentClass)
     {
-        if (isProxiedClass(currentClass))
+        Class unproxiedClass = currentClass;
+        
+        while (isProxiedClass(unproxiedClass))
         {
-            return currentClass.getSuperclass();
+            unproxiedClass = unproxiedClass.getSuperclass();
         }
-        return currentClass;
+
+        return unproxiedClass;
     }
 
     /**
@@ -68,13 +71,21 @@ public abstract class ProxyUtils
     {
         List<Class<?>> result = new ArrayList<Class<?>>();
         result.add(proxyClass);
+        
         if (isInterfaceProxy(proxyClass))
         {
             result.addAll(Arrays.asList(proxyClass.getInterfaces()));
         }
         else
         {
-            result.add(proxyClass.getSuperclass());
+            Class unproxiedClass = proxyClass.getSuperclass();
+            result.add(unproxiedClass);
+
+            while (isProxiedClass(unproxiedClass))
+            {
+                unproxiedClass = unproxiedClass.getSuperclass();
+                result.add(unproxiedClass);
+            }
         }
         return result;
     }
@@ -82,7 +93,23 @@ public abstract class ProxyUtils
     public static boolean isInterfaceProxy(Class<?> proxyClass)
     {
         Class<?>[] interfaces = proxyClass.getInterfaces();
-        return Proxy.class.equals(proxyClass.getSuperclass()) &&
-                interfaces != null && interfaces.length > 0;
+        if (Proxy.class.equals(proxyClass.getSuperclass()) &&
+                interfaces != null && interfaces.length > 0)
+        {
+            return true;
+        }
+        
+        if (proxyClass.getName().contains("$$"))
+        {
+            for (Class<?> iface : interfaces)
+            {
+                if (proxyClass.getName().startsWith(iface.getName()))
+                {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
     }
 }
