@@ -21,7 +21,6 @@ package org.apache.deltaspike.test.core.api.partialbean.uc004;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.test.core.api.partialbean.shared.TestPartialBeanBinding;
 import org.apache.deltaspike.test.core.api.partialbean.util.ArchiveUtils;
-import org.apache.deltaspike.test.utils.CdiContainerUnderTest;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
