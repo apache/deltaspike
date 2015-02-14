@@ -24,7 +24,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -32,6 +31,7 @@ import java.util.List;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 
 import org.apache.deltaspike.data.test.TransactionalTestCase;
@@ -310,7 +310,7 @@ public class CriteriaTest extends TransactionalTestCase
         assertNull(result2);
     }
 
-    @Test(expected = InvocationTargetException.class)
+    @Test(expected = NonUniqueResultException.class)
     public void should_fail_with_optional_nonunique_result()
     {
         // given
