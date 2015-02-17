@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.*;
@@ -147,6 +148,7 @@ public class MessageBundleExtension implements Extension, Deactivatable
 
         beanBuilder.types(annotatedType.getJavaClass(), Object.class, Serializable.class);
         beanBuilder.passivationCapable(true);
+        beanBuilder.scope(ApplicationScoped.class); // needs to be a normalscope due to a bug in older Weld versions
         beanBuilder.id("MessageBundleBean#" + annotatedType.getJavaClass().getName());
 
         return beanBuilder.create();
@@ -186,7 +188,7 @@ public class MessageBundleExtension implements Extension, Deactivatable
         private <T> T createMessageBundleProxy(Class<T> type, MessageBundleInvocationHandler handler)
         {
             return type.cast(Proxy.newProxyInstance(ClassUtils.getClassLoader(null),
-                    new Class<?>[]{type}, handler));
+                    new Class<?>[]{type, Serializable.class}, handler));
         }
 
     }
