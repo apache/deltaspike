@@ -26,7 +26,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
 @TestPartialBeanBinding
-@CustomInterceptor //for uc003
+//TODO discuss @CustomHandlerInterceptor //for uc003
 @Dependent //normal-scopes are possible as well
 public class TestPartialBeanHandler implements InvocationHandler, /*just needed for testing interceptors: */TestInterceptorAware
 {

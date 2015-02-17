@@ -16,24 +16,26 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.api.partialbean.shared;
+package org.apache.deltaspike.test.core.api.partialbean.uc007;
 
-import javax.inject.Inject;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
+import org.apache.deltaspike.test.core.api.partialbean.shared.TestInterceptedBeanProcessor;
+import org.apache.deltaspike.test.core.api.partialbean.shared.TestInterceptorAware;
+
+import javax.enterprise.inject.Specializes;
 import javax.interceptor.InvocationContext;
-import java.io.Serializable;
 
-@Interceptor
-@CustomInterceptor
-public class CustomInterceptorImpl implements Serializable
+@Specializes
+public class SpecializedTestInterceptedBeanProcessor extends TestInterceptedBeanProcessor
 {
-    @Inject
-    private TestInterceptedBeanProcessor testInterceptedBeanProcessor;
-
-    @AroundInvoke
-    public Object interceptIt(InvocationContext invocationContext) throws Exception
+    public Object process(InvocationContext invocationContext) throws Exception
     {
-        return this.testInterceptedBeanProcessor.process(invocationContext);
+        Object target = invocationContext.getTarget();
+
+        if (target instanceof TestInterceptorAware)
+        {
+            ((TestInterceptorAware)target).setIntercepted(true);
+        }
+
+        return super.process(invocationContext);
     }
 }

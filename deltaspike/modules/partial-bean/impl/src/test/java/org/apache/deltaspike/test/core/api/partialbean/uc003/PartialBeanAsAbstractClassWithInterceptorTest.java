@@ -34,6 +34,7 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
 import org.junit.Assume;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -74,6 +75,7 @@ public class PartialBeanAsAbstractClassWithInterceptorTest
     }
 
     @Test
+    @Ignore //TODO re-visit use-case (also see uc007)
     public void testPartialBeanAsAbstractClassWithInterceptor() throws Exception
     {
         // this test is known to not work under weld-2.0.0.Final and weld-2.0.0.SP1
@@ -90,8 +92,7 @@ public class PartialBeanAsAbstractClassWithInterceptorTest
 
         result = partialBean.getManualResult();
 
-        //"manual-test-true" would be the goal, but it isn't supported (for now)
-        Assert.assertEquals("manual-test-false", result);
+        Assert.assertEquals("manual-test-true", result);
 
         //TODO test pre-destroy callback
     }

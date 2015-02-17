@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.test.core.api.partialbean.uc003;
 
-import org.apache.deltaspike.test.core.api.partialbean.shared.CustomInterceptor;
 import org.apache.deltaspike.test.core.api.partialbean.shared.TestPartialBeanBinding;
 import org.apache.deltaspike.test.core.api.partialbean.shared.TestInterceptorAware;
 import org.apache.deltaspike.test.core.api.partialbean.shared.TestBean;
@@ -30,7 +29,6 @@ import javax.inject.Inject;
 
 @TestPartialBeanBinding
 @RequestScoped
-@CustomInterceptor //doesn't work currently
 public abstract class PartialBean implements /*just needed for testing interceptors: */ TestInterceptorAware
 {
     @Inject

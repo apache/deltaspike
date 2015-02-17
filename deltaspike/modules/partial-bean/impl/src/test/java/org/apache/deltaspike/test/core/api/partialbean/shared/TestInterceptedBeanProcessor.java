@@ -18,22 +18,15 @@
  */
 package org.apache.deltaspike.test.core.api.partialbean.shared;
 
-import javax.inject.Inject;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
+import javax.enterprise.context.ApplicationScoped;
 import javax.interceptor.InvocationContext;
-import java.io.Serializable;
 
-@Interceptor
-@CustomInterceptor
-public class CustomInterceptorImpl implements Serializable
+@ApplicationScoped
+public class TestInterceptedBeanProcessor
 {
-    @Inject
-    private TestInterceptedBeanProcessor testInterceptedBeanProcessor;
-
-    @AroundInvoke
-    public Object interceptIt(InvocationContext invocationContext) throws Exception
+    public Object process(InvocationContext invocationContext) throws Exception
     {
-        return this.testInterceptedBeanProcessor.process(invocationContext);
+        //do nothing by default
+        return invocationContext.proceed();
     }
 }
