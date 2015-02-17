@@ -41,6 +41,16 @@
         <h:outputText id="valueOutput" value="#{jsfMessageBackingBean.someMessage}"/>
         <br/>
 
+        <br/>
+        <h:outputLabel for="elOutput" value="and via EL:"/>
+        <h:outputText id="elOutput" value="#{userMessage.simpleMessageNoParam()}"/>
+        <br/>
+
+        <br/>
+        <h:outputLabel for="elOutputWithParam" value="and via EL and param:"/>
+        <h:outputText id="elOutputWithParam" value="#{userMessage.simpleMessageWithParam('hiho')}"/>
+        <br/>
+
     </h:form>
     </div>
 </f:view>

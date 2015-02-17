@@ -339,6 +339,12 @@ public final class BeanProvider
     public static <T> DependentProvider<T> getDependent(Class<T> type, Annotation... qualifiers)
     {
         BeanManager beanManager = getBeanManager();
+        return getDependent(beanManager, type, qualifiers);
+    }
+
+    public static <T> DependentProvider<T> getDependent(BeanManager beanManager, Class<T> type,
+                                                        Annotation... qualifiers)
+    {
         Set<Bean<?>> beans = beanManager.getBeans(type, qualifiers);
         @SuppressWarnings("unchecked")
         Bean<T> bean = (Bean<T>) beanManager.resolve(beans);
@@ -348,6 +354,11 @@ public final class BeanProvider
     public static <T> DependentProvider<T> getDependent(String name)
     {
         BeanManager beanManager = getBeanManager();
+        return getDependent(beanManager, name);
+    }
+
+    public static <T> DependentProvider<T> getDependent(BeanManager beanManager, String name)
+    {
         Set<Bean<?>> beans = beanManager.getBeans(name);
         @SuppressWarnings("unchecked")
         Bean<T> bean = (Bean<T>) beanManager.resolve(beans);

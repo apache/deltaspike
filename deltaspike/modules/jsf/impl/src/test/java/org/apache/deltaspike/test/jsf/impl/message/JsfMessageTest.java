@@ -103,6 +103,12 @@ public class JsfMessageTest
         // check the free message usage
         Assert.assertTrue(ExpectedConditions.textToBePresentInElement(
                 By.id("test:valueOutput"), "a simple message without a param.").apply(driver));
+
+        // and also the usage via direct EL invocation
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(
+                By.id("test:elOutput"), "a simple message without a param.").apply(driver));
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(
+                By.id("test:elOutputWithParam"), "simple message with a string param hiho.").apply(driver));
     }
 
     @Test

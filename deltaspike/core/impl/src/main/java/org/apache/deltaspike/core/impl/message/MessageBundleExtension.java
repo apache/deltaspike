@@ -18,42 +18,29 @@
  */
 package org.apache.deltaspike.core.impl.message;
 
-import java.beans.Introspector;
 import java.io.Serializable;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.event.Observes;
-import javax.enterprise.inject.spi.AfterBeanDiscovery;
-import javax.enterprise.inject.spi.AfterDeploymentValidation;
-import javax.enterprise.inject.spi.AnnotatedMethod;
-import javax.enterprise.inject.spi.AnnotatedType;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.BeforeBeanDiscovery;
-import javax.enterprise.inject.spi.Extension;
-import javax.enterprise.inject.spi.PassivationCapable;
-import javax.enterprise.inject.spi.ProcessAnnotatedType;
-import javax.enterprise.inject.spi.ProcessProducerMethod;
-import javax.inject.Named;
+import javax.enterprise.inject.spi.*;
 
-import org.apache.deltaspike.core.api.literal.AnyLiteral;
 import org.apache.deltaspike.core.api.message.Message;
 import org.apache.deltaspike.core.api.message.MessageBundle;
 import org.apache.deltaspike.core.api.message.MessageTemplate;
-import org.apache.deltaspike.core.util.bean.ImmutableBeanWrapper;
-import org.apache.deltaspike.core.util.bean.ImmutablePassivationCapableBeanWrapper;
-import org.apache.deltaspike.core.util.bean.WrappingBeanBuilder;
+import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.core.api.provider.DependentProvider;
+import org.apache.deltaspike.core.util.ClassUtils;
+import org.apache.deltaspike.core.util.bean.BeanBuilder;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
+import org.apache.deltaspike.core.util.metadata.builder.ContextualLifecycle;
 
 /**
  * Extension for handling {@link MessageBundle}s.
@@ -64,10 +51,6 @@ import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 public class MessageBundleExtension implements Extension, Deactivatable
 {
     private final Collection<AnnotatedType<?>> messageBundleTypes = new HashSet<AnnotatedType<?>>();
-    private Bean<Object> bundleProducerBean;
-    private Bean<Object> namedBundleProducerBean;
-    private NamedTypedMessageBundle namedTypedMessageBundle = new NamedTypedMessageBundleLiteral();
-    private boolean elSupportEnabled;
 
     private List<String> deploymentErrors = new ArrayList<String>();
 
@@ -77,7 +60,6 @@ public class MessageBundleExtension implements Extension, Deactivatable
     protected void init(@Observes BeforeBeanDiscovery beforeBeanDiscovery)
     {
         isActivated = ClassDeactivationUtils.isActivated(getClass());
-        elSupportEnabled = ClassDeactivationUtils.isActivated(NamedMessageBundleInvocationHandler.class);
     }
 
     @SuppressWarnings("UnusedDeclaration")
@@ -140,62 +122,6 @@ public class MessageBundleExtension implements Extension, Deactivatable
         return ok;
     }
 
-    /**
-     * Part of a workaround for very old CDI containers. The spec originally had a
-     * mismatch in the generic parameters of ProcessProducerMethod between the JavaDoc
-     * and the spec PDF.
-     *
-     * According to the Java EE 6 javadoc (the authority according to the powers
-     * that be), this is the correct order of type parameters.
-     *
-     * @see #detectProducersInverted(javax.enterprise.inject.spi.ProcessProducerMethod)
-     */
-    @SuppressWarnings("UnusedDeclaration")
-    protected void detectProducers(@Observes ProcessProducerMethod<Object, TypedMessageBundleProducer> event)
-    {
-        if (!isActivated)
-        {
-            return;
-        }
-
-        captureProducers(event.getAnnotatedProducerMethod(), event.getBean());
-    }
-
-    /**
-     * Part of a workaround for very old CDI containers. The spec originally had a
-     * mismatch in the generic parameters of ProcessProducerMethod between the JavaDoc
-     * and the spec PDF.
-     *
-     * According to the old JSR-299 spec wording, this is the correct order of type parameters.
-     * This is now fixed in the spec as of today, but old containers might still fire it!
-     *
-     * @see #detectProducersInverted(javax.enterprise.inject.spi.ProcessProducerMethod)
-     */
-    @Deprecated
-    @SuppressWarnings("UnusedDeclaration")
-    protected void detectProducersInverted(@Observes ProcessProducerMethod<TypedMessageBundleProducer, Object> event)
-    {
-        if (!isActivated)
-        {
-            return;
-        }
-
-        captureProducers(event.getAnnotatedProducerMethod(), event.getBean());
-    }
-
-    @SuppressWarnings("unchecked")
-    protected void captureProducers(AnnotatedMethod<?> method, Bean<?> bean)
-    {
-        if (method.isAnnotationPresent(TypedMessageBundle.class))
-        {
-            bundleProducerBean = (Bean<Object>) bean;
-        }
-        else if (method.isAnnotationPresent(NamedTypedMessageBundle.class))
-        {
-            namedBundleProducerBean = (Bean<Object>)bean;
-        }
-    }
-
     @SuppressWarnings("UnusedDeclaration")
     protected void installMessageBundleProducerBeans(@Observes AfterBeanDiscovery abd, BeanManager beanManager)
     {
@@ -208,32 +134,17 @@ public class MessageBundleExtension implements Extension, Deactivatable
 
         for (AnnotatedType<?> type : messageBundleTypes)
         {
-            abd.addBean(createMessageBundleBean(bundleProducerBean, type, beanManager));
-
-            if (this.elSupportEnabled)
-            {
-                Bean<?> namedBean = createNamedMessageBundleBean(namedBundleProducerBean, type, beanManager);
-                if (namedBean.getName() != null)
-                {
-                    abd.addBean(namedBean);
-                }
-            }
+            abd.addBean(createMessageBundleBean(type, beanManager));
         }
     }
 
-    private <T> Bean<T> createMessageBundleBean(Bean<Object> delegate,
-                                                AnnotatedType<T> annotatedType,
+    private <T> Bean<T> createMessageBundleBean(AnnotatedType<T> annotatedType,
                                                 BeanManager beanManager)
     {
-        WrappingBeanBuilder<T> beanBuilder = new WrappingBeanBuilder<T>(delegate, beanManager)
-                .readFromType(annotatedType);
+        BeanBuilder<T> beanBuilder = new BeanBuilder<T>(beanManager).readFromType(annotatedType);
 
-        if (this.elSupportEnabled)
-        {
-            /*see namedBundleProducerBean - a producer without injection-point is needed*/
-            beanBuilder.name(null);
-        }
-        //X TODO re-visit type.getBaseType() in combination with #addQualifier
+        beanBuilder.beanLifecycle(new MessageBundleLifecycle<T>(beanManager));
+
         beanBuilder.types(annotatedType.getJavaClass(), Object.class, Serializable.class);
         beanBuilder.passivationCapable(true);
         beanBuilder.id("MessageBundleBean#" + annotatedType.getJavaClass().getName());
@@ -241,105 +152,42 @@ public class MessageBundleExtension implements Extension, Deactivatable
         return beanBuilder.create();
     }
 
-    private <T> Bean<T> createNamedMessageBundleBean(Bean<Object> delegate,
-                                                     AnnotatedType<T> annotatedType,
-                                                     BeanManager beanManager)
-    {
-        WrappingBeanBuilder<T> beanBuilder = new WrappingBeanBuilder<T>(delegate, beanManager) {
-            @Override
-            public ImmutableBeanWrapper<T> create()
-            {
-                final ImmutableBeanWrapper<T> result = super.create();
-
-                String beanName = createBeanName(result.getTypes());
-
-                Set<Annotation> qualifiers = new HashSet<Annotation>();
-                qualifiers.add(new AnyLiteral());
-                qualifiers.add(namedTypedMessageBundle);
-
-                if (isPassivationCapable())
-                {
-                    return new ImmutablePassivationCapableBeanWrapper<T>(result,
-                            beanName, qualifiers, result.getScope(),
-                            result.getStereotypes(), result.getTypes(), result.isAlternative(),
-                            result.isNullable(), result.toString(), ((PassivationCapable)result).getId()) {
-                        @Override
-                        public T create(CreationalContext<T> creationalContext)
-                        {
-                            MessageBundleContext.setBean(result);
-
-                            try
-                            {
-                                return super.create(creationalContext);
-                            }
-                            finally
-                            {
-                                MessageBundleContext.reset();
-                            }
-                        }
-                    };
-                }
-                else
-                {
-                    return new ImmutableBeanWrapper<T>(result,
-                            beanName, qualifiers, result.getScope(),
-                            result.getStereotypes(), result.getTypes(), result.isAlternative(),
-                            result.isNullable(), result.toString()) {
-                        @Override
-                        public T create(CreationalContext<T> creationalContext)
-                        {
-                            MessageBundleContext.setBean(result);
-                            try
-                            {
-                                return super.create(creationalContext);
-                            }
-                            finally
-                            {
-                                MessageBundleContext.reset();
-                            }
-                        }
-                    };
-                }
-            }
-
-            private String createBeanName(Set<Type> types)
-            {
-                for (Object type : types)
-                {
-                    if (type instanceof Class)
-                    {
-                        Named namedAnnotation = ((Class<?>) type).getAnnotation(Named.class);
-
-                        if (namedAnnotation == null)
-                        {
-                            continue;
-                        }
-
-                        String result = namedAnnotation.value();
-                        if (!"".equals(result))
-                        {
-                            return result;
-                        }
-                        return Introspector.decapitalize(((Class<?>) type).getSimpleName());
-                    }
-                }
-                return null;
-            }
-        };
-        beanBuilder.readFromType(annotatedType);
-
-        //X TODO re-visit type.getBaseType() in combination with #addQualifier
-        beanBuilder.types(annotatedType.getJavaClass(), Object.class, Serializable.class);
-        beanBuilder.passivationCapable(true);
-        beanBuilder.id("NamedMessageBundleBean#" + annotatedType.getJavaClass().getName());
-
-        return beanBuilder.create();
-    }
-
-
     @SuppressWarnings("UnusedDeclaration")
     protected void cleanup(@Observes AfterDeploymentValidation afterDeploymentValidation)
     {
         messageBundleTypes.clear();
+    }
+
+    private static class MessageBundleLifecycle<T> implements ContextualLifecycle<T>
+    {
+        private final BeanManager beanManager;
+
+        private DependentProvider<MessageBundleInvocationHandler> invocationHandlerProvider;
+
+        private MessageBundleLifecycle(BeanManager beanManager)
+        {
+            this.beanManager = beanManager;
+        }
+
+        @Override
+        public T create(Bean<T> bean, CreationalContext<T> creationalContext)
+        {
+            invocationHandlerProvider = BeanProvider.getDependent(beanManager, MessageBundleInvocationHandler.class);
+
+            return createMessageBundleProxy((Class<T>) bean.getBeanClass(), invocationHandlerProvider.get());
+        }
+
+        @Override
+        public void destroy(Bean<T> bean, T instance, CreationalContext<T> creationalContext)
+        {
+            invocationHandlerProvider.destroy();
+        }
+
+        private <T> T createMessageBundleProxy(Class<T> type, MessageBundleInvocationHandler handler)
+        {
+            return type.cast(Proxy.newProxyInstance(ClassUtils.getClassLoader(null),
+                    new Class<?>[]{type}, handler));
+        }
+
     }
 }

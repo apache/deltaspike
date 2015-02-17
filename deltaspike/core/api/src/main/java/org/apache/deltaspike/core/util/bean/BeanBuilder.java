@@ -36,6 +36,7 @@ import javax.enterprise.inject.spi.InjectionPoint;
 import javax.enterprise.inject.spi.InjectionTarget;
 import javax.inject.Named;
 
+import java.beans.Introspector;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Arrays;
@@ -59,25 +60,24 @@ import java.util.Set;
  * It is advised that a new bean builder is instantiated for each bean created.
  * </p>
  */
-// X TODO: Add tests
 public class BeanBuilder<T>
 {
 
-    private final BeanManager beanManager;
+    protected final BeanManager beanManager;
 
-    private Class<?> beanClass;
-    private String name;
-    private Set<Annotation> qualifiers;
-    private Class<? extends Annotation> scope;
-    private Set<Class<? extends Annotation>> stereotypes;
-    private Set<Type> types;
-    private Set<InjectionPoint> injectionPoints;
-    private boolean alternative;
-    private boolean nullable;
-    private ContextualLifecycle<T> beanLifecycle;
-    private boolean passivationCapable;
-    private String id;
-    private String toString;
+    protected Class<?> beanClass;
+    protected String name;
+    protected Set<Annotation> qualifiers;
+    protected Class<? extends Annotation> scope = Dependent.class;
+    protected Set<Class<? extends Annotation>> stereotypes;
+    protected Set<Type> types;
+    protected Set<InjectionPoint> injectionPoints;
+    protected boolean alternative;
+    protected boolean nullable;
+    protected ContextualLifecycle<T> beanLifecycle;
+    protected boolean passivationCapable;
+    protected String id;
+    protected String toString;
 
     /**
      * Instantiate a new bean builder.
@@ -112,17 +112,12 @@ public class BeanBuilder<T>
     public BeanBuilder<T> readFromType(AnnotatedType<T> type)
     {
         this.beanClass = type.getJavaClass();
-        InjectionTarget<T> injectionTarget;
-        if (!type.getJavaClass().isInterface())
+
+        if (beanLifecycle == null)
         {
-            injectionTarget = beanManager.createInjectionTarget(type);
+            setDefaultBeanLifecycle(type);
         }
-        else
-        {
-            injectionTarget = new DummyInjectionTarget<T>();
-        }
-        this.beanLifecycle = new DelegatingContextualLifecycle<T>(injectionTarget);
-        this.injectionPoints = injectionTarget.getInjectionPoints();
+
         this.qualifiers = new HashSet<Annotation>();
         this.stereotypes = new HashSet<Class<? extends Annotation>>();
         this.types = new HashSet<Type>();
@@ -143,15 +138,15 @@ public class BeanBuilder<T>
             if (annotation instanceof Named)
             {
                 this.name = ((Named) annotation).value();
+                if (name == null || name.length() == 0)
+                {
+                    name = createDefaultBeanName(type);
+                }
             }
             if (annotation instanceof Alternative)
             {
                 this.alternative = true;
             }
-        }
-        if (this.scope == null)
-        {
-            this.scope = Dependent.class;
         }
         if (type.isAnnotationPresent(Typed.class))
         {
@@ -170,13 +165,41 @@ public class BeanBuilder<T>
                 this.types.add(i);
             }
         }        
+
         if (qualifiers.isEmpty())
         {
             qualifiers.add(new DefaultLiteral());
         }
         qualifiers.add(new AnyLiteral());
+
         this.id = ImmutableBeanWrapper.class.getName() + ":" + Annotateds.createTypeId(type);
         return this;
+    }
+
+    private String createDefaultBeanName(AnnotatedType<T> type)
+    {
+        Class<T> javaClass = type.getJavaClass();
+        return Introspector.decapitalize(javaClass.getSimpleName());
+    }
+
+
+    /**
+     * Set the ContextualLifecycle and the InjectionPoints for the AnnotatedType
+     * @param type
+     */
+    protected void setDefaultBeanLifecycle(AnnotatedType<T> type)
+    {
+        InjectionTarget<T> injectionTarget;
+        if (!type.getJavaClass().isInterface())
+        {
+            injectionTarget = beanManager.createInjectionTarget(type);
+        }
+        else
+        {
+            injectionTarget = new DummyInjectionTarget<T>();
+        }
+        this.beanLifecycle = new DelegatingContextualLifecycle<T>(injectionTarget);
+        this.injectionPoints = injectionTarget.getInjectionPoints();
     }
 
     /**

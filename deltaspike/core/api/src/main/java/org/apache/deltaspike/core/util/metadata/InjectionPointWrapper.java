@@ -33,8 +33,8 @@ import java.util.Set;
  */
 public class InjectionPointWrapper implements InjectionPoint
 {
-    final InjectionPoint wrapped;
-    final Bean<?> newBean;
+    private final InjectionPoint wrapped;
+    private final Bean<?> newBean;
 
     public InjectionPointWrapper(InjectionPoint wrapped, Bean<?> newBean)
     {

@@ -22,7 +22,10 @@ import org.apache.deltaspike.core.api.message.Message;
 import org.apache.deltaspike.core.api.message.MessageBundle;
 import org.apache.deltaspike.core.api.message.MessageContextConfig;
 
+import javax.inject.Named;
+
 @MessageBundle
+@Named
 @MessageContextConfig(messageSource = "jsfMessageTest.UserMessage")
 public interface UserMessage
 {
