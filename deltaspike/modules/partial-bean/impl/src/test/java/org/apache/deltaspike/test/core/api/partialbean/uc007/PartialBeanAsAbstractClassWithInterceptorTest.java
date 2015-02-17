@@ -20,10 +20,10 @@ package org.apache.deltaspike.test.core.api.partialbean.uc007;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.partialbean.spi.PartialBeanProvider;
+import org.apache.deltaspike.test.category.WebEE7ProfileCategory;
 import org.apache.deltaspike.test.core.api.partialbean.shared.CustomInterceptorImpl;
 import org.apache.deltaspike.test.core.api.partialbean.shared.TestPartialBeanBinding;
 import org.apache.deltaspike.test.core.api.partialbean.util.ArchiveUtils;
-import org.apache.deltaspike.test.utils.CdiContainerUnderTest;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -32,27 +32,20 @@ import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-@Ignore("1) currently fails on wildfly/jboss because interceptors doesn't work on partial beans"
-        + "2) arquillian doesn't deploy the TestPartialBeanProvider if tested != *-build-managed profiles")
+@Category(WebEE7ProfileCategory.class)
+//weld creates synthetic BDAs for classes added via BeforeBeanDiscovery#addAnnotatedType
+//-> only globally enabled interceptors will get active for such beans
+//in case of ee7+ it works due to GlobalInterceptorExtension
 public class PartialBeanAsAbstractClassWithInterceptorTest
 {
-    public static final String CONTAINER_WELD_2_0_0 = "weld-2\\.0\\.0\\..*";
-
     @Deployment
     public static WebArchive war()
     {
-        // test doesn't work correclty on Weld 2.0.0 because PostConstruct isn't called on the partial bean
-        if (CdiContainerUnderTest.is(CONTAINER_WELD_2_0_0))
-        {
-            return ShrinkWrap.create(WebArchive.class, "empty.war");
-        }
-
         Asset beansXml = new StringAsset(
             "<beans><interceptors><class>" +
                     CustomInterceptorImpl.class.getName() +
@@ -77,8 +70,6 @@ public class PartialBeanAsAbstractClassWithInterceptorTest
     @Test
     public void testPartialBeanAsAbstractClassWithInterceptor() throws Exception
     {
-        Assume.assumeTrue(!CdiContainerUnderTest.is(CONTAINER_WELD_2_0_0));
-
         PartialBean partialBean = BeanProvider.getContextualReference(PartialBean.class);
         Assert.assertNotNull(partialBean);
 
