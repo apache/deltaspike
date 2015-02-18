@@ -106,7 +106,6 @@ public class MessageTest
     {
         messages.hashCode();
         assertNotNull(messages.toString());
-        assertTrue(messages.equals(messages));
         assertNotNull(messages.getClass());
     }
 
