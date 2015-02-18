@@ -22,13 +22,15 @@ import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.core.util.metadata.builder.ContextualLifecycle;
 
 import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.InjectionTarget;
 import java.lang.reflect.InvocationHandler;
 import java.util.Set;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.spi.AnnotatedType;
+import javax.enterprise.inject.spi.Bean;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.InjectionTarget;
+import javax.enterprise.inject.spi.PassivationCapable;
+
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 
@@ -103,7 +105,23 @@ class PartialBeanLifecycle<T, H extends InvocationHandler> implements Contextual
         
         if (handlerBeans.size() != 1)
         {
-            throw new IllegalStateException(handlerBeans.size() + " beans found for " + this.handlerClass);
+            StringBuilder beanInfo = new StringBuilder();
+            for (Bean<H> bean : handlerBeans)
+            {
+                if (beanInfo.length() != 0)
+                {
+                    beanInfo.append(", ");
+                }
+                beanInfo.append(bean);
+
+                if (bean instanceof PassivationCapable)
+                {
+                    beanInfo.append(" bean-id: ").append(((PassivationCapable)bean).getId());
+                }
+            }
+
+            throw new IllegalStateException(handlerBeans.size() + " beans found for " + this.handlerClass +
+                " found beans: " + beanInfo.toString());
         }
 
         Bean<H> handlerBean = handlerBeans.iterator().next();
