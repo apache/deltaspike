@@ -21,7 +21,6 @@ package org.apache.deltaspike.test.core.api.partialbean.uc007;
 import org.apache.deltaspike.partialbean.spi.AbstractPartialBeanProvider;
 import org.apache.deltaspike.partialbean.spi.PartialBeanBuilder;
 import org.apache.deltaspike.test.core.api.partialbean.shared.TestPartialBeanBinding;
-import org.apache.deltaspike.test.core.api.partialbean.shared.TestPartialBeanHandler;
 
 public class TestPartialBeanProvider extends AbstractPartialBeanProvider
 {

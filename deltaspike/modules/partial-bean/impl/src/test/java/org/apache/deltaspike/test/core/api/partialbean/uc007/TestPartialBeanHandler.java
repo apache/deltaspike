@@ -16,7 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.api.partialbean.shared;
+package org.apache.deltaspike.test.core.api.partialbean.uc007;
+
+import org.apache.deltaspike.test.core.api.partialbean.shared.CustomInterceptor;
+import org.apache.deltaspike.test.core.api.partialbean.shared.TestBean;
+import org.apache.deltaspike.test.core.api.partialbean.shared.TestInterceptorAware;
+import org.apache.deltaspike.test.core.api.partialbean.shared.TestPartialBeanBinding;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
