@@ -43,7 +43,6 @@ public class PartialBeanAsInterfaceWarFileTest extends PartialBeanAsInterfaceTes
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
         return ShrinkWrap.create(WebArchive.class, archiveName + ".war")
-                .addPackage(PartialBeanAsInterfaceWarFileTest.class.getPackage())
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndPartialBeanArchive())
                 .addAsLibraries(testJar)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
