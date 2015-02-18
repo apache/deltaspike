@@ -34,7 +34,6 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
 import org.junit.Assume;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -49,11 +48,6 @@ public class PartialBeanAsAbstractClassWithInterceptorTest
     @Deployment
     public static WebArchive war()
     {
-        if (CdiContainerUnderTest.is(CONTAINER_WELD_2_0_0))
-        {
-            return ShrinkWrap.create(WebArchive.class, "empty.war");
-        }
-
         Asset beansXml = new StringAsset(
             "<beans><interceptors><class>" +
                     CustomInterceptorImpl.class.getName() +
@@ -75,7 +69,6 @@ public class PartialBeanAsAbstractClassWithInterceptorTest
     }
 
     @Test
-    @Ignore //TODO re-visit use-case (also see uc007)
     public void testPartialBeanAsAbstractClassWithInterceptor() throws Exception
     {
         // this test is known to not work under weld-2.0.0.Final and weld-2.0.0.SP1
@@ -92,7 +85,8 @@ public class PartialBeanAsAbstractClassWithInterceptorTest
 
         result = partialBean.getManualResult();
 
-        Assert.assertEquals("manual-test-true", result);
+        //"manual-test-true" would be the goal, but it isn't supported (for now)
+        Assert.assertEquals("manual-test-false", result);
 
         //TODO test pre-destroy callback
     }

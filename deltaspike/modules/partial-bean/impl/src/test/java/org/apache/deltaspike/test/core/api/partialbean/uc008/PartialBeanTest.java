@@ -41,12 +41,6 @@ public class PartialBeanTest
     @Deployment
     public static WebArchive war()
     {
-        if (CdiContainerUnderTest.is(CONTAINER_OWB_1_2_x_BEFORE_1_2_8)
-                || CdiContainerUnderTest.is(CONTAINER_TOMEE_1_7_x))
-        {
-            return ShrinkWrap.create(WebArchive.class, "empty.war");
-        }
-        
         String simpleName = PartialBeanTest.class.getSimpleName();
         String archiveName = simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1);
 

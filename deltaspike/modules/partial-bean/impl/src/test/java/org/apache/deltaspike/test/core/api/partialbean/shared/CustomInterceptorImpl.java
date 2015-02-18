@@ -18,7 +18,8 @@
  */
 package org.apache.deltaspike.test.core.api.partialbean.shared;
 
-import javax.inject.Inject;
+import org.apache.deltaspike.core.util.ClassUtils;
+
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
@@ -28,12 +29,21 @@ import java.io.Serializable;
 @CustomInterceptor
 public class CustomInterceptorImpl implements Serializable
 {
-    @Inject
-    private TestInterceptedBeanProcessor testInterceptedBeanProcessor;
-
     @AroundInvoke
     public Object interceptIt(InvocationContext invocationContext) throws Exception
     {
-        return this.testInterceptedBeanProcessor.process(invocationContext);
+        //interceptor gets enabled globally -> restrict it the the use-case which contains the test for it
+        if (ClassUtils.tryToLoadClassForName(
+            "org.apache.deltaspike.test.core.api.partialbean.uc007.PartialBean") != null)
+        {
+            Object target = invocationContext.getTarget();
+
+            if (target instanceof TestInterceptorAware)
+            {
+                ((TestInterceptorAware)target).setIntercepted(true);
+            }
+        }
+
+        return invocationContext.proceed();
     }
 }
