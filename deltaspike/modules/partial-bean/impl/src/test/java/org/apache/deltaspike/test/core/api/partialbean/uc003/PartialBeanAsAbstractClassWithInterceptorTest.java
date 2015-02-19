@@ -57,6 +57,13 @@ public class PartialBeanAsAbstractClassWithInterceptorTest
         String simpleName = PartialBeanAsAbstractClassWithInterceptorTest.class.getSimpleName();
         String archiveName = simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1);
 
+        //don't create a completely empty web-archive
+        if (CdiContainerUnderTest.is(CONTAINER_WELD_2_0_0))
+        {
+            return ShrinkWrap.create(WebArchive.class, archiveName + ".war")
+                    .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndPartialBeanArchive());
+        }
+
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, archiveName + ".jar")
                 .addPackage(PartialBeanAsAbstractClassWithInterceptorTest.class.getPackage())
                 .addPackage(TestPartialBeanBinding.class.getPackage())
