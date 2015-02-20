@@ -138,79 +138,8 @@
 
 
         <profile>
-            <id>OWB11</id>
-
-            <properties>
-                <cdicontainer.version>owb-${owb.version}</cdicontainer.version>
-            </properties>
-
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <configuration>
-                            <systemProperties>
-                                <cdicontainer.version>${cdicontainer.version}</cdicontainer.version>
-                            </systemProperties>
-
-                            <!-- Ignore these groups because they don't work with embedded OWB -->
-                            <excludedGroups>
-                                org.apache.deltaspike.test.category.WebProfileCategory,
-                                org.apache.deltaspike.test.category.WebEE7ProfileCategory,
-                                org.apache.deltaspike.test.category.FullProfileCategory,
-                                org.apache.deltaspike.test.category.EnterpriseArchiveProfileCategory
-                            </excludedGroups>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-
-            <dependencies>
-                <!-- OWB specific dependencies-->
-                <dependency>
-                    <groupId>org.apache.geronimo.specs</groupId>
-                    <artifactId>geronimo-atinject_1.0_spec</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>org.apache.geronimo.specs</groupId>
-                    <artifactId>geronimo-jcdi_1.0_spec</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>org.apache.geronimo.specs</groupId>
-                    <artifactId>geronimo-interceptor_1.1_spec</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>org.apache.openwebbeans</groupId>
-                    <artifactId>openwebbeans-impl</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>org.apache.openwebbeans</groupId>
-                    <artifactId>openwebbeans-spi</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>org.apache.openwebbeans</groupId>
-                    <artifactId>openwebbeans-resource</artifactId>
-                </dependency>
-
-                <dependency>
-                    <groupId>org.apache.openwebbeans.arquillian</groupId>
-                    <artifactId>owb-arquillian-standalone</artifactId>
-                    <version>1.2.0</version>
-                    <scope>test</scope>
-                </dependency>
-
-                <dependency>
-                    <groupId>org.apache.bval</groupId>
-                    <artifactId>bval-jsr303</artifactId>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
-        </profile>
-
-        <profile>
             <!-- use this profile to compile and test DeltaSpike with Apache OpenWebBeans -->
-            <id>OWB12</id>
+            <id>OWB</id>
 
             <!-- ensures a correct build at analysis.apache.org -->
             <activation>
@@ -219,6 +148,7 @@
 
             <properties>
                 <cdicontainer.version>owb-${owb.version}</cdicontainer.version>
+                <owb-arquillian.version>${owb.version}</owb-arquillian.version>
             </properties>
 
             <build>
@@ -273,7 +203,7 @@
                 <dependency>
                     <groupId>org.apache.openwebbeans.arquillian</groupId>
                     <artifactId>owb-arquillian-standalone</artifactId>
-                    <version>${owb.version}</version>
+                    <version>${owb-arquillian.version}</version>
                     <scope>test</scope>
                 </dependency>
 
