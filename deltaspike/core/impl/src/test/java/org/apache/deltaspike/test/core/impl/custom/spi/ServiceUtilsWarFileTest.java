@@ -16,10 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.api.partialbean.uc001;
+package org.apache.deltaspike.test.core.impl.custom.spi;
 
-import org.apache.deltaspike.test.core.api.partialbean.shared.TestPartialBeanBinding;
-import org.apache.deltaspike.test.core.api.partialbean.util.ArchiveUtils;
+import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -29,22 +28,23 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-public class PartialBeanAsInterfaceWarFileTest extends PartialBeanAsInterfaceTest
+public class ServiceUtilsWarFileTest extends ServiceUtilsTest
 {
     @Deployment
     public static WebArchive deploy()
     {
-        String simpleName = PartialBeanAsInterfaceWarFileTest.class.getSimpleName();
+        String simpleName = ServiceUtilsWarFileTest.class.getSimpleName();
         String archiveName = simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1);
 
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, archiveName + ".jar")
-                .addPackage(PartialBeanAsInterfaceWarFileTest.class.getPackage())
-                .addPackage(TestPartialBeanBinding.class.getPackage())
+                .addPackage(ServiceUtilsWarFileTest.class.getPackage())
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
         return ShrinkWrap.create(WebArchive.class, archiveName + ".war")
-                .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndPartialBeanArchive())
+                .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
                 .addAsLibraries(testJar)
+                //due to an issue with arquillian we can just add it to the web-archive (and not the jar)
+                .addAsServiceProvider(MyInterface.class, MyImpl.class)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 }

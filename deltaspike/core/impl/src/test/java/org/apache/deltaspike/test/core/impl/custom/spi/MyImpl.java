@@ -16,9 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.api.partialbean.uc001;
+package org.apache.deltaspike.test.core.impl.custom.spi;
 
-public interface MyInterface
+public class MyImpl implements MyInterface
 {
-    String getValue();
+    @Override
+    public String getValue()
+    {
+        return "test";
+    }
 }
