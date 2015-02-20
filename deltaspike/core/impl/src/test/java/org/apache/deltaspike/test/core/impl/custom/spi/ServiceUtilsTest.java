@@ -27,12 +27,14 @@ import org.junit.Test;
 public abstract class ServiceUtilsTest
 {
     private static final String CONTAINER_OWB_1_1_x = "owb-1\\.1\\..*";
+    private static final String CONTAINER_OWB_1_2_0 = "owb-1\\.2\\.0";
 
     @Test
     public void lookupOfSpiImplementations()
     {
-        //exclude it due to an issue with the arquillian-adapter for owb 1.1.x
-        Assume.assumeTrue(!CdiContainerUnderTest.is(CONTAINER_OWB_1_1_x));
+        //exclude it due to an issue with the arquillian-adapter for owb 1.1.x and 1.2.0
+        Assume.assumeTrue(!CdiContainerUnderTest.is(CONTAINER_OWB_1_1_x) &&
+                !CdiContainerUnderTest.is(CONTAINER_OWB_1_2_0));
 
         Assert.assertTrue(ServiceUtils.loadServiceImplementations(MyInterface.class).iterator().hasNext());
 
