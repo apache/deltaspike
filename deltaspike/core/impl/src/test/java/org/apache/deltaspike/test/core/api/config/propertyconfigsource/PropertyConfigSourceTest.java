@@ -37,6 +37,8 @@ import org.junit.Test;
 public class PropertyConfigSourceTest
 {
     private final static String CONFIG_FILE_NAME = "myconfig.properties";
+    private final static String BOOTCONFIG_FILE_NAME = "myboottimeconfig.properties";
+    private final static String NOT_PICKED_UP_CONFIG_FILE_NAME = "mynotpickedupconfig.properties";
 
     /**
      *X TODO creating a WebArchive is only a workaround because JavaArchive cannot contain other archives.
@@ -47,6 +49,8 @@ public class PropertyConfigSourceTest
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "PropertyConfigSourceTest.jar")
                 .addPackage(PropertyConfigSourceTest.class.getPackage())
                 .addAsResource(CONFIG_FILE_NAME)
+                .addAsResource(BOOTCONFIG_FILE_NAME)
+                .addAsResource(NOT_PICKED_UP_CONFIG_FILE_NAME)
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
         return ShrinkWrap.create(WebArchive.class, "beanProvider.war")
@@ -65,6 +69,10 @@ public class PropertyConfigSourceTest
         String value = ConfigResolver.getPropertyValue("some.propertykey");
         Assert.assertNotNull(value);
         Assert.assertEquals("somevalue", value);
+
+        String bootTimeValue = ConfigResolver.getPropertyValue("some.boottimekey");
+        Assert.assertNotNull(bootTimeValue);
+        Assert.assertEquals("correctvalue", bootTimeValue);
     }
 
 }

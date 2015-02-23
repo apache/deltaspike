@@ -34,6 +34,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.config.PropertyFileConfig;
+import org.apache.deltaspike.core.api.exclude.Exclude;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.spi.config.ConfigSource;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
@@ -88,6 +89,13 @@ public class ConfigurationExtension implements Extension, Deactivatable
             pcsClass.isEnum()         )
         {
             // we only like to add real classes
+            return;
+        }
+
+        if (pat.getAnnotatedType().isAnnotationPresent(Exclude.class))
+        {
+            // We only pick up PropertyFileConfigs if they are not excluded
+            // This can be the case for PropertyFileConfigs which are registered via java.util.ServiceLoader
             return;
         }
 

@@ -18,8 +18,10 @@
  */
 package org.apache.deltaspike.core.impl.config;
 
+import org.apache.deltaspike.core.api.config.PropertyFileConfig;
 import org.apache.deltaspike.core.spi.config.ConfigSource;
 import org.apache.deltaspike.core.spi.config.ConfigSourceProvider;
+import org.apache.deltaspike.core.util.ServiceUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +53,22 @@ public class DefaultConfigSourceProvider implements ConfigSourceProvider
         EnvironmentPropertyConfigSourceProvider epcsp =
             new EnvironmentPropertyConfigSourceProvider(PROPERTY_FILE_NAME, true);
         configSources.addAll(epcsp.getConfigSources());
+
+        registerPropertyFileConfigs();
+    }
+
+    private void registerPropertyFileConfigs()
+    {
+        List<? extends PropertyFileConfig> propertyFileConfigs =
+                ServiceUtils.loadServiceImplementations(PropertyFileConfig.class);
+        for (PropertyFileConfig propertyFileConfig : propertyFileConfigs)
+        {
+            EnvironmentPropertyConfigSourceProvider environmentPropertyConfigSourceProvider
+                = new EnvironmentPropertyConfigSourceProvider(propertyFileConfig.getPropertyFileName(),
+                    propertyFileConfig.isOptional());
+
+            configSources.addAll(environmentPropertyConfigSourceProvider.getConfigSources());
+        }
     }
 
     /**

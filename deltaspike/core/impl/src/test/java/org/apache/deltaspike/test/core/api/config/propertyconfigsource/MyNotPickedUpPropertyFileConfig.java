@@ -19,18 +19,19 @@
 package org.apache.deltaspike.test.core.api.config.propertyconfigsource;
 
 import org.apache.deltaspike.core.api.config.PropertyFileConfig;
+import org.apache.deltaspike.core.api.exclude.Exclude;
 
 /**
- * Custom PropertyFileConfig which gets picked up during
- * {@link javax.enterprise.inject.spi.ProcessAnnotatedType}.
- * The values will be available <em>after</em> the container got booted!
+ * Custom PropertyFileConfig which gets picked up via {@code java.util.ServiceLoader}
+ * The values will already be available <em>before</em> the container gets booted!
  */
-public class MyCustomPropertyFileConfig implements PropertyFileConfig
+@Exclude // this is important to let the ConfigurationExtension know that it should not handle it
+public class MyNotPickedUpPropertyFileConfig implements PropertyFileConfig
 {
     @Override
     public String getPropertyFileName()
     {
-        return "myconfig.properties";
+        return "mynotpickedupconfig.properties";
     }
 
     @Override

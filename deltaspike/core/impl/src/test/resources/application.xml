@@ -18,17 +18,17 @@
     under the License.
 -->
 <application xmlns="http://java.sun.com/xml/ns/javaee"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/application_6.xsd"
-	version="6">
-	<module>
-		<ejb>ejb-jar.jar</ejb>
-	</module>
-	<module>
-		<web>
-			<web-uri>test.war</web-uri>
-			<context-root>test</context-root>
-		</web>
-	</module>
-	<library-directory>lib</library-directory>
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/application_6.xsd"
+             version="6">
+    <module>
+        <ejb>ejb-jar.jar</ejb>
+    </module>
+    <module>
+        <web>
+            <web-uri>test.war</web-uri>
+            <context-root>test</context-root>
+        </web>
+    </module>
+    <library-directory>lib</library-directory>
 </application>

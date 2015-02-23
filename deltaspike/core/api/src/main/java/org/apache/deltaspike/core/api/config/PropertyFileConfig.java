@@ -20,12 +20,14 @@ package org.apache.deltaspike.core.api.config;
 
 /**
  * <p>
- * If you implement this interface inside a Bean Archive (a JAR or ClassPath entry with a META-INF/beans.xml file), the
- * property files with the given file name will be registered as
+ * If you implement this interface, the property files with the given file name will be registered as
  * {@link org.apache.deltaspike.core.spi.config.ConfigSource}s.</p>
+ *<p>There are 2 ways to register a {@code PropertyFileConfig}</p>
  *
+ * <h3>1. Automatic pickup via {@code ProcessAnnotatedType} phase</h3>
  * <p>
- * DeltaSpike will automatically pick up all the implementations during the
+ * DeltaSpike will automatically pick up all the implementations which are
+ * inside a Bean Archive (a JAR or ClassPath entry with a META-INF/beans.xml file) during the
  * {@link javax.enterprise.inject.spi.ProcessAnnotatedType} phase and create a new instance via reflection. Thus the
  * implementations will need a non-private default constructor. There is <b>no</b> CDI injection being performed in
  * those instances! The scope of the implementations will also be ignored as they will not get picked up as CDI
@@ -45,6 +47,35 @@ package org.apache.deltaspike.core.api.config;
  * {@link org.apache.deltaspike.core.spi.config.ConfigSource} or
  * {@link org.apache.deltaspike.core.spi.config.ConfigSourceProvider} via the
  * {@link java.util.ServiceLoader} mechanism described there.</p>.
+ *
+ * <h3>2. Automatic pickup via {@code java.util.ServiceLoader} mechanism</h3>
+ * <p>In case you have an EAR or you need the configured values already during the CDI container start
+ * then you can also register the PropertyFileConfig via the {@code java.util.ServiceLoader} mechanism.
+ * To not have this configuration picked up twice it is required to annotate your own
+ * {@code PropertyFileConfig} implementation with {@link org.apache.deltaspike.core.api.exclude.Exclude}.</p>
+ *
+ * <p>The {@code ServiceLoader} mechanism requires to have a file
+ * <pre>
+ *     META-INF/services/org.apache.deltaspike.core.api.config.PropertyFileConfig
+ * </pre>
+ * containing the fully qualified Class name of your own {@code PropertyFileConfig} implementation class.
+ * <pre>
+ *     com.acme.my.own.SomeSpecialPropertyFileConfig
+ * </pre>
+ * The implementation will look like the following:
+ * <pre>
+ *     &#064;Exclude
+ *     public class SomeSpecialPropertyFileConfig implements PropertyFileConfig {
+ *         public String getPropertyFileName() {
+ *             return "myconfig/specialconfig.properties"
+ *         }
+ *         public boolean isOptional() {
+ *             return false;
+ *         }
+ *     }
+ * </pre>
+ * </p>
+ *
  */
 public interface PropertyFileConfig extends DeltaSpikeConfig
 {
