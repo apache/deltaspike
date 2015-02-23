@@ -18,32 +18,30 @@
  */
 package org.apache.deltaspike.data.impl.param;
 
-import javax.persistence.Query;
-
-/**
- * Parameters which have a name (:name).
- */
-public class NamedParameter extends Parameter
+public class ToUpperStringParameterUpdate implements ParameterUpdate
 {
 
-    private final String name;
+    private final String id;
 
-    public NamedParameter(String name, Object value)
+    public ToUpperStringParameterUpdate(String id)
     {
-        super(value);
-        this.name = name;
+        this.id = id;
     }
 
     @Override
-    public void apply(Query query)
+    public String forParamWithId()
     {
-        query.setParameter(name, queryValue());
+        return id;
     }
 
     @Override
-    public boolean is(String ident)
+    public Object newParamValue(Object current)
     {
-        return ident != null && ident.equals(name);
+        if (current instanceof String)
+        {
+            return ((String) current).toUpperCase();
+        }
+        return current;
     }
 
 }

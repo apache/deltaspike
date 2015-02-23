@@ -62,7 +62,6 @@ import org.apache.deltaspike.data.test.TransactionalTestCase;
 import org.apache.deltaspike.data.test.domain.AuditedEntity;
 import org.apache.deltaspike.jpa.impl.transaction.EnvironmentAwareTransactionStrategy;
 import org.apache.deltaspike.test.category.WebProfileCategory;
-import org.apache.deltaspike.test.utils.CdiContainerUnderTest;
 import org.jboss.arquillian.container.test.spi.TestDeployment;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;

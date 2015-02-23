@@ -26,6 +26,7 @@ import org.apache.deltaspike.data.impl.builder.QueryBuilder;
 import org.apache.deltaspike.data.impl.builder.QueryBuilderContext;
 import org.apache.deltaspike.data.impl.builder.QueryOperator;
 import org.apache.deltaspike.data.impl.meta.RepositoryComponent;
+import org.apache.deltaspike.data.impl.param.ToUpperStringParameterUpdate;
 
 class PropertyQueryPart extends BasePropertyQueryPart
 {
@@ -62,6 +63,10 @@ class PropertyQueryPart extends BasePropertyQueryPart
             args[i] = "?" + ctx.increment();
         }
         ctx.append(MessageFormat.format(comparator.getJpql(), (Object[]) args));
+        if (comparator.isCaseInsensitive() && args.length >= 1)
+        {
+            ctx.addParameterUpdate(new ToUpperStringParameterUpdate(args[1].substring(1)));
+        }
         return this;
     }
 

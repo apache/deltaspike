@@ -43,6 +43,7 @@ public class MethodQueryBuilder extends QueryBuilder
         QueryRoot root = context.getRepositoryMethod().getQueryRoot();
         String jpqlQuery = context.applyQueryStringPostProcessors(root.getJpqlQuery());
         context.setQueryString(jpqlQuery);
+        params.updateValues(root.getParameterUpdates());
         Query result = params.applyTo(context.getEntityManager().createQuery(jpqlQuery));
         return applyRestrictions(context, result);
     }

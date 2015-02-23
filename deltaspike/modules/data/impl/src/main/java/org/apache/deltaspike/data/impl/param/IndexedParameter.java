@@ -28,9 +28,9 @@ public class IndexedParameter extends Parameter
 
     private final int index;
 
-    public IndexedParameter(int index, Object value, int argIndex)
+    public IndexedParameter(int index, Object value)
     {
-        super(value, argIndex);
+        super(value);
         this.index = index;
     }
 
@@ -38,6 +38,19 @@ public class IndexedParameter extends Parameter
     public void apply(Query query)
     {
         query.setParameter(index, queryValue());
+    }
+
+    @Override
+    public boolean is(String ident)
+    {
+        try
+        {
+            return Integer.valueOf(ident).intValue() == index;
+        }
+        catch (NumberFormatException e)
+        {
+            return false;
+        }
     }
 
 }

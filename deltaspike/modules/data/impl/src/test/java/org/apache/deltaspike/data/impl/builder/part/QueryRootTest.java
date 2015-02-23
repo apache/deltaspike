@@ -55,14 +55,15 @@ public class QueryRootTest
     {
         // given
         final String name = "findByNameAndTemporalBetweenOrEnabledIsNull" +
-                "AndCamelCaseAndEmbedded_embeddNotEqualOrderByEmbedded_embeddDesc";
+                "AndCamelCaseLikeIgnoreCaseAndEmbedded_embeddNotEqualIgnoreCase" +
+                "OrderByEmbedded_embeddDesc";
         final String expected =
                 "select e from Simple e " +
                         "where e.name = ?1 " +
                         "and e.temporal between ?2 and ?3 " +
                         "or e.enabled IS NULL " +
-                        "and e.camelCase = ?4 " +
-                        "and e.embedded.embedd <> ?5 " +
+                        "and upper(e.camelCase) like ?4 " +
+                        "and upper(e.embedded.embedd) <> upper(?5) " +
                         "order by e.embedded.embedd desc";
 
         // when

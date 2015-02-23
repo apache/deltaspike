@@ -18,15 +18,23 @@
  */
 package org.apache.deltaspike.data.impl.builder;
 
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.apache.deltaspike.data.impl.param.ParameterUpdate;
+
 public class QueryBuilderContext
 {
 
     private final StringBuilder builder;
+    private final List<ParameterUpdate> paramUpdates;
     private int counter = 1;
 
     public QueryBuilderContext()
     {
         this.builder = new StringBuilder();
+        this.paramUpdates = new LinkedList<ParameterUpdate>();
     }
 
     public int increment()
@@ -48,6 +56,16 @@ public class QueryBuilderContext
     public int getCounter()
     {
         return counter;
+    }
+
+    public void addParameterUpdate(ParameterUpdate update)
+    {
+        paramUpdates.add(update);
+    }
+
+    public List<ParameterUpdate> getParameterUpdates()
+    {
+        return Collections.unmodifiableList(paramUpdates);
     }
 
 }

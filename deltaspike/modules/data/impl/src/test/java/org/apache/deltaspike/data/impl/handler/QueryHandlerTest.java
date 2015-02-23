@@ -370,6 +370,34 @@ public class QueryHandlerTest extends TransactionalTestCase
         assertNull(result2);
     }
 
+    @Test
+    public void should_create_case_insensitive_query_for_like_comparator()
+    {
+        // given
+        final String name = "Should_Create_Case_Insensitive_Query_For_Like";
+        builder.createSimple(name);
+
+        // when
+        Simple result = repo.findByNameLikeIgnoreCase("should_create_CASE_Insensitive_QUERY_for_l%");
+
+        // then
+        assertEquals(name, result.getName());
+    }
+
+    @Test
+    public void should_create_case_insensitive_query_for_equals_comparator()
+    {
+        // given
+        final String name = "Should_Create_Case_Insensitive_Query_for_Equals";
+        builder.createSimple(name);
+
+        // when
+        Simple result = repo.findByNameIgnoreCase("should_create_case_insensitive_query_for_equals");
+
+        // then
+        assertEquals(name, result.getName());
+    }
+
     @Before
     public void setup()
     {

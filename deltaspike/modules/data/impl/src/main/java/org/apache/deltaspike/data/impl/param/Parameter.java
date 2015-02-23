@@ -32,18 +32,18 @@ public abstract class Parameter
 {
     private static final Logger LOG = Logger.getLogger(Parameter.class.getName());
 
-    protected final Object value;
-    protected final int argIndex;
+    protected Object value;
 
     protected Object mappedValue = null;
 
-    public Parameter(Object value, int argIndex)
+    public Parameter(Object value)
     {
         this.value = value;
-        this.argIndex = argIndex;
     }
 
     public abstract void apply(Query query);
+
+    public abstract boolean is(String ident);
 
     public void applyMapper(QueryInOutMapper<?> mapper)
     {
@@ -51,6 +51,18 @@ public abstract class Parameter
         {
             mappedValue = mapper.mapParameter(value);
             LOG.log(Level.FINE, "Converting param {0} to {1}", new Object[] { value, mappedValue });
+        }
+    }
+
+    public void updateValue(Object newValue)
+    {
+        if (mappedValue != null)
+        {
+            mappedValue = newValue;
+        }
+        else
+        {
+            value = newValue;
         }
     }
 

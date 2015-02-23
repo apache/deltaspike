@@ -76,6 +76,10 @@ public abstract class SimpleRepository extends AbstractEntityRepository<Simple, 
 
     public abstract Simple findByNameAndEnabled(String name, Boolean enabled);
 
+    public abstract Simple findByNameLikeIgnoreCase(String name);
+
+    public abstract Simple findByNameIgnoreCase(String name);
+
     public abstract Simple findOptionalByName(String name);
 
     public abstract Simple findAnyByName(String name);

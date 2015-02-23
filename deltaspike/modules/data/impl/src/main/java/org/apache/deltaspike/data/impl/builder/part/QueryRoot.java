@@ -21,6 +21,7 @@ package org.apache.deltaspike.data.impl.builder.part;
 import static org.apache.deltaspike.data.impl.util.QueryUtils.splitByKeyword;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,6 +31,7 @@ import org.apache.deltaspike.data.impl.builder.QueryBuilder;
 import org.apache.deltaspike.data.impl.builder.QueryBuilderContext;
 import org.apache.deltaspike.data.impl.meta.MethodPrefix;
 import org.apache.deltaspike.data.impl.meta.RepositoryComponent;
+import org.apache.deltaspike.data.impl.param.ParameterUpdate;
 
 /**
  * Root of the query tree. Also the only exposed class in the package.
@@ -45,6 +47,7 @@ public class QueryRoot extends QueryPart
     private final MethodPrefix methodPrefix;
 
     private String jpqlQuery;
+    private List<ParameterUpdate> paramUpdates;
 
     protected QueryRoot(String entityName, MethodPrefix methodPrefix)
     {
@@ -63,6 +66,11 @@ public class QueryRoot extends QueryPart
     public String getJpqlQuery()
     {
         return jpqlQuery;
+    }
+
+    public List<ParameterUpdate> getParameterUpdates()
+    {
+        return paramUpdates;
     }
 
     @Override
@@ -109,6 +117,7 @@ public class QueryRoot extends QueryPart
         QueryBuilderContext ctx = new QueryBuilderContext();
         buildQuery(ctx);
         jpqlQuery = ctx.resultString();
+        paramUpdates = ctx.getParameterUpdates();
         log.log(Level.FINER, "createJpql: Query is {0}", jpqlQuery);
         return jpqlQuery;
     }

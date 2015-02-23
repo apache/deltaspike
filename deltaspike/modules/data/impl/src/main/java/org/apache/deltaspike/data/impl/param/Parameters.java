@@ -75,11 +75,11 @@ public final class Parameters
                 QueryParam qpAnnotation = extractFrom(annotations[i], QueryParam.class);
                 if (qpAnnotation != null)
                 {
-                    result.add(new NamedParameter(qpAnnotation.value(), parameters[i], i));
+                    result.add(new NamedParameter(qpAnnotation.value(), parameters[i]));
                 }
                 else
                 {
-                    result.add(new IndexedParameter(paramIndex++, parameters[i], i));
+                    result.add(new IndexedParameter(paramIndex++, parameters[i]));
                 }
             }
             else
@@ -96,6 +96,20 @@ public final class Parameters
         for (Parameter param : parameterList)
         {
             param.applyMapper(mapper);
+        }
+    }
+
+    public void updateValues(List<ParameterUpdate> updates)
+    {
+        for (ParameterUpdate update : updates)
+        {
+            for (Parameter param : parameterList)
+            {
+                if (param.is(update.forParamWithId()))
+                {
+                    param.updateValue(update.newParamValue(param.queryValue()));
+                }
+            }
         }
     }
 
