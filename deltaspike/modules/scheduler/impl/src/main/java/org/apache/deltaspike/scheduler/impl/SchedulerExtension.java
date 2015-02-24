@@ -32,10 +32,13 @@ import javax.enterprise.inject.spi.BeforeBeanDiscovery;
 import javax.enterprise.inject.spi.BeforeShutdown;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
+
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 public class SchedulerExtension implements Extension, Deactivatable
@@ -44,7 +47,7 @@ public class SchedulerExtension implements Extension, Deactivatable
 
     private Boolean isActivated = true;
 
-    private List<Class> foundManagedJobClasses = new ArrayList<Class>();
+    private Set<Class> foundManagedJobClasses = new HashSet<Class>();
 
     private Scheduler scheduler;
 
