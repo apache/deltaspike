@@ -1,4 +1,4 @@
-= Migrate from MyFaces CODI-Core to DeltaSpike
+= Migration Guide
 
 :Notice: Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
@@ -113,13 +113,11 @@ might haven't seen so far, we will discuss it again.
 ... (TODO)
 
 
-== JBoss Seam2 to Apache DeltaSpike
+== JBoss Seam 2 to Java EE 6 + DeltaSpike + other
+
+Migration of a Seam 2 application to Java EE 6 technologies and some alternatives including DeltaSpike is described along with a complete migrated Seam 2 application in the https://github.com/mareknovotny/seam-migration/wiki[Seam 2 Migration Wiki].
 
 
-(TODO)
-
-
-== JBoss Seam3 to Apache DeltaSpike
-
+== JBoss Seam 3 to Apache DeltaSpike
 
 (TODO)
