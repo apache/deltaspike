@@ -223,6 +223,7 @@ public abstract class AsmProxyClassGenerator
         Label proceedOriginal = mg.mark();
         if (callInvocationHandler)
         {
+            // call stored InvocationHandler
             mg.loadThis();
             mg.getField(proxyType, FIELDNAME_HANDLER, invocationHandlerType);
             mg.loadThis();
@@ -235,6 +236,7 @@ public abstract class AsmProxyClassGenerator
         }
         else
         {
+            // call super method
             mg.loadThis();
             mg.loadArgs();
             mg.visitMethodInsn(Opcodes.INVOKESPECIAL,
