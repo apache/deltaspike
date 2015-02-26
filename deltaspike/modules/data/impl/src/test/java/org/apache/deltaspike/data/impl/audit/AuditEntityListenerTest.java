@@ -33,7 +33,6 @@ import org.apache.deltaspike.data.test.domain.Principal;
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -46,7 +45,7 @@ public class AuditEntityListenerTest extends TransactionalTestCase
     {
         return initDeployment()
                 .addPackage(AuditEntityListener.class.getPackage())
-                .addAsWebInfResource("test-orm.xml", ArchivePaths.create("classes/META-INF/orm.xml"))
+                .addAsWebInfResource("test-orm.xml", "classes/META-INF/orm.xml")
                 .addPackage(AuditedEntity.class.getPackage());
     }
 

@@ -50,6 +50,7 @@ public class EntityManagerTest
     public static Archive<?> deployment()
     {
         return initDeployment()
+                .addPackage(Simple.class.getPackage())
                 .addClasses(SimpleRepositoryWithEntityManager.class,
                         SimpleRepositoryWithEntityManagerResolver.class,
                         QualifiedEntityManagerTestProducer.class,
