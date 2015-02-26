@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.partialbean.impl;
+package org.apache.deltaspike.partialbean.impl.proxy;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -56,11 +56,16 @@ public abstract class PartialBeanProxyFactory
         Class<T> proxyClass = ClassUtils.tryToLoadClassForName(constructProxyClassName(targetClass), targetClass);
         if (proxyClass == null)
         {
-            proxyClass = ASMProxyClassGenerator.generateProxyClass(classLoader,
+            ArrayList<Method> redirectMethods = new ArrayList<Method>();
+            ArrayList<Method> interceptionMethods = new ArrayList<Method>();
+            collectMethods(targetClass, redirectMethods, interceptionMethods);
+
+            proxyClass = AsmProxyClassGenerator.generateProxyClass(classLoader,
                     targetClass,
                     invocationHandlerClass,
                     CLASSNAME_SUFFIX,
-                    findNotImplementedMethods(targetClass));
+                    redirectMethods.toArray(new Method[redirectMethods.size()]),
+                    interceptionMethods.toArray(new Method[interceptionMethods.size()]));
         }
 
         return proxyClass;
@@ -72,7 +77,7 @@ public abstract class PartialBeanProxyFactory
     }
 
     /**
-     * Checks if the given class is partial bean proxy class.
+     * Checks if the given class is DS proxy class.
      *
      * @param clazz
      * @return
@@ -82,25 +87,21 @@ public abstract class PartialBeanProxyFactory
         return clazz.getName().endsWith(CLASSNAME_SUFFIX);
     }
 
-    /**
-     * Collects all abstract methods which needs to be proxied from the given class and super classes...
-     *
-     * @param clazz The clazz which will be proxied.
-     * @return All abstract methods.
-     */
-    private static Method[] findNotImplementedMethods(Class<?> clazz)
+    private static void collectMethods(Class<?> clazz,
+            ArrayList<Method> redirectMethods,
+            ArrayList<Method> interceptionMethods)
     {
         List<Method> methods = new ArrayList<Method>();
         for (Method method : clazz.getDeclaredMethods())
         {
-            if (!containsMethodWithSameSignature(method, methods))
+            if (!ignoreMethod(method, methods))
             {
                 methods.add(method);
             }
         }
         for (Method method : clazz.getMethods())
         {
-            if (!containsMethodWithSameSignature(method, methods))
+            if (!ignoreMethod(method, methods))
             {
                 methods.add(method);
             }
@@ -114,44 +115,20 @@ public abstract class PartialBeanProxyFactory
             {
                 for (Method method : currentSuperClass.getDeclaredMethods())
                 {
-                    if (!containsMethodWithSameSignature(method, methods))
+                    if (!ignoreMethod(method, methods))
                     {
                         methods.add(method);
                     }
                 }
                 for (Method method : currentSuperClass.getMethods())
                 {
-                    if (!containsMethodWithSameSignature(method, methods))
+                    if (!ignoreMethod(method, methods))
                     {
                         methods.add(method);
                     }
                 }
             }
             currentSuperClass = currentSuperClass.getSuperclass();
-        }
-
-        // sort out invalid methods
-        Iterator<Method> it = methods.iterator();
-        while (it.hasNext())
-        {
-            Method method = it.next();
-
-            if (method.isBridge())
-            {
-                // we have no interest in generics bridge methods
-                it.remove();
-            }
-
-            if (!Modifier.isAbstract(method.getModifiers()))
-            {
-                it.remove();
-            }
-            
-            if ("finalize".equals(method.getName()))
-            {
-                // we do not proxy finalize()
-                it.remove();
-            }
         }
 
         // sort out somewhere implemented abstract methods
@@ -162,34 +139,65 @@ public abstract class PartialBeanProxyFactory
             while (methodIterator.hasNext())
             {
                 Method method = methodIterator.next();
-                try
+                if (Modifier.isAbstract(method.getModifiers()))
                 {
-                    Method foundMethod = currentClass.getMethod(method.getName(), method.getParameterTypes());
-                    // if method is implementent in the current class -> remove it
-                    if (foundMethod != null && !Modifier.isAbstract(foundMethod.getModifiers()))
+                    try
                     {
-                        methodIterator.remove();
+                        Method foundMethod = currentClass.getMethod(method.getName(), method.getParameterTypes());
+                        // if method is implementent in the current class -> remove it
+                        if (foundMethod != null && !Modifier.isAbstract(foundMethod.getModifiers()))
+                        {
+                            methodIterator.remove();
+                        }
                     }
-                }
-                catch (Exception e)
-                {
-                    // ignore...
+                    catch (Exception e)
+                    {
+                        // ignore...
+                    }
                 }
             }
 
             currentClass = currentClass.getSuperclass();
         }
 
-        return methods.toArray(new Method[methods.size()]);
+        Iterator<Method> it = methods.iterator();
+        while (it.hasNext())
+        {
+            Method method = it.next();
+
+            if (Modifier.isAbstract(method.getModifiers()))
+            {
+                redirectMethods.add(method);
+            }
+            else if (Modifier.isPublic(method.getModifiers()) && !Modifier.isFinal(method.getModifiers()))
+            {
+                interceptionMethods.add(method);
+            }
+        }
+
     }
-    
-    private static boolean containsMethodWithSameSignature(Method method, List<Method> methods)
+
+    private static boolean ignoreMethod(Method method, List<Method> methods)
     {
+        // we have no interest in generics bridge methods
+        if (method.isBridge())
+        {
+            return true;
+        }
+
+        // we do not proxy finalize()
+        if ("finalize".equals(method.getName()))
+        {
+            return true;
+        }
+
+        // same method...
         if (methods.contains(method))
         {
             return true;
         }
-        
+
+        // check if a method with the same signature is already available
         for (Method currentMethod : methods)
         {
             if (hasSameSignature(currentMethod, method))
@@ -197,10 +205,10 @@ public abstract class PartialBeanProxyFactory
                 return true;
             }
         }
-        
+
         return false;
     }
-    
+
     private static boolean hasSameSignature(Method a, Method b)
     {
         return a.getName().equals(b.getName())

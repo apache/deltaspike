@@ -18,46 +18,19 @@
  */
 package org.apache.deltaspike.test.core.api.partialbean.uc008;
 
-import org.apache.deltaspike.test.core.api.partialbean.shared.TestBean;
-import org.apache.deltaspike.test.core.api.partialbean.shared.TestInterceptorAware;
 import org.apache.deltaspike.test.core.api.partialbean.shared.TestPartialBeanBinding;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import javax.enterprise.context.ApplicationScoped;
 
 @TestPartialBeanBinding
-@Dependent //normal-scopes are possible as well
-public class TestPartialBeanHandler implements InvocationHandler, /*just needed for testing interceptors: */TestInterceptorAware
+@ApplicationScoped
+public class TestPartialBeanHandler implements InvocationHandler
 {
-    @Inject
-    private TestBean testBean;
-
-    private String value;
-    private boolean intercepted;
-
-    @PostConstruct
-    protected void onCreate()
-    {
-        this.value = "partial";
-    }
-
-    @PreDestroy
-    protected void onDestroy()
-    {
-        //TODO check in a test
-    }
-
+    @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
     {
-        return this.value + "-" + this.testBean.getValue() + "-" + this.intercepted;
-    }
-
-    public void setIntercepted(boolean intercepted)
-    {
-        this.intercepted = intercepted;
+        return "partial";
     }
 }

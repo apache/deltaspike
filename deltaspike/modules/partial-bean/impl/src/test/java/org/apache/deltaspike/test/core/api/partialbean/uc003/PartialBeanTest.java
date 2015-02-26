@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.api.partialbean.uc005;
+package org.apache.deltaspike.test.core.api.partialbean.uc003;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.test.core.api.partialbean.shared.TestPartialBeanBinding;
@@ -28,25 +28,24 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-public class ScopedPartialBeanTest
+public class PartialBeanTest
 {
     private static final String CONTAINER_OWB_1_2_x_BEFORE_1_2_8 = "owb-1\\.2\\.[0-7]";
     private static final String CONTAINER_TOMEE_1_7_x = "tomee-1\\.7\\..*";
-
+    
     @Deployment
     public static WebArchive war()
     {
-        String simpleName = ScopedPartialBeanTest.class.getSimpleName();
+        String simpleName = PartialBeanTest.class.getSimpleName();
         String archiveName = simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1);
 
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, archiveName + ".jar")
-                .addPackage(ScopedPartialBeanTest.class.getPackage())
+                .addPackage(PartialBeanTest.class.getPackage())
                 .addPackage(TestPartialBeanBinding.class.getPackage())
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
@@ -64,21 +63,8 @@ public class ScopedPartialBeanTest
         // this test is known to not work under OWB 1.2.0 till 1.2.7 - see OWB #1036
         Assume.assumeTrue(!CdiContainerUnderTest.is(CONTAINER_OWB_1_2_x_BEFORE_1_2_8)
                 && !CdiContainerUnderTest.is(CONTAINER_TOMEE_1_7_x));
-
-        ApplicationScopedPartialBean bean = BeanProvider.getContextualReference(ApplicationScopedPartialBean.class);
         
-        String result = bean.willFail();
-
-        Assert.assertEquals("partial-test-false", result);
-
-        String result2 = bean.willFail2();
-
-        Assert.assertEquals("partial-test-false", result2);
-
-        int count = bean.getManualResult();
-        Assert.assertEquals(0, count);
-
-        count = bean.getManualResult();
-        Assert.assertEquals(1, count);
+        PartialBean bean = BeanProvider.getContextualReference(PartialBean.class);
+        bean.test(this);            
     }
 }

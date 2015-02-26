@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.test.core.api.partialbean.uc003;
 
-import org.apache.deltaspike.test.core.api.partialbean.shared.CustomInterceptor;
 import org.apache.deltaspike.test.core.api.partialbean.shared.TestBean;
 import org.apache.deltaspike.test.core.api.partialbean.shared.TestInterceptorAware;
 import org.apache.deltaspike.test.core.api.partialbean.shared.TestPartialBeanBinding;
@@ -31,7 +30,6 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
 @TestPartialBeanBinding
-@CustomInterceptor //for uc003
 @Dependent //normal-scopes are possible as well
 public class TestPartialBeanHandler implements InvocationHandler, /*just needed for testing interceptors: */TestInterceptorAware
 {

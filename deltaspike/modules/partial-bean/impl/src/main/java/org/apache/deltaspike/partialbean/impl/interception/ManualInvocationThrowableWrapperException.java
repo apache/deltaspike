@@ -16,9 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.api.partialbean.uc005;
+package org.apache.deltaspike.partialbean.impl.interception;
 
-public abstract class AbstractSuper
+/**
+ * Wrapper for {@link Throwable}s because the highest exception of
+ * {@link javax.interceptor.InvocationContext#proceed()} is a {@link Exception}.
+ */
+public class ManualInvocationThrowableWrapperException extends RuntimeException
 {
-    public abstract String willFail2();
+    public ManualInvocationThrowableWrapperException(Throwable e)
+    {
+        super(e);
+    }
 }

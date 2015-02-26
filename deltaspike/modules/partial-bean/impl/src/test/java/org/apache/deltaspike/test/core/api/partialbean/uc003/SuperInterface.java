@@ -16,9 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.api.partialbean.uc005;
+package org.apache.deltaspike.test.core.api.partialbean.uc003;
 
-public abstract class AbstractSuper
+public interface SuperInterface<E>
 {
-    public abstract String willFail2();
+    E test(E entity);
 }

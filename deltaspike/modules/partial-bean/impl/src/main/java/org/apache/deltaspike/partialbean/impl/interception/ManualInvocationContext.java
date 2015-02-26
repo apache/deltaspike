@@ -1,0 +1,194 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.deltaspike.partialbean.impl.interception;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.enterprise.context.spi.CreationalContext;
+import javax.enterprise.inject.Typed;
+import javax.enterprise.inject.spi.InterceptionType;
+import javax.enterprise.inject.spi.Interceptor;
+import javax.interceptor.InvocationContext;
+import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
+
+@Typed
+public class ManualInvocationContext<T, H> implements InvocationContext
+{
+    protected List<Interceptor<H>> interceptors;
+    protected int interceptorIndex;
+    protected T target;
+    protected Method method;
+    protected Object[] parameters;
+    protected Map<String, Object> contextData;
+    protected Object timer;
+    protected ManualInvocationHandler manualInvocationHandler;
+
+    public ManualInvocationContext(ManualInvocationHandler manualInvocationHandler,
+            List<Interceptor<H>> interceptors, T target, Method method, Object[] parameters, Object timer)
+    {
+        this.manualInvocationHandler = manualInvocationHandler;
+        this.interceptors = interceptors;
+        this.target = target;
+        this.method = method;
+        this.parameters = parameters;
+        this.timer = timer;
+
+        this.interceptorIndex = 0;
+    }
+
+    @Override
+    public Object getTarget()
+    {
+        return target;
+    }
+
+    @Override
+    public Method getMethod()
+    {
+        return method;
+    }
+
+    @Override
+    public Object[] getParameters()
+    {
+        return parameters;
+    }
+
+    @Override
+    public void setParameters(Object[] os)
+    {
+        parameters = os;
+    }
+
+    @Override
+    public Map<String, Object> getContextData()
+    {
+        if (contextData == null)
+        {
+            contextData = new HashMap<String, Object>();
+        }
+        return contextData;
+    }
+
+    @Override
+    public Object proceed() throws Exception
+    {
+        if (interceptors.size() > interceptorIndex)
+        {
+            Interceptor<H> interceptor = null;
+            CreationalContext<H> creationalContext = null;
+            H interceptorInstance = null;
+
+            try
+            {
+                interceptor =
+                        interceptors.get(interceptorIndex++);
+                creationalContext =
+                        BeanManagerProvider.getInstance().getBeanManager().createCreationalContext(interceptor);
+                interceptorInstance =
+                        interceptor.create(creationalContext);
+
+                Object value = interceptor.intercept(InterceptionType.AROUND_INVOKE, interceptorInstance, this);
+                return value;
+            }
+            catch (Exception e)
+            {
+                ProceedOriginalMethodException proceedOriginalMethodException =
+                        extractProceedOriginalMethodException(e);
+                if (proceedOriginalMethodException != null)
+                {
+                    try
+                    {
+                        return manualInvocationHandler.proceedOriginal(target, method, parameters);
+                    }
+                    catch (Throwable t)
+                    {
+                        // wrap it to rethrow the original Throwable later
+                        throw new ManualInvocationThrowableWrapperException(t);
+                    }
+                }
+
+                throw e;
+            }
+            finally
+            {
+                if (creationalContext != null)
+                {
+                    if (interceptorInstance != null && interceptor != null)
+                    {
+                        interceptor.destroy(interceptorInstance, creationalContext);
+                    }
+
+                    creationalContext.release();
+                }
+            }
+        }
+
+        // all interceptors handled without return a value
+        try
+        {
+            Object value = manualInvocationHandler.proceedOriginal(target, method, parameters);
+            return value;
+        }
+        catch (Exception e)
+        {
+            throw e;
+        }
+        catch (Throwable t)
+        {
+            // wrap it to rethrow the original Throwable later
+            throw new ManualInvocationThrowableWrapperException(t);
+        }
+    }
+
+    protected ProceedOriginalMethodException extractProceedOriginalMethodException(Throwable throwable)
+    {
+        if (throwable instanceof ProceedOriginalMethodException)
+        {
+            return (ProceedOriginalMethodException) throwable;
+        }
+
+        while (throwable.getCause() != null)
+        {
+            throwable = throwable.getCause();
+            if (throwable instanceof ProceedOriginalMethodException)
+            {
+                return (ProceedOriginalMethodException) throwable;
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public Object getTimer()
+    {
+        return timer;
+    }
+
+    // @Override
+    // CDI 1.1 compatibility
+    public Constructor getConstructor()
+    {
+        return null;
+    }
+}

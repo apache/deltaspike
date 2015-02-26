@@ -16,21 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.partialbean.spi;
+package org.apache.deltaspike.test.core.api.partialbean.shared;
 
-import java.util.List;
-import org.apache.deltaspike.core.spi.activation.Deactivatable;
+import javax.enterprise.context.RequestScoped;
 
-/**
- * The PartialBeanProvider allows to register a partial bean in BeforeBeanDiscovery as a completely new AnnotatedType,
- * to enable interceptors on the provided partial beans.
- *
- * Partial beans which will be collected later in ProcessAnnotatedType can't be intercepted.
- *
- * If other/new partial beans will be found later via ProcessAnnotatedType, they will be merged with the early provided
- * partial beans from the PartialBeanProvider's.
- */
-public interface PartialBeanProvider extends Deactivatable
+@RequestScoped
+public class CustomInterceptorState
 {
-    List<PartialBeanDescriptor> get();
+    private boolean intercepted;
+
+    public boolean isIntercepted()
+    {
+        return intercepted;
+    }
+
+    public void setIntercepted(boolean intercepted)
+    {
+        this.intercepted = intercepted;
+    }
 }

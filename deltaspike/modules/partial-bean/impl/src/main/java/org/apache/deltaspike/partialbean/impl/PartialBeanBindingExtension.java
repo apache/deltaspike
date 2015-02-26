@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.partialbean.impl;
 
+import org.apache.deltaspike.partialbean.impl.proxy.PartialBeanProxyFactory;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Modifier;
@@ -35,12 +36,9 @@ import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
-import org.apache.deltaspike.core.util.ServiceUtils;
 import org.apache.deltaspike.core.util.bean.BeanBuilder;
 import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
 import org.apache.deltaspike.partialbean.api.PartialBeanBinding;
-import org.apache.deltaspike.partialbean.spi.PartialBeanDescriptor;
-import org.apache.deltaspike.partialbean.spi.PartialBeanProvider;
 
 public class PartialBeanBindingExtension implements Extension, Deactivatable
 {
@@ -53,85 +51,7 @@ public class PartialBeanBindingExtension implements Extension, Deactivatable
 
     protected void init(@Observes BeforeBeanDiscovery beforeBeanDiscovery)
     {
-        this.isActivated = ClassDeactivationUtils.isActivated(getClass());
-
-        if (!this.isActivated)
-        {
-            return;
-        }
-
-        List<PartialBeanProvider> providers = ServiceUtils.loadServiceImplementations(PartialBeanProvider.class);
-        for (PartialBeanProvider provider : providers)
-        {
-            for (PartialBeanDescriptor descriptor : provider.get())
-            {
-                if (descriptors.containsKey(descriptor.getBinding()))
-                {
-                    PartialBeanDescriptor existingDescriptor = descriptors.get(descriptor.getBinding());
-
-                    // check if multiple handlers are defined for the same binding
-                    if ((descriptor.getHandler() != null
-                            && descriptor.getHandler().equals(existingDescriptor.getHandler()))
-                        || (existingDescriptor.getHandler() != null
-                            && existingDescriptor.getHandler().equals(descriptor.getHandler())))
-                    {
-                        this.definitionError = new IllegalStateException("Multiple handlers found for "
-                                + descriptor.getBinding().getName() + " ("
-                                + descriptor.getHandler().getName() + " and "
-                                + existingDescriptor.getHandler().getName() + ")");
-                        return;
-                    }
-
-                    if (existingDescriptor.getClasses() == null)
-                    {
-                        existingDescriptor.setClasses(new ArrayList<Class<?>>());
-                    }
-
-                    // merge bean classes
-                    if (descriptor.getClasses() != null && descriptor.getClasses().size() > 0)
-                    {
-                        existingDescriptor.getClasses().addAll(descriptor.getClasses());
-                    }
-                }
-                else
-                {
-                    descriptors.put(descriptor.getBinding(), descriptor);
-                }
-            }
-        }
-
-        // loop early partial beans and register them via a new annotated type for the proxy
-        // this enables interceptors on the early provided partial beans
-        for (Map.Entry<Class<? extends Annotation>, PartialBeanDescriptor> entry : this.descriptors.entrySet())
-        {
-            PartialBeanDescriptor descriptor = entry.getValue();
-            if (descriptor.getClasses() != null)
-            {
-                for (Class<?> partialBeanClass : descriptor.getClasses())
-                {
-                    // skip
-                    if (alreadyProxied.contains(partialBeanClass))
-                    {
-                        continue;
-                    }
-
-                    // handler currently not defined - skip early partial bean process
-                    // later if the handler is still null, we will throw a definition error
-                    if (descriptor.getHandler() == null)
-                    {
-                        continue;
-                    }
-
-                    Class<?> partialBeanProxyClass =
-                            PartialBeanProxyFactory.getProxyClass(partialBeanClass, descriptor.getHandler());
-                    AnnotatedType<?> annotatedType =
-                            new AnnotatedTypeBuilder().readFromType(partialBeanProxyClass).create();
-                    beforeBeanDiscovery.addAnnotatedType(annotatedType);
-
-                    alreadyProxied.add(partialBeanClass);
-                }
-            }
-        }
+        this.isActivated = ClassDeactivationUtils.isActivated(getClass());      
     }
 
     public <X> void findInvocationHandlerBindings(@Observes ProcessAnnotatedType<X> pat, BeanManager beanManager)
@@ -159,12 +79,6 @@ public class PartialBeanBindingExtension implements Extension, Deactivatable
         if (beanClass.isInterface() || Modifier.isAbstract(beanClass.getModifiers()))
         {
             pat.veto();
-
-            // skip already proxied beans
-            if (alreadyProxied.contains(beanClass))
-            {
-                return;
-            }
 
             PartialBeanDescriptor descriptor = descriptors.get(bindingClass);
 
@@ -236,17 +150,10 @@ public class PartialBeanBindingExtension implements Extension, Deactivatable
             {
                 for (Class partialBeanClass : descriptor.getClasses())
                 {
-                    // skip already/early proxied beans
-                    if (alreadyProxied.contains(partialBeanClass))
-                    {
-                        continue;
-                    }
-
                     Bean partialBean = createPartialBean(partialBeanClass, descriptor, afterBeanDiscovery, beanManager);
                     if (partialBean != null)
                     {
                         afterBeanDiscovery.addBean(partialBean);
-                        alreadyProxied.add(partialBeanClass);
                     }
                 }
             }

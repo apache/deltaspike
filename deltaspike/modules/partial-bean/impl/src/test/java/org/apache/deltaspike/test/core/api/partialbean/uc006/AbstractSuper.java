@@ -21,7 +21,7 @@ package org.apache.deltaspike.test.core.api.partialbean.uc006;
 
 public abstract class AbstractSuper<T> extends AbstractSuperSuper
 {
-    abstract T willFail2() throws ClassNotFoundException, NoSuchMethodException, NoSuchFieldException;
+    public abstract T willFail2() throws Throwable;
 
     @Override
     public String willFail3() throws ClassNotFoundException, NoSuchMethodException, NoSuchFieldException

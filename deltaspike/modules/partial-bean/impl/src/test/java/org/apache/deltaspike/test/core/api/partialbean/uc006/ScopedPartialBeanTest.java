@@ -54,7 +54,7 @@ public class ScopedPartialBeanTest
     }
 
     @Test
-    public void testPartialBeanWithApplicationScope() throws Exception
+    public void testPartialBeanWithApplicationScope() throws Throwable
     {
         ApplicationScopedPartialBean bean = BeanProvider.getContextualReference(ApplicationScopedPartialBean.class);
         bean.getManualResult();
@@ -63,7 +63,7 @@ public class ScopedPartialBeanTest
 
         try
         {
-            BeanProvider.getContextualReference(ApplicationScopedPartialBean.class).willFail2();
+            bean.willFail2();
 
             Assert.fail("#willFail2 should actually throw a ClassNotFoundException");
         }

@@ -16,9 +16,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.api.partialbean.uc005;
+package org.apache.deltaspike.partialbean.impl.interception;
 
-public abstract class AbstractSuper
+import java.io.Serializable;
+
+/**
+ * Exception which will be throewd by the {@link ManualInvocationContext} if all interecptors
+ * are successfully handled and the original method should be called.
+ */
+public class ProceedOriginalMethodException extends RuntimeException implements Serializable
 {
-    public abstract String willFail2();
+
 }

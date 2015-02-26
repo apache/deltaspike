@@ -19,7 +19,6 @@
 package org.apache.deltaspike.test.core.api.partialbean.uc006;
 
 import org.apache.deltaspike.test.core.api.partialbean.shared.TestBean;
-import org.apache.deltaspike.test.core.api.partialbean.shared.TestInterceptorAware;
 import org.apache.deltaspike.test.core.api.partialbean.shared.TestPartialBeanBinding;
 
 import javax.annotation.PostConstruct;
@@ -28,6 +27,7 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import org.apache.deltaspike.test.core.api.partialbean.shared.TestInterceptorAware;
 
 @TestPartialBeanBinding
 @Dependent //normal-scopes are possible as well

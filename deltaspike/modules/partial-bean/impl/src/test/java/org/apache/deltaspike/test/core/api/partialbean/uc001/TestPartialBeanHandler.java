@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.test.core.api.partialbean.uc001;
 
-import org.apache.deltaspike.test.core.api.partialbean.shared.CustomInterceptor;
 import org.apache.deltaspike.test.core.api.partialbean.shared.TestBean;
 import org.apache.deltaspike.test.core.api.partialbean.shared.TestInterceptorAware;
 import org.apache.deltaspike.test.core.api.partialbean.shared.TestPartialBeanBinding;

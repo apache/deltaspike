@@ -16,9 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.api.partialbean.uc008;
+package org.apache.deltaspike.partialbean.impl.proxy;
 
-public interface SuperInterface2<E>
+import java.lang.reflect.InvocationHandler;
+
+public interface PartialBeanProxy
 {
-     E test(E entity);
+    void setRedirectInvocationHandler(InvocationHandler redirectInvocationHandler);
+
+    InvocationHandler getRedirectInvocationHandler();
 }

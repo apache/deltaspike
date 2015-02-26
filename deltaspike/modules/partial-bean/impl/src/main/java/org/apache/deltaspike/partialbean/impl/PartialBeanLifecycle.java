@@ -18,6 +18,8 @@
  */
 package org.apache.deltaspike.partialbean.impl;
 
+import org.apache.deltaspike.partialbean.impl.proxy.PartialBeanProxyFactory;
+import org.apache.deltaspike.partialbean.impl.proxy.PartialBeanProxy;
 import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.core.util.metadata.builder.ContextualLifecycle;
 
@@ -63,8 +65,7 @@ class PartialBeanLifecycle<T, H extends InvocationHandler> implements Contextual
         {
             T instance = proxyClass.newInstance();
 
-            // only required here, for early partial beans, the handler will be injected and handled by CDI
-            ((PartialBeanProxy) instance).setHandler(createHandlerInstance());
+            ((PartialBeanProxy) instance).setRedirectInvocationHandler(createHandlerInstance());
 
             if (this.injectionTarget != null)
             {
@@ -130,7 +131,7 @@ class PartialBeanLifecycle<T, H extends InvocationHandler> implements Contextual
         CreationalContext<?> creationalContext = beanManager.createCreationalContext(handlerBean);
         
         H handlerInstance = (H) beanManager.getReference(handlerBean, this.handlerClass, creationalContext);
-
+        
         if (handlerBean.getScope().equals(Dependent.class))
         {
             this.creationalContextOfDependentHandler = creationalContext;
@@ -139,4 +140,3 @@ class PartialBeanLifecycle<T, H extends InvocationHandler> implements Contextual
         return handlerInstance;
     }
 }
-

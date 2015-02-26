@@ -60,7 +60,7 @@ public class PartialBeanAsAbstractClassTest
     @Test
     public void testPartialBeanAsAbstractClass() throws Exception
     {
-        String result = this.partialBean.getResult();
+        String result = this.partialBean.getResult("test");
 
         Assert.assertEquals("partial-test-false", result);
 

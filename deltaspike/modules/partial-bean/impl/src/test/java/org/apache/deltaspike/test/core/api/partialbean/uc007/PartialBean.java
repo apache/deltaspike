@@ -18,49 +18,21 @@
  */
 package org.apache.deltaspike.test.core.api.partialbean.uc007;
 
-import org.apache.deltaspike.test.core.api.partialbean.shared.CustomInterceptor;
 import org.apache.deltaspike.test.core.api.partialbean.shared.TestPartialBeanBinding;
-import org.apache.deltaspike.test.core.api.partialbean.shared.TestInterceptorAware;
-import org.apache.deltaspike.test.core.api.partialbean.shared.TestBean;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
+import org.apache.deltaspike.test.core.api.partialbean.shared.CustomInterceptor;
 
 @TestPartialBeanBinding
 @RequestScoped
-@CustomInterceptor
-public abstract class PartialBean implements /*just needed for testing interceptors: */ TestInterceptorAware
+public abstract class PartialBean
 {
-    @Inject
-    private TestBean testBean;
-
-    private String value;
-    private boolean intercepted;
-
+    @CustomInterceptor
     public abstract String getResult();
 
-    @PostConstruct
-    protected void onCreate()
+    @CustomInterceptor
+    public void doSomething()
     {
-        this.value = "manual";
-    }
 
-    @PreDestroy
-    protected void onDestroy()
-    {
-        //TODO check in a test
-    }
-
-    public String getManualResult()
-    {
-        return this.value + "-" + this.testBean.getValue() + "-" + this.intercepted;
-    }
-
-    @Override
-    public void setIntercepted(boolean intercepted)
-    {
-        this.intercepted = intercepted;
     }
 }

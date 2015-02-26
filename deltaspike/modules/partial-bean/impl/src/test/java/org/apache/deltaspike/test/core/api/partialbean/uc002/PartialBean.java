@@ -35,7 +35,7 @@ public abstract class PartialBean
 
     private String value;
 
-    public abstract String getResult();
+    public abstract String getResult(String value);
 
     @PostConstruct
     protected void onCreate()
