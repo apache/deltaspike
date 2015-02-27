@@ -32,7 +32,7 @@ Add the Partial-Bean module to the list of dependencies in the project `pom.xml`
 
 == Use the Module Features
 
-IMPORTANT: Currently CDI Interceptors can only by applied to beans which will be registred via the PartialBeanProvider.
+IMPORTANT: Currently CDI Interceptors applied via @Interceptors and @Decorator are not supported by partial beans!
 
 
 === @PartialBeanBinding
@@ -73,42 +73,3 @@ public class MyPartialBeanHandler implements java.lang.reflect.InvocationHandler
     }
 }
 -------------------------------------------------------------------------------------
-
-
-=== PartialBeanProvider
-
-Due the CDI nature, to support CDI Interceptors, we need to register the partial beans in BeforeBeanDiscovery as a completely new AnnotatedType.
-
-This is possible if you provide a PartialBeanProvider via the ServiceLoader approach.
-
-The following example shows how to enable your repositories to support interceptors like @Transactional:
-
-
-[source,java]
--------------------------------------------------------------------------------------
-package de.test;
-
-public class RepositoryPartialBeanProvider extends AbstractPartialBeanProvider
-{
-    public RepositoryPartialBeanProvider()
-    {
-		PartialBeanBuilder partialBeanBuilder = new PartialBeanBuilder(
-			org.apache.deltaspike.data.api.Repository.class,
-			org.apache.deltaspike.data.impl.handler.QueryHandler.class);
-		partialBeanBuilder.addClasses(UserRepository.class, CompanyRepository.class, CountryRepository.class);
-        add(partialBeanBuilder);
-    }
-}
--------------------------------------------------------------------------------------
-
-
-Config file `#META-INF/services/org.apache.deltaspike.partialbean.spi.PartialBeanProvider`:
-
-[source]
--------------------------------------------------------------------------------------
-de.test.RepositoryPartialBeanProvider
--------------------------------------------------------------------------------------
-
-Custom implementations might use a classpath scanner like xbeans-finder, scannotations, reflections.
-
-We didn't found an completely portable way, therefore we didn't include it directly in DeltaSpike.
