@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -121,7 +122,7 @@ public final class ConfigResolver
      */
     public static void addConfigFilter(ConfigFilter configFilter)
     {
-        List<ConfigFilter> currentConfigFilters = getConfigFilters();
+        List<ConfigFilter> currentConfigFilters = getInternalConfigFilters();
         currentConfigFilters.add(configFilter);
     }
 
@@ -130,11 +131,19 @@ public final class ConfigResolver
      */
     public static List<ConfigFilter> getConfigFilters()
     {
+        return Collections.unmodifiableList(getInternalConfigFilters());
+    }
+
+    /**
+     * @return the {@link ConfigFilter}s for the current application.
+     */
+    private static List<ConfigFilter> getInternalConfigFilters()
+    {
         ClassLoader cl = ClassUtils.getClassLoader(null);
         List<ConfigFilter> currentConfigFilters = configFilters.get(cl);
         if (currentConfigFilters == null)
         {
-            currentConfigFilters = new ArrayList<ConfigFilter>();
+            currentConfigFilters = new CopyOnWriteArrayList<ConfigFilter>();
             configFilters.put(cl, currentConfigFilters);
         }
 
@@ -475,7 +484,7 @@ public final class ConfigResolver
 
     private static String filterConfigValue(String key, String value)
     {
-        List<ConfigFilter> currentConfigFilters = getConfigFilters();
+        List<ConfigFilter> currentConfigFilters = getInternalConfigFilters();
 
         String filteredValue = value;
 
@@ -488,7 +497,7 @@ public final class ConfigResolver
 
     private static String filterConfigValueForLog(String key, String value)
     {
-        List<ConfigFilter> currentConfigFilters = getConfigFilters();
+        List<ConfigFilter> currentConfigFilters = getInternalConfigFilters();
 
         String logValue = value;
 
