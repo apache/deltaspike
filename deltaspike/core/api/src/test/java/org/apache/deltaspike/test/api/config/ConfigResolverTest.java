@@ -114,7 +114,6 @@ public class ConfigResolverTest
     @Test
     public void testConfigFilter()
     {
-
         ConfigFilter configFilter = new TestConfigFilter();
 
         Assert.assertEquals("shouldGetDecrypted: value", configFilter.filterValue("somekey.encrypted", "value"));

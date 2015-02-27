@@ -19,10 +19,14 @@
 package org.apache.deltaspike.core.spi.config;
 
 /**
- * A filter which can be added to the
+ * <p>A filter which can be added to the
  * {@link org.apache.deltaspike.core.api.config.ConfigResolver}.
  * The filter can be used to decrypt config values or prepare
- * values for logging.
+ * values for logging.</p>
+ *
+ * <p>Registering a {@code ConfigFilter} can either be done via the
+ * {@code java.util.ServiceLoader} pattern or by manually adding it via
+ * {@link org.apache.deltaspike.core.api.config.ConfigResolver#addConfigFilter(ConfigFilter)}.</p>
  */
 public interface ConfigFilter
 {

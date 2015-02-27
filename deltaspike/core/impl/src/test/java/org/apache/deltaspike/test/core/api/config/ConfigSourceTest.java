@@ -86,5 +86,13 @@ public class ConfigSourceTest
         Assert.assertEquals(value, configuredValue);
     }
 
+    @Test
+    public void testConfigFilter()
+    {
+        String secretVal = ConfigResolver.getPropertyValue("my.very.secret");
+        Assert.assertNotNull(secretVal);
+        Assert.assertEquals("a secret value: onlyIDoKnowIt", secretVal);
+    }
+
 
 }

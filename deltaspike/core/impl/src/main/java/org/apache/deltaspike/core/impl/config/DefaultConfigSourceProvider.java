@@ -57,6 +57,11 @@ public class DefaultConfigSourceProvider implements ConfigSourceProvider
         registerPropertyFileConfigs();
     }
 
+
+    /**
+     * Load all {@link PropertyFileConfig}s which are registered via
+     * {@code java.util.ServiceLoader}.
+     */
     private void registerPropertyFileConfigs()
     {
         List<? extends PropertyFileConfig> propertyFileConfigs =

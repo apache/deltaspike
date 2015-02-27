@@ -421,6 +421,12 @@ public final class ConfigResolver
             appConfigSources.addAll(configSourceProvider.getConfigSources());
         }
 
+        List<? extends ConfigFilter> configFilters = ServiceUtils.loadServiceImplementations(ConfigFilter.class);
+        for (ConfigFilter configFilter : configFilters)
+        {
+            addConfigFilter(configFilter);
+        }
+
         return appConfigSources;
     }
 
