@@ -384,7 +384,7 @@ public final class ConfigResolver
         return Collections.unmodifiableMap(result);
     }
 
-    private static synchronized ConfigSource[] getConfigSources()
+    public static synchronized ConfigSource[] getConfigSources()
     {
         ClassLoader currentClassLoader = ClassUtils.getClassLoader(null);
 
@@ -482,7 +482,12 @@ public final class ConfigResolver
         return value;
     }
 
-    private static String filterConfigValue(String key, String value)
+    /**
+     * Filter the configured value.
+     * This can e.g. be used for decryption.
+     * @return the filtered value
+     */
+    public static String filterConfigValue(String key, String value)
     {
         List<ConfigFilter> currentConfigFilters = getInternalConfigFilters();
 
@@ -495,7 +500,12 @@ public final class ConfigResolver
         return filteredValue;
     }
 
-    private static String filterConfigValueForLog(String key, String value)
+    /**
+     * Filter the configured value for logging.
+     * This can e.g. be used for displaying ***** instead of a real password.
+     * @return the filtered value
+     */
+    public static String filterConfigValueForLog(String key, String value)
     {
         List<ConfigFilter> currentConfigFilters = getInternalConfigFilters();
 
