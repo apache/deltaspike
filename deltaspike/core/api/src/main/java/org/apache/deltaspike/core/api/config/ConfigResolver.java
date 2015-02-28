@@ -108,10 +108,13 @@ public final class ConfigResolver
 
     /**
      * Clear all ConfigSources for the current ClassLoader.
+     * This will also clean up all ConfigFilters.
      */
     public static synchronized void freeConfigSources()
     {
-        configSources.remove(ClassUtils.getClassLoader(null));
+        ClassLoader classLoader = ClassUtils.getClassLoader(null);
+        configSources.remove(classLoader);
+        configFilters.remove(classLoader);
     }
 
     /**
