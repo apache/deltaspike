@@ -94,7 +94,7 @@ public class ProjectStageAwareSchedulerController
         if (ProjectStage.Production.equals(this.projectStage))
         {
             //see 'false' for @Scheduled#onStartup
-            this.jobScheduler.scheduleJob(ManualCdiAwareQuartzJob.class);
+            this.jobScheduler.registerNewJob(ManualCdiAwareQuartzJob.class);
         }
     }
 
