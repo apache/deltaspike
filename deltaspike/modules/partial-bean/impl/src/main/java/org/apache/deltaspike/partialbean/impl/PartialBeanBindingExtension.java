@@ -44,7 +44,6 @@ public class PartialBeanBindingExtension implements Extension, Deactivatable
 {
     private final Map<Class<? extends Annotation>, PartialBeanDescriptor> descriptors =
             new HashMap<Class<? extends Annotation>, PartialBeanDescriptor>();
-    private final List<Class<?>> alreadyProxied = new ArrayList<Class<?>>();
 
     private Boolean isActivated = true;
     private IllegalStateException definitionError;
