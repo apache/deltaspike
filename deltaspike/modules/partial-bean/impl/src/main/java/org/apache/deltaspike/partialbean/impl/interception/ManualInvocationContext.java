@@ -116,15 +116,7 @@ public class ManualInvocationContext<T, H> implements InvocationContext
                         extractProceedOriginalMethodException(e);
                 if (proceedOriginalMethodException != null)
                 {
-                    try
-                    {
-                        return manualInvocationHandler.proceedOriginal(target, method, parameters);
-                    }
-                    catch (Throwable t)
-                    {
-                        // wrap it to rethrow the original Throwable later
-                        throw new ManualInvocationThrowableWrapperException(t);
-                    }
+                    return manualInvocationHandler.proceedOriginal(target, method, parameters);
                 }
 
                 throw e;
@@ -144,20 +136,8 @@ public class ManualInvocationContext<T, H> implements InvocationContext
         }
 
         // all interceptors handled without return a value
-        try
-        {
-            Object value = manualInvocationHandler.proceedOriginal(target, method, parameters);
-            return value;
-        }
-        catch (Exception e)
-        {
-            throw e;
-        }
-        catch (Throwable t)
-        {
-            // wrap it to rethrow the original Throwable later
-            throw new ManualInvocationThrowableWrapperException(t);
-        }
+        Object value = manualInvocationHandler.proceedOriginal(target, method, parameters);
+        return value;
     }
 
     protected ProceedOriginalMethodException extractProceedOriginalMethodException(Throwable throwable)

@@ -84,18 +84,12 @@ public class PartialBeanBindingExtension implements Extension, Deactivatable
 
             if (descriptor == null)
             {
-                descriptor = new PartialBeanDescriptor(bindingClass);
+                descriptor = new PartialBeanDescriptor(bindingClass, null, beanClass);
+                descriptors.put(bindingClass, descriptor);
             }
-
-            if (descriptor.getClasses() == null)
-            {
-                descriptor.setClasses(new ArrayList<Class<?>>());
-            }
-
-            if (!descriptor.getClasses().contains(beanClass))
+            else if (!descriptor.getClasses().contains(beanClass))
             {
                 descriptor.getClasses().add(beanClass);
-                descriptors.put(bindingClass, descriptor);
             }
         }
         else if (InvocationHandler.class.isAssignableFrom(beanClass))

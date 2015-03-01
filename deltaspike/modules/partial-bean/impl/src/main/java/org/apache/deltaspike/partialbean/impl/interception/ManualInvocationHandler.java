@@ -46,23 +46,15 @@ public class ManualInvocationHandler implements InvocationHandler
         List<Interceptor<?>> interceptors = resolveInterceptors(proxy, method);
         if (interceptors != null && interceptors.size() > 0)
         {
-            try
-            {
-                ManualInvocationContext invocationContext =
-                        new ManualInvocationContext(this, interceptors, proxy, method, parameters, null);
-                return invocationContext.proceed();
-            }
-            catch (ManualInvocationThrowableWrapperException e)
-            {
-                // unwrap
-                throw e.getCause();
-            }
+            ManualInvocationContext invocationContext =
+                    new ManualInvocationContext(this, interceptors, proxy, method, parameters, null);
+            return invocationContext.proceed();
         }
 
         return proceedOriginal(proxy, method, parameters);
     }
 
-    protected Object proceedOriginal(Object proxy, Method method, Object[] parameters) throws Throwable
+    protected Object proceedOriginal(Object proxy, Method method, Object[] parameters) throws Exception
     {
         throw new ProceedOriginalMethodException();
     }

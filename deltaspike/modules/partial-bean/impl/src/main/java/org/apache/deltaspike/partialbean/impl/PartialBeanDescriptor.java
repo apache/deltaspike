@@ -20,50 +20,36 @@ package org.apache.deltaspike.partialbean.impl;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class PartialBeanDescriptor
 {
     private Class<? extends Annotation> binding;
     private Class<? extends InvocationHandler> handler;
-    private List<Class<?>> classes;
+    private Set<Class<?>> classes;
 
     public PartialBeanDescriptor(Class<? extends Annotation> binding)
     {
         this.binding = binding;
+        this.classes = new HashSet<Class<?>>();
     }
 
     public PartialBeanDescriptor(Class<? extends Annotation> binding,
             Class<? extends InvocationHandler> handler)
     {
-        this.binding = binding;
+        this(binding);
         this.handler = handler;
     }
 
     public PartialBeanDescriptor(Class<? extends Annotation> binding,
             Class<? extends InvocationHandler> handler,
-            Class<?>... classes)
+            Class<?> clazz)
     {
-        this.binding = binding;
-        this.handler = handler;
-        this.classes = new ArrayList<Class<?>>();
-        if (classes.length > 0)
-        {
-            this.classes.addAll(Arrays.asList(classes));
-        }
+        this(binding, handler);
+        this.classes.add(clazz);
     }
-
-    public PartialBeanDescriptor(Class<? extends Annotation> binding,
-            Class<? extends InvocationHandler> handler,
-            List<Class<?>> classes)
-    {
-        this.binding = binding;
-        this.handler = handler;
-        this.classes = classes;
-    }
-
+    
     public Class<? extends Annotation> getBinding()
     {
         return binding;
@@ -84,12 +70,12 @@ public class PartialBeanDescriptor
         this.handler = handler;
     }
 
-    public List<Class<?>> getClasses()
+    public Set<Class<?>> getClasses()
     {
         return classes;
     }
 
-    public void setClasses(List<Class<?>> classes)
+    public void setClasses(Set<Class<?>> classes)
     {
         this.classes = classes;
     }
