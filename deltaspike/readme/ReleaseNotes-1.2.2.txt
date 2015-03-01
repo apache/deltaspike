@@ -1,0 +1,43 @@
+Release Notes - Apache DeltaSpike - Version 1.2.2
+
+Bug
+
+    [DELTASPIKE-647] - AppScoped abstract repositories doesn't work
+    [DELTASPIKE-714] - QueryResult.count not work if jpql have order by
+    [DELTASPIKE-746] - Doc: JSF/ExceptionControl integration redirect example
+    [DELTASPIKE-808] - Make website to read pom.xml properties
+    [DELTASPIKE-812] - remove AttributeAware
+    [DELTASPIKE-814] - Create a root pom.xml to share common properties
+    [DELTASPIKE-818] - CDI Events with reception condition in WindowScoped beans
+    [DELTASPIKE-825] - Scheduler docs mention wrong method scheduleJob
+    [DELTASPIKE-828] - Infinite recursive loop navigating through annoations
+    [DELTASPIKE-831] - NPE in DefaultMockFilter when running JUnit and the application contains a class in the default package
+    [DELTASPIKE-834] - MessageBundle Extension not working in EARs on some containers
+    [DELTASPIKE-838] - SchedulerExtension: Multiple Job-Classes found with name
+
+Improvement
+
+    [DELTASPIKE-805] - Provide utils method to check if an context is active or not
+    [DELTASPIKE-829] - add hints for using jersey-test with test-control
+    [DELTASPIKE-835] - Improve build config and add tests
+    [DELTASPIKE-836] - Support case insensitive LIKE queries with method naming convention
+    [DELTASPIKE-840] - ConfigResolver#getConfigFilters() shall return unmutable List
+
+New Feature
+
+    [DELTASPIKE-419] - Interceptors on partial beans
+    [DELTASPIKE-420] - Transactional repositories
+    [DELTASPIKE-837] - PropertyFileConfig pickup via java.util.ServiceLoader
+    [DELTASPIKE-841] - make getConfigSources public
+    [DELTASPIKE-842] - pick up ConfigFilters via ServiceLoader
+
+Task
+
+    [DELTASPIKE-806] - update site to 1.2.1
+    [DELTASPIKE-807] - update external resources
+    [DELTASPIKE-810] - improve site headers
+    [DELTASPIKE-811] - document custom project-stages
+    [DELTASPIKE-815] - Publish 1.2.1 Javadoc
+    [DELTASPIKE-821] - check compatibility with gradle
+    [DELTASPIKE-823] - Reimplement Partial-Bean module
+    [DELTASPIKE-845] - prepare v1.2.2
