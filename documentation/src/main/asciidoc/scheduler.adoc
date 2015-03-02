@@ -43,6 +43,27 @@ By default, the Scheduler module looks to integrate with Quartz. If this is the 
 </dependency>
 ----
 
+=== 3. Declare Container Control dependency
+
+Scheduled jobs can have built-in CDI contexts started for the duration of their execution using `@Scheduled#startScopes` which internally uses the <<container-control#, Container Control module>>. The dependency on the API and the appropriate implementation needs to be declared manually even if the feature is not used. An example for the Weld implementation:
+
+[source,xml]
+----
+<dependency>
+    <groupId>org.apache.deltaspike.cdictrl</groupId>
+    <artifactId>deltaspike-cdictrl-api</artifactId>
+    <version>${deltaspike.version}</version>
+    <scope>compile</scope>
+</dependency>
+
+<dependency>
+    <groupId>org.apache.deltaspike.cdictrl</groupId>
+    <artifactId>deltaspike-cdictrl-weld</artifactId>
+    <version>${deltaspike.version}</version>
+    <scope>runtime</scope>
+</dependency>
+----
+
 == Use the Module Features
 
 === @Scheduled
