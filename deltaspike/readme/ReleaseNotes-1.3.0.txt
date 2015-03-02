@@ -1,4 +1,12 @@
-Release Notes - Apache DeltaSpike - Version 1.2.2
+Release Notes - Apache DeltaSpike - Version 1.3.0
+
+New Feature
+
+    [DELTASPIKE-419] - Interceptors on partial beans
+    [DELTASPIKE-420] - Transactional repositories
+    [DELTASPIKE-837] - PropertyFileConfig pickup via java.util.ServiceLoader
+    [DELTASPIKE-841] - make getConfigSources public
+    [DELTASPIKE-842] - pick up ConfigFilters via ServiceLoader
 
 Bug
 
@@ -23,14 +31,6 @@ Improvement
     [DELTASPIKE-836] - Support case insensitive LIKE queries with method naming convention
     [DELTASPIKE-840] - ConfigResolver#getConfigFilters() shall return unmutable List
 
-New Feature
-
-    [DELTASPIKE-419] - Interceptors on partial beans
-    [DELTASPIKE-420] - Transactional repositories
-    [DELTASPIKE-837] - PropertyFileConfig pickup via java.util.ServiceLoader
-    [DELTASPIKE-841] - make getConfigSources public
-    [DELTASPIKE-842] - pick up ConfigFilters via ServiceLoader
-
 Task
 
     [DELTASPIKE-806] - update site to 1.2.1
@@ -40,4 +40,4 @@ Task
     [DELTASPIKE-815] - Publish 1.2.1 Javadoc
     [DELTASPIKE-821] - check compatibility with gradle
     [DELTASPIKE-823] - Reimplement Partial-Bean module
-    [DELTASPIKE-845] - prepare v1.2.2
+    [DELTASPIKE-845] - prepare v1.3.0
