@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.test.core.api.config.propertyconfigsource;
 
+import org.apache.deltaspike.core.api.config.PropertyFileConfig;
 import org.apache.deltaspike.test.category.EnterpriseArchiveProfileCategory;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -42,8 +43,9 @@ public class ConfigPropertyEARTest extends BaseTestConfigProperty
         JavaArchive ejbJar = ShrinkWrap
                 .create(JavaArchive.class, "ejb-jar.jar")
                 .addClasses(BaseTestConfigProperty.class, ConfigPropertyEARTest.class,
-                        MyCustomPropertyFileConfig.class, MyBean.class)
+                        MyBean.class, MyCustomEarPropertyFileConfig.class)
                 .addAsResource(CONFIG_FILE_NAME)
+                .addAsServiceProvider(PropertyFileConfig.class, MyCustomEarPropertyFileConfig.class)
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
         WebArchive war = ShrinkWrap.create(WebArchive.class, "test.war")
