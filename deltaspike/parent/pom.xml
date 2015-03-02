@@ -876,13 +876,6 @@
                 </configuration>
             </plugin>
 
-            <plugin>
-                <artifactId>maven-release-plugin</artifactId>
-                <configuration>
-                    <preparationGoals>clean install</preparationGoals>
-                </configuration>
-            </plugin>
-
             <!-- Generate Manifest file required for OSGI bundles -->
             <plugin>
                 <groupId>org.apache.felix</groupId>

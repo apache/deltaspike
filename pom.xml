@@ -79,18 +79,6 @@
                     </configuration>
                 </plugin>
 
-                <!-- we need to tweak the maven-release-plugin for GIT -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-release-plugin</artifactId>
-                    <version>2.3.1</version>
-                    <configuration>
-                        <pushChanges>false</pushChanges>
-                        <localCheckout>true</localCheckout>
-                        <autoVersionSubmodules>true</autoVersionSubmodules>
-                        <releaseProfiles>distribution</releaseProfiles>
-                    </configuration>
-                </plugin>
 
                 <!-- SCM Publish plugin to publish documentation and site -->
                 <plugin>
@@ -130,6 +118,24 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+
+        <plugins>
+            <!-- we need to tweak the maven-release-plugin for GIT -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.3.1</version>
+                <configuration>
+                    <pushChanges>false</pushChanges>
+                    <localCheckout>true</localCheckout>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+
+                    <releaseProfiles>distribution</releaseProfiles>
+                    <preparationGoals>clean install</preparationGoals>
+                </configuration>
+            </plugin>
+
+        </plugins>
     </build>
 
     <profiles>
