@@ -84,9 +84,30 @@ public abstract class AbstractResourceProvider implements InjectableResourceProv
     {
         final Properties properties = new Properties();
         final String name = injectableResource.location();
-        final InputStream inputStream = this.readStream(injectableResource);
-        this.loadInputStreamToProperties(inputStream, properties, name);
-        return properties;
+        InputStream inputStream = null;
+        try
+        {
+            inputStream = this.readStream(injectableResource);
+            this.loadInputStreamToProperties(inputStream, properties, name);
+            return properties;
+        }
+        finally
+        {
+            if (inputStream != null)
+            {
+                try
+                {
+                    inputStream.close();
+                }
+                catch (IOException e)
+                {
+                    if (logger.isLoggable(Level.FINE))
+                    {
+                        logger.log(Level.FINE, "Problem closing resource.", e);
+                    }
+                }
+            }
+        }
     }
 
     @Override
