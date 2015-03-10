@@ -32,7 +32,6 @@ import org.apache.deltaspike.data.test.service.MappedOneRepository;
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Test;
@@ -45,16 +44,15 @@ public class OrmXmlBasedRepositoryTest extends TransactionalTestCase
     @Deployment
     public static Archive<?> deployment()
     {
-        return initDeployment("(.*mapped.*)|(.*test.*)")
+        return initDeployment()
                 .addClasses(MappedOneRepository.class)
                 .addAsLibraries(
                         ShrinkWrap.create(JavaArchive.class, "domain.jar")
                                 .addPackage(MappedOne.class.getPackage())
-                                .addAsResource("test-custom-orm.xml", ArchivePaths.create("META-INF/custom-orm.xml"))
+                                .addAsResource("test-custom-orm.xml", "META-INF/custom-orm.xml")
                 )
-                .addAsWebInfResource("test-mapped-persistence.xml",
-                        ArchivePaths.create("classes/META-INF/persistence.xml"))
-                .addAsWebInfResource("test-default-orm.xml", ArchivePaths.create("classes/META-INF/orm.xml"));
+                .addAsWebInfResource("test-mapped-persistence.xml", "classes/META-INF/persistence.xml")
+                .addAsWebInfResource("test-default-orm.xml", "classes/META-INF/orm.xml");
     }
 
     @Produces

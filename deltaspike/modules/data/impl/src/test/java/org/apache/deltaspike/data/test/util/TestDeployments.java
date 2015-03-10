@@ -18,149 +18,59 @@
  */
 package org.apache.deltaspike.data.test.util;
 
+import java.io.File;
 import java.net.URL;
 
-import org.apache.deltaspike.data.api.AbstractEntityRepository;
-import org.apache.deltaspike.data.api.EntityManagerConfig;
-import org.apache.deltaspike.data.api.EntityManagerDelegate;
-import org.apache.deltaspike.data.api.EntityManagerResolver;
-import org.apache.deltaspike.data.api.EntityRepository;
-import org.apache.deltaspike.data.api.FirstResult;
-import org.apache.deltaspike.data.api.MaxResults;
-import org.apache.deltaspike.data.api.Modifying;
-import org.apache.deltaspike.data.api.Query;
-import org.apache.deltaspike.data.api.QueryInvocationException;
-import org.apache.deltaspike.data.api.QueryParam;
-import org.apache.deltaspike.data.api.QueryResult;
-import org.apache.deltaspike.data.api.Repository;
-import org.apache.deltaspike.data.api.SingleResultType;
-import org.apache.deltaspike.data.api.audit.CreatedOn;
-import org.apache.deltaspike.data.api.audit.CurrentUser;
-import org.apache.deltaspike.data.api.audit.ModifiedBy;
-import org.apache.deltaspike.data.api.audit.ModifiedOn;
-import org.apache.deltaspike.data.api.criteria.Criteria;
-import org.apache.deltaspike.data.api.criteria.CriteriaSupport;
-import org.apache.deltaspike.data.api.criteria.QuerySelection;
-import org.apache.deltaspike.data.api.mapping.MappingConfig;
-import org.apache.deltaspike.data.api.mapping.QueryInOutMapper;
-import org.apache.deltaspike.data.api.mapping.SimpleQueryInOutMapperBase;
-import org.apache.deltaspike.data.impl.RepositoryDefinitionException;
-import org.apache.deltaspike.data.impl.RepositoryExtension;
-import org.apache.deltaspike.data.impl.audit.AuditEntityListener;
-import org.apache.deltaspike.data.impl.builder.QueryBuilder;
-import org.apache.deltaspike.data.impl.criteria.QueryCriteria;
-import org.apache.deltaspike.data.impl.handler.QueryHandler;
-import org.apache.deltaspike.data.impl.meta.RepositoryComponents;
-import org.apache.deltaspike.data.impl.meta.RequiresTransaction;
-import org.apache.deltaspike.data.impl.param.Parameters;
-import org.apache.deltaspike.data.impl.property.Property;
-import org.apache.deltaspike.data.impl.tx.TransactionalQueryRunner;
-import org.apache.deltaspike.data.impl.util.EntityUtils;
-import org.apache.deltaspike.data.spi.DelegateQueryHandler;
-import org.apache.deltaspike.data.spi.QueryInvocationContext;
 import org.apache.deltaspike.data.test.TransactionalTestCase;
-import org.apache.deltaspike.data.test.domain.AuditedEntity;
-import org.apache.deltaspike.jpa.impl.transaction.EnvironmentAwareTransactionStrategy;
-import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.jboss.arquillian.container.test.spi.TestDeployment;
-import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ArchivePath;
-import org.jboss.shrinkwrap.api.ArchivePaths;
-import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.descriptor.api.Descriptors;
-import org.jboss.shrinkwrap.descriptor.api.beans10.BeansDescriptor;
-import org.jboss.shrinkwrap.impl.base.filter.ExcludeRegExpPaths;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 
-public abstract class TestDeployments
-{
-
-    public static Filter<ArchivePath> TEST_FILTER = new ExcludeRegExpPaths(".*Test.*class");
-
-    public static WebArchive initDeployment()
-    {
-        return initDeployment(".*test.*");
-    }
+public abstract class TestDeployments {
+    
+    public static String DS_PROPERTIES_WITH_ENV_AWARE_TX_STRATEGY
+            = "globalAlternatives.org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy="
+            + "org.apache.deltaspike.jpa.impl.transaction.EnvironmentAwareTransactionStrategy";
 
     /**
-     * Create a basic deployment containing API classes, the Extension class and test persistence / beans descriptor.
-     *
+     * Create a basic deployment with dependencies, beans.xml and persistence descriptor.
+     * 
      * @return Basic web archive.
      */
-    public static WebArchive initDeployment(String testFilter)
+    public static WebArchive initDeployment()
     {
         Logging.reconfigure();
-        String descriptor = Descriptors.create(BeansDescriptor.class)
-                .addDefaultNamespaces()
-                .createAlternatives()
-                    .clazz(EnvironmentAwareTransactionStrategy.class.getName())
-                    .up()
-                .exportAsString();
+        
         WebArchive archive = ShrinkWrap
                 .create(WebArchive.class, "test.war")
-                .addAsLibrary(createApiArchive())
-                .addClasses(WebProfileCategory.class, TransactionalTestCase.class, TestData.class)
-                .addClasses(RepositoryExtension.class, RepositoryDefinitionException.class)
-                .addPackages(true, TEST_FILTER, createImplPackages())
-                .addPackages(true, AuditedEntity.class.getPackage())
-                .addPackages(true, new ExcludeRegExpPaths(testFilter), TransactionalTestCase.class.getPackage())
-                .addAsWebInfResource("test-persistence.xml",
-                        ArchivePaths.create("classes/META-INF/persistence.xml"))
-                .addAsWebInfResource("META-INF/services/javax.enterprise.inject.spi.Extension",
-                        ArchivePaths.create("classes/META-INF/services/javax.enterprise.inject.spi.Extension"))
-                .addAsWebInfResource(new StringAsset(descriptor), ArchivePaths.create("beans.xml"));
-        return addDependencies(archive);
+                // used by many tests, shouldn't interfere with others
+                .addClasses(TransactionalTestCase.class, TestData.class)
+                .addAsLibraries(getDeltaSpikeDataWithDependencies())
+                .addAsWebInfResource("test-persistence.xml", "classes/META-INF/persistence.xml")
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+                .addAsWebInfResource(new StringAsset(DS_PROPERTIES_WITH_ENV_AWARE_TX_STRATEGY), 
+                        "classes/META-INF/apache-deltaspike.properties");
+
+        return archive;
     }
-
-    public static Package[] createImplPackages()
+    
+    public static File[] getDeltaSpikeDataWithDependencies() 
     {
-        return new Package[] {
-                AuditEntityListener.class.getPackage(),
-                QueryBuilder.class.getPackage(),
-                QueryCriteria.class.getPackage(),
-                QueryHandler.class.getPackage(),
-                RepositoryComponents.class.getPackage(),
-                Parameters.class.getPackage(),
-                EntityUtils.class.getPackage(),
-                Property.class.getPackage(),
-                TransactionalQueryRunner.class.getPackage()
-        };
-    }
-
-    public static Archive<?> createApiArchive()
-    {
-        return ShrinkWrap.create(JavaArchive.class, "archive.jar")
-                .addClasses(AbstractEntityRepository.class, Repository.class, EntityRepository.class,
-                        FirstResult.class, MaxResults.class, Modifying.class,
-                        Query.class, QueryParam.class, QueryResult.class,
-                        EntityManagerConfig.class, EntityManagerResolver.class, SingleResultType.class,
-                        QueryInvocationException.class, EntityManagerDelegate.class)
-                .addClasses(Criteria.class, QuerySelection.class, CriteriaSupport.class)
-                .addClasses(CreatedOn.class, CurrentUser.class, ModifiedBy.class, ModifiedOn.class)
-                .addClasses(MappingConfig.class, QueryInOutMapper.class)
-                .addClasses(DelegateQueryHandler.class, QueryInvocationContext.class, RequiresTransaction.class)
-                .addClasses(SimpleQueryInOutMapperBase.class);
-    }
-
-    public static WebArchive addDependencies(WebArchive archive)
-    {
-        WebArchive webArchive= archive.addAsLibraries(
-                Maven.resolver().loadPomFromFile("pom.xml").resolve(
-                        "org.apache.deltaspike.core:deltaspike-core-api",
-                        "org.apache.deltaspike.core:deltaspike-core-impl",
-                        "org.apache.deltaspike.modules:deltaspike-partial-bean-module-api",
-                        "org.apache.deltaspike.modules:deltaspike-partial-bean-module-impl",
-                        "org.apache.deltaspike.modules:deltaspike-jpa-module-api",
-                        "org.apache.deltaspike.modules:deltaspike-jpa-module-impl")
-                        .withTransitivity()
-                        .asFile());
-
-        return webArchive;
+        return Maven.resolver().loadPomFromFile("pom.xml").resolve(
+                "org.apache.deltaspike.core:deltaspike-core-api",
+                "org.apache.deltaspike.core:deltaspike-core-impl",
+                "org.apache.deltaspike.modules:deltaspike-partial-bean-module-api",
+                "org.apache.deltaspike.modules:deltaspike-partial-bean-module-impl",
+                "org.apache.deltaspike.modules:deltaspike-jpa-module-api",
+                "org.apache.deltaspike.modules:deltaspike-jpa-module-impl",
+                "org.apache.deltaspike.modules:deltaspike-data-module-api",
+                "org.apache.deltaspike.modules:deltaspike-data-module-impl")
+                .withTransitivity()
+                .asFile();
     }
 
     public static void addToEarManifestIfExists(EnterpriseArchive archive, String resource)

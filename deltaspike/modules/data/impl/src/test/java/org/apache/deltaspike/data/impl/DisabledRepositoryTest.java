@@ -21,6 +21,7 @@ package org.apache.deltaspike.data.impl;
 import static org.apache.deltaspike.data.test.util.TestDeployments.initDeployment;
 
 import javax.inject.Inject;
+import org.apache.deltaspike.data.test.domain.Simple;
 
 import org.apache.deltaspike.data.test.service.DisabledRepository;
 import org.apache.deltaspike.data.test.service.SimpleRepository;
@@ -43,11 +44,14 @@ public class DisabledRepositoryTest
     public static Archive<?> deployment()
     {
         WebArchive archive = initDeployment()
+                .addPackage(Simple.class.getPackage())
                 .addClasses(SimpleRepository.class,
                         RepositoryDeactivator.class,
                         DisabledRepository.class
-                )
-                .addAsWebInfResource("disabled/META-INF/apache-deltaspike.properties",
+                );
+       
+        archive.delete("WEB-INF/classes/META-INF/apache-deltaspike.properties");
+        archive.addAsWebInfResource("disabled/META-INF/apache-deltaspike.properties",
                         "classes/META-INF/apache-deltaspike.properties");
         return archive;
     }
