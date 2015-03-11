@@ -24,7 +24,6 @@ import java.lang.reflect.UndeclaredThrowableException;
 import java.util.Arrays;
 import javax.enterprise.inject.Typed;
 import org.apache.deltaspike.partialbean.impl.interception.ManualInvocationHandler;
-import org.apache.deltaspike.partialbean.impl.interception.ProceedOriginalMethodException;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
@@ -57,6 +56,7 @@ public abstract class AsmProxyClassGenerator
 
         byte[] proxyBytes = generateProxyClassBytes(targetClass, invocationHandlerClass,
                 classFileName, redirectMethods, interceptionMethods);
+
         Class<T> proxyClass = (Class<T>) loadClass(classLoader, proxyName, proxyBytes);
 
         return proxyClass;
@@ -205,11 +205,21 @@ public abstract class AsmProxyClassGenerator
         loadCurrentMethod(mg, method, methodType);
         loadArguments(mg, method, methodType);
 
-        // invoke our ProxyInvocationHandler
+        // invoke our ProxyInvocationHandler and store it in a local variable
+        int manualInvocationHandlerReturnValue = mg.newLocal(TYPE_OBJECT);
         mg.invokeStatic(Type.getType(ManualInvocationHandler.class),
                 Method.getMethod("Object staticInvoke(Object, java.lang.reflect.Method, Object[])"));
-
+        mg.storeLocal(manualInvocationHandlerReturnValue);
+        
+        // check if ManualInvocationHandler returned the PROCEED_ORIGINAL object
+        // if true, we switch to our special logic, otherwise return the returned value
+        Label proceedOriginalStart = new Label();
+        mg.getStatic(Type.getType(ManualInvocationHandler.class), "PROCEED_ORIGINAL", TYPE_OBJECT);
+        mg.loadLocal(manualInvocationHandlerReturnValue);
+        mg.ifCmp(TYPE_OBJECT, GeneratorAdapter.EQ, proceedOriginalStart);
+        
         // cast the result
+        mg.loadLocal(manualInvocationHandlerReturnValue);
         mg.unbox(methodType.getReturnType());
 
         Label tryBlockEnd = mg.mark();
@@ -217,10 +227,7 @@ public abstract class AsmProxyClassGenerator
         // push return
         mg.returnValue();
 
-        boolean throwableCatched = false;
-
-        // catch ProceedOriginalRuntimeException
-        Label proceedOriginal = mg.mark();
+        mg.mark(proceedOriginalStart);
         if (callInvocationHandler)
         {
             // call stored InvocationHandler
@@ -246,8 +253,10 @@ public abstract class AsmProxyClassGenerator
                     false);
             mg.returnValue();
         }
-        mg.visitTryCatchBlock(tryBlockStart, tryBlockEnd, proceedOriginal,
-                Type.getInternalName(ProceedOriginalMethodException.class));
+        
+        
+        
+        boolean throwableCatched = false;
 
         // catch declared exceptions
         if (exceptionTypes.length > 0)

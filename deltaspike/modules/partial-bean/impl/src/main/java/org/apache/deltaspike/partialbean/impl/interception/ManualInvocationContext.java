@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.Typed;
+import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InterceptionType;
 import javax.enterprise.inject.spi.Interceptor;
 import javax.interceptor.InvocationContext;
@@ -41,6 +42,10 @@ public class ManualInvocationContext<T, H> implements InvocationContext
     protected Map<String, Object> contextData;
     protected Object timer;
     protected ManualInvocationHandler manualInvocationHandler;
+    
+    protected BeanManager beanManager;
+    
+    protected boolean proceedOriginal;
 
     public ManualInvocationContext(ManualInvocationHandler manualInvocationHandler,
             List<Interceptor<H>> interceptors, T target, Method method, Object[] parameters, Object timer)
@@ -92,6 +97,11 @@ public class ManualInvocationContext<T, H> implements InvocationContext
     @Override
     public Object proceed() throws Exception
     {
+        if (proceedOriginal)
+        {
+            return null;
+        }
+        
         if (interceptors.size() > interceptorIndex)
         {
             Interceptor<H> interceptor = null;
@@ -100,26 +110,17 @@ public class ManualInvocationContext<T, H> implements InvocationContext
 
             try
             {
-                interceptor =
-                        interceptors.get(interceptorIndex++);
-                creationalContext =
-                        BeanManagerProvider.getInstance().getBeanManager().createCreationalContext(interceptor);
-                interceptorInstance =
-                        interceptor.create(creationalContext);
-
-                Object value = interceptor.intercept(InterceptionType.AROUND_INVOKE, interceptorInstance, this);
-                return value;
-            }
-            catch (Exception e)
-            {
-                ProceedOriginalMethodException proceedOriginalMethodException =
-                        extractProceedOriginalMethodException(e);
-                if (proceedOriginalMethodException != null)
+                // lazy init beanManager
+                if (beanManager == null)
                 {
-                    return manualInvocationHandler.proceedOriginal(target, method, parameters);
+                    beanManager = BeanManagerProvider.getInstance().getBeanManager();
                 }
 
-                throw e;
+                interceptor = interceptors.get(interceptorIndex++);
+                creationalContext = beanManager.createCreationalContext(interceptor);
+                interceptorInstance = interceptor.create(creationalContext);
+
+                return interceptor.intercept(InterceptionType.AROUND_INVOKE, interceptorInstance, this);
             }
             finally
             {
@@ -135,28 +136,14 @@ public class ManualInvocationContext<T, H> implements InvocationContext
             }
         }
 
+        
+        // workaround for OWB 1.1
+        // interceptor#intercept always return null. Therefore we must remember here,
+        // that our interceptor chain is finished and #proceedOriginal should be called outside
+        proceedOriginal = true;
+        
         // all interceptors handled without return a value
-        Object value = manualInvocationHandler.proceedOriginal(target, method, parameters);
-        return value;
-    }
-
-    protected ProceedOriginalMethodException extractProceedOriginalMethodException(Throwable throwable)
-    {
-        if (throwable instanceof ProceedOriginalMethodException)
-        {
-            return (ProceedOriginalMethodException) throwable;
-        }
-
-        while (throwable.getCause() != null)
-        {
-            throwable = throwable.getCause();
-            if (throwable instanceof ProceedOriginalMethodException)
-            {
-                return (ProceedOriginalMethodException) throwable;
-            }
-        }
-
-        return null;
+        return manualInvocationHandler.proceedOriginal(target, method, parameters);
     }
 
     @Override
@@ -170,5 +157,10 @@ public class ManualInvocationContext<T, H> implements InvocationContext
     public Constructor getConstructor()
     {
         return null;
+    }
+
+    public boolean isProceedOriginal()
+    {
+        return proceedOriginal;
     }
 }

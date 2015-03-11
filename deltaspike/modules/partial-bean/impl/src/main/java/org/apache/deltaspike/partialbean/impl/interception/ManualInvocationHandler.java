@@ -33,6 +33,8 @@ import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 @Typed
 public class ManualInvocationHandler implements InvocationHandler
 {
+    public static final Object PROCEED_ORIGINAL = new Object();
+    
     private static final ManualInvocationHandler INSTANCE = new ManualInvocationHandler();
 
     public static <T> Object staticInvoke(T proxy, Method method, Object[] parameters) throws Throwable
@@ -48,7 +50,12 @@ public class ManualInvocationHandler implements InvocationHandler
         {
             ManualInvocationContext invocationContext =
                     new ManualInvocationContext(this, interceptors, proxy, method, parameters, null);
-            return invocationContext.proceed();
+            Object returnValue = invocationContext.proceed();
+            if (invocationContext.isProceedOriginal())
+            {
+                return proceedOriginal(proxy, method, parameters);
+            }
+            return returnValue;
         }
 
         return proceedOriginal(proxy, method, parameters);
@@ -56,7 +63,7 @@ public class ManualInvocationHandler implements InvocationHandler
 
     protected Object proceedOriginal(Object proxy, Method method, Object[] parameters) throws Exception
     {
-        throw new ProceedOriginalMethodException();
+        return PROCEED_ORIGINAL;
     }
 
     protected List<Interceptor<?>> resolveInterceptors(Object instance, Method method)
