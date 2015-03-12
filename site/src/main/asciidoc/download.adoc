@@ -27,10 +27,10 @@ v{latestStable}
 == Source Distribution
 
 
-* http://www.apache.org/dyn/closer.cgi/deltaspike/{latestStable}/deltaspike-project-{latestStable}-source-release.zip[deltaspike-project-{latestStable}-source-release.zip]
-* http://www.apache.org/dist/deltaspike/{latestStable}/deltaspike-project-{latestStable}-source-release.zip.asc[deltaspike-project-{latestStable}-source-release.zip.asc]
-* http://www.apache.org/dist/deltaspike/{latestStable}/deltaspike-project-{latestStable}-source-release.zip.md5[deltaspike-project-{latestStable}-source-release.zip.md5]
-* http://www.apache.org/dist/deltaspike/{latestStable}/deltaspike-project-{latestStable}-source-release.zip.sha1[deltaspike-project-{latestStable}-source-release.zip.sha1]
+* http://www.apache.org/dyn/closer.cgi/deltaspike/{latestStable}/deltaspike-root-{latestStable}-source-release.zip[deltaspike-root-{latestStable}-source-release.zip]
+* http://www.apache.org/dist/deltaspike/{latestStable}/deltaspike-root-{latestStable}-source-release.zip.asc[deltaspike-root-{latestStable}-source-release.zip.asc]
+* http://www.apache.org/dist/deltaspike/{latestStable}/deltaspike-root-{latestStable}-source-release.zip.md5[deltaspike-root-{latestStable}-source-release.zip.md5]
+* http://www.apache.org/dist/deltaspike/{latestStable}/deltaspike-root-{latestStable}-source-release.zip.sha1[deltaspike-root-{latestStable}-source-release.zip.sha1]
 
 
 == Maven Dependencies
