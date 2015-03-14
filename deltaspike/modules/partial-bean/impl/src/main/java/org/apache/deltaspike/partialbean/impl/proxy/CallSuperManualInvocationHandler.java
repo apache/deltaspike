@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.partialbean.impl.proxy;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import javax.enterprise.inject.Typed;
 import org.apache.deltaspike.partialbean.impl.interception.AbstractManualInvocationHandler;
@@ -35,7 +36,15 @@ public class CallSuperManualInvocationHandler extends AbstractManualInvocationHa
     @Override
     protected Object proceedOriginal(Object proxy, Method method, Object[] parameters) throws Throwable
     {
-        Method superAccessorMethod = PartialBeanProxyFactory.getSuperAccessorMethod(proxy, method);
-        return superAccessorMethod.invoke(proxy, parameters);
+        try
+        {
+            Method superAccessorMethod = PartialBeanProxyFactory.getSuperAccessorMethod(proxy, method);
+            return superAccessorMethod.invoke(proxy, parameters);
+        }
+        catch (InvocationTargetException e)
+        {
+            // rethrow original exception
+            throw e.getCause();
+        }
     }
 }

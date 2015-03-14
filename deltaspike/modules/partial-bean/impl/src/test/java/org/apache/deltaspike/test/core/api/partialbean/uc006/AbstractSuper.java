@@ -24,7 +24,7 @@ public abstract class AbstractSuper<T> extends AbstractSuperSuper
     public abstract T willFail2() throws Throwable;
 
     @Override
-    public String willFail3() throws ClassNotFoundException, NoSuchMethodException, NoSuchFieldException
+    public String willFail3() throws RuntimeException, ClassNotFoundException, NoSuchMethodException, NoSuchFieldException
     {
         return "willFail3";
     }

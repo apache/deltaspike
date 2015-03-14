@@ -21,6 +21,7 @@ package org.apache.deltaspike.partialbean.impl.proxy;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.UndeclaredThrowableException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import javax.enterprise.inject.Typed;
 import org.objectweb.asm.ClassWriter;
@@ -212,12 +213,24 @@ public abstract class AsmProxyClassGenerator
             Class manualInvocationHandlerClass)
     {
         Type methodType = Type.getType(method);
-        Type[] exceptionTypes = getTypes(method.getExceptionTypes());
-
+        
+        ArrayList<Type> exceptionsToCatch = new ArrayList<Type>();
+        for (Class<?> exception : method.getExceptionTypes())
+        {
+            if (!RuntimeException.class.isAssignableFrom(exception))
+            {
+                exceptionsToCatch.add(Type.getType(exception));
+            }
+        }
+        
         // push the method definition
         int modifiers = (Opcodes.ACC_PUBLIC | Opcodes.ACC_PROTECTED) & method.getModifiers();
         Method asmMethod = Method.getMethod(method);
-        GeneratorAdapter mg = new GeneratorAdapter(modifiers, asmMethod, null, exceptionTypes, cw);
+        GeneratorAdapter mg = new GeneratorAdapter(modifiers,
+                asmMethod,
+                null,
+                getTypes(method.getExceptionTypes()),
+                cw);
 
         // copy annotations
         for (Annotation annotation : method.getDeclaredAnnotations())
@@ -240,23 +253,30 @@ public abstract class AsmProxyClassGenerator
         // cast the result
         mg.unbox(methodType.getReturnType());
 
+        // build try catch
+        Label tryBlockEnd = mg.mark();
+        
         // push return
         mg.returnValue();
 
-        // build try catch
-        Label tryBlockEnd = mg.mark();
-        boolean throwableCatched = false;
+        // catch runtime exceptions and rethrow it
+        Label rethrow = mg.mark();
+        mg.visitVarInsn(Opcodes.ASTORE, 1);
+        mg.visitVarInsn(Opcodes.ALOAD, 1);
+        mg.throwException();
+        mg.visitTryCatchBlock(tryBlockStart, tryBlockEnd, rethrow, Type.getInternalName(RuntimeException.class));
 
-        // catch declared exceptions
-        if (exceptionTypes.length > 0)
+        // catch checked exceptions and rethrow it
+        boolean throwableCatched = false;
+        if (exceptionsToCatch.size() > 0)
         {
-            Label rethrow = mg.mark();
+            rethrow = mg.mark();
             mg.visitVarInsn(Opcodes.ASTORE, 1);
             mg.visitVarInsn(Opcodes.ALOAD, 1);
             mg.throwException();
 
             // catch declared exceptions and rethrow it...
-            for (Type exceptionType : exceptionTypes)
+            for (Type exceptionType : exceptionsToCatch)
             {
                 if (exceptionType.getClassName().equals(Throwable.class.getName()))
                 {
@@ -266,9 +286,9 @@ public abstract class AsmProxyClassGenerator
             }
         }
 
+        // if throwable isn't alreached cachted, catch it and wrap it with an UndeclaredThrowableException and throw it
         if (!throwableCatched)
         {
-            // catch Throwable and wrap it with a UndeclaredThrowableException
             Type uteType = Type.getType(UndeclaredThrowableException.class);
             Label wrapAndRethrow = mg.mark();
 
