@@ -56,14 +56,16 @@ public class ScopedPartialBeanTest
     @Test
     public void testPartialBeanWithApplicationScope() throws Exception
     {
-        String result = BeanProvider.getContextualReference(ApplicationScopedPartialBean.class).getResult();
+        ApplicationScopedPartialBean bean = BeanProvider.getContextualReference(ApplicationScopedPartialBean.class);
+        
+        String result = bean.getResult();
 
         Assert.assertEquals("partial-test-false", result);
 
-        int count = BeanProvider.getContextualReference(ApplicationScopedPartialBean.class).getManualResult();
+        int count = bean.getManualResult();
         Assert.assertEquals(0, count);
 
-        count = BeanProvider.getContextualReference(ApplicationScopedPartialBean.class).getManualResult();
+        count = bean.getManualResult();
         Assert.assertEquals(1, count);
     }
 

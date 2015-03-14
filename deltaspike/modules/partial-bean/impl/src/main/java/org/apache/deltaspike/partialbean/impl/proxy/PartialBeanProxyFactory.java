@@ -32,6 +32,7 @@ import org.apache.deltaspike.core.util.ClassUtils;
 public abstract class PartialBeanProxyFactory
 {
     private static final String CLASSNAME_SUFFIX = "$$DSPartialBeanProxy";
+    private static final String SUPER_ACCESSOR_METHOD_SUFFIX = "$super";
 
     private PartialBeanProxyFactory()
     {
@@ -64,6 +65,7 @@ public abstract class PartialBeanProxyFactory
                     targetClass,
                     invocationHandlerClass,
                     CLASSNAME_SUFFIX,
+                    SUPER_ACCESSOR_METHOD_SUFFIX,
                     redirectMethods.toArray(new Method[redirectMethods.size()]),
                     interceptionMethods.toArray(new Method[interceptionMethods.size()]));
         }
@@ -76,6 +78,18 @@ public abstract class PartialBeanProxyFactory
         return clazz.getCanonicalName() + CLASSNAME_SUFFIX;
     }
 
+    private static String constructSuperAccessorMethodName(Method method)
+    {
+        return method.getName() + SUPER_ACCESSOR_METHOD_SUFFIX;
+    }
+    
+    public static Method getSuperAccessorMethod(Object proxy, Method method) throws NoSuchMethodException
+    {
+        return proxy.getClass().getMethod(
+                constructSuperAccessorMethodName(method),
+                method.getParameterTypes());
+    }
+    
     /**
      * Checks if the given class is DS proxy class.
      *

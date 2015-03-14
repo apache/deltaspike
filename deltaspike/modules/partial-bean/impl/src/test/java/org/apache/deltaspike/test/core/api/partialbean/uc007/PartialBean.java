@@ -33,6 +33,6 @@ public abstract class PartialBean
     @CustomInterceptor
     public void doSomething()
     {
-
+        String a = "test";
     }
 }

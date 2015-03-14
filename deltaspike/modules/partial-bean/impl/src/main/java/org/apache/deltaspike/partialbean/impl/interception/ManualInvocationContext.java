@@ -41,13 +41,14 @@ public class ManualInvocationContext<T, H> implements InvocationContext
     protected Object[] parameters;
     protected Map<String, Object> contextData;
     protected Object timer;
-    protected ManualInvocationHandler manualInvocationHandler;
-    
-    protected BeanManager beanManager;
-    
-    protected boolean proceedOriginal;
+    protected AbstractManualInvocationHandler manualInvocationHandler;
 
-    public ManualInvocationContext(ManualInvocationHandler manualInvocationHandler,
+    protected BeanManager beanManager;
+
+    protected boolean proceedOriginal;
+    protected Object proceedOriginalReturnValue;
+
+    public ManualInvocationContext(AbstractManualInvocationHandler manualInvocationHandler,
             List<Interceptor<H>> interceptors, T target, Method method, Object[] parameters, Object timer)
     {
         this.manualInvocationHandler = manualInvocationHandler;
@@ -101,7 +102,7 @@ public class ManualInvocationContext<T, H> implements InvocationContext
         {
             return null;
         }
-        
+
         if (interceptors.size() > interceptorIndex)
         {
             Interceptor<H> interceptor = null;
@@ -136,14 +137,24 @@ public class ManualInvocationContext<T, H> implements InvocationContext
             }
         }
 
-        
-        // workaround for OWB 1.1
-        // interceptor#intercept always return null. Therefore we must remember here,
-        // that our interceptor chain is finished and #proceedOriginal should be called outside
-        proceedOriginal = true;
-        
-        // all interceptors handled without return a value
-        return manualInvocationHandler.proceedOriginal(target, method, parameters);
+
+        // workaround for OWB 1.1, otherwise we could just return the proceedOriginalReturnValue value in this method
+        try
+        {
+            proceedOriginal = true;
+            proceedOriginalReturnValue = manualInvocationHandler.proceedOriginal(target, method, parameters);
+        }
+        catch (Exception e)
+        {
+            throw e;
+        }
+        catch (Throwable e)
+        {
+            // wrap the Throwable here as interceptors declared only "throws Exception"
+            throw new ManualInvocationThrowableWrapperException(e);
+        }
+
+        return null;
     }
 
     @Override
@@ -162,5 +173,15 @@ public class ManualInvocationContext<T, H> implements InvocationContext
     public boolean isProceedOriginal()
     {
         return proceedOriginal;
+    }
+
+    public Object getProceedOriginalReturnValue()
+    {
+        return proceedOriginalReturnValue;
+    }
+
+    public void setProceedOriginalReturnValue(Object proceedOriginalReturnValue)
+    {
+        this.proceedOriginalReturnValue = proceedOriginalReturnValue;
     }
 }

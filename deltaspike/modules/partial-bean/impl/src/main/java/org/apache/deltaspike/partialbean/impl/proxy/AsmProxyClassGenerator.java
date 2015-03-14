@@ -23,7 +23,6 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.util.Arrays;
 import javax.enterprise.inject.Typed;
-import org.apache.deltaspike.partialbean.impl.interception.ManualInvocationHandler;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
@@ -48,6 +47,7 @@ public abstract class AsmProxyClassGenerator
             Class<T> targetClass,
             Class<? extends InvocationHandler> invocationHandlerClass,
             String suffix,
+            String superAccessorMethodSuffix,
             java.lang.reflect.Method[] redirectMethods,
             java.lang.reflect.Method[] interceptionMethods)
     {
@@ -55,8 +55,8 @@ public abstract class AsmProxyClassGenerator
         String classFileName = proxyName.replace('.', '/');
 
         byte[] proxyBytes = generateProxyClassBytes(targetClass, invocationHandlerClass,
-                classFileName, redirectMethods, interceptionMethods);
-
+                classFileName, superAccessorMethodSuffix, redirectMethods, interceptionMethods);
+        
         Class<T> proxyClass = (Class<T>) loadClass(classLoader, proxyName, proxyBytes);
 
         return proxyClass;
@@ -65,6 +65,7 @@ public abstract class AsmProxyClassGenerator
     private static byte[] generateProxyClassBytes(Class<?> targetClass,
             Class<? extends InvocationHandler> invocationHandlerClass,
             String proxyName,
+            String superAccessorMethodSuffix,
             java.lang.reflect.Method[] redirectMethods,
             java.lang.reflect.Method[] interceptionMethods)
     {
@@ -101,12 +102,13 @@ public abstract class AsmProxyClassGenerator
 
         for (java.lang.reflect.Method method : redirectMethods)
         {
-            defineMethod(cw, method, proxyType, invocationHandlerType, superType, true);
+            defineMethod(cw, method, RedirectManualInvocationHandler.class);
         }
 
         for (java.lang.reflect.Method method : interceptionMethods)
         {
-            defineMethod(cw, method, proxyType, invocationHandlerType, superType, false);
+            defineSuperAccessorMethod(cw, method, superType, superAccessorMethodSuffix);
+            defineMethod(cw, method, CallSuperManualInvocationHandler.class);
         }
 
         return cw.toByteArray();
@@ -144,9 +146,8 @@ public abstract class AsmProxyClassGenerator
         try
         {
             // implement #setRedirectInvocationHandler
-            Method asmMethod = Method.getMethod(
-                            PartialBeanProxy.class.getDeclaredMethod("setRedirectInvocationHandler",
-                            InvocationHandler.class));
+            Method asmMethod = Method.getMethod(PartialBeanProxy.class.getDeclaredMethod(
+                    "setRedirectInvocationHandler", InvocationHandler.class));
             GeneratorAdapter mg = new GeneratorAdapter(Opcodes.ACC_PUBLIC, asmMethod, null, null, cw);
 
             mg.visitCode();
@@ -180,8 +181,35 @@ public abstract class AsmProxyClassGenerator
         }
     }
 
-    private static void defineMethod(ClassWriter cw, java.lang.reflect.Method method, Type proxyType,
-            Type invocationHandlerType, Type superType, boolean callInvocationHandler)
+    private static void defineSuperAccessorMethod(ClassWriter cw, java.lang.reflect.Method method, Type superType,
+            String superAccessorMethodSuffix) 
+    {
+        Method originalAsmMethod = Method.getMethod(method);
+        Method newAsmMethod = new Method(method.getName() + superAccessorMethodSuffix,
+                originalAsmMethod.getReturnType(),
+                originalAsmMethod.getArgumentTypes());
+        GeneratorAdapter mg = new GeneratorAdapter(Opcodes.ACC_PUBLIC, newAsmMethod, null, null, cw);
+        
+        mg.visitCode();
+        
+        // call super method
+        mg.loadThis();
+        mg.loadArgs();
+        mg.visitMethodInsn(Opcodes.INVOKESPECIAL,
+                superType.getInternalName(),
+                method.getName(),
+                Type.getMethodDescriptor(method),
+                false);
+        mg.returnValue();
+        
+        // finish the method
+        mg.endMethod();
+        mg.visitMaxs(10, 10);
+        mg.visitEnd();
+    }
+    
+    private static void defineMethod(ClassWriter cw, java.lang.reflect.Method method,
+            Class manualInvocationHandlerClass)
     {
         Type methodType = Type.getType(method);
         Type[] exceptionTypes = getTypes(method.getExceptionTypes());
@@ -204,58 +232,19 @@ public abstract class AsmProxyClassGenerator
         mg.loadThis();
         loadCurrentMethod(mg, method, methodType);
         loadArguments(mg, method, methodType);
-
-        // invoke our ProxyInvocationHandler and store it in a local variable
-        int manualInvocationHandlerReturnValue = mg.newLocal(TYPE_OBJECT);
-        mg.invokeStatic(Type.getType(ManualInvocationHandler.class),
+        
+        // invoke our ProxyInvocationHandler
+        mg.invokeStatic(Type.getType(manualInvocationHandlerClass),
                 Method.getMethod("Object staticInvoke(Object, java.lang.reflect.Method, Object[])"));
-        mg.storeLocal(manualInvocationHandlerReturnValue);
-        
-        // check if ManualInvocationHandler returned the PROCEED_ORIGINAL object
-        // if true, we switch to our special logic, otherwise return the returned value
-        Label proceedOriginalStart = new Label();
-        mg.getStatic(Type.getType(ManualInvocationHandler.class), "PROCEED_ORIGINAL", TYPE_OBJECT);
-        mg.loadLocal(manualInvocationHandlerReturnValue);
-        mg.ifCmp(TYPE_OBJECT, GeneratorAdapter.EQ, proceedOriginalStart);
-        
-        // cast the result
-        mg.loadLocal(manualInvocationHandlerReturnValue);
-        mg.unbox(methodType.getReturnType());
 
-        Label tryBlockEnd = mg.mark();
+        // cast the result
+        mg.unbox(methodType.getReturnType());
 
         // push return
         mg.returnValue();
 
-        mg.mark(proceedOriginalStart);
-        if (callInvocationHandler)
-        {
-            // call stored InvocationHandler
-            mg.loadThis();
-            mg.getField(proxyType, FIELDNAME_HANDLER, invocationHandlerType);
-            mg.loadThis();
-            loadCurrentMethod(mg, method, methodType);
-            loadArguments(mg, method, methodType);
-            mg.invokeVirtual(invocationHandlerType,
-                    Method.getMethod("Object invoke(Object, java.lang.reflect.Method, Object[])"));
-            mg.unbox(methodType.getReturnType());
-            mg.returnValue();
-        }
-        else
-        {
-            // call super method
-            mg.loadThis();
-            mg.loadArgs();
-            mg.visitMethodInsn(Opcodes.INVOKESPECIAL,
-                    superType.getInternalName(),
-                    method.getName(),
-                    Type.getMethodDescriptor(method),
-                    false);
-            mg.returnValue();
-        }
-        
-        
-        
+        // build try catch
+        Label tryBlockEnd = mg.mark();
         boolean throwableCatched = false;
 
         // catch declared exceptions
