@@ -16,17 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.partialbean.impl.proxy;
+package org.apache.deltaspike.core.util.proxy.invocation;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import javax.enterprise.inject.Typed;
-import org.apache.deltaspike.partialbean.impl.interception.AbstractManualInvocationHandler;
+import org.apache.deltaspike.core.util.invocation.AbstractManualInvocationHandler;
+import org.apache.deltaspike.core.util.proxy.DeltaSpikeProxy;
 
 @Typed
-public class RedirectManualInvocationHandler extends AbstractManualInvocationHandler
+public class DelegateManualInvocationHandler extends AbstractManualInvocationHandler
 {
-    private static final RedirectManualInvocationHandler INSTANCE = new RedirectManualInvocationHandler();
+    private static final DelegateManualInvocationHandler INSTANCE = new DelegateManualInvocationHandler();
     
     public static Object staticInvoke(Object proxy, Method method, Object[] parameters) throws Throwable
     {
@@ -36,7 +37,7 @@ public class RedirectManualInvocationHandler extends AbstractManualInvocationHan
     @Override
     protected Object proceedOriginal(Object proxy, Method method, Object[] parameters) throws Throwable
     {
-        InvocationHandler redirectInvocationHandler = ((PartialBeanProxy) proxy).getRedirectInvocationHandler();
-        return redirectInvocationHandler.invoke(proxy, method, parameters);
+        InvocationHandler delegateInvocationHandler = ((DeltaSpikeProxy) proxy).getDelegateInvocationHandler();
+        return delegateInvocationHandler.invoke(proxy, method, parameters);
     }
 }

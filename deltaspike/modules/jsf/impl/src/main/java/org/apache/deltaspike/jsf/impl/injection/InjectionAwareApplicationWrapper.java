@@ -20,7 +20,6 @@ package org.apache.deltaspike.jsf.impl.injection;
 
 import org.apache.deltaspike.core.util.ProxyUtils;
 import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;
-import org.apache.deltaspike.jsf.impl.injection.proxy.ProxyMarker;
 import org.apache.deltaspike.jsf.impl.security.SecurityAwareViewHandler;
 
 import javax.faces.FacesException;
@@ -31,6 +30,7 @@ import javax.faces.convert.Converter;
 import javax.faces.event.PreDestroyViewMapEvent;
 import javax.faces.event.SystemEvent;
 import javax.faces.validator.Validator;
+import org.apache.deltaspike.core.util.proxy.DeltaSpikeProxy;
 
 public class InjectionAwareApplicationWrapper extends ApplicationWrapper
 {
@@ -80,7 +80,7 @@ public class InjectionAwareApplicationWrapper extends ApplicationWrapper
             return defaultResult;
         }
 
-        if (result instanceof ProxyMarker || ProxyUtils.isProxiedClass(result.getClass()))
+        if (result instanceof DeltaSpikeProxy || ProxyUtils.isProxiedClass(result.getClass()))
         {
             return result;
         }
@@ -114,7 +114,7 @@ public class InjectionAwareApplicationWrapper extends ApplicationWrapper
             return defaultResult;
         }
 
-        if (result instanceof ProxyMarker || ProxyUtils.isProxiedClass(result.getClass()))
+        if (result instanceof DeltaSpikeProxy || ProxyUtils.isProxiedClass(result.getClass()))
         {
             return result;
         }

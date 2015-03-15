@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.partialbean.impl.interception;
+package org.apache.deltaspike.core.util.invocation;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -138,7 +138,7 @@ public class ManualInvocationContext<T, H> implements InvocationContext
         }
 
 
-        // workaround for OWB 1.1, otherwise we could just return the proceedOriginalReturnValue value in this method
+        // workaround for OWB 1.1, otherwise we could just return the proceedOriginalReturnValue here
         try
         {
             proceedOriginal = true;

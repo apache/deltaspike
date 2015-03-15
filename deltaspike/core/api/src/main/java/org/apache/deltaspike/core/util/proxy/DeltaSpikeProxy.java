@@ -16,12 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.partialbean.impl.interception;
+package org.apache.deltaspike.core.util.proxy;
 
-public class ManualInvocationThrowableWrapperException extends Exception
+import java.lang.reflect.InvocationHandler;
+
+public interface DeltaSpikeProxy
 {
-    public ManualInvocationThrowableWrapperException(Throwable e)
-    {
-        super(e);
-    }
+    void setDelegateInvocationHandler(InvocationHandler redirectInvocationHandler);
+
+    InvocationHandler getDelegateInvocationHandler();
 }

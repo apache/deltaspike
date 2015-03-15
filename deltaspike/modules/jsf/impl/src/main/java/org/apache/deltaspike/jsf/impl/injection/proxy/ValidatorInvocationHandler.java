@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.jsf.impl.injection.proxy;
 
-import javax.faces.component.PartialStateHolder;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
@@ -29,15 +28,6 @@ public class ValidatorInvocationHandler implements InvocationHandler
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
     {
-        // if the original class implements PartialStateHolder already, we won't get in here
-        if (PartialStateHolder.class.equals(method.getDeclaringClass()))
-        {
-            return method.invoke(defaultPartialStateHolder, args);
-        }
-        else
-        {
-            //shouldn't happen, because DelegatingMethodHandler delegates all methods to the real implementations
-            return method.invoke(proxy, args);
-        }
+        return method.invoke(defaultPartialStateHolder, args);
     }
 }

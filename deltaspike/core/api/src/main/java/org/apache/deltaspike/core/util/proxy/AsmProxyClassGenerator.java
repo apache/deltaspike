@@ -16,8 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.partialbean.impl.proxy;
+package org.apache.deltaspike.core.util.proxy;
 
+import org.apache.deltaspike.core.util.proxy.invocation.InterceptManualInvocationHandler;
+import org.apache.deltaspike.core.util.proxy.invocation.DelegateManualInvocationHandler;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.UndeclaredThrowableException;
@@ -34,7 +36,7 @@ import org.objectweb.asm.commons.Method;
 @Typed
 public abstract class AsmProxyClassGenerator
 {
-    private static final String FIELDNAME_HANDLER = "__handler";
+    private static final String FIELDNAME_DELEGATE_INVOCATION_HANDLER = "delegateInvocationHandler";
 
     private static final Type TYPE_CLASS = Type.getType(Class.class);
     private static final Type TYPE_OBJECT = Type.getType(Object.class);
@@ -49,14 +51,15 @@ public abstract class AsmProxyClassGenerator
             Class<? extends InvocationHandler> invocationHandlerClass,
             String suffix,
             String superAccessorMethodSuffix,
-            java.lang.reflect.Method[] redirectMethods,
-            java.lang.reflect.Method[] interceptionMethods)
+            Class<?>[] additionalInterfaces,
+            java.lang.reflect.Method[] delegateMethods,
+            java.lang.reflect.Method[] interceptMethods)
     {
         String proxyName = targetClass.getCanonicalName() + suffix;
         String classFileName = proxyName.replace('.', '/');
 
         byte[] proxyBytes = generateProxyClassBytes(targetClass, invocationHandlerClass,
-                classFileName, superAccessorMethodSuffix, redirectMethods, interceptionMethods);
+                classFileName, superAccessorMethodSuffix, additionalInterfaces, delegateMethods, interceptMethods);
         
         Class<T> proxyClass = (Class<T>) loadClass(classLoader, proxyName, proxyBytes);
 
@@ -67,8 +70,9 @@ public abstract class AsmProxyClassGenerator
             Class<? extends InvocationHandler> invocationHandlerClass,
             String proxyName,
             String superAccessorMethodSuffix,
-            java.lang.reflect.Method[] redirectMethods,
-            java.lang.reflect.Method[] interceptionMethods)
+            Class<?>[] additionalInterfaces,
+            java.lang.reflect.Method[] delegateMethods,
+            java.lang.reflect.Method[] interceptMethods)
     {
         Class<?> superClass = targetClass;
         String[] interfaces = new String[] { };
@@ -79,10 +83,19 @@ public abstract class AsmProxyClassGenerator
             interfaces = new String[] { Type.getInternalName(targetClass) };
         }
 
-        // add PartialBeanProxy as interface
+        // add DeltaSpikeProxy as interface
         interfaces = Arrays.copyOf(interfaces, interfaces.length + 1);
-        interfaces[interfaces.length - 1] = Type.getInternalName(PartialBeanProxy.class);
+        interfaces[interfaces.length - 1] = Type.getInternalName(DeltaSpikeProxy.class);
 
+        if (additionalInterfaces != null && additionalInterfaces.length > 0)
+        {
+            interfaces = Arrays.copyOf(interfaces, interfaces.length + additionalInterfaces.length);
+            for (int i = 0; i < additionalInterfaces.length; i++)
+            {
+                interfaces[(interfaces.length - 1) + i] = Type.getInternalName(additionalInterfaces[i]);
+            }
+        }
+        
         Type superType = Type.getType(superClass);
         Type proxyType = Type.getObjectType(proxyName);
         Type invocationHandlerType = Type.getType(invocationHandlerClass);
@@ -99,17 +112,17 @@ public abstract class AsmProxyClassGenerator
 
         defineInvocationHandlerField(cw, invocationHandlerType);
         defineConstructor(cw, proxyType, superType);
-        definePartialBeanProxyMethods(cw, proxyType, invocationHandlerType);
+        defineDeltaSpikeProxyMethods(cw, proxyType, invocationHandlerType);
 
-        for (java.lang.reflect.Method method : redirectMethods)
+        for (java.lang.reflect.Method method : delegateMethods)
         {
-            defineMethod(cw, method, RedirectManualInvocationHandler.class);
+            defineMethod(cw, method, DelegateManualInvocationHandler.class);
         }
 
-        for (java.lang.reflect.Method method : interceptionMethods)
+        for (java.lang.reflect.Method method : interceptMethods)
         {
             defineSuperAccessorMethod(cw, method, superType, superAccessorMethodSuffix);
-            defineMethod(cw, method, CallSuperManualInvocationHandler.class);
+            defineMethod(cw, method, InterceptManualInvocationHandler.class);
         }
 
         return cw.toByteArray();
@@ -118,9 +131,9 @@ public abstract class AsmProxyClassGenerator
     private static void defineInvocationHandlerField(ClassWriter cw, Type invocationHandlerType)
     {
         // generates
-        // private MyPartialBeanInvocationHandler __handler;
-        cw.visitField(Opcodes.ACC_PRIVATE, FIELDNAME_HANDLER, invocationHandlerType.getDescriptor(), null, null)
-                .visitEnd();
+        // private MyInvocationHandler delegateInvocationHandler;
+        cw.visitField(Opcodes.ACC_PRIVATE, FIELDNAME_DELEGATE_INVOCATION_HANDLER,
+                invocationHandlerType.getDescriptor(), null, null).visitEnd();
     }
 
     private static void defineConstructor(ClassWriter cw, Type proxyType, Type superType)
@@ -142,13 +155,13 @@ public abstract class AsmProxyClassGenerator
         mg.visitEnd();
     }
 
-    private static void definePartialBeanProxyMethods(ClassWriter cw, Type proxyType, Type invocationHandlerType)
+    private static void defineDeltaSpikeProxyMethods(ClassWriter cw, Type proxyType, Type invocationHandlerType)
     {
         try
         {
-            // implement #setRedirectInvocationHandler
-            Method asmMethod = Method.getMethod(PartialBeanProxy.class.getDeclaredMethod(
-                    "setRedirectInvocationHandler", InvocationHandler.class));
+            // implement #setDelegateInvocationHandler
+            Method asmMethod = Method.getMethod(DeltaSpikeProxy.class.getDeclaredMethod(
+                    "setDelegateInvocationHandler", InvocationHandler.class));
             GeneratorAdapter mg = new GeneratorAdapter(Opcodes.ACC_PUBLIC, asmMethod, null, null, cw);
 
             mg.visitCode();
@@ -156,21 +169,21 @@ public abstract class AsmProxyClassGenerator
             mg.loadThis();
             mg.loadArg(0);
             mg.checkCast(invocationHandlerType);
-            mg.putField(proxyType, FIELDNAME_HANDLER, invocationHandlerType);
+            mg.putField(proxyType, FIELDNAME_DELEGATE_INVOCATION_HANDLER, invocationHandlerType);
             mg.returnValue();
 
             mg.visitMaxs(2, 1);
             mg.visitEnd();
 
 
-            // implement #getRedirectInvocationHandler
-            asmMethod = Method.getMethod(PartialBeanProxy.class.getDeclaredMethod("getRedirectInvocationHandler"));
+            // implement #getDelegateInvocationHandler
+            asmMethod = Method.getMethod(DeltaSpikeProxy.class.getDeclaredMethod("getDelegateInvocationHandler"));
             mg = new GeneratorAdapter(Opcodes.ACC_PUBLIC, asmMethod, null, null, cw);
 
             mg.visitCode();
 
             mg.loadThis();
-            mg.getField(proxyType, FIELDNAME_HANDLER, invocationHandlerType);
+            mg.getField(proxyType, FIELDNAME_DELEGATE_INVOCATION_HANDLER, invocationHandlerType);
             mg.returnValue();
 
             mg.visitMaxs(2, 1);
@@ -178,7 +191,7 @@ public abstract class AsmProxyClassGenerator
         }
         catch (NoSuchMethodException e)
         {
-            throw new IllegalStateException("Unable to implement " + PartialBeanProxy.class.getName(), e);
+            throw new IllegalStateException("Unable to implement " + DeltaSpikeProxy.class.getName(), e);
         }
     }
 

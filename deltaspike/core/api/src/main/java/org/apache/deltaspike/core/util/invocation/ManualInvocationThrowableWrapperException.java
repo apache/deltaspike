@@ -16,8 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.jsf.impl.injection.proxy;
+package org.apache.deltaspike.core.util.invocation;
 
-public interface ProxyMarker
+public class ManualInvocationThrowableWrapperException extends Exception
 {
+    public ManualInvocationThrowableWrapperException(Throwable e)
+    {
+        super(e);
+    }
 }

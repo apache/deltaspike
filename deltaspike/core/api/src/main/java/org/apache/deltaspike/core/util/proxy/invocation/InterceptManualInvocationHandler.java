@@ -16,17 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.partialbean.impl.proxy;
+package org.apache.deltaspike.core.util.proxy.invocation;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import javax.enterprise.inject.Typed;
-import org.apache.deltaspike.partialbean.impl.interception.AbstractManualInvocationHandler;
+import org.apache.deltaspike.core.util.invocation.AbstractManualInvocationHandler;
+import org.apache.deltaspike.core.util.proxy.DeltaSpikeProxyFactory;
 
 @Typed
-public class CallSuperManualInvocationHandler extends AbstractManualInvocationHandler
+public class InterceptManualInvocationHandler extends AbstractManualInvocationHandler
 {
-    private static final CallSuperManualInvocationHandler INSTANCE = new CallSuperManualInvocationHandler();
+    private static final InterceptManualInvocationHandler INSTANCE = new InterceptManualInvocationHandler();
     
     public static Object staticInvoke(Object proxy, Method method, Object[] parameters) throws Throwable
     {
@@ -38,7 +39,7 @@ public class CallSuperManualInvocationHandler extends AbstractManualInvocationHa
     {
         try
         {
-            Method superAccessorMethod = PartialBeanProxyFactory.getSuperAccessorMethod(proxy, method);
+            Method superAccessorMethod = DeltaSpikeProxyFactory.getSuperAccessorMethod(proxy, method);
             return superAccessorMethod.invoke(proxy, parameters);
         }
         catch (InvocationTargetException e)

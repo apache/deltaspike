@@ -54,16 +54,19 @@ public class DefaultPartialStateHolder implements PartialStateHolder
         this.transientValue = newTransientValue;
     }
 
+    @Override
     public void clearInitialState()
     {
         this.initialStateMarked = false;
     }
 
+    @Override
     public boolean initialStateMarked()
     {
         return this.initialStateMarked;
     }
 
+    @Override
     public void markInitialState()
     {
         this.initialStateMarked = true;

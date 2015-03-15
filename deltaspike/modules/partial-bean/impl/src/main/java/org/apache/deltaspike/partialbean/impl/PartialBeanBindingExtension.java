@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.partialbean.impl;
 
-import org.apache.deltaspike.partialbean.impl.proxy.PartialBeanProxyFactory;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Modifier;
@@ -36,6 +35,7 @@ import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.core.util.bean.BeanBuilder;
 import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
+import org.apache.deltaspike.core.util.proxy.DeltaSpikeProxyContextualLifecycle;
 import org.apache.deltaspike.partialbean.api.PartialBeanBinding;
 
 public class PartialBeanBindingExtension implements Extension, Deactivatable
@@ -59,12 +59,6 @@ public class PartialBeanBindingExtension implements Extension, Deactivatable
         }
 
         Class<X> beanClass = pat.getAnnotatedType().getJavaClass();
-
-        // skip early generated proxies
-        if (PartialBeanProxyFactory.isProxyClass(beanClass))
-        {
-            return;
-        }
 
         // skip classes without a partial bean binding
         Class<? extends Annotation> bindingClass = extractBindingClass(pat);
@@ -170,13 +164,15 @@ public class PartialBeanBindingExtension implements Extension, Deactivatable
 
         AnnotatedType<T> annotatedType = new AnnotatedTypeBuilder<T>().readFromType(beanClass).create();
 
-        PartialBeanLifecycle beanLifecycle =
-                new PartialBeanLifecycle(beanClass, descriptor.getHandler(), beanManager);
+        DeltaSpikeProxyContextualLifecycle lifecycle = new DeltaSpikeProxyContextualLifecycle(beanClass,
+                descriptor.getHandler(),
+                PartialBeanProxyFactory.getInstance(),
+                beanManager);
 
         BeanBuilder<T> beanBuilder = new BeanBuilder<T>(beanManager)
                 .readFromType(annotatedType)
                 .passivationCapable(true)
-                .beanLifecycle(beanLifecycle);
+                .beanLifecycle(lifecycle);
 
         return beanBuilder.create();
     }

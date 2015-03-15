@@ -16,44 +16,41 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.partialbean.impl;
+package org.apache.deltaspike.core.util.proxy;
 
-import org.apache.deltaspike.partialbean.impl.proxy.PartialBeanProxyFactory;
-import org.apache.deltaspike.partialbean.impl.proxy.PartialBeanProxy;
-import org.apache.deltaspike.core.util.ExceptionUtils;
-import org.apache.deltaspike.core.util.metadata.builder.ContextualLifecycle;
-
-import javax.enterprise.context.spi.CreationalContext;
 import java.lang.reflect.InvocationHandler;
 import java.util.Set;
 import javax.enterprise.context.Dependent;
+import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InjectionTarget;
 import javax.enterprise.inject.spi.PassivationCapable;
-
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.core.util.ExceptionUtils;
+import org.apache.deltaspike.core.util.metadata.builder.ContextualLifecycle;
 
-class PartialBeanLifecycle<T, H extends InvocationHandler> implements ContextualLifecycle<T>
+public class DeltaSpikeProxyContextualLifecycle<T, H extends InvocationHandler> implements ContextualLifecycle<T>
 {
     private final Class<T> proxyClass;
-    private final Class<T> partialBeanClass;
-    private final Class<H> handlerClass;
+    private final Class<H> delegateInvocationHandlerClass;
+    private final Class<T> targetClass;
     
     private InjectionTarget<T> injectionTarget;
     private CreationalContext<?> creationalContextOfDependentHandler;
 
-    PartialBeanLifecycle(Class<T> partialBeanClass, Class<H> handlerClass, BeanManager beanManager)
+    public DeltaSpikeProxyContextualLifecycle(Class<T> targetClass, Class<H> delegateInvocationHandlerClass,
+            DeltaSpikeProxyFactory proxyFactory, BeanManager beanManager)
     {
-        this.partialBeanClass = partialBeanClass;
-        this.proxyClass = PartialBeanProxyFactory.getProxyClass(partialBeanClass, handlerClass);
-        this.handlerClass = handlerClass;
+        this.targetClass = targetClass;
+        this.delegateInvocationHandlerClass = delegateInvocationHandlerClass;
+        this.proxyClass = proxyFactory.getProxyClass(targetClass, delegateInvocationHandlerClass);
 
-        if (!partialBeanClass.isInterface())
+        if (!targetClass.isInterface())
         {
-            AnnotatedType<T> annotatedType = beanManager.createAnnotatedType(this.partialBeanClass);
+            AnnotatedType<T> annotatedType = beanManager.createAnnotatedType(this.targetClass);
             this.injectionTarget = beanManager.createInjectionTarget(annotatedType);
         }
     }
@@ -65,7 +62,11 @@ class PartialBeanLifecycle<T, H extends InvocationHandler> implements Contextual
         {
             T instance = proxyClass.newInstance();
 
-            ((PartialBeanProxy) instance).setRedirectInvocationHandler(createHandlerInstance());
+            if (delegateInvocationHandlerClass != null)
+            {
+                H delegateInvocationHandler = instantiateDelegateInvocationHandler();
+                ((DeltaSpikeProxy) instance).setDelegateInvocationHandler(delegateInvocationHandler);
+            }
 
             if (this.injectionTarget != null)
             {
@@ -80,7 +81,7 @@ class PartialBeanLifecycle<T, H extends InvocationHandler> implements Contextual
             ExceptionUtils.throwAsRuntimeException(e);
         }
 
-        //can't happen
+        // can't happen
         return null;
     }
 
@@ -100,9 +101,9 @@ class PartialBeanLifecycle<T, H extends InvocationHandler> implements Contextual
         creationalContext.release();
     }
     
-    private H createHandlerInstance()
+    protected H instantiateDelegateInvocationHandler()
     {
-        Set<Bean<H>> handlerBeans = BeanProvider.getBeanDefinitions(this.handlerClass, false, true);
+        Set<Bean<H>> handlerBeans = BeanProvider.getBeanDefinitions(this.delegateInvocationHandlerClass, false, true);
         
         if (handlerBeans.size() != 1)
         {
@@ -121,8 +122,8 @@ class PartialBeanLifecycle<T, H extends InvocationHandler> implements Contextual
                 }
             }
 
-            throw new IllegalStateException(handlerBeans.size() + " beans found for " + this.handlerClass +
-                " found beans: " + beanInfo.toString());
+            throw new IllegalStateException(handlerBeans.size() + " beans found for "
+                    + this.delegateInvocationHandlerClass + " found beans: " + beanInfo.toString());
         }
 
         Bean<H> handlerBean = handlerBeans.iterator().next();
@@ -130,7 +131,8 @@ class PartialBeanLifecycle<T, H extends InvocationHandler> implements Contextual
         BeanManager beanManager = BeanManagerProvider.getInstance().getBeanManager();
         CreationalContext<?> creationalContext = beanManager.createCreationalContext(handlerBean);
         
-        H handlerInstance = (H) beanManager.getReference(handlerBean, this.handlerClass, creationalContext);
+        H handlerInstance = (H) beanManager.getReference(handlerBean,
+                this.delegateInvocationHandlerClass, creationalContext);
         
         if (handlerBean.getScope().equals(Dependent.class))
         {

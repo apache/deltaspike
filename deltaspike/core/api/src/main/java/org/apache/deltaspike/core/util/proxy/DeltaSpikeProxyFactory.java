@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.partialbean.impl.proxy;
+package org.apache.deltaspike.core.util.proxy;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
@@ -26,22 +26,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import javax.enterprise.inject.Typed;
 import javax.interceptor.InterceptorBinding;
 import org.apache.deltaspike.core.util.ClassUtils;
 
-@Typed
-public abstract class PartialBeanProxyFactory
+public abstract class DeltaSpikeProxyFactory
 {
-    private static final String CLASSNAME_SUFFIX = "$$DSPartialBeanProxy";
     private static final String SUPER_ACCESSOR_METHOD_SUFFIX = "$super";
-
-    private PartialBeanProxyFactory()
-    {
-        // prevent instantiation
-    }
-
-    public static <T> Class<T> getProxyClass(Class<T> targetClass,
+    
+    public <T> Class<T> getProxyClass(Class<T> targetClass,
             Class<? extends InvocationHandler> invocationHandlerClass)
     {
         Class<T> proxyClass = ClassUtils.tryToLoadClassForName(constructProxyClassName(targetClass), targetClass);
@@ -53,21 +45,23 @@ public abstract class PartialBeanProxyFactory
         return proxyClass;
     }
 
-    private static synchronized <T> Class<T> createProxyClass(ClassLoader classLoader, Class<T> targetClass,
+    private synchronized <T> Class<T> createProxyClass(ClassLoader classLoader, Class<T> targetClass,
             Class<? extends InvocationHandler> invocationHandlerClass)
     {
         Class<T> proxyClass = ClassUtils.tryToLoadClassForName(constructProxyClassName(targetClass), targetClass);
         if (proxyClass == null)
         {
-            ArrayList<Method> redirectMethods = new ArrayList<Method>();
-            ArrayList<Method> interceptionMethods = new ArrayList<Method>();
-            collectMethods(targetClass, redirectMethods, interceptionMethods);
+            ArrayList<Method> allMethods = collectAllMethods(targetClass);
+            ArrayList<Method> interceptMethods = filterInterceptMethods(targetClass, allMethods);
+            ArrayList<Method> delegateMethods = getDelegateMethods(targetClass, allMethods);
 
-            // check if a interceptor is defined on class level. if yes -> proxy all public methods
-            if (!containsInterceptorBinding(targetClass.getDeclaredAnnotations()))
+            // check if a interceptor is defined on class level. if not, skip interceptor methods
+            if (delegateMethods != null
+                    && interceptMethods.size() > 0
+                    && !containsInterceptorBinding(targetClass.getDeclaredAnnotations()))
             {
                 // loop every method and check if a interceptor is defined on the method -> otherwise don't proxy
-                Iterator<Method> iterator = interceptionMethods.iterator();
+                Iterator<Method> iterator = interceptMethods.iterator();
                 while (iterator.hasNext())
                 {
                     Method method = iterator.next();
@@ -81,17 +75,20 @@ public abstract class PartialBeanProxyFactory
             proxyClass = AsmProxyClassGenerator.generateProxyClass(classLoader,
                     targetClass,
                     invocationHandlerClass,
-                    CLASSNAME_SUFFIX,
+                    getProxyClassSuffix(),
                     SUPER_ACCESSOR_METHOD_SUFFIX,
-                    redirectMethods.toArray(new Method[redirectMethods.size()]),
-                    interceptionMethods.toArray(new Method[interceptionMethods.size()]));
+                    getAdditionalInterfacesToImplement(targetClass),
+                    delegateMethods == null ? new Method[0]
+                            : delegateMethods.toArray(new Method[delegateMethods.size()]),
+                    interceptMethods == null ? new Method[0]
+                            : interceptMethods.toArray(new Method[interceptMethods.size()]));
         }
 
         return proxyClass;
     }
-
+    
     // TODO stereotypes
-    private static boolean containsInterceptorBinding(Annotation[] annotations)
+    protected boolean containsInterceptorBinding(Annotation[] annotations)
     {
         for (Annotation annotation : annotations)
         {
@@ -103,13 +100,13 @@ public abstract class PartialBeanProxyFactory
         
         return false;
     }
-    
-    private static String constructProxyClassName(Class<?> clazz)
+        
+    protected String constructProxyClassName(Class<?> clazz)
     {
-        return clazz.getCanonicalName() + CLASSNAME_SUFFIX;
+        return clazz.getName() + getProxyClassSuffix();
     }
 
-    private static String constructSuperAccessorMethodName(Method method)
+    protected static String constructSuperAccessorMethodName(Method method)
     {
         return method.getName() + SUPER_ACCESSOR_METHOD_SUFFIX;
     }
@@ -127,16 +124,53 @@ public abstract class PartialBeanProxyFactory
      * @param clazz
      * @return
      */
-    public static boolean isProxyClass(Class<?> clazz)
+    public boolean isProxyClass(Class<?> clazz)
     {
-        return clazz.getName().endsWith(CLASSNAME_SUFFIX);
+        return clazz.getName().endsWith(getProxyClassSuffix());
     }
 
-    private static void collectMethods(Class<?> clazz,
-            ArrayList<Method> redirectMethods,
-            ArrayList<Method> interceptionMethods)
+    protected boolean hasSameSignature(Method a, Method b)
     {
-        List<Method> methods = new ArrayList<Method>();
+        return a.getName().equals(b.getName())
+                && a.getReturnType().equals(b.getReturnType())
+                && Arrays.equals(a.getParameterTypes(), b.getParameterTypes());
+    }
+
+    protected boolean ignoreMethod(Method method, List<Method> methods)
+    {
+        // we have no interest in generics bridge methods
+        if (method.isBridge())
+        {
+            return true;
+        }
+
+        // we do not proxy finalize()
+        if ("finalize".equals(method.getName()))
+        {
+            return true;
+        }
+
+        // same method...
+        if (methods.contains(method))
+        {
+            return true;
+        }
+
+        // check if a method with the same signature is already available
+        for (Method currentMethod : methods)
+        {
+            if (hasSameSignature(currentMethod, method))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    
+    protected ArrayList<Method> collectAllMethods(Class<?> clazz)
+    {
+        ArrayList<Method> methods = new ArrayList<Method>();
         for (Method method : clazz.getDeclaredMethods())
         {
             if (!ignoreMethod(method, methods))
@@ -205,59 +239,36 @@ public abstract class PartialBeanProxyFactory
             currentClass = currentClass.getSuperclass();
         }
 
-        Iterator<Method> it = methods.iterator();
+        return methods;
+    }
+    
+    protected ArrayList<Method> filterInterceptMethods(Class<?> targetClass, ArrayList<Method> allMethods)
+    {
+        ArrayList<Method> methods = new ArrayList<Method>();
+        
+        Iterator<Method> it = allMethods.iterator();
         while (it.hasNext())
         {
             Method method = it.next();
 
-            if (Modifier.isAbstract(method.getModifiers()))
+            if (Modifier.isPublic(method.getModifiers())
+                    && !Modifier.isFinal(method.getModifiers())
+                    && !Modifier.isAbstract(method.getModifiers()))
             {
-                redirectMethods.add(method);
-            }
-            else if (Modifier.isPublic(method.getModifiers()) && !Modifier.isFinal(method.getModifiers()))
-            {
-                interceptionMethods.add(method);
+                methods.add(method);
             }
         }
-
+        
+        return methods;
     }
-
-    private static boolean ignoreMethod(Method method, List<Method> methods)
+    
+    protected Class<?>[] getAdditionalInterfacesToImplement(Class<?> targetClass)
     {
-        // we have no interest in generics bridge methods
-        if (method.isBridge())
-        {
-            return true;
-        }
-
-        // we do not proxy finalize()
-        if ("finalize".equals(method.getName()))
-        {
-            return true;
-        }
-
-        // same method...
-        if (methods.contains(method))
-        {
-            return true;
-        }
-
-        // check if a method with the same signature is already available
-        for (Method currentMethod : methods)
-        {
-            if (hasSameSignature(currentMethod, method))
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return null;
     }
-
-    private static boolean hasSameSignature(Method a, Method b)
-    {
-        return a.getName().equals(b.getName())
-                && a.getReturnType().equals(b.getReturnType())
-                && Arrays.equals(a.getParameterTypes(), b.getParameterTypes());
-    }
+    
+    protected abstract ArrayList<Method> getDelegateMethods(Class<?> targetClass, ArrayList<Method> allMethods);
+    
+    protected abstract String getProxyClassSuffix();
 }
+

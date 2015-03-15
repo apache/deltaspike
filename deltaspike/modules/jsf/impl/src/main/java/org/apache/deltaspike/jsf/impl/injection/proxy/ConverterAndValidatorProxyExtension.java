@@ -20,7 +20,6 @@ package org.apache.deltaspike.jsf.impl.injection.proxy;
 
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
-import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.bean.BeanBuilder;
 import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
 
@@ -41,6 +40,7 @@ import java.lang.reflect.Modifier;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
+import org.apache.deltaspike.core.util.proxy.DeltaSpikeProxyContextualLifecycle;
 
 public class ConverterAndValidatorProxyExtension implements Extension, Deactivatable
 {
@@ -81,15 +81,6 @@ public class ConverterAndValidatorProxyExtension implements Extension, Deactivat
         //converters/validators without properties for tags, will be handled by the corresponding manual wrapper
         if (!hasPublicProperty(beanClass))
         {
-            return;
-        }
-
-        Object proxyFactory = ClassUtils.tryToInstantiateClassForName("javassist.util.proxy.ProxyFactory");
-
-        if (proxyFactory == null)
-        {
-            LOG.warning("To use dependency-injection in converters/validators with properties, " +
-                "you have to add javassist to the application.");
             return;
         }
 
@@ -146,7 +137,6 @@ public class ConverterAndValidatorProxyExtension implements Extension, Deactivat
         return false;
     }
 
-    @SuppressWarnings("UnusedDeclaration")
     public <X> void createBeans(@Observes AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager)
     {
         if (!this.isActivated)
@@ -175,14 +165,13 @@ public class ConverterAndValidatorProxyExtension implements Extension, Deactivat
 
         AnnotatedType<T> annotatedType = new AnnotatedTypeBuilder<T>().readFromType(beanClass).create();
 
-        ConverterAndValidatorLifecycle beanLifecycle =
-            new ConverterAndValidatorLifecycle(beanClass, invocationHandlerClass, beanManager);
+        DeltaSpikeProxyContextualLifecycle lifecycle = new DeltaSpikeProxyContextualLifecycle(beanClass,
+                invocationHandlerClass, ConverterAndValidatorProxyFactory.getInstance(), beanManager);
 
         BeanBuilder<T> beanBuilder = new BeanBuilder<T>(beanManager)
             .readFromType(annotatedType)
             .passivationCapable(true)
-            .beanLifecycle(beanLifecycle)
-            .addType(ProxyMarker.class);
+            .beanLifecycle(lifecycle);
 
         return beanBuilder.create();
     }

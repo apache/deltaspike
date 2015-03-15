@@ -44,13 +44,6 @@ public abstract class ArchiveUtils
                 "ds-core_and_partial-bean");
         result.addAll(Arrays.asList(temp));
 
-        temp = ShrinkWrapArchiveUtil.getArchives(null,
-                "META-INF/MANIFEST.MF",
-                new String[] { "org.objectweb.asm" },
-                new String[] { },
-                "asm");
-        result.addAll(Arrays.asList(temp));
-
         return result.toArray(new JavaArchive[result.size()]);
     }
 }

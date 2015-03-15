@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.partialbean.impl.interception;
+package org.apache.deltaspike.core.util.invocation;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
