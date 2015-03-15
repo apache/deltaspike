@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.partialbean.impl.proxy;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -26,6 +27,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import javax.enterprise.inject.Typed;
+import javax.interceptor.InterceptorBinding;
 import org.apache.deltaspike.core.util.ClassUtils;
 
 @Typed
@@ -61,6 +63,21 @@ public abstract class PartialBeanProxyFactory
             ArrayList<Method> interceptionMethods = new ArrayList<Method>();
             collectMethods(targetClass, redirectMethods, interceptionMethods);
 
+            // check if a interceptor is defined on class level. if yes -> proxy all public methods
+            if (!containsInterceptorBinding(targetClass.getDeclaredAnnotations()))
+            {
+                // loop every method and check if a interceptor is defined on the method -> otherwise don't proxy
+                Iterator<Method> iterator = interceptionMethods.iterator();
+                while (iterator.hasNext())
+                {
+                    Method method = iterator.next();
+                    if (!containsInterceptorBinding(method.getDeclaredAnnotations()))
+                    {
+                        iterator.remove();
+                    }
+                }
+            }
+            
             proxyClass = AsmProxyClassGenerator.generateProxyClass(classLoader,
                     targetClass,
                     invocationHandlerClass,
@@ -73,6 +90,20 @@ public abstract class PartialBeanProxyFactory
         return proxyClass;
     }
 
+    // TODO stereotypes
+    private static boolean containsInterceptorBinding(Annotation[] annotations)
+    {
+        for (Annotation annotation : annotations)
+        {
+            if (annotation.annotationType().isAnnotationPresent(InterceptorBinding.class))
+            {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
     private static String constructProxyClassName(Class<?> clazz)
     {
         return clazz.getCanonicalName() + CLASSNAME_SUFFIX;

@@ -76,6 +76,7 @@ public abstract class AbstractManualInvocationHandler implements InvocationHandl
         return null;
     }
 
+    // TODO stereotypes
     protected Annotation[] extractInterceptorBindings(Object instance, Method method)
     {
         ArrayList<Annotation> bindings = new ArrayList<Annotation>();
