@@ -32,7 +32,7 @@
 
     <container qualifier="jbossas-managed-7">
         <configuration>
-            <property name="javaVmArguments">-client -noverify -Xms64m -Xmx1024m -XX:MaxPermSize=512m -Dcdicontainer.version=${cdicontainer.version}</property>
+            <property name="javaVmArguments">-client -noverify -Xms64m -Xmx1024m -XX:MaxPermSize=512m -Dcdicontainer.version=${cdicontainer.version} ${jacoco.agent}</property>
             <property name="outputToConsole">false</property>
             <property name="allowConnectingToRunningServer">true</property>
             <property name="cdicontainer.version">${cdicontainer.version}</property>

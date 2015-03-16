@@ -97,7 +97,7 @@ public abstract class TestDeployments
         Logging.reconfigure();
         String descriptor = Descriptors.create(BeansDescriptor.class)
                 .addDefaultNamespaces()
-                .createAlternatives()
+                .getOrCreateAlternatives()
                     .clazz(EnvironmentAwareTransactionStrategy.class.getName())
                     .up()
                 .exportAsString();
