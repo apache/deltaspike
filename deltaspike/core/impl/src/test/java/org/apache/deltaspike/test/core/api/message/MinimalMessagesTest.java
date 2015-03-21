@@ -47,6 +47,9 @@ public class MinimalMessagesTest
     @Inject
     private CustomMinimalMessages customMinimalMessages;
 
+    @Inject
+    private ElPickedUpMessages injectedElPickedUpMessages;
+
     /**
      * X TODO creating a WebArchive is only a workaround because JavaArchive
      * cannot contain other archives.
@@ -103,5 +106,16 @@ public class MinimalMessagesTest
         Assert.assertEquals("Hello DeltaSpike", elMessage.sayHello("DeltaSpike"));
         Assert.assertEquals("Hello 'null'", elMessage.sayHello(null));
         Assert.assertEquals("Text", elMessage.text());
+    }
+
+    @Test
+    public void testInjectionOfNamedMessageBundle()
+    {
+
+        ElPickedUpMessages injectedElMessage = this.injectedElPickedUpMessages;
+        Assert.assertNotNull(injectedElMessage);
+        Assert.assertEquals("Hello DeltaSpike", injectedElMessage.sayHello("DeltaSpike"));
+        Assert.assertEquals("Hello 'null'", injectedElMessage.sayHello(null));
+        Assert.assertEquals("Text", injectedElMessage.text());
     }
 }

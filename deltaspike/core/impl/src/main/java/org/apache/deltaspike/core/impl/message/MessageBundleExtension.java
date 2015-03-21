@@ -32,6 +32,7 @@ import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.*;
 
+import org.apache.deltaspike.core.api.literal.DefaultLiteral;
 import org.apache.deltaspike.core.api.message.Message;
 import org.apache.deltaspike.core.api.message.MessageBundle;
 import org.apache.deltaspike.core.api.message.MessageTemplate;
@@ -147,6 +148,8 @@ public class MessageBundleExtension implements Extension, Deactivatable
         beanBuilder.beanLifecycle(new MessageBundleLifecycle<T>(beanManager));
 
         beanBuilder.types(annotatedType.getJavaClass(), Object.class, Serializable.class);
+        beanBuilder.addQualifier(new DefaultLiteral());
+
         beanBuilder.passivationCapable(true);
         beanBuilder.scope(ApplicationScoped.class); // needs to be a normalscope due to a bug in older Weld versions
         beanBuilder.id("MessageBundleBean#" + annotatedType.getJavaClass().getName());
