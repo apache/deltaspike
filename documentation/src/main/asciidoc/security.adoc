@@ -83,9 +83,9 @@ public class CustomAuthorizer
 {
     @Secures
     @CustomSecurityBinding
-    public boolean doSecuredCheck(InvocationContext invocationContext, BeanManager manager, @LoggedIn User user) throws Exception
+    public boolean doSecuredCheck(InvocationContext invocationContext, BeanManager manager, Identity identity) throws Exception
     {
-        return user.isLoggedIn(); // perform security check
+        return identity.isLoggedIn(); // perform security check
     }
 }
 ---------------------------------------------------------------------------------------------------------------------------------
@@ -135,9 +135,9 @@ public class CustomAuthorizer
 {
     @Secures
     @CustomSecurityBinding
-    public boolean doSecuredCheck(InvocationContext invocationContext, BeanManager manager, @LoggedIn User user, @CurrentThing Thing thing) throws Exception
+    public boolean doSecuredCheck(InvocationContext invocationContext, BeanManager manager, Identity identity, @CurrentThing Thing thing) throws Exception
     {
-        return thing.hasMember(user); // perform security check against our method parameter
+        return thing.hasMember(identity); // perform security check against our method parameter
     }
 }
 ------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -190,9 +190,9 @@ public class CustomAuthorizer
 {
     @Secures
     @CustomSecurityBinding
-    public boolean doSecuredCheck(@SecuredReturn Thing thing, @LoggedIn User user) throws Exception
+    public boolean doSecuredCheck(@SecuredReturn Thing thing, Identity identity) throws Exception
     {
-        return thing.hasMember(user); // perform security check against the return value
+        return thing.hasMember(identity); // perform security check against the return value
 }
 ---------------------------------------------------------------------------------------------------
 
