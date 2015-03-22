@@ -97,11 +97,11 @@ public class DefaultMockFilter implements MockFilter
         if ((annotated instanceof AnnotatedMethod || annotated instanceof AnnotatedField) &&
                 annotated.getAnnotation(Produces.class) != null)
         {
-            return TestBaseConfig.Mock.ALLOW_MOCKED_PRODUCERS.getValue();
+            return TestBaseConfig.MockIntegration.ALLOW_MOCKED_PRODUCERS.getValue();
         }
         else
         {
-            return TestBaseConfig.Mock.ALLOW_MOCKED_BEANS.getValue();
+            return TestBaseConfig.MockIntegration.ALLOW_MOCKED_BEANS.getValue();
         }
     }
 

@@ -23,7 +23,7 @@ import org.apache.deltaspike.core.api.config.base.TypedConfig;
 //keep it in the impl. module for now, because it's mainly quartz specific config
 public interface SchedulerBaseConfig
 {
-    interface Job
+    interface JobCustomization
     {
         //don't type it to class to keep quartz optional
         TypedConfig<String> DEFAULT_JOB_FACTORY_CLASS_NAME =

@@ -59,7 +59,7 @@ public class SchedulerExtension implements Extension, Deactivatable
 
         if (this.isActivated)
         {
-            String jobClassName = SchedulerBaseConfig.Job.JOB_CLASS_NAME.getValue();
+            String jobClassName = SchedulerBaseConfig.JobCustomization.JOB_CLASS_NAME.getValue();
 
             this.jobClass = ClassUtils.tryToLoadClassForName(jobClassName);
 

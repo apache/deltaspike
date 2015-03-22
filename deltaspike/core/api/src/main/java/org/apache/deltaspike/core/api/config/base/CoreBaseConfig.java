@@ -20,7 +20,7 @@ package org.apache.deltaspike.core.api.config.base;
 
 public interface CoreBaseConfig
 {
-    interface BeanManager
+    interface BeanManagerDelegation
     {
         TypedConfig<Boolean> DELEGATE_LOOKUP =
             new TypedConfig<Boolean>("deltaspike.bean-manager.delegate_lookup", Boolean.TRUE);
@@ -40,7 +40,7 @@ public interface CoreBaseConfig
 
     interface Scope
     {
-        interface Window
+        interface WindowRestriction
         {
             TypedConfig<Integer> MAX_COUNT =
                 new TypedConfig<Integer>("deltaspike.scope.window.max-count", 1024);

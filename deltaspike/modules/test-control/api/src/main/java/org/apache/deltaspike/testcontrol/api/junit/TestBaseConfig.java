@@ -22,7 +22,7 @@ import org.apache.deltaspike.core.api.config.base.TypedConfig;
 
 public interface TestBaseConfig
 {
-    interface Container
+    interface ContainerIntegration
     {
         //default is false to improve the compatibility with @Before and @After
         TypedConfig<Boolean> USE_TEST_CLASS_AS_CDI_BEAN =
@@ -32,7 +32,7 @@ public interface TestBaseConfig
             new TypedConfig<Boolean>("deltaspike.testcontrol.stop_container", Boolean.TRUE);
     }
 
-    interface Mock
+    interface MockIntegration
     {
         TypedConfig<Boolean> ALLOW_MOCKED_BEANS =
                 new TypedConfig<Boolean>("deltaspike.testcontrol.mock-support.allow_mocked_beans", Boolean.FALSE);
