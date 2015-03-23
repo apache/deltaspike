@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.core.util.proxy;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.util.Set;
 import javax.enterprise.context.Dependent;
@@ -60,12 +61,17 @@ public class DeltaSpikeProxyContextualLifecycle<T, H extends InvocationHandler> 
     {
         try
         {
-            T instance = proxyClass.newInstance();
+            T instance;
 
-            if (delegateInvocationHandlerClass != null)
+            if (delegateInvocationHandlerClass == null)
+            {
+                instance = proxyClass.newInstance();
+            }
+            else
             {
                 H delegateInvocationHandler = instantiateDelegateInvocationHandler();
-                ((DeltaSpikeProxy) instance).setDelegateInvocationHandler(delegateInvocationHandler);
+                Constructor<T> constructor = proxyClass.getConstructor(delegateInvocationHandlerClass);
+                instance = constructor.newInstance(delegateInvocationHandler);
             }
 
             if (this.injectionTarget != null)

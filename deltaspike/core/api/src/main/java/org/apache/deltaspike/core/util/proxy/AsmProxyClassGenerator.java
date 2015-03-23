@@ -111,7 +111,8 @@ public abstract class AsmProxyClassGenerator
         }
 
         defineInvocationHandlerField(cw, invocationHandlerType);
-        defineConstructor(cw, proxyType, superType);
+        defineDefaultConstructor(cw, proxyType, superType);
+        defineDelegateInvocationHandlerConstructor(cw, proxyType, superType, invocationHandlerType);
         defineDeltaSpikeProxyMethods(cw, proxyType, invocationHandlerType);
 
         for (java.lang.reflect.Method method : delegateMethods)
@@ -136,7 +137,7 @@ public abstract class AsmProxyClassGenerator
                 invocationHandlerType.getDescriptor(), null, null).visitEnd();
     }
 
-    private static void defineConstructor(ClassWriter cw, Type proxyType, Type superType)
+    private static void defineDefaultConstructor(ClassWriter cw, Type proxyType, Type superType)
     {
         GeneratorAdapter mg = new GeneratorAdapter(Opcodes.ACC_PUBLIC,
                 new Method("<init>", Type.VOID_TYPE, new Type[]{ }),
@@ -149,6 +150,32 @@ public abstract class AsmProxyClassGenerator
         // invoke super constructor
         mg.loadThis();
         mg.invokeConstructor(superType, Method.getMethod("void <init> ()"));
+        mg.returnValue();
+        mg.endMethod();
+
+        mg.visitEnd();
+    }
+    
+    private static void defineDelegateInvocationHandlerConstructor(ClassWriter cw, Type proxyType, Type superType,
+            Type invocationHandlerType)
+    {
+        GeneratorAdapter mg = new GeneratorAdapter(Opcodes.ACC_PUBLIC,
+                new Method("<init>", Type.VOID_TYPE, new Type[] { invocationHandlerType }),
+                null,
+                null,
+                cw);
+
+        mg.visitCode();
+
+        // invoke super constructor
+        mg.loadThis();
+        mg.invokeConstructor(superType, Method.getMethod("void <init> ()"));
+        
+        // set invocation handler
+        mg.loadThis();
+        mg.loadArg(0);
+        mg.putField(proxyType, FIELDNAME_DELEGATE_INVOCATION_HANDLER, invocationHandlerType);
+        
         mg.returnValue();
         mg.endMethod();
 
