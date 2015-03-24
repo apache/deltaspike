@@ -46,18 +46,18 @@ public class ConverterAndValidatorProxyFactory extends DeltaSpikeProxyFactory
     @Override
     protected ArrayList<Method> getDelegateMethods(Class<?> targetClass, ArrayList<Method> allMethods)
     {
-        List<Class<?>> interfaces = Arrays.asList(targetClass.getInterfaces());
-        if (!interfaces.contains(PartialStateHolder.class))
+        if (!StateHolder.class.isAssignableFrom(targetClass))
+        {
+            ArrayList<Method> delegateMethods = new ArrayList<Method>();
+            delegateMethods.addAll(Arrays.asList(StateHolder.class.getDeclaredMethods()));
+            delegateMethods.addAll(Arrays.asList(PartialStateHolder.class.getDeclaredMethods()));
+            return delegateMethods;
+        }
+        
+        if (!PartialStateHolder.class.isAssignableFrom(targetClass))
         {
             ArrayList<Method> delegateMethods = new ArrayList<Method>();
             delegateMethods.addAll(Arrays.asList(PartialStateHolder.class.getDeclaredMethods()));
-            delegateMethods.addAll(Arrays.asList(StateHolder.class.getDeclaredMethods()));
-            return delegateMethods;
-        }
-        if (!interfaces.contains(StateHolder.class))
-        {
-            ArrayList<Method> delegateMethods = new ArrayList<Method>();
-            delegateMethods.addAll(Arrays.asList(StateHolder.class.getDeclaredMethods()));
             return delegateMethods;
         }
         
