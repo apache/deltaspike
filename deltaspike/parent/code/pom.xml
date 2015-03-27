@@ -801,6 +801,7 @@
                                 <arquillian.xml>arquillian-jboss.xml</arquillian.xml>
                                 <org.apache.deltaspike.ProjectStage>UnitTest</org.apache.deltaspike.ProjectStage>
                                 <cdicontainer.version>${cdicontainer.version}</cdicontainer.version>
+                                <jacoco.agent>${jacoco.agent}</jacoco.agent>
                             </systemProperties>
                             <!-- we just use groups to mark that a test should be executed only
                             with specific environments. even though a java-ee6 application server has to be able to run
