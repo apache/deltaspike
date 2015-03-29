@@ -198,11 +198,6 @@ public class BeanManagerProvider implements Extension
 
         if (!bmi.booted)
         {
-            // warn the user if he tries to use the BeanManager before container startup
-            LOG.warning("When using the BeanManager to retrieve Beans before the Container is started," +
-                    " non-portable behaviour results!");
-
-
             // This is a workaround for some containers with messed up EAR handling.
             // Those containers might boot up with the shared ear ClassLoader
             // and later run the WARs with their own child ClassLoaders.
