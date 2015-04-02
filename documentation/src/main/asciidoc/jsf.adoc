@@ -50,6 +50,40 @@ aware of
 https://issues.apache.org/jira/browse/DELTASPIKE-335[DELTASPIKE-335] and
 the corresponding impact.
 
+=== JSF Messages
+
+DeltaSpike provides an injectable component for typesafe FacesMessages.
+
+Is provides an integration with <<core.adoc#_messages_and_i18n,MessageBundle>> making the use of JSF messages and I18N simple and type-safe.
+
+Usage:
+
+[source,java]
+---------------------------------------------
+
+@MessageBundle
+public interface Messages
+{
+    @MessageTemplate("Welcome to DeltaSpike")
+    String welcomeToDeltaSpike();
+}
+
+ @Model
+ public class MyJSFBean
+ {
+    @Inject
+    private JsfMessage<Messages> messages;
+
+    ...
+    messages.addInfo().welcomeToDeltaSpike();
+}
+---------------------------------------------
+
+MessageBundle methods which are used as JsfMessage can return a `org.apache.deltaspike.core.api.message.Message` or a String.
+In case of a String we use it for both the summary and detail information on the FacesMessage. 
+
+If a Message is returned, we lookup the 'detail' and 'summary' categories (see `org.apache.deltaspike.core.api.message.Message#toString(String)` for creating the FacesMessage.
+
 === Multi-Window Handling
 
 ==== Background
