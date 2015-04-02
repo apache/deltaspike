@@ -30,13 +30,13 @@ Add the Test-Control module to the list of dependencies in the project `pom.xml`
 </dependency>
 ----
 
-=== 2. Declare CDI Implemetation-specific Test-Control Module Dependencies
+=== 2. Declare CDI-implementation-specific dependencies
 
-The Test-Control module uses the Container-Control module, requiring a implementation-specific Container Control module to be declared in the project `pom.xml` file. Choose the appropriate option from those listed here.
+The Test-Control module depends on the Container-Control module, which provides adapters for several major CDI implementations. Therefore, to use Test-Control, declare dependency on a CDI implementation and a corresponding Container Control implementation in the `pom.xml`.
 
 ==== OpenWebBeans
 
-If you are using OpenWebBeans, add the OpenWebBeans-specific Container Control module to the list of dependencies:
+If you are using OpenWebBeans, add an OpenWebBeans implementation and the OpenWebBeans-specific Container Control module to the list of dependencies:
 
 [source,xml]
 -----------------------------------------------------
@@ -46,11 +46,18 @@ If you are using OpenWebBeans, add the OpenWebBeans-specific Container Control m
      <version>${deltaspike.version}</version>
      <scope>test</scope>
  </dependency>
+
+<dependency>
+    <groupId>org.apache.openwebbeans</groupId>
+    <artifactId>openwebbeans-impl</artifactId>
+    <version>${owb.version}</version>
+    <scope>test</scope>
+</dependency>
 -----------------------------------------------------
 
 ==== Weld
 
-If you are using Weld, add the Weld-specific Container Control module to the list of dependencies:
+If you are using Weld, add a Weld implementation and the Weld-specific Container Control module to the list of dependencies:
 
 [source,xml]
 ----------------------------------------------------
@@ -58,6 +65,13 @@ If you are using Weld, add the Weld-specific Container Control module to the lis
     <groupId>org.apache.deltaspike.cdictrl</groupId>
     <artifactId>deltaspike-cdictrl-weld</artifactId>
     <version>${deltaspike.version}</version>
+    <scope>test</scope>
+</dependency>
+
+<dependency>
+    <groupId>org.jboss.weld.se</groupId>
+    <artifactId>weld-se-core</artifactId>
+    <version>${weld.version}</version>
     <scope>test</scope>
 </dependency>
 ----------------------------------------------------
