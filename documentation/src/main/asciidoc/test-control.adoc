@@ -202,7 +202,7 @@ To pass properties to the underlying test-container,
 you have to add `/META-INF/apache-deltaspike_test-container.properties`
 to the resources-directory of your test-classpath.
 The content of the file are key/value pairs which get passed to the container.
-Therefore, it is a configuration which isis not used by DeltaSpike itself
+Therefore, it is a configuration which is not used by DeltaSpike itself
 (it is just forwarded (as it is) to the underlying test-container).
 
 ==== Reconfigure the config-file Name or Location
@@ -233,7 +233,7 @@ ProjectStage) is enough, however, for some cases mocked beans might be
 easier. Therefore it is possible to create (mock-)instances manually or
 via a mocking framework and add them, for example, via `DynamicMockManager`.
 
-**Attention:** Mocking CDI beans isis not supported for every feature of CDI and/or
+**Attention:** Mocking CDI beans is not supported for every feature of CDI and/or
 every implementation version. For example, we cais not mock intercepted CDI beans and
 with some implementations mocking specialized beans fails.
 Usually all features are active by default, however,
@@ -531,7 +531,7 @@ public class JsfContainerTest
 ==== Liquibase
 
 Liquibase invokes `#toString` in a `AfterDeploymentValidation` observer.
-*that isis not portable* and therefore you have to deactivate the
+*that is not portable* and therefore you have to deactivate the
 mocking-support via:
 
 [source,java]
