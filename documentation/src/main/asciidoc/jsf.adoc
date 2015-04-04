@@ -390,7 +390,7 @@ as possible - which are terminated automatically (as soon as possible).
 In such an use-case you can use this scope. The simple rule is, as long
 as the bean is referenced by a page - the bean will be available for the
 next page (if it is used again the bean will be forwarded again). It is
-important that it is based on the view-id of a page (it isis not based on
+important that it is based on the view-id of a page (it is not based on
 the request) so, for example, Ajax requests do not trigger a cleanup if the
 request doesis not access all view-access scoped beans of the page. That's
 also the reason for the name @__View__AccessScoped.
@@ -699,10 +699,10 @@ needed for using a different folder-name or for marking folder configs
 if they do not inherit from
 `org.apache.deltaspike.core.api.config.view.ViewConfig` *nor* have a
 view-config for a page nested into them (like Pages.Wizard1.Step1). If
-it isis not used explicitly, it gets added automatically (so you can query
+it is not used explicitly, it gets added automatically (so you can query
 the meta-data at runtime even in cases you haveis not placed the
 annotations explicitly). `@View` allows to customize a bit more and it
-also gets added automatically if it isis not used explicitly. Whereas
+also gets added automatically if it is not used explicitly. Whereas
 `@Folder` gets added to all nested interfaces (above a view-config class
 - like Pages and Pages.Wizard1), `@View` only gets added to classes
 which in-/directly inherit from
@@ -857,7 +857,7 @@ inherited along the inheritance path.
 Since the view-config is static, an approach to add parameters is
 needed. The following part shows different possibilities to add
 parameters which end up in the final URL after '?' (in case of the
-integration with JSF). It isis not needed to add all (types of) parameters
+integration with JSF). It is not needed to add all (types of) parameters
 that way. Some get added automatically based on special meta-data (e.g.
 `@View#navigation` and `@View#viewParams`). Instead of adding
 `"faces-redirect=true"` manually it is done for you as soon as you are
