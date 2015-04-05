@@ -21,7 +21,6 @@ package org.apache.deltaspike.data.impl.meta;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -212,12 +211,14 @@ public class RepositoryComponent
 
     private void collectClasses(Class<?> cls, Set<Class<?>> result)
     {
-        if (cls == null || Object.class == cls) {
+        if (cls == null || Object.class == cls)
+        {
             return;
         }
 
         result.add(cls);
-        for (Class<?> child : cls.getInterfaces()) {
+        for (Class<?> child : cls.getInterfaces())
+        {
             collectClasses(child, result);
         }
 
