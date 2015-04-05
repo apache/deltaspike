@@ -201,7 +201,8 @@ public class RepositoryComponent
         }
     }
 
-    private Set<Class<?>> collectClasses() {
+    private Set<Class<?>> collectClasses()
+    {
         Set<Class<?>> result = new HashSet<Class<?>>();
         collectClasses(repoClass, result);
 
@@ -209,7 +210,8 @@ public class RepositoryComponent
         return result;
     }
 
-    private void collectClasses(Class<?> cls, Set<Class<?>> result) {
+    private void collectClasses(Class<?> cls, Set<Class<?>> result)
+    {
         if (cls == null || Object.class == cls) {
             return;
         }
