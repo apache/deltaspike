@@ -23,6 +23,7 @@ import org.apache.deltaspike.core.util.proxy.invocation.DelegateManualInvocation
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.UndeclaredThrowableException;
+import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javax.enterprise.inject.Typed;
@@ -60,8 +61,9 @@ public abstract class AsmProxyClassGenerator
 
         byte[] proxyBytes = generateProxyClassBytes(targetClass, invocationHandlerClass,
                 classFileName, superAccessorMethodSuffix, additionalInterfaces, delegateMethods, interceptMethods);
-        
-        Class<T> proxyClass = (Class<T>) loadClass(classLoader, proxyName, proxyBytes);
+
+        Class<T> proxyClass = (Class<T>) loadClass(classLoader, proxyName, proxyBytes,
+                targetClass.getProtectionDomain());
 
         return proxyClass;
     }
@@ -95,7 +97,7 @@ public abstract class AsmProxyClassGenerator
                 interfaces[(interfaces.length - 1) + i] = Type.getInternalName(additionalInterfaces[i]);
             }
         }
-        
+
         Type superType = Type.getType(superClass);
         Type proxyType = Type.getObjectType(proxyName);
         Type invocationHandlerType = Type.getType(invocationHandlerClass);
@@ -429,13 +431,14 @@ public abstract class AsmProxyClassGenerator
      *
      * @return Class<?>
      */
-    private static Class<?> loadClass(ClassLoader loader, String className, byte[] b)
+    private static Class<?> loadClass(ClassLoader loader, String className, byte[] b,
+            ProtectionDomain protectionDomain)
     {
         // override classDefine (as it is protected) and define the class.
         try
         {
             java.lang.reflect.Method method = ClassLoader.class.getDeclaredMethod(
-                    "defineClass", String.class, byte[].class, int.class, int.class);
+                    "defineClass", String.class, byte[].class, int.class, int.class, ProtectionDomain.class);
 
             // protected method invocation
             boolean accessible = method.isAccessible();
@@ -445,7 +448,8 @@ public abstract class AsmProxyClassGenerator
             }
             try
             {
-                return (Class<?>) method.invoke(loader, className, b, Integer.valueOf(0), Integer.valueOf(b.length));
+                return (Class<?>) method.invoke(loader, className, b, Integer.valueOf(0), Integer.valueOf(b.length),
+                        protectionDomain);
             }
             finally
             {
