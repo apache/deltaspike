@@ -18,46 +18,94 @@
  */
 package org.apache.deltaspike.jsf.impl.listener.request;
 
-import org.apache.deltaspike.core.api.lifecycle.Destroyed;
-import org.apache.deltaspike.core.api.lifecycle.Initialized;
+import org.apache.deltaspike.core.api.literal.DestroyedLiteral;
+import org.apache.deltaspike.core.api.literal.InitializedLiteral;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
+import org.apache.deltaspike.core.util.ClassUtils;
+import org.apache.deltaspike.core.util.metadata.AnnotationInstanceProvider;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
+import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import java.lang.annotation.Annotation;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Broadcaster for {@link Initialized} and {@link Destroyed}
+ * Broadcaster for
+ * {@link org.apache.deltaspike.core.api.lifecycle.Initialized}
+ * {@link org.apache.deltaspike.core.api.lifecycle.Destroyed}
+ * with
+ * {@link FacesContext} as event-payload
+ * and/or in case of CDI 1.1+
+ * {@link javax.enterprise.context.Initialized}
+ * {@link javax.enterprise.context.Destroyed}
+ * with
+ * {@link javax.faces.bean.RequestScoped} as annotation-parameter and
+ * {@link FacesContext} as event-payload
  */
 @ApplicationScoped
 public class JsfRequestBroadcaster implements Deactivatable
 {
     @Inject
-    @Initialized
-    private Event<FacesContext> initializedJsfRequestEvent;
+    private Event<FacesContext> jsfRequestEvent;
 
-    @Inject
-    @Destroyed
-    private Event<FacesContext> destroyedJsfRequestEvent;
+    /*
+     * annotation-instances for the optional cdi 1.1+ support
+     */
+    private Annotation initializedAnnotationInstance;
+    private Annotation destroyedAnnotationInstance;
+
+    @PostConstruct
+    protected void init()
+    {
+        Map<String, Class> values = new HashMap<String, Class>();
+        values.put("value", RequestScoped.class);
+        Class<? extends Annotation> initializedAnnotationClass =
+            ClassUtils.tryToLoadClassForName("javax.enterprise.context.Initialized");
+        if (initializedAnnotationClass != null)
+        {
+            this.initializedAnnotationInstance = AnnotationInstanceProvider.of(initializedAnnotationClass, values);
+        }
+
+        Class<? extends Annotation> destroyedAnnotationClass =
+            ClassUtils.tryToLoadClassForName("javax.enterprise.context.Destroyed");
+        if (destroyedAnnotationClass != null)
+        {
+            this.destroyedAnnotationInstance = AnnotationInstanceProvider.of(destroyedAnnotationClass, values);
+        }
+    }
 
     /**
-     * Broadcasts the {@link Initialized} event
+     * Broadcasts @Initialized-event(s)
      *
      * @param facesContext current faces-context
      */
     public void broadcastInitializedJsfRequestEvent(FacesContext facesContext)
     {
-        this.initializedJsfRequestEvent.fire(facesContext);
+        this.jsfRequestEvent.select(new InitializedLiteral()).fire(facesContext);
+
+        if (this.initializedAnnotationInstance != null)
+        {
+            this.jsfRequestEvent.select(this.initializedAnnotationInstance).fire(facesContext);
+        }
     }
 
     /**
-     * Broadcasts the {@link Destroyed} event
+     * Broadcasts @Destroyed-event(s)
      *
      * @param facesContext current faces-context
      */
     public void broadcastDestroyedJsfRequestEvent(FacesContext facesContext)
     {
-        this.destroyedJsfRequestEvent.fire(facesContext);
+        this.jsfRequestEvent.select(new DestroyedLiteral()).fire(facesContext);
+
+        if (this.destroyedAnnotationInstance != null)
+        {
+            this.jsfRequestEvent.select(this.destroyedAnnotationInstance).fire(facesContext);
+        }
     }
 }
