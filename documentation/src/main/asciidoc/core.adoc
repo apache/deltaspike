@@ -20,11 +20,13 @@ This is described in a separate page solely targeting <<configuration.adoc#,conf
 
 ==== BeanProvider
 
-The `BeanProvider` is a class which provides (static) util methods which
-allow to lookup beans if it is not possible to inject them via `@Inject`
-or if the lookup depends on dynamic conditions. Instead of using the
-term 'bean', the term 'contextual instance' is used because that's the
-term used by CDI itself.
+The `BeanProvider` utility class provides static methods for manual lookup of bean instances in places where
+standard injection is not available or if the lookup depends on dynamic conditions.
+
+WARNING: `BeanProvider` is only used to look up normal-scoped contextual
+instances. To obtain instances of dependent-scoped beans, use <<_dependentprovider, DependentProvider>>.
+
+NOTE: The term 'contextual instance' is used instead of 'bean' because that's the term used by CDI itself.
 
 The following example shows a simple lookup. With the second parameter
 it is possible to specify if the contextual instance is optional. If it
@@ -105,8 +107,7 @@ destroy them manually - especially if you get them via a manual lookup), you
 can also call the previous util method with an additional parameter to
 filter dependent scoped instances.
 
-.Resolving All Contextual Instances of a Given Type without Dependent
-Scoped Instances
+.Resolving All Contextual Instances of a Given Type without Dependent-scoped Instances
 [source,java]
 ----------------------------------------------------------------------------------------------------------------------
 List<MyServiceInterface> myServiceList = BeanProvider.getContextualReferences(MyServiceInterface.class, false, false);
@@ -122,6 +123,29 @@ fields.
 ------------------------------------
 BeanProvider.injectFields(myObject);
 ------------------------------------
+
+===== DependentProvider
+
+`DependentProvider` must be used instead of `BeanProvider` to obtain instances of dependent-scoped beans to allow for
+their proper destruction.
+
+When obtaining contextual instances using `@Inject`, the normal-scoped ones get destroyed along with their associated
+context. However, instances of dependent-scoped beans -- as implied by their name -- depend on the lifecycle of
+the contextual instance which declares them and get destroyed along with this declaring bean's instance.
+
+However, if dependent-scoped instances are obtained programmatically using `DependentProvider`, there's no
+"declaring bean" to speak of and they *must be destroyed manually*.
+
+.Obtaining and destroying an instance of a dependent-scoped bean using DependentProvider
+[source,java]
+-----------------------------------------------------------------------------------
+DependentProvider<MyBean> myBeanProvider = BeanProvider.getDependent(MyBean.class);
+MyBean myBean = myBeanProvider.get();
+
+// ...work with myBean...
+
+myBeanProvider.destroy();
+-----------------------------------------------------------------------------------
 
 ==== BeanManagerProvider
 
@@ -152,6 +176,47 @@ If you migrate from CDI 1.0 to a later version of CDI and you would like to keep
 the lookup strategy you used before, you can deactivate the delegation to the container by adding
 `deltaspike.bean-manager.delegate_lookup=false` to your config-source
 (e.g. in `/META-INF/apache-deltaspike.properties`).
+
+
+==== AnnotationInstanceProvider
+
+Java EE provides a standard mechanism for obtaining annotation instances -- the `AnnotationLiteral` class.
+
+[source,java]
+------------------------------------------------------------------------------------------------
+public class CurrentUserLiteral extends AnnotationLiteral<CurrentUser> implements CurrentUser {}
+------------------------------------------------------------------------------------------------
+[source,java]
+-----------------------------------------------
+CurrentUser user = new CurrentUserLiteral() {};
+-----------------------------------------------
+
+`AnnotationLiteral` can however be used only if the annotation class name is known beforehand.
+`AnnotationInstanceProvider` is the solution for dynamic creation of annotation instances, with
+the option to provide a map of values for annotation members. That might be useful in many situations,
+especially for CDI extension authors. For example:
+
+* avoiding a compile-time dependency on an annotation class
++
+[source,java]
+--------------------------------------------------------------------------------------------------------------------
+Class<? extends Annotation> priorityAnnotationClass = ClassUtils.tryToLoadClassForName("javax.annotation.Priority");
+priorityAnnotationInstance = AnnotationInstanceProvider.of(priorityAnnotationClass, mapOfMemberValues);
+--------------------------------------------------------------------------------------------------------------------
+
+* getting an instance of a dynamically obtained annotation class
++
+[source,java]
+-------------------------------------------------------------------------------------------------------
+Annotation exceptionQualifier = AnnotationInstanceProvider.of(jsfModuleConfig.getExceptionQualifier());
+-------------------------------------------------------------------------------------------------------
+
+* or simply for the sake of a prettier syntax compared to `AnnotationLiteral`
++
+[source,java]
+-------------------------------------------------------------------------
+CurrentUser principal = AnnotationInstanceProvider.of(CurrentUser.class);
+-------------------------------------------------------------------------
 
 ==== Type-safe ProjectStage
 
@@ -881,20 +946,20 @@ handling process, such as rethrowing the exception, aborting the handler
 chain or unmuting the current handler. Five methods exist on the
 `ExceptionEvent` object to give flow control to the handler
 
-* `abort()` - terminate all handling immediately after this handler,
+* `abort()` -- terminate all handling immediately after this handler,
 does not mark the exception as handled, does not re-throw the exception.
-* `throwOriginal()` - continues through all handlers, but once all
+* `throwOriginal()` -- continues through all handlers, but once all
 handlers have been called (assuming another handler does not call
 abort() or handled()) the initial exception passed to DeltaSpike is
 rethrown. Does not mark the exception as handled.
-* `handled()` - marks the exception as handled and terminates further
+* `handled()` -- marks the exception as handled and terminates further
 handling.
-* `handleAndContinue()` - default. Marks the exception as handled and
+* `handleAndContinue()` -- default. Marks the exception as handled and
 proceeds with the rest of the handlers.
-* `skipCause()` - marks the exception as handled, but proceeds to the
+* `skipCause()` -- marks the exception as handled, but proceeds to the
 next cause in the cause container, without calling other handlers for
 the current cause.
-* `rethrow(Throwable)` - Throw a new exception after this handler is
+* `rethrow(Throwable)` -- Throw a new exception after this handler is
 invoked
 
 Once a handler is invoked it is muted, meaning it will not be run again
@@ -1028,17 +1093,26 @@ org.apache.deltaspike.core.spi.activation.ClassDeactivator=org.test.CustomClassD
 === Core - Utils
 
 
-DeltaSpike provides many utility-classes (no constructor / static
+DeltaSpike provides many utility classes (no constructor / static
 methods) that can be useful for your project.
 
 Below you can find an information about these classes.
+
+==== AnnotationUtils
+
+Utilities for working with annotations on methods and classes.
+
+* `#findAnnotation` -- obtains an `Annotation` instance of a given annotation `Class` from the given `Annotation[]`, recursing any possible stereotype tree along the way
+* `#extractAnnotationFromMethod` -- uses `findAnnotation` to obtain an `Annotation` from a given `Method`
+* `#extractAnnotationFromMethodOrClass` -- uses `findAnnotation` to obtain an `Annotation` on either the given `Method` or the given `Class`, in that order
+* `#getQualifierHashCode` -- computes the hashCode of a qualifier annotation, taking into account only the "binding" members (not annotated `@Nonbinding`)
 
 ==== ArraysUtils
 
 
 A collection of utilities for working with Arrays
 
-* `#asSet` - Create a set from an array. If the array contains duplicate
+* `#asSet` -- Create a set from an array. If the array contains duplicate
 objects, the last object in the array will be placed in resultant set.
 
 
@@ -1046,16 +1120,16 @@ objects, the last object in the array will be placed in resultant set.
 
 A set of utility methods for working with beans.
 
-* `#getQualifiers` - Extract the qualifiers from a set of annotations.
-* `#extractAnnotation` - Extract the annotations.
-* `#createInjectionPoints` - Given a method, and the bean on which the method is declared, create a collection of injection points representing the parameters of the method.
+* `#getQualifiers` -- Extract the qualifiers from a set of annotations.
+* `#extractAnnotation` -- Extract the annotations.
+* `#createInjectionPoints` -- Given a method, and the bean on which the method is declared, create a collection of injection points representing the parameters of the method.
 
 
 ==== ContextUtils
 
 A set of utility methods for working with contexts.
 
-* `#isContextActive` - Checks if the context for the scope annotation is active.
+* `#isContextActive` -- Checks if the context for the scope annotation is active.
 
 
 ==== ClassDeactivationUtils
@@ -1063,7 +1137,7 @@ A set of utility methods for working with contexts.
 
 Helper methods for `ClassDeactivator`
 
-* `#isActivated` - Evaluates if the given `Deactivatable` is active.
+* `#isActivated` -- Evaluates if the given `Deactivatable` is active.
 
 To add a custom `ClassDeactivator` add `org.apache.deltaspike.core.spi.activation.ClassDeactivator=my.CustomClassDeactivator` to `META-INF\apache-deltaspike.properties`. Or configure it via a custom `ConfigSource`.
 
@@ -1071,28 +1145,28 @@ To add a custom `ClassDeactivator` add `org.apache.deltaspike.core.spi.activatio
 
 Helper methods to deal with Exceptions
 
-* `#throwAsRuntimeException` - helper which allows to use a trick to throw a catched checked exception without a wrapping exception.
-* `#changeAndThrowException` - helper which allows to use a trick to throw a cached checked exception without a wrapping exception.
+* `#throwAsRuntimeException` -- helper which allows to use a trick to throw a catched checked exception without a wrapping exception.
+* `#changeAndThrowException` -- helper which allows to use a trick to throw a cached checked exception without a wrapping exception.
 
 ==== PropertyFileUtils
 
 Helper methods for Property files
 
-* `#resolvePropertyFiles` - Allows to lookup for resource bundle files.
-* `#loadProperties` - Load a Properties file from the given URL.
-* `#getResourceBundle` - Return the ResourceBundle for the current default Locale.
+* `#resolvePropertyFiles` -- Allows to lookup for resource bundle files.
+* `#loadProperties` -- Load a Properties file from the given URL.
+* `#getResourceBundle` -- Return the ResourceBundle for the current default Locale.
 
 
 ==== ProxyUtils
 
 Helper for CDI proxies
 
-* `#getUnproxiedClass` - Return class of the real implementation.
-* `#isProxiedClass` - Analyses if the given class is a generated proxy class.
+* `#getUnproxiedClass` -- Return class of the real implementation.
+* `#isProxiedClass` -- Analyses if the given class is a generated proxy class.
 
 ==== StringUtils
 
 A collection of utilities for working with Strings.
 
-* `#isEmpty` - return true if the String is null or empty ( `string.trim().isEmpty()` )
+* `#isEmpty` -- return true if the String is null or empty ( `string.trim().isEmpty()` )
 
