@@ -24,7 +24,7 @@
 ** <<build#,Build and Test DeltaSpike from Source>>
 ** <<snapshots#,Use DeltaSpike Snapshots>>
 ** link:https://deltaspike.apache.org/migration-guide.html[Migrate to DeltaSpike]
-** <<source#,Contribute to the DeltaSpike Source>>
+** link:https://deltaspike.apache.org/source.html[Contribute to the DeltaSpike Source]
 ** <<spi#,DeltaSpike Service Provider Interface (SPI)>>
 * Access More DeltaSpike Resources
 ** link:http://deltaspike.apache.org/articles.html[Articles and Blogs]

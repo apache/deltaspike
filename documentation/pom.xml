@@ -60,6 +60,7 @@
                     <attributes>
                         <!-- Site Base Dir relative path -->
                         <sitebasedir>..</sitebasedir>
+                        <docpage>documentation</docpage>
                     </attributes>
                 </configuration>
             </plugin>
