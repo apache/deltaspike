@@ -343,6 +343,15 @@
             </roles>
             <timezone>-3</timezone>
         </developer>
+        <developer>
+            <id>rsmeral</id>
+            <name>Ron Smeral</name>
+            <email>rsmeral@apache.org</email>
+            <roles>
+                <role>Committer</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
     </developers>
 
 
