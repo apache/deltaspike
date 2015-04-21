@@ -93,11 +93,14 @@ public abstract class AnnotationUtils
                 continue;
             }
 
-            final Object annotationMemberValue;
-            annotationMemberValue = ReflectionUtils.invokeMethod(annotation, member, Object.class, true);
+            final Object annotationMemberValue = ReflectionUtils.invokeMethod(annotation, member, Object.class, true);
 
             final int arrayValue;
-            if (annotationMemberValue.getClass().isArray())
+            if (annotationMemberValue == null /*possible with literals*/)
+            {
+                arrayValue = 0;
+            }
+            else if (annotationMemberValue.getClass().isArray())
             {
                 Class<?> annotationMemberType = annotationMemberValue.getClass().getComponentType();
                 if (annotationMemberType.isPrimitive())
