@@ -19,14 +19,18 @@
 package org.apache.deltaspike.jsf.impl.config.view;
 
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
+import org.apache.deltaspike.core.api.config.view.metadata.Aggregated;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewMetaData;
 import org.apache.deltaspike.core.spi.config.view.ViewConfigInheritanceStrategy;
 import org.apache.deltaspike.core.spi.config.view.ViewConfigNode;
+import org.apache.deltaspike.jsf.api.config.view.Folder;
+import org.apache.deltaspike.jsf.api.config.view.View;
 import org.apache.deltaspike.jsf.impl.util.ViewConfigUtils;
 
 import javax.enterprise.inject.Stereotype;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -61,7 +65,7 @@ public class DefaultViewConfigInheritanceStrategy implements ViewConfigInheritan
             //don't add the annotations of the final view-config class itself (we just need the inherited annotations)
             if (ViewConfigUtils.isFolderConfig(currentClass))
             {
-                inheritedAnnotations.addAll(addViewMetaData(currentClass));
+                inheritedAnnotations.addAll(findViewMetaData(currentClass, viewConfigNode));
             }
 
             Class nextClass = currentClass.getSuperclass();
@@ -75,13 +79,19 @@ public class DefaultViewConfigInheritanceStrategy implements ViewConfigInheritan
         }
 
         //add meta-data inherited via stereotypes on the node itself
-        inheritedAnnotations.addAll(addViewMetaData(viewConfigNode.getSource()));
+        inheritedAnnotations.addAll(findViewMetaData(viewConfigNode.getSource(), viewConfigNode));
 
         return inheritedAnnotations;
     }
 
-    protected List<Annotation> addViewMetaData(Class currentClass)
+    protected List<Annotation> findViewMetaData(Class currentClass, ViewConfigNode viewConfigNode)
     {
+        //don't include meta-data from the node itself, because it would be stored as inherited meta-data
+        if (currentClass.equals(viewConfigNode.getSource()))
+        {
+            return Collections.emptyList();
+        }
+
         List<Annotation> result = new ArrayList<Annotation>();
 
         for (Annotation annotation : currentClass.getAnnotations())
@@ -95,7 +105,81 @@ public class DefaultViewConfigInheritanceStrategy implements ViewConfigInheritan
 
             addViewMetaData(annotation, result);
         }
+
+        result = tryToReplaceWithMergedMetaDataFromAncestor(currentClass, viewConfigNode.getParent(), result);
         return result;
+    }
+
+    //only supported for meta-data which isn't aggregated
+    protected List<Annotation> tryToReplaceWithMergedMetaDataFromAncestor(
+        Class currentClass, ViewConfigNode parentViewConfigNode, List<Annotation> foundResult)
+    {
+        ViewConfigNode ancestorNode = findNodeWithClass(currentClass, parentViewConfigNode);
+        if (ancestorNode == null)
+        {
+            return foundResult;
+        }
+
+        List<Annotation> result = new ArrayList<Annotation>(foundResult.size());
+
+        //only replace the meta-data found for the node and don't add all meta-data from the ancestor-node
+        for (Annotation annotation : foundResult)
+        {
+            Annotation finalMetaData = getFinalMetaDataFromNode(ancestorNode, annotation);
+            result.add(finalMetaData);
+        }
+
+        return result;
+    }
+
+    //the meta-data returned by this method is merged and potentially customized by a ConfigPreProcessor
+    private Annotation getFinalMetaDataFromNode(ViewConfigNode viewConfigNode, Annotation annotation)
+    {
+        Class<? extends Annotation> targetType = annotation.annotationType();
+
+        //skip @View and @Folder, because they get created dynamically to support their optional usage
+        //the dynamic generation depends on the level and if it is a synthetic information
+        if (View.class.equals(targetType) || Folder.class.equals(targetType))
+        {
+            return annotation;
+        }
+
+        //skip aggregated meta-data, because it can't be replaced
+        //(there is no info available about the instance which replaced the original one
+        // which might be equivalent to the annotation passed to this method)
+        ViewMetaData viewMetaData = annotation.annotationType().getAnnotation(ViewMetaData.class);
+        if (viewMetaData == null)
+        {
+            return annotation;
+        }
+        Aggregated aggregated = viewMetaData.annotationType().getAnnotation(Aggregated.class);
+        if (aggregated == null || aggregated.value())
+        {
+            return annotation;
+        }
+
+        for (Annotation nodeMetaData : viewConfigNode.getMetaData())
+        {
+            if (targetType.equals(nodeMetaData.annotationType()))
+            {
+                return nodeMetaData;
+            }
+        }
+        return annotation;
+    }
+
+    private ViewConfigNode findNodeWithClass(Class nodeClass, ViewConfigNode viewConfigNode)
+    {
+        if (viewConfigNode == null || nodeClass == null)
+        {
+            return null;
+        }
+
+        if (nodeClass.equals(viewConfigNode.getSource()))
+        {
+            return viewConfigNode;
+        }
+        return findNodeWithClass(nodeClass, viewConfigNode.getParent());
     }
 
     protected void addViewMetaData(Annotation currentAnnotation, List<Annotation> metaDataList)

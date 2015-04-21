@@ -27,6 +27,7 @@ import org.apache.deltaspike.core.api.config.view.metadata.ConfigDescriptor;
 import org.apache.deltaspike.core.spi.config.view.ConfigNodeConverter;
 import org.apache.deltaspike.core.spi.config.view.ConfigPreProcessor;
 import org.apache.deltaspike.core.spi.config.view.ViewConfigNode;
+import org.apache.deltaspike.core.util.AnnotationUtils;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.core.util.metadata.AnnotationInstanceProvider;
@@ -38,7 +39,9 @@ import javax.enterprise.inject.Stereotype;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -250,7 +253,17 @@ public class DefaultConfigNodeConverter implements ConfigNodeConverter
                     }
                 }
                 ConfigPreProcessor preProcessor = ClassUtils.tryToInstantiateClass(preProcessorClass);
-                result.add(preProcessor.beforeAddToConfig(annotation, node));
+
+                Annotation resultToAdd = preProcessor.beforeAddToConfig(annotation, node);
+
+                //it isn't possible to detect changed annotations
+                if (resultToAdd != annotation) //check if the annotation(-instance) was changed
+                {
+                    validateAnnotationChange(annotation);
+                    rewriteMetaDataOfNode(node.getMetaData(), annotation, resultToAdd);
+                    rewriteMetaDataOfNode(node.getInheritedMetaData(), annotation, resultToAdd);
+                }
+                result.add(resultToAdd);
             }
             else
             {
@@ -287,5 +300,47 @@ public class DefaultConfigNodeConverter implements ConfigNodeConverter
         }
 
         return result;
+    }
+
+    protected void validateAnnotationChange(Annotation annotation)
+    {
+        Class<? extends Annotation> annotationType = annotation.annotationType();
+
+        if (Folder.class.equals(annotationType) || View.class.equals(annotationType))
+        {
+            return;
+        }
+
+        ViewMetaData viewMetaData = annotationType.getAnnotation(ViewMetaData.class);
+        if (viewMetaData == null)
+        {
+            return;
+        }
+
+        Aggregated aggregated = viewMetaData.annotationType().getAnnotation(Aggregated.class);
+        if (aggregated != null && aggregated.value())
+        {
+            throw new IllegalStateException("it isn't supported to change aggregated meta-data," +
+                "because inheritance won't work correctly");
+        }
+    }
+
+    protected void rewriteMetaDataOfNode(Collection<Annotation> metaData,
+                                         Annotation oldMetaData, Annotation newMetaData)
+    {
+        Iterator<Annotation> metaDataIterator = metaData.iterator();
+
+        while (metaDataIterator.hasNext())
+        {
+            Annotation currentMetaData = metaDataIterator.next();
+
+            if (AnnotationUtils.getQualifierHashCode(currentMetaData) ==
+                AnnotationUtils.getQualifierHashCode(oldMetaData))
+            {
+                metaDataIterator.remove();
+                metaData.add(newMetaData);
+                break;
+            }
+        }
     }
 }
