@@ -19,7 +19,9 @@
 package org.apache.deltaspike.core.impl.exclude.extension;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
+import org.apache.deltaspike.core.api.config.base.CoreBaseConfig;
 import org.apache.deltaspike.core.api.exclude.Exclude;
+import org.apache.deltaspike.core.impl.util.AnnotationInstanceUtils;
 import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
 import org.apache.deltaspike.core.impl.exclude.CustomProjectStageBeanFilter;
 import org.apache.deltaspike.core.impl.exclude.GlobalAlternative;
@@ -77,6 +79,7 @@ public class ExcludeExtension implements Extension, Deactivatable
      * VALUE=Implementation class name
      */
     private Map<String, String> globalAlternatives = new HashMap<String, String>();
+    private Annotation priorityAnnotationInstance;
 
 
     @SuppressWarnings("UnusedDeclaration")
@@ -111,6 +114,12 @@ public class ExcludeExtension implements Extension, Deactivatable
             if (globalAlternatives.isEmpty())
             {
                 isGlobalAlternativeActivated = false;
+            }
+
+            if (isGlobalAlternativeActivated)
+            {
+                int priorityValue = CoreBaseConfig.Interceptor.PRIORITY.getValue();
+                priorityAnnotationInstance = AnnotationInstanceUtils.getPriorityAnnotationInstance(priorityValue);
             }
         }
     }
@@ -272,10 +281,16 @@ public class ExcludeExtension implements Extension, Deactivatable
                 continue;
             }
 
+            if (!doQualifiersMatch(qualifiersOfCurrentBean, qualifiersOfConfiguredBean))
+            {
+                continue;
+            }
+
             //current bean is annotated with @Alternative and of the same type as the configured bean
             if (isAlternativeBeanImplementation && alternativeBeanClass.equals(currentBean))
             {
-                if (doQualifiersMatch(qualifiersOfCurrentBean, qualifiersOfConfiguredBean))
+                //cdi 1.0
+                if (priorityAnnotationInstance == null)
                 {
                     AnnotatedTypeBuilder<Object> annotatedTypeBuilder
                         = new AnnotatedTypeBuilder<Object>().readFromType(processAnnotatedType.getAnnotatedType());
@@ -284,10 +299,21 @@ public class ExcludeExtension implements Extension, Deactivatable
                     processAnnotatedType.setAnnotatedType(annotatedTypeBuilder.create());
                     return;
                 }
+                //cdi 1.1+
+                else
+                {
+                    AnnotatedTypeBuilder<Object> annotatedTypeBuilder
+                        = new AnnotatedTypeBuilder<Object>().readFromType(processAnnotatedType.getAnnotatedType());
+
+                    annotatedTypeBuilder.addToClass(priorityAnnotationInstance);
+                    processAnnotatedType.setAnnotatedType(annotatedTypeBuilder.create());
+                    return;
+                }
             }
             else //current bean is the original implementation
             {
-                if (doQualifiersMatch(qualifiersOfCurrentBean, qualifiersOfConfiguredBean))
+                //cdi 1.0 (no change needed with cdi 1.1+)
+                if (priorityAnnotationInstance == null)
                 {
                     //veto this original implementation because the alternative will be added
                     processAnnotatedType.veto();

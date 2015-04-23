@@ -19,10 +19,9 @@
 package org.apache.deltaspike.core.impl.interceptor;
 
 import org.apache.deltaspike.core.api.config.base.CoreBaseConfig;
+import org.apache.deltaspike.core.impl.util.AnnotationInstanceUtils;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
-import org.apache.deltaspike.core.util.ClassUtils;
-import org.apache.deltaspike.core.util.metadata.AnnotationInstanceProvider;
 
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.BeanManager;
@@ -31,8 +30,6 @@ import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import javax.interceptor.Interceptor;
 import java.lang.annotation.Annotation;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Logger;
 
 //promotes deltaspike interceptors to global interceptors in case of cdi 1.1+
@@ -50,18 +47,8 @@ public class GlobalInterceptorExtension implements Deactivatable, Extension
             return;
         }
 
-        Class<? extends Annotation> priorityAnnotationClass =
-            ClassUtils.tryToLoadClassForName("javax.annotation.Priority");
-
-        //check for @Priority and CDI v1.1+
-        if (priorityAnnotationClass != null &&
-            ClassUtils.tryToLoadClassForName("javax.enterprise.inject.spi.AfterTypeDiscovery") != null)
-        {
-            Map<String, Object> defaultValueMap = new HashMap<String, Object>();
-            int priorityValue = CoreBaseConfig.Interceptor.PRIORITY.getValue();
-            defaultValueMap.put("value", priorityValue);
-            priorityAnnotationInstance = AnnotationInstanceProvider.of(priorityAnnotationClass, defaultValueMap);
-        }
+        int priorityValue = CoreBaseConfig.Interceptor.PRIORITY.getValue();
+        priorityAnnotationInstance = AnnotationInstanceUtils.getPriorityAnnotationInstance(priorityValue);
     }
 
     protected void promoteInterceptors(@Observes ProcessAnnotatedType pat, BeanManager beanManager)
