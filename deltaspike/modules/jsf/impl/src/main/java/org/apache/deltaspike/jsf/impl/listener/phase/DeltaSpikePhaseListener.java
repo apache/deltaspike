@@ -74,13 +74,13 @@ public class DeltaSpikePhaseListener implements PhaseListener, Deactivatable
 
         processInitView(phaseEvent);
 
+        //delegate to JsfRequestLifecyclePhaseListener as a last step
+        this.jsfRequestLifecyclePhaseListener.beforePhase(phaseEvent);
+
         if (PhaseId.RENDER_RESPONSE.equals(phaseEvent.getPhaseId()))
         {
             onBeforeRenderResponse(phaseEvent.getFacesContext());
         }
-
-        //delegate to JsfRequestLifecyclePhaseListener as a last step
-        this.jsfRequestLifecyclePhaseListener.beforePhase(phaseEvent);
     }
 
     private void onBeforeRenderResponse(FacesContext facesContext)
