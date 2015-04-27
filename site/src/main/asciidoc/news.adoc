@@ -4,6 +4,14 @@
 
 == Overview
 
+=== New PMC Member (21.04.2015)
+
+Rafael Benevides joined our PMC.
+
+=== New Committer (17.14.2015)
+
+Ron Smeral joined our development community.
+
 === 15th Release (1.3.0) (10.03.2015)
 
 The Apache DeltaSpike team is pleased to announce the 15th release
@@ -26,13 +34,9 @@ The Apache DeltaSpike team is pleased to announce the 13th release
 
 The http://s.apache.org/DeltaSpike_1.2.0[release notes] contains 22 JIRA tickets.
 
-
-
 === New PMC Member (20.11.2014)
 
 Thomas Andraschko joined our PMC.
-
-
 
 === 12th Release (1.1.0) (01.11.2014)
 
