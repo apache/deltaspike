@@ -112,15 +112,24 @@ function applyWindowId() {
     }
 }
 
-function getUrlParameter(name) {
-    var url = window.location.href;
-    var vars = url.split(/&|\?/g);
-    for (var i=0; vars != null && i < vars.length; i++) {
-        var pair = vars[i].split("=");
-        if (pair[0]==name) {
-            return pair[1];
+function getUrlParameter(uri, name) {
+    // create an anchor object with the uri and let the browser parse it
+    var a = document.createElement('a');
+    a.href = uri;
+
+    // check if a query string is available
+    var queryString = a.search;
+    if (queryString && queryString.length > 0) {
+        // create an array of query parameters - substring(1) removes the ? at the beginning of the query
+        var queryParameters = queryString.substring(1).split("&");
+        for (var i = 0; i < queryParameters.length; i++) {
+            var queryParameter = queryParameters[i].split("=");
+            if (queryParameter[0] === name) {
+                return queryParameter.length > 1 ? queryParameter[1] : "";
+            }
         }
     }
+
     return null;
 }
 function setUrlParam(baseUrl, paramName, paramValue) {
@@ -161,7 +170,7 @@ function assertWindowId() {
         }
     }
     else if (window.deltaspikeClientWindowRenderMode === 'LAZY') {
-        var dswid = getUrlParameter('dswid');
+        var dswid = getUrlParameter(window.location.href, 'dswid');
         
         // window.name is null which means that "open in new tab/window" was used
         if (!window.name || window.name.length < 1) {
@@ -170,7 +179,7 @@ function assertWindowId() {
             if (dswid) {
                 // initial redirect case
                 // the windowId is valid - we don't need to a second request
-                if (window.deltaspikeInitialRedirectWindowId && dswid == window.deltaspikeInitialRedirectWindowId) {                    
+                if (window.deltaspikeInitialRedirectWindowId && dswid === window.deltaspikeInitialRedirectWindowId) {                    
                     window.name = window.deltaspikeInitialRedirectWindowId;
                 }
                 else {
@@ -209,13 +218,13 @@ function eraseRequestCookie() {
     date.setTime(date.getTime()-(10*24*60*60*1000)); // - 10 day
     var expires = ";max-age=0;expires="+date.toGMTString();
     
-    var dsrid = getUrlParameter('dsrid'); // random request param
+    var dsrid = getUrlParameter(window.location.href, 'dsrid'); // random request param
     if (dsrid) {
         var cookieName = 'dsWindowId-' + dsrid;
         document.cookie = cookieName+"="+expires+"; path=/";
     }
 
-    var dswid = getUrlParameter('dswid');
+    var dswid = getUrlParameter(window.location.href, 'dswid');
     if (dswid) {
         var cookieName = 'dsrwid-' + dswid;
         document.cookie = cookieName+"="+expires+"; path=/";
@@ -223,14 +232,14 @@ function eraseRequestCookie() {
 }
 
 var jsfAjaxHandler = function(event) {
-    if (event.status=="success") {
+    if (event.status === "success") {
         applyWindowId();
     }
-}
+};
 
 var pfAjaxHandler = function() {
     applyWindowId();
-}
+};
 
 var oldWindowOnLoad = window.onload;
 
@@ -249,5 +258,5 @@ window.onload = function(evt) {
             }
         }
     }
-}
+};
 })();
