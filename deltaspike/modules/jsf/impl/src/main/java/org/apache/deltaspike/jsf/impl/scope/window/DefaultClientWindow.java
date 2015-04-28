@@ -158,9 +158,14 @@ public class DefaultClientWindow implements ClientWindow
                 windowId = externalContext.getRequestParameterMap().get(DELTASPIKE_WINDOW_ID_URL_PARAM);
             }
 
+            if (StringUtils.isEmpty(windowId) && facesContext.isPostback())
+            {
+                windowId = getPostBackWindowId(facesContext);
+            }
+            
             if (StringUtils.isEmpty(windowId))
             {
-                if (this.jsfModuleConfig.isInitialRedirectEnabled())
+                if (this.jsfModuleConfig.isInitialRedirectEnabled() && !facesContext.isPostback())
                 {
                     ClientWindowHelper.handleInitialRedirect(facesContext, generateNewWindowId());
                     facesContext.responseComplete();
