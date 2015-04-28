@@ -77,7 +77,7 @@ package org.apache.deltaspike.core.api.config;
  * </p>
  *
  */
-public interface PropertyFileConfig extends DeltaSpikeConfig
+public interface PropertyFileConfig
 {
     /**
      * All the property files on the classpath which have this name will get picked up and registered as
