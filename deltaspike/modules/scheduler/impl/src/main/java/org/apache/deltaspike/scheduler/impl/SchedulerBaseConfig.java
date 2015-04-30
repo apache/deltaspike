@@ -18,35 +18,53 @@
  */
 package org.apache.deltaspike.scheduler.impl;
 
-import org.apache.deltaspike.core.api.config.base.TypedConfig;
+import org.apache.deltaspike.core.api.config.ConfigResolver;
 
 //keep it in the impl. module for now, because it's mainly quartz specific config
 public interface SchedulerBaseConfig
 {
     interface JobCustomization
     {
-        //don't type it to class to keep quartz optional
-        TypedConfig<String> DEFAULT_JOB_FACTORY_CLASS_NAME =
-            new TypedConfig<String>("deltaspike.scheduler.DefaultJobFactory",
-                "org.quartz.simpl.PropertySettingJobFactory");
+        String JOB_CLASS_NAME_KEY = "deltaspike.scheduler.job-class";
 
         //don't type it to class to keep quartz optional
-        TypedConfig<String> JOB_CLASS_NAME =
-            new TypedConfig<String>("deltaspike.scheduler.job-class", "org.quartz.Job");
+        String DEFAULT_JOB_FACTORY_CLASS_NAME = ConfigResolver.resolve("deltaspike.scheduler.DefaultJobFactory")
+                .withCurrentProjectStage(true)
+                .withDefault("org.quartz.simpl.PropertySettingJobFactory")
+                .getValue();
+
+        //don't type it to class to keep quartz optional
+        String JOB_CLASS_NAME = ConfigResolver.resolve(JOB_CLASS_NAME_KEY)
+                .withCurrentProjectStage(true)
+                .withDefault("org.quartz.Job")
+                .getValue();
     }
 
-    TypedConfig<String> SCHEDULER_CONFIG_FILE =
-        new TypedConfig<String>("deltaspike.scheduler.quartz_config-file", "quartz");
+    String SCHEDULER_CONFIG_FILE = ConfigResolver.resolve("deltaspike.scheduler.quartz_config-file")
+            .withCurrentProjectStage(true)
+            .withDefault("quartz")
+            .getValue();
 
     interface Lifecycle
     {
-        TypedConfig<Boolean> START_SCOPES_PER_JOB =
-                new TypedConfig<Boolean>("deltaspike.scheduler.start_scopes_for_jobs", Boolean.TRUE);
+        String START_SCOPES_PER_JOB_KEY = "deltaspike.scheduler.start_scopes_for_jobs";
 
-        TypedConfig<Boolean> FORCE_STOP =
-                new TypedConfig<Boolean>("deltaspike.scheduler.force_stop", Boolean.TRUE);
+        Boolean START_SCOPES_PER_JOB = ConfigResolver.resolve(START_SCOPES_PER_JOB_KEY)
+                .as(Boolean.class)
+                .withCurrentProjectStage(true)
+                .withDefault(Boolean.TRUE)
+                .getValue();
 
-        TypedConfig<Integer> DELAYED_START_IN_SECONDS =
-                new TypedConfig<Integer>("deltaspike.scheduler.delayed_start_in_seconds", 1);
+        Boolean FORCE_STOP = ConfigResolver.resolve("deltaspike.scheduler.force_stop")
+                .as(Boolean.class)
+                .withCurrentProjectStage(true)
+                .withDefault(Boolean.TRUE)
+                .getValue();
+
+        Integer DELAYED_START_IN_SECONDS = ConfigResolver.resolve("deltaspike.scheduler.delayed_start_in_seconds")
+                .as(Integer.class)
+                .withCurrentProjectStage(true)
+                .withDefault(1)
+                .getValue();
     }
 }

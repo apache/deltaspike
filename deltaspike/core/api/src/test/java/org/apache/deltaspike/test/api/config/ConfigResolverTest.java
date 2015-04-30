@@ -103,11 +103,11 @@ public class ConfigResolverTest
 
         Assert.assertEquals("TestDataSource", ConfigResolver.getPropertyAwarePropertyValue("dataSource", "dbvendor"));
         Assert.assertEquals("PostgreDataSource", ConfigResolver.getPropertyAwarePropertyValue("dataSource", "dbvendor2"));
-        Assert.assertEquals("DefaultDataSource", ConfigResolver.getPropertyAwarePropertyValue("dataSource", "dbvendorX"));
+        Assert.assertEquals("UnitTestDataSource", ConfigResolver.getPropertyAwarePropertyValue("dataSource", "dbvendorX"));
 
         Assert.assertEquals("TestDataSource", ConfigResolver.getPropertyAwarePropertyValue("dataSource", "dbvendor", null));
         Assert.assertEquals("PostgreDataSource", ConfigResolver.getPropertyAwarePropertyValue("dataSource", "dbvendor2", null));
-        Assert.assertEquals("DefaultDataSource", ConfigResolver.getPropertyAwarePropertyValue("dataSource", "dbvendorX", null));
+        Assert.assertEquals("UnitTestDataSource", ConfigResolver.getPropertyAwarePropertyValue("dataSource", "dbvendorX", null));
         Assert.assertEquals(DEFAULT_VALUE, ConfigResolver.getPropertyAwarePropertyValue("dataSourceX", "dbvendorX", DEFAULT_VALUE));
     }
 

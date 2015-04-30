@@ -24,6 +24,7 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -40,7 +41,9 @@ public class ConfigPropertyWARTest extends BaseTestConfigProperty
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
                 .addPackage(ConfigPropertyWARTest.class.getPackage())
                 .addAsResource(CONFIG_FILE_NAME)
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+                .addAsWebInfResource(new StringAsset("org.apache.deltaspike.ProjectStage = UnitTest"),
+                        "classes/META-INF/apache-deltaspike.properties");
 
     }
 

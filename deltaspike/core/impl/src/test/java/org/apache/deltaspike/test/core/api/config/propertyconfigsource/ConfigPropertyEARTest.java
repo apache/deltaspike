@@ -25,6 +25,7 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
@@ -46,7 +47,9 @@ public class ConfigPropertyEARTest extends BaseTestConfigProperty
                         MyBean.class, MyCustomEarPropertyFileConfig.class)
                 .addAsResource(CONFIG_FILE_NAME)
                 .addAsServiceProvider(PropertyFileConfig.class, MyCustomEarPropertyFileConfig.class)
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
+                .addAsManifestResource(new StringAsset("org.apache.deltaspike.ProjectStage = UnitTest"),
+                        "apache-deltaspike.properties");
 
         WebArchive war = ShrinkWrap.create(WebArchive.class, "test.war")
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");

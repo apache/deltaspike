@@ -81,7 +81,7 @@ public class DefaultClientWindowConfig implements ClientWindowConfig
     protected void init()
     {
         this.defaultClientWindowRenderMode = this.jsfModuleConfig.getDefaultWindowMode();
-        this.maxWindowContextCount = JsfBaseConfig.Scope.WindowRestriction.MAX_COUNT.getValue();
+        this.maxWindowContextCount = JsfBaseConfig.Scope.WindowRestriction.MAX_COUNT;
     }
 
     @Override

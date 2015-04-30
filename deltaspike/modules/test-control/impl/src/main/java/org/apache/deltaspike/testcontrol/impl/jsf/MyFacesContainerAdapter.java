@@ -60,7 +60,7 @@ public class MyFacesContainerAdapter implements TestAware, ExternalContainer
                 if (testConfig == null || DEFAULT_TEST_CONFIG_LITERAL.webappResourcePath().equals(
                     testConfig.webappResourcePath()))
                 {
-                    return MyFacesTestBaseConfig.WEBAPP_RESOURCE_PATH.getValue();
+                    return MyFacesTestBaseConfig.WEBAPP_RESOURCE_PATH;
                 }
                 return testConfig.webappResourcePath();
             }

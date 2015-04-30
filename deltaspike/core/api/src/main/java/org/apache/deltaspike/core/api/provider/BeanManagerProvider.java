@@ -76,7 +76,7 @@ public class BeanManagerProvider implements Extension
         Method resolvedCdiBeanManagerMethod = null;
         //only init methods if a cdi 1.1+ container is available and the delegation-mode isn't deactivated.
         //deactivation is e.g. useful if owb is used in "parallel mode" in a weld-based server.
-        if (cdiClass != null && !CoreBaseConfig.BeanManagerDelegation.DELEGATE_LOOKUP.getValue())
+        if (cdiClass != null && !CoreBaseConfig.BeanManagerDelegation.DELEGATE_LOOKUP)
         {
 
             try

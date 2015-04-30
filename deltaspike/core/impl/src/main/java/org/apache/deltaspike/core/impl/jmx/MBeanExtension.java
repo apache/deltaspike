@@ -122,7 +122,7 @@ public class MBeanExtension implements Extension, Deactivatable
         final Annotation[] qualifiers = qualifiers(bean.getAnnotatedBeanClass(), bm);
         final DynamicMBeanWrapper mbean = new DynamicMBeanWrapper(clazz, normalScoped, qualifiers);
         final MBeanServer server = mBeanServer();
-        if (server.isRegistered(objectName) && CoreBaseConfig.MBean.AUTO_UNREGISTER.getValue())
+        if (server.isRegistered(objectName) && CoreBaseConfig.MBean.AUTO_UNREGISTER)
         {
             server.unregisterMBean(objectName);
         }

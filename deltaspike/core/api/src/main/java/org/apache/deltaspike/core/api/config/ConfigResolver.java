@@ -37,6 +37,7 @@ import org.apache.deltaspike.core.spi.config.ConfigFilter;
 import org.apache.deltaspike.core.spi.config.ConfigSource;
 import org.apache.deltaspike.core.spi.config.ConfigSourceProvider;
 import org.apache.deltaspike.core.util.ClassUtils;
+import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
 import org.apache.deltaspike.core.util.ServiceUtils;
 
@@ -59,6 +60,7 @@ import org.apache.deltaspike.core.util.ServiceUtils;
 @Typed()
 public final class ConfigResolver
 {
+
     private static final Logger LOG = Logger.getLogger(ConfigResolver.class.getName());
 
     /**
@@ -478,9 +480,9 @@ public final class ConfigResolver
         return projectStage;
     }
 
-    private static String fallbackToDefaultIfEmpty(String key, String value, String defaultValue)
+    private static <T> T fallbackToDefaultIfEmpty(String key, T value, T defaultValue)
     {
-        if (value == null || value.isEmpty())
+        if (value == null || (value instanceof String && ((String)value).isEmpty()))
         {
             LOG.log(Level.FINE, "no configured value found for key {0}, using default value {1}.",
                     new Object[]{key, defaultValue});
@@ -525,6 +527,325 @@ public final class ConfigResolver
             logValue = filter.filterValueForLog(key, logValue);
         }
         return logValue;
+    }
+
+    public interface Converter<T>
+    {
+
+        T convert(String value);
+
+    }
+
+    public interface TypedResolver<T>
+    {
+
+        TypedResolver<T> parameterizedBy(String propertyName);
+
+        TypedResolver<T> withCurrentProjectStage(boolean with);
+
+        TypedResolver<T> strictly(boolean strictly);
+
+        TypedResolver<T> withDefault(T value);
+
+        TypedResolver<T> withStringDefault(String value);
+
+        T getValue();
+
+        String getKey();
+
+        String getResolvedKey();
+
+        T getDefaultValue();
+
+    }
+
+    public interface UntypedResolver<T> extends TypedResolver<T>
+    {
+
+        <N> TypedResolver<N> as(Class<N> clazz);
+
+        <N> TypedResolver<N> as(Class<N> clazz, Converter<N> converter);
+
+    }
+
+    public static UntypedResolver<String> resolve(String name)
+    {
+        return new PropertyBuilder<String>(name);
+    }
+
+    private static class PropertyBuilder<T> implements UntypedResolver<T>
+    {
+
+        private String keyOriginal;
+
+        private String keyResolved;
+
+        private Class<?> configEntryType = String.class;
+
+        private T defaultValue;
+
+        private boolean projectStageAware = true;
+
+        private String propertyParameter;
+
+        private String parameterValue;
+
+        private boolean strictly = false;
+
+        private Converter<?> converter;
+
+
+        private PropertyBuilder()
+        {
+        }
+
+        protected PropertyBuilder(String propertyName)
+        {
+            this.keyOriginal = propertyName;
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public <N> TypedResolver<N> as(Class<N> clazz)
+        {
+            configEntryType = clazz;
+            return (TypedResolver<N>) this;
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public <N> TypedResolver<N> as(Class<N> clazz, Converter<N> converter)
+        {
+            configEntryType = clazz;
+            this.converter = converter;
+
+            return (TypedResolver<N>) this;
+        }
+
+        @Override
+        public TypedResolver<T> withDefault(T value)
+        {
+            defaultValue = value;
+            return this;
+        }
+
+        @Override
+        public TypedResolver<T> withStringDefault(String value)
+        {
+            if (value == null || value.isEmpty())
+            {
+                throw new RuntimeException("Empty String or null supplied as string-default value for property "
+                        + keyOriginal);
+            }
+
+            defaultValue = convert(value);
+            return this;
+        }
+
+        @Override
+        public TypedResolver<T> parameterizedBy(String propertyName)
+        {
+            this.propertyParameter = propertyName;
+
+            if (propertyParameter != null && !propertyParameter.isEmpty())
+            {
+                String parameterValue = ConfigResolver
+                        .resolve(propertyParameter)
+                        .withCurrentProjectStage(projectStageAware)
+                        .getValue();
+
+                if (parameterValue != null && !parameterValue.isEmpty())
+                {
+                    this.parameterValue = parameterValue;
+                }
+            }
+
+            return this;
+        }
+
+        @Override
+        public TypedResolver<T> withCurrentProjectStage(boolean with)
+        {
+            this.projectStageAware = with;
+            return this;
+        }
+
+        @Override
+        public TypedResolver<T> strictly(boolean strictly)
+        {
+            this.strictly = strictly;
+            return this;
+        }
+
+        @Override
+        public T getValue()
+        {
+            String valueStr = resolveStringValue();
+            T value = convert(valueStr);
+
+            return fallbackToDefaultIfEmpty(keyResolved, value, defaultValue);
+        }
+
+        @Override
+        public String getKey()
+        {
+            return keyOriginal;
+        }
+
+        @Override
+        public String getResolvedKey()
+        {
+            return keyResolved;
+        }
+
+        @Override
+        public T getDefaultValue()
+        {
+            return defaultValue;
+        }
+
+        /**
+         * Performs the resolution cascade
+         */
+        private String resolveStringValue()
+        {
+            ProjectStage ps = null;
+            String value = null;
+            keyResolved = keyOriginal;
+            int keySuffices = 0;
+
+            // make the longest key
+            // first, try appending resolved parameter
+            if (propertyParameter != null && !propertyParameter.isEmpty())
+            {
+                if (parameterValue != null && !parameterValue.isEmpty())
+                {
+                    keyResolved += "." + parameterValue;
+                    keySuffices++;
+                }
+                // if parameter value can't be resolved and strictly
+                else if (strictly)
+                {
+                    return null;
+                }
+            }
+
+            // try appending projectstage
+            if (projectStageAware)
+            {
+                ps = getProjectStage();
+                keyResolved += "." + ps;
+                keySuffices++;
+            }
+
+            // make initial resolution of longest key
+            value = getPropertyValue(keyResolved);
+
+            // try fallbacks if not strictly
+            if (value == null && !strictly)
+            {
+
+                // by the length of the longest resolved key already tried
+                // breaks are left out intentionally
+                switch (keySuffices)
+                {
+
+                    case 2:
+                        // try base.param
+                        keyResolved = keyOriginal + "." + parameterValue;
+                        value = getPropertyValue(keyResolved);
+
+                        if (value != null)
+                        {
+                            return value;
+                        }
+
+                        // try base.ps
+                        ps = getProjectStage();
+                        keyResolved = keyOriginal + "." + ps;
+                        value = getPropertyValue(keyResolved);
+
+                        if (value != null)
+                        {
+                            return value;
+                        }
+
+                    case 1:
+                        // try base
+                        keyResolved = keyOriginal;
+                        value = getPropertyValue(keyResolved);
+                        return value;
+
+                    default:
+                        // the longest key was the base, no fallback
+                        return null;
+                }
+            }
+
+            return value;
+        }
+
+        private T convert(String value)
+        {
+
+            if (value == null)
+            {
+                return null;
+            }
+
+            Object result = null;
+
+            if (this.converter != null)
+            {
+                try
+                {
+                    result = converter.convert(value);
+                }
+                catch (Exception e)
+                {
+                    throw ExceptionUtils.throwAsRuntimeException(e);
+                }
+            }
+            else if (String.class.equals(configEntryType))
+            {
+                result = value;
+            }
+            else if (Class.class.equals(configEntryType))
+            {
+                result = ClassUtils.tryToLoadClassForName(value);
+            }
+            else if (Boolean.class.equals(configEntryType))
+            {
+                Boolean isTrue = "TRUE".equalsIgnoreCase(value);
+                isTrue |= "1".equalsIgnoreCase(value);
+                isTrue |= "YES".equalsIgnoreCase(value);
+                isTrue |= "Y".equalsIgnoreCase(value);
+                isTrue |= "JA".equalsIgnoreCase(value);
+                isTrue |= "J".equalsIgnoreCase(value);
+                isTrue |= "OUI".equalsIgnoreCase(value);
+
+                result = isTrue;
+            }
+            else if (Integer.class.equals(configEntryType))
+            {
+                result = Integer.parseInt(value);
+            }
+            else if (Long.class.equals(configEntryType))
+            {
+                result = Long.parseLong(value);
+            }
+            else if (Float.class.equals(configEntryType))
+            {
+                result = Float.parseFloat(value);
+            }
+            else if (Double.class.equals(configEntryType))
+            {
+                result = Double.parseDouble(value);
+            }
+
+            return (T) result;
+        }
+
     }
 
 }

@@ -56,21 +56,26 @@ public class TestConfigSource implements ConfigSource
         props.put("dataSource.mysql.Production", "java:/comp/env/MyDs");
         props.put("dataSource.mysql.UnitTest", "TestDataSource");
         props.put("dataSource.postgresql", "PostgreDataSource");
+        props.put("dataSource.UnitTest", "UnitTestDataSource");
         props.put("dataSource", "DefaultDataSource");
 
         // another one
         props.put("dbvendor2.Production", "mysql");
         props.put("dbvendor2", "postgresql");
 
+        props.put("dbvendor3", "h2");
+
         props.put("testkey4.encrypted", "value");
         props.put("testkey4.password", "mysecretvalue");
 
         props.put("deltaspike.test.string-value", "configured");
         props.put("deltaspike.test.integer-value", "5");
+        props.put("deltaspike.test.long-value", "8589934592");
         props.put("deltaspike.test.float-value", "-1.1");
+        props.put("deltaspike.test.double-value", "4e40");
         props.put("deltaspike.test.boolean-value", Boolean.FALSE.toString());
         props.put("deltaspike.test.class-value", "org.apache.deltaspike.test.api.config.TestConfigSource");
-        props.put("deltaspike.test.date-value", "" + System.currentTimeMillis());
+        props.put("deltaspike.test.date-value", "2014-12-24");
         props.put("deltaspike.test.invalid-value", "wrong");
     }
 

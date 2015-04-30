@@ -28,12 +28,93 @@ public class MyBean
 {
 
     @Inject
-    @ConfigProperty(name = "some.propertykey")
-    private String myConfig;
+    @ConfigProperty(name = "configproperty.test.string")
+    private String stringConfig;
 
-    public String getConfig()
+    @Inject
+    @ConfigProperty(name = "INVALIDKEY", defaultValue = "DEFAULT")
+    private String stringConfigWithDefault;
+
+    @Inject
+    @ConfigProperty(name = "configproperty.test.string", projectStageAware = false)
+    private String stringConfigWithoutProjectStage;
+
+    @Inject
+    @ConfigProperty(name = "configproperty.test.string", projectStageAware = true,
+            parameterizedBy = "configproperty.test.param")
+    private String stringConfigParameterized;
+
+    @Inject
+    @ConfigProperty(name = "configproperty.test.boolean")
+    private Boolean booleanConfig;
+
+    @Inject
+    @ConfigProperty(name = "configproperty.test.class")
+    private Class classConfig;
+
+    @Inject
+    @ConfigProperty(name = "configproperty.test.int")
+    private Integer intConfig;
+
+    @Inject
+    @ConfigProperty(name = "configproperty.test.long")
+    private Long longConfig;
+
+    @Inject
+    @ConfigProperty(name = "configproperty.test.float")
+    private Float floatConfig;
+
+    @Inject
+    @ConfigProperty(name = "configproperty.test.double")
+    private Double doubleConfig;
+
+    public String getStringConfig()
     {
-        return myConfig;
+        return stringConfig;
     }
-    
+
+    public String getStringConfigWithDefault()
+    {
+        return stringConfigWithDefault;
+    }
+
+    public String getStringConfigWithoutProjectStage()
+    {
+        return stringConfigWithoutProjectStage;
+    }
+
+    public String getStringConfigParameterized()
+    {
+        return stringConfigParameterized;
+    }
+
+    public boolean getBooleanConfig()
+    {
+        return booleanConfig;
+    }
+
+    public Class getClassConfig()
+    {
+        return classConfig;
+    }
+
+    public int getIntConfig()
+    {
+        return intConfig;
+    }
+
+    public long getLongConfig()
+    {
+        return longConfig;
+    }
+
+    public float getFloatConfig()
+    {
+        return floatConfig;
+    }
+
+    public double getDoubleConfig()
+    {
+        return doubleConfig;
+    }
 }

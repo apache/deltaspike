@@ -18,32 +18,53 @@
  */
 package org.apache.deltaspike.core.api.config.base;
 
+import org.apache.deltaspike.core.api.config.ConfigResolver;
+
 public interface CoreBaseConfig
 {
     interface BeanManagerDelegation
     {
-        TypedConfig<Boolean> DELEGATE_LOOKUP =
-            new TypedConfig<Boolean>("deltaspike.bean-manager.delegate_lookup", Boolean.TRUE);
+        Boolean DELEGATE_LOOKUP =
+                ConfigResolver.resolve("deltaspike.bean-manager.delegate_lookup")
+                        .as(Boolean.class)
+                        .withCurrentProjectStage(true)
+                        .withDefault(Boolean.TRUE)
+                        .getValue();
     }
 
     interface Interceptor
     {
-        TypedConfig<Integer> PRIORITY =
-            new TypedConfig<Integer>("deltaspike.interceptor.priority", 0);
+        Integer PRIORITY =
+                ConfigResolver.resolve("deltaspike.interceptor.priority")
+                        .as(Integer.class)
+                        .withCurrentProjectStage(true)
+                        .withDefault(0)
+                        .getValue();
     }
 
     interface MBean
     {
-        TypedConfig<Boolean> AUTO_UNREGISTER =
-            new TypedConfig<Boolean>("deltaspike.mbean.auto-unregister", Boolean.TRUE);
+        Boolean AUTO_UNREGISTER =
+                ConfigResolver.resolve("deltaspike.mbean.auto-unregister")
+                        .as(Boolean.class)
+                        .withCurrentProjectStage(true)
+                        .withDefault(Boolean.TRUE)
+                        .getValue();
     }
 
     interface Scope
     {
         interface WindowRestriction
         {
-            TypedConfig<Integer> MAX_COUNT =
-                new TypedConfig<Integer>("deltaspike.scope.window.max-count", 1024);
+            String MAX_COUNT_KEY = "deltaspike.scope.window.max-count";
+
+            Integer MAX_COUNT =
+                    ConfigResolver.resolve(MAX_COUNT_KEY)
+                            .as(Integer.class)
+                            .withCurrentProjectStage(true)
+                            .withDefault(1024)
+                            .getValue();
+
         }
     }
 }

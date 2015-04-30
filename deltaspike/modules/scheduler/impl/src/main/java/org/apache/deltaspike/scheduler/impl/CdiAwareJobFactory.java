@@ -32,7 +32,7 @@ public class CdiAwareJobFactory implements JobFactory
 
     public CdiAwareJobFactory()
     {
-        String defaultJobFactoryName = SchedulerBaseConfig.JobCustomization.DEFAULT_JOB_FACTORY_CLASS_NAME.getValue();
+        String defaultJobFactoryName = SchedulerBaseConfig.JobCustomization.DEFAULT_JOB_FACTORY_CLASS_NAME;
 
         defaultFactory = ClassUtils.tryToInstantiateClassForName(defaultJobFactoryName, JobFactory.class);
     }

@@ -163,9 +163,9 @@ public abstract class ClientWindowHelper
 
     public static int getMaxWindowIdLength()
     {
-        int result = JsfBaseConfig.Scope.WindowRestriction.ID_MAX_LENGTH.getValue();
+        int result = JsfBaseConfig.Scope.WindowRestriction.ID_MAX_LENGTH;
 
-        if (result > JsfBaseConfig.Scope.WindowRestriction.ID_MAX_LENGTH.getDefaultValue())
+        if (result > JsfBaseConfig.Scope.WindowRestriction.ID_MAX_LENGTH_DEFAULT)
         {
             if (LOG.isLoggable(Level.WARNING))
             {

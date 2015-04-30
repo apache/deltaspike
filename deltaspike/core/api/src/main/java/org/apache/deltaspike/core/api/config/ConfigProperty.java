@@ -130,4 +130,10 @@ public @interface ConfigProperty
      */
     @Nonbinding
     String defaultValue() default NULL;
+
+    @Nonbinding
+    boolean projectStageAware() default true;
+
+    @Nonbinding
+    String parameterizedBy() default NULL;
 }

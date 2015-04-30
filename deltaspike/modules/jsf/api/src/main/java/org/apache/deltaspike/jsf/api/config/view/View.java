@@ -242,7 +242,7 @@ public @interface View
             if (DefaultBasePathBuilder.class.equals(view.basePathBuilder()))
             {
                 String customDefaultBasePathBuilderClassName =
-                    JsfBaseConfig.ViewConfig.CUSTOM_DEFAULT_BASE_PATH_BUILDER.getValue();
+                    JsfBaseConfig.ViewConfig.CUSTOM_DEFAULT_BASE_PATH_BUILDER;
 
                 if (customDefaultBasePathBuilderClassName != null)
                 {
@@ -267,7 +267,7 @@ public @interface View
             if (DefaultFileNameBuilder.class.equals(view.fileNameBuilder()))
             {
                 String customDefaultFileNameBuilderClassName =
-                    JsfBaseConfig.ViewConfig.CUSTOM_DEFAULT_FILE_NAME_BUILDER.getValue();
+                    JsfBaseConfig.ViewConfig.CUSTOM_DEFAULT_FILE_NAME_BUILDER;
 
                 if (customDefaultFileNameBuilderClassName != null)
                 {
@@ -292,7 +292,7 @@ public @interface View
             if (DefaultExtensionBuilder.class.equals(view.extensionBuilder()))
             {
                 String customDefaultExtensionBuilderClassName =
-                    JsfBaseConfig.ViewConfig.CUSTOM_DEFAULT_EXTENSION_BUILDER.getValue();
+                    JsfBaseConfig.ViewConfig.CUSTOM_DEFAULT_EXTENSION_BUILDER;
 
                 if (customDefaultExtensionBuilderClassName != null)
                 {

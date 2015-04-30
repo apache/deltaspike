@@ -18,27 +18,42 @@
  */
 package org.apache.deltaspike.testcontrol.api.junit;
 
-import org.apache.deltaspike.core.api.config.base.TypedConfig;
+import org.apache.deltaspike.core.api.config.ConfigResolver;
 
 public interface TestBaseConfig
 {
     interface ContainerIntegration
     {
         //default is false to improve the compatibility with @Before and @After
-        TypedConfig<Boolean> USE_TEST_CLASS_AS_CDI_BEAN =
-            new TypedConfig<Boolean>("deltaspike.testcontrol.use_test_class_as_cdi_bean", Boolean.FALSE);
+        Boolean USE_TEST_CLASS_AS_CDI_BEAN = ConfigResolver.resolve("deltaspike.testcontrol.use_test_class_as_cdi_bean")
+                .as(Boolean.class)
+                .withCurrentProjectStage(true)
+                .withDefault(Boolean.FALSE)
+                .getValue();
 
-        TypedConfig<Boolean> STOP_CONTAINER =
-            new TypedConfig<Boolean>("deltaspike.testcontrol.stop_container", Boolean.TRUE);
+        Boolean STOP_CONTAINER = ConfigResolver.resolve("deltaspike.testcontrol.stop_container")
+                .as(Boolean.class)
+                .withCurrentProjectStage(true)
+                .withDefault(Boolean.TRUE)
+                .getValue();
     }
 
     interface MockIntegration
     {
-        TypedConfig<Boolean> ALLOW_MOCKED_BEANS =
-                new TypedConfig<Boolean>("deltaspike.testcontrol.mock-support.allow_mocked_beans", Boolean.FALSE);
+        String ALLOW_MOCKED_BEANS_KEY = "deltaspike.testcontrol.mock-support.allow_mocked_beans";
+        String ALLOW_MOCKED_PRODUCERS_KEY = "deltaspike.testcontrol.mock-support.allow_mocked_producers";
 
-        TypedConfig<Boolean> ALLOW_MOCKED_PRODUCERS =
-                new TypedConfig<Boolean>("deltaspike.testcontrol.mock-support.allow_mocked_producers", Boolean.FALSE);
+        Boolean ALLOW_MOCKED_BEANS = ConfigResolver.resolve(ALLOW_MOCKED_BEANS_KEY)
+                .as(Boolean.class)
+                .withCurrentProjectStage(true)
+                .withDefault(Boolean.FALSE)
+                .getValue();
+
+        Boolean ALLOW_MOCKED_PRODUCERS = ConfigResolver.resolve(ALLOW_MOCKED_PRODUCERS_KEY)
+                .as(Boolean.class)
+                .withCurrentProjectStage(true)
+                .withDefault(Boolean.FALSE)
+                .getValue();
 
     }
 }

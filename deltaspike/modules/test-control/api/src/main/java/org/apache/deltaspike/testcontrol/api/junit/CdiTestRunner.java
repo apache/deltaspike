@@ -82,7 +82,7 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
 
     static
     {
-        USE_TEST_CLASS_AS_CDI_BEAN = TestBaseConfig.ContainerIntegration.USE_TEST_CLASS_AS_CDI_BEAN.getValue();
+        USE_TEST_CLASS_AS_CDI_BEAN = TestBaseConfig.ContainerIntegration.USE_TEST_CLASS_AS_CDI_BEAN;
     }
 
     private static ThreadLocal<Boolean> automaticScopeHandlingActive = new ThreadLocal<Boolean>();

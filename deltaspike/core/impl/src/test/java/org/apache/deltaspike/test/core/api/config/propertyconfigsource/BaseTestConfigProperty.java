@@ -34,6 +34,17 @@ public class BaseTestConfigProperty
     @Test
     public void testInjectConfig()
     {
-        Assert.assertEquals("somevalue", myBean.getConfig());
+        Assert.assertEquals("psAwareStringValue", myBean.getStringConfig());
+        Assert.assertEquals("DEFAULT", myBean.getStringConfigWithDefault());
+        Assert.assertEquals("stringValue", myBean.getStringConfigWithoutProjectStage());
+        Assert.assertEquals("parameterizedPsAwareStringValue", myBean.getStringConfigParameterized());
+
+        Assert.assertEquals(false, myBean.getBooleanConfig());
+        Assert.assertEquals(MyBean.class, myBean.getClassConfig());
+        Assert.assertEquals(5, myBean.getIntConfig());
+        Assert.assertEquals(8589934592l, myBean.getLongConfig());
+        Assert.assertEquals(-1.1f, myBean.getFloatConfig(), 0);
+        Assert.assertEquals(4e40, myBean.getDoubleConfig(), 0);
+
     }
 }

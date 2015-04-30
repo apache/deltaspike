@@ -46,48 +46,9 @@ public class DefaultConfigPropertyProducer extends BaseConfigPropertyProducer
     @Produces
     @Dependent
     @ConfigProperty(name = "ignored") // we actually don't need the name
-    public Integer produceIntegerConfiguration(InjectionPoint injectionPoint)
+    public Class produceClassConfiguration(InjectionPoint injectionPoint)
     {
-        String configuredValue = getStringPropertyValue(injectionPoint);
-        if (configuredValue == null)
-        {
-            return null;
-        }
-
-        try
-        {
-            return Integer.parseInt(configuredValue);
-        }
-        catch (NumberFormatException nfe)
-        {
-            ConfigProperty configProperty = getAnnotation(injectionPoint, ConfigProperty.class);
-            throw new RuntimeException("Error while converting Integer property '" + configProperty.name() +
-                    "' value: " + configuredValue + " happening in bean " + injectionPoint.getBean() , nfe);
-        }
-
-    }
-
-    @Produces
-    @Dependent
-    @ConfigProperty(name = "ignored") // we actually don't need the name
-    public Long produceLongConfiguration(InjectionPoint injectionPoint)
-    {
-        String configuredValue = getStringPropertyValue(injectionPoint);
-        if (configuredValue == null)
-        {
-            return null;
-        }
-
-        try
-        {
-            return Long.parseLong(configuredValue);
-        }
-        catch (NumberFormatException nfe)
-        {
-            ConfigProperty configProperty = getAnnotation(injectionPoint, ConfigProperty.class);
-            throw new RuntimeException("Error while converting Long property '" + configProperty.name() +
-                    "' value: " + configuredValue + " happening in bean " + injectionPoint.getBean() , nfe);
-        }
+        return getPropertyWithException(injectionPoint, Class.class);
     }
 
     @Produces
@@ -95,21 +56,23 @@ public class DefaultConfigPropertyProducer extends BaseConfigPropertyProducer
     @ConfigProperty(name = "ignored") // we actually don't need the name
     public Boolean produceBooleanConfiguration(InjectionPoint injectionPoint)
     {
-        String configuredValue = getStringPropertyValue(injectionPoint);
-        if (configuredValue == null)
-        {
-            return null;
-        }
+        return getPropertyWithException(injectionPoint, Boolean.class);
+    }
 
-        Boolean isTrue = "TRUE".equalsIgnoreCase(configuredValue);
-        isTrue |= "1".equalsIgnoreCase(configuredValue);
-        isTrue |= "YES".equalsIgnoreCase(configuredValue);
-        isTrue |= "Y".equalsIgnoreCase(configuredValue);
-        isTrue |= "JA".equalsIgnoreCase(configuredValue);
-        isTrue |= "J".equalsIgnoreCase(configuredValue);
-        isTrue |= "OUI".equalsIgnoreCase(configuredValue);
+    @Produces
+    @Dependent
+    @ConfigProperty(name = "ignored") // we actually don't need the name
+    public Integer produceIntegerConfiguration(InjectionPoint injectionPoint)
+    {
+        return getPropertyWithException(injectionPoint, Integer.class);
+    }
 
-        return isTrue;
+    @Produces
+    @Dependent
+    @ConfigProperty(name = "ignored") // we actually don't need the name
+    public Long produceLongConfiguration(InjectionPoint injectionPoint)
+    {
+        return getPropertyWithException(injectionPoint, Long.class);
     }
 
     @Produces
@@ -117,23 +80,30 @@ public class DefaultConfigPropertyProducer extends BaseConfigPropertyProducer
     @ConfigProperty(name = "ignored") // we actually don't need the name
     public Float produceFloatConfiguration(InjectionPoint injectionPoint)
     {
-        String configuredValue = getStringPropertyValue(injectionPoint);
+        return getPropertyWithException(injectionPoint, Float.class);
 
-        if (configuredValue == null)
-        {
-            return null;
-        }
+    }
 
+    @Produces
+    @Dependent
+    @ConfigProperty(name = "ignored") // we actually don't need the name
+    public Double produceDoubleConfiguration(InjectionPoint injectionPoint)
+    {
+        return getPropertyWithException(injectionPoint, Double.class);
+
+    }
+
+    private <T> T getPropertyWithException(InjectionPoint ip, Class<T> ipCls)
+    {
         try
         {
-            return Float.parseFloat(configuredValue);
+            return getPropertyValue(ip, ipCls);
         }
-        catch (NumberFormatException nfe)
+        catch (RuntimeException rte)
         {
-            ConfigProperty configProperty = getAnnotation(injectionPoint, ConfigProperty.class);
-            throw new RuntimeException("Error while converting Float property '" + configProperty.name() +
-                    "' value: " + configuredValue + " happening in bean " + injectionPoint.getBean() , nfe);
+            ConfigProperty configProperty = getAnnotation(ip, ConfigProperty.class);
+            throw new RuntimeException("Error while converting property '" + configProperty.name() +
+                    "' happening in bean " + ip.getBean(), rte);
         }
-
     }
 }

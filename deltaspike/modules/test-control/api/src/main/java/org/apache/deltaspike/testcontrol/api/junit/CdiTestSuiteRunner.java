@@ -63,7 +63,7 @@ public class CdiTestSuiteRunner extends Suite
 
     static
     {
-        STOP_CONTAINER = TestBaseConfig.ContainerIntegration.STOP_CONTAINER.getValue();
+        STOP_CONTAINER = TestBaseConfig.ContainerIntegration.STOP_CONTAINER;
     }
 
     public CdiTestSuiteRunner(Class<?> klass, RunnerBuilder builder) throws InitializationError

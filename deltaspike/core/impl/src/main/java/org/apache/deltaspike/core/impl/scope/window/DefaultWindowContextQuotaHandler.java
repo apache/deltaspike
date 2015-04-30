@@ -41,7 +41,7 @@ public class DefaultWindowContextQuotaHandler implements WindowContextQuotaHandl
     @PostConstruct
     protected void init()
     {
-        this.maxWindowContextCount = CoreBaseConfig.Scope.WindowRestriction.MAX_COUNT.getValue();
+        this.maxWindowContextCount = CoreBaseConfig.Scope.WindowRestriction.MAX_COUNT;
     }
 
     public synchronized /*no issue due to session-scoped instance*/ void checkWindowContextQuota(String windowId)

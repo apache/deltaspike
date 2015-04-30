@@ -125,13 +125,13 @@ public class QuartzScheduler implements Scheduler<Job>
         try
         {
             this.scheduler = schedulerFactory.getScheduler();
-            if (SchedulerBaseConfig.Lifecycle.START_SCOPES_PER_JOB.getValue())
+            if (SchedulerBaseConfig.Lifecycle.START_SCOPES_PER_JOB)
             {
                 this.scheduler.getListenerManager().addJobListener(new InjectionAwareJobListener());
             }
             if (!this.scheduler.isStarted())
             {
-                this.scheduler.startDelayed(SchedulerBaseConfig.Lifecycle.DELAYED_START_IN_SECONDS.getValue());
+                this.scheduler.startDelayed(SchedulerBaseConfig.Lifecycle.DELAYED_START_IN_SECONDS);
             }
         }
         catch (SchedulerException e)
@@ -143,7 +143,7 @@ public class QuartzScheduler implements Scheduler<Job>
     protected ResourceBundle loadCustomQuartzConfig()
     {
         //don't use quartz.properties as default-value
-        String configFile = SchedulerBaseConfig.SCHEDULER_CONFIG_FILE.getValue();
+        String configFile = SchedulerBaseConfig.SCHEDULER_CONFIG_FILE;
         return PropertyFileUtils.getResourceBundle(configFile);
     }
 
@@ -154,7 +154,7 @@ public class QuartzScheduler implements Scheduler<Job>
         {
             if (this.scheduler != null && this.scheduler.isStarted())
             {
-                this.scheduler.shutdown(SchedulerBaseConfig.Lifecycle.FORCE_STOP.getValue());
+                this.scheduler.shutdown(SchedulerBaseConfig.Lifecycle.FORCE_STOP);
                 this.scheduler = null;
             }
         }

@@ -105,12 +105,35 @@ public abstract class BaseConfigPropertyProducer
             throw new IllegalStateException("producer method called without @ConfigProperty being present!");
         }
 
-        String configuredValue;
-        String defaultValue = configProperty.defaultValue();
+        return getPropertyValue(injectionPoint, String.class);
+    }
 
-        configuredValue = getPropertyValue(configProperty.name(), defaultValue);
+    protected <T> T getPropertyValue(InjectionPoint injectionPoint, Class<T> ipCls)
+    {
+        ConfigProperty configProperty = getAnnotation(injectionPoint, ConfigProperty.class);
 
-        return configuredValue;
+        if (configProperty == null)
+        {
+            throw new IllegalStateException("producer method called without @ConfigProperty being present!");
+        }
+
+        ConfigResolver.TypedResolver<T> resolver = ConfigResolver.resolve(configProperty.name())
+                .as(ipCls)
+                .withCurrentProjectStage(configProperty.projectStageAware());
+
+        String stringDefault = configProperty.defaultValue();
+        if (!ConfigProperty.NULL.equals(stringDefault))
+        {
+            resolver.withStringDefault(stringDefault);
+        }
+
+        String parameterizedBy = configProperty.parameterizedBy();
+        if (!ConfigProperty.NULL.equals(parameterizedBy))
+        {
+            resolver.parameterizedBy(parameterizedBy);
+        }
+
+        return resolver.getValue();
     }
 
     /**

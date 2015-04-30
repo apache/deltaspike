@@ -48,7 +48,7 @@ public class FolderLiteral extends AnnotationLiteral<Folder> implements Folder
         }
 
         final String customDefaultFolderNameBuilderClassName =
-            JsfBaseConfig.ViewConfig.CUSTOM_DEFAULT_FOLDER_NAME_BUILDER.getValue();
+            JsfBaseConfig.ViewConfig.CUSTOM_DEFAULT_FOLDER_NAME_BUILDER;
 
         if (customDefaultFolderNameBuilderClassName != null)
         {

@@ -29,7 +29,7 @@ public class CustomConfigSource implements ConfigSource
 {
     private Map<String, String> config = new HashMap<String, String>()
     {{
-        put(SchedulerBaseConfig.JobCustomization.JOB_CLASS_NAME.getKey(), CustomJob.class.getName());
+        put(SchedulerBaseConfig.JobCustomization.JOB_CLASS_NAME_KEY, CustomJob.class.getName());
         put(ClassDeactivator.class.getName(), QuartzDeactivator.class.getName());
     }};
 

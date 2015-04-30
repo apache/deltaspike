@@ -118,7 +118,7 @@ public class ExcludeExtension implements Extension, Deactivatable
 
             if (isGlobalAlternativeActivated)
             {
-                int priorityValue = CoreBaseConfig.Interceptor.PRIORITY.getValue();
+                int priorityValue = CoreBaseConfig.Interceptor.PRIORITY;
                 priorityAnnotationInstance = AnnotationInstanceUtils.getPriorityAnnotationInstance(priorityValue);
             }
         }

@@ -18,10 +18,13 @@
  */
 package org.apache.deltaspike.testcontrol.impl.jsf;
 
-import org.apache.deltaspike.core.api.config.base.TypedConfig;
+import org.apache.deltaspike.core.api.config.ConfigResolver;
 
 public interface MyFacesTestBaseConfig
 {
-    TypedConfig<String> WEBAPP_RESOURCE_PATH =
-        new TypedConfig<String>("deltaspike.testcontrol.mf.test.webapp_resource_path", "");
+    String WEBAPP_RESOURCE_PATH = ConfigResolver.resolve("deltaspike.testcontrol.mf.test.webapp_resource_path")
+            .as(String.class)
+            .withCurrentProjectStage(true)
+            .withDefault("")
+            .getValue();
 }

@@ -35,13 +35,13 @@ public abstract class AbstractMockManager implements DynamicMockManager
     public void addMock(Object mockInstance, Annotation... qualifiers)
     {
         //check if this method gets used without changing the default-config
-        if (!TestBaseConfig.MockIntegration.ALLOW_MOCKED_BEANS.getValue() &&
-            !TestBaseConfig.MockIntegration.ALLOW_MOCKED_PRODUCERS.getValue())
+        if (!TestBaseConfig.MockIntegration.ALLOW_MOCKED_BEANS &&
+            !TestBaseConfig.MockIntegration.ALLOW_MOCKED_PRODUCERS)
         {
             throw new IllegalStateException("The support for mocked CDI-Beans is disabled " +
                 "due to a reduced portability across different CDI-implementations. " +
-                "Please set '" + TestBaseConfig.MockIntegration.ALLOW_MOCKED_BEANS.getKey() + "' and/or '" +
-                TestBaseConfig.MockIntegration.ALLOW_MOCKED_PRODUCERS.getKey() + "' to 'true' " +
+                "Please set '" + TestBaseConfig.MockIntegration.ALLOW_MOCKED_BEANS_KEY + "' and/or '" +
+                TestBaseConfig.MockIntegration.ALLOW_MOCKED_PRODUCERS_KEY + "' to 'true' " +
                 "(in 'META-INF/apache-deltaspike.properties') on your test-classpath.");
         }
 

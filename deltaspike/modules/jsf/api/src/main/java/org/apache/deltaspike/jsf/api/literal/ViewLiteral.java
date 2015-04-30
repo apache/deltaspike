@@ -63,7 +63,7 @@ public class ViewLiteral extends AnnotationLiteral<View> implements View
         }
 
         final String customDefaultBasePathBuilderClassName =
-            JsfBaseConfig.ViewConfig.CUSTOM_DEFAULT_BASE_PATH_BUILDER.getValue();
+            JsfBaseConfig.ViewConfig.CUSTOM_DEFAULT_BASE_PATH_BUILDER;
 
         if (customDefaultBasePathBuilderClassName != null)
         {
@@ -76,7 +76,7 @@ public class ViewLiteral extends AnnotationLiteral<View> implements View
 
 
         final String customDefaultFileNameBuilderClassName =
-            JsfBaseConfig.ViewConfig.CUSTOM_DEFAULT_FILE_NAME_BUILDER.getValue();
+            JsfBaseConfig.ViewConfig.CUSTOM_DEFAULT_FILE_NAME_BUILDER;
 
         if (customDefaultFileNameBuilderClassName != null)
         {
@@ -89,7 +89,7 @@ public class ViewLiteral extends AnnotationLiteral<View> implements View
 
 
         final String customDefaultExtensionBuilderClassName =
-            JsfBaseConfig.ViewConfig.CUSTOM_DEFAULT_EXTENSION_BUILDER.getValue();
+            JsfBaseConfig.ViewConfig.CUSTOM_DEFAULT_EXTENSION_BUILDER;
 
         if (customDefaultExtensionBuilderClassName != null)
         {
