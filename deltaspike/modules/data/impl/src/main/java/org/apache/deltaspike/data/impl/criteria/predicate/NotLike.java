@@ -29,15 +29,25 @@ import javax.persistence.metamodel.SingularAttribute;
 public class NotLike<E> extends SingleValueBuilder<E, String>
 {
 
+    private final boolean caseInsensitive;
+
     public NotLike(SingularAttribute<? super E, String> att, String value)
     {
+        this(att, value, false);
+    }
+
+    public NotLike(SingularAttribute<? super E, String> att, String value, boolean caseInsensitive)
+    {
         super(att, value);
+        this.caseInsensitive = caseInsensitive;
     }
 
     @Override
     public List<Predicate> build(CriteriaBuilder builder, Path<E> path)
     {
-        return Arrays.asList(builder.notLike(path.get(getAtt()), getValue()));
+        return Arrays.asList(builder.notLike(
+                caseInsensitive ? builder.upper(path.<String>get(getAtt())) : path.get(getAtt()),
+                caseInsensitive ? getValue().toUpperCase() : getValue()));
     }
 
 }

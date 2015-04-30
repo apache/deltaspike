@@ -89,6 +89,26 @@ public class CriteriaTest extends TransactionalTestCase
     }
 
     @Test
+    public void should_query_with_ignore_case()
+    {
+        // given
+        final String name = "TEST_query_EQ_with_igNOREe_case";
+        final String nameLike = "TEST_query_LIKE_with_igNOREe_case";
+        createSimple(name, 155);
+        createSimple(nameLike, 166);
+
+        // when
+        List<Simple> result1 = repo.queryByIgnoreCase(name.toLowerCase(), "no_match");
+        List<Simple> result2 = repo.queryByIgnoreCase("no_match", "%" + nameLike.substring(5, 22) + "%");
+
+        // then
+        assertEquals(1, result1.size());
+        assertEquals(Integer.valueOf(155), result1.get(0).getCounter());
+        assertEquals(1, result2.size());
+        assertEquals(Integer.valueOf(166), result2.get(0).getCounter());
+    }
+
+    @Test
     public void should_create_join_criteria_query()
     {
         // given

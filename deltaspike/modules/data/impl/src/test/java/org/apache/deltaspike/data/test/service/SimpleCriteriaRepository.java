@@ -29,6 +29,7 @@ import org.apache.deltaspike.data.test.domain.Simple_;
 import org.apache.deltaspike.data.test.domain.SuperSimple_;
 
 @Repository
+@SuppressWarnings("unchecked")
 public abstract class SimpleCriteriaRepository extends AbstractEntityRepository<Simple, Long>
         implements CriteriaSupport<Simple>
 {
@@ -39,6 +40,20 @@ public abstract class SimpleCriteriaRepository extends AbstractEntityRepository<
                 .eq(Simple_.name, name)
                 .eq(Simple_.enabled, enabled)
                 .between(Simple_.counter, from, to)
+                .getResultList();
+    }
+
+    public List<Simple> queryByIgnoreCase(String name, String nameLike)
+    {
+        return criteria()
+                .or(
+                    criteria()
+                        .eqIgnoreCase(Simple_.name, name)
+                        .notEqIgnoreCase(Simple_.name, nameLike),
+                    criteria()
+                        .likeIgnoreCase(Simple_.name, nameLike)
+                        .notLikeIgnoreCase(Simple_.name, name)
+                 )
                 .getResultList();
     }
 
@@ -77,7 +92,6 @@ public abstract class SimpleCriteriaRepository extends AbstractEntityRepository<
                 .getSingleResult();
     }
 
-    @SuppressWarnings("unchecked")
     public Statistics queryWithSelect(String name)
     {
         return criteria()
@@ -86,7 +100,6 @@ public abstract class SimpleCriteriaRepository extends AbstractEntityRepository<
                 .getSingleResult();
     }
 
-    @SuppressWarnings("unchecked")
     public Object[] queryWithSelectAggregateReturnArray(String name)
     {
         return criteria()
@@ -97,7 +110,6 @@ public abstract class SimpleCriteriaRepository extends AbstractEntityRepository<
                 .getSingleResult();
     }
 
-    @SuppressWarnings("unchecked")
     public List<Object[]> queryWithSelectAttributes(String name)
     {
         return criteria()

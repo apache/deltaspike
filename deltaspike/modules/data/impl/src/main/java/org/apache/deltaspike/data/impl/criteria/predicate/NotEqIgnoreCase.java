@@ -26,28 +26,18 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.metamodel.SingularAttribute;
 
-public class Like<E> extends SingleValueBuilder<E, String>
+public class NotEqIgnoreCase<E> extends SingleValueBuilder<E, String>
 {
 
-    private final boolean caseInsensitive;
-
-    public Like(SingularAttribute<? super E, String> att, String value)
-    {
-        this(att, value, false);
-    }
-
-    public Like(SingularAttribute<? super E, String> att, String value, boolean caseInsensitive)
+    public NotEqIgnoreCase(SingularAttribute<? super E, String> att, String value)
     {
         super(att, value);
-        this.caseInsensitive = caseInsensitive;
     }
 
     @Override
     public List<Predicate> build(CriteriaBuilder builder, Path<E> path)
     {
-        return Arrays.asList(builder.like(
-                caseInsensitive ? builder.upper(path.<String>get(getAtt())) : path.get(getAtt()),
-                caseInsensitive ? getValue().toUpperCase() : getValue()));
+        return Arrays.asList(builder.notEqual(builder.upper(path.<String>get(getAtt())), getValue().toUpperCase()));
     }
 
 }

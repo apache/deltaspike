@@ -203,12 +203,28 @@ public interface Criteria<C, R>
     <P> Criteria<C, R> eq(SingularAttribute<? super C, P> att, P value);
 
     /**
+     * Equals predicate, case insensitive.
+     * @param att           The attribute to compare with.
+     * @param value         The comparison value.
+     * @return              Fluent API: Criteria instance.
+     */
+    <P> Criteria<C, R> eqIgnoreCase(SingularAttribute<? super C, String> att, String value);
+
+    /**
      * Not Equals predicate.
      * @param att           The attribute to compare with.
      * @param value         The comparison value.
      * @return              Fluent API: Criteria instance.
      */
     <P> Criteria<C, R> notEq(SingularAttribute<? super C, P> att, P value);
+
+    /**
+     * Not Equals predicate, case insensitive.
+     * @param att           The attribute to compare with.
+     * @param value         The comparison value.
+     * @return              Fluent API: Criteria instance.
+     */
+    <P> Criteria<C, R> notEqIgnoreCase(SingularAttribute<? super C, String> att, String value);
 
     /**
      * Like predicate.
@@ -219,12 +235,28 @@ public interface Criteria<C, R>
     <P> Criteria<C, R> like(SingularAttribute<? super C, String> att, String value);
 
     /**
+     * Like predicate, case insensitive.
+     * @param att           The attribute to compare with.
+     * @param value         The comparison value.
+     * @return              Fluent API: Criteria instance.
+     */
+    <P> Criteria<C, R> likeIgnoreCase(SingularAttribute<? super C, String> att, String value);
+
+    /**
      * Not like predicate.
      * @param att           The attribute to compare with.
      * @param value         The comparison value.
      * @return              Fluent API: Criteria instance.
      */
     <P> Criteria<C, R> notLike(SingularAttribute<? super C, String> att, String value);
+
+    /**
+     * Not like predicate, case insensitive.
+     * @param att           The attribute to compare with.
+     * @param value         The comparison value.
+     * @return              Fluent API: Criteria instance.
+     */
+    <P> Criteria<C, R> notLikeIgnoreCase(SingularAttribute<? super C, String> att, String value);
 
     /**
      * Less than predicate.

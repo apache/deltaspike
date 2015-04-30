@@ -48,6 +48,7 @@ import org.apache.deltaspike.data.api.criteria.QuerySelection;
 import org.apache.deltaspike.data.impl.builder.OrderDirection;
 import org.apache.deltaspike.data.impl.criteria.predicate.Between;
 import org.apache.deltaspike.data.impl.criteria.predicate.Eq;
+import org.apache.deltaspike.data.impl.criteria.predicate.EqIgnoreCase;
 import org.apache.deltaspike.data.impl.criteria.predicate.FetchBuilder;
 import org.apache.deltaspike.data.impl.criteria.predicate.GreaterThan;
 import org.apache.deltaspike.data.impl.criteria.predicate.GreaterThanOrEqual;
@@ -61,6 +62,7 @@ import org.apache.deltaspike.data.impl.criteria.predicate.LessThan;
 import org.apache.deltaspike.data.impl.criteria.predicate.LessThanOrEqual;
 import org.apache.deltaspike.data.impl.criteria.predicate.Like;
 import org.apache.deltaspike.data.impl.criteria.predicate.NotEq;
+import org.apache.deltaspike.data.impl.criteria.predicate.NotEqIgnoreCase;
 import org.apache.deltaspike.data.impl.criteria.predicate.NotLike;
 import org.apache.deltaspike.data.impl.criteria.predicate.OrBuilder;
 import org.apache.deltaspike.data.impl.criteria.predicate.PredicateBuilder;
@@ -367,9 +369,23 @@ public class QueryCriteria<C, R> implements Criteria<C, R>
     }
 
     @Override
+    public <P> Criteria<C, R> eqIgnoreCase(SingularAttribute<? super C, String> att, String value)
+    {
+        add(new EqIgnoreCase<C>(att, value), value);
+        return this;
+    }
+
+    @Override
     public <P> Criteria<C, R> notEq(SingularAttribute<? super C, P> att, P value)
     {
         add(new NotEq<C, P>(att, value), value);
+        return this;
+    }
+
+    @Override
+    public <P> Criteria<C, R> notEqIgnoreCase(SingularAttribute<? super C, String> att, String value)
+    {
+        add(new NotEqIgnoreCase<C>(att, value), value);
         return this;
     }
 
@@ -381,9 +397,23 @@ public class QueryCriteria<C, R> implements Criteria<C, R>
     }
 
     @Override
+    public <P> Criteria<C, R> likeIgnoreCase(SingularAttribute<? super C, String> att, String value)
+    {
+        add(new Like<C>(att, value, true), value);
+        return this;
+    }
+
+    @Override
     public <P> Criteria<C, R> notLike(SingularAttribute<? super C, String> att, String value)
     {
         add(new NotLike<C>(att, value), value);
+        return this;
+    }
+
+    @Override
+    public <P> Criteria<C, R> notLikeIgnoreCase(SingularAttribute<? super C, String> att, String value)
+    {
+        add(new NotLike<C>(att, value, true), value);
         return this;
     }
 
