@@ -123,11 +123,10 @@ public abstract class SecurityUtils
      * Processes a security violation without triggering the navigation to the error page
      *
      * @param exception current exception
-     * @return error view which can be used e.g. for manual navigation
      */
-    public static Class<? extends ViewConfig> handleSecurityViolationWithoutNavigation(RuntimeException exception)
+    public static void handleSecurityViolationWithoutNavigation(RuntimeException exception)
     {
-        return tryToHandleSecurityViolation(exception, false);
+        tryToHandleSecurityViolation(exception, false);
     }
 
     /**
@@ -140,8 +139,8 @@ public abstract class SecurityUtils
         tryToHandleSecurityViolation(exception, true);
     }
 
-    private static Class<? extends ViewConfig> tryToHandleSecurityViolation(RuntimeException runtimeException,
-                                                                            boolean allowNavigation)
+    private static void tryToHandleSecurityViolation(RuntimeException runtimeException,
+                                                     boolean allowNavigation)
     {
         ErrorViewAwareAccessDeniedException exception = extractException(runtimeException);
 
@@ -176,7 +175,6 @@ public abstract class SecurityUtils
         }
 
         processApplicationSecurityException(exception, errorView, allowNavigation);
-        return errorView;
     }
 
     private static ErrorViewAwareAccessDeniedException extractException(Throwable exception)

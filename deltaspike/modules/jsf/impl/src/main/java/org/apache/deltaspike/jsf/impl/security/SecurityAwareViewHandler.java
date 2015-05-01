@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.jsf.impl.security;
 
-import org.apache.deltaspike.core.api.config.view.ViewConfig;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigDescriptor;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
@@ -115,8 +114,6 @@ public class SecurityAwareViewHandler extends ViewHandlerWrapper implements Deac
         }
         catch (ErrorViewAwareAccessDeniedException accessDeniedException)
         {
-            Class<? extends ViewConfig> errorView;
-
             ViewConfigResolver viewConfigResolver = BeanProvider.getContextualReference(ViewConfigResolver.class);
 
             ViewConfigDescriptor errorViewDescriptor = viewConfigResolver
@@ -130,21 +127,15 @@ public class SecurityAwareViewHandler extends ViewHandlerWrapper implements Deac
                         .isAlwaysUseNavigationHandlerOnSecurityViolation())
                 {
                     SecurityUtils.tryToHandleSecurityViolation(accessDeniedException);
-                    errorView = errorViewDescriptor.getConfigClass();
                 }
                 else
                 {
-                    errorView = SecurityUtils.handleSecurityViolationWithoutNavigation(accessDeniedException);
+                    SecurityUtils.handleSecurityViolationWithoutNavigation(accessDeniedException);
                 }
             }
             finally
             {
                 broadcastAccessDeniedException(accessDeniedException);
-            }
-
-            if (errorViewDescriptor == null && errorView != null)
-            {
-                errorViewDescriptor = viewConfigResolver.getViewConfigDescriptor(errorView);
             }
 
             if (errorViewDescriptor != null)
