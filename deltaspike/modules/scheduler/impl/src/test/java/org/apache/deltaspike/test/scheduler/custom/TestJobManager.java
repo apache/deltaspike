@@ -71,6 +71,11 @@ public class TestJobManager
         this.runningJobs.remove(jobClass);
     }
 
+    public boolean deleteJob(Class<? extends CustomJob> jobClass)
+    {
+        return this.registeredJobs.remove(jobClass);
+    }
+
     public boolean isExecutingJob(Class<? extends CustomJob> jobClass)
     {
         return this.runningJobs.contains(jobClass);

@@ -32,6 +32,8 @@ public interface Scheduler<T> extends Deactivatable
 
     void interruptJob(Class<? extends T> jobClass);
 
+    boolean deleteJob(Class<? extends T> jobClass);
+
     boolean isExecutingJob(Class<? extends T> jobClass);
 
     void registerNewJob(Class<? extends T> jobClass);

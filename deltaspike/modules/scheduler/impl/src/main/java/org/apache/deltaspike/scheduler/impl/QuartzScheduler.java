@@ -264,6 +264,19 @@ public class QuartzScheduler implements Scheduler<Job>
     }
 
     @Override
+    public boolean deleteJob(Class<? extends Job> jobClass)
+    {
+        try
+        {
+            return this.scheduler.deleteJob(createJobKey(jobClass));
+        }
+        catch (SchedulerException e)
+        {
+            throw ExceptionUtils.throwAsRuntimeException(e);
+        }
+    }
+
+    @Override
     public void pauseJob(Class<? extends Job> jobClass)
     {
         try

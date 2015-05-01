@@ -49,6 +49,10 @@ public class MockedScheduler implements Scheduler<CustomJob>
         TestJobManager.getInstance().interruptJob(jobClass);
     }
 
+    public boolean deleteJob(Class<? extends CustomJob> jobClass) {
+        return TestJobManager.getInstance().deleteJob(jobClass);
+    }
+
     public boolean isExecutingJob(Class<? extends CustomJob> jobClass)
     {
         return TestJobManager.getInstance().isExecutingJob(jobClass);

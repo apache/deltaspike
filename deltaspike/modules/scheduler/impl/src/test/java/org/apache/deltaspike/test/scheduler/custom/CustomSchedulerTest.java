@@ -92,6 +92,9 @@ public abstract class CustomSchedulerTest
 
         this.scheduler.registerNewJob(AutoRegisteredJob.class);
         Assert.assertEquals(1, testJobManager.getRegisteredJobs().size());
+
+        this.scheduler.deleteJob(AutoRegisteredJob.class);
+        Assert.assertEquals(0, testJobManager.getRegisteredJobs().size());
     }
 
     @Test
