@@ -21,6 +21,7 @@ package org.apache.deltaspike.core.api.config.view.metadata;
 import org.apache.deltaspike.core.util.ExceptionUtils;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -78,6 +79,10 @@ public abstract class ExecutableCallbackDescriptor<R> extends CallbackDescriptor
                 }
                 catch (Exception e)
                 {
+                    if (e instanceof InvocationTargetException)
+                    {
+                        ExceptionUtils.throwAsRuntimeException(e.getCause());
+                    }
                     ExceptionUtils.throwAsRuntimeException(e);
                 }
             }
