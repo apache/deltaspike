@@ -142,7 +142,25 @@ public class SecurityAwareViewHandler extends ViewHandlerWrapper implements Deac
                 broadcastAccessDeniedException(accessDeniedException);
             }
 
-            return this.wrapped.createView(context, viewConfigResolver.getViewConfigDescriptor(errorView).getViewId());
+            if (errorViewDescriptor == null && errorView != null)
+            {
+                errorViewDescriptor = viewConfigResolver.getViewConfigDescriptor(errorView);
+            }
+
+            if (errorViewDescriptor != null)
+            {
+                return this.wrapped.createView(context, errorViewDescriptor.getViewId());
+            }
+            else
+            {
+                //only in case of GET requests, because an exception during POST requests leads to re-rendering
+                //the previous page (including the error message)
+                if (!context.isPostback() && context.getViewRoot() != null)
+                {
+                    context.getViewRoot().setViewId(null);
+                }
+            }
+            throw accessDeniedException; //security exception without error-view
         }
         finally
         {

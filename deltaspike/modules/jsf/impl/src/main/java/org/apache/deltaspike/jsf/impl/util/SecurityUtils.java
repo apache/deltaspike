@@ -170,7 +170,7 @@ public abstract class SecurityUtils
             }
         }
 
-        if (errorView == null)
+        if (errorView == null && allowNavigation)
         {
             throw exception;
         }
@@ -224,8 +224,38 @@ public abstract class SecurityUtils
         {
             //TODO discuss it (with CODI handling such messages was easier)
             message = violation.getReason();
-            FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, message, message);
-            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+
+            if (!isMessageAddedAlready(message))
+            {
+                FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, message, message);
+                FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+            }
         }
+    }
+
+    private static boolean isMessageAddedAlready(String message)
+    {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+
+        if (facesContext == null || message == null)
+        {
+            return false;
+        }
+
+        List<FacesMessage> existingMessages = facesContext.getMessageList();
+
+        if (existingMessages == null)
+        {
+            return false;
+        }
+
+        for (FacesMessage facesMessage : existingMessages)
+        {
+            if (message.equals(facesMessage.getSummary()))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
