@@ -25,7 +25,7 @@ import java.lang.reflect.InvocationHandler;
  */
 public interface DeltaSpikeProxy
 {
-    void setDelegateInvocationHandler(InvocationHandler redirectInvocationHandler);
+    void setDelegateInvocationHandler(InvocationHandler delegateInvocationHandler);
 
     InvocationHandler getDelegateInvocationHandler();
 }

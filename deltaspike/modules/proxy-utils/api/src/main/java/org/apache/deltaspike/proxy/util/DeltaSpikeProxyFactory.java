@@ -34,20 +34,20 @@ public abstract class DeltaSpikeProxyFactory
     private static final String SUPER_ACCESSOR_METHOD_SUFFIX = "$super";
     
     public <T> Class<T> getProxyClass(Class<T> targetClass,
-            Class<? extends InvocationHandler> invocationHandlerClass)
+            Class<? extends InvocationHandler> delegateInvocationHandlerClass)
     {
         // check if a proxy is already defined for this class
         Class<T> proxyClass = ClassUtils.tryToLoadClassForName(constructProxyClassName(targetClass), targetClass);
         if (proxyClass == null)
         {
-            proxyClass = createProxyClass(targetClass.getClassLoader(), targetClass, invocationHandlerClass);
+            proxyClass = createProxyClass(targetClass.getClassLoader(), targetClass, delegateInvocationHandlerClass);
         }
 
         return proxyClass;
     }
 
     private synchronized <T> Class<T> createProxyClass(ClassLoader classLoader, Class<T> targetClass,
-            Class<? extends InvocationHandler> invocationHandlerClass)
+            Class<? extends InvocationHandler> delegateInvocationHandlerClass)
     {
         Class<T> proxyClass = ClassUtils.tryToLoadClassForName(constructProxyClassName(targetClass), targetClass);
         if (proxyClass == null)
@@ -61,7 +61,8 @@ public abstract class DeltaSpikeProxyFactory
                     && interceptMethods.size() > 0
                     && !containsInterceptorBinding(targetClass.getDeclaredAnnotations()))
             {
-                // loop every method and check if a interceptor is defined on the method -> otherwise don't proxy
+                // loop every method and check if a interceptor is defined on the method -> otherwise don't overwrite
+                // interceptMethods
                 Iterator<Method> iterator = interceptMethods.iterator();
                 while (iterator.hasNext())
                 {
@@ -75,7 +76,7 @@ public abstract class DeltaSpikeProxyFactory
             
             proxyClass = AsmProxyClassGenerator.generateProxyClass(classLoader,
                     targetClass,
-                    invocationHandlerClass,
+                    delegateInvocationHandlerClass,
                     getProxyClassSuffix(),
                     SUPER_ACCESSOR_METHOD_SUFFIX,
                     getAdditionalInterfacesToImplement(targetClass),

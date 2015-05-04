@@ -52,7 +52,7 @@ public abstract class AsmProxyClassGenerator
 
     public static <T> Class<T> generateProxyClass(ClassLoader classLoader,
             Class<T> targetClass,
-            Class<? extends InvocationHandler> invocationHandlerClass,
+            Class<? extends InvocationHandler> delegateInvocationHandlerClass,
             String suffix,
             String superAccessorMethodSuffix,
             Class<?>[] additionalInterfaces,
@@ -62,7 +62,7 @@ public abstract class AsmProxyClassGenerator
         String proxyName = targetClass.getCanonicalName() + suffix;
         String classFileName = proxyName.replace('.', '/');
 
-        byte[] proxyBytes = generateProxyClassBytes(targetClass, invocationHandlerClass,
+        byte[] proxyBytes = generateProxyClassBytes(targetClass, delegateInvocationHandlerClass,
                 classFileName, superAccessorMethodSuffix, additionalInterfaces, delegateMethods, interceptMethods);
 
         Class<T> proxyClass = (Class<T>) loadClass(classLoader, proxyName, proxyBytes,
@@ -72,7 +72,7 @@ public abstract class AsmProxyClassGenerator
     }
 
     private static byte[] generateProxyClassBytes(Class<?> targetClass,
-            Class<? extends InvocationHandler> invocationHandlerClass,
+            Class<? extends InvocationHandler> delegateInvocationHandlerClass,
             String proxyName,
             String superAccessorMethodSuffix,
             Class<?>[] additionalInterfaces,
@@ -103,7 +103,7 @@ public abstract class AsmProxyClassGenerator
 
         Type superType = Type.getType(superClass);
         Type proxyType = Type.getObjectType(proxyName);
-        Type invocationHandlerType = Type.getType(invocationHandlerClass);
+        Type delegateInvocationHandlerType = Type.getType(delegateInvocationHandlerClass);
 
         ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
         cw.visit(Opcodes.V1_6, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER, proxyType.getInternalName(), null,
@@ -115,10 +115,10 @@ public abstract class AsmProxyClassGenerator
             cw.visitAnnotation(Type.getDescriptor(annotation.annotationType()), true).visitEnd();
         }
 
-        defineInvocationHandlerField(cw, invocationHandlerType);
+        defineInvocationHandlerField(cw, delegateInvocationHandlerType);
         defineDefaultConstructor(cw, proxyType, superType);
-        defineDelegateInvocationHandlerConstructor(cw, proxyType, superType, invocationHandlerType);
-        defineDeltaSpikeProxyMethods(cw, proxyType, invocationHandlerType);
+        defineDelegateInvocationHandlerConstructor(cw, proxyType, superType, delegateInvocationHandlerType);
+        defineDeltaSpikeProxyMethods(cw, proxyType, delegateInvocationHandlerType);
 
         for (java.lang.reflect.Method method : delegateMethods)
         {
@@ -134,12 +134,12 @@ public abstract class AsmProxyClassGenerator
         return cw.toByteArray();
     }
 
-    private static void defineInvocationHandlerField(ClassWriter cw, Type invocationHandlerType)
+    private static void defineInvocationHandlerField(ClassWriter cw, Type delegateInvocationHandlerType)
     {
         // generates
         // private MyInvocationHandler delegateInvocationHandler;
         cw.visitField(Opcodes.ACC_PRIVATE, FIELDNAME_DELEGATE_INVOCATION_HANDLER,
-                invocationHandlerType.getDescriptor(), null, null).visitEnd();
+                delegateInvocationHandlerType.getDescriptor(), null, null).visitEnd();
     }
 
     private static void defineDefaultConstructor(ClassWriter cw, Type proxyType, Type superType)
@@ -162,10 +162,10 @@ public abstract class AsmProxyClassGenerator
     }
     
     private static void defineDelegateInvocationHandlerConstructor(ClassWriter cw, Type proxyType, Type superType,
-            Type invocationHandlerType)
+            Type delegateInvocationHandlerType)
     {
         GeneratorAdapter mg = new GeneratorAdapter(Opcodes.ACC_PUBLIC,
-                new Method("<init>", Type.VOID_TYPE, new Type[] { invocationHandlerType }),
+                new Method("<init>", Type.VOID_TYPE, new Type[] { delegateInvocationHandlerType }),
                 null,
                 null,
                 cw);
@@ -179,7 +179,7 @@ public abstract class AsmProxyClassGenerator
         // set invocation handler
         mg.loadThis();
         mg.loadArg(0);
-        mg.putField(proxyType, FIELDNAME_DELEGATE_INVOCATION_HANDLER, invocationHandlerType);
+        mg.putField(proxyType, FIELDNAME_DELEGATE_INVOCATION_HANDLER, delegateInvocationHandlerType);
         
         mg.returnValue();
         mg.endMethod();
@@ -187,7 +187,7 @@ public abstract class AsmProxyClassGenerator
         mg.visitEnd();
     }
 
-    private static void defineDeltaSpikeProxyMethods(ClassWriter cw, Type proxyType, Type invocationHandlerType)
+    private static void defineDeltaSpikeProxyMethods(ClassWriter cw, Type proxyType, Type delegateInvocationHandlerType)
     {
         try
         {
@@ -200,8 +200,8 @@ public abstract class AsmProxyClassGenerator
 
             mg.loadThis();
             mg.loadArg(0);
-            mg.checkCast(invocationHandlerType);
-            mg.putField(proxyType, FIELDNAME_DELEGATE_INVOCATION_HANDLER, invocationHandlerType);
+            mg.checkCast(delegateInvocationHandlerType);
+            mg.putField(proxyType, FIELDNAME_DELEGATE_INVOCATION_HANDLER, delegateInvocationHandlerType);
             mg.returnValue();
 
             mg.visitMaxs(2, 1);
@@ -215,7 +215,7 @@ public abstract class AsmProxyClassGenerator
             mg.visitCode();
 
             mg.loadThis();
-            mg.getField(proxyType, FIELDNAME_DELEGATE_INVOCATION_HANDLER, invocationHandlerType);
+            mg.getField(proxyType, FIELDNAME_DELEGATE_INVOCATION_HANDLER, delegateInvocationHandlerType);
             mg.returnValue();
 
             mg.visitMaxs(2, 1);
