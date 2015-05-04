@@ -36,6 +36,7 @@ public abstract class DeltaSpikeProxyFactory
     public <T> Class<T> getProxyClass(Class<T> targetClass,
             Class<? extends InvocationHandler> invocationHandlerClass)
     {
+        // check if a proxy is already defined for this class
         Class<T> proxyClass = ClassUtils.tryToLoadClassForName(constructProxyClassName(targetClass), targetClass);
         if (proxyClass == null)
         {

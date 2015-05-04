@@ -27,6 +27,10 @@ import javax.enterprise.inject.Typed;
 
 import org.apache.deltaspike.proxy.util.DeltaSpikeProxyFactory;
 
+/**
+ * {@link DeltaSpikeProxyFactory} which delegates all abstract methods to the 
+ * partial bean binding {@link java.lang.reflect.InvocationHandler}.
+ */
 @Typed
 public class PartialBeanProxyFactory extends DeltaSpikeProxyFactory
 {

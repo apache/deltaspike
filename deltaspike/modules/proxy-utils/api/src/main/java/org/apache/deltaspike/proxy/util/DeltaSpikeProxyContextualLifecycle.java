@@ -33,6 +33,16 @@ import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.core.util.metadata.builder.ContextualLifecycle;
 
+/**
+ * {@link ContextualLifecycle} which handles a complete lifecycle of a proxy:
+ * - creates a proxy via a {@link DeltaSpikeProxyFactory}
+ * - handles the instantiation and injection of the proxy
+ * - handles the instantiation via CDI of the delegate {@link InvocationHandler} and assign it to the proxy
+ * - handles the release/destruction of both proxy and delegate {@link InvocationHandler}
+ *
+ * @param <T> The class of the original class.
+ * @param <H> The class of the delegate {@link InvocationHandler}.
+ */
 public class DeltaSpikeProxyContextualLifecycle<T, H extends InvocationHandler> implements ContextualLifecycle<T>
 {
     private final Class<T> proxyClass;

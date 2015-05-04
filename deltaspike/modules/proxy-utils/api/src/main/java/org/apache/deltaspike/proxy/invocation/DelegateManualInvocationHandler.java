@@ -25,6 +25,10 @@ import javax.enterprise.inject.Typed;
 
 import org.apache.deltaspike.proxy.util.DeltaSpikeProxy;
 
+/**
+ * {@link AbstractManualInvocationHandler} which delegates the method call to the defined {@link InvocationHandler}
+ * in {@link DeltaSpikeProxy#getDelegateInvocationHandler()}.
+ */
 @Typed
 public class DelegateManualInvocationHandler extends AbstractManualInvocationHandler
 {

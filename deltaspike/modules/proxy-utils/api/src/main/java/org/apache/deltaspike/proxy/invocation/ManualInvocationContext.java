@@ -31,6 +31,10 @@ import javax.enterprise.inject.spi.Interceptor;
 import javax.interceptor.InvocationContext;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 
+/**
+ * {@link InvocationContext} implementation to support manual interceptor invocation before invoking the
+ * original logic via the given {@link AbstractManualInvocationHandler}.
+ */
 @Typed
 public class ManualInvocationContext<T, H> implements InvocationContext
 {

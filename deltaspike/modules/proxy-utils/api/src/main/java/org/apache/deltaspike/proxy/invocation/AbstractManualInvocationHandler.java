@@ -36,6 +36,7 @@ public abstract class AbstractManualInvocationHandler implements InvocationHandl
     @Override
     public Object invoke(Object proxy, Method method, Object[] parameters) throws Throwable
     {
+        // check if interceptors are defined, otherwise just call the original logik
         List<Interceptor<?>> interceptors = resolveInterceptors(proxy, method);
         if (interceptors != null && interceptors.size() > 0)
         {
@@ -62,6 +63,15 @@ public abstract class AbstractManualInvocationHandler implements InvocationHandl
         return proceedOriginal(proxy, method, parameters);
     }
 
+    /**
+     * Calls the original logic after invoking the interceptor chain.
+     * 
+     * @param proxy The current proxy instance.
+     * @param method The current invoked method.
+     * @param parameters The method parameter.
+     * @return The original value from the original method.
+     * @throws Throwable 
+     */
     protected abstract Object proceedOriginal(Object proxy, Method method, Object[] parameters) throws Throwable;
 
     protected List<Interceptor<?>> resolveInterceptors(Object instance, Method method)

@@ -20,6 +20,9 @@ package org.apache.deltaspike.proxy.util;
 
 import java.lang.reflect.InvocationHandler;
 
+/**
+ * Interface which will automatically be implemented by the proxy instance.
+ */
 public interface DeltaSpikeProxy
 {
     void setDelegateInvocationHandler(InvocationHandler redirectInvocationHandler);

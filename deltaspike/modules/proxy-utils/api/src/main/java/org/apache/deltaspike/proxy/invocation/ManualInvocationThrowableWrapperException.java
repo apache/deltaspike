@@ -18,6 +18,10 @@
  */
 package org.apache.deltaspike.proxy.invocation;
 
+/**
+ * Wrapper exception to wrap and pass trough the original {@link Throwable} because
+ * the {@link javax.interceptor.InvocationContext#proceed()} method only declares "throws Exception".
+ */
 public class ManualInvocationThrowableWrapperException extends Exception
 {
     public ManualInvocationThrowableWrapperException(Throwable e)

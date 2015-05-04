@@ -25,6 +25,9 @@ import javax.enterprise.inject.Typed;
 
 import org.apache.deltaspike.proxy.util.DeltaSpikeProxyFactory;
 
+/**
+ * {@link AbstractManualInvocationHandler} which just delegates to the original method after invoking interceptors.
+ */
 @Typed
 public class InterceptManualInvocationHandler extends AbstractManualInvocationHandler
 {
