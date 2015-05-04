@@ -33,6 +33,7 @@ import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import javax.faces.convert.Converter;
 import javax.faces.validator.Validator;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -40,7 +41,8 @@ import java.lang.reflect.Modifier;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
-import org.apache.deltaspike.core.util.proxy.DeltaSpikeProxyContextualLifecycle;
+
+import org.apache.deltaspike.proxy.util.DeltaSpikeProxyContextualLifecycle;
 
 public class ConverterAndValidatorProxyExtension implements Extension, Deactivatable
 {
@@ -56,7 +58,7 @@ public class ConverterAndValidatorProxyExtension implements Extension, Deactivat
 
     @SuppressWarnings("UnusedDeclaration")
     public <X> void findConverterAndValidatorsWhichNeedProxiesForDependencyInjectionSupport(
-        @Observes ProcessAnnotatedType<X> pat, BeanManager beanManager)
+            @Observes ProcessAnnotatedType<X> pat, BeanManager beanManager)
     {
         if (!this.isActivated)
         {
@@ -71,14 +73,14 @@ public class ConverterAndValidatorProxyExtension implements Extension, Deactivat
         }
 
         Bean<X> bean = new BeanBuilder<X>(beanManager).readFromType(pat.getAnnotatedType()).create();
-        //veto normal converters/validators -> they will get excluded from the special handling later on
+        // veto normal converters/validators -> they will get excluded from the special handling later on
         if (!hasInjectionPoints(bean) && !hasNormalScopeAnnotation(bean, beanManager))
         {
             pat.veto();
             return;
         }
 
-        //converters/validators without properties for tags, will be handled by the corresponding manual wrapper
+        // converters/validators without properties for tags, will be handled by the corresponding manual wrapper
         if (!hasPublicProperty(beanClass))
         {
             return;
@@ -92,7 +94,7 @@ public class ConverterAndValidatorProxyExtension implements Extension, Deactivat
         else
         {
             LOG.warning("To use dependency-injection in converters/validators with properties, " +
-                "you they aren't allowed to be 'final'.");
+                    "you they aren't allowed to be 'final'.");
         }
     }
 
@@ -104,7 +106,7 @@ public class ConverterAndValidatorProxyExtension implements Extension, Deactivat
     protected <X> boolean hasNormalScopeAnnotation(Bean<X> bean, BeanManager beanManager)
     {
         Class<? extends Annotation> scopeAnnotationClass = bean.getScope();
-        return  scopeAnnotationClass != null && beanManager.isNormalScope(scopeAnnotationClass);
+        return scopeAnnotationClass != null && beanManager.isNormalScope(scopeAnnotationClass);
     }
 
     protected <X> boolean hasPublicProperty(Class<X> beanClass)
@@ -112,8 +114,8 @@ public class ConverterAndValidatorProxyExtension implements Extension, Deactivat
         for (Method currentMethod : beanClass.getMethods())
         {
             if (currentMethod.getName().startsWith("set") && currentMethod.getName().length() > 3
-                && currentMethod.getParameterTypes().length == 1 &&
-                hasGetterMethod(beanClass, currentMethod.getName().substring(3)))
+                    && currentMethod.getParameterTypes().length == 1 &&
+                    hasGetterMethod(beanClass, currentMethod.getName().substring(3)))
             {
                 return true;
             }
@@ -160,8 +162,8 @@ public class ConverterAndValidatorProxyExtension implements Extension, Deactivat
     protected <T> Bean<T> createBean(Class<T> beanClass, BeanManager beanManager)
     {
         Class<? extends InvocationHandler> invocationHandlerClass =
-            Converter.class.isAssignableFrom(beanClass) ?
-                ConverterInvocationHandler.class : ValidatorInvocationHandler.class;
+                Converter.class.isAssignableFrom(beanClass) ?
+                        ConverterInvocationHandler.class : ValidatorInvocationHandler.class;
 
         AnnotatedType<T> annotatedType = new AnnotatedTypeBuilder<T>().readFromType(beanClass).create();
 
@@ -169,9 +171,9 @@ public class ConverterAndValidatorProxyExtension implements Extension, Deactivat
                 invocationHandlerClass, ConverterAndValidatorProxyFactory.getInstance(), beanManager);
 
         BeanBuilder<T> beanBuilder = new BeanBuilder<T>(beanManager)
-            .readFromType(annotatedType)
-            .passivationCapable(true)
-            .beanLifecycle(lifecycle);
+                .readFromType(annotatedType)
+                .passivationCapable(true)
+                .beanLifecycle(lifecycle);
 
         return beanBuilder.create();
     }

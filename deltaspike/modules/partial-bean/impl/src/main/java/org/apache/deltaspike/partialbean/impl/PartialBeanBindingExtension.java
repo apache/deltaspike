@@ -23,6 +23,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AfterBeanDiscovery;
 import javax.enterprise.inject.spi.AnnotatedType;
@@ -31,11 +32,12 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.BeforeBeanDiscovery;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
+
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.core.util.bean.BeanBuilder;
 import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
-import org.apache.deltaspike.core.util.proxy.DeltaSpikeProxyContextualLifecycle;
+import org.apache.deltaspike.proxy.util.DeltaSpikeProxyContextualLifecycle;
 import org.apache.deltaspike.partialbean.api.PartialBeanBinding;
 
 public class PartialBeanBindingExtension implements Extension, Deactivatable

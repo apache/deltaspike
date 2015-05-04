@@ -16,17 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.util.proxy;
+package org.apache.deltaspike.proxy.util;
 
-import org.apache.deltaspike.core.util.proxy.invocation.InterceptManualInvocationHandler;
-import org.apache.deltaspike.core.util.proxy.invocation.DelegateManualInvocationHandler;
+import org.apache.deltaspike.proxy.invocation.DelegateManualInvocationHandler;
+import org.apache.deltaspike.proxy.invocation.InterceptManualInvocationHandler;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.Arrays;
+
 import javax.enterprise.inject.Typed;
+
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;

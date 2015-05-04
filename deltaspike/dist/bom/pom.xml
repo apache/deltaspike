@@ -187,6 +187,12 @@
             <artifactId>deltaspike-scheduler-module-impl</artifactId>
             <scope>runtime</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.deltaspike.modules</groupId>
+            <artifactId>deltaspike-proxy-module-api</artifactId>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
 </project>

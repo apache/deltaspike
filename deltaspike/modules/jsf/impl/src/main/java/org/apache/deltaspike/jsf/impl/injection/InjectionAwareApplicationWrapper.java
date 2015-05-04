@@ -30,7 +30,8 @@ import javax.faces.convert.Converter;
 import javax.faces.event.PreDestroyViewMapEvent;
 import javax.faces.event.SystemEvent;
 import javax.faces.validator.Validator;
-import org.apache.deltaspike.core.util.proxy.DeltaSpikeProxy;
+
+import org.apache.deltaspike.proxy.util.DeltaSpikeProxy;
 
 public class InjectionAwareApplicationWrapper extends ApplicationWrapper
 {

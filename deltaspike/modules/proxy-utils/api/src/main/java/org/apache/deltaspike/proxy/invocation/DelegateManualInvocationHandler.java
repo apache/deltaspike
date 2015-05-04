@@ -16,13 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.util.proxy.invocation;
+package org.apache.deltaspike.proxy.invocation;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+
 import javax.enterprise.inject.Typed;
-import org.apache.deltaspike.core.util.invocation.AbstractManualInvocationHandler;
-import org.apache.deltaspike.core.util.proxy.DeltaSpikeProxy;
+
+import org.apache.deltaspike.proxy.util.DeltaSpikeProxy;
 
 @Typed
 public class DelegateManualInvocationHandler extends AbstractManualInvocationHandler

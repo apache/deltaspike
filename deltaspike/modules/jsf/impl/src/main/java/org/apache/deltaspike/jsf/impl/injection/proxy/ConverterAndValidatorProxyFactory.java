@@ -22,10 +22,12 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import javax.enterprise.inject.Typed;
 import javax.faces.component.PartialStateHolder;
 import javax.faces.component.StateHolder;
-import org.apache.deltaspike.core.util.proxy.DeltaSpikeProxyFactory;
+
+import org.apache.deltaspike.proxy.util.DeltaSpikeProxyFactory;
 
 @Typed
 public class ConverterAndValidatorProxyFactory extends DeltaSpikeProxyFactory

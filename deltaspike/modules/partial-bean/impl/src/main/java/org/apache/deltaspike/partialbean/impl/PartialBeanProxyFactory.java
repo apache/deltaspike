@@ -22,8 +22,10 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Iterator;
+
 import javax.enterprise.inject.Typed;
-import org.apache.deltaspike.core.util.proxy.DeltaSpikeProxyFactory;
+
+import org.apache.deltaspike.proxy.util.DeltaSpikeProxyFactory;
 
 @Typed
 public class PartialBeanProxyFactory extends DeltaSpikeProxyFactory

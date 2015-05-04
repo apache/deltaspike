@@ -17,7 +17,8 @@
     specific language governing permissions and limitations
     under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -41,10 +42,12 @@
             *
         </deltaspike.osgi.import>
         <deltaspike.osgi.require.capability>
-            org.ops4j.pax.cdi.extension; filter:="(extension=pax-cdi-extension)"
+            org.ops4j.pax.cdi.extension;
+            filter:="(extension=pax-cdi-extension)"
         </deltaspike.osgi.require.capability>
         <deltaspike.osgi.provide.capability>
-            org.ops4j.pax.cdi.extension; extension=deltaspike-partial-bean-module-impl
+            org.ops4j.pax.cdi.extension;
+            extension=deltaspike-partial-bean-module-impl
         </deltaspike.osgi.provide.capability>
     </properties>
 
@@ -58,5 +61,11 @@
             <groupId>org.apache.deltaspike.modules</groupId>
             <artifactId>deltaspike-partial-bean-module-api</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.deltaspike.modules</groupId>
+            <artifactId>deltaspike-proxy-module-api</artifactId>
+        </dependency>
+
     </dependencies>
 </project>

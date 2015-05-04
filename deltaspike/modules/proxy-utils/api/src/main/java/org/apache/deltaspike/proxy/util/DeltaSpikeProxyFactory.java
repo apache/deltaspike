@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.util.proxy;
+package org.apache.deltaspike.proxy.util;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
