@@ -38,10 +38,11 @@ public abstract class ArchiveUtils
         temp = ShrinkWrapArchiveUtil.getArchives(null,
                 "META-INF/beans.xml",
                 new String[] { "org.apache.deltaspike.core",
+                        "org.apache.deltaspike.proxy",
                         "org.apache.deltaspike.test.category",
                         "org.apache.deltaspike.partialbean" },
                 new String[] { "META-INF.apache-deltaspike.properties" },
-                "ds-core_and_partial-bean");
+                "ds-core_proxy_and_partial-bean");
         result.addAll(Arrays.asList(temp));
 
         return result.toArray(new JavaArchive[result.size()]);

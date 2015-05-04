@@ -57,10 +57,11 @@ public class ArchiveUtils
 
         JavaArchive[] coreArchives = ShrinkWrapArchiveUtil.getArchives(null
                 , "META-INF/beans.xml"
-                , new String[]{ "org.apache.deltaspike.core"
-                              , "org.apache.deltaspike.jsf" }
+                , new String[]{ "org.apache.deltaspike.core",
+                                "org.apache.deltaspike.proxy",
+                                "org.apache.deltaspike.jsf" }
                 , excludedFiles,
-                "ds-core_and_jsf");
+                "ds-core_proxy_jsf");
 
         List<JavaArchive> archives = new ArrayList<JavaArchive>(Arrays.asList(coreArchives));
         archives.add(grapheneJar);
