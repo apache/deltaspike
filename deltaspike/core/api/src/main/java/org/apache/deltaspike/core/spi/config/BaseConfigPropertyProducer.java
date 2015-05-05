@@ -31,8 +31,8 @@ import org.apache.deltaspike.core.util.BeanUtils;
  * ConfigProperty producers.</p>
  *
  * <h2>Providing own Converters and Type injection</h2>
- * <p>DeltaSpikes own configuration system only natively only supports Strings.
- * If you like to apply own Converters or extract other types from those Strings,
+ * <p>DeltaSpikes own configuration system natively supports only Strings.
+ * If you'd like to apply own Converters or extract other types from those Strings,
  * you can simply do this by providing an own Qualifier and a simple
  * CDI producer method for it.</p>
  *
@@ -78,7 +78,7 @@ import org.apache.deltaspike.core.util.BeanUtils;
  *
  *         // format according to the given pattern
  *         DecimalFormat df = new DecimalFormat(metaData.pattern(), new DecimalFormatSymbols(Locale.US));
- *         return df.parse(configuredValue).floatValue(); *
+ *         return df.parse(configuredValue).floatValue();
  *     }
  * }
  * </pre>

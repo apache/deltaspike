@@ -2,21 +2,38 @@
 
 :Notice: Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
-== Overview
 The Core module provides fundamental and defining DeltaSpike API and utility classes. As such, this module must be included in every project that uses DeltaSpike.
+Instructions for configuring your projects to use the DeltaSpike Core module are detailed in
+<<configure#, Configure DeltaSpike in Your Projects>> as part of the general instructions for configuring your projects for DeltaSpike.
 
-== Configure Your Projects
+== DeltaSpike Configuration
 
-Instructions for configuring your Maven-based and Maven-independent projects to use the DeltaSpike Core module are detailed in <<configure#, Configure DeltaSpike in Your Projects>> as part of the general instructions for configuring your projects for DeltaSpike.
+DeltaSpike provides a very flexible application configuration mechanism. Its main goal is to make it possible
+to never have to rebuild a project just for the sake of adjusting configuration values. It respects the usual
+software development cycle and takes into account project stages, various configuration sources and resolution
+mechanisms. Configuration can be overridden just by dropping a JAR into the classpath.
 
-== Use the Module Features
+Detailed documentation is available on a separate page: <<configuration.adoc#,Configuration>>.
 
-=== Core - API
+=== Internal configuration
 
-==== DeltaSpike Configuration
-This is described in a separate page solely targeting <<configuration.adoc#,configuration>> mechanics, API and SPI.
+The functionality of DeltaSpike itself and its modules is adjustable using the same mechanism. There are two main
+types of internal configuration:
 
-==== BeanProvider
+* *static configuration:* certain configurable options, like the maximum number of windows in the window scope or the
+ priority for DeltaSpike's global interceptors, are defined using the DeltaSpike configuration mechanism and can be
+ adjusted by redefining their value in the `apache-deltaspike.properties` file, as described in the
+ <<configuration.adoc#,documentation>>. All of these configuration options and their corresponding properties can be
+ found as members of interfaces extending `DeltaSpikeBaseConfig`, e.g. `CoreBaseConfig` which configures the core
+  module.
+
+* *dynamic configuration:* certain values can change dynamically during runtime and some may differ even among
+contexts. For example, much of the behaviour of the JSF module is configured in `JsfModuleConfig`. To override any of
+ the default configuration options, the `JsfModuleConfig` bean can be overridden using a custom implementation of
+ `JsfModuleConfig` which would be annotated `@Alternative` or `@Specializes`. All of the dynamic CDI-based
+ configuration beans can be found as implementations of the `DeltaSpikeConfig` interface.
+
+== BeanProvider
 
 The `BeanProvider` utility class provides static methods for manual lookup of bean instances in places where
 standard injection is not available or if the lookup depends on dynamic conditions.
@@ -122,7 +139,7 @@ fields.
 BeanProvider.injectFields(myObject);
 ------------------------------------
 
-===== DependentProvider
+=== DependentProvider
 
 `DependentProvider` must be used instead of `BeanProvider` to obtain instances of dependent-scoped beans to allow for
 their proper destruction.
@@ -145,7 +162,7 @@ MyBean myBean = myBeanProvider.get();
 myBeanProvider.destroy();
 -----------------------------------------------------------------------------------
 
-==== BeanManagerProvider
+== BeanManagerProvider
 
 This mechanism provides access to the `BeanManager` by registering the
 current `BeanManager` during the startup. This is really handy if you
@@ -176,7 +193,7 @@ the lookup strategy you used before, you can deactivate the delegation to the co
 (e.g. in `/META-INF/apache-deltaspike.properties`).
 
 
-==== AnnotationInstanceProvider
+== AnnotationInstanceProvider
 
 Java EE provides a standard mechanism for obtaining annotation instances -- the `AnnotationLiteral` class.
 
@@ -216,13 +233,13 @@ Annotation exceptionQualifier = AnnotationInstanceProvider.of(jsfModuleConfig.ge
 CurrentUser principal = AnnotationInstanceProvider.of(CurrentUser.class);
 -------------------------------------------------------------------------
 
-==== Type-safe ProjectStage
+== Type-safe ProjectStage
 
 The DeltaSpike <<projectstage.adoc#,ProjectStage>> mechanism allows to use configuration and implementations depending on the server environment you currently run on.
 
 DeltaSpike provides some pre-defined <<projectstage.adoc#_introduction,ProjectStages>> but it's also possible to create your own <<projectstage.adoc#_custom_project_stages,Custom Project Stage>>, Please, check the <<projectstage.adoc#,DeltaSpike ProjectStage>> page for more details.
 
-==== @Exclude
+== @Exclude
 
 With `@Exclude` it is possible to annotate beans which should be ignored
 by CDI even if they are in a CDI enabled archive.
@@ -309,7 +326,7 @@ public class MyDevBean
 }
 ---------------------------------------------------------------
 
-===== Custom ExpressionInterpreter
+=== Custom ExpressionInterpreter
 
 By default only a very simple and limited syntax is supported. In real
 projects there are usually quite concrete requirements. Since it would
@@ -349,15 +366,14 @@ public class ConfigAwareExpressionInterpreter implements ExpressionInterpreter<S
 }
 ----------------------------------------------------------------------------------------------------
 
-==== Type-safe View-Config
-
+== Type-safe View-Config
 
 TODO (Overview)
 
-==== Literals
+== Literals
 
 Literals allow the instantiation of annotations by extending the
-abstract class 'javax.enterprise.util.AnnotationLiteral'
+abstract class `javax.enterprise.util.AnnotationLiteral`
 
 .Example
 [source,java]
@@ -386,7 +402,7 @@ DeltaSpike provides many annotation literals that you can use, including the fol
 * SpecializesLiteral
 * TypedLiteral
 
-==== Messages and I18n
+== Messages and i18n
 
 The following implementation is the minimal effort to use type-safe
 messages (which are hardcoded in this case).
@@ -477,9 +493,9 @@ public class MyBean
 }
 ----------------------------------------------------------------------------
 
-==== Dynamic Message Builder
+=== Dynamic Message Builder
 
-===== Creating Message Instances
+==== Creating Message Instances
 
 The following implementation creates an instance of `Message` for the
 key `hello`. The final text will be resolved and interpolated lazily.
@@ -532,9 +548,9 @@ org/apache/deltaspike/example/message/Messages_de.properties
 hello=Hello %s from %s
 --------------------------------------------------------------------------------------------------------------------
 
-===== Customizing the Message Context
+==== Customizing the Message Context
 
-====== MessageResolver
+===== MessageResolver
 
 A message-resolver is responsible for creating the message-text based on
 the message-descriptor (key or inline-text), the current locale (and in
@@ -563,7 +579,7 @@ Message message = this.messageContext.messageResolver(new CustomMessageResolver(
 The result of a `MessageResolver` is the message-text. The text might
 contain placeholders which are processed by a `MessageInterpolator`
 
-====== MessageInterpolator
+===== MessageInterpolator
 
 A `MessageInterpolator` replaces the placeholders in a message-text with
 the arguments of the message.
@@ -584,7 +600,7 @@ private MessageContext messageContext;
 Message message = this.messageContext.messageInterpolator(new CustomMessageInterpolator()).message();
 -----------------------------------------------------------------------------------------------------
 
-====== LocaleResolver
+===== LocaleResolver
 
 A locale resolver provides the current locale. The locale is, for example, used
 to by a `MessageResolver` to choose the correct language for the
@@ -604,7 +620,7 @@ private MessageContext messageContext;
 Message message = this.messageContext.localeResolver(new CustomLocaleResolver()).message();
 -------------------------------------------------------------------------------------------
 
-==== Injecting Resources
+== Injecting Resources
 
 DeltaSpike has simple APIs for performing basic resource loading and
 property file reading.
@@ -616,13 +632,19 @@ property file reading.
 private InputStream inputStream;
 ----------------------------------------
 
-This can be used to read files, from classpath or on your local file
-system, using two default implementations: `ClasspathResourceProvider`
-and `FileResourceProvider`. They can be extended as well by implementing
-the `InjectableResourceProvider` interface to allow reading from
-alternate sources, if needed (e.g. database LOBs, NoSQL storage areas).
+This can be used to read resources from the classpath or from the file
+system using the two default implementations -- `ClasspathResourceProvider`
+and `FileResourceProvider` -- or from any other source using a custom provider.
 
-==== Exception Control
+=== Custom resource providers
+
+The `InjectableResourceProvider` interface can be implemented to allow reading from
+alternate sources if needed (e.g. database LOBs, NoSQL storage areas). A base class called `AbstractResourceProvider`
+is provided by DeltaSpike and contains most of the methods for potential implementations. The only method which must be
+provided is the `readStream(InjectableResource)` which returns an InputStream.
+
+
+== Exception Control
 
 Exception handling in DeltaSpike is based around the CDI eventing model.
 While the implementation of exception handlers may not be the same as a
@@ -643,7 +665,7 @@ developer. In most cases, you register an exception handler simply by
 annotating a handler method. Alternatively, you can handle an exception
 programmatically, just as you would observe an event in CDI.
 
-===== Usage
+=== Usage
 
 The entire exception handling process starts with an event. This helps
 keep your application minimally coupled to DeltaSpike, but also allows
@@ -681,7 +703,7 @@ your class for use later within a try/catch block.
 The event is fired with a new instance of `ExceptionToCatchEvent`
 constructed with the exception to be handled.
 
-===== Exception Handlers
+=== Exception Handlers
 
 As an application developer (i.e., an end user of DeltaSpike's exception
 handling), you'll be focused on writing exception handlers. An exception
@@ -720,7 +742,7 @@ methods which have a parameter which is an instance of
 `ExceptionEvent<T extends Throwable>` annotated with the `@Handles`
 annotation.
 
-====== @ExceptionHandler
+==== @ExceptionHandler
 
 The `@ExceptionHandler` annotation is simply a marker annotation that
 instructs the DeltaSpike exception handling CDI extension to scan the
@@ -738,7 +760,7 @@ public class MyHandlers {}
 That's all there is to it. Now we can begin defining exception handling
 methods on this bean.
 
-====== @Handles and @BeforeHandles
+==== @Handles and @BeforeHandles
 
 `@Handles` is a method parameter annotation that designates a method as
 an exception handler. Exception handler methods are registered on beans
@@ -845,7 +867,7 @@ unchecked exceptions. Should a handler throw an unchecked exception it
 will propagate up the stack and all handling done via DeltaSpike will
 cease. Any exception that was being handled will be lost.
 
-====== Ordinal
+==== Ordinal
 
 When DeltaSpike finds more than one handler for the same exception type,
 it orders the handlers by ordinal. Handlers with higher ordinal are
@@ -881,7 +903,7 @@ invoke (until a handler marks exception as handled):
 5.  If multiple handlers for same type, invoke handlers with higher ordinal first
 6.  Continue above steps for each exception in stack
 
-===== Exception Chain Processing
+=== Exception Chain Processing
 
 When an exception is thrown, chances are it is nested (wrapped) inside
 other exceptions. (If you've ever examined a server log, you'll
@@ -928,7 +950,7 @@ the handlers for `EJBException` from being invoked, which is a good
 thing since what useful information can really be obtained from
 `EJBException`?
 
-===== APIs for Exception Information and Flow Control
+=== APIs for Exception Information and Flow Control
 
 There are two APIs provided by DeltaSpike that should be familiar to
 application developers:
@@ -936,7 +958,7 @@ application developers:
 * `ExceptionEvent`
 * `ExceptionStackEvent`
 
-====== ExceptionEvent
+==== ExceptionEvent
 
 In addition to providing information about the exception being handled,
 the `ExceptionEvent` object contains methods to control the exception
@@ -964,18 +986,18 @@ Once a handler is invoked it is muted, meaning it will not be run again
 for that exception chain, unless it is explicitly marked as unmuted via
 the `unmute()` method on `ExceptionEvent`.
 
-==== Scopes
+== Scopes
 
 DeltaSpike Core provides the API and SPI for several scopes. Currently
 all scopes are only implemented in the <<jsf.adoc#_scopes,JSF module>>.
 
-===== @WindowScoped
+=== @WindowScoped
 
-===== @ViewAccessScoped
+=== @ViewAccessScoped
 
-===== @GroupedConversationScoped
+=== @GroupedConversationScoped
 
-==== Creating a Custom CDI Scope
+=== Creating a Custom CDI Scope
 
 To create a custom CDI scope to match your needs, complete the following steps:
 
@@ -1053,7 +1075,7 @@ public class ACustomScopeContext implements Context, Serializable {
 }
 -----------------------------------------------------------------------------------------------------
 
-==== Deactivatable
+== Deactivatable
 
 DeltaSpike allows you to deactivate its own Extensions. You just need to
 implement your <<spi.adoc#_classdeactivator,ClassDeactivator>>.
@@ -1088,15 +1110,14 @@ other <<configuration.adoc#_configsources_provided_by_default,ConfigSource>>) wi
 org.apache.deltaspike.core.spi.activation.ClassDeactivator=org.test.CustomClassDeactivator
 ------------------------------------------------------------------------------------------
 
-=== Core - Utils
-
+== Utilities
 
 DeltaSpike provides many utility classes (no constructor / static
 methods) that can be useful for your project.
 
 Below you can find an information about these classes.
 
-==== AnnotationUtils
+=== AnnotationUtils
 
 Utilities for working with annotations on methods and classes.
 
@@ -1105,7 +1126,7 @@ Utilities for working with annotations on methods and classes.
 * `#extractAnnotationFromMethodOrClass` -- uses `findAnnotation` to obtain an `Annotation` on either the given `Method` or the given `Class`, in that order
 * `#getQualifierHashCode` -- computes the hashCode of a qualifier annotation, taking into account only the "binding" members (not annotated `@Nonbinding`)
 
-==== ArraysUtils
+=== ArraysUtils
 
 
 A collection of utilities for working with Arrays
@@ -1114,7 +1135,7 @@ A collection of utilities for working with Arrays
 objects, the last object in the array will be placed in resultant set.
 
 
-==== BeanUtils
+=== BeanUtils
 
 A set of utility methods for working with beans.
 
@@ -1123,14 +1144,14 @@ A set of utility methods for working with beans.
 * `#createInjectionPoints` -- Given a method, and the bean on which the method is declared, create a collection of injection points representing the parameters of the method.
 
 
-==== ContextUtils
+=== ContextUtils
 
 A set of utility methods for working with contexts.
 
 * `#isContextActive` -- Checks if the context for the scope annotation is active.
 
 
-==== ClassDeactivationUtils
+=== ClassDeactivationUtils
 
 
 Helper methods for `ClassDeactivator`
@@ -1139,14 +1160,14 @@ Helper methods for `ClassDeactivator`
 
 To add a custom `ClassDeactivator` add `org.apache.deltaspike.core.spi.activation.ClassDeactivator=my.CustomClassDeactivator` to `META-INF\apache-deltaspike.properties`. Or configure it via a custom `ConfigSource`.
 
-==== ExceptionUtils
+=== ExceptionUtils
 
 Helper methods to deal with Exceptions
 
 * `#throwAsRuntimeException` -- helper which allows to use a trick to throw a catched checked exception without a wrapping exception.
 * `#changeAndThrowException` -- helper which allows to use a trick to throw a cached checked exception without a wrapping exception.
 
-==== PropertyFileUtils
+=== PropertyFileUtils
 
 Helper methods for Property files
 
@@ -1155,14 +1176,14 @@ Helper methods for Property files
 * `#getResourceBundle` -- Return the ResourceBundle for the current default Locale.
 
 
-==== ProxyUtils
+=== ProxyUtils
 
 Helper for CDI proxies
 
 * `#getUnproxiedClass` -- Return class of the real implementation.
 * `#isProxiedClass` -- Analyses if the given class is a generated proxy class.
 
-==== StringUtils
+=== StringUtils
 
 A collection of utilities for working with Strings.
 

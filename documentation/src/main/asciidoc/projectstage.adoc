@@ -100,9 +100,9 @@ determine the string is the ConfigResolver.
 `ProjectStageProducer` provides the producer method which allows to
 inject the current ProjectStage. However, in some cases it is needed to
 use ProjectStages also during the bootstrapping process of the CDI
-container and you cais not use injection. In such cases you can use
+container and you can not use injection. In such cases you can use
 `ProjectStageProducer.getInstance().getProjectStage()` to resolve the
 current ProjectStage. This helper also contains helpers for unit-tests
-- e.g. `#setProjectStage`. However, those methods shouldis not be needed
+- e.g. `#setProjectStage`. However, those methods should not be needed
 for users (we just need them for testing different ProjectStage
 scenarios).

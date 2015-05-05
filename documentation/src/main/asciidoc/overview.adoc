@@ -2,88 +2,107 @@
 
 :Notice: Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
+Apache DeltaSpike is a collection of portable CDI extensions. These ready-to-use modules enable you to integrate tested API extensions into your Java projects.
+
+DeltaSpike consists of a core module and a number of <<modules.adoc#, optional modules>> for providing additional
+enterprise functionality to your applications. The modules include features for enhanced security with type-safe
+control over method invocations, integration with schedulers, injection of CDI objects into validators, a
+transactional context and scope, and much more. DeltaSpike also provides boot and shutdown control over CDI containers
+in Java SE applications.
+
+As a CDI extension, DeltaSpike must be used in conjunction with a CDI implementation and supports both JBoss Weld
+and Apache OpenWebBeans. DeltaSpike is tested on a range of application servers and CDI-enabled containers
+including Apache TomEE, JBoss AS, WildFly, Oracle GlassFish, and Jetty.
+
+DeltaSpike provides a number of link:http://deltaspike.apache.org/examples.html[examples] to show you how to use and get
+the most from this technology.
+
+== Features
+
+=== Java EE 7 without Java EE 7!
+
+*Transactional support for non-EJB beans:* The Transactional Interceptor in DeltaSpike paved the way for
+`@Transactional` in Java EE 7.
+
+*Injectable Servlet objects:* Enables CDI injection in Servlets in Java EE 6/CDI 1.0 environments
+
+*Injectable resources:* Configuration, resource bundles,... are easy to inject when using CDI and Apache DeltaSpike.
+
+*@Exclude annotation:* Lets you prevent classes from being treated as CDI beans even if they are in a CDI-enabled
+archive in a Java EE 6/CDI 1.0 environment where `@Vetoed` is unavailable or when you need to veto based on
+ProjectStages or expressions.
+
+*Scheduling tasks*: Async processes in a non-EE7 environment.
+
+*Bean Validation integration:* Injection of CDI beans and EJBs into Constraint Validators.
+
+*BeanProvider:* Access the BeanManager and CDI beans even in non-managed classes like JPA 2.0 EntityListeners or
+Spring Beans.
+
+
+=== JSF Improvements
+
+*Multi-window handling:* Management of logical windows for batch jobs, browser tab separation in JSF and more.
+
+*Type-safe view-config:* Lets you bind metadata (e.g. for security) to views with a flexible type-safe approach. It
+provides a more solid navigation in case of JSF and helps a lot in the maintenance phase.
+
+*View-Controller:* Based on type-safe view-configs, view-controller annotations provide a type-safe alternative to
+standard tags.
+
+*Injection in Converters and Validators:* Inject CDI beans and EJBs into JSF Converters and Validators.
+
+*JSF event broadcasting to CDI:* Allows CDI to be notified about JSF events
+
+=== Productivity Improvements
+
+*Security based on annotations:* The foundation for building a robust, capable and non-invasive security solution.
+
+*New CDI scopes:* TransactionScoped, WindowScoped, ViewScoped, ViewAccess scope, Grouped conversation scope.
+
+*Container Control and Test Control:* Java SE with CDI, all with a unifying API. Start, stop, add classes to a running CDI container.
+
+*Data Module:* An out of the box entity framework solution complete with support for container or application managed persistence contexts, as well as JDBC.
+
+*Decoupled Exception handling:* Event-based exception handling framework, similar to the CDI event observer mechanism.
+
+*JMX integration:* Any CDI bean can be exposed via JMX easily with a single annotation.
+
+*Type-safe i18n messages:* Localized messages are easy to use with an interface and a resource bundle, no more boilerplate and your messages now have context within the code.
+
+*Type-safe ProjectStages:* Compared to ProjectStages in JSF, DeltaSpike provides a type-safe, but still extensible
+approach which can be used in CDI-based applications.
+
 == Background
 
 === CDI
-Java Contexts and Dependency Injection for the Java EE platform (link:https://jcp.org/en/jsr/detail?id=299[JSR 299]), abbreviated to CDI, was introduced as part of Java EE6. The core features of CDI are as follows:
+Java Contexts and Dependency Injection for the Java EE platform (link:https://jcp.org/en/jsr/detail?id=299[JSR 299]),
+ abbreviated _CDI_ was introduced as part of Java EE 6. The core features of CDI are as follows:
 
 * improved stateful object lifecycles with an additional context named _Conversation_ that encompasses a series of requests within one session and lifecycle management by the container according to well-defined contexts
 * dependency injection conducted in a type-safe manner, with type checking conducted at compilation time so errors are exposed earlier and debugging is easier
 * event notification facility for object interaction
-* a better approach for interceptors with annotations binding interceptors to objects and with a new interceptor named _decorator_ that knows about individual bean attributes through inheritence and is more appropriate for use in solving business problems
+* a better approach for interceptors with annotations binding interceptors to objects and with a new interceptor
+named _decorator_ that knows about individual bean attributes through inheritance and is more appropriate for use in
+ solving business problems
 * a Service Provider Interface (SPI) for developing portable extensions to the CDI container
 
-CDI is a link:https://jcp.org/en/home/index[Java Community Process (JCP)] standard. All Java EE6 compliant application servers must provide support for CDI. link:http://weld.cdi-spec.org/[JBoss Weld] is a reference implementation of the CDI specification and other spec-compliant implementations exist such as link:http://openwebbeans.apache.org/[Apache OpenWebBeans (OWB)]. While CDI is a Java EE6 essential, CDI can also be used in Java SE environments with the aid of standalone CDI implementations.
+CDI is a link:https://jcp.org/en/home/index[Java Community Process (JCP)] standard. All Java EE 6 compliant
+application servers must provide support for CDI. link:http://weld.cdi-spec.org/[JBoss Weld] is a reference
+implementation of the CDI specification and other spec-compliant implementations exist such as link:http://openwebbeans.apache.org/[Apache OpenWebBeans (OWB)]. While CDI is a Java EE 6 essential, CDI can also be used in Java SE environments with the aid of standalone CDI implementations.
 
 === Portable CDI Extensions
-The CDI Service Provider Interface (SPI) is exposed to enable extension of the CDI feature set by third-parties. Portable CDI extensions extend CDI implementations and improve existing Java EE APIs by enabling integration of different technologies. 
+The CDI Service Provider Interface (SPI) is exposed to enable extension of the CDI feature set by third parties.
+Portable CDI extensions extend CDI implementations and improve existing Java EE APIs by enabling integration of different technologies.
 
-As set out in the CDI specification, a portable CDI extenstion may integrate with a CDI container as follows:
- 
+As set out in the CDI specification, a portable CDI extension may integrate with a CDI container as follows:
+
 * providing its own beans, interceptors and decorators to the container
 * injecting dependencies into its own objects using the dependency injection service
 * providing a context implementation for a custom scope
 * augmenting or overriding the annotation-based metadata with metadata from some other source
 
 As indicated by the name, _portable_ CDI extensions can be used with any spec-compliant CDI implementation.
-
-== About Apache DeltaSpike
-Apache DeltaSpike is a collection of portable CDI extensions. These ready-to-use modules enable you to integrate tested API extensions into your Java projects.
-
-DeltaSpike consists of a core module and a number of optional modules for providing additional enterprise functionality to your applications. The modules include features for enhanced security with type-safe control over method invocations, integration with schedulers, injection of CDI objects into validators, and a transactional context and scope. DeltaSpike also provides boot and shutdown control over CDI containers in Java SE applications.
-
-As a CDI extension, DeltaSpike must be used in conjunction with a CDI implementation and supports both JBoss Weld and Apache OpenWebBeans. DeltaSpike has been tested on a range of application servers and containers that utilize these CDI implementations, such as Apache TomEE, JBoss AS, WildFly, Oracle GlassFish, and Jetty.
-
-In addition to the portable CDI extension modules, DeltaSpike provides a number of examples to show you how to use and get the most from this technology.
-
-== Features of DeltaSpike
-
-=== Java EE 7 without Java EE 7!
-
-*Transactional support for non-EJB beans:* The Transactional Interceptor in DeltaSpike paved the way for @Transactional in Java EE 7.
-
-*Injectable Servlet objects:* Allows the developer to inject CDI beans on Servlets on Java EE 6/CDI 1.0 environments
-
-*Injectable resources:* Configuration, resource bundles,... are easy to inject when using CDI and Apache DeltaSpike.
-
-*@Exclude annotation:* it is possible to annotate beans which should be ignored by CDI even if they are in a CDI enabled archive on Java EE 6/CDI 1.0 environment where you cais not use @Vetoed or a veto based on ProjectStages or expressions is needed.
-
-**Scheduling tasks**: Async processes in a non Java EE 7 environment.
-
-*Bean Validation integration:* Allows to inject CDI beans and EJB in to Constraint-Validators.
-
-*BeanProvider:* Access the BeanManager and CDI beans even in non managed classes like JPA-2.0 EntityListeners or Spring Beans.
-
-
-=== JSF Improvements
-
-*Multi-window handling:* Allows to manage logical windows for batches,... or in case of JSF it offers proper separation of browser-tabs.
-
-*Type-safe view-config:* It allows to bind meta-data (e.g. for security) to views with a type-safe, but flexible approach. It provides a more solid navigation in case of JSF and helps a lot in the maintenance phase.
-
-*View-Controller:* Based on type-safe view-configs view-controller annotations provide a type-safe alternative to standard-tags.
-
-*Injection on Converters and Validators:* Allows to inject CDI beans and EJB in to JSF Converters and Validators.
-
-*JSF event broadcasting to CDI:* Allows CDI to be notified about JSF events
-
-=== Productivity Improvements
-
-*Security based on annotations:* The foundation for building a robust, capable and non invasive security solution.
-
-*New CDI scopes:* TransactionScoped, WindowScoped, ViewScoped, ViewAccess scope, Grouped conversion scope
-
-*Container Control and Test Control:* Java SE with CDI, all with a unifying API. Start, stop, add classes to a running CDI container.
-
-*Data Module:* An out of the box entity framework solution complete with support for container or application managed persistence contexts, as well as JDBC.
-
-*Decoupled Exception handling:* Allows to do exception handling in one location similar to CDI Observers.
-
-*JMX integration:* Any CDI bean can be exposed via JMX easily with one annotation.
-
-*Type-safe i18n messages:* Localized messages are easy to use with an interface and a resource bundle, no more boilerplate and your messages now have context within the code.
-
-*Type-safe ProjectStages:* Compared to ProjectStages in JSF, DeltaSpike provides a type-safe, but still extensible approach which can be used in CDI based applications.
 
 == Next
 For instructions on how to start using DeltaSpike, see <<configure#,Configure DeltaSpike in Your Projects>> and <<cdiimp#,Enable CDI For Your Java Environment>>.

@@ -236,7 +236,7 @@ from `window.name`
 Any window or browser tab detection will be disabled for the current
 request. Scopes like @WindowScoped, @GroupedConversationScoped or
 @ViewAccessScoped will not work. This is also the default mode if the
-current request doesis not support Javascript or if the user agent is a
+current request does not support Javascript or if the user agent is a
 bot/crawler.
 
 
@@ -390,7 +390,7 @@ as the bean is referenced by a page - the bean will be available for the
 next page (if it is used again the bean will be forwarded again). It is
 important that it is based on the view-id of a page (it is not based on
 the request) so, for example, Ajax requests do not trigger a cleanup if the
-request doesis not access all view-access scoped beans of the page. That's
+request does not access all view-access scoped beans of the page. That's
 also the reason for the name @__View__AccessScoped.
 
 [source,java]
@@ -641,7 +641,7 @@ inheritance.
 In the following example `Pages.Admin.Index`, `Pages.Admin.Home` and
 `Pages.Admin.Statistics.Home` inherit the meta-data from `Pages.Admin`
 because they implement the interface whereas
-`Pages.Admin.Statistics.Index` doesis not. However, `Pages.Admin.Home`
+`Pages.Admin.Statistics.Index` does not. However, `Pages.Admin.Home`
 overrides `View#navigation`. During the bootstrapping process the
 meta-data gets merged and at runtime you only see the final result
 (which is cached).

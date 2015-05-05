@@ -2,19 +2,16 @@
 
 :Notice: Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
-== Configuration Basics
-
+== Introduction
 
 The goal of the DeltaSpike configuration mechanism is to make it
 obsolete to touch released binaries for changing the configuration of
 your project. All values which are needed in your code (but should not
 be hardcoded as static final constants) can be maintained via
-DeltaSpikes own configuration mechanism in a very flexible and powerful
+DeltaSpike's own configuration mechanism in a very flexible and powerful
 way.
 
-
 === Benefits for Production
-
 
 Once a binary like a WAR file or an EAR got created and tested, it must
 _not_ get changed anymore. The exact same binary which got created by
@@ -55,23 +52,26 @@ users can utilize it for their own needs as well. This is done by using
 the `ConfigResolver` which resolves and caches `ConfigSource`s per
 application.
 
-=== Userland Configuration
 
-DeltaSpike also provides a mechanism to inject those configured values
-using the `@ConfigProperty` CDI Qualifier.
+== Accessing configured values using ConfigResolver
 
+The `ConfigResolver` is the central point to access configuration in DeltaSpike. There are several different APIs
+ and ways to access the individual configured values, each suitable for a different purpose:
 
-== ConfigResolver
+ * `ConfigResolver` methods for easy programmatic access to values
+ * `TypedResolver` API for typed configuration values and precise control over resolution
+ * `@ConfigProperty` for injection of configured values into beans
 
+All three mechanisms are described in the following sections.
 
-The `ConfigResolver` is the central point to pick up configured values
-in DeltaSpike.
+=== ConfigResolver methods
 
-=== getPropertyValue()
+ConfigResolver offers several methods for easy access to String values of configured properties.
 
-The method `ConfigResolver#getPropertyValue(String key)` allows to
-provide a string based key and returns the configured value as `String`,
-or `null` if no value has been found.
+==== getPropertyValue()
+
+The method `ConfigResolver#getPropertyValue(String key)` returns the value configured for a given key
+as `String`, or `null` if no value has been found.
 
 `ConfigResolver#getAllPropertyValues(String key)` has a similar contract
 but it returns a list which might be empty if there are no configured
@@ -85,14 +85,12 @@ configuration:
 String dbUserName = ConfigResolver.getPropertyValue("databaseconfig.username");
 -------------------------------------------------------------------------------
 
-
-=== getProjectStageAwarePropertyValue()
+==== getProjectStageAwarePropertyValue()
 
 The method
 `ConfigResolver#getProjectStageAwarePropertyValue(String key)` utilizes
 the <<projectstage.adoc#,DeltaSpike ProjectStage>> mechanism to allow
-configured values to depend on the current `ProjectStage` of the system
-we run on.
+configured values to depend on the current `ProjectStage` of the running system.
 
 This is done by first looking up the ProjectStage (this internally
 happens with the DeltaSpike ConfigResolver as well) and then go down the
@@ -101,7 +99,7 @@ following lookup chain until we found a configured value.
 * key + '.' + projectStage , e.g. "databaseconfig.username.Production"
 * key alone , e.g. "databaseconfig.username"
 
-=== getPropertyAwarePropertyValue()
+==== getPropertyAwarePropertyValue()
 
 The method
 `ConfigResolver#getProjectStageAwarePropertyValue(String key, String property)`
@@ -109,15 +107,15 @@ first looks up the configured value of the given property and uses this
 value to determine the final lookup path. All those lookups take the
 <<projectstage.adoc#,DeltaSpike ProjectStage>> mechanism into account.
 
-Given we have the following code in our program:
-
 [source,java]
 --------------------------------------------------------------------------------------------------------
 String dbUserName = ConfigResolver.getPropertyAwarePropertyValue("databaseconfig.username", "dbvendor");
 --------------------------------------------------------------------------------------------------------
 
-This will end up in the following lookup sequences. First we need to
-resolve the value of the property:
+===== Property value resolution sequence
+
+The following lookup sequence will be performed until a value is found:
+First, the value of the _parameter_ property is resolved:
 
 * propertyValue = property + '.' + projectStage, e.g. "dbvendor.Production"
 * if nothing found: propertyValue = property, e.g. "dbvendor"
@@ -125,13 +123,12 @@ resolve the value of the property:
 Let's assume we found the value 'mysql' for our dbvendor. In this case
 the following lookup chain is used until a value got found:
 
-* key + '.' + property + projectstage, e.g. "databaseconfig.username.mysql.Production"
-* key + '.' + property, e.g. "databaseconfig.username.mysql"
-* key + '.' + projectstage, e.g. "databaseconfig.username.Production"
+* key + '.' + propertyValue + '.' + projectstage, e.g. "databaseconfig.username.mysql.Production"
+* key + '.' + propertyValue, e.g. "databaseconfig.username.mysql"
+* key + '.' + projectStage, e.g. "databaseconfig.username.Production"
 * key, e.g. "databaseconfig.username"
 
-
-=== Handling of Default Values
+==== Handling of Default Values
 
 There is a 2nd variant of all those methods where it is possible to
 provide a default value which gets returned instead of `null` or if the
@@ -143,11 +140,180 @@ of the `ConfigSources`. The various getPropertyValue operations are not
 cached in the ConfigResolver but might be cached in the ConfigSources.
 This makes the overall calculation a bit slower, but allows for values
 to change dynamically if someone likes to for example implement a
-`JmxConfigSource` (not yet part of DeltaSpike, but easily
-implementable).
+`JmxConfigSource` (not yet part of DeltaSpike, but easily implementable).
+
+=== TypedResolver API
+
+Very often the configured values represent more than just strings -- number types and booleans are commonly used as
+configuration types. ConfigResolver provides a builder-style API to access configuration values as specific types.
+
+The API is accessed by a call to `ConfigResolver.resolve(propertyKey)`.
+
+The simplest usage of the API is resolution of a String property, equivalent to a call to
+`ConfigResolver.getPropertyValue(propertyKey)`.
+
+.Simple example of TypedResolver
+[source,java]
+-----------------------------------------------------------------
+String userName = ConfigResolver.resolve("user.name").getValue();
+-----------------------------------------------------------------
+
+The call to `ConfigResolver.resolve(..)` returns a builder which has methods to refine the resolution, including the
+following:
+
+* `as(Class<N> clazz)` -- defines the return type of the property
+* `parameterizedBy(String propertyName)` -- sets a parameter for the resolution, similarly as in
+<<_getpropertyawarepropertyvalue, ConfigResolver.getPropertyAwarePropertyValue>>
+* `withCurrentProjectStage(boolean with)` -- indicates whether the current ProjectStage should be taken into account
+for the resolution
+* `strictly(boolean strictly)` -- indicates, whether the <<_property_value_resolution_sequence, property value
+resolution sequence>> should be taken into account. When set to true, the sequence is not followed.
+* `withDefault(T value)` -- sets the default value, used in case the resolution returns `null`
+* `getValue()` -- terminates the builder and returns the resolved value with the appropriate type
+
+.A more complete example of TypedResolver
+[source,java]
+-----------------------------------------------------------------
+Integer dbPort = ConfigResolver
+    .resolve("db.port")
+    .as(Integer.class)
+    .withProjectStage(true)
+    .parameterizedBy("db.vendor")
+    .withDefault(3306)
+    .getValue();
+-----------------------------------------------------------------
+
+==== Supported types
+
+The types supported out of the box include: String, Integer, Long, Float, Double, Boolean, Class.
+Custom types can be supported by providing an implementation of the `ConfigResolver.Converter` interface.
+
+[source,java]
+---------------------------------------------------------------------------------------------------------
+Date deadline = ConfigResolver.resolve("deadline").as(Date.class, new CustomDateConverter()).getValue());
+---------------------------------------------------------------------------------------------------------
+
+[source,java]
+------------------------------------------------------------------------------------------
+public class CustomDateConverter implements ConfigResolver.Converter<Date> {
+
+    @Override
+    public Date convert(String value)
+    {
+        String[] parts = value.split("-");
+        return new GregorianCalendar(Integer.valueOf(parts[0]), Integer.valueOf(parts[1]),
+                Integer.valueOf(parts[2])).getTime();
+    }
+}
+------------------------------------------------------------------------------------------
+
+=== Injection of configured values into beans using @ConfigProperty
+
+DeltaSpike provides a way to inject configured values into your code via the qualifier `@ConfigProperty`.
+The supported types are the same as the <<_supported_types,supported types of the TypedResolver>>.
+
+[source,java]
+------------------------------------------------------
+@ApplicationScoped
+public class SomeRandomService
+{
+    @Inject
+    @ConfigProperty(name = "endpoint.poll.interval")
+    private Integer pollInterval;
+
+    @Inject
+    @ConfigProperty(name = "endpoint.poll.servername")
+    private String pollUrl;
+
+    ...
+ }
+------------------------------------------------------
+
+==== Custom ConfigProperty types
+
+Custom types can be injected using `@ConfigProperty` by providing a custom producer.
+DeltaSpike provides a base implementation for custom producers in the class `BaseConfigPropertyProducer`
+which offers the following methods:
+* `getStringPropertyValue` -- looks for the property name in `@ConfigProperty` annotation on the injection point.
+If not found, it looks for it in other annotations on the injection point.
+* `getPropertyValue` -- a shortcut to <<_configresolver, ConfigResolver#getProjectStageAwarePropertyValue>>
+* `getAnnotation` -- extracts any annotation type from the injection point, useful when a custom annotation
+is used instead of `@ConfigProperty`
+
+The following example uses `getStringPropertyValue` and a custom `@Location` annotation annotated `@ConfigProperty`.
+In such case, the `@Location` annotation is bound to a single fixed property name and acts as a type-safe replacement
+for `@ConfigProperty(name = "locationId")`.
+
+[source,java]
+--------------------------------------------------------------------
+@ApplicationScoped
+public class CustomConfigPropertyProducer extends BaseConfigPropertyProducer {
+
+    @Produces
+    @Dependent
+    @Location
+    public LocationId produceLocationId(InjectionPoint injectionPoint)
+    {
+        String configuredValue = getStringPropertyValue(injectionPoint);
+
+        return LocationId.valueOf(configuredValue.trim().toUpperCase());
+    }
+}
+--------------------------------------------------------------------
+
+[source,java]
+-----------------------------------------------------------------
+@Target({ FIELD, METHOD })
+@Retention(RUNTIME)
+@ConfigProperty(name = "locationId", defaultValue = "LOCATION_X")
+@Qualifier
+public @interface Location {}
+-----------------------------------------------------------------
+
+The `@ConfigProperty` annotation doesn't need to be used at all. Instead, a custom annotation can be provided and
+obtained in the producer using `getAnnotation` and `getPropertyValue`:
+
+[source,java]
+------------------------------------------------------------------------------------------------------
+@ApplicationScoped
+public class NumberConfigPropertyProducer extends BaseConfigPropertyProducer
+{
+    @Produces
+    @Dependent
+    @NumberConfig(name = "unused")
+    public Float produceNumberProperty(InjectionPoint injectionPoint) throws ParseException
+    {
+        // resolve the annotation
+        NumberConfig metaData = getAnnotation(injectionPoint, NumberConfig.class);
+
+        // get the configured value from the underlying configuration system
+        String configuredValue = getPropertyValue(metaData.name(), metaData.defaultValue());
+
+        // format according to the given pattern
+        DecimalFormat df = new DecimalFormat(metaData.pattern(), new DecimalFormatSymbols(Locale.US));
+        return df.parse(configuredValue).floatValue();
+    }
+}
+------------------------------------------------------------------------------------------------------
+
+[source,java]
+-------------------------------------------------------------------
+@Qualifier
+public @interface NumberConfig
+{
+    @Nonbinding
+    String name();
+
+    @Nonbinding
+    String defaultValue() default ConfigProperty.NULL;
+
+    @Nonbinding
+    String pattern() default "#0.00";
+}
+-------------------------------------------------------------------
 
 
-== ConfigSource
+== Providing configuration using ConfigSources
 
 A `ConfigSource` is exactly what its name says: a source for configured
 values. The `ConfigResolver` uses all configured implementations of
@@ -163,7 +329,6 @@ ConfigSources have a higher `deltaspike_ordinal` than the ones who
 pickup the values from within the release binaries.
 
 === ConfigSources Provided by Default
-
 
 By default there are implementations for the following configuration sources
 (listed in the lookup order):
@@ -232,7 +397,7 @@ implementations provided by DeltaSpike do.
 ==== PropertyFileConfig
 
 For registering all your own property files of a certain name in your
-classpath to get picked up as `ConfigSource`s you can also provide a
+classpath to get picked up as ConfigSources you can also provide a
 class which implements the `PropertyFileConfig` interface.
 
 The method `isOptional` indicates whether your custom property file is mandatory.
@@ -275,23 +440,36 @@ dependency to the module that contains the property file._
 </jboss-deployment-structure>
 ---------------------------------------------------------------------------------------------------
 
-== Type-safe Configuration
+== Filtering configured values
 
-DeltaSpike provides a way to directly inject configured values into your
-code via the qualifier `@ConfigProperty`.
+It is possible to perform filtering on all configured values on their way between the ConfigSource and user code.
+This might be useful for example for decryption of values from an encrypted ConfigSource or to hide passwords from a
+log.
 
-------------------------------------------------------
-@ApplicationScoped
-public class SomeRandomService
+DeltaSpike doesn't provide any filters by default but custom filters can be provided by implementing the
+`ConfigFilter` interface. This is then enabled either using the ServiceLoader mechanism or by calling
+`ConfigResolver.addConfigFilter(ConfigFilter)`. Provided ConfigFilters are then enabled for the whole application.
+
+Once some filters are provided, all operations of ConfigResolver return filtered values.
+
+.A custom ConfigFilter
+[source,java]
+-------------------------------------------------------------
+public class DecryptingConfigFilter implements ConfigFilter
 {
-    @Inject
-    @ConfigProperty(name = "endpoint.poll.interval")
-    private Integer pollInterval;
+    @Override
+    public String filterValue(String key, String value)
+    {
+        if (key.contains("encrypted"))
+        {
+            return decrypt(value);
+        }
+        return value;
+    }
 
-    @Inject
-    @ConfigProperty(name = "endpoint.poll.servername")
-    private String pollUrl;
-
-    ...
- }
-------------------------------------------------------
+    @Override
+    public String filterValueForLog(String key, String value)
+    {
+        return "<value encrypted>";
+    }
+}

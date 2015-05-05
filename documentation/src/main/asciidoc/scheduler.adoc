@@ -176,4 +176,4 @@ or
 === Custom Scheduler
 
 It is possible to replace the default integration with Quartz. Any scheduler that supports cron-expressions for job-classes can be used.
-For more information, see http://org.apache.deltaspike.test.scheduler.custom.
+For more information, see link:https://deltaspike.apache.org/javadoc/{latestStable}/org/apache/deltaspike/scheduler/spi/Scheduler.html[Scheduler javadoc].

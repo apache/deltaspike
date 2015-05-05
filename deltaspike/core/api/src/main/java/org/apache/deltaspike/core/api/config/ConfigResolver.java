@@ -529,45 +529,143 @@ public final class ConfigResolver
         return logValue;
     }
 
+    /**
+     * A very simple interface for conversion of configuration values from String to any Java type.
+     * @param <T> The target type of the configuration entry
+     */
     public interface Converter<T>
     {
 
+        /**
+         * Returns the converted value of the configuration entry.
+         * @param value The String property value to convert
+         * @return Converted value
+         */
         T convert(String value);
 
     }
 
+    /**
+     * A builder-based typed resolution mechanism for configuration values.
+     * @param <T> The target type of the configuration entry.
+     */
     public interface TypedResolver<T>
     {
 
+        /**
+         * Appends the resolved value of the given property to the key of this builder. This is described in more detail
+         * in {@link ConfigResolver#getPropertyAwarePropertyValue(String, String)}.
+         * @param propertyName The name of the parameter property
+         * @return This builder
+         */
         TypedResolver<T> parameterizedBy(String propertyName);
 
+        /**
+         * Indicates whether to append the name of the current project stage to the key of this builder. This
+         * is described in more detail in {@link ConfigResolver#getProjectStageAwarePropertyValue(String)}. True by
+         * default.
+         * @param with
+         * @return This builder
+         */
         TypedResolver<T> withCurrentProjectStage(boolean with);
 
+        /**
+         * Indicates whether the fallback resolution sequence should be performed, as described in
+         * {@link ConfigResolver#getPropertyAwarePropertyValue(String, String)}. This applies only when
+         * {@link #parameterizedBy(String)} or {@link #withCurrentProjectStage(boolean)} is used.
+         * @param strictly
+         * @return This builder
+         */
         TypedResolver<T> strictly(boolean strictly);
 
+        /**
+         * Sets the default value to use in case the resolution returns null.
+         * @param value the default value
+         * @return This builder
+         */
         TypedResolver<T> withDefault(T value);
 
+        /**
+         * Sets the default value to use in case the resolution returns null. Converts the given String to the type of
+         * this resolver using the same method as used for the configuration entries.
+         * @param value string value to be converted and used as default
+         * @return This builder
+         */
         TypedResolver<T> withStringDefault(String value);
 
+        /**
+         * Returns the converted resolved filtered value.
+         * @return the resolved value
+         */
         T getValue();
 
+        /**
+         * Returns the key given in {@link #resolve(String)}.
+         * @return the original key
+         */
         String getKey();
 
+        /**
+         * Returns the actual key which led to successful resolution and corresponds to the resolved value. This applies
+         * only when {@link #parameterizedBy(String)} or {@link #withCurrentProjectStage(boolean)} is used and
+         * {@link #strictly(boolean)} is not used, otherwise the resolved key should always be equal to the original
+         * key. This method is provided for cases, when projectStage-aware and/or parameterized resolution is
+         * requested but the value for such appended key is not found and some of the fallback keys is used, as
+         * described in {@link ConfigResolver#getPropertyAwarePropertyValue(String, String)}.
+         * This should be called only after calling {@link #getValue()} otherwise the value is undefined (but likely
+         * null).
+         * @return
+         */
         String getResolvedKey();
 
+        /**
+         * Returns the default value provided by {@link #withDefault(Object)} or {@link #withStringDefault(String)}.
+         * Returns null if no default was provided.
+         * @return the default value or null
+         */
         T getDefaultValue();
 
     }
 
+    /**
+     * A builder-based optionally typed resolution mechanism for configuration values.
+     * @param <T> This type variable should always be String for UntypedResolver.
+     */
     public interface UntypedResolver<T> extends TypedResolver<T>
     {
-
+        /**
+         * Sets the type of the configuration entry to the given class and returns this builder as a TypedResolver.
+         * Only one of the supported types should be used which includes: Boolean, Class, Integer, Long, Float, Double.
+         * For custom types, see {@link #as(Class, Converter)}.
+         * @param clazz The target type
+         * @param <N> The target type
+         * @return This builder as a TypedResolver
+         */
         <N> TypedResolver<N> as(Class<N> clazz);
 
+        /**
+         * Sets the type of the configuration entry to the given class, sets the converter to the one given and
+         * returns this builder as a TypedResolver. If a converter is provided for one of the types supported by
+         * default (see {@link #as(Class)} then the provided converter is used instead of the built-in one.
+         * @param clazz The target type
+         * @param converter The converter for the target type
+         * @param <N> The target type
+         * @return This builder as a TypedResolver
+         */
         <N> TypedResolver<N> as(Class<N> clazz, Converter<N> converter);
 
     }
 
+    /**
+     * The entry point to the builder-based optionally typed configuration resolution mechanism.
+     *
+     * String is the default type for configuration entries and is not considered a 'type' by this resolver. Therefore
+     * an UntypedResolver is returned by this method. To convert the configuration value to another type, call
+     * {@link UntypedResolver#as(Class)}.
+     *
+     * @param name The property key to resolve
+     * @return A builder for configuration resolution.
+     */
     public static UntypedResolver<String> resolve(String name)
     {
         return new PropertyBuilder<String>(name);
@@ -785,6 +883,9 @@ public final class ConfigResolver
             return value;
         }
 
+        /**
+         * If a converter was provided for this builder, it takes precedence over the built-in converters.
+         */
         private T convert(String value)
         {
 

@@ -37,7 +37,7 @@ listeners and filters are automatically registered in the container.
 However there are certain situations in which you will have to manually
 register the listeners and filters in your `web.xml`:
 
-* Your container doesis not support Servlet 3.0 or newer.
+* Your container does not support Servlet 3.0 or newer.
 * You have set `metadata-complete=true` in your `web.xml`.
 * You packaged the servlet module in the `lib` directory of an EAR archive.
 

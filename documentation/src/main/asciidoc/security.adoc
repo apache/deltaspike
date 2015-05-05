@@ -222,7 +222,7 @@ as part of our security authorizer!
 `@Secured` is build on `@SecurityBindingType` and a very simple
 alternative to the rest of the security module. It is a basic hook to
 integrate a custom security concept, third-party frameworks, etc. It
-doesis not provide a full blown security concept like the rest of the
+does not provide a full blown security concept like the rest of the
 security module, but other DeltaSpike modules ensure that the security
 concepts are integrated properly (e.g. correct behaviour within custom
 scope implementations,...). It just allows to integrate other security
