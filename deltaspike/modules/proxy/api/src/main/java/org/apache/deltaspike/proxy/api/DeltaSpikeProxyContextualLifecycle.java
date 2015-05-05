@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.proxy.util;
+package org.apache.deltaspike.proxy.api;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
@@ -52,8 +52,10 @@ public class DeltaSpikeProxyContextualLifecycle<T, H extends InvocationHandler> 
     private InjectionTarget<T> injectionTarget;
     private CreationalContext<?> creationalContextOfDependentHandler;
 
-    public DeltaSpikeProxyContextualLifecycle(Class<T> targetClass, Class<H> delegateInvocationHandlerClass,
-            DeltaSpikeProxyFactory proxyFactory, BeanManager beanManager)
+    public DeltaSpikeProxyContextualLifecycle(Class<T> targetClass,
+                                              Class<H> delegateInvocationHandlerClass,
+                                              DeltaSpikeProxyFactory proxyFactory,
+                                              BeanManager beanManager)
     {
         this.targetClass = targetClass;
         this.delegateInvocationHandlerClass = delegateInvocationHandlerClass;

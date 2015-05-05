@@ -37,8 +37,8 @@ import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.core.util.bean.BeanBuilder;
 import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
-import org.apache.deltaspike.proxy.util.DeltaSpikeProxyContextualLifecycle;
 import org.apache.deltaspike.partialbean.api.PartialBeanBinding;
+import org.apache.deltaspike.proxy.api.DeltaSpikeProxyContextualLifecycle;
 
 public class PartialBeanBindingExtension implements Extension, Deactivatable
 {

@@ -16,16 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.proxy.util;
+package org.apache.deltaspike.proxy.spi;
 
 import java.lang.reflect.InvocationHandler;
 
-/**
- * Interface which will automatically be implemented by the proxy instance.
- */
-public interface DeltaSpikeProxy
+public interface ProxyClassGenerator
 {
-    void setDelegateInvocationHandler(InvocationHandler delegateInvocationHandler);
-
-    InvocationHandler getDelegateInvocationHandler();
+    <T> Class<T> generateProxyClass(ClassLoader classLoader,
+                                    Class<T> targetClass,
+                                    Class<? extends InvocationHandler> delegateInvocationHandlerClass,
+                                    String suffix,
+                                    String superAccessorMethodSuffix,
+                                    Class<?>[] additionalInterfaces,
+                                    java.lang.reflect.Method[] delegateMethods,
+                                    java.lang.reflect.Method[] interceptMethods);
 }

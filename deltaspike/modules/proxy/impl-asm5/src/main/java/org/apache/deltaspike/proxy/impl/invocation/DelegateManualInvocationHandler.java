@@ -16,22 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.proxy.invocation;
+package org.apache.deltaspike.proxy.impl.invocation;
 
-import java.lang.reflect.InvocationTargetException;
+import org.apache.deltaspike.proxy.spi.DeltaSpikeProxy;
+
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
 import javax.enterprise.inject.Typed;
 
-import org.apache.deltaspike.proxy.util.DeltaSpikeProxyFactory;
-
 /**
- * {@link AbstractManualInvocationHandler} which just delegates to the original method after invoking interceptors.
+ * {@link AbstractManualInvocationHandler} which delegates the method call to the defined {@link InvocationHandler}
+ * in {@link DeltaSpikeProxy#getDelegateInvocationHandler()}.
  */
 @Typed
-public class InterceptManualInvocationHandler extends AbstractManualInvocationHandler
+public class DelegateManualInvocationHandler extends AbstractManualInvocationHandler
 {
-    private static final InterceptManualInvocationHandler INSTANCE = new InterceptManualInvocationHandler();
+    private static final DelegateManualInvocationHandler INSTANCE = new DelegateManualInvocationHandler();
     
     public static Object staticInvoke(Object proxy, Method method, Object[] parameters) throws Throwable
     {
@@ -41,15 +42,7 @@ public class InterceptManualInvocationHandler extends AbstractManualInvocationHa
     @Override
     protected Object proceedOriginal(Object proxy, Method method, Object[] parameters) throws Throwable
     {
-        try
-        {
-            Method superAccessorMethod = DeltaSpikeProxyFactory.getSuperAccessorMethod(proxy, method);
-            return superAccessorMethod.invoke(proxy, parameters);
-        }
-        catch (InvocationTargetException e)
-        {
-            // rethrow original exception
-            throw e.getCause();
-        }
+        InvocationHandler delegateInvocationHandler = ((DeltaSpikeProxy) proxy).getDelegateInvocationHandler();
+        return delegateInvocationHandler.invoke(proxy, method, parameters);
     }
 }

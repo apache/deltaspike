@@ -18,6 +18,8 @@
  */
 package org.apache.deltaspike.jsf.impl.injection.proxy;
 
+import org.apache.deltaspike.proxy.api.DeltaSpikeProxyFactory;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,8 +28,6 @@ import java.util.List;
 import javax.enterprise.inject.Typed;
 import javax.faces.component.PartialStateHolder;
 import javax.faces.component.StateHolder;
-
-import org.apache.deltaspike.proxy.util.DeltaSpikeProxyFactory;
 
 @Typed
 public class ConverterAndValidatorProxyFactory extends DeltaSpikeProxyFactory

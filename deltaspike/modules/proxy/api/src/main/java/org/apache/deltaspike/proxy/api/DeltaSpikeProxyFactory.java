@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.proxy.util;
+package org.apache.deltaspike.proxy.api;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
@@ -28,6 +28,8 @@ import java.util.Iterator;
 import java.util.List;
 import javax.interceptor.InterceptorBinding;
 import org.apache.deltaspike.core.util.ClassUtils;
+import org.apache.deltaspike.core.util.ServiceUtils;
+import org.apache.deltaspike.proxy.spi.ProxyClassGenerator;
 
 public abstract class DeltaSpikeProxyFactory
 {
@@ -73,8 +75,18 @@ public abstract class DeltaSpikeProxyFactory
                     }
                 }
             }
-            
-            proxyClass = AsmProxyClassGenerator.generateProxyClass(classLoader,
+
+            List<ProxyClassGenerator> proxyClassGeneratorList =
+                ServiceUtils.loadServiceImplementations(ProxyClassGenerator.class);
+
+            if (proxyClassGeneratorList.size() != 1)
+            {
+                throw new IllegalStateException(proxyClassGeneratorList.size()
+                    + " implementations of " + ProxyClassGenerator.class.getName()
+                    + " found. It's just allowed to use one implementation.");
+            }
+
+            proxyClass = proxyClassGeneratorList.iterator().next().generateProxyClass(classLoader,
                     targetClass,
                     delegateInvocationHandlerClass,
                     getProxyClassSuffix(),

@@ -21,6 +21,7 @@ package org.apache.deltaspike.jsf.impl.injection;
 import org.apache.deltaspike.core.util.ProxyUtils;
 import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;
 import org.apache.deltaspike.jsf.impl.security.SecurityAwareViewHandler;
+import org.apache.deltaspike.proxy.spi.DeltaSpikeProxy;
 
 import javax.faces.FacesException;
 import javax.faces.application.Application;
@@ -30,8 +31,6 @@ import javax.faces.convert.Converter;
 import javax.faces.event.PreDestroyViewMapEvent;
 import javax.faces.event.SystemEvent;
 import javax.faces.validator.Validator;
-
-import org.apache.deltaspike.proxy.util.DeltaSpikeProxy;
 
 public class InjectionAwareApplicationWrapper extends ApplicationWrapper
 {

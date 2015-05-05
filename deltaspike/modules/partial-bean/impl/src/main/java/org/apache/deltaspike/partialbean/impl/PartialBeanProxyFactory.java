@@ -18,14 +18,14 @@
  */
 package org.apache.deltaspike.partialbean.impl;
 
+import org.apache.deltaspike.proxy.api.DeltaSpikeProxyFactory;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 import javax.enterprise.inject.Typed;
-
-import org.apache.deltaspike.proxy.util.DeltaSpikeProxyFactory;
 
 /**
  * {@link DeltaSpikeProxyFactory} which delegates all abstract methods to the 

@@ -32,6 +32,7 @@
         <resource-root path="deltaspike-partial-bean-module-api-${project.version}.jar"/>
         <resource-root path="deltaspike-partial-bean-module-impl-${project.version}.jar"/>
         <resource-root path="deltaspike-proxy-module-api-${project.version}.jar"/>
+        <resource-root path="deltaspike-proxy-module-impl-asm5-${project.version}.jar"/>
         <resource-root path="deltaspike-security-module-api-${project.version}.jar"/>
         <resource-root path="deltaspike-security-module-impl-${project.version}.jar"/>
         <resource-root path="deltaspike-servlet-module-api-${project.version}.jar"/>

@@ -571,6 +571,12 @@
                 <scope>compile</scope>
             </dependency>
 
+            <dependency>
+                <groupId>org.apache.deltaspike.modules</groupId>
+                <artifactId>deltaspike-proxy-module-impl-asm5</artifactId>
+                <version>${project.version}</version>
+                <scope>runtime</scope>
+            </dependency>
 
             <!-- Dependencies for Java-SE -->
             <dependency>

@@ -22,6 +22,7 @@ import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.core.util.bean.BeanBuilder;
 import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
+import org.apache.deltaspike.proxy.api.DeltaSpikeProxyContextualLifecycle;
 
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AfterBeanDiscovery;
@@ -41,8 +42,6 @@ import java.lang.reflect.Modifier;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
-
-import org.apache.deltaspike.proxy.util.DeltaSpikeProxyContextualLifecycle;
 
 public class ConverterAndValidatorProxyExtension implements Extension, Deactivatable
 {

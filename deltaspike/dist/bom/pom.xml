@@ -193,6 +193,12 @@
             <artifactId>deltaspike-proxy-module-api</artifactId>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.deltaspike.modules</groupId>
+            <artifactId>deltaspike-proxy-module-impl-asm5</artifactId>
+            <scope>runtime</scope>
+        </dependency>
     </dependencies>
 
 </project>

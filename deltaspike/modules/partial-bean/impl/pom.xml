@@ -67,5 +67,9 @@
             <artifactId>deltaspike-proxy-module-api</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.deltaspike.modules</groupId>
+            <artifactId>deltaspike-proxy-module-impl-asm5</artifactId>
+        </dependency>
     </dependencies>
 </project>

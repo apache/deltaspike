@@ -22,13 +22,13 @@
 
 	<parent>
 		<groupId>org.apache.deltaspike.modules</groupId>
-		<artifactId>proxy-utils-module-project</artifactId>
+		<artifactId>proxy-module-project</artifactId>
 		<version>1.3.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>deltaspike-proxy-module-api</artifactId>
+	<artifactId>deltaspike-proxy-module-impl-asm5</artifactId>
 
-	<name>Apache DeltaSpike Proxy-Module API</name>
+	<name>Apache DeltaSpike Proxy-Module Impl ASM5</name>
     
         <build>
         <plugins>
@@ -43,7 +43,7 @@
                     <relocations>
                         <relocation>
                             <pattern>org.objectweb.asm</pattern>
-                            <shadedPattern>org.apache.deltaspike.proxyutils.asm5</shadedPattern>
+                            <shadedPattern>org.apache.deltaspike.proxy.asm5</shadedPattern>
                         </relocation>
                     </relocations>
                     <artifactSet>
@@ -71,6 +71,12 @@
 			<groupId>org.apache.deltaspike.core</groupId>
 			<artifactId>deltaspike-core-api</artifactId>
 		</dependency>
+
+        <dependency>
+            <groupId>org.apache.deltaspike.modules</groupId>
+            <artifactId>deltaspike-proxy-module-api</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.ow2.asm</groupId>
             <artifactId>asm</artifactId>

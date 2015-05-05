@@ -16,10 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.proxy.util;
+package org.apache.deltaspike.proxy.impl;
 
-import org.apache.deltaspike.proxy.invocation.DelegateManualInvocationHandler;
-import org.apache.deltaspike.proxy.invocation.InterceptManualInvocationHandler;
+import org.apache.deltaspike.proxy.spi.DeltaSpikeProxy;
+import org.apache.deltaspike.proxy.impl.invocation.DelegateManualInvocationHandler;
+import org.apache.deltaspike.proxy.impl.invocation.InterceptManualInvocationHandler;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
@@ -30,6 +31,7 @@ import java.util.Arrays;
 
 import javax.enterprise.inject.Typed;
 
+import org.apache.deltaspike.proxy.spi.ProxyClassGenerator;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
@@ -38,19 +40,14 @@ import org.objectweb.asm.commons.GeneratorAdapter;
 import org.objectweb.asm.commons.Method;
 
 @Typed
-public abstract class AsmProxyClassGenerator
+public class AsmProxyClassGenerator implements ProxyClassGenerator
 {
     private static final String FIELDNAME_DELEGATE_INVOCATION_HANDLER = "delegateInvocationHandler";
 
     private static final Type TYPE_CLASS = Type.getType(Class.class);
     private static final Type TYPE_OBJECT = Type.getType(Object.class);
 
-    private AsmProxyClassGenerator()
-    {
-        // prevent instantiation
-    }
-
-    public static <T> Class<T> generateProxyClass(ClassLoader classLoader,
+    public <T> Class<T> generateProxyClass(ClassLoader classLoader,
             Class<T> targetClass,
             Class<? extends InvocationHandler> delegateInvocationHandlerClass,
             String suffix,
