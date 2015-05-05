@@ -20,7 +20,7 @@ package org.apache.deltaspike.core.api.config.base;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 
-public interface CoreBaseConfig
+public interface CoreBaseConfig extends DeltaSpikeBaseConfig
 {
     interface BeanManagerDelegation
     {

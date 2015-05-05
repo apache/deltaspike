@@ -19,9 +19,10 @@
 package org.apache.deltaspike.scheduler.impl;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
+import org.apache.deltaspike.core.api.config.base.DeltaSpikeBaseConfig;
 
 //keep it in the impl. module for now, because it's mainly quartz specific config
-public interface SchedulerBaseConfig
+public interface SchedulerBaseConfig extends DeltaSpikeBaseConfig
 {
     interface JobCustomization
     {

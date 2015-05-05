@@ -19,8 +19,9 @@
 package org.apache.deltaspike.testcontrol.api.junit;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
+import org.apache.deltaspike.core.api.config.base.DeltaSpikeBaseConfig;
 
-public interface TestBaseConfig
+public interface TestBaseConfig extends DeltaSpikeBaseConfig
 {
     interface ContainerIntegration
     {

@@ -19,11 +19,12 @@
 package org.apache.deltaspike.jsf.api.config.base;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
+import org.apache.deltaspike.core.api.config.base.DeltaSpikeBaseConfig;
 import org.apache.deltaspike.core.api.config.base.CoreBaseConfig;
 import org.apache.deltaspike.jsf.api.config.view.Folder;
 import org.apache.deltaspike.jsf.api.config.view.View;
 
-public interface JsfBaseConfig
+public interface JsfBaseConfig extends DeltaSpikeBaseConfig
 {
     interface ViewConfig
     {

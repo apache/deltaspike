@@ -16,16 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.testcontrol.impl.jsf;
+package org.apache.deltaspike.core.api.config.base;
 
-import org.apache.deltaspike.core.api.config.ConfigResolver;
-import org.apache.deltaspike.core.api.config.base.DeltaSpikeBaseConfig;
-
-public interface MyFacesTestBaseConfig extends DeltaSpikeBaseConfig
+/**
+ * Marker interface for all classes used for static configuration of DeltaSpike itself. The term <i>Static
+ * configuration</i> refers to values which are set using DeltaSpike's configuration mechanism (e.g. in {@code
+ * META-INF/apache-deltaspike.properties}) and remain fixed during runtime and can be accessed even during container
+ * boot time.
+ *
+ * <p>
+ * All DeltaSpike static configuration objects implement this interface so they can be found more easily. There is no
+ * other functionality implied with this interface.</p>
+ */
+public interface DeltaSpikeBaseConfig
 {
-    String WEBAPP_RESOURCE_PATH = ConfigResolver.resolve("deltaspike.testcontrol.mf.test.webapp_resource_path")
-            .as(String.class)
-            .withCurrentProjectStage(true)
-            .withDefault("")
-            .getValue();
 }
