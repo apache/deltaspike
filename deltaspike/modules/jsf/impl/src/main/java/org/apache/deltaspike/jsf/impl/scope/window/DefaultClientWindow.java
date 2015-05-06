@@ -38,6 +38,7 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import javax.servlet.http.HttpServletRequest;
 import org.apache.deltaspike.core.util.StringUtils;
 
 import static org.apache.deltaspike.jsf.spi.scope.window.ClientWindowConfig.ClientWindowRenderMode;
@@ -158,14 +159,16 @@ public class DefaultClientWindow implements ClientWindow
                 windowId = externalContext.getRequestParameterMap().get(DELTASPIKE_WINDOW_ID_URL_PARAM);
             }
 
-            if (StringUtils.isEmpty(windowId) && facesContext.isPostback())
+            boolean post = isPost(facesContext);
+            
+            if (StringUtils.isEmpty(windowId) && post)
             {
                 windowId = getPostBackWindowId(facesContext);
             }
             
             if (StringUtils.isEmpty(windowId))
             {
-                if (this.jsfModuleConfig.isInitialRedirectEnabled() && !facesContext.isPostback())
+                if (this.jsfModuleConfig.isInitialRedirectEnabled() && !post)
                 {
                     ClientWindowHelper.handleInitialRedirect(facesContext, generateNewWindowId());
                     facesContext.responseComplete();
@@ -179,7 +182,9 @@ public class DefaultClientWindow implements ClientWindow
         }
         else if (ClientWindowRenderMode.CLIENTWINDOW.equals(clientWindowRenderMode))
         {
-            if (facesContext.isPostback())
+            boolean post = isPost(facesContext);
+            
+            if (post)
             {
                 windowId = getPostBackWindowId(facesContext);
             }
@@ -230,6 +235,25 @@ public class DefaultClientWindow implements ClientWindow
         return "" + (new Random()).nextInt() % 10000;
     }
 
+    private boolean isPost(FacesContext context)
+    {
+        if (context.isPostback())
+        {
+            return true;
+        }
+        
+        Object request = context.getExternalContext().getRequest();
+        if (request instanceof HttpServletRequest)
+        {
+            if ("POST".equals(((HttpServletRequest) request).getMethod()))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    
     /**
      * Extract the windowId for http POST
      */
