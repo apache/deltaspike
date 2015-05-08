@@ -22,6 +22,7 @@ import org.apache.deltaspike.core.api.config.view.metadata.ConfigDescriptor;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigDescriptor;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.core.spi.activation.ClassDeactivator;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.core.util.ExceptionUtils;
@@ -53,7 +54,10 @@ public class ViewConfigPathValidator implements ServletContextListener, Deactiva
             }
             catch (Exception e)
             {
-                LOGGER.log(Level.WARNING, "Container issue detected -> can't validate view-configs.", e);
+                LOGGER.log(Level.WARNING, "Container issue detected -> can't validate view-configs. " +
+                    "This exception is usually the effect (but not the reason) of a failed startup. " +
+                    "You can deactivate " + getClass().getName() + " via a custom " +
+                    ClassDeactivator.class.getName() + " to verify it.", e);
                 return;
             }
 
