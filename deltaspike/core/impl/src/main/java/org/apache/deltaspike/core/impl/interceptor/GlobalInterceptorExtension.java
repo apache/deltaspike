@@ -47,7 +47,7 @@ public class GlobalInterceptorExtension implements Deactivatable, Extension
             return;
         }
 
-        int priorityValue = CoreBaseConfig.Interceptor.PRIORITY;
+        int priorityValue = CoreBaseConfig.InterceptorCustomization.PRIORITY;
         priorityAnnotationInstance = AnnotationInstanceUtils.getPriorityAnnotationInstance(priorityValue);
     }
 

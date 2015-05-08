@@ -26,7 +26,7 @@ import org.apache.deltaspike.jsf.api.config.view.View;
 
 public interface JsfBaseConfig extends DeltaSpikeBaseConfig
 {
-    interface ViewConfig
+    interface ViewConfigCustomization
     {
         String CUSTOM_DEFAULT_BASE_PATH_BUILDER = ConfigResolver.resolve(View.DefaultBasePathBuilder.class.getName())
                 .withCurrentProjectStage(true)
@@ -46,13 +46,14 @@ public interface JsfBaseConfig extends DeltaSpikeBaseConfig
                 .getValue();
     }
 
-    interface Scope
+    interface ScopeCustomization
     {
         interface WindowRestriction
         {
             int ID_MAX_LENGTH_DEFAULT = 10;
 
-            Integer MAX_COUNT = ConfigResolver.resolve(CoreBaseConfig.Scope.WindowRestriction.MAX_COUNT_KEY)
+            Integer MAX_COUNT =
+                ConfigResolver.resolve(CoreBaseConfig.ScopeCustomization.WindowRestriction.MAX_COUNT_KEY)
                     .as(Integer.class)
                     .withCurrentProjectStage(true)
                     .withDefault(64)

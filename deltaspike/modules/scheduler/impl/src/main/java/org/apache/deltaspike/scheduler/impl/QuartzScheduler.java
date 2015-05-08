@@ -125,13 +125,13 @@ public class QuartzScheduler implements Scheduler<Job>
         try
         {
             this.scheduler = schedulerFactory.getScheduler();
-            if (SchedulerBaseConfig.Lifecycle.START_SCOPES_PER_JOB)
+            if (SchedulerBaseConfig.LifecycleIntegration.START_SCOPES_PER_JOB)
             {
                 this.scheduler.getListenerManager().addJobListener(new InjectionAwareJobListener());
             }
             if (!this.scheduler.isStarted())
             {
-                this.scheduler.startDelayed(SchedulerBaseConfig.Lifecycle.DELAYED_START_IN_SECONDS);
+                this.scheduler.startDelayed(SchedulerBaseConfig.LifecycleIntegration.DELAYED_START_IN_SECONDS);
             }
         }
         catch (SchedulerException e)
@@ -154,7 +154,7 @@ public class QuartzScheduler implements Scheduler<Job>
         {
             if (this.scheduler != null && this.scheduler.isStarted())
             {
-                this.scheduler.shutdown(SchedulerBaseConfig.Lifecycle.FORCE_STOP);
+                this.scheduler.shutdown(SchedulerBaseConfig.LifecycleIntegration.FORCE_STOP);
                 this.scheduler = null;
             }
         }

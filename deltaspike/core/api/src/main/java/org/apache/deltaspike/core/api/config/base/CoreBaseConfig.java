@@ -22,7 +22,7 @@ import org.apache.deltaspike.core.api.config.ConfigResolver;
 
 public interface CoreBaseConfig extends DeltaSpikeBaseConfig
 {
-    interface BeanManagerDelegation
+    interface BeanManagerIntegration
     {
         Boolean DELEGATE_LOOKUP =
                 ConfigResolver.resolve("deltaspike.bean-manager.delegate_lookup")
@@ -32,7 +32,7 @@ public interface CoreBaseConfig extends DeltaSpikeBaseConfig
                         .getValue();
     }
 
-    interface Interceptor
+    interface InterceptorCustomization
     {
         Integer PRIORITY =
                 ConfigResolver.resolve("deltaspike.interceptor.priority")
@@ -42,7 +42,7 @@ public interface CoreBaseConfig extends DeltaSpikeBaseConfig
                         .getValue();
     }
 
-    interface MBean
+    interface MBeanIntegration
     {
         Boolean AUTO_UNREGISTER =
                 ConfigResolver.resolve("deltaspike.mbean.auto-unregister")
@@ -52,7 +52,7 @@ public interface CoreBaseConfig extends DeltaSpikeBaseConfig
                         .getValue();
     }
 
-    interface Scope
+    interface ScopeCustomization
     {
         interface WindowRestriction
         {
@@ -64,7 +64,6 @@ public interface CoreBaseConfig extends DeltaSpikeBaseConfig
                             .withCurrentProjectStage(true)
                             .withDefault(1024)
                             .getValue();
-
         }
     }
 }

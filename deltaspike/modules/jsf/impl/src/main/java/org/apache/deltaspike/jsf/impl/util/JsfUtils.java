@@ -362,7 +362,7 @@ public abstract class JsfUtils
     public static boolean isViewScopeDelegationEnabled()
     {
         return ClassUtils.tryToLoadClassForName("javax.faces.view.ViewScoped") != null &&
-            JsfBaseConfig.Scope.ViewDelegation.DELEGATE_TO_JSF;
+            JsfBaseConfig.ScopeCustomization.ViewDelegation.DELEGATE_TO_JSF;
     }
 
     public static void logWrongModuleUsage(String name)

@@ -46,7 +46,7 @@ public interface SchedulerBaseConfig extends DeltaSpikeBaseConfig
             .withDefault("quartz")
             .getValue();
 
-    interface Lifecycle
+    interface LifecycleIntegration
     {
         String START_SCOPES_PER_JOB_KEY = "deltaspike.scheduler.start_scopes_for_jobs";
 
