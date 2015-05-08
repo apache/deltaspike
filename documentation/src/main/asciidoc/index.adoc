@@ -1,32 +1,61 @@
+:notoc:
+
 = Documentation
 
 :Notice: Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
-* Get Started
-** <<overview#,Overview of DeltaSpike>>
-** <<configure#,Configure DeltaSpike in Your Projects>>
-** <<cdiimp#,Enable CDI For Your Java Environment>>
-** link:http://deltaspike.apache.org/examples.html[See DeltaSpike in Action]
-* Use Individual Modules
-** <<modules#,Overview of DeltaSpike Modules>>
-** <<core#,Core>>
-** <<bean-validation#,Bean Validation>>
-** <<container-control#,Container Control>>
-** <<data#,Data>>
-** <<jpa#,JPA>>
-** <<jsf#,JSF>>
-** <<partial-bean#,Partial-Bean>>
-** <<scheduler#,Scheduler>>
-** <<security#,Security>>
-** <<servlet#,Servlet>>
-** <<test-control#,Test-Control>>
-* Advanced Information
-** <<build#,Build and Test DeltaSpike from Source>>
-** <<snapshots#,Use DeltaSpike Snapshots>>
-** link:https://deltaspike.apache.org/migration-guide.html[Migrate to DeltaSpike]
-** link:https://deltaspike.apache.org/source.html[Contribute to the DeltaSpike Source]
-** <<spi#,DeltaSpike Service Provider Interface (SPI)>>
-* Access More DeltaSpike Resources
-** link:http://deltaspike.apache.org/articles.html[Articles and Blogs]
-** link:http://deltaspike.apache.org/addons.html[Add-ons]
-** link:https://deltaspike.apache.org/external.html[External Examples]
+++++
+<style>
+#doc-content h2 {
+    border-bottom: none;
+}
+</style>
+<div class="row-fluid">
+    <div class="span4">
+        <h2>Get Started</h2>
+        <ul class="nav nav-list toc-like">
+            <li><a href="overview.html">Overview of DeltaSpike</a></li>
+            <li><a href="configure.html">Configure DeltaSpike in Your Projects</a></li>
+            <li><a href="cdiimp.html">Enable CDI For Your Java Environment</a></li>
+            <li><a href="../examples.html">See DeltaSpike in Action</a></li>
+        </ul>
+
+        <h2>More resources</h2>
+        <ul class="nav nav-list toc-like">
+            <li><a href="../articles.html">Articles and Blogs</a></li>
+            <li><a href="../addons.html">Add-ons</a></li>
+            <li><a href="../external.html">External Examples</a></li>
+        </ul>
+    </div>
+
+    <div class="span4">
+        <h2>Modules</h2>
+        <ul class="nav nav-list toc-like">
+            <li><a href="modules.html">Overview of DeltaSpike Modules</a></li>
+            <li><a href="core.html">Core</a></li>
+            <li><a href="bean-validation.html">Bean Validation</a></li>
+            <li><a href="container-control.html">Container Control</a></li>
+            <li><a href="data.html">Data</a></li>
+            <li><a href="jpa.html">JPA</a></li>
+            <li><a href="jsf.html">JSF</a></li>
+            <li><a href="partial-bean.html">Partial-Bean</a></li>
+            <li><a href="scheduler.html">Scheduler</a></li>
+            <li><a href="security.html">Security</a></li>
+            <li><a href="servlet.html">Servlet</a></li>
+            <li><a href="test-control.html">Test-Control</a></li>
+        </ul>
+    </div>
+
+    <div class="span4">
+        <h2>Advanced information</h2>
+        <ul class="nav nav-list toc-like">
+            <li><a href="build.html">Build and Test DeltaSpike from Source</a></li>
+            <li><a href="snapshots.html">Use DeltaSpike Snapshots</a></li>
+            <li><a href="../migration-guide.html">Migrate to DeltaSpike</a></li>
+            <li><a href="../source.html">Contribute to the DeltaSpike Source</a></li>
+            <li><a href="spi.html">DeltaSpike Service Provider Interface (SPI)</a></li>
+        </ul>
+    </div>
+
+</div>
+++++

@@ -24,7 +24,7 @@ Instructions are provided here for adding the required resources to both Maven-b
 
 === Declare CDI Dependencies 
 
-==== Option A: Declare Dependencies for Maven-based Projects
+==== Dependencies for Maven-based Projects
 For Maven-based projects, the Container Control module is available in Maven Central together with the other DeltaSpike modules. You must configure your project to use the DeltaSpike Container Control API and one of the CDI container-specific modules.
 
 . Open the project `pom.xml` file for editing
@@ -126,7 +126,7 @@ c. Add the DeltaSpike Apache OpenWebBeans-specific Container Control module to t
 mvn clean install
 ----
 
-==== Option B: Declare Dependencies for Maven-independent Projects
+==== Dependencies for Maven-independent Projects
 For Maven-independent projects, the Container Control module is distributed together with the other DeltaSpike modules in `distribution-fill-<version>.zip`. You must add two of the files from the `cdictrl` directory to your project, namely `deltaspike-cdictrl-api.jar` and the .jar file that corresponds to the CDI container you have chosen. Add these files to the project `WEB-INF/lib` or `EAR/lib` directory for .war and .ear projects respectively.
 
 == Next

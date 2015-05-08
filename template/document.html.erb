@@ -1,129 +1,299 @@
 <%#encoding:UTF-8%><!DOCTYPE html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="deltaspike-generate-pages">
-<meta name="author" content="chm">
-<!-- No caching headers -->
-<meta http-equiv="cache-control" content="no-cache" />
-<meta http-equiv="pragma" content="no-cache" />
-<meta http-equiv="expires" content="-1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="deltaspike-generate-pages">
+    <meta name="author" content="chm">
+    <!-- No caching headers -->
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta http-equiv="pragma" content="no-cache"/>
+    <meta http-equiv="expires" content="-1"/>
 
-<title><%= document.name %></title>
+    <title><%= document.name %></title>
 
-<!--
-    Licensed to the Apache Software Foundation (ASF) under one
-    or more contributor license agreements.  See the NOTICE file
-    distributed with this work for additional information
-    regarding copyright ownership.  The ASF licenses this file
-    to you under the Apache License, Version 2.0 (the
-    "License"); you may not use this file except in compliance
-    with the License.  You may obtain a copy of the License at
+    <!--
+        Licensed to the Apache Software Foundation (ASF) under one
+        or more contributor license agreements.  See the NOTICE file
+        distributed with this work for additional information
+        regarding copyright ownership.  The ASF licenses this file
+        to you under the Apache License, Version 2.0 (the
+        "License"); you may not use this file except in compliance
+        with the License.  You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+        http://www.apache.org/licenses/LICENSE-2.0
 
-    Unless required by applicable law or agreed to in writing,
-    software distributed under the License is distributed on an
-    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-    KIND, either express or implied.  See the License for the
-    specific language governing permissions and limitations
-    under the License.
--->
+        Unless required by applicable law or agreed to in writing,
+        software distributed under the License is distributed on an
+        "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+        KIND, either express or implied.  See the License for the
+        specific language governing permissions and limitations
+        under the License.
+    -->
 
-<!-- Styles -->
+    <!-- Styles -->
+    <link href="https://deltaspike.apache.org/resources/css/bootstrap.css" rel="stylesheet">
+    <link href="https://deltaspike.apache.org/resources/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/3.1.0/css/font-awesome.min.css" rel="stylesheet">
 
-<link href="https://deltaspike.apache.org/resources/css/bootstrap.css" rel="stylesheet">
-<link href="https://deltaspike.apache.org/resources/css/bootstrap-responsive.css" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/3.1.0/css/font-awesome.min.css" rel="stylesheet" >
+    <%
+       def is_toc?
+         not (attributes.has_key?('notoc'))
+       end
+    %>
 
-<style type="text/css">
-<%= ::Asciidoctor::Stylesheets.instance.coderay_stylesheet_data %>
+    <% if is_toc? then %>
+        <!-- Tocify - nice dynamic autoscrolling TOC -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tocify/1.9.0/stylesheets/jquery.tocify.min.css" rel="stylesheet">
+        <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tocify/1.9.0/javascripts/jquery.tocify.min.js"></script>
 
-body {
-  padding-top: 60px;
-  padding-bottom: 40px;
-}
-</style>
 
-<script type="text/javascript">
+        <script type="text/javascript">
+            $(function () {
+                $("#toc").tocify({
+                    scrollTo: 50,
+                    extendPage: true,
+                    context: "#doc-content",
+                    selectors: "h2,h3,h4,h5"
+                });
+                $(".fallback-toc").hide();
+            });
+        </script>
+    <% end %>
 
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-36103647-1']);
-    _gaq.push(['_trackPageview']);
+    <style type="text/css">
+        <%= ::Asciidoctor::Stylesheets.instance.coderay_stylesheet_data %>
 
-    (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
+        body {
+            padding-top: 60px;
+            padding-bottom: 40px;
+        }
 
-  </script>
+        .toc-like {
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        .toc-like li {
+            line-height: 30px;
+            text-indent: 10px;
+        }
+
+        .toc-like li.custom-toc-header {
+            font-weight: bold;
+            background: #666;
+            color: white;
+            cursor: initial !important;
+            padding: 5px;
+        }
+
+        .toc-like li.custom-toc-header a {
+            color: white;
+            font-style: normal;
+            text-shadow: none;
+            padding: 0;
+        }
+
+        .toc-like li.custom-toc-header:hover a {
+            background: #666;
+        }
+
+        .page-title {
+            text-align: left;
+        }
+
+        #doc-content h2,
+        #doc-content h3,
+        #doc-content h4,
+        #doc-content h5,
+        #doc-content h6 {
+            padding-top: 0;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            line-height: 1.4em;
+        }
+
+        #doc-content h2 {
+            border-bottom: 1px solid lightgrey;
+        }
+
+
+    </style>
+
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-36103647-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+
+    </script>
 </head>
 
 <body>
 
-  <div class="navbar navbar-fixed-top">
+<div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
-      <div class="container">
-        <a class="btn btn-navbar" data-toggle="collapse"
-          data-target=".nav-collapse"> <span class="icon-bar"></span> <span
-          class="icon-bar"></span> <span class="icon-bar"></span>
-        </a>
-        <a class="brand logocolor" href="<%= (attr :sitebasedir) %>/index.html">Apache DeltaSpike</a>
-        <div class="nav-collapse">
-     
-          <% 
-          def active_page(page)
-            docpage = attributes.has_key?('docpage') ? attributes['docpage'] : attributes['docname']
-            'class="active"' if docpage == page
-          end
-          %>
-          <ul class="nav">
-            <li><a href="<%= (attr :sitebasedir) %>/index.html">Home</a></li>
-            <li <%= active_page("documentation") %>><a href="<%= (attr :sitebasedir) %>/documentation">Documentation</a></li>
-            <li <%= active_page("javadoc") %> ><a href="<%= (attr :sitebasedir) %>/javadoc.html">Javadoc</a></li>
-            <li <%= active_page("source") %>><a href="<%= (attr :sitebasedir) %>/source.html">Source</a></li>
-            <li <%= active_page("download") %>><a href="<%= (attr :sitebasedir) %>/download.html">Download</a></li>
-            <li <%= active_page("community") %>><a href="<%= (attr :sitebasedir) %>/community.html">Community</a></li>
-            <!-- <li><a href="./support.html">Support</a></li>  -->
-            <li <%= active_page("news") %>><a href="<%= (attr :sitebasedir) %>/news.html">News</a></li>
-            <li <%= active_page("migration-guide") %>><a href="<%= (attr :sitebasedir) %>/migration-guide.html">Migration</a></li>
-          </ul>
-        </div>
-        <!--/.nav-collapse -->
-        <form id="search-form" action="https://www.google.com/search"
-          method="get" class="navbar-search pull-right">
-          <input value="deltaspike.apache.org" name="sitesearch"
-            type="hidden"> <input class="search-query" name="q"
-            id="query" type="text">
-        </form>
-      </div>
-    </div>
-  </div>
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse"
+               data-target=".nav-collapse"> <span class="icon-bar"></span> <span
+            class="icon-bar"></span> <span class="icon-bar"></span>
+            </a>
+            <a class="brand logocolor" href="<%= (attr :sitebasedir) %>/index.html">Apache DeltaSpike</a>
 
-  <div class="container">
+            <div class="nav-collapse">
+
+                <%
+                   def active_page(page)
+                     docpage = attributes.has_key?('docpage') ? attributes['docpage'] : attributes['docname']
+                     'class="active"' if docpage == page
+                   end
+                %>
+                <ul class="nav">
+                    <li><a href="<%= (attr :sitebasedir) %>/index.html">Home</a></li>
+                    <li <%= active_page("documentation") %>><a href="<%= (attr :sitebasedir) %>/documentation">Documentation</a></li>
+                    <li <%= active_page("javadoc") %> ><a href="<%= (attr :sitebasedir) %>/javadoc.html">Javadoc</a></li>
+                    <li <%= active_page("source") %>><a href="<%= (attr :sitebasedir) %>/source.html">Source</a></li>
+                    <li <%= active_page("download") %>><a href="<%= (attr :sitebasedir) %>/download.html">Download</a></li>
+                    <li <%= active_page("community") %>><a href="<%= (attr :sitebasedir) %>/community.html">Community</a></li>
+                    <!-- <li><a href="./support.html">Support</a></li>  -->
+                    <li <%= active_page("news") %>><a href="<%= (attr :sitebasedir) %>/news.html">News</a></li>
+                    <li <%= active_page("migration-guide") %>><a href="<%= (attr :sitebasedir) %>/migration-guide.html">Migration</a></li>
+                </ul>
+            </div>
+            <!--/.nav-collapse -->
+            <form id="search-form" action="https://www.google.com/search"
+                  method="get" class="navbar-search pull-right">
+                <input value="deltaspike.apache.org" name="sitesearch"
+                       type="hidden"> <input class="search-query" name="q"
+                                             id="query" type="text">
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row-fluid">
+
+        <%
+           MODULEDEPS = 'moduledeps' unless defined? MODULEDEPS
+           MODULECONF = 'moduleconf' unless defined? MODULECONF
+           MODULEBASE = 'modulebase' unless defined? MODULEBASE
+           CONF_LINK = "https://github.com/apache/deltaspike/blob/master/deltaspike/%{base}/%{proj}/src/main/java/%{fqn}.java" unless defined? CONF_LINK
+
+           # module dependencies
+           def dep_name(short_name)
+             short_name.tr('-', ' ').capitalize
+           end
+
+           def has_deps?
+             if attributes.has_key?(MODULEDEPS) && !(attributes[MODULEDEPS].empty?)
+               attributes[MODULEDEPS].split(%r{\s*,\s*}).size > 0
+             else
+               false
+             end
+           end
+
+           def deps_list()
+             attributes[MODULEDEPS].split(%r{\s*,\s*})
+           end
+
+           # module configuration
+           def module_base()
+             if attributes.has_key?(MODULEBASE) && !(attributes[MODULEBASE].empty?)
+               attributes[MODULEBASE]
+             else
+               'modules/' + attributes['docname']
+             end
+           end
+
+           def conf_name(fqn)
+             fqn[fqn.rindex(".")+1..-1]
+           end
+
+           def conf_link(in_fqn)
+             CONF_LINK % { base: module_base(), proj: in_fqn.split(':')[0], fqn: in_fqn.split(':')[1].tr('.', '/') }
+           end
+
+           def has_conf?
+             if attributes.has_key?(MODULECONF) && !(attributes[MODULECONF].empty?)
+               attributes[MODULECONF].split(%r{\s*,\s*}).size > 0
+             else
+               false
+             end
+           end
+
+           def conf_list()
+             attributes[MODULECONF].split(%r{\s*,\s*})
+           end
+        %>
+
+        <div class="<%= if is_toc? or has_deps? or has_conf? then
+                          'span8'
+                        else
+                          'span12'
+                        end %>">
+            <div class="page-title">
+                <h1><%= document.name %></h1>
+            </div>
+
+            <div id="doc-content">
+                <%= document.content %>
+            </div>
+        </div>
+
+        <% if is_toc? or has_deps? or has_conf? then %>
+            <div class="span4">
+                <div id="toc">
+                    <div class="moduledeps">
+                        <ul class="toc-like nav nav-list">
+                            <% if has_deps? then %>
+                                <li class="custom-toc-header">Depends on</li>
+                                <% deps_list().each { |dep| %>
+                                    <li><a href="<%= dep %>.html"><%= dep_name(dep) %></a></li>
+                                <% } %>
+                            <% end %>
+                            <% if has_conf? then %>
+                                <li class="custom-toc-header"><a href="core.html#_internal_configuration">Configuration</a></li>
+                                <% conf_list().each { |conf| %>
+                                    <li><a href="<%= conf_link(conf) %>"><%= conf_name(conf) %></a></li>
+                                <% } %>
+                            <% end %>
+                            <% if is_toc? && (has_deps? or has_conf?) then %>
+                                <li class="custom-toc-header">Table of Contents</li>
+                            <% end %>
+                        </ul>
+                    </div>
+                </div>
+                <% if is_toc? then %>
+                    <div class="fallback-toc">
+                        <%= converter.convert_with_options @document, 'outline', :toclevels => 4 %>
+                    </div>
+                <% end %>
+            </div>
+        <% end %>
+
+    </div>
     <div class="row">
-      <div class="span12">
-        <div class="page-title">
-          <h1><%= document.name %></h1>
-        </div>
-
-        <div id="toc" class="<%= attr 'toc-class', 'toc' %>">
-            <%= converter.convert_with_options @document, 'outline', :toclevels => 4  %>
-            <hr>
-            <%= document.content %>
-        </div>
-
         <hr>
-
         <footer>
-          <p>Copyright © 2011-2014 The Apache Software Foundation,
-            Licensed under the Apache License, Version 2.0.</p>
-          <p>Apache and the Apache feather logo are trademarks of The Apache Software Foundation.</p>
+            <p>Copyright &copy; 2011-2014 The Apache Software Foundation,
+                Licensed under the Apache License, Version 2.0.</p>
+
+            <p>Apache and the Apache feather logo are trademarks of The Apache Software Foundation.</p>
         </footer>
-      </div>
     </div>
-  </div>
+</div>
+
 </body>
 </html>
