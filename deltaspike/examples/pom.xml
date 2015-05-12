@@ -37,6 +37,8 @@
         <module>jse-examples</module>
         <module>jsf-examples</module>
         <module>jsf-playground</module>
+        <module>security-requested-page-after-login-cdi</module>
+        <module>security-requested-page-after-login-picketlink</module>
         <module>scheduler-playground</module>
     </modules>
 

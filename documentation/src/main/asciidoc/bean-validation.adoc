@@ -8,7 +8,7 @@
 == Overview
 The Bean Validation module provides CDI integration for bean validation. It enables the creation of CDI-aware `ConstraintValidator` methods that can use business objects (EJBs, ManagedBeans) to support validation needs.
 
-== Configure Your Projects
+== Project Setup
 The configuration information provided here is for Maven-based projects and it assumes that you have already declared the DeltaSpike version and DeltaSpike Core module for your projects, as detailed in <<configure#, Configure DeltaSpike in Your Projects>>. For Maven-independent projects, see <<configure#config-maven-indep,Configure DeltaSpike in Maven-independent Projects>>.
 
 === Declare Bean Validation Module Dependencies
@@ -24,15 +24,13 @@ Add the Bean Validation module to the list of dependencies in the project `pom.x
 </dependency>
 ----
 
-== Use the Module Features
-
-=== Scoping
+== Scoping
 
 A `ConstraintValidator` inherits the scope defined in the bean class.
 
 NOTE: A `ConstraintValidator` may be invoked by multiple threads. For this reason, you should consider using at least `RequestScoped` validators.
 
-=== Code Requirements
+== Code Requirements
 
 There are no compile dependencies to use the Bean Validation module. You
 simply need to override the factory. Then you can build your `ConstraintValidator` based on CDI programming rules.

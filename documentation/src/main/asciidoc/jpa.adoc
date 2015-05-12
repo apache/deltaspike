@@ -8,7 +8,7 @@
 == Overview
 The JPA module provides a transactional context and scope, enabling execution of methods within transactions.
 
-== Configure Your Projects
+== Project Setup
 The configuration information provided here is for Maven-based projects and it assumes that you have already declared the DeltaSpike version and DeltaSpike Core module for your projects, as detailed in <<configure#, Configure DeltaSpike in Your Projects>>. For Maven-independent projects, see <<configure#config-maven-indep,Configure DeltaSpike in Maven-independent Projects>>.
 
 === 1. Declare JPA Module Dependencies
@@ -44,9 +44,7 @@ For CDI 1.0 (or DeltaSpike v1.1.0 and earlier together with CDI 1.1+), you must 
 </beans>
 ----
 
-== Use the Module Features
-
-=== @Transactional
+== @Transactional
 
 This annotation is an alternative to transactional EJBs which allows to
 execute a method within a transaction. Before it is possible to start
@@ -337,7 +335,7 @@ a different `EntityManager`. So it is possible to catch an exception in
 `FirstLevelTransactionBean`, for example, to try an optional path instead of an
 immediate rollback.
 
-=== @TransactionScoped
+== @TransactionScoped
 
 `@Transactional` also starts a context which is available as long as the
 transaction started by `@Transactional`. Besides other beans you can use
@@ -373,7 +371,7 @@ public class EntityManagerProducer
 }
 ----------------------------------------------------------------------------
 
-=== Extended Persistence Contexts
+== Extended Persistence Contexts
 
 Frameworks like MyFaces Orchestra provide a feature which allows keeping
 an `EntityManager` across multiple requests. That means it is not
@@ -493,7 +491,7 @@ to merge detached entities automatically if those entities get
 serialized as well. However, as mentioned before *we do not recommend*
 such an approach.
 
-=== JTA Support
+== JTA Support
 
 By default the transaction-type used by `@Transactional` is
 `RESOURCE_LOCAL`. If you configure `transaction-type="JTA"` in the

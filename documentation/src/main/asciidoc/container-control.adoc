@@ -5,7 +5,7 @@
 == Overview
 The Container Control module provides CDI container booting and shutdown, crucial for CDI use in Java SE6+ environments, and associated context lifecycle management. The module abstracts individual CDI container implementations, ensuring projects are container-independent.
 
-== Configure Your Projects
+== Project Setup
 The configuration information provided here is for Maven-based projects and it assumes that you have already declared the DeltaSpike version and DeltaSpike Core module for your projects, as detailed in <<configure#, Configure DeltaSpike in Your Projects>>. For Maven-independent projects, see <<configure#config-maven-indep,Configure DeltaSpike in Maven-independent Projects>>.
 
 === Enable CDI For Your Java Environment
@@ -24,9 +24,7 @@ Add the Container Control module to the list of dependencies in the project `pom
 </dependency>
 ----
 
-== Use the Module Features
-
-=== Start the CDI Container from Your Project
+== Start the CDI Container from Your Project
 To start a CDI container in your application, you must instantiate a `CdiContainer` object and call the `#boot` method. When `#boot` is called, the `CdiContainer` scans CDI-enabled
 archives for beans and CDI extensions. Before the application exits, `#shutdown` must be called to correctly destroy all beans. An example is given in the code snippet here.
 
@@ -81,17 +79,17 @@ To resolve project beans, you can use the DeltaSpike `BeanProvider` class. Wheth
 EchoService echoService = BeanProvider.getContextualReference(EchoService.class, false);
 ----
 
-=== CdiContainer
+== CdiContainer
 The `CdiContainer` interface provides booting and shutdown of the CDI containers from deployed applications, with `CdiContainerLoader` a simple factory providing access to the underlying `CdiContainer` implementation.
 
 This is useful to Java SE6+ applications in which a standalone CDI implementation must be provided and booted and shutdown by the application. Booting and shutdown of the CDI container for Java EE and servlet containers is managed by the servlet container integration.
 
 For instructions and examples on using this feature in your projects, see <<cdiimp#javase6,Enable CDI For Your Java Environment: Java SE6+>>.
 
-=== ContextControl Usage
+== ContextControl Usage
 The `ContextControl` interface provides life-cycle control of the CDI container built-in contexts. This includes starting and stoping built-in standard contexts like `@RequestScoped`, `@ConversationScoped`, and `@SessionScoped`. It is provided as an `@Dependent` bean and can be injected in the classic CDI way. This feature can be used and is helpful in all Java environments, including Java SE, as illustrated here.
 
-=== Procedure for builing Uber jar
+== Procedure for building an uber jar
 Uber jar or executable jar can created by using the maven shade plugin. Some things you needs to be aware of when you use it.
 
 * Multiple `beans.xml` and `javax.enterprise.inject.spi.Extension` files needs to be merged into the final jar using a transformer.
@@ -102,7 +100,7 @@ Uber jar or executable jar can created by using the maven shade plugin. Some thi
 * The _asm:asm:3.3.1_ transitive dependency of OpenWebBeans isn't properly included in the Uber jar.  Add it as a project dependency if you use OWB. (Only needed for OWB 1.1.8 !)
 * Some frameworks, like logging frameworks, aren't CDI compatible.  So you need to exclude them from scanning. Use for example the `scan` feature of Weld to define which packages needs to be excluded.
 
-==== Restart the RequestContext in Unit Tests
+=== Restart the RequestContext in Unit Tests
 In unit testing it can be necessary to test with attached and also with
 detached JPA entities. A very common approach for JPA is the
 http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Web_Server/1.0/html/Hibernate_Entity_Manager_Reference_Guide/transactions.html[entitymanager-per-request
@@ -132,7 +130,7 @@ public void testMyBusinessLogic()
 }
 ---------------------------------------------------------------------------------------
 
-==== Attach a RequestContext to a New Thread in EE
+=== Attach a RequestContext to a New Thread in EE
 Accessing the `@RequestScoped` bean in a new thread will result in a
 `ContextNotActiveException`. The RequestContext usually gets started
 for a particular thread via a simple `ServletRequestListener`. So "no
@@ -165,7 +163,7 @@ public class CdiJob implements org.quartz.Job
 }
 ---------------------------------------------------------------------------------------------
 
-=== Embedded Servlet Support
+== Embedded Servlet Support
 From DeltaSpike 1.0.2, you can use DeltaSpike to power embedded Servlet
 runtimes. This work is done via Servlet Listeners. The configuration is
 specific to each container, below are some examples.
@@ -188,7 +186,7 @@ cdiContainer.boot();
 cdiContainer.getContextControl().startContexts();
 -----------------------------------------------------------------
 
-==== Jetty
+=== Jetty
 
 For Jetty, you need to add an `EventListener` which will be your
 `CdiServletRequestListener`. The object must be instantiated. This must
@@ -207,7 +205,7 @@ context.addServlet(new ServletHolder(new YourServlet()),"/*");
 server.start();
 ------------------------------------------------------------------------------------------
 
-==== Undertow
+=== Undertow
 
 For Undertow, you register the `CdiServletRequestListener` via
 `ListenerInfo` by passing in the class to their builders. Then you add
@@ -232,7 +230,7 @@ Undertow server = Undertow.builder()
 server.start();
 --------------------------------------------------------------------------------------------------------
 
-==== Tomcat
+=== Tomcat
 
 For Tomcat, you need to register the `CdiServletContextListener` instead
 of the `CdiServletRequestListener`. It is added as an

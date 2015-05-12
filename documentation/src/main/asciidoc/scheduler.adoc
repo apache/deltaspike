@@ -8,7 +8,7 @@
 == Overview
 The Scheduler module provides simple integration with Quartz v2 (default) or any other scheduler that supports cron-expressions for job-classes.
 
-== Configure Your Projects
+== Project Setup
 The configuration information provided here is for Maven-based projects and it assumes that you have already declared the DeltaSpike version and DeltaSpike Core module for your projects, as detailed in <<configure#, Configure DeltaSpike in Your Projects>>. For Maven-independent projects, see <<configure#config-maven-indep,Configure DeltaSpike in Maven-independent Projects>>.
 
 === 1. Declare Scheduler Module Dependencies
@@ -65,9 +65,7 @@ Scheduled jobs can have built-in CDI contexts started for the duration of their 
 </dependency>
 ----
 
-== Use the Module Features
-
-=== @Scheduled
+== @Scheduled
 
 Just annotate your Quartz-Jobs with `@Scheduled` and they will get
 picked up and passed to the scheduler automatically (during the
@@ -135,7 +133,7 @@ public class ProjectStageAwareSchedulerController
 }
 -------------------------------------------------------------------------------------
 
-=== Manual Scheduler Control
+== Manual Scheduler Control
 
 Th SPI allows to control the scheduler (or integrate any other
 compatible scheduler as an alternative to Quartz2)
@@ -176,7 +174,7 @@ or
 </alternatives>
 -----------------------------------------------------------------------------
 
-=== Custom Scheduler
+== Custom Scheduler
 
 It is possible to replace the default integration with Quartz. Any scheduler that supports cron-expressions for job-classes can be used.
 For more information, see link:https://deltaspike.apache.org/javadoc/{latestStable}/org/apache/deltaspike/scheduler/spi/Scheduler.html[Scheduler javadoc].

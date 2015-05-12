@@ -8,7 +8,7 @@
 == Overview
 The Test-Control module enables you to write CDI-based tests easily. Calls to stop and start the CDI container are built into the Test-Control API, with simplified commands for customizing the management of contexts and other aspects during testing.
 
-== Configure Your Projects
+== Project Setup
 The configuration information provided here is for Maven-based projects and it assumes that you have already declared the DeltaSpike version and DeltaSpike Core module for your projects, as detailed in <<configure#, Configure DeltaSpike in Your Projects>>. For Maven-independent projects, see <<configure#config-maven-indep,Configure DeltaSpike in Maven-independent Projects>>.
 
 === 1. Declare Test-Control Module Dependencies
@@ -104,11 +104,9 @@ of dependencies instead of the OpenWebBeans-specific Container Control module:
 
 Add a `beans.xml` file in the project test module (e.g. src/test/resources/META-INF/beans.xml).
 
-== Use the Module Features
+== Automated Container Booting and Shutdown
 
-=== Automated Container Booting and Shutdown
-
-==== CdiTestRunner
+=== CdiTestRunner
 
 Start and stop the CDI container automatically per test class with CdiTestRunner, a JUnit Test-Runner. 
 This also starts and stops one request and session per test-method.
@@ -132,7 +130,7 @@ public class ContainerAndInjectionControl
 }
 --------------------------------------------------------
 
-==== CdiTestSuiteRunner
+=== CdiTestSuiteRunner
 
 Extend automated CDI container start and stop actions to whole test suites with CdiTestSuiteRunner, a JUnit Test-Suite-Runner.
 
@@ -149,13 +147,13 @@ public class SuiteLevelContainerControl
 }
 ---------------------------------------
 
-==== Optional Shutdown Configuration
+=== Optional Shutdown Configuration
 
 You can set `deltaspike.testcontrol.stop_container` to `false` (via the standard DeltaSpike config), resulting in the CDI Container being started just once for all tests.
 
-=== Test Customization
+== Test Customization
 
-==== @TestControl
+=== @TestControl
 
 Customize the default behavior of CdiTestRunner with @TestControl. In the following
 case only one session for all test-methods (of the test-class) will be
@@ -172,7 +170,7 @@ public class CustomizedScopeHandling
 }
 -----------------------------------------------
 
-==== ProjectStage Control
+=== ProjectStage Control
 
 Override the default ProjectStage for unit tests with `ProjectStage.UnitTest.class`.
 
@@ -195,7 +193,7 @@ public class TestStageControl
 }
 ---------------------------------------------------------------
 
-=== Optional Configuration
+== Optional Configuration
 
 From DeltaSpike 1.2, it is possible to provide a configuration for the underlying test-container.
 However, currently only the adapter for OpenEJB embedded (available in CDI-Control) supports it out-of-the-box.
@@ -206,7 +204,7 @@ The content of the file are key/value pairs which get passed to the container.
 Therefore, it is a configuration which is not used by DeltaSpike itself
 (it is just forwarded (as it is) to the underlying test-container).
 
-==== Reconfigure the config-file Name or Location
+=== Reconfigure the config-file Name or Location
 
 If you would like to point to an existing config-file, you have to add for example:
 
@@ -225,9 +223,9 @@ deltaspike.testcontrol.test-container.config-file.UnitTest=META-INF/unit-test/ex
 ---------------------------------------------------------------
 
 
-=== Optional Integrations
+== Optional Integrations
 
-==== Mock Frameworks
+=== Mock Frameworks
 
 From DeltaSpike 1.0, it is possible to mock CDI-Beans. Usually @Exclude (+
 ProjectStage) is enough, however, for some cases mocked beans might be
@@ -419,7 +417,7 @@ Mocking such typed beans can result in an
 mocked implementation via `@Exclude` or `@Typed()` (or a parametrized
 constructor) and specify the target-type via `@TypedMock`.
 
-==== JSF (via MyFaces-Test)
+=== JSF (via MyFaces-Test)
 
 add on of
 
@@ -434,7 +432,7 @@ as content to
 
 (in your config-folder for tests, e.g. test/resources)
 
-=== Using jersey-test with test-control
+== Using jersey-test with test-control
 
 Jersey-test starts jetty which answers requests in a separated thread. Since ds test-control just handles the thread of the test itself, it's needed to integrate jetty and jersey with the cdi-container. Usually that's done via a ServletRequestListener - the following part describes an alternative approach for jersey-test:
 
@@ -509,7 +507,7 @@ public class CdiAwareHandlerWrapper extends HandlerWrapper
 }
 -------------------------------------------------------------------------------------------
 
-=== Mixed Tests
+== Mixed Tests
 
 Usually you should have one kind of tests per test-module. However, if
 you need to add, for example, a test without an external-container to your
@@ -527,9 +525,9 @@ public class JsfContainerTest
 ---------------------------------------------
 
 
-=== Known Restrictions
+== Known Restrictions
 
-==== Liquibase
+=== Liquibase
 
 Liquibase invokes `#toString` in a `AfterDeploymentValidation` observer.
 *that is not portable* and therefore you have to deactivate the
@@ -553,7 +551,7 @@ org.apache.deltaspike.core.spi.activation.ClassDeactivator=myPackage.LiquibaseAw
 
 Further details are available at deactivatable.
 
-==== Gradle
+=== Gradle
 
 Gradle by default does not put resources and compiled sources in to the same directory.
 When running a test using Gradle, this means your classes will not be in bean archives as
@@ -574,9 +572,9 @@ sourceSets {
 }
 ----------------------------------------------------------------------------------------------------------
 
-=== SPI
+== SPI
 
-==== ExternalContainer
+=== ExternalContainer
 
 org.apache.deltaspike.testcontrol.spi.ExternalContainer allows to
 integrate containers which get started after the CDI container.

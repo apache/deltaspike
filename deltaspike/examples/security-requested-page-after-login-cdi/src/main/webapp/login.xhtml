@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html">
+<head>
+    <title>Login</title>
+</head>
+
+<body>
+<h1>Log in</h1>
+<h:messages globalOnly="true"></h:messages>
+<h:form id="loginForm">
+    <h:outputLabel value="Username:" for="username"/><br/>
+    <h:inputText value="#{loginController.username}" id="username"/><br/><br/>
+    <h:outputLabel value="Password:" for="password"/><br/>
+    <h:inputSecret value="#{loginController.password}" id="password"/><br/>
+    <h:commandButton value="Log in" action="#{loginController.login()}" id="loginBtn"/>
+</h:form>
+
+<p>
+    <b>Hint:</b> log in as john / 123456
+</p>
+<br/>
+
+</body>
+
+</html>

@@ -42,7 +42,7 @@ extension. A client can declare a dependency to the interface only. The
 details on how to use those features are outlines in the following
 chapters.
 
-== Configure Your Projects
+== Project Setup
 
 The configuration information provided here is for Maven-based projects and it assumes that you have already declared the DeltaSpike version and DeltaSpike Core module for your projects, as detailed in <<configure#, Configure DeltaSpike in Your Projects>>. For Maven-independent projects, see <<configure#config-maven-indep,Configure DeltaSpike in Maven-independent Projects>>.
 
@@ -126,14 +126,12 @@ configure the `TransactionStrategy` your repositories use. Adapt your
 </beans>
 ----
 
-== Use the Module Features
-
 IMPORTANT: Using the DeltaSpike Data module in an EAR deployment is currently restricted to
 annotation-based entities.
 
-=== Core Concepts
+== Core Concepts
 
-==== Repositories
+=== Repositories
 
 With the DeltaSpike Data module, it is possible to make a repository out
 of basically any abstract class or interface (using a concrete class
@@ -162,7 +160,7 @@ classes or interfaces this is the only way to tell the framework what
 entity the repository relates to. In order to simplify this, DeltaSpike
 Data provides several base types.
 
-===== The `EntityRepository` Interface
+==== The `EntityRepository` Interface
 
 Although mainly intended to hold complex query logic, working with both
 a repository and an `EntityManager` in the service layer might
@@ -245,7 +243,7 @@ public abstract class PersonRepository extends AbstractEntityRepository<Person, 
 }
 -------------------------------------------------------------------------------------
 
-==== Deactivating Repositories
+=== Deactivating Repositories
 
 Repositories can be deactivated creating a <<spi.adoc#_classdeactivator,ClassDeactivator>>.
 
@@ -266,7 +264,7 @@ public interface PersonRepository implements Deactivatable{
 }    
 ----------------------------------------
 
-==== Using Multiple `EntityManager`
+=== Using Multiple `EntityManager`
 
 While most applications will run just fine with a single
 `EntityManager`, there might be setups where multiple data sources are
@@ -299,7 +297,7 @@ possible to create something like a base `CrmRepository` interface with
 the `@EntityManagerConfig` and then extending / implementing this
 interface.
 
-==== Other `EntityManager` Methods
+=== Other `EntityManager` Methods
 
 While the `EntityRepository` methods should cover most interactions
 normally done with an `EntityManager`, for some specific cases it might
@@ -317,14 +315,14 @@ public interface PersonRepository extends EntityRepository<Person, Long>, Entity
 }
 -------------------------------------------------------------------------------------------------------
 
-=== Query Method Expressions
+== Query Method Expressions
 
 Good naming is a difficult aspects in software engineering. A good
 method name usually makes comments unnecessary and states exactly what
 the method does. And with method expressions, the method name is
 actually the implementation!
 
-==== Using Method Expressions
+=== Using Method Expressions
 
 Let's start by looking at a (simplified for readability) example:
 
@@ -395,7 +393,7 @@ Note that DeltaSpike will validate those expressions during startup, so
 you will notice early in case you have a typo in those expressions.
 
 
-==== Query Ordering
+=== Query Ordering
 
 Beside comparators it is also possible to sort queries by using the
 `OrderBy` keyword, followed by the attribute name and the direction
@@ -412,7 +410,7 @@ public interface PersonRepository extends EntityRepository<Person, Long>
 } 
 ------------------------------------------------------------------------------
 
-==== Nested Properties
+=== Nested Properties
 
 To create a comparison on a nested property, the traversal parts can be
 separated by a `_`:
@@ -428,7 +426,7 @@ public interface PersonRepository extends EntityRepository<Person, Long>
 }
 ------------------------------------------------------------------------
 
-==== Query Options
+=== Query Options
 
 
 DeltaSpike supports query options on method expressions. If you want to
@@ -446,7 +444,7 @@ public interface PersonRepository extends EntityRepository<Person, Long>
 }
 -----------------------------------------------------------------------------------------------
 
-==== Method Prefix
+=== Method Prefix
 
 In case the `findBy` prefix does not comply with your team conventions,
 this can be adapted:
@@ -462,7 +460,7 @@ public interface PersonRepository extends EntityRepository<Person, Long>
 }
 --------------------------------------------------------------------------------------------------
 
-=== Query Annotations
+== Query Annotations
 
 While method expressions are fine for simple queries, they will often
 reach their limit once things get slightly more complex. Another aspect
@@ -472,7 +470,7 @@ cases, the DeltaSpike Data module supports also annotating methods for
 more control on the generated query.
 
 
-==== Using Query Annotations
+=== Using Query Annotations
 
 The simples way to define a specific query is by annotating a method and
 providing the JPQL query string which has to be executed. In code, this
@@ -569,7 +567,7 @@ public interface PersonRepository extends EntityRepository<Person, Long>
 }
 ------------------------------------------------------------------------------------
 
-==== Annotation Options
+=== Annotation Options
 
 Beside providing a query string or reference, the `@Query` annotation
 provides also two more attributes:
@@ -595,7 +593,7 @@ public interface PersonRepository extends EntityRepository<Person, Long>
 
 Note that these options can also be applied to method expressions.
 
-==== Query Options
+=== Query Options
 
 All the query options you have seen so far are more or less static. But
 sometimes you might want to apply certain query options dynamically. For
@@ -635,7 +633,7 @@ supported for Hibernate, EclipseLink and OpenJPA.
 Note that the `QueryResult` return type can also be used with method
 expressions.
 
-==== Pagination
+=== Pagination
 
 We introduced the `QueryResult` type in the last chapter, which can also
 be used for pagination:
@@ -655,7 +653,7 @@ QueryResult<Person> paged = personRepository.findByAge(age)
 int totalPages = paged.countPages();
 -----------------------------------------------------------
 
-==== Bulk Operations
+=== Bulk Operations
 
 While reading entities and updating them one by one might be fine for
 many use cases, applying bulk updates or deletes is also a common usage
@@ -678,7 +676,7 @@ public interface PersonRepository extends EntityRepository<Person, Long>
 Bulk operation query methods can either return void or int, which counts
 the number of entities affected by the bulk operation.
 
-==== Optional Query Results
+=== Optional Query Results
 
 The JPA spec requires to throw exceptions in case the
 `getSingleResult()` method does either return no or more than one
@@ -690,7 +688,7 @@ DeltaSpike Data gives the option to change this to the way it makes most
 sense for the current usecase. While the default behavior is still fully
 aligned with JPA, it is also possible to request optional query results.
 
-==== Zero or One Result
+=== Zero or One Result
 
 With this option, the query returns `null` instead of throwing a
 `NoResultException` when there is no result returned. It is usable with
@@ -717,7 +715,7 @@ with the `SingleResultType.OPTIONAL` enum.
 In case the query returns more than one result, a
 `NonUniqueResultException` is still thrown.
 
-==== Any Result
+=== Any Result
 
 If the caller does not really mind what kind if result is returned, it is
 also possible to request any result from the query. If there is no
@@ -745,7 +743,7 @@ annotations, the `singleResult` attribute can be overridden with the
 
 This option will not throw an exception.
 
-=== Transactions
+== Transactions
 
 If you call any method expression, `@Query`-annotated method or a method
 from the `EntityRepository`, the repository will figure out if a
@@ -787,9 +785,9 @@ Repositories can then implement the `TxRepository` interface and call
 their queries in the `transactional` method (where the callback
 implementation can be, for example, in an anonymous class).
 
-=== Extensions
+== Extensions
 
-==== Query Delegates
+=== Query Delegates
 
 While repositories defines several base interfaces, there might still be
 the odd convenience method that is missing. This is actually intentional
@@ -815,7 +813,7 @@ public interface PersonRepository extends QueryDslSupport
 }   
 ---------------------------------------------------------
 
-==== Implementing the Query Delegate
+=== Implementing the Query Delegate
 
 The first step is to define an interface which contains the extra
 methods for your repositories (as shown above):
@@ -858,7 +856,7 @@ Note that, if you define multiple extensions with equivalent method
 signatures, there is no specific order in which the implementation is
 selected.
 
-=== Mapping
+== Mapping
 
 While repositories are primarily intended to work with Entities, it
 might be preferable in some cases to have an additional mapping layer on
@@ -948,7 +946,7 @@ is mandatory. Also it is up to the mapper to convert parameters
 correctly (in this example, a conversion from a `PersonDto` parameter to
 `Person` entity and from `PersonId` to `Long` is necessary).
 
-==== Simple Mappings
+=== Simple Mappings
 
 In many cases it is just required to map a DTO object back and forth. For
 this case, the `SimpleQueryInOutMapperBase` class can be subclassed,
@@ -988,7 +986,7 @@ created. In any case, there is no need to map the primary key to the
 entity (it either does not exist or is already populated for an existing
 entity).
 
-=== JPA Criteria API Support
+== JPA Criteria API Support
 
 Beside automatic query generation, the DeltaSpike Data module also
 provides a DSL-like API to create JPA 2 Criteria queries. It takes
@@ -1006,7 +1004,7 @@ strongest point is certainly its type safety - which comes at the cost
 of readability. We're trying to provide a middle way here. A less
 powerful API, but still type safe and readable.
 
-==== API Usage
+=== API Usage
 
 The API is centered around the Criteria class and is targeted to provide
 a fluent interface to write criteria queries:
@@ -1065,7 +1063,7 @@ Once all comparators and query options are applied, the `createQuery()`
 method is called. This creates a JPA TypedQuery object for the
 repository entity. If required, further processing can be applied here.
 
-==== Joins
+=== Joins
 
 For simple cases, restricting on the repository entity only works out
 fine, but once the Data model gets more complicated, the query will have
@@ -1112,7 +1110,7 @@ public abstract class PersonRepository extends AbstractEntityRepository<Person, 
 }
 -------------------------------------------------------------------------------------
 
-==== Boolean Operators
+=== Boolean Operators
 
 By default, all query operators are concatenated as an and conjunction
 to the query. The DeltaSpike criteria API also allows to add groups of
@@ -1140,7 +1138,7 @@ public abstract class PersonRepository extends AbstractEntityRepository<Person, 
 }
 -------------------------------------------------------------------------------------
 
-==== Selections
+=== Selections
 
 It might not always be appropriate to retrieve full entities - you might
 also be interested in scalar values or by modified entity attributes.
@@ -1194,7 +1192,7 @@ selection clause:
 |===
 
 
-=== Auditing
+== Auditing
 
 A common requirement for entities is tracking what is being done with
 them. DeltaSpike provides a convenient way to support this requirement.
@@ -1202,7 +1200,7 @@ them. DeltaSpike provides a convenient way to support this requirement.
 NOTE: DeltaSpike does not support creating revisions of entities. If this is a
 requirement for your audits, have a look at Hibernate Envers.
 
-==== Activating Auditing
+=== Activating Auditing
 
 DeltaSpike uses an entity listener to update auditing data before
 entities get created or update. The entity listener must be activated
@@ -1244,12 +1242,12 @@ Note that for this variant, you need a compile dependency on the impl
 module. Alternatively, also the per entity listener can be configured by
 XML.
 
-==== Using Auditing Annotations
+=== Using Auditing Annotations
 
 All that has to be done now is annotating the entity properties which
 are used to audit the entity.
 
-===== Updating Timestamps
+====  Updating Timestamps
 
 To keep track on creation and modification times, following annotations
 can be used:
@@ -1282,7 +1280,7 @@ the annotation can be customized:
 @ModifiedOn(setOnCreate=true)
 -----------------------------
 
-===== Who's Changing My Entities?
+====  Who's Changing My Entities?
 
 Beside keeping track of when a change has happened, it is also often
 critical to track who's responsible for the change. Annotate a user

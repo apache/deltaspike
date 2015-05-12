@@ -8,7 +8,7 @@
 == Overview
 The JSF module provides CDI integration with JSF, with type-safe view config, multi-window handling, new scopes (WindowScoped, ViewScope, ViewAccessScoped, GroupedConversationScoped) and integration with DeltaSpike “core” messages and exception handling.
 
-== Configure Your Projects
+== Project Setup
 The configuration information provided here is for Maven-based projects and it assumes that you have already declared the DeltaSpike version and DeltaSpike Core module for your projects, as detailed in <<configure#, Configure DeltaSpike in Your Projects>>. For Maven-independent projects, see <<configure#config-maven-indep,Configure DeltaSpike in Maven-independent Projects>>.
 
 === Declare JSF Module Dependencies
@@ -43,15 +43,13 @@ Some EE6 servers cannot handle optional classes. From DeltaSpike 1.0.1, if you d
 </dependency>
 ----
 
-== Use the Module Features
-
 .Support of EAR deployments
 IMPORTANT: Before using features described by this page, please ensure that you are
 aware of
 https://issues.apache.org/jira/browse/DELTASPIKE-335[DELTASPIKE-335] and
 the corresponding impact.
 
-=== JSF Messages
+== JSF Messages
 
 DeltaSpike provides an injectable component for typesafe FacesMessages.
 
@@ -85,11 +83,11 @@ In case of a String we use it for both the summary and detail information on the
 
 If a Message is returned, we lookup the 'detail' and 'summary' categories (see `org.apache.deltaspike.core.api.message.Message#toString(String)` for creating the FacesMessage.
 
-=== Multi-Window Handling
+== Multi-Window Handling
 
-==== Background
+=== Background
 
-===== Historic Considerations
+==== Historic Considerations
 
 Until the end of the 1990s web browsers are usually single threaded and
 only had one window. But in the last years browsers supporting multiple
@@ -99,7 +97,7 @@ server side. Sadly browser windows still lack of a native windowId, thus
 maintaining web application data in @SessionScoped backing beans is
 still used in most of the cases.
 
-===== How JSF-2 Changed the World
+==== How JSF-2 Changed the World
 
 The MyFaces Orchestra community did a good summary about the various
 ways to handle multiple window support in JSF Applications. Those
@@ -110,7 +108,7 @@ requests. Due to the new JSF-2 ability to use bookmarkable URLs and deep
 links, a typical JSF-2 application contains much more GET links than we
 used to see in JSF-1, thus we have far more href links to cope with.
 
-===== Standard windowId Handling
+==== Standard windowId Handling
 
 With a classical approach we would not be able to simply add a windowId
 parameter to such links because if the user would open the link in a new
@@ -127,9 +125,9 @@ destroy their information) while rendering the page, which means this is
 not feasible as general solution.
 
 
-==== Available Modes
+=== Available Modes
 
-===== CLIENTWINDOW
+==== CLIENTWINDOW
 
 Each GET request results in an intermediate small html page which checks
 if the browser tab fits the requested windowId. When the windowId is
@@ -139,12 +137,12 @@ dsRid/windowId will be added. On the server side, the verified windowId
 will be extracted from the cookie. For POST request detection, the
 windowId will be added as hidden input to all forms.
 
-====== Advantage
+===== Advantage
 
 * Covers all edge cases
 
 
-====== Disadvantage
+===== Disadvantage
 
 * Having the windowhandler.html site rendered between requests sometimes
 leads to some 'flickering' if the destination page takes some time to
@@ -161,7 +159,7 @@ parse a request and decide upon the UserAgent or any other information
 if a client will get an intermediate page or if he gets the result page
 directly.
 
-====== Change windowhandler.html
+===== Change windowhandler.html
 
 To customize the look and feel of the windowhandler.html, you can simply
 provide a own via:
@@ -179,7 +177,7 @@ public class MyClientWindowConfig extends DefaultClientWindowConfig
 }
 -------------------------------------------------------------------
 
-===== LAZY
+==== LAZY
 
 Always appends the windowId to all, from JSF generated, URLs. On the
 first GET request without a windowId, it will generate a new windowId
@@ -191,11 +189,11 @@ it is not matching, the view will be refreshed with the right windowId in
 the URL.
 
 
-====== Advantage
+===== Advantage
 
 * No windowhandler.html / loading screen required
 
-====== Disadvantage
+===== Disadvantage
 
 * It could happen that 2 tabs will share the same windowId for 1 request
 because the `LAZY` mode will check lazily, after rendering the view, if
@@ -203,7 +201,7 @@ the windowId matches the `window.name`. Therefore it could happen that
 @ViewAccessScoped or other scopes will unintentionally be destroyed.
 
 
-====== Workflow Example
+===== Workflow Example
 
 First GET request with windowId
 
@@ -234,7 +232,7 @@ Further GET request without windowId
 from `window.name`
 
 
-===== NONE
+==== NONE
 
 Any window or browser tab detection will be disabled for the current
 request. Scopes like @WindowScoped, @GroupedConversationScoped or
@@ -243,22 +241,22 @@ current request does not support Javascript or if the user agent is a
 bot/crawler.
 
 
-===== DELEGATED
+==== DELEGATED
 
 Delegates the complete window handling to the new JSF 2.2 ClientWindow
 (if not disabled).
 
 
-===== CUSTOM
+==== CUSTOM
 
 Enables to use an complete own
 `org.apache.deltaspike.jsf.spi.scope.window.ClientWindow`
 implementation.
 
 
-==== Configuration
+=== Configuration
 
-===== ds:windowId
+==== ds:windowId
 
 The component `ds:windowId`
 (`xmlns:ds="http://deltaspike.apache.org/jsf"`) is required to enable
@@ -268,7 +266,7 @@ mode. The best way, to apply it for all views, is to add this component
 to all of your templates.
 
 
-===== ds:disableClientWindow
+==== ds:disableClientWindow
 
 Similiar to JSF 2.2' `disableClientWindow` attribute,
 `ds:disableClientWindow` provides the ability to disable the rendering
@@ -282,7 +280,7 @@ of the windowId to all links of all child components:
 <h:link value="Link with windowId" outcome="target.xhtml"/>
 -------------------------------------------------------------------
 
-===== Number of Active Windows
+==== Number of Active Windows
 
 By default, DeltaSpike allows `1024` active windows per session. Anyway, this number is reduced inside this JSF module to `64` for JSF applications. Once that the limit number of active windows is reached, DeltaSpike will drop the oldest active window.
 
@@ -304,7 +302,7 @@ public class MyClientWindowConfig extends DefaultClientWindowConfig
 }
 -----------------------------------------------------------------------------------
 
-===== Switch Mode
+==== Switch Mode
 
 To switch the mode, just provide a
 `org.apache.deltaspike.jsf.api.config.JsfModuleConfig` and overwrite
@@ -324,7 +322,7 @@ public class MyJsfModuleConfig extends JsfModuleConfig
 ---------------------------------------------------------------------------
 
 
-===== Provide a Custom ClientWindow
+==== Provide a Custom ClientWindow
 
 If you would like to provide an custom
 `org.apache.deltaspike.jsf.spi.scope.window.ClientWindow`
@@ -355,16 +353,16 @@ public class MyJsfModuleConfig extends JsfModuleConfig
 }
 ---------------------------------------------------------------------------
 
-==== Based Scopes
+=== Based Scopes
 
 * @WindowScoped
 * @ViewAccessScoped
 * @GroupedConversationScoped
 
 
-=== Scopes
+== Scopes
 
-==== @WindowScoped
+=== @WindowScoped
 
 The window-scope is like a session per window. That means that the data
 is bound to a window/tab and it not shared between windows (like the
@@ -382,7 +380,7 @@ public class PreferencesBean implements Serializable
 ----------------------------------------------------
 
 
-==== @ViewAccessScoped
+=== @ViewAccessScoped
 
 In case of conversations you have to un-scope beans manually (or they
 will be terminated automatically after a timeout). However, sometimes
@@ -411,17 +409,17 @@ separation without touching the old windowId. Otherwise a 'open in new
 tab' on a page with a @ViewAccessScoped bean might cause the termination
 (and re-initialization) of that bean.
 
-==== @GroupedConversationScoped (From DeltaSpike 0.6)
+=== @GroupedConversationScoped
 
 See (Grouped-)Conversations
 
-==== @ViewScoped
+=== @ViewScoped
 
 DeltaSpike provides an CDI context for the JSF 2.0/2.1
 @javax.faces.bean.ViewScoped. You can simply annotate your bean with
 @javax.faces.bean.ViewScoped and @Named.
 
-==== JSF 2.0 Scopes
+=== JSF 2.0 Scopes
 
 JSF 2.0 introduced new annotations as well as a new scope - the View
 Scope. CODI allows to use all the CDI mechanisms in beans annotated
@@ -439,7 +437,7 @@ All these annotations are mapped automatically. So you will not face
 issues, if you import a JSF 2 annotation instead of the corresponding
 CDI annotation.
 
-=== Integration with DeltaSpike Type-safe Messages
+== Integration with DeltaSpike Type-safe Messages
 
 You can use <<core.adoc#_messages_i18n,DeltaSpike type-safe messages>>
 with JSF to provide i18n messages and test to an JSF appplicaton.
@@ -505,9 +503,9 @@ javax.faces.component.UIInput.REQUIRED = {0}: Please enter a value
 </faces-config>
 --------------------------------------------------------------------------------------------
 
-=== Type-safe View-Configs
+== Type-safe View-Configs
 
-==== Intro
+=== Intro
 
 Type-safe view-configs are static configs which can be used in
 combination with every view-technology which is based on Java. Currently
@@ -529,7 +527,7 @@ Even the concepts provided by modules (of DeltaSpike itself) are based
 on the basic API provided by the Core. So it is possible to introduce
 custom concepts the same way DeltaSpike itself does.
 
-==== Motivation
+=== Motivation
 
 Instead of learning the concepts and rules of view-configs provided by
 DeltaSpike, it might be easier for simple demos to just type some
@@ -559,13 +557,13 @@ Advantages which are planned for later (= currently not supported):
 
 If you are still not convinced, you just have to try it. You will see how your daily workflow benefits from it pretty soon.
 
-==== Bean-discovery-mode Annotated
+=== Bean-discovery-mode Annotated
 
 CDI 1.1 introduced a concept called bean-discovery-mode. If you would
 like to use the mode `annotated`, please have a look at the tip at
 @ViewConfigRoot
 
-==== Basic API Usages
+=== Basic API Usages
 
 While reading this section keep the following simple rules in mind:
 Meta-data gets inherited along the path of Java inheritance
@@ -693,7 +691,7 @@ public Class<? extends Pages.Admin> toNextPage()
 }
 ------------------------------------------------
 
-===== File (@View) and Folder (@Folder) Paths
+==== File (@View) and Folder (@Folder) Paths
 
 `@View` as well as `@Folder` are optional annotations. `@Folder` is only
 needed for using a different folder-name or for marking folder configs
@@ -746,7 +744,7 @@ To customize it you can use `@Folder#name`, `@View#basePath`,
 `@View#name` and `@View#extension` (or you register custom
 `NameBuilder`s inline or globally).
 
-====== @Folder#name
+===== @Folder#name
 
 The rules are pretty simple. You will get what you write. There are only
 two additional features:
@@ -781,7 +779,7 @@ leads to the following paths:
 * /w1/step1.xhtml
 * /pages/w2/step1.xhtml
 
-====== @View
+===== @View
 
 The same naming rules apply to `@View#basePath`. However, it is only
 valid to be used at view-config nodes which represent pages (-> classes
@@ -853,7 +851,7 @@ interface Pages extends ViewConfig
 It leads to the same paths, but in addition `@View#navigation` gets
 inherited along the inheritance path.
 
-===== Navigation Parameters
+==== Navigation Parameters
 
 Since the view-config is static, an approach to add parameters is
 needed. The following part shows different possibilities to add
@@ -865,7 +863,7 @@ that way. Some get added automatically based on special meta-data (e.g.
 using `@View(navigation = REDIRECT)`. The same goes for
 `"includeViewParams=true"` and `@View(viewParams = INCLUDE)`.
 
-===== Static Configuration via @NavigationParameter
+==== Static Configuration via @NavigationParameter
 
 In some cases, it is needed to add an information in any case. So you can
 annotate the view-config class with `@NavigationParameter`. Supported
@@ -911,7 +909,7 @@ public class PageBean
 }
 -----------------------------------------------------------------------
 
-====== Dynamic Configuration via NavigationParameterContext
+===== Dynamic Configuration via NavigationParameterContext
 
 Instead of using parameters in a static fashion (as shown above), it is
 also possible to add them dynamically (e.g. in case of special
@@ -941,7 +939,7 @@ public class PageBean
 }
 --------------------------------------------------------------------------------------
 
-===== Security Integration via @Secured
+==== Security Integration via @Secured
 
 This annotation is a custom view-meta-data provided by the
 Security-module which allows to integrate third-party frameworks (or
@@ -1022,7 +1020,7 @@ public interface Pages extends ViewConfig
 -------------------------------------------------
 
 
-===== View-Controller Callbacks via @ViewControllerRef
+==== View-Controller Callbacks via @ViewControllerRef
 
 This annotation is a custom view-meta-data provided by the JSF-module
 which allows to configure beans which should act as view-controllers.
@@ -1073,7 +1071,7 @@ public class ErrorViewAwareExceptionHandler {
 }
 --------------------------------------------------------------------------------------------------------------
 
-===== Referencing Views via @ViewRef
+==== Referencing Views via @ViewRef
 
 With `@ViewControllerRef#value` you can annotate a view-config class to
 bind (/reference) a controller to it. `@ViewRef#config` allows the same
@@ -1106,7 +1104,7 @@ The above example leads to the invocation of the pre-render-view logic before
 /pages/page1.xhtml gets rendered (and it will not be called for other
 pages).
 
-===== Using the (Optional) ViewNavigationHandler
+==== Using the (Optional) ViewNavigationHandler
 
 With JSF you typically navigate with the action-method bound to a
 command-component. However, also JSF supports manual navigation via
@@ -1140,7 +1138,7 @@ Also in this case (optional) meta-data will be used for the navigation
 process, since `ViewNavigationHandler` just delegates to the active
 navigation-handler (of JSF).
 
-===== Configuring a Default Error-View
+==== Configuring a Default Error-View
 
 It is possible to mark one view-config class as default error-view. That
 means in case of errors it will be used as navigation target
@@ -1202,7 +1200,7 @@ However, in case of JSF you have to ensure that you are at a valid point
 in the JSF request-lifecycle for a navigation, because invocation gets
 transformed to a standard (implicit) JSF navigation.
 
-===== Using ViewConfigResolver
+==== Using ViewConfigResolver
 
 If you would like to query view-meta-data yourself (for whatever
 reason), you can do that with `ViewConfigResolver`.
@@ -1257,9 +1255,9 @@ pages (which have to implement the `ViewConfig` interface).
 page, it is possible to get the implicitly as well as explicitly
 configured (view-)meta-data and get and/or execute configured callbacks.
 
-==== Advanced API Usages
+=== Advanced API Usages
 
-===== Creating Custom Meta-Data via @ViewMetaData
+==== Creating Custom Meta-Data via @ViewMetaData
 
 This meta-annotation allows to create custom view-meta-data which can be
 used for view-configs. By default meta-data of a lower level overrides
@@ -1287,7 +1285,7 @@ ViewConfigDescriptor viewConfigDescriptor = viewConfigResolver.getViewConfigDesc
 List<InfoPage> metaDataList = viewConfigDescriptor.getMetaData(InfoPage.class)
 ----------------------------------------------------------------------------------------------------------
 
-===== Creating Custom Meta-Data via @Stereotype
+==== Creating Custom Meta-Data via @Stereotype
 
 Like with CDI itself you can encapsulate multiple view meta-data
 annotation in one annotation.
@@ -1315,7 +1313,7 @@ From DeltaSpike 1.0.1, it is possible to access such stereotype annotations as
 well, once you annotate them with `@ViewMetaData`.
 
 
-===== Creating Custom Callbacks via @ViewMetaData
+==== Creating Custom Callbacks via @ViewMetaData
 
 Via a custom ConfigPreProcessor it is possible to register custom
 callbacks dynamically. The following listing shows a view-config which
@@ -1378,7 +1376,7 @@ the type of the callback (= class of the annotation) as additional
 parameter for `#getExecutableCallbackDescriptor`.
 
 
-===== Creating Custom inline Meta-Data via @InlineViewMetaData
+==== Creating Custom inline Meta-Data via @InlineViewMetaData
 
 This annotation can be used for view-meta-data which can be placed on
 other classes than view-config-classes. It is used, for example, for `@ViewRef`.
@@ -1390,7 +1388,7 @@ support one side since the inline-meta-data was converted to the same
 meta-data representation which is used for the normal view-meta-data).
 
 
-==== Path-Validation
+=== Path-Validation
 
 DeltaSpike (after v0.5) validates your configs out-of-the-box. The
 application will fail to start, if there is an invalid config (e.g. a
@@ -1403,26 +1401,26 @@ To disable the view-config (path) validation, add a `ClassDeactivator`
 which restricts
 `org.apache.deltaspike.jsf.impl.config.view.ViewConfigPathValidator`.
 
-==== View-Config SPI
+=== View-Config SPI
 
-===== ConfigDescriptorValidator
+==== ConfigDescriptorValidator
 
 Allows to validate the final view-config descriptors before they get
 deployed. Since the config-descriptor contains, for example, the final path, it is
 also possible to validate if the corresponding file exists. Use
 `@ViewConfigRoot` to configure 1-n validators.
 
-===== ConfigNodeConverter
+==== ConfigNodeConverter
 
 Allows to provide custom strategies to process the nodes of the built
 config-tree. Use `@ViewConfigRoot` to configure a custom converter.
 
-===== ConfigPreProcessor
+==== ConfigPreProcessor
 
 Allows to change the found meta-data (e.g. replace default values,
 callbacks,...) or the `ViewConfigNode` itself.
 
-===== InlineMetaDataTransformer
+==== InlineMetaDataTransformer
 
 Allows to transform an annotation annotated with `@InlineViewMetaData`
 to an annotation annotated with `@ViewMetaData`. This transformer is
@@ -1431,24 +1429,24 @@ the inline-meta-data needs a different syntax via a different annotation
 (compared to the view-config meta-data). See for example `@ViewRef` vs.
 `@ViewControllerRef`.
 
-===== TargetViewConfigProvider
+==== TargetViewConfigProvider
 
 Allows to provide a custom reference to `ViewConfig` classes (see for example
 `@InlineViewMetaData` and `@ViewRef`)
 
-===== ViewConfigInheritanceStrategy
+==== ViewConfigInheritanceStrategy
 
 Allows to customize the inheritance-strategy for meta-data. For example,
 inheritance via standard java inheritance vs. inheritance via nested
 interfaces. Use `@ViewConfigRoot` to configure a custom
 inheritance-strategy.
 
-===== ViewConfigNode
+==== ViewConfigNode
 
 Node-type used for building the meta-data-tree during the bootstrapping
 process.
 
-===== @ViewConfigRoot
+==== @ViewConfigRoot
 
 Optional annotation which allows to provide custom implementations. Only
 annotate one `ViewConfig` class which represents the root node.
@@ -1470,7 +1468,7 @@ public interface Pages extends ViewConfig
 }
 -----------------------------------------
 
-==== Activation of Custom Naming Conventions
+=== Activation of Custom Naming Conventions
 
 DeltaSpike allows to customize the default naming convention via
 `View.DefaultBasePathBuilder` and/or `View.DefaultFileNameBuilder`
@@ -1481,9 +1479,7 @@ provided by DeltaSpike. The same is supported for folders via
 `Folder.DefaultFolderNameBuilder`. In this case changing only one usage
 is possible via `Folder.folderNameBuilder`.
 
-=== (Grouped-)Conversations
-
-Available from DeltaSpike 0.6.
+== (Grouped-)Conversations
 
 DeltaSpike conversations are based on the window-scope. Therefore, do not
 forget to add the `ds:windowId`
@@ -1618,7 +1614,7 @@ public class CustomBean2
 }
 ------------------------------------------------
 
-==== Terminating Conversations
+=== Terminating Conversations
 
 You can inject the conversation via `@Inject` and use it to terminate
 the conversation immediately or you inject the
@@ -1736,7 +1732,7 @@ because the behaviour of standard conversations breaks a lot of use-cases.
 However, if you really need to keep them until the end of the request,
 you can close them in a `@PostRenderView` callback.
 
-==== Sub-Conversation-Groups
+=== Sub-Conversation-Groups
 
 Due to the parallel conversation concept of DeltaSpike there is no need
 of something like nested conversations. Just use them in parallel and
@@ -1818,16 +1814,16 @@ In the listing above all beans which implement the Wizard interface will
 be closed as soon as you close the ImplicitSubGroup.
 
 
-=== Injection in JSF Artifacts
+== Injection in JSF Artifacts
 
-==== Converter and Validator
+=== Converter and Validator
 
 Per default the JSF module of DeltaSpike handles JSF converters and validators as std. CDI beans and
 therefore it's possible to use injection, lifecycle-callbacks, scope-annotations,...
 the same way as with any other CDI bean.
 The usage is the same as for `PhaseListener` s.
 
-==== PhaseListener
+=== PhaseListener
 
 Once a std. JSF-`PhaseListener` is annotated with `@org.apache.deltaspike.jsf.api.listener.phase.JsfPhaseListener`,
 that `PhaseListener` gets active without additional config in `faces-config.xml`.
@@ -1867,9 +1863,9 @@ public class DoubleSubmitAwarePhaseListener implements PhaseListener, Deactivata
 ------------------------------------------------------------------------
 
 
-=== Event broadcasting
+== Event broadcasting
 
-==== Observe Faces-Requests
+=== Observe Faces-Requests
 
 It is possible to observe JSF-Requests via `@Observes` in combination with
 `@org.apache.deltaspike.core.api.lifecycle.Initialized` or
@@ -1889,7 +1885,7 @@ public void onAfterFacesRequest(@Observes @Destroyed FacesContext facesContext) 
 }
 ------------------------------------------------------------------------
 
-==== BeforePhase / AfterPhase
+=== BeforePhase / AfterPhase
 
 It is possible to observe JSF request-lifecycle phase-events via `@Observes` in combination with
 `@org.apache.deltaspike.jsf.api.listener.phase.BeforePhase` or
@@ -1909,7 +1905,7 @@ public void onPhaseEnd(@Observes @AfterPhase(JsfPhaseId.ANY_PHASE) PhaseEvent ev
 }
 ------------------------------------------------------------------------
 
-==== JSF SystemEvents
+=== JSF SystemEvents
 
 Following JSF SystemEvents can be observed via CDI:
 
@@ -1930,15 +1926,15 @@ public class ApplicationConfig
 }
 -------------------------------------------------------------------
 
-=== Intergration with Exception Control (from DeltaSpike 0.6)
+== Integration with Exception Control
 
 Whenever a unhandled exception occurs within the JSF lifecycle, our JSF
 ExceptionHandler provides a integration to the DeltaSpike Exception
 Control.
 
-==== Examples
+=== Examples
 
-===== Basic
+==== Basic
 
 -----------------------------------------------------------------------------
 @ExceptionHandler
@@ -1954,7 +1950,7 @@ public class ApplicationExceptionHandler
 }
 -----------------------------------------------------------------------------
 
-===== Redirect
+==== Redirect
 
 [source,java]
 -----------------------------------------------------------------------------------------------------------------------------------
@@ -1974,7 +1970,7 @@ public class ApplicationExceptionHandler
 }
 -----------------------------------------------------------------------------------------------------------------------------------
 
-==== Using a Custom Qualifier for JSF Exceptions
+=== Using a Custom Qualifier for JSF Exceptions
 
 In some cases, it is required to differentiate exceptions from JSF and
 normal exceptions. This is possible via a CDI qualifier:
@@ -2014,7 +2010,7 @@ public class ApplicationExceptionHandler
 }
 -----------------------------------------------------------------------------------------------------------------------------------
 
-=== Double-Submit Prevention
+== Double-Submit Prevention
 
 To avoid that the same content of a form gets submitted and therefore
 processed multiple times, it is possible to use the tag
@@ -2039,7 +2035,7 @@ within every JSF form-tag, you would like to safeguard.
 </html>
 --------------------------------------------------
 
-=== Tips
+== Tips
 
 Using errorView, DefaultErrorView or ViewNavigationHandler will fail
 with Weld versions older than 1.1.10 due to
