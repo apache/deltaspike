@@ -149,6 +149,12 @@
             <version>2.0.3.Final</version>
             <type>pom</type>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>cdi-api</artifactId>
+                    <groupId>javax.enterprise</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
