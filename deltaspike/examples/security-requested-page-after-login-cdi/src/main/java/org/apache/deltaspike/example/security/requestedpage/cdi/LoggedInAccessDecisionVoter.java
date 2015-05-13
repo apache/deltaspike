@@ -37,7 +37,7 @@ public class LoggedInAccessDecisionVoter extends AbstractAccessDecisionVoter
     private ViewConfigResolver viewConfigResolver;
 
     @Inject
-    LoginController loginController;
+    private LoginController loginController;
 
     private Class<? extends ViewConfig> deniedPage = Pages.Secure.Home.class;
 

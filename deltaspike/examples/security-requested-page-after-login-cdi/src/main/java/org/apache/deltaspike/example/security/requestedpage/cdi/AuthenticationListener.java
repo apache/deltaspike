@@ -23,15 +23,16 @@ import org.apache.deltaspike.core.api.config.view.navigation.ViewNavigationHandl
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
-public class AuthenticationListener {
-
+public class AuthenticationListener
+{ 
     @Inject
     private ViewNavigationHandler viewNavigationHandler;
 
     @Inject
     private LoggedInAccessDecisionVoter loggedInAccessDecisionVoter;
 
-    public void handleLoggedIn(@Observes UserEvent.LoggedIn event) {
+    public void handleLoggedIn(@Observes UserEvent.LoggedIn event) 
+    {
         this.viewNavigationHandler.navigateTo(loggedInAccessDecisionVoter.getDeniedPage());
         System.err.println("handling loggedin");
     }
