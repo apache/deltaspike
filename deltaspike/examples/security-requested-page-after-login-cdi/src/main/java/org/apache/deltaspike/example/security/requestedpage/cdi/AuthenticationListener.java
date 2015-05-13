@@ -24,7 +24,7 @@ import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 public class AuthenticationListener
-{ 
+{
     @Inject
     private ViewNavigationHandler viewNavigationHandler;
 

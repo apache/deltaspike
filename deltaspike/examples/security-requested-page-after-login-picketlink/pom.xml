@@ -20,7 +20,6 @@
     under the License.
 -->
     <modelVersion>4.0.0</modelVersion>
-
     <parent>
         <groupId>org.apache.deltaspike.examples</groupId>
         <artifactId>examples-project</artifactId>
@@ -29,7 +28,8 @@
 
     <artifactId>deltaspike-security-requested-page-after-login-picketlink</artifactId>
     <packaging>war</packaging>
-    <name>DeltaSpike Example: Show requested page after login with PicketLink</name>
+    <name>Apache DeltaSpike Security Example PicketLink</name>
+    <description>DeltaSpike Example: Show requested page after login with PicketLink</description>
 
     <properties>
         <deploy.skip>true</deploy.skip>

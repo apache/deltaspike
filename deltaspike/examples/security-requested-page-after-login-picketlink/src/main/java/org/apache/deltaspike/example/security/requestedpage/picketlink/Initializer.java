@@ -40,7 +40,7 @@ public class Initializer
     private PartitionManager partitionManager;
 
     @PostConstruct
-    public void create()
+    public void create() 
     {
 
         // Create user john
