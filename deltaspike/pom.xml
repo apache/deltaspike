@@ -146,6 +146,10 @@
                                 <title>Test Control Module</title>
                                 <packages>org.apache.deltaspike.testcontrol.*</packages>
                             </group>
+                            <group>
+                                <title>Proxy Module</title>
+                                <packages>org.apache.deltaspike.proxy.*</packages>
+                            </group>
                         </groups>
                     </configuration>
                 </plugin>
