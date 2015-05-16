@@ -1,0 +1,55 @@
+Release Notes - Apache DeltaSpike - Version 1.4.0
+
+Bug
+
+    [DELTASPIKE-822] - Repository method lookup in super interfaces
+    [DELTASPIKE-830] - Now active ViewAccessScoped context during restore view phase
+    [DELTASPIKE-832] - Javascript assert windowId not resilient enough
+    [DELTASPIKE-833] - BeanManagerProvider Log Flood
+    [DELTASPIKE-847] - java.util.Properties Provider does not close InputStream after usage
+    [DELTASPIKE-849] - InjectableResourceProducer does not close InputStreams
+    [DELTASPIKE-854] - Jacoco profile doesn't work anymore
+    [DELTASPIKE-859] - Injection of @Named @MessageBundle works only with @Named injection point
+    [DELTASPIKE-860] - documentation says "@LoggedIn User user", but that's impossible
+    [DELTASPIKE-863] - NPE when invoking proxy for custom jsf converter
+    [DELTASPIKE-867] - Clarify that Test-Control module has manual dependencies on CDI implementations
+    [DELTASPIKE-869] - Minor typos on test-control asciidoc
+    [DELTASPIKE-870] - Partial Bean with signed jar trouble.
+    [DELTASPIKE-876] - Website navigation bar active tab highlighting broken
+    [DELTASPIKE-884] - PropertyFileConfig shouldn't implement DeltaSpikeConfig
+    [DELTASPIKE-889] - ValidatorWrapper causes filtering of multiple custom validators in ValidatorTagHandler
+    [DELTASPIKE-893] - Remove erroneous WarpTest annotation and Warp dependency from JSF impl tests
+    [DELTASPIKE-899] - Build fail for OWB15
+
+Improvement
+
+    [DELTASPIKE-809] - Clean up cdi ctrl and cdi imp pages
+    [DELTASPIKE-846] - Docs: Clarify that scheduler module has manual dependencies
+    [DELTASPIKE-852] - fix naming of type-safe configs
+    [DELTASPIKE-855] - Review deltaspike-release-plugin and distribution profile to not consider deltaspike-root
+    [DELTASPIKE-857] - [perf] skip method interception if no interceptors defined
+    [DELTASPIKE-873] - show error-message on the same page
+    [DELTASPIKE-875] - HTTPS support for site and documentation
+    [DELTASPIKE-878] - AnnotationUtils should support literal instances
+    [DELTASPIKE-879] - use @Priority for global-alternatives
+    [DELTASPIKE-880] - Restrict initial redirect to GET requests
+    [DELTASPIKE-881] - align invocation order of @PreRenderView with jsf
+    [DELTASPIKE-882] - Create a new module for proxy
+    [DELTASPIKE-885] - Static DeltaSpike configuration should be easy to find in code base
+    [DELTASPIKE-886] - Add ignoreCase() to the criteria API
+    [DELTASPIKE-891] - check for InvocationTargetException in ExecutableCallbackDescriptor
+    [DELTASPIKE-896] - improve the warning in ViewConfigPathValidator
+
+New Feature
+
+    [DELTASPIKE-420] - Transactional repositories
+    [DELTASPIKE-874] - observe @javax.faces.bean.RequestScoped via @javax.enterprise.context.Initialized and @javax.enterprise.context.Destroyed
+    [DELTASPIKE-877] - allow to inherit dynamically changed metadata
+    [DELTASPIKE-888] - Add support for delete a job from the Scheduler
+    [DELTASPIKE-892] - type-safe static config
+
+Task
+
+    [DELTASPIKE-850] - Add Weld 3 profile
+    [DELTASPIKE-862] - document JsfMessage
+    [DELTASPIKE-903] - prepare v1.4.0
