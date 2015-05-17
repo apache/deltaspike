@@ -36,7 +36,7 @@
     -->
     <groupId>org.apache.deltaspike</groupId>
     <artifactId>deltaspike</artifactId>
-    <version>1.3.1-SNAPSHOT</version>
+    <version>1.4.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Apache DeltaSpike</name>
@@ -48,7 +48,7 @@
     <properties>
         <asciidoctor.version>1.5.2</asciidoctor.version>
         <version.deltaspike.latest.stable>1.3.0</version.deltaspike.latest.stable>
-        <version.deltaspike.latest.snapshot>1.3.1-SNAPSHOT</version.deltaspike.latest.snapshot>
+        <version.deltaspike.latest.snapshot>1.4.0-SNAPSHOT</version.deltaspike.latest.snapshot>
         <svn.scmPubCheckoutDirectory>${project.build.directory}/co-site</svn.scmPubCheckoutDirectory>
     </properties>
 
