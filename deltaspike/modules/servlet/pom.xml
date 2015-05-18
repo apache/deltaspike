@@ -23,12 +23,12 @@
     <parent>
         <groupId>org.apache.deltaspike.modules</groupId>
         <artifactId>modules-project</artifactId>
-        <version>1.4.0-SNAPSHOT</version>
+        <version>1.4.0</version>
     </parent>
 
     <groupId>org.apache.deltaspike.modules</groupId>
     <artifactId>servlet-module-project</artifactId>
-    <version>1.4.0-SNAPSHOT</version>
+    <version>1.4.0</version>
     <packaging>pom</packaging>
 
     <name>Apache DeltaSpike Servlet-Module</name>

@@ -15,7 +15,7 @@
 	<parent>
 		<groupId>org.apache.deltaspike.modules</groupId>
 		<artifactId>bean-validation-module-project</artifactId>
-		<version>1.4.0-SNAPSHOT</version>
+		<version>1.4.0</version>
 	</parent>
 
 	<artifactId>deltaspike-bean-validation-module-api</artifactId>
