@@ -49,7 +49,7 @@ For Eclipse you can use this
 link:http://deltaspike.apache.org/resources/files/deltaspike-code-conventions.xml[Code Formatter Profile]. Import it via Window | Preferences | Java | Code Style | Formatter
 
 == 3. Build the Source
-Always build and test your changes before you make pull requests to the DeltaSpike repository. For instructions on building the source and running Arquillian tests, see <<build#,Build and Test DeltaSpike from Source>>.
+Always build and test your changes before you make pull requests to the DeltaSpike repository. For instructions on building the source and running Arquillian tests, see link:http://deltaspike.apache.org/documentation/build.html[Build and Test DeltaSpike from Source].
 
 
 == 4. Make a Pull Request
