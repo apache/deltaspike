@@ -120,6 +120,23 @@ $ mvn clean install -Pwls-remote-12c
 ----
 |===
 
+== Build and Debug with a Java EE6+ application servers
+Tests can be debugged through Java EE 6+ application servers. Configurations are currently provided as details in the table here.
+
+[cols="2,3a", options="header"]
+.Integration Tests with debug
+|===
+|Container |Command to Execute Arquillian Tests with remote debugging
+
+|Apache TomEE
+|Use remote debuggig at port 5005
+
+[source,shell]
+----
+mvn test -Ptomee-build-managed -Dtest=UnitTestName -Dopenejb.server.debug=true
+----
+
+|===
 
 == Next
 * For analysis of the DeltaSpike source, see https://analysis.apache.org/dashboard/index/org.apache.deltaspike:deltaspike-project
