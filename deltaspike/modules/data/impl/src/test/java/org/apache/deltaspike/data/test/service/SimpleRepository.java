@@ -35,6 +35,7 @@ import org.apache.deltaspike.data.api.QueryParam;
 import org.apache.deltaspike.data.api.QueryResult;
 import org.apache.deltaspike.data.api.Repository;
 import org.apache.deltaspike.data.test.domain.Simple;
+import org.apache.deltaspike.data.test.domain.SimpleStringId;
 
 @Repository
 public abstract class SimpleRepository extends AbstractEntityRepository<Simple, Long>
@@ -100,6 +101,9 @@ public abstract class SimpleRepository extends AbstractEntityRepository<Simple, 
     public abstract QueryResult<Simple> queryAll();
 
     public abstract QueryResult<Simple> findByName(String name);
+
+    @Query(named = SimpleStringId.FIND_ALL_ORDER_BY_ID)
+    public abstract QueryResult<SimpleStringId> findAllOrderByIdPaginate(@FirstResult int start, @MaxResults int pageSize);
 
     @Override
     protected abstract EntityManager entityManager();

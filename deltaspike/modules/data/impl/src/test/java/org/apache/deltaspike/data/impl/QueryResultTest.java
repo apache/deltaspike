@@ -38,9 +38,7 @@ import javax.persistence.PersistenceContext;
 
 import org.apache.deltaspike.data.api.QueryResult;
 import org.apache.deltaspike.data.test.TransactionalTestCase;
-import org.apache.deltaspike.data.test.domain.Simple;
-import org.apache.deltaspike.data.test.domain.SimpleBuilder;
-import org.apache.deltaspike.data.test.domain.Simple_;
+import org.apache.deltaspike.data.test.domain.*;
 import org.apache.deltaspike.data.test.service.SimpleRepository;
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -357,6 +355,30 @@ public class QueryResultTest extends TransactionalTestCase
         assertNotNull(result1);
         assertEquals(name, result1.getName());
         assertNull(result2);
+    }
+
+    @Test
+    public void should_paginate_with_orderby()
+    {
+        // given
+        SimpleStringIdBuilder builder = new SimpleStringIdBuilder(entityManager);
+
+
+        final String name = "should_paginate_with_orderby";
+        final String name2 = "should_paginate_with_orderby2";
+        builder.createSimple("a", name);
+        builder.createSimple("b", name2);
+
+        // when
+        QueryResult<SimpleStringId> allOrderByNamePaginate = repo.findAllOrderByIdPaginate(0, 10);
+
+        // then
+        assertNotNull(allOrderByNamePaginate);
+
+        List<SimpleStringId> resultList = allOrderByNamePaginate.getResultList();
+        assertEquals(2, resultList.size());
+        assertEquals("a", resultList.get(0).getId());
+        assertEquals("b", resultList.get(1).getId());
     }
 
     @Before
