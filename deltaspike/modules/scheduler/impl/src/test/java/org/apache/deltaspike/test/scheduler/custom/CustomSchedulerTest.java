@@ -89,12 +89,16 @@ public abstract class CustomSchedulerTest
         Assert.assertTrue(this.scheduler.isExecutingJob(ManualJob.class));
         Assert.assertEquals(0, testJobManager.getRegisteredJobs().size());
         this.scheduler.interruptJob(ManualJob.class);
+    }
 
-        this.scheduler.registerNewJob(AutoRegisteredJob.class);
-        Assert.assertEquals(1, testJobManager.getRegisteredJobs().size());
+    @Test
+    public void checkDeleteJob() {
 
-        this.scheduler.deleteJob(AutoRegisteredJob.class);
-        Assert.assertEquals(0, testJobManager.getRegisteredJobs().size());
+        this.scheduler.registerNewJob(DeleteJob.class);
+        Assert.assertTrue(testJobManager.getRegisteredJobs().contains(DeleteJob.class));
+
+        this.scheduler.deleteJob(DeleteJob.class);
+        Assert.assertFalse(testJobManager.getRegisteredJobs().contains(DeleteJob.class)); 
     }
 
     @Test
