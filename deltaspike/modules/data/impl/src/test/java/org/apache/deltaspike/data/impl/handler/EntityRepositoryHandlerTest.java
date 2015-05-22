@@ -339,6 +339,19 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
         assertNull(lookup);
     }
 
+    @Test
+    public void should_remove_and_flush() {
+        // given
+        Simple simple = testData.createSimple("testRemoveAndFlush");
+
+        // when
+        repo.removeAndFlush(simple);
+        Simple lookup = entityManager.find(Simple.class, simple.getId());
+
+        // then
+        assertNull(lookup);
+    }
+
     @Override
     protected EntityManager getEntityManager()
     {
