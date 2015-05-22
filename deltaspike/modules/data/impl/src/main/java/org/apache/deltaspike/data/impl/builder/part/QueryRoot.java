@@ -103,7 +103,14 @@ public class QueryRoot extends QueryPart
     @Override
     protected QueryPart buildQuery(QueryBuilderContext ctx)
     {
-        ctx.append(QueryBuilder.selectQuery(entityName));
+        if (methodPrefix.isDelete())
+        {
+            ctx.append(QueryBuilder.deleteQuery(entityName));
+        }
+        else
+        {
+            ctx.append(QueryBuilder.selectQuery(entityName));
+        }
         if (hasChildren(excludedForWhereCheck()))
         {
             ctx.append(" where ");

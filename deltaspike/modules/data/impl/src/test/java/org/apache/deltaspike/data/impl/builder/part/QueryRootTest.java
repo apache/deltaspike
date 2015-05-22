@@ -135,6 +135,38 @@ public class QueryRootTest
         assertEquals(expected, result);
     }
 
+    @Test
+    public void should_create_delete_query_by_name()
+    {
+        // given
+        final String name = "deleteByName";
+        final String expected =
+                "delete from Simple e " +
+                        "where e.name = ?1";
+
+        // when
+        String result = QueryRoot.create(name, repo, prefix(name)).getJpqlQuery().trim();
+
+        // then
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void should_create_delete_query_by_name_and_enabled()
+    {
+        // given
+        final String name = "deleteByNameAndEnabled";
+        final String expected =
+                "delete from Simple e " +
+                        "where e.name = ?1 and e.enabled = ?2";
+
+        // when
+        String result = QueryRoot.create(name, repo, prefix(name)).getJpqlQuery().trim();
+
+        // then
+        assertEquals(expected, result);
+    }
+
     private MethodPrefix prefix(final String name)
     {
         return new MethodPrefix("", name);

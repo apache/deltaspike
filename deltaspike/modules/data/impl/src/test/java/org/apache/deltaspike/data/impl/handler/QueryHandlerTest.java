@@ -147,6 +147,38 @@ public class QueryHandlerTest extends TransactionalTestCase
     }
 
     @Test
+    public void should_create_query_delete_by_method_name()
+    {
+        // given
+        final String name = "testCreateQueryByMethodName";
+        builder.createSimple(name);
+
+        // when
+        repo.deleteByName(name);
+        repo.flush();
+        Simple result = repo.findAnyByName(name);
+
+        // then
+        assertNull(result);
+    }
+
+    @Test
+    public void should_create_query_delete_by_method_name_with_multiply_params()
+    {
+        // given
+        final String name = "testCreateQueryByMethodName";
+        builder.createSimple(name);
+
+        // when
+        repo.deleteByNameAndEnabled(name, Boolean.TRUE);
+        repo.flush();
+        Simple result = repo.findAnyByName(name);
+
+        // then
+        assertNull(result);
+    }
+
+    @Test
     public void should_restrict_result_size_by_annotation()
     {
         // given

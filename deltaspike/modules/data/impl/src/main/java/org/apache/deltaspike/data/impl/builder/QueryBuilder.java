@@ -39,11 +39,17 @@ public abstract class QueryBuilder
 
     public static final String QUERY_SELECT = "select e from {0} e";
     public static final String QUERY_COUNT = "select count(e) from {0} e";
+    public static final String QUERY_DELETE = "delete from {0} e";
     public static final String ENTITY_NAME = "e";
 
     public static String selectQuery(String entityName)
     {
         return MessageFormat.format(QUERY_SELECT, entityName);
+    }
+
+    public static String deleteQuery(String entityName)
+    {
+        return MessageFormat.format(QUERY_DELETE, entityName);
     }
 
     public static String countQuery(String entityName)

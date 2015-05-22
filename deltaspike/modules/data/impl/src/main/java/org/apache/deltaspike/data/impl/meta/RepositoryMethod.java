@@ -73,7 +73,7 @@ public class RepositoryMethod
         this.methodPrefix = new MethodPrefix(repo.getCustomMethodPrefix(), method.getName());
         this.methodType = extractMethodType();
         this.queryRoot = initQueryRoot();
-        this.queryProcessor = QueryProcessorFactory.newInstance(method).build();
+        this.queryProcessor = QueryProcessorFactory.newInstance(method, methodPrefix).build();
         this.mapper = extractMapper(method, repo);
     }
 

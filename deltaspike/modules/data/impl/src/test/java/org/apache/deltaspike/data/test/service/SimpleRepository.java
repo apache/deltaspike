@@ -105,7 +105,10 @@ public abstract class SimpleRepository extends AbstractEntityRepository<Simple, 
     @Query(named = SimpleStringId.FIND_ALL_ORDER_BY_ID)
     public abstract QueryResult<SimpleStringId> findAllOrderByIdPaginate(@FirstResult int start, @MaxResults int pageSize);
 
+    public abstract void deleteByName(String name);
+
+    public abstract void deleteByNameAndEnabled(String name, boolean enable);
+
     @Override
     protected abstract EntityManager entityManager();
-
 }

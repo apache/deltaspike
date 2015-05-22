@@ -28,20 +28,34 @@ import org.apache.deltaspike.data.api.Modifying;
 import org.apache.deltaspike.data.api.QueryResult;
 import org.apache.deltaspike.data.api.SingleResultType;
 import org.apache.deltaspike.data.impl.handler.CdiQueryInvocationContext;
+import org.apache.deltaspike.data.impl.meta.MethodPrefix;
 
 public final class QueryProcessorFactory
 {
 
     private final Method method;
+    private final MethodPrefix methodPrefix;
 
     private QueryProcessorFactory(Method method)
     {
         this.method = method;
+        this.methodPrefix = new MethodPrefix("", method.getName());
+    }
+
+    private QueryProcessorFactory(Method method, MethodPrefix methodPrefix)
+    {
+        this.method = method;
+        this.methodPrefix = methodPrefix;
     }
 
     public static QueryProcessorFactory newInstance(Method method)
     {
         return new QueryProcessorFactory(method);
+    }
+
+    public static QueryProcessorFactory newInstance(Method method, MethodPrefix methodPrefix)
+    {
+        return new QueryProcessorFactory(method, methodPrefix);
     }
 
     public QueryProcessor build()
@@ -66,7 +80,7 @@ public final class QueryProcessorFactory
         boolean matchesType = Void.TYPE.equals(method.getReturnType()) ||
                 int.class.equals(method.getReturnType()) ||
                 Integer.class.equals(method.getReturnType());
-        return method.isAnnotationPresent(Modifying.class) && matchesType;
+        return (method.isAnnotationPresent(Modifying.class) && matchesType) || methodPrefix.isDelete();
     }
 
     private boolean returns(Class<?> clazz)
