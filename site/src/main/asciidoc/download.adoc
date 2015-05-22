@@ -27,16 +27,16 @@ v{latestStable}
 == Source Distribution
 
 
-* http://www.apache.org/dyn/closer.cgi/deltaspike/{latestStable}/deltaspike-root-{latestStable}-source-release.zip[deltaspike-root-{latestStable}-source-release.zip]
-* http://www.apache.org/dist/deltaspike/{latestStable}/deltaspike-root-{latestStable}-source-release.zip.asc[deltaspike-root-{latestStable}-source-release.zip.asc]
-* http://www.apache.org/dist/deltaspike/{latestStable}/deltaspike-root-{latestStable}-source-release.zip.md5[deltaspike-root-{latestStable}-source-release.zip.md5]
-* http://www.apache.org/dist/deltaspike/{latestStable}/deltaspike-root-{latestStable}-source-release.zip.sha1[deltaspike-root-{latestStable}-source-release.zip.sha1]
+* http://www.apache.org/dyn/closer.cgi/deltaspike/{latestStable}/deltaspike-{latestStable}-source-release.zip[deltaspike-{latestStable}-source-release.zip]
+* http://www.apache.org/dist/deltaspike/{latestStable}/deltaspike-{latestStable}-source-release.zip.asc[deltaspike-{latestStable}-source-release.zip.asc]
+* http://www.apache.org/dist/deltaspike/{latestStable}/deltaspike-{latestStable}-source-release.zip.md5[deltaspike-{latestStable}-source-release.zip.md5]
+* http://www.apache.org/dist/deltaspike/{latestStable}/deltaspike-{latestStable}-source-release.zip.sha1[deltaspike-{latestStable}-source-release.zip.sha1]
 
 
 == Maven Dependencies
 
 
-Details are available http://deltaspike.apache.org/documentation/#_project_configuration_without_maven[here].
+Details are available http://deltaspike.apache.org/documentation/configure.html#Maven-basedProjects[here].
 
 
 == Previous Releases
