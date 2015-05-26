@@ -420,6 +420,21 @@ public class CriteriaTest extends TransactionalTestCase
         assertEquals(superName, result.getSuperName());
     }
 
+    @Test
+    public void should_apply_multiply_orderby()
+    {
+        // given
+        createSimple("a", 1);
+        createSimple("b", 2);
+
+        // when
+        final List<Simple> orderByNameAndCounter = repo.findOrderByNameAndCounter();
+
+        // then
+        assertEquals(new Integer(2), orderByNameAndCounter.get(0).getCounter());
+        assertEquals(new Integer(1), orderByNameAndCounter.get(1).getCounter());
+    }
+
     @Override
     protected EntityManager getEntityManager()
     {
@@ -434,5 +449,4 @@ public class CriteriaTest extends TransactionalTestCase
         entityManager.flush();
         return result;
     }
-
 }

@@ -20,34 +20,95 @@ package org.apache.deltaspike.data.impl.criteria.processor;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Path;
 import javax.persistence.metamodel.SingularAttribute;
 
 import org.apache.deltaspike.data.impl.builder.OrderDirection;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 public class OrderBy<P, V> implements QueryProcessor<P>
 {
 
-    private final SingularAttribute<? super P, V> att;
-    private final OrderDirection dir;
+    private final List<OrderByDefinition> orderByDefinitions = new ArrayList<OrderByDefinition>();
 
-    public OrderBy(SingularAttribute<? super P, V> att, OrderDirection dir)
+    public void add(SingularAttribute<? super P, V> att, OrderDirection dir)
     {
-        this.att = att;
-        this.dir = dir;
+        orderByDefinitions.add(new OrderByDefinition(att, dir));
     }
 
     @Override
     public <R> void process(CriteriaQuery<R> query, CriteriaBuilder builder, Path<P> path)
     {
-        switch (dir)
+        List<Order> orders = new ArrayList<Order>();
+        Iterator<OrderByDefinition> iterator = orderByDefinitions.iterator();
+        while (iterator.hasNext())
         {
-            case ASC:
-                query.orderBy(builder.asc(path.get(att)));
-                break;
-            default:
-                query.orderBy(builder.desc(path.get(att)));
+            OrderByDefinition orderByDefinition = iterator.next();
+            switch (orderByDefinition.getDir())
+            {
+                case ASC:
+                    orders.add(builder.asc(path.get(orderByDefinition.getAtt())));
+                    break;
+                default:
+                    orders.add(builder.desc(path.get(orderByDefinition.getAtt())));
+            }
         }
+        query.orderBy(orders);
     }
 
+    private class OrderByDefinition
+    {
+        private final SingularAttribute<? super P, V> att;
+        private final OrderDirection dir;
+
+        public OrderByDefinition(SingularAttribute<? super P, V> att, OrderDirection dir)
+        {
+            this.att = att;
+            this.dir = dir;
+        }
+
+        public SingularAttribute<? super P, V> getAtt()
+        {
+            return att;
+        }
+
+        public OrderDirection getDir()
+        {
+            return dir;
+        }
+
+        @Override
+        public boolean equals(Object o)
+        {
+            if (this == o)
+            {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass())
+            {
+                return false;
+            }
+
+            OrderByDefinition that = (OrderByDefinition) o;
+
+            if (att != null ? !att.equals(that.att) : that.att != null)
+            {
+                return false;
+            }
+            return dir == that.dir;
+
+        }
+
+        @Override
+        public int hashCode()
+        {
+            int result = att != null ? att.hashCode() : 0;
+            result = 31 * result + (dir != null ? dir.hashCode() : 0);
+            return result;
+        }
+    }
 }

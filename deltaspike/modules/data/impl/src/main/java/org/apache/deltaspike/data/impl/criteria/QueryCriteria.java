@@ -81,6 +81,7 @@ public class QueryCriteria<C, R> implements Criteria<C, R>
     private final boolean ignoreNull = true;
     private boolean distinct = false;
 
+    private final OrderBy orderByProcessor = new OrderBy();
     private final List<PredicateBuilder<C>> builders = new LinkedList<PredicateBuilder<C>>();
     private final List<QueryProcessor<C>> processors = new LinkedList<QueryProcessor<C>>();
     private final List<QuerySelection<? super C, ?>> selections = new LinkedList<QuerySelection<? super C, ?>>();
@@ -241,14 +242,14 @@ public class QueryCriteria<C, R> implements Criteria<C, R>
     @Override
     public <P> Criteria<C, R> orderAsc(SingularAttribute<? super C, P> att)
     {
-        add(new OrderBy<C, P>(att, OrderDirection.ASC));
+        addOrderBy(att, OrderDirection.ASC);
         return this;
     }
 
     @Override
     public <P> Criteria<C, R> orderDesc(SingularAttribute<? super C, P> att)
     {
-        add(new OrderBy<C, P>(att, OrderDirection.DESC));
+        addOrderBy(att, OrderDirection.DESC);
         return this;
     }
 
@@ -294,6 +295,7 @@ public class QueryCriteria<C, R> implements Criteria<C, R>
 
     void applyProcessors(CriteriaQuery<?> query, CriteriaBuilder builder, From<C, C> from)
     {
+        orderByProcessor.process(query, builder, from);
         for (QueryProcessor<C> proc : processors)
         {
             proc.process(query, builder, from);
@@ -333,6 +335,11 @@ public class QueryCriteria<C, R> implements Criteria<C, R>
     private void add(QueryProcessor<C> proc)
     {
         processors.add(proc);
+    }
+
+    private void addOrderBy(SingularAttribute<? super C, ?> att, OrderDirection orderDirection)
+    {
+        orderByProcessor.add(att, orderDirection);
     }
 
     private Selection<?>[] prepareSelections(CriteriaQuery<?> query, CriteriaBuilder builder, From<C, C> root)
