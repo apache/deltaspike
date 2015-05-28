@@ -20,6 +20,7 @@ package org.apache.deltaspike.scheduler.impl;
 
 import org.apache.deltaspike.cdise.api.ContextControl;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.core.api.provider.DependentProvider;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.core.util.PropertyFileUtils;
@@ -419,7 +420,7 @@ public class QuartzScheduler implements Scheduler<Job>
     private class JobListenerContext
     {
         private Stack<Class<? extends Annotation>> scopes = new Stack<Class<? extends Annotation>>();
-        private ContextControl contextControl;
+        private DependentProvider<ContextControl> contextControl;
 
         public void startContexts(Scheduled scheduled)
         {
@@ -427,11 +428,11 @@ public class QuartzScheduler implements Scheduler<Job>
 
             if (!this.scopes.isEmpty())
             {
-                this.contextControl = BeanProvider.getContextualReference(ContextControl.class);
+                this.contextControl = BeanProvider.getDependent(ContextControl.class);
 
                 for (Class<? extends Annotation> scopeAnnotation : this.scopes)
                 {
-                    contextControl.startContext(scopeAnnotation);
+                    contextControl.get().startContext(scopeAnnotation);
                 }
             }
         }
@@ -440,8 +441,9 @@ public class QuartzScheduler implements Scheduler<Job>
         {
             while (!this.scopes.empty())
             {
-                this.contextControl.stopContext(this.scopes.pop());
+                this.contextControl.get().stopContext(this.scopes.pop());
             }
+            this.contextControl.destroy();
         }
     }
 
