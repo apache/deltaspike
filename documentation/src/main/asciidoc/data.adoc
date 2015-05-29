@@ -757,9 +757,6 @@ JTA has still some portability issues even in Java EE 7, it might be
 required that you implement your own `TransactionStrategy`. We will
 think about providing an acceptable solution for this.
 
-IMPORTANT: Annotating Repository methods with `@Transactional` is not yet
-supported, but will follow.
-
 
 If you need to open a transaction on a concrete repository method, we
 currently recommend creating an extension (see next chapter) which uses
