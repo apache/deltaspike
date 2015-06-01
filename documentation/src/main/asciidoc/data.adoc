@@ -222,7 +222,7 @@ methods, it is not possible to simply add the annotation there. It needs
 to go on each concrete repository. The same is not true if a base class
 is introduced, as we see in the next chapter.
 
-===== The `AbstractEntityRepository` Class
+===== The AbstractEntityRepository Class
 
 This class is an implementation of the `EntityRepository` interface and
 provides additional functionality when custom query logic needs also to
@@ -264,7 +264,7 @@ public interface PersonRepository implements Deactivatable{
 }    
 ----------------------------------------
 
-=== Using Multiple `EntityManager`
+=== Using Multiple EntityManagers
 
 While most applications will run just fine with a single
 `EntityManager`, there might be setups where multiple data sources are
@@ -297,7 +297,7 @@ possible to create something like a base `CrmRepository` interface with
 the `@EntityManagerConfig` and then extending / implementing this
 interface.
 
-=== Other `EntityManager` Methods
+=== Other EntityManager Methods
 
 While the `EntityRepository` methods should cover most interactions
 normally done with an `EntityManager`, for some specific cases it might
