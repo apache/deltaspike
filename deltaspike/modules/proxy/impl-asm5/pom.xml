@@ -27,10 +27,22 @@
 	</parent>
 
 	<artifactId>deltaspike-proxy-module-impl-asm5</artifactId>
+	<packaging>bundle</packaging>
 
 	<name>Apache DeltaSpike Proxy-Module Impl ASM5</name>
     
-        <build>
+    <properties>
+        <deltaspike.osgi.export.pkg>
+            org.apache.deltaspike.proxy.impl.*
+        </deltaspike.osgi.export.pkg>
+        <deltaspike.osgi.import>
+            *
+        </deltaspike.osgi.import>
+    </properties>
+
+
+
+    <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -62,6 +74,15 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Service-Component>OSGI-INF/*</Service-Component>
+                    </instructions>
+                </configuration>
             </plugin>
         </plugins>
     </build>

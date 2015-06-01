@@ -28,7 +28,6 @@ import java.util.Iterator;
 import java.util.List;
 import javax.interceptor.InterceptorBinding;
 import org.apache.deltaspike.core.util.ClassUtils;
-import org.apache.deltaspike.core.util.ServiceUtils;
 import org.apache.deltaspike.proxy.spi.ProxyClassGenerator;
 
 public abstract class DeltaSpikeProxyFactory
@@ -76,17 +75,9 @@ public abstract class DeltaSpikeProxyFactory
                 }
             }
 
-            List<ProxyClassGenerator> proxyClassGeneratorList =
-                ServiceUtils.loadServiceImplementations(ProxyClassGenerator.class);
+            ProxyClassGenerator proxyClassGenerator = ProxyClassGeneratorLookup.lookupService();
 
-            if (proxyClassGeneratorList.size() != 1)
-            {
-                throw new IllegalStateException(proxyClassGeneratorList.size()
-                    + " implementations of " + ProxyClassGenerator.class.getName()
-                    + " found. It's just allowed to use one implementation.");
-            }
-
-            proxyClass = proxyClassGeneratorList.iterator().next().generateProxyClass(classLoader,
+            proxyClass = proxyClassGenerator.generateProxyClass(classLoader,
                     targetClass,
                     delegateInvocationHandlerClass,
                     getProxyClassSuffix(),
