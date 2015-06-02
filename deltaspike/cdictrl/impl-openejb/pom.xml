@@ -45,12 +45,6 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.apache.openejb</groupId>
-            <artifactId>openejb-core</artifactId>
-            <version>${openejb.version}</version>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
 
     <dependencyManagement>
@@ -93,6 +87,37 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <profiles>
+        <profile>
+            <id>OpenEJB-Legacy</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        <dependencies>
+            <dependency>
+                <groupId>org.apache.openejb</groupId>
+                <artifactId>openejb-core</artifactId>
+                <version>${openejb.version}</version>
+                <scope>provided</scope>
+            </dependency>
+        </dependencies>
+        </profile>
+
+        <profile>
+            <!-- from TomEE-7.0.0 on openejb resides under the tomee group and not openejb anymore -->
+            <id>OpenEJB-TomEE</id>
+        <dependencies>
+            <dependency>
+                <groupId>org.apache.tomee</groupId>
+                <artifactId>openejb-core</artifactId>
+                <version>${openejb.version}</version>
+                <scope>provided</scope>
+            </dependency>
+        </dependencies>
+        </profile>
+
+    </profiles>
 
     <build>
         <plugins>
@@ -137,9 +162,6 @@
                     </execution>
                 </executions>
             </plugin>
-
-
-
         </plugins>
     </build>
 
