@@ -356,8 +356,16 @@
             </roles>
             <timezone>+1</timezone>
         </developer>
+        <developer>
+            <id>danielsoro</id>
+            <name>Daniel Cunha</name>
+            <email>danielsoro@apache.org</email>
+            <roles>
+                <role>Committer</role>
+            </roles>
+            <timezone>-3</timezone>
+        </developer>
     </developers>
-
 
     <dependencyManagement>
         <dependencies>
