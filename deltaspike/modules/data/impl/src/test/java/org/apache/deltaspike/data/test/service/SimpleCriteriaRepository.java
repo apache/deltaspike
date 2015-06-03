@@ -121,4 +121,11 @@ public abstract class SimpleCriteriaRepository extends AbstractEntityRepository<
                 .getResultList();
     }
 
+   public List<Simple> findOrderByNameAndCounter() {
+      return criteria()
+               .orderAsc(Simple_.name)
+               .orderDesc(Simple_.counter)
+               .getResultList();
+   }
+
 }
