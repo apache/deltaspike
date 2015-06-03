@@ -66,5 +66,5 @@ public @interface Transactional
      * Only evaluated on the first/outermost transactional bean/method in the chain
      * @return true to trigger #rollback for the current transaction(s), false otherwise
      */
-    boolean readOnly() default false;
+    @Nonbinding boolean readOnly() default false;
 }
