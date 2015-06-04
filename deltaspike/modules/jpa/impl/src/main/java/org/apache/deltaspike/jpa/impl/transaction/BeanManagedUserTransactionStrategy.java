@@ -19,14 +19,16 @@
 package org.apache.deltaspike.jpa.impl.transaction;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.core.api.provider.DependentProvider;
 import org.apache.deltaspike.core.impl.util.JndiUtils;
 import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.jpa.api.transaction.TransactionConfig;
 import org.apache.deltaspike.jpa.impl.transaction.context.EntityManagerEntry;
 
-import javax.annotation.Resource;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Alternative;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.inject.Inject;
 import javax.interceptor.InvocationContext;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -50,17 +52,16 @@ import java.util.logging.Logger;
 //TODO move to a separated ds-jta module and use @Specializes -> no additional config is needed
 public class BeanManagedUserTransactionStrategy extends ResourceLocalTransactionStrategy
 {
-    protected static final String USER_TRANSACTION_JNDI_NAME = "java:comp/UserTransaction";
     protected static final String TRANSACTION_SYNC_REGISTRY_JNDI_NAME = "java:comp/TransactionSynchronizationRegistry";
 
     private static final long serialVersionUID = -2432802805095533499L;
 
     private static final Logger LOGGER = Logger.getLogger(BeanManagedUserTransactionStrategy.class.getName());
 
-    private transient TransactionConfig transactionConfig;
+    @Inject
+    private BeanManager beanManager;
 
-    @Resource
-    private UserTransaction userTransaction;
+    private transient TransactionConfig transactionConfig;
 
     @Override
     protected EntityManagerEntry createEntityManagerEntry(
@@ -171,18 +172,19 @@ public class BeanManagedUserTransactionStrategy extends ResourceLocalTransaction
 
     protected UserTransaction resolveUserTransaction()
     {
-        if (userTransaction != null)
-        {
-            return userTransaction;
-        }
-
+        //manual lookup needed because injecting UserTransactionResolver can fail (see the comment there)
         try
         {
-            return JndiUtils.lookup(USER_TRANSACTION_JNDI_NAME, UserTransaction.class);
+            DependentProvider<UserTransactionResolver> provider =
+                BeanProvider.getDependent(this.beanManager, UserTransactionResolver.class);
+
+            UserTransaction userTransaction = provider.get().resolveUserTransaction();
+
+            provider.destroy();
+            return userTransaction;
         }
         catch (Exception e)
         {
-            // do nothing it was just a try
             return null;
         }
     }
