@@ -367,18 +367,13 @@
                     <scope>test</scope>
                 </dependency>
                 <dependency>
-                    <groupId>org.jboss.spec.javax.ejb</groupId>
-                    <artifactId>jboss-ejb-api_3.1_spec</artifactId>
+                    <groupId>org.apache.geronimo.specs</groupId>
+                    <artifactId>geronimo-ejb_3.1_spec</artifactId>
                     <scope>test</scope>
                 </dependency>
                 <dependency>
                     <groupId>javax.validation</groupId>
                     <artifactId>validation-api</artifactId>
-                    <scope>test</scope>
-                </dependency>
-                <dependency>
-                    <groupId>javax.persistence</groupId>
-                    <artifactId>persistence-api</artifactId>
                     <scope>test</scope>
                 </dependency>
                 <dependency>

@@ -47,7 +47,6 @@
         <deltaspike.osgi.provide.capability>
             org.ops4j.pax.cdi.extension; extension=deltaspike-core-impl
         </deltaspike.osgi.provide.capability>
-        <ejb.spec.version>3.0</ejb.spec.version>
     </properties>
 
     <dependencies>
@@ -63,9 +62,8 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>javax.ejb</groupId>
-            <artifactId>ejb-api</artifactId>
-            <version>${ejb.spec.version}</version>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-ejb_3.1_spec</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
