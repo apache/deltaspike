@@ -37,7 +37,22 @@ public abstract class DeltaSpikeProxyFactory
 {
     private static final String SUPER_ACCESSOR_METHOD_SUFFIX = "$super";
     
-    private static ProxyClassGenerator generator;
+    public static class GeneratorHolder
+    {
+        private static ProxyClassGenerator generator;
+
+        /**
+         * Setter invoked by OSGi Service Component Runtime.
+         *
+         * @param generator
+         *            generator service
+         */
+        public void setGenerator(ProxyClassGenerator generator)
+        {
+            GeneratorHolder.generator = generator;
+        }
+    }
+
 
     /**
      * Looks up a unique service implementation.
@@ -46,7 +61,7 @@ public abstract class DeltaSpikeProxyFactory
      */
     private static ProxyClassGenerator lookupService()
     {
-        if (generator == null)
+        if (GeneratorHolder.generator == null)
         {
             List<ProxyClassGenerator> proxyClassGeneratorList = ServiceUtils
                 .loadServiceImplementations(ProxyClassGenerator.class);
@@ -57,20 +72,9 @@ public abstract class DeltaSpikeProxyFactory
                     + " implementations of " + ProxyClassGenerator.class.getName()
                     + " found. Expected exactly one implementation.");
             }
-            generator = proxyClassGeneratorList.get(0);
+            GeneratorHolder.generator = proxyClassGeneratorList.get(0);
         }
-        return generator;
-    }
-
-    /**
-     * Setter invoked by OSGi Service Component Runtime
-     *
-     * @param generator
-     *            generator service
-     */
-    public void setGenerator(ProxyClassGenerator generator)
-    {
-        DeltaSpikeProxyFactory.generator = generator;
+        return GeneratorHolder.generator;
     }
 
     public <T> Class<T> getProxyClass(Class<T> targetClass,
