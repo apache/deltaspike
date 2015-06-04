@@ -97,8 +97,9 @@ public abstract class CustomSchedulerTest
         this.scheduler.registerNewJob(DeleteJob.class);
         Assert.assertTrue(testJobManager.getRegisteredJobs().contains(DeleteJob.class));
 
+        this.scheduler.interruptJob(DeleteJob.class);
         this.scheduler.deleteJob(DeleteJob.class);
-        Assert.assertFalse(testJobManager.getRegisteredJobs().contains(DeleteJob.class)); 
+        Assert.assertFalse(testJobManager.getRegisteredJobs().contains(DeleteJob.class));
     }
 
     @Test
