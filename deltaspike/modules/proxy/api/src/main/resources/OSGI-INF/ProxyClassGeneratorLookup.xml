@@ -17,8 +17,8 @@
     specific language governing permissions and limitations
     under the License.
 -->
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="ProxyClassGeneratorLookup">
-   <implementation class="org.apache.deltaspike.proxy.api.ProxyClassGeneratorLookup"/>
-   <reference bind="setGenerator" cardinality="1..1" interface="org.apache.deltaspike.proxy.spi.ProxyClassGenerator" 
-       name="ProxyClassGenerator" policy="static" unbind="setGenerator"/>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="DeltaSpikeProxyFactory">
+   <implementation class="org.apache.deltaspike.proxy.api.DeltaSpikeProxyFactory"/>
+   <reference bind="setGenerator" cardinality="1..1" interface="org.apache.deltaspike.proxy.spi.DeltaSpikeProxyFactory" 
+       name="DeltaSpikeProxyFactory" policy="static" unbind="setGenerator"/>
 </scr:component>

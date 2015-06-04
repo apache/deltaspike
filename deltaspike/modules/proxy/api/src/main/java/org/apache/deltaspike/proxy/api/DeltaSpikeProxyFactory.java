@@ -26,14 +26,53 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.interceptor.InterceptorBinding;
+
 import org.apache.deltaspike.core.util.ClassUtils;
+import org.apache.deltaspike.core.util.ServiceUtils;
 import org.apache.deltaspike.proxy.spi.ProxyClassGenerator;
 
 public abstract class DeltaSpikeProxyFactory
 {
     private static final String SUPER_ACCESSOR_METHOD_SUFFIX = "$super";
     
+    private static ProxyClassGenerator generator;
+
+    /**
+     * Looks up a unique service implementation.
+     *
+     * @return ProxyClassGenerator service
+     */
+    private static ProxyClassGenerator lookupService()
+    {
+        if (generator == null)
+        {
+            List<ProxyClassGenerator> proxyClassGeneratorList = ServiceUtils
+                .loadServiceImplementations(ProxyClassGenerator.class);
+
+            if (proxyClassGeneratorList.size() != 1)
+            {
+                throw new IllegalStateException(proxyClassGeneratorList.size()
+                    + " implementations of " + ProxyClassGenerator.class.getName()
+                    + " found. Expected exactly one implementation.");
+            }
+            generator = proxyClassGeneratorList.get(0);
+        }
+        return generator;
+    }
+
+    /**
+     * Setter invoked by OSGi Service Component Runtime
+     *
+     * @param generator
+     *            generator service
+     */
+    public void setGenerator(ProxyClassGenerator generator)
+    {
+        DeltaSpikeProxyFactory.generator = generator;
+    }
+
     public <T> Class<T> getProxyClass(Class<T> targetClass,
             Class<? extends InvocationHandler> delegateInvocationHandlerClass)
     {
@@ -75,7 +114,7 @@ public abstract class DeltaSpikeProxyFactory
                 }
             }
 
-            ProxyClassGenerator proxyClassGenerator = ProxyClassGeneratorLookup.lookupService();
+            ProxyClassGenerator proxyClassGenerator = lookupService();
 
             proxyClass = proxyClassGenerator.generateProxyClass(classLoader,
                     targetClass,
