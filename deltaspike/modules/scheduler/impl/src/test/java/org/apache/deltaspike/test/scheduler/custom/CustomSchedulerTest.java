@@ -62,33 +62,31 @@ public abstract class CustomSchedulerTest
         Assert.assertEquals(AutoRegisteredJob.class, testJobManager.getRunningJobs().iterator().next());
 
         this.scheduler.registerNewJob(ManualJob.class);
+
         Assert.assertEquals(2, testJobManager.getRegisteredJobs().size());
         Assert.assertEquals(2, testJobManager.getRunningJobs().size());
 
-        this.scheduler.interruptJob(AutoRegisteredJob.class);
-        Assert.assertEquals(1, testJobManager.getRunningJobs().size());
-        Assert.assertEquals(ManualJob.class, testJobManager.getRunningJobs().iterator().next());
-
-        Assert.assertEquals(2, testJobManager.getRegisteredJobs().size());
-        this.scheduler.pauseJob(AutoRegisteredJob.class);
-        Assert.assertEquals(1, testJobManager.getRegisteredJobs().size());
-        Assert.assertEquals(ManualJob.class, testJobManager.getRegisteredJobs().iterator().next());
-
-        this.scheduler.pauseJob(ManualJob.class);
-        Assert.assertEquals(0, testJobManager.getRegisteredJobs().size());
-        this.scheduler.resumeJob(ManualJob.class);
-        Assert.assertEquals(1, testJobManager.getRegisteredJobs().size());
-        Assert.assertEquals(ManualJob.class, testJobManager.getRegisteredJobs().iterator().next());
-
-        this.scheduler.pauseJob(ManualJob.class);
         this.scheduler.interruptJob(ManualJob.class);
-        Assert.assertEquals(0, testJobManager.getRunningJobs().size());
-        Assert.assertEquals(0, testJobManager.getRegisteredJobs().size());
+        Assert.assertEquals(2, testJobManager.getRegisteredJobs().size());
+        Assert.assertEquals(1, testJobManager.getRunningJobs().size());
+
+        this.scheduler.pauseJob(ManualJob.class);
+        Assert.assertEquals(1, testJobManager.getRegisteredJobs().size());
+        Assert.assertEquals(1, testJobManager.getRunningJobs().size());
+
+        this.scheduler.resumeJob(ManualJob.class);
+        Assert.assertEquals(2, testJobManager.getRegisteredJobs().size());
+        Assert.assertEquals(1, testJobManager.getRunningJobs().size());
 
         this.scheduler.startJobManually(ManualJob.class);
-        Assert.assertTrue(this.scheduler.isExecutingJob(ManualJob.class));
-        Assert.assertEquals(0, testJobManager.getRegisteredJobs().size());
+        Assert.assertEquals(2, testJobManager.getRegisteredJobs().size());
+        Assert.assertEquals(2, testJobManager.getRunningJobs().size());
+
         this.scheduler.interruptJob(ManualJob.class);
+        this.scheduler.pauseJob(ManualJob.class);
+
+        Assert.assertEquals(1, testJobManager.getRegisteredJobs().size());
+        Assert.assertEquals(1, testJobManager.getRunningJobs().size());
     }
 
     @Test
