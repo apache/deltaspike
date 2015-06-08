@@ -352,6 +352,21 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
         assertNull(lookup);
     }
 
+    @Test
+    public void should_remove_detach_entity() {
+        //given
+        Simple simple = testData.createSimple("testeAttachAndRemove");
+
+        //when
+        repo.detach(simple);
+        repo.attachAndRemove(simple);
+        repo.flush();
+        Simple lookup = entityManager.find(Simple.class, simple.getId());
+
+        // then
+        assertNull(lookup);
+    }
+
     @Override
     protected EntityManager getEntityManager()
     {

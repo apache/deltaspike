@@ -74,6 +74,13 @@ public interface EntityRepository<E, PK extends Serializable> extends Deactivata
     void removeAndFlush(E entity);
 
     /**
+     * Convenience access to {@link javax.persistence.EntityManager#remove(Object)}
+     * with an detached entity.
+     * @param entity            Entity to remove.
+     */
+    void attachAndRemove(E entity);
+
+    /**
      * Convenience access to {@link javax.persistence.EntityManager#refresh(Object)}.
      * @param entity            Entity to refresh.
      */
@@ -168,5 +175,4 @@ public interface EntityRepository<E, PK extends Serializable> extends Deactivata
      * @return                  Counter.
      */
     Long countLike(E example, SingularAttribute<E, ?>... attributes);
-
 }

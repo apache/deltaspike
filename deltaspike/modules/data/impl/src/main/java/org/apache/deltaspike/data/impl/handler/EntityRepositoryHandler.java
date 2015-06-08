@@ -47,8 +47,8 @@ import org.apache.deltaspike.data.spi.QueryInvocationContext;
 /**
  * Implement basic functionality from the {@link EntityRepository}.
  *
- * @param <E>   Entity type.
- * @param <PK>  Primary key type, must be a serializable.
+ * @param <E>  Entity type.
+ * @param <PK> Primary key type, must be a serializable.
  */
 public class EntityRepositoryHandler<E, PK extends Serializable>
         implements EntityRepository<E, PK>, DelegateQueryHandler
@@ -182,6 +182,17 @@ public class EntityRepositoryHandler<E, PK extends Serializable>
 
     @Override
     @RequiresTransaction
+    public void attachAndRemove(E entity)
+    {
+        if (!entityManager().contains(entity))
+        {
+            entity = entityManager().merge(entity);
+        }
+        remove(entity);
+    }
+
+    @Override
+    @RequiresTransaction
     public void flush()
     {
         entityManager().flush();
@@ -230,7 +241,7 @@ public class EntityRepositoryHandler<E, PK extends Serializable>
     }
 
     private void addParameters(TypedQuery<?> query, E example, List<Property<Object>> properties,
-            boolean useLikeOperator)
+                               boolean useLikeOperator)
     {
         for (Property<Object> property : properties)
         {
@@ -286,12 +297,12 @@ public class EntityRepositoryHandler<E, PK extends Serializable>
     {
         List<String> names = extractPropertyNames(attributes);
         List<Property<Object>> properties = PropertyQueries.createQuery(entityClass())
-                .addCriteria(new NamedPropertyCriteria(names.toArray(new String[] {}))).getResultList();
+                .addCriteria(new NamedPropertyCriteria(names.toArray(new String[]{}))).getResultList();
         return properties;
     }
 
     private List<E> executeExampleQuery(E example, int start, int max, boolean useLikeOperator,
-            SingularAttribute<E, ?>... attributes)
+                                        SingularAttribute<E, ?>... attributes)
     {
         // Not sure if this should be the intended behaviour
         // when we don't get any attributes maybe we should
@@ -335,5 +346,4 @@ public class EntityRepositoryHandler<E, PK extends Serializable>
         addParameters(query, example, properties, useLikeOperator);
         return query.getSingleResult();
     }
-
 }
