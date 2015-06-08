@@ -435,6 +435,22 @@ public class CriteriaTest extends TransactionalTestCase
         assertEquals(new Integer(1), orderByNameAndCounter.get(1).getCounter());
     }
 
+    @Test
+    public void should_apply_trim()
+    {
+        // given
+        final String name = " should_apply_trim ";
+        createSimple(name, 10);
+
+        // when
+        Object[] objects = repo.queryWithSelectAttributesAndTrim(name);
+        assertNotNull(objects);
+        assertEquals(name, objects[0]);
+        assertEquals(name.trim(), objects[1]);
+        assertEquals("should_apply_trim ", objects[2]);
+    }
+
+
     @Override
     protected EntityManager getEntityManager()
     {

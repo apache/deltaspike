@@ -18,48 +18,52 @@
  */
 package org.apache.deltaspike.data.api.criteria;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.metamodel.SingularAttribute;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
 
-import javax.persistence.criteria.JoinType;
-import javax.persistence.metamodel.SingularAttribute;
-
 /**
  * Interface to be added to a repository for criteria support.
  *
- * @param <E>   Entity type.
+ * @param <E> Entity type.
  */
 public interface CriteriaSupport<E>
 {
 
     /**
      * Create a {@link Criteria} instance.
-     * @return          Criteria instance related to the Repository entity class.
+     *
+     * @return Criteria instance related to the Repository entity class.
      */
     Criteria<E, E> criteria();
 
     /**
      * Create a {@link Criteria} instance.
-     * @param <T>       Type related to the current criteria class.
-     * @param clazz     Class other than the current entity class.
-     * @return          Criteria instance related to a join type of the current entity class.
+     *
+     * @param <T>   Type related to the current criteria class.
+     * @param clazz Class other than the current entity class.
+     * @return Criteria instance related to a join type of the current entity class.
      */
     <T> Criteria<T, T> where(Class<T> clazz);
 
     /**
      * Create a {@link Criteria} instance with a join type.
-     * @param <T>       Type related to the current criteria class.
-     * @param clazz     Class other than the current entity class.
-     * @param joinType  Join type to apply.
-     * @return          Criteria instance related to a join type of the current entity class.
+     *
+     * @param <T>      Type related to the current criteria class.
+     * @param clazz    Class other than the current entity class.
+     * @param joinType Join type to apply.
+     * @return Criteria instance related to a join type of the current entity class.
      */
     <T> Criteria<T, T> where(Class<T> clazz, JoinType joinType);
 
     /**
      * Create a query selection for an Entity attribute.
+     *
      * @param attribute Attribute to show up in the result selection
-     * @return          {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
+     * @return {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
      */
     <X> QuerySelection<E, X> attribute(SingularAttribute<? super E, X> attribute);
 
@@ -67,8 +71,9 @@ public interface CriteriaSupport<E>
      * Create a query selection for the
      * {@link javax.persistence.criteria.CriteriaBuilder#abs(javax.persistence.criteria.Expression)}
      * over an attribute.
+     *
      * @param attribute Attribute to use in the aggregate.
-     * @return          {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
+     * @return {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
      */
     <N extends Number> QuerySelection<E, N> abs(SingularAttribute<? super E, N> attribute);
 
@@ -76,8 +81,9 @@ public interface CriteriaSupport<E>
      * Create a query selection for the
      * {@link javax.persistence.criteria.CriteriaBuilder#avg(javax.persistence.criteria.Expression)}
      * over an attribute.
+     *
      * @param attribute Attribute to use in the aggregate.
-     * @return          {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
+     * @return {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
      */
     <N extends Number> QuerySelection<E, N> avg(SingularAttribute<? super E, N> attribute);
 
@@ -85,8 +91,9 @@ public interface CriteriaSupport<E>
      * Create a query selection for the
      * {@link javax.persistence.criteria.CriteriaBuilder#count(javax.persistence.criteria.Expression)}
      * over an attribute.
+     *
      * @param attribute Attribute to use in the aggregate.
-     * @return          {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
+     * @return {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
      */
     QuerySelection<E, Long> count(SingularAttribute<? super E, ?> attribute);
 
@@ -94,8 +101,9 @@ public interface CriteriaSupport<E>
      * Create a query selection for the
      * {@link javax.persistence.criteria.CriteriaBuilder#countDistinct(javax.persistence.criteria.Expression)}
      * over an attribute.
+     *
      * @param attribute Attribute to use in the aggregate.
-     * @return          {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
+     * @return {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
      */
     QuerySelection<E, Long> countDistinct(SingularAttribute<? super E, ?> attribute);
 
@@ -103,8 +111,9 @@ public interface CriteriaSupport<E>
      * Create a query selection for the
      * {@link javax.persistence.criteria.CriteriaBuilder#max(javax.persistence.criteria.Expression)}
      * over an attribute.
+     *
      * @param attribute Attribute to use in the aggregate.
-     * @return          {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
+     * @return {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
      */
     <N extends Number> QuerySelection<E, N> max(SingularAttribute<? super E, N> attribute);
 
@@ -112,8 +121,9 @@ public interface CriteriaSupport<E>
      * Create a query selection for the
      * {@link javax.persistence.criteria.CriteriaBuilder#min(javax.persistence.criteria.Expression)}
      * over an attribute.
+     *
      * @param attribute Attribute to use in the aggregate.
-     * @return          {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
+     * @return {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
      */
     <N extends Number> QuerySelection<E, N> min(SingularAttribute<? super E, N> attribute);
 
@@ -121,8 +131,9 @@ public interface CriteriaSupport<E>
      * Create a query selection for the
      * {@link javax.persistence.criteria.CriteriaBuilder#neg(javax.persistence.criteria.Expression)}
      * over an attribute.
+     *
      * @param attribute Attribute to use in the aggregate.
-     * @return          {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
+     * @return {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
      */
     <N extends Number> QuerySelection<E, N> neg(SingularAttribute<? super E, N> attribute);
 
@@ -130,8 +141,9 @@ public interface CriteriaSupport<E>
      * Create a query selection for the
      * {@link javax.persistence.criteria.CriteriaBuilder#sum(javax.persistence.criteria.Expression)}
      * over an attribute.
+     *
      * @param attribute Attribute to use in the aggregate.
-     * @return          {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
+     * @return {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
      */
     <N extends Number> QuerySelection<E, N> sum(SingularAttribute<? super E, N> attribute);
 
@@ -139,9 +151,10 @@ public interface CriteriaSupport<E>
      * Create a query selection for the
      * {@link javax.persistence.criteria.CriteriaBuilder#mod(javax.persistence.criteria.Expression, Integer)}
      * for an attribute.
+     *
      * @param attribute Attribute to use in the aggregate.
      * @param modulo    Modulo what.
-     * @return          {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
+     * @return {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
      */
     QuerySelection<E, Integer> modulo(SingularAttribute<? super E, Integer> attribute, Integer modulo);
 
@@ -149,8 +162,9 @@ public interface CriteriaSupport<E>
      * Create a query selection for the
      * {@link javax.persistence.criteria.CriteriaBuilder#upper(javax.persistence.criteria.Expression)}
      * over a String attribute.
+     *
      * @param attribute Attribute to uppercase.
-     * @return          {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
+     * @return {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
      */
     QuerySelection<E, String> upper(SingularAttribute<? super E, String> attribute);
 
@@ -158,8 +172,9 @@ public interface CriteriaSupport<E>
      * Create a query selection for the
      * {@link javax.persistence.criteria.CriteriaBuilder#lower(javax.persistence.criteria.Expression)}
      * over a String attribute.
+     *
      * @param attribute Attribute to lowercase.
-     * @return          {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
+     * @return {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
      */
     QuerySelection<E, String> lower(SingularAttribute<? super E, String> attribute);
 
@@ -167,9 +182,10 @@ public interface CriteriaSupport<E>
      * Create a query selection for the
      * {@link javax.persistence.criteria.CriteriaBuilder#substring(javax.persistence.criteria.Expression, int)}
      * over a String attribute.
+     *
      * @param attribute Attribute to create a substring from.
      * @param from      Substring start.
-     * @return          {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
+     * @return {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
      */
     QuerySelection<E, String> substring(SingularAttribute<? super E, String> attribute, int from);
 
@@ -177,28 +193,55 @@ public interface CriteriaSupport<E>
      * Create a query selection for the
      * {@link javax.persistence.criteria.CriteriaBuilder#substring(javax.persistence.criteria.Expression, int, int)}
      * over a String attribute.
+     *
      * @param attribute Attribute to create a substring from.
      * @param from      Substring start.
      * @param length    Substring length.
-     * @return          {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
+     * @return {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
      */
     QuerySelection<E, String> substring(SingularAttribute<? super E, String> attribute, int from, int length);
 
     /**
+     * Create a query selection for the
+     * {@link javax.persistence.criteria.CriteriaBuilder#trim(javax.persistence.criteria.Expression)}
+     * over a String attribute.
+     *
+     * @param attribute Attribute to apply trim.
+     * @return {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
+     */
+    QuerySelection<E, String> trim(SingularAttribute<? super E, String> attribute);
+
+    /**
+     * Create a query selection for the
+     * {@link javax.persistence.criteria.CriteriaBuilder#trim(javax.persistence.criteria.CriteriaBuilder.Trimspec,
+     * javax.persistence.criteria.Expression)}
+     * over a String attribute.
+     *
+     * @param trimspec  Used to specify how strings are trimmed.
+     * @param attribute Attribute to apply trim.
+     * @return {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
+     */
+    QuerySelection<E, String> trim(CriteriaBuilder.Trimspec trimspec, SingularAttribute<? super E, String> attribute);
+
+
+    /**
      * Create a query selection for the {@link javax.persistence.criteria.CriteriaBuilder#currentDate()}.
-     * @return          {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
+     *
+     * @return {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
      */
     QuerySelection<E, Date> currDate();
 
     /**
      * Create a query selection for the {@link javax.persistence.criteria.CriteriaBuilder#currentTime()}.
-     * @return          {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
+     *
+     * @return {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
      */
     QuerySelection<E, Time> currTime();
 
     /**
      * Create a query selection for the {@link javax.persistence.criteria.CriteriaBuilder#currentTimestamp()}.
-     * @return          {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
+     *
+     * @return {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
      */
     QuerySelection<E, Timestamp> currTStamp();
 

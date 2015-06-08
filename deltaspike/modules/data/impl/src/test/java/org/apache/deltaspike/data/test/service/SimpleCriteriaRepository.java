@@ -28,6 +28,8 @@ import org.apache.deltaspike.data.test.domain.Simple;
 import org.apache.deltaspike.data.test.domain.Simple_;
 import org.apache.deltaspike.data.test.domain.SuperSimple_;
 
+import javax.persistence.criteria.CriteriaBuilder;
+
 @Repository
 @SuppressWarnings("unchecked")
 public abstract class SimpleCriteriaRepository extends AbstractEntityRepository<Simple, Long>
@@ -47,13 +49,13 @@ public abstract class SimpleCriteriaRepository extends AbstractEntityRepository<
     {
         return criteria()
                 .or(
-                    criteria()
-                        .eqIgnoreCase(Simple_.name, name)
-                        .notEqIgnoreCase(Simple_.name, nameLike),
-                    criteria()
-                        .likeIgnoreCase(Simple_.name, nameLike)
-                        .notLikeIgnoreCase(Simple_.name, name)
-                 )
+                        criteria()
+                                .eqIgnoreCase(Simple_.name, name)
+                                .notEqIgnoreCase(Simple_.name, nameLike),
+                        criteria()
+                                .likeIgnoreCase(Simple_.name, nameLike)
+                                .notLikeIgnoreCase(Simple_.name, name)
+                )
                 .getResultList();
     }
 
@@ -71,17 +73,19 @@ public abstract class SimpleCriteriaRepository extends AbstractEntityRepository<
                 .getAnyResult();
     }
 
-    public List<Simple> findByTimeBetween(Date from, Date to) {
+    public List<Simple> findByTimeBetween(Date from, Date to)
+    {
         return criteria()
-                 .gt(Simple_.temporal, from)
-                 .lt(Simple_.temporal, to)
-                 .getResultList();
+                .gt(Simple_.temporal, from)
+                .lt(Simple_.temporal, to)
+                .getResultList();
     }
 
-    public Simple findBySuperName(String superName) {
+    public Simple findBySuperName(String superName)
+    {
         return criteria()
-                 .eq(SuperSimple_.superName, superName)
-                 .getSingleResult();
+                .eq(SuperSimple_.superName, superName)
+                .getSingleResult();
     }
 
     public Long criteriaCount(String name)
@@ -121,11 +125,22 @@ public abstract class SimpleCriteriaRepository extends AbstractEntityRepository<
                 .getResultList();
     }
 
-   public List<Simple> findOrderByNameAndCounter() {
-      return criteria()
-              .orderDesc(Simple_.counter)
-              .orderAsc(Simple_.name)
-              .getResultList();
-   }
+    public List<Simple> findOrderByNameAndCounter()
+    {
+        return criteria()
+                .orderDesc(Simple_.counter)
+                .orderAsc(Simple_.name)
+                .getResultList();
+    }
+
+    public Object[] queryWithSelectAttributesAndTrim(String name)
+    {
+        return criteria()
+                .select(attribute(Simple_.name), trim(Simple_.name),
+                        trim(CriteriaBuilder.Trimspec.LEADING, Simple_.name))
+                .eq(Simple_.name, name)
+                .createQuery()
+                .getSingleResult();
+    }
 
 }

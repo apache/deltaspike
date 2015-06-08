@@ -23,6 +23,7 @@ import java.sql.Time;
 import java.sql.Timestamp;
 
 import javax.enterprise.context.Dependent;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.metamodel.SingularAttribute;
 
@@ -43,6 +44,7 @@ import org.apache.deltaspike.data.impl.criteria.selection.numeric.Sum;
 import org.apache.deltaspike.data.impl.criteria.selection.strings.Lower;
 import org.apache.deltaspike.data.impl.criteria.selection.strings.SubstringFrom;
 import org.apache.deltaspike.data.impl.criteria.selection.strings.SubstringFromTo;
+import org.apache.deltaspike.data.impl.criteria.selection.strings.Trim;
 import org.apache.deltaspike.data.impl.criteria.selection.strings.Upper;
 import org.apache.deltaspike.data.impl.criteria.selection.temporal.CurrentDate;
 import org.apache.deltaspike.data.impl.criteria.selection.temporal.CurrentTime;
@@ -160,6 +162,19 @@ public class CriteriaSupportHandler<E> extends AbstractDelegateQueryHandler<E> i
     public QuerySelection<E, String> substring(SingularAttribute<? super E, String> attribute, int from, int length)
     {
         return new SubstringFromTo<E>(attribute, from, length);
+    }
+
+    @Override
+    public QuerySelection<E, String> trim(SingularAttribute<? super E, String> attribute)
+    {
+        return new Trim<E>(attribute);
+    }
+
+    @Override
+    public QuerySelection<E, String> trim(CriteriaBuilder.Trimspec trimspec,
+                                          SingularAttribute<? super E, String> attribute)
+    {
+        return new Trim<E>(trimspec, attribute);
     }
 
     // ----------------------------------------------------------------------------
