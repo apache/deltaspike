@@ -366,6 +366,15 @@
             </roles>
             <timezone>-3</timezone>
         </developer>
+        <developer>
+            <id>hwellmann</id>
+            <name>Harald Wellmann</name>
+            <email>hwellmann@apache.org</email>
+            <roles>
+                <role>Committer</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
     </developers>
 
     <dependencyManagement>
