@@ -18,29 +18,25 @@
  */
 package org.apache.deltaspike.data.impl.meta;
 
-import org.apache.deltaspike.core.api.lifecycle.Initialized;
-
 import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
+
+import org.apache.deltaspike.core.api.lifecycle.Initialized;
+import org.apache.deltaspike.data.impl.RepositoryExtension;
 
 /**
- * Repository components producer. Exposes a singleton both programmatically as well
- * as over a CDI producer.
+ * Repository components producer.
  */
 public class RepositoryComponentsFactory
 {
 
-    private static RepositoryComponents components = new RepositoryComponents();
-
-    public static RepositoryComponents instance()
-    {
-        return components;
-    }
-
+    @Inject
+    private RepositoryExtension extension;
+    
     @Produces
     @Initialized
     public RepositoryComponents producer()
     {
-        return instance();
+        return extension.getComponents();
     }
-
 }
