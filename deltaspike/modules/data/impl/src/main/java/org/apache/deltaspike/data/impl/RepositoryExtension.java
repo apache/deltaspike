@@ -36,7 +36,7 @@ import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.data.api.AbstractEntityRepository;
 import org.apache.deltaspike.data.api.Repository;
-import org.apache.deltaspike.data.impl.meta.RepositoryComponentsFactory;
+import org.apache.deltaspike.data.impl.meta.RepositoryComponents;
 import org.apache.deltaspike.data.impl.meta.unit.PersistenceUnits;
 
 /**
@@ -62,6 +62,9 @@ public class RepositoryExtension implements Extension, Deactivatable
             new LinkedList<RepositoryDefinitionException>();
 
     private Boolean isActivated = true;
+
+    private RepositoryComponents components = new RepositoryComponents();
+
 
     void beforeBeanDiscovery(@Observes BeforeBeanDiscovery before)
     {
@@ -100,7 +103,7 @@ public class RepositoryExtension implements Extension, Deactivatable
                     log.log(Level.FINER, "Class {0} is Deactivated", repoClass);
                     return;
                 }
-                RepositoryComponentsFactory.instance().add(repoClass);
+                components.add(repoClass);
             }
             catch (RepositoryDefinitionException e)
             {
@@ -136,6 +139,11 @@ public class RepositoryExtension implements Extension, Deactivatable
     private <X> boolean isVetoed(AnnotatedType<X> annotated)
     {
         return annotated.getJavaClass().equals(AbstractEntityRepository.class);
+    }
+    
+    public RepositoryComponents getComponents()
+    {
+        return components;
     }
 
 }
