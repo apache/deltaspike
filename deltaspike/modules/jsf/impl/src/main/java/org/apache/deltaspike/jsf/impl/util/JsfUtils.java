@@ -373,4 +373,19 @@ public abstract class JsfUtils
                     "org.apache.deltaspike.modules:deltaspike-jsf-module-impl-ee6 to " +
                         "org.apache.deltaspike.modules:deltaspike-jsf-module-impl");
     }
+
+    public static void addStaticNavigationParameter(
+        NavigationParameterContext navigationParameterContext, String key, String value)
+    {
+        Map<String, String> existingParameters = navigationParameterContext.getPageParameters();
+
+        String existingValue = existingParameters.get(key);
+
+        if (existingValue != null && value != null) //support null for special cases to reset an entry
+        {
+            return;
+        }
+        navigationParameterContext.addPageParameter(key, value);
+    }
+
 }

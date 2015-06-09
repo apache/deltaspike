@@ -174,7 +174,8 @@ public class ViewConfigAwareNavigationHandler extends NavigationHandler
 
     private void addConfiguredPageParameter(NavigationParameter viewParameter)
     {
-        this.navigationParameterContext.addPageParameter(viewParameter.key(), viewParameter.value());
+        JsfUtils.addStaticNavigationParameter(
+            this.navigationParameterContext, viewParameter.key(), viewParameter.value());
     }
 
     private String convertEntryToOutcome(ExternalContext externalContext, ViewConfigDescriptor entry)

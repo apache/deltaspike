@@ -20,6 +20,7 @@ package org.apache.deltaspike.jsf.impl.config.view.navigation;
 
 import org.apache.deltaspike.core.api.config.view.navigation.NavigationParameter;
 import org.apache.deltaspike.core.api.config.view.navigation.NavigationParameterContext;
+import org.apache.deltaspike.jsf.impl.util.JsfUtils;
 import org.apache.deltaspike.jsf.spi.config.view.navigation.NavigationParameterStrategy;
 
 import javax.enterprise.context.Dependent;
@@ -58,7 +59,8 @@ public class DefaultNavigationParameterStrategy implements NavigationParameterSt
 
         for (NavigationParameter currentParameter : parameterList)
         {
-            this.navigationParameterContext.addPageParameter(currentParameter.key(), currentParameter.value());
+            JsfUtils.addStaticNavigationParameter(
+                this.navigationParameterContext, currentParameter.key(), currentParameter.value());
         }
 
         return ic.proceed();
