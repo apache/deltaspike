@@ -116,4 +116,13 @@ public final class PersistenceUnits
         return null;
     }
 
+    public String entityTableName(Class<?> entityClass)
+    {
+        EntityDescriptor entity = find(entityClass);
+        if (entity != null)
+        {
+            return entity.getTableName();
+        }
+        return null;
+    }
 }

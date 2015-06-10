@@ -34,7 +34,10 @@ import javax.persistence.metamodel.SingularAttribute;
 
 import org.apache.deltaspike.data.test.TransactionalTestCase;
 import org.apache.deltaspike.data.test.domain.Simple;
+import org.apache.deltaspike.data.test.domain.Simple2;
 import org.apache.deltaspike.data.test.domain.Simple_;
+import org.apache.deltaspike.data.test.service.ExtendedRepositoryAbstract;
+import org.apache.deltaspike.data.test.service.ExtendedRepositoryAbstract2;
 import org.apache.deltaspike.data.test.service.ExtendedRepositoryInterface;
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -51,11 +54,19 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
     {
         return initDeployment()
                 .addClasses(ExtendedRepositoryInterface.class)
+                .addClasses(ExtendedRepositoryAbstract.class)
+                .addClasses(ExtendedRepositoryAbstract2.class)
                 .addPackage(Simple.class.getPackage());
     }
 
     @Inject
     private ExtendedRepositoryInterface repo;
+
+    @Inject
+    private ExtendedRepositoryAbstract repoAbstract;
+
+    @Inject
+    private ExtendedRepositoryAbstract2 repoAbstract2;
 
     @Produces
     @PersistenceContext
@@ -365,6 +376,16 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
 
         // then
         assertNull(lookup);
+    }
+
+    @Test
+    public void should_return_table_name()
+    {
+        final String tableName = repoAbstract.getTableName();
+        final String tableName2 = repoAbstract2.getTableName();
+
+        assertEquals("SIMPLE_TABLE", tableName);
+        assertEquals(Simple2.class.getSimpleName(), tableName2);
     }
 
     @Override

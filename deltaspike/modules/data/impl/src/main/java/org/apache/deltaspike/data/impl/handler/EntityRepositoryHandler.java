@@ -18,10 +18,24 @@
  */
 package org.apache.deltaspike.data.impl.handler;
 
-import static org.apache.deltaspike.data.impl.util.EntityUtils.entityName;
-import static org.apache.deltaspike.data.impl.util.QueryUtils.isEmpty;
-import static org.apache.deltaspike.data.impl.util.QueryUtils.isString;
+import org.apache.deltaspike.core.util.StringUtils;
+import org.apache.deltaspike.data.api.EntityRepository;
+import org.apache.deltaspike.data.impl.builder.QueryBuilder;
+import org.apache.deltaspike.data.impl.meta.RequiresTransaction;
+import org.apache.deltaspike.data.impl.meta.unit.PersistenceUnits;
+import org.apache.deltaspike.data.impl.property.Property;
+import org.apache.deltaspike.data.impl.property.query.NamedPropertyCriteria;
+import org.apache.deltaspike.data.impl.property.query.PropertyQueries;
+import org.apache.deltaspike.data.spi.DelegateQueryHandler;
+import org.apache.deltaspike.data.spi.QueryInvocationContext;
 
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.Table;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.metamodel.EntityType;
+import javax.persistence.metamodel.SingularAttribute;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -29,20 +43,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.metamodel.SingularAttribute;
-
-import org.apache.deltaspike.data.api.EntityRepository;
-import org.apache.deltaspike.data.impl.builder.QueryBuilder;
-import org.apache.deltaspike.data.impl.meta.RequiresTransaction;
-import org.apache.deltaspike.data.impl.property.Property;
-import org.apache.deltaspike.data.impl.property.query.NamedPropertyCriteria;
-import org.apache.deltaspike.data.impl.property.query.PropertyQueries;
-import org.apache.deltaspike.data.spi.DelegateQueryHandler;
-import org.apache.deltaspike.data.spi.QueryInvocationContext;
+import static org.apache.deltaspike.data.impl.util.EntityUtils.entityName;
+import static org.apache.deltaspike.data.impl.util.QueryUtils.isEmpty;
+import static org.apache.deltaspike.data.impl.util.QueryUtils.isString;
 
 /**
  * Implement basic functionality from the {@link EntityRepository}.
@@ -217,6 +220,21 @@ public class EntityRepositoryHandler<E, PK extends Serializable>
     public Class<E> entityClass()
     {
         return (Class<E>) context.getEntityClass();
+    }
+
+    public String tableName()
+    {
+        final Class<?> entityClass = context.getEntityClass();
+        final String tableName = PersistenceUnits.instance().entityTableName(entityClass);
+        if (StringUtils.isEmpty(tableName))
+        {
+            final EntityType<?> entityType = entityManager().getMetamodel().entity(entityClass);
+            Table tableAnnotation = entityClass.getAnnotation(Table.class);
+            return (tableAnnotation == null)
+                    ? entityType.getName()
+                    : tableAnnotation.name();
+        }
+        return tableName;
     }
 
     // ----------------------------------------------------------------------------

@@ -62,4 +62,10 @@ public abstract class AbstractEntityRepository<E, PK extends Serializable>
      */
     protected abstract Class<E> entityClass();
 
+    /**
+     * Get the entity table name this Repository is related to.
+     * @return          Repository entity table name.
+     */
+    protected abstract String tableName();
+
 }

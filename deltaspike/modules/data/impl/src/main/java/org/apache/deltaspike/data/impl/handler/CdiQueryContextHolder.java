@@ -18,10 +18,9 @@
  */
 package org.apache.deltaspike.data.impl.handler;
 
-import java.util.Stack;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
+import java.util.Stack;
 
 @ApplicationScoped
 public class CdiQueryContextHolder

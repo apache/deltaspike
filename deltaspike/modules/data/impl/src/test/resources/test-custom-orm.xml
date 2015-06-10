@@ -38,6 +38,7 @@
         </attributes>
     </entity>
     <entity class="MappedThree">
+        <table name="mapped_three_table" />
     </entity>
 
 </entity-mappings>

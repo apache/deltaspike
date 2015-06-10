@@ -45,8 +45,8 @@ public class EntityDescriptorReader extends DescriptorReader
         }
         catch (Exception e)
         {
-            return new MappingFile(Collections.<EntityDescriptor> emptyList(),
-                    Collections.<MappedSuperclassDescriptor> emptyList());
+            return new MappingFile(Collections.<EntityDescriptor>emptyList(),
+                    Collections.<MappedSuperclassDescriptor>emptyList());
         }
     }
 
@@ -55,30 +55,30 @@ public class EntityDescriptorReader extends DescriptorReader
         List<EntityDescriptor> entities = new EntityBuilder<EntityDescriptor>()
         {
             @Override
-            EntityDescriptor instance(String name, String packageName, String className,
-                    String idClass, String id)
+            protected EntityDescriptor instance(String name, String packageName, String className,
+                                      String idClass, String id, String tableName)
             {
-                return new EntityDescriptor(name, packageName, className, idClass, id);
+                return new EntityDescriptor(name, packageName, className, idClass, id, tableName);
             }
 
             @Override
-            String tagName()
+            protected String tagName()
             {
                 return "entity";
             }
         }
                 .build(doc);
-        List<MappedSuperclassDescriptor> superClasses = new EntityBuilder<MappedSuperclassDescriptor>()
+        List<MappedSuperclassDescriptor> superClasses = new MappedSuperClassBuilder<MappedSuperclassDescriptor>()
         {
             @Override
-            MappedSuperclassDescriptor instance(String name, String packageName, String className,
-                    String idClass, String id)
+            protected MappedSuperclassDescriptor instance(String name, String packageName, String className,
+                                                String idClass, String id)
             {
                 return new MappedSuperclassDescriptor(name, packageName, className, idClass, id);
             }
 
             @Override
-            String tagName()
+            protected String tagName()
             {
                 return "mapped-superclass";
             }
@@ -139,29 +139,81 @@ public class EntityDescriptorReader extends DescriptorReader
         }
     }
 
-    private abstract class EntityBuilder<T extends PersistentClassDescriptor>
+
+    private abstract class PersistenceBuilder<T extends PersistentClassDescriptor>
     {
+        protected List<T> result;
+        protected String packageName;
+        protected String name;
+        protected String className;
+        protected String idClass;
+        protected String id;
+        protected String embeddedId;
 
         public List<T> build(Document doc)
         {
-            List<T> result = new LinkedList<T>();
-            String packageName = extractNodeContent(doc.getDocumentElement(), "package");
+            this.result = new LinkedList<T>();
+            this.packageName = extractNodeContent(doc.getDocumentElement(), "package");
             NodeList mappings = doc.getElementsByTagName(tagName());
             for (int i = 0; i < mappings.getLength(); i++)
             {
-                String name = extractAttribute(mappings.item(i), "name");
-                String className = extractAttribute(mappings.item(i), "class");
-                String idClass = extractNodeAttribute((Element) mappings.item(i), "id-class", "class");
-                String id = extractNodeAttribute((Element) mappings.item(i), "id", "name");
-                String embeddedId = extractNodeAttribute((Element) mappings.item(i), "embedded-id", "name");
-                result.add(instance(name, packageName, className, idClass, id != null ? id : embeddedId));
+                this.name = extractAttribute(mappings.item(i), "name");
+                this.className = extractAttribute(mappings.item(i), "class");
+                this.idClass = extractNodeAttribute((Element) mappings.item(i), "id-class", "class");
+                this.id = extractNodeAttribute((Element) mappings.item(i), "id", "name");
+                this.embeddedId = extractNodeAttribute((Element) mappings.item(i), "embedded-id", "name");
+                addFields((Element) mappings.item(i));
+                addInResult();
             }
-            return result;
+            return this.result;
         }
 
-        abstract T instance(String name, String packageName, String className, String idClass, String id);
+        protected abstract String tagName();
 
-        abstract String tagName();
+        protected abstract void addInResult();
 
+        protected abstract void addFields(Element element);
+    }
+
+    private abstract class MappedSuperClassBuilder<T extends PersistentClassDescriptor> extends PersistenceBuilder
+    {
+        protected abstract T instance(String name, String packageName, String className, String idClass, String id);
+
+        protected abstract String tagName();
+
+        @Override
+        protected void addInResult()
+        {
+            result.add(instance(name, packageName, className, idClass, id != null ? id : embeddedId));
+        }
+
+        @Override
+        protected void addFields(Element element)
+        {
+            // do nothing;
+        }
+    }
+
+    private abstract class EntityBuilder<T extends PersistentClassDescriptor> extends PersistenceBuilder
+    {
+
+        protected String tableName;
+
+        protected abstract T instance(String name, String packageName, String className, String idClass, String id,
+                            String tableName);
+
+        protected abstract String tagName();
+
+        @Override
+        protected void addInResult()
+        {
+            result.add(instance(name, packageName, className, idClass, id != null ? id : embeddedId, tableName));
+        }
+
+        @Override
+        protected void addFields(Element element)
+        {
+            this.tableName = extractNodeAttribute(element, "table", "name");
+        }
     }
 }

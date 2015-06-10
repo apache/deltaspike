@@ -39,8 +39,8 @@ public class DescriptorHierarchyBuilderTest
     @Before
     public void before()
     {
-        entities.add(new EntityDescriptor("test", null, EntityLevel3.class.getName(), null, null));
-        entities.add(new EntityDescriptor("test", null, EntityLevel5.class.getName(), null, null));
+        entities.add(new EntityDescriptor("test", null, EntityLevel3.class.getName(), null, null, null));
+        entities.add(new EntityDescriptor("test", null, EntityLevel5.class.getName(), null, null, null));
 
         superClasses.add(new MappedSuperclassDescriptor("test", null, MappedLevel1.class.getName(), null, "id"));
         superClasses.add(new MappedSuperclassDescriptor("test", null, MappedLevel4.class.getName(), null, null));

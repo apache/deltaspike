@@ -18,16 +18,19 @@
  */
 package org.apache.deltaspike.data.impl.meta.unit;
 
-import static org.apache.deltaspike.data.impl.util.QueryUtils.isEmpty;
-
 import java.io.Serializable;
+
+import static org.apache.deltaspike.data.impl.util.QueryUtils.isEmpty;
 
 class EntityDescriptor extends PersistentClassDescriptor
 {
 
-    EntityDescriptor(String name, String packageName, String className, String idClass, String id)
+    protected final String tableName;
+
+    EntityDescriptor(String name, String packageName, String className, String idClass, String id, String tableName)
     {
         super(name, packageName, className, idClass, id);
+        this.tableName = tableName;
     }
 
     public boolean is(Class<?> entityClass)
@@ -55,6 +58,11 @@ class EntityDescriptor extends PersistentClassDescriptor
         return super.getId();
     }
 
+    public String getTableName()
+    {
+        return tableName;
+    }
+
     @Override
     public String toString()
     {
@@ -65,8 +73,8 @@ class EntityDescriptor extends PersistentClassDescriptor
                 .append(", idClass=").append(className(idClass))
                 .append(", id=").append(id)
                 .append(", superClass=").append(getParent())
+                .append(", tableName=").append(tableName)
                 .append("]");
         return builder.toString();
     }
-
 }

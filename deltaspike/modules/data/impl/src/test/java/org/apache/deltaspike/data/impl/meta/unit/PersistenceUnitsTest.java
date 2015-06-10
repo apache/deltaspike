@@ -150,4 +150,11 @@ public class PersistenceUnitsTest
         assertEquals(Long.class, entity3.getPrimaryClass());
     }
 
+    @Test
+    public void should_read_table_name()
+    {
+        String entityTableName = PersistenceUnits.instance().entityTableName(MappedThree.class);
+        assertEquals("mapped_three_table", entityTableName);
+    }
+
 }
