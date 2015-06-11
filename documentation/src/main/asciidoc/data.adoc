@@ -233,7 +233,7 @@ be implemented in the repository.
 public abstract class PersonRepository extends AbstractEntityRepository<Person, Long>
 {
 
-    public Person findBySSN(String ssn)
+    public List<Person> findBySSN(String ssn)
     {
         return typedQuery("select p from Person p where p.ssn = ?1")
                 .setParameter(1, ssn)
