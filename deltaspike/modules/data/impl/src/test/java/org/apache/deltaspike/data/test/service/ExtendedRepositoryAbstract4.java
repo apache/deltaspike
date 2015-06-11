@@ -19,19 +19,13 @@
 package org.apache.deltaspike.data.test.service;
 
 import org.apache.deltaspike.data.api.AbstractEntityRepository;
-import org.apache.deltaspike.data.api.EntityManagerDelegate;
 import org.apache.deltaspike.data.api.Repository;
-import org.apache.deltaspike.data.test.domain.Simple;
+import org.apache.deltaspike.data.test.domain.Simple4;
 
 @Repository
-public abstract class ExtendedRepositoryAbstract
-        extends AbstractEntityRepository<Simple, Long>
+public abstract class ExtendedRepositoryAbstract4
+        extends AbstractEntityRepository<Simple4, Long>
 {
-    public String getTableName()
-    {
-        return tableName();
-    }
-
     public String getEntityName()
     {
         return entityName();

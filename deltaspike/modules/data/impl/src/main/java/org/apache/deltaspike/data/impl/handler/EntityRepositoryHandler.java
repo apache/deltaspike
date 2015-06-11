@@ -26,6 +26,7 @@ import org.apache.deltaspike.data.impl.meta.unit.PersistenceUnits;
 import org.apache.deltaspike.data.impl.property.Property;
 import org.apache.deltaspike.data.impl.property.query.NamedPropertyCriteria;
 import org.apache.deltaspike.data.impl.property.query.PropertyQueries;
+import org.apache.deltaspike.data.impl.util.EntityUtils;
 import org.apache.deltaspike.data.spi.DelegateQueryHandler;
 import org.apache.deltaspike.data.spi.QueryInvocationContext;
 
@@ -43,7 +44,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.apache.deltaspike.data.impl.util.EntityUtils.entityName;
 import static org.apache.deltaspike.data.impl.util.QueryUtils.isEmpty;
 import static org.apache.deltaspike.data.impl.util.QueryUtils.isString;
 
@@ -237,18 +237,23 @@ public class EntityRepositoryHandler<E, PK extends Serializable>
         return tableName;
     }
 
+    public String entityName()
+    {
+        return EntityUtils.entityName(entityClass());
+    }
+
     // ----------------------------------------------------------------------------
     // PRIVATE
     // ----------------------------------------------------------------------------
 
     private String allQuery()
     {
-        return QueryBuilder.selectQuery(entityName(entityClass()));
+        return QueryBuilder.selectQuery(entityName());
     }
 
     private String countQuery()
     {
-        return QueryBuilder.countQuery(entityName(entityClass()));
+        return QueryBuilder.countQuery(entityName());
     }
 
     private String exampleQuery(String queryBase, List<Property<Object>> properties, boolean useLikeOperator)

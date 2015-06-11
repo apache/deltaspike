@@ -30,4 +30,9 @@ public abstract class ExtendedRepositoryAbstract2
     {
         return tableName();
     }
+
+    public String getEntityName()
+    {
+        return entityName();
+    }
 }
