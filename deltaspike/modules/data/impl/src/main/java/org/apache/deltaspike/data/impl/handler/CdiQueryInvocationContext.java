@@ -18,19 +18,20 @@
  */
 package org.apache.deltaspike.data.impl.handler;
 
-import java.lang.reflect.Method;
-import java.util.LinkedList;
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-
 import org.apache.deltaspike.data.api.SingleResultType;
 import org.apache.deltaspike.data.api.mapping.QueryInOutMapper;
 import org.apache.deltaspike.data.impl.meta.RepositoryMethod;
 import org.apache.deltaspike.data.impl.param.Parameters;
 import org.apache.deltaspike.data.impl.util.bean.Destroyable;
 import org.apache.deltaspike.data.spi.QueryInvocationContext;
+
+import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
+import javax.persistence.Query;
+import javax.persistence.QueryHint;
+import java.lang.reflect.Method;
+import java.util.LinkedList;
+import java.util.List;
 
 public class CdiQueryInvocationContext implements QueryInvocationContext
 {
@@ -49,10 +50,10 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
     private String queryString;
 
     public CdiQueryInvocationContext(Object proxy, Method method, Object[] args, RepositoryMethod repoMethod,
-            EntityManager entityManager)
+                                     EntityManager entityManager)
     {
         this.entityManager = entityManager;
-        this.args = args == null ? new Object[] {} : args;
+        this.args = args == null ? new Object[]{} : args;
         this.params = Parameters.create(method, this.args);
         this.proxy = proxy;
         this.method = method;
@@ -120,6 +121,34 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
     public Method getMethod()
     {
         return method;
+    }
+
+    public Query applyRestrictions(Query query)
+    {
+        Parameters params = getParams();
+        Method method = getMethod();
+        if (params.hasSizeRestriction())
+        {
+            query.setMaxResults(params.getSizeRestriciton());
+        }
+        if (params.hasFirstResult())
+        {
+            query.setFirstResult(params.getFirstResult());
+        }
+        if (hasLockMode(method))
+        {
+            query.setLockMode(extractLockMode(method));
+        }
+        if (hasQueryHints(method))
+        {
+            QueryHint[] hints = extractQueryHints(method);
+            for (QueryHint hint : hints)
+            {
+                query.setHint(hint.name(), hint.value());
+            }
+        }
+        query = applyJpaQueryPostProcessors(query);
+        return query;
     }
 
     public Object[] getMethodParameters()
@@ -229,6 +258,38 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
     public Object getProxy()
     {
         return proxy;
+    }
+
+    private boolean hasLockMode(Method method)
+    {
+        return extractLockMode(method) != null;
+    }
+
+    private LockModeType extractLockMode(Method method)
+    {
+        Class<org.apache.deltaspike.data.api.Query> query = org.apache.deltaspike.data.api.Query.class;
+        if (method.isAnnotationPresent(query) &&
+                method.getAnnotation(query).lock() != LockModeType.NONE)
+        {
+            return method.getAnnotation(query).lock();
+        }
+        return null;
+    }
+
+    private QueryHint[] extractQueryHints(Method method)
+    {
+        Class<org.apache.deltaspike.data.api.Query> query = org.apache.deltaspike.data.api.Query.class;
+        if (method.isAnnotationPresent(query) &&
+                method.getAnnotation(query).hints().length > 0)
+        {
+            return method.getAnnotation(query).hints();
+        }
+        return null;
+    }
+
+    private boolean hasQueryHints(Method method)
+    {
+        return extractQueryHints(method) != null;
     }
 
 }

@@ -28,7 +28,6 @@ import org.apache.deltaspike.data.impl.property.query.NamedPropertyCriteria;
 import org.apache.deltaspike.data.impl.property.query.PropertyQueries;
 import org.apache.deltaspike.data.impl.util.EntityUtils;
 import org.apache.deltaspike.data.spi.DelegateQueryHandler;
-import org.apache.deltaspike.data.spi.QueryInvocationContext;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -60,7 +59,7 @@ public class EntityRepositoryHandler<E, PK extends Serializable>
     private static final Logger log = Logger.getLogger(EntityRepositoryHandler.class.getName());
 
     @Inject
-    private QueryInvocationContext context;
+    private CdiQueryInvocationContext context;
 
     @Override
     @RequiresTransaction
@@ -132,7 +131,7 @@ public class EntityRepositoryHandler<E, PK extends Serializable>
     @Override
     public List<E> findAll()
     {
-        return entityManager().createQuery(allQuery(), entityClass()).getResultList();
+        return context.applyRestrictions(entityManager().createQuery(allQuery(), entityClass())).getResultList();
     }
 
     @Override
@@ -147,13 +146,14 @@ public class EntityRepositoryHandler<E, PK extends Serializable>
         {
             query.setMaxResults(max);
         }
-        return query.getResultList();
+        return context.applyRestrictions(query).getResultList();
     }
 
     @Override
     public Long count()
     {
-        return entityManager().createQuery(countQuery(), Long.class).getSingleResult();
+        return (Long) context.applyRestrictions(entityManager().createQuery(countQuery(), Long.class))
+                .getSingleResult();
     }
 
     @Override
@@ -352,6 +352,7 @@ public class EntityRepositoryHandler<E, PK extends Serializable>
             query.setMaxResults(max);
         }
 
+        context.applyRestrictions(query);
         addParameters(query, example, properties, useLikeOperator);
         return query.getResultList();
     }
@@ -367,6 +368,7 @@ public class EntityRepositoryHandler<E, PK extends Serializable>
         log.log(Level.FINER, "count: Created query {0}", jpqlQuery);
         TypedQuery<Long> query = entityManager().createQuery(jpqlQuery, Long.class);
         addParameters(query, example, properties, useLikeOperator);
+        context.applyRestrictions(query);
         return query.getSingleResult();
     }
 }

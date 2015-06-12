@@ -18,18 +18,17 @@
  */
 package org.apache.deltaspike.data.impl.builder;
 
-import static org.apache.deltaspike.data.impl.util.QueryUtils.isNotEmpty;
-
-import java.lang.reflect.Method;
-
-import javax.persistence.EntityManager;
-
 import org.apache.deltaspike.data.api.Query;
 import org.apache.deltaspike.data.impl.handler.CdiQueryInvocationContext;
 import org.apache.deltaspike.data.impl.meta.MethodType;
 import org.apache.deltaspike.data.impl.meta.QueryInvocation;
 import org.apache.deltaspike.data.impl.param.Parameters;
 import org.apache.deltaspike.data.impl.util.jpa.QueryStringExtractorFactory;
+
+import javax.persistence.EntityManager;
+import java.lang.reflect.Method;
+
+import static org.apache.deltaspike.data.impl.util.QueryUtils.isNotEmpty;
 
 /**
  * Create the query based on method annotations.
@@ -79,7 +78,7 @@ public class AnnotatedQueryBuilder extends QueryBuilder
             context.setQueryString(jpqlQuery);
             result = params.applyTo(entityManager.createQuery(jpqlQuery));
         }
-        return applyRestrictions(context, result);
+        return context.applyRestrictions(result);
     }
 
 }

@@ -45,7 +45,7 @@ public class MethodQueryBuilder extends QueryBuilder
         context.setQueryString(jpqlQuery);
         params.updateValues(root.getParameterUpdates());
         Query result = params.applyTo(context.getEntityManager().createQuery(jpqlQuery));
-        return applyRestrictions(context, result);
+        return context.applyRestrictions(result);
     }
 
 }

@@ -18,9 +18,8 @@
  */
 package org.apache.deltaspike.data.spi;
 
-import java.lang.reflect.Method;
-
 import javax.persistence.EntityManager;
+import java.lang.reflect.Method;
 
 /**
  * Expose the current query invocation to extensions.
@@ -41,8 +40,9 @@ public interface QueryInvocationContext
     /**
      * Given the object parameter is an entity, checks if the entity is
      * persisted or not.
-     * @param entity            Entity object, non nullable.
-     * @return                  true if the entity is not persisted, false otherwise and if no entity.
+     *
+     * @param entity Entity object, non nullable.
+     * @return true if the entity is not persisted, false otherwise and if no entity.
      */
     boolean isNew(Object entity);
 
@@ -55,5 +55,4 @@ public interface QueryInvocationContext
      * The repository method currently executed.
      */
     Method getMethod();
-
 }
