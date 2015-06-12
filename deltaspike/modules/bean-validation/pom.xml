@@ -23,12 +23,12 @@
     <parent>
         <groupId>org.apache.deltaspike.modules</groupId>
         <artifactId>modules-project</artifactId>
-        <version>1.4.1</version>
+        <version>1.4.2-SNAPSHOT</version>
     </parent>
 
     <groupId>org.apache.deltaspike.modules</groupId>
     <artifactId>bean-validation-module-project</artifactId>
-    <version>1.4.1</version>
+    <version>1.4.2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Apache DeltaSpike BeanValidation-Module</name>
