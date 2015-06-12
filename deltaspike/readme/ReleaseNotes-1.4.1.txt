@@ -1,0 +1,36 @@
+Release Notes - Apache DeltaSpike - Version 1.4.1
+
+Bug
+
+    [DELTASPIKE-594] - Memory leak in RepositoryComponents singleton
+    [DELTASPIKE-901] - org.apache.deltaspike.data.impl.builder.postprocessor.CountQueryPostProcessor doesn't respect order by
+    [DELTASPIKE-905] - Missing OSGi headers in Proxy modules
+    [DELTASPIKE-908] - org.apache.deltaspike.test.scheduler.custom.CustomSchedulerWarFileTest fails with Weld
+    [DELTASPIKE-915] - Transactional#readOnly needs to be @Nonbinding
+    [DELTASPIKE-917] - EnvironmentAwareTransactionStrategy fails in unmanaged threads
+
+Improvement
+
+    [DELTASPIKE-603] - removeBy* - similiar to findBy*
+    [DELTASPIKE-911] - Criteria API - Add support for accept multiple columns in orderBy
+    [DELTASPIKE-913] - QuartzScheduler uses BeanProvider.getContextualReference() for dependent scoped bean
+    [DELTASPIKE-919] - higher priority for dynamic navigation-parameters
+    [DELTASPIKE-924] - Adjust The AbstractEntityRepository Class section.
+
+New Feature
+
+    [DELTASPIKE-700] - Add #tableName() to AbstractEntityRepository
+    [DELTASPIKE-701] - Add method in EntityRepository to merge a detached entity and remove it
+    [DELTASPIKE-894] - Trim for CriteriaSupport API
+    [DELTASPIKE-923] - Add #entityName() to AbstractEntityRepository
+
+Task
+
+    [DELTASPIKE-816] - document usage of multiple entity-managers
+    [DELTASPIKE-909] - Site/Docs/Javadoc Release procedures for DS 1.4
+    [DELTASPIKE-916] - Weld 2.3 and 3.x support
+    [DELTASPIKE-925] - prepare v1.4.1
+
+Test
+
+    [DELTASPIKE-902] - Test for EntityRepository#removeAndFlush(entity)
