@@ -346,18 +346,71 @@
             </dependencyManagement>
             <dependencies>
                 <dependency>
-                    <groupId>javax.enterprise</groupId>
-                    <artifactId>cdi-api</artifactId>
-                    <scope>provided</scope>
+                    <!--
+                        This is a temporary workaround for WELD-1892
+                        We add a dependency on the bom directly. This is ugly but the only option right now to support Weld 1.1.x, 2.x and 3.x without
+                        requiring separate profiles.
+                    -->
+                    <groupId>org.jboss.weld</groupId>
+                    <artifactId>weld-core-bom</artifactId>
+                    <type>pom</type>
+                    <version>${weld.version}</version>
+                    <scope>test</scope>
+                    <exclusions>
+                        <!-- Common -->
+                        <exclusion>
+                            <groupId>org.jboss.weld</groupId>
+                            <artifactId>weld-core-test</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>javax.inject</groupId>
+                            <artifactId>javax.inject-tck</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.jboss.weld.se</groupId>
+                            <artifactId>*</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.jboss.weld.servlet</groupId>
+                            <artifactId>*</artifactId>
+                        </exclusion>
+                        <!-- Weld 1.x -->
+                        <exclusion>
+                            <groupId>org.jboss.weld</groupId>
+                            <artifactId>weld-porting-package</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.jboss.jsr299.tck</groupId>
+                            <artifactId>*</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.atinject</groupId>
+                            <artifactId>inject-tck</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.jboss</groupId>
+                            <artifactId>jboss-vfs</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>javax.faces</groupId>
+                            <artifactId>jsf-api</artifactId>
+                        </exclusion>
+                        <!-- Weld 2.x -->
+                        <exclusion>
+                            <groupId>org.jboss.weld</groupId>
+                            <artifactId>weld-core-jsf</artifactId>
+                        </exclusion>
+                        <!-- Weld 3.x -->
+                        <exclusion>
+                            <groupId>org.jboss.weld.module</groupId>
+                            <artifactId>*</artifactId>
+                        </exclusion>
+                    </exclusions>
                 </dependency>
+
                 <dependency>
                     <groupId>org.jboss.weld</groupId>
                     <artifactId>weld-api</artifactId>
-                    <scope>provided</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.jboss.weld</groupId>
-                    <artifactId>weld-core</artifactId>
                     <scope>provided</scope>
                 </dependency>
                 <dependency>
@@ -381,12 +434,6 @@
                     <artifactId>validation-api</artifactId>
                     <scope>test</scope>
                 </dependency>
-                <dependency>
-                    <groupId>javassist</groupId>
-                    <artifactId>javassist</artifactId>
-                    <scope>test</scope>
-                </dependency>
-
                 <dependency>
                     <groupId>org.apache.geronimo.specs</groupId>
                     <artifactId>geronimo-interceptor_1.1_spec</artifactId>
