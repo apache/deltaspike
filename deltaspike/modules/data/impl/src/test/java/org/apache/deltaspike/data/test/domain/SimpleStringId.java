@@ -19,7 +19,6 @@
 package org.apache.deltaspike.data.test.domain;
 
 import javax.persistence.*;
-import java.util.UUID;
 
 @Entity
 @NamedQueries({
@@ -34,6 +33,11 @@ public class SimpleStringId extends SuperSimple
     @Id
     private String id;
     private String name;
+
+    public SimpleStringId()
+    {
+
+    }
 
     public SimpleStringId(String id, String name)
     {
