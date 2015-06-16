@@ -75,19 +75,23 @@ public class ShrinkWrapArchiveUtil
             Enumeration<URL> foundFiles = classLoader.getResources(markerFile);
 
             List<JavaArchive> archives = new ArrayList<JavaArchive>();
+            int numArchives = 0;
 
             while (foundFiles.hasMoreElements())
             {
                 URL foundFile = foundFiles.nextElement();
                 LOG.fine("Evaluating Java ClassPath URL " + foundFile.toExternalForm());
+                String suffix = (numArchives == 0) ? "" : Integer.toString(numArchives);
 
                 JavaArchive archive
-                    = createArchive(foundFile, markerFile, includeIfPackageExists, excludeIfPackageExists, archiveName);
+                    = createArchive(foundFile, markerFile, includeIfPackageExists, excludeIfPackageExists, 
+                        archiveName + suffix);
                 if (archive != null)
                 {
                     LOG.info("Test " + getTestName()
                             + " Adding Java ClassPath URL as JavaArchive " + foundFile.toExternalForm());
                     archives.add(archive);
+                    numArchives++;
                 }
             }
 
@@ -236,7 +240,7 @@ public class ShrinkWrapArchiveUtil
             return archiveEntries;
         }
 
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
 
