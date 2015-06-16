@@ -22,7 +22,7 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core">
+      xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ds="http://deltaspike.apache.org/jsf">
 
 <h:head>
     <title>DeltaSpike JSF Playground</title>
@@ -30,6 +30,8 @@
 
 <h:body>
     <h:form>
+        <ds:windowId />
+
         <h:commandButton value="Throw Exception" actionListener="#{testExceptionController.throwException}" />
     </h:form>
 </h:body>
