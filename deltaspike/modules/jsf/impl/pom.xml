@@ -151,8 +151,12 @@
             <scope>test</scope>
             <exclusions>
                 <exclusion>
-                    <artifactId>cdi-api</artifactId>
                     <groupId>javax.enterprise</groupId>
+                    <artifactId>cdi-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xerces</groupId>
+                    <artifactId>xercesImpl</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

@@ -58,7 +58,7 @@
 
         <!-- testing stuff -->
         <junit.version>4.10</junit.version>
-        <arquillian.version>1.1.4.Final</arquillian.version>
+        <arquillian.version>1.1.8.Final</arquillian.version>
         <tomee.version>1.7.0</tomee.version>
 
         <!-- JSF-2.0 implementations-->
