@@ -41,6 +41,9 @@
             !org.apache.deltaspike.core.*,
             *
         </deltaspike.osgi.import>
+        <deltaspike.osgi.require.capability>
+            osgi.extender; filter:="(osgi.extender=pax.cdi)"
+        </deltaspike.osgi.require.capability>
         <deltaspike.osgi.provide.capability>
             org.ops4j.pax.cdi.extension; extension=deltaspike-core-api
         </deltaspike.osgi.provide.capability>

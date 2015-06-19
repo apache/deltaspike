@@ -40,8 +40,7 @@
             *
         </deltaspike.osgi.import>
         <deltaspike.osgi.require.capability>
-            org.ops4j.pax.cdi.extension;
-            filter:="(extension=pax-cdi-extension)"
+            osgi.extender; filter:="(osgi.extender=pax.cdi)"
         </deltaspike.osgi.require.capability>
         <deltaspike.osgi.provide.capability>
             org.ops4j.pax.cdi.extension;

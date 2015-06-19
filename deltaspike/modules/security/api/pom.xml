@@ -39,6 +39,9 @@
         <deltaspike.osgi.import>
             *
         </deltaspike.osgi.import>
+        <deltaspike.osgi.require.capability>
+            osgi.extender; filter:="(osgi.extender=pax.cdi)"
+        </deltaspike.osgi.require.capability>
     </properties>
 
     <dependencies>
