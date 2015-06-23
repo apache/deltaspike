@@ -473,8 +473,6 @@
 
             <properties>
                 <cdicontainer.version>tomee-${tomee.version}</cdicontainer.version>
-                <arquillian.version>1.1.1.Final</arquillian.version>
-                <shrinkwrap.version>1.1.2</shrinkwrap.version>
             </properties>
 
             <dependencies>
