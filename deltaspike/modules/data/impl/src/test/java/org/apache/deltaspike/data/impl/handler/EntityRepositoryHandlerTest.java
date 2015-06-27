@@ -18,20 +18,6 @@
  */
 package org.apache.deltaspike.data.impl.handler;
 
-import static org.apache.deltaspike.data.test.util.TestDeployments.initDeployment;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
-import java.util.List;
-
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.metamodel.SingularAttribute;
-
 import org.apache.deltaspike.data.test.TransactionalTestCase;
 import org.apache.deltaspike.data.test.domain.Simple;
 import org.apache.deltaspike.data.test.domain.Simple2;
@@ -45,6 +31,19 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+
+import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.metamodel.SingularAttribute;
+import java.util.List;
+
+import static org.apache.deltaspike.data.test.util.TestDeployments.initDeployment;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 @Category(WebProfileCategory.class)
 public class EntityRepositoryHandlerTest extends TransactionalTestCase
@@ -401,6 +400,32 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
 
         assertEquals("Simple", entityName);
         assertEquals("EntitySimple4", entityName2);
+    }
+
+    @Test
+    public void should_return_entity_primary_key()
+    {
+        //given
+        Simple simple = testData.createSimple("should_return_entity_primary_key");
+
+        //when
+        Long primaryKey = repo.getPrimaryKey(simple);
+
+        // then
+        assertNotNull(primaryKey);
+    }
+
+    @Test
+    public void should_return_null_primary_key()
+    {
+        //given
+        Simple simple = new Simple("should_return_null_primary_key");
+
+        //when
+        Long primaryKey = repo.getPrimaryKey(simple);
+
+        // then
+        assertNull(primaryKey);
     }
 
     @Override

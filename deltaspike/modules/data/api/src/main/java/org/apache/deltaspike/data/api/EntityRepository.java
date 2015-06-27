@@ -175,4 +175,11 @@ public interface EntityRepository<E, PK extends Serializable> extends Deactivata
      * @return                  Counter.
      */
     Long countLike(E example, SingularAttribute<E, ?>... attributes);
+
+    /**
+     * Return the id of the entity. Returns null if the entity does not yet have an id.
+     * @param example           Sample entity.
+     * @return                  id of the entity
+     */
+    PK getPrimaryKey(E example);
 }

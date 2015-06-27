@@ -27,10 +27,12 @@ import org.apache.deltaspike.data.impl.property.Property;
 import org.apache.deltaspike.data.impl.property.query.NamedPropertyCriteria;
 import org.apache.deltaspike.data.impl.property.query.PropertyQueries;
 import org.apache.deltaspike.data.impl.util.EntityUtils;
+import org.apache.deltaspike.data.impl.util.jpa.PersistenceUnitUtilDelegateFactory;
 import org.apache.deltaspike.data.spi.DelegateQueryHandler;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceUnitUtil;
 import javax.persistence.Table;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
@@ -166,6 +168,12 @@ public class EntityRepositoryHandler<E, PK extends Serializable>
     public Long countLike(E example, SingularAttribute<E, ?>... attributes)
     {
         return executeCountQuery(example, true, attributes);
+    }
+
+    @Override
+    public PK getPrimaryKey(E entity)
+    {
+        return (PK) persistenceUnitUtil().getIdentifier(entity);
     }
 
     @Override
@@ -370,5 +378,10 @@ public class EntityRepositoryHandler<E, PK extends Serializable>
         addParameters(query, example, properties, useLikeOperator);
         context.applyRestrictions(query);
         return query.getSingleResult();
+    }
+
+    private PersistenceUnitUtil persistenceUnitUtil()
+    {
+        return PersistenceUnitUtilDelegateFactory.get(entityManager());
     }
 }
