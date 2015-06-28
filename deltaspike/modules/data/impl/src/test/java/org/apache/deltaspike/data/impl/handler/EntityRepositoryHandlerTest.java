@@ -407,12 +407,14 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
     {
         //given
         Simple simple = testData.createSimple("should_return_entity_primary_key");
+        Long id = simple.getId();
 
         //when
         Long primaryKey = repo.getPrimaryKey(simple);
 
         // then
         assertNotNull(primaryKey);
+        assertEquals(id, primaryKey);
     }
 
     @Test
@@ -426,6 +428,22 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
 
         // then
         assertNull(primaryKey);
+    }
+
+    @Test
+    public void should_return_entity_primary_key_detached_entity()
+    {
+        //given
+        Simple simple = testData.createSimple("should_return_entity_primary_key");
+        Long id = simple.getId();
+
+        //when
+        entityManager.detach(simple);
+        Long primaryKey = repo.getPrimaryKey(simple);
+
+        // then
+        assertNotNull(primaryKey);
+        assertEquals(id, primaryKey);
     }
 
     @Override

@@ -18,6 +18,8 @@
  */
 package org.apache.deltaspike.data.impl.util.jpa;
 
+import org.apache.deltaspike.data.impl.util.EntityUtils;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceUnitUtil;
 import java.lang.reflect.InvocationTargetException;
@@ -26,10 +28,12 @@ import java.lang.reflect.Method;
 public class OpenJpaPersistenceUnitUtilDelegate implements PersistenceUnitUtil
 {
     private final PersistenceUnitUtil persistenceUnitUtil;
+    private final EntityManager entityManager;
 
     public OpenJpaPersistenceUnitUtilDelegate(EntityManager entityManager)
     {
         this.persistenceUnitUtil = entityManager.getEntityManagerFactory().getPersistenceUnitUtil();
+        this.entityManager = entityManager;
     }
 
     @Override
@@ -47,28 +51,37 @@ public class OpenJpaPersistenceUnitUtilDelegate implements PersistenceUnitUtil
     public Object getIdentifier(Object entity)
     {
         final String methodName = "getIdObject";
-        final Object identifier = persistenceUnitUtil.getIdentifier(entity);
-        if (identifier != null)
+        try
         {
-            final Method method;
-            try
+            if (!entityManager.contains(entity))
             {
+                entity = entityManager.getReference(entity.getClass(), EntityUtils.primaryKeyValue(entity));
+            }
+
+            final Object identifier = persistenceUnitUtil.getIdentifier(entity);
+            if (identifier != null)
+            {
+                final Method method;
+
                 method = identifier.getClass().getMethod(methodName, null);
                 return method.invoke(identifier, null);
             }
-            catch (NoSuchMethodException e)
-            {
-                // do nothing
-            }
-            catch (InvocationTargetException e)
-            {
-                // do nothing
-            }
-            catch (IllegalAccessException e)
-            {
-                // do nothing
-            }
-
+        }
+        catch (NoSuchMethodException e)
+        {
+            throw new RuntimeException(e);
+        }
+        catch (InvocationTargetException e)
+        {
+            throw new RuntimeException(e);
+        }
+        catch (IllegalAccessException e)
+        {
+            throw new RuntimeException(e);
+        }
+        catch (IllegalStateException e)
+        {
+            return null;
         }
         return null;
     }

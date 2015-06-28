@@ -23,6 +23,7 @@ import org.apache.deltaspike.data.api.mapping.QueryInOutMapper;
 import org.apache.deltaspike.data.impl.meta.RepositoryMethod;
 import org.apache.deltaspike.data.impl.param.Parameters;
 import org.apache.deltaspike.data.impl.util.bean.Destroyable;
+import org.apache.deltaspike.data.impl.util.jpa.PersistenceUnitUtilDelegateFactory;
 import org.apache.deltaspike.data.spi.QueryInvocationContext;
 
 import javax.persistence.EntityManager;
@@ -91,7 +92,7 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
     {
         try
         {
-            return entityManager.getEntityManagerFactory().getPersistenceUnitUtil().getIdentifier(entity) == null;
+            return PersistenceUnitUtilDelegateFactory.get(entityManager).getIdentifier(entity) == null;
         }
         catch (IllegalArgumentException e)
         {
