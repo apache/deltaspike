@@ -37,20 +37,34 @@ import org.apache.deltaspike.jsf.spi.scope.window.ClientWindow;
 @Typed()
 public abstract class ClientWindowHelper
 {
-    public static final String INITIAL_REDIRECT_WINDOW_ID = ClientWindowHelper.class.getName()
-            + ".INITIAL_REDIRECT_WINDOW_ID";
-    public static final String REQUEST_WINDOW_ID_COOKIE_PREFIX = "dsrwid-";
-
     private static final Logger LOG = Logger.getLogger(ClientWindowHelper.class.getName());
 
+    private static final String INITIAL_REDIRECT_WINDOW_ID = ClientWindowHelper.class.getName()
+            + ".INITIAL_REDIRECT_WINDOW_ID";
+
+    public abstract class RequestParameters
+    {
+        public static final String POST_WINDOW_ID = "dspwid";
+        public static final String JSF_POST_WINDOW_ID = "javax.faces.ClientWindow";
+        public static final String GET_WINDOW_ID = "dswid";
+        public static final String REQUEST_TOKEN = "dsrid";
+    }
+
+    public abstract class Cookies
+    {
+        public static final String REQUEST_WINDOW_ID_PREFIX = "dsrwid-";
+        public static final String WINDOW_ID_PREFIX = "dsWindowId-";
+    }
+
+
     /**
-     * Handles the initial redirect for the URL modus, if no windowId is available in the current request URL.
+     * Handles the initial redirect for the LAZY mode, if no windowId is available in the current request URL.
      *
      * @param facesContext the {@link FacesContext}
      * @param newWindowId the new windowId
      */
     public static void handleInitialRedirect(FacesContext facesContext, String newWindowId)
-    {
+    {        
         // store the new windowId as context attribute to prevent infinite loops
         // #sendRedirect will append the windowId (from ClientWindow#getWindowId again) to the redirectUrl
         facesContext.getAttributes().put(INITIAL_REDIRECT_WINDOW_ID, newWindowId);
@@ -64,7 +78,7 @@ public abstract class ClientWindowHelper
         {
             url += externalContext.getRequestPathInfo();
         }
-  
+
         url = JsfUtils.addRequestParameters(externalContext, url, true);
         //TODO check if it isn't better to fix addRequestParameters itself
         //only #encodeResourceURL is portable currently
@@ -119,12 +133,13 @@ public abstract class ClientWindowHelper
                             true,
                             entry.getKey(),
                             entry.getValue());
-                }
 
-                if (targetUrl.contains("dswid=&"))
-                {
-                    //remove empty dswid parameter
-                    targetUrl = targetUrl.replace("dswid=&", "");
+                    //remove empty parameter (e.g. dswid)
+                    String emptyParameter = entry.getKey() + "=&";
+                    if (targetUrl.contains(emptyParameter))
+                    {
+                        targetUrl = targetUrl.replace(emptyParameter, "");
+                    }
                 }
                 return targetUrl;
             }
@@ -132,7 +147,7 @@ public abstract class ClientWindowHelper
 
         return url;
     }
-    
+
     public static void addRequestWindowIdCookie(FacesContext context, String windowId)
     {
         Map<String, Object> properties = new HashMap();
@@ -140,21 +155,21 @@ public abstract class ClientWindowHelper
         properties.put("maxAge", 30);
 
         context.getExternalContext().addResponseCookie(
-                REQUEST_WINDOW_ID_COOKIE_PREFIX + windowId, windowId, properties);
+                Cookies.REQUEST_WINDOW_ID_PREFIX + windowId, windowId, properties);
     }
-    
+
     public static Object getRequestWindowIdCookie(FacesContext context, String windowId)
     {
         Map<String, Object> cookieMap = context.getExternalContext().getRequestCookieMap();
-        
-        if (cookieMap.containsKey(REQUEST_WINDOW_ID_COOKIE_PREFIX + windowId))
+
+        if (cookieMap.containsKey(Cookies.REQUEST_WINDOW_ID_PREFIX + windowId))
         {
-            return cookieMap.get(REQUEST_WINDOW_ID_COOKIE_PREFIX + windowId);
+            return cookieMap.get(Cookies.REQUEST_WINDOW_ID_PREFIX + windowId);
         }
-        
+
         return null;
     }
-    
+
     public static void removeRequestWindowIdCookie(FacesContext context, Cookie cookie)
     {
         cookie.setMaxAge(0);
