@@ -27,6 +27,7 @@ import javax.faces.render.FacesRenderer;
 import javax.faces.render.Renderer;
 import java.io.IOException;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.spi.scope.window.WindowContext;
@@ -79,8 +80,11 @@ public class WindowIdHtmlRenderer extends Renderer
         if (cookie != null && cookie instanceof Cookie)
         {
             Cookie servletCookie = (Cookie) cookie;
-            ClientWindowHelper.removeRequestWindowIdCookie(context, servletCookie);
             writer.write("window.deltaspikeInitialRedirectWindowId='" + servletCookie.getValue() + "';");
+            
+            // expire/remove cookie
+            servletCookie.setMaxAge(0);
+            ((HttpServletResponse) context.getExternalContext().getResponse()).addCookie(servletCookie);
         }
 
         writer.endElement("script");

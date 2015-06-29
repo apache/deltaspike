@@ -218,12 +218,14 @@ function eraseRequestCookie() {
     date.setTime(date.getTime()-(10*24*60*60*1000)); // - 10 day
     var expires = ";max-age=0;expires="+date.toGMTString();
     
-    var dsrid = getUrlParameter(window.location.href, 'dsrid'); // random request param
+    // CLIENT_WINDOW 
+    var dsrid = getUrlParameter(window.location.href, 'dsrid');
     if (dsrid) {
-        var cookieName = 'dsWindowId-' + dsrid;
+        var cookieName = 'dsrwid-' + dsrid;
         document.cookie = cookieName+"="+expires+"; path=/";
     }
 
+    // LAZY
     var dswid = getUrlParameter(window.location.href, 'dswid');
     if (dswid) {
         var cookieName = 'dsrwid-' + dswid;

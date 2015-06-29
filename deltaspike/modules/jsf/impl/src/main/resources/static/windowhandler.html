@@ -166,7 +166,7 @@ window.onload = function() {
     // we still add hte windowId page param to support lazy windowId dropping for some clients
     newUrl = setUrlParam(newUrl, "dswid", urlId);
 
-    document.cookie = 'dsWindowId-' + requestToken + '=' + windowId + expires+"; path=/";
+    document.cookie = 'dsrwid-' + requestToken + '=' + windowId + expires+"; path=/";
 
     window.location = newUrl;
 }

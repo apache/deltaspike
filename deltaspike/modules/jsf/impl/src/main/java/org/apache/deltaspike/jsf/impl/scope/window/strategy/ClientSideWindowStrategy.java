@@ -60,7 +60,7 @@ public class ClientSideWindowStrategy extends AbstractClientWindowStrategy
 
         if (post)
         {
-            windowId = getPostBackWindowId(facesContext);
+            windowId = getWindowIdPostParameter(facesContext);
         }
         else if (isNoscriptRequest(facesContext.getExternalContext()))
         {
@@ -168,7 +168,8 @@ public class ClientSideWindowStrategy extends AbstractClientWindowStrategy
 
     protected String getVerifiedWindowIdFromCookie(ExternalContext externalContext)
     {
-        String cookieName = ClientWindowHelper.Cookies.WINDOW_ID_PREFIX + getRequestToken(externalContext);
+        String cookieName =
+                ClientWindowHelper.Cookies.REQUEST_WINDOW_ID_PREFIX + getRequestTokenParameter(externalContext);
         Cookie cookie = (Cookie) externalContext.getRequestCookieMap().get(cookieName);
 
         if (cookie != null)
@@ -184,7 +185,7 @@ public class ClientSideWindowStrategy extends AbstractClientWindowStrategy
         return null;
     }
 
-    protected String getRequestToken(ExternalContext externalContext)
+    protected String getRequestTokenParameter(ExternalContext externalContext)
     {
         String requestToken =
                 externalContext.getRequestParameterMap().get(ClientWindowHelper.RequestParameters.REQUEST_TOKEN);

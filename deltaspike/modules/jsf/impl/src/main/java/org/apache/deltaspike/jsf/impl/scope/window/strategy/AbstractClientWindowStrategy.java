@@ -63,7 +63,6 @@ public abstract class AbstractClientWindowStrategy implements ClientWindow
         this.maxWindowIdCount = ClientWindowHelper.getMaxWindowIdLength();
     }
 
-
     @Override
     public String getWindowId(FacesContext facesContext)
     {
@@ -78,9 +77,12 @@ public abstract class AbstractClientWindowStrategy implements ClientWindow
 
         windowId = getOrCreateWindowId(facesContext);
 
-        if (windowId != null && windowId.length() > this.maxWindowIdCount)
+        if (windowId != null)
         {
-            windowId = windowId.substring(0, this.maxWindowIdCount);
+            if (windowId.length() > this.maxWindowIdCount)
+            {
+                windowId = windowId.substring(0, this.maxWindowIdCount);
+            }
 
             requestMap.put(CACHE_WINDOW_ID, windowId);
         }
@@ -115,10 +117,7 @@ public abstract class AbstractClientWindowStrategy implements ClientWindow
         return false;
     }
 
-    /**
-     * Extract the windowId for http POST
-     */
-    protected String getPostBackWindowId(FacesContext facesContext)
+    protected String getWindowIdPostParameter(FacesContext facesContext)
     {
         Map<String, String> requestParams = facesContext.getExternalContext().getRequestParameterMap();
         String windowId = requestParams.get(ClientWindowHelper.RequestParameters.POST_WINDOW_ID);
@@ -127,9 +126,16 @@ public abstract class AbstractClientWindowStrategy implements ClientWindow
         {
             windowId = requestParams.get(ClientWindowHelper.RequestParameters.JSF_POST_WINDOW_ID);
         }
+
         return windowId;
     }
 
+    protected String getWindowIdParameter(FacesContext facesContext)
+    {
+        Map<String, String> requestParameters = facesContext.getExternalContext().getRequestParameterMap();
+        return requestParameters.get(ClientWindowHelper.RequestParameters.GET_WINDOW_ID);
+    }
+    
     @Override
     public void disableClientWindowRenderMode(FacesContext facesContext)
     {

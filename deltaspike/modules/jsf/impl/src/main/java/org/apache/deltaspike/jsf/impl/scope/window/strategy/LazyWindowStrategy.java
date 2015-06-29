@@ -38,15 +38,14 @@ public class LazyWindowStrategy extends AbstractClientWindowStrategy
 
         if (StringUtils.isEmpty(windowId))
         {
-            Map<String, String> requestParameters = facesContext.getExternalContext().getRequestParameterMap();
-            windowId = requestParameters.get(ClientWindowHelper.RequestParameters.GET_WINDOW_ID);
+            windowId = getWindowIdParameter(facesContext);
         }
 
         boolean post = isPost(facesContext);
 
         if (StringUtils.isEmpty(windowId) && post)
         {
-            windowId = getPostBackWindowId(facesContext);
+            windowId = getWindowIdPostParameter(facesContext);
         }
 
         if (StringUtils.isEmpty(windowId))

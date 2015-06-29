@@ -28,8 +28,6 @@ import javax.enterprise.inject.Typed;
 import javax.faces.FacesException;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.deltaspike.jsf.api.config.base.JsfBaseConfig;
 import org.apache.deltaspike.jsf.spi.scope.window.ClientWindow;
@@ -53,7 +51,6 @@ public abstract class ClientWindowHelper
     public abstract class Cookies
     {
         public static final String REQUEST_WINDOW_ID_PREFIX = "dsrwid-";
-        public static final String WINDOW_ID_PREFIX = "dsWindowId-";
     }
 
 
@@ -84,8 +81,8 @@ public abstract class ClientWindowHelper
         //only #encodeResourceURL is portable currently
         url = facesContext.getExternalContext().encodeResourceURL(url);
 
-        // see #729
-        addRequestWindowIdCookie(facesContext, newWindowId);
+        // rember the initial redirect windowId till the next request - see #729
+        addRequestWindowIdCookie(facesContext, newWindowId, newWindowId);
 
         try
         {
@@ -148,32 +145,26 @@ public abstract class ClientWindowHelper
         return url;
     }
 
-    public static void addRequestWindowIdCookie(FacesContext context, String windowId)
+    public static void addRequestWindowIdCookie(FacesContext context, String requestToken, String windowId)
     {
         Map<String, Object> properties = new HashMap();
         properties.put("path", "/");
         properties.put("maxAge", 30);
 
         context.getExternalContext().addResponseCookie(
-                Cookies.REQUEST_WINDOW_ID_PREFIX + windowId, windowId, properties);
+                Cookies.REQUEST_WINDOW_ID_PREFIX + requestToken, windowId, properties);
     }
 
-    public static Object getRequestWindowIdCookie(FacesContext context, String windowId)
+    public static Object getRequestWindowIdCookie(FacesContext context, String requestToken)
     {
         Map<String, Object> cookieMap = context.getExternalContext().getRequestCookieMap();
 
-        if (cookieMap.containsKey(Cookies.REQUEST_WINDOW_ID_PREFIX + windowId))
+        if (cookieMap.containsKey(Cookies.REQUEST_WINDOW_ID_PREFIX + requestToken))
         {
-            return cookieMap.get(Cookies.REQUEST_WINDOW_ID_PREFIX + windowId);
+            return cookieMap.get(Cookies.REQUEST_WINDOW_ID_PREFIX + requestToken);
         }
 
         return null;
-    }
-
-    public static void removeRequestWindowIdCookie(FacesContext context, Cookie cookie)
-    {
-        cookie.setMaxAge(0);
-        ((HttpServletResponse) context.getExternalContext().getResponse()).addCookie(cookie);
     }
 
     public static int getMaxWindowIdLength()
