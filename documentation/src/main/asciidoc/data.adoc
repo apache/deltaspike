@@ -749,7 +749,7 @@ If you call any method expression, `@Query`-annotated method or a method
 from the `EntityRepository`, the repository will figure out if a
 transaction is needed or not, and if so, if there is already one
 ongoing. The Data module uses the `TransactionStrategy` provided by the
-http://deltaspike.apache.org/jpa[JPA Module] for this. See the JPA
+http://deltaspike.apache.org/documentation/jpa.html[JPA Module] for this. See the JPA
 module documentation for more details.
 
 IMPORTANT: Some containers do not support `BeanManagedUserTransactionStrategy`! As
