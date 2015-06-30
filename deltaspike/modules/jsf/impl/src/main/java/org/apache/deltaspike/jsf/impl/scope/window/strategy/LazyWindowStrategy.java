@@ -66,12 +66,6 @@ public class LazyWindowStrategy extends AbstractClientWindowStrategy
     }
 
     @Override
-    protected boolean isSupportClientWindowRenderingMode()
-    {
-        return true;
-    }
-
-    @Override
     protected Map<String, String> createQueryURLParameters(FacesContext facesContext)
     {
         String windowId = getWindowId(facesContext);
@@ -84,5 +78,17 @@ public class LazyWindowStrategy extends AbstractClientWindowStrategy
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put(ClientWindowHelper.RequestParameters.GET_WINDOW_ID, windowId);
         return parameters;
+    }
+    
+    @Override
+    protected boolean isSupportClientWindowRenderingMode()
+    {
+        return true;
+    }
+
+    @Override
+    public boolean isInitialRedirectSupported(FacesContext facesContext)
+    {
+        return true;
     }
 }

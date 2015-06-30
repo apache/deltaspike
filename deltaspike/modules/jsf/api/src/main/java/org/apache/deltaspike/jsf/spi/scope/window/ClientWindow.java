@@ -71,4 +71,9 @@ public interface ClientWindow
      * @return meta-data for the current window which should get added to URLs, null otherwise
      */
     Map<String, String> getQueryURLParameters(FacesContext facesContext);
+    
+    /**
+     * @return true if the implementation possible sends an initial redirect.
+     */
+    boolean isInitialRedirectSupported(FacesContext facesContext);
 }

@@ -174,6 +174,12 @@ public abstract class AbstractClientWindowStrategy implements ClientWindow
     }
 
     @Override
+    public boolean isInitialRedirectSupported(FacesContext facesContext)
+    {
+        return false;
+    }
+    
+    @Override
     public Map<String, String> getQueryURLParameters(FacesContext facesContext)
     {
         Map<String, String> cachedParameters =

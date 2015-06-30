@@ -87,6 +87,12 @@ public class DefaultClientWindow implements ClientWindow
     {
         return getClientWindow(facesContext).getQueryURLParameters(facesContext);
     }
+    
+    @Override
+    public boolean isInitialRedirectSupported(FacesContext facesContext)
+    {
+        return getClientWindow(facesContext).isInitialRedirectSupported(facesContext);
+    }
 
     protected ClientWindow getClientWindow(FacesContext facesContext)
     {

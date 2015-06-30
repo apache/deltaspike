@@ -30,8 +30,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
-import org.apache.deltaspike.core.spi.scope.window.WindowContext;
 import org.apache.deltaspike.jsf.impl.util.ClientWindowHelper;
+import org.apache.deltaspike.jsf.spi.scope.window.ClientWindow;
 import org.apache.deltaspike.jsf.spi.scope.window.ClientWindowConfig;
 
 @FacesRenderer(componentFamily = WindowIdComponent.COMPONENT_FAMILY, rendererType = WindowIdComponent.COMPONENT_TYPE)
@@ -40,7 +40,7 @@ import org.apache.deltaspike.jsf.spi.scope.window.ClientWindowConfig;
         @ResourceDependency(library = "javax.faces", name = "jsf.js", target = "head") } )
 public class WindowIdHtmlRenderer extends Renderer
 {
-    private volatile WindowContext windowContext;
+    private volatile ClientWindow clientWindow;
     private volatile ClientWindowConfig clientWindowConfig;
     private int maxWindowIdCount = 10;
 
@@ -57,7 +57,10 @@ public class WindowIdHtmlRenderer extends Renderer
     {
         super.encodeBegin(context, component);
 
-        String windowId = getWindowContext().getCurrentWindowId();
+        lazyInit();
+        
+        String windowId = clientWindow.getWindowId(context);
+        String clientWindowRenderMode = clientWindowConfig.getClientWindowRenderMode(context).name();
 
         //already ensured by DefaultClientWindow
         //just to ensure that we don't get a security issue in case of a customized client-window implementation
@@ -67,59 +70,44 @@ public class WindowIdHtmlRenderer extends Renderer
             windowId = windowId.substring(0, this.maxWindowIdCount);
         }
 
-        String mode = getClientWindowConfig().getClientWindowRenderMode(context).name();
-
         ResponseWriter writer = context.getResponseWriter();
         writer.startElement("script", component);
         writer.writeAttribute("type", "text/javascript", null);
         writer.write("window.deltaspikeWindowId='" + windowId + "';");
-        writer.write("window.deltaspikeClientWindowRenderMode='" + mode + "';");
+        writer.write("window.deltaspikeClientWindowRenderMode='" + clientWindowRenderMode + "';");
         
         // see #729
-        Object cookie = ClientWindowHelper.getRequestWindowIdCookie(context, windowId);
-        if (cookie != null && cookie instanceof Cookie)
+        if (clientWindow.isInitialRedirectSupported(context))
         {
-            Cookie servletCookie = (Cookie) cookie;
-            writer.write("window.deltaspikeInitialRedirectWindowId='" + servletCookie.getValue() + "';");
-            
-            // expire/remove cookie
-            servletCookie.setMaxAge(0);
-            ((HttpServletResponse) context.getExternalContext().getResponse()).addCookie(servletCookie);
+            Object cookie = ClientWindowHelper.getRequestWindowIdCookie(context, windowId);
+            if (cookie != null && cookie instanceof Cookie)
+            {
+                Cookie servletCookie = (Cookie) cookie;
+                writer.write("window.deltaspikeInitialRedirectWindowId='" + servletCookie.getValue() + "';");
+
+                // expire/remove cookie
+                servletCookie.setMaxAge(0);
+                ((HttpServletResponse) context.getExternalContext().getResponse()).addCookie(servletCookie);
+            }
         }
 
         writer.endElement("script");
     }
 
-    private WindowContext getWindowContext()
+    private void lazyInit()
     {
-        if (windowContext == null)
+        if (clientWindow == null)
         {
             synchronized (this)
             {
-                if (windowContext == null)
+                if (clientWindow == null)
                 {
-                    windowContext = BeanProvider.getContextualReference(WindowContext.class);
+                    clientWindowConfig = BeanProvider.getContextualReference(ClientWindowConfig.class);
+                    clientWindow = BeanProvider.getContextualReference(ClientWindow.class);
                     maxWindowIdCount = ClientWindowHelper.getMaxWindowIdLength();
                 }
             }
         }
-
-        return windowContext;
     }
-    
-    private ClientWindowConfig getClientWindowConfig()
-    {
-        if (clientWindowConfig == null)
-        {
-            synchronized (this)
-            {
-                if (clientWindowConfig == null)
-                {
-                    clientWindowConfig = BeanProvider.getContextualReference(ClientWindowConfig.class);
-                }
-            }
-        }
 
-        return clientWindowConfig;
-    }
 }
