@@ -44,4 +44,10 @@ public class DelegatedWindowStrategy extends AbstractClientWindowStrategy
     {
         facesContext.getExternalContext().getClientWindow().enableClientWindowRenderMode(facesContext);
     }
+    
+    @Override
+    public boolean isClientWindowRenderModeEnabled(FacesContext facesContext)
+    {
+        return facesContext.getExternalContext().getClientWindow().isClientWindowRenderModeEnabled(facesContext);
+    }
 }
