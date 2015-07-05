@@ -24,24 +24,41 @@ import javax.faces.context.FacesContext;
 import javax.faces.render.FacesRenderer;
 import javax.faces.render.Renderer;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;
+import org.apache.deltaspike.jsf.impl.scope.window.ClientWindowAdapter;
 import org.apache.deltaspike.jsf.spi.scope.window.ClientWindow;
 
 @FacesRenderer(componentFamily = DisableClientWindowComponent.COMPONENT_FAMILY,
         rendererType = DisableClientWindowComponent.COMPONENT_TYPE)
 public class DisableClientWindowHtmlRenderer extends Renderer
 {
-    private volatile ClientWindow clientWindow;
+    private volatile Boolean initialized;
+
+    private ClientWindow clientWindow;
+    private JsfModuleConfig jsfModuleConfig;
     
     @Override
     public void encodeChildren(FacesContext context, UIComponent component) throws IOException
     {
-        boolean clientWindowRenderModeEnabled = getClientWindow().isClientWindowRenderModeEnabled(context);
-
+        lazyInit();
+        
+        boolean clientWindowRenderModeEnabled = clientWindow.isClientWindowRenderModeEnabled(context);
+        
+        if (jsfModuleConfig.isJsf22Available())
+        {
+            Boolean jsfClientWindowRenderModeEnabled =
+                    ClientWindowAdapter.isJsf22ClientWindowRenderModeEnabled(context);
+            if (jsfClientWindowRenderModeEnabled != null)
+            {
+                clientWindowRenderModeEnabled = clientWindowRenderModeEnabled || jsfClientWindowRenderModeEnabled;
+            }
+        }
+        
         try
         {
             if (clientWindowRenderModeEnabled)
             {
-                getClientWindow().disableClientWindowRenderMode(context);
+                clientWindow.disableClientWindowRenderMode(context);
             }
 
             super.encodeChildren(context, component);
@@ -50,7 +67,7 @@ public class DisableClientWindowHtmlRenderer extends Renderer
         {
             if (clientWindowRenderModeEnabled)
             {
-                getClientWindow().enableClientWindowRenderMode(context);
+                clientWindow.enableClientWindowRenderMode(context);
             }
         }
     }
@@ -61,19 +78,20 @@ public class DisableClientWindowHtmlRenderer extends Renderer
         return true;
     }
     
-    private ClientWindow getClientWindow()
+    private void lazyInit()
     {
-        if (clientWindow == null)
+        if (this.initialized == null)
         {
-            synchronized (this)
-            {
-                if (clientWindow == null)
-                {
-                    clientWindow = BeanProvider.getContextualReference(ClientWindow.class);
-                }
-            }
+            init();
         }
+    }
 
-        return clientWindow;
+    protected synchronized void init()
+    {
+        if (this.initialized == null)
+        {
+            clientWindow = BeanProvider.getContextualReference(ClientWindow.class);
+            jsfModuleConfig = BeanProvider.getContextualReference(JsfModuleConfig.class);
+        }
     }
 }

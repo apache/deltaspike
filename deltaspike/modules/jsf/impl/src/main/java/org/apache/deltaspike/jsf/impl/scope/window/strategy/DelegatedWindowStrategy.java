@@ -21,7 +21,6 @@ package org.apache.deltaspike.jsf.impl.scope.window.strategy;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Typed;
 import javax.faces.context.FacesContext;
-import org.apache.deltaspike.jsf.impl.scope.window.ClientWindowAdapter;
 
 @Dependent
 @Typed(DelegatedWindowStrategy.class)
@@ -30,24 +29,11 @@ public class DelegatedWindowStrategy extends AbstractClientWindowStrategy
     @Override
     protected String getOrCreateWindowId(FacesContext facesContext)
     {
-        return ClientWindowAdapter.getWindowIdFromJsf(facesContext);
-    }
-
-    @Override
-    public void disableClientWindowRenderMode(FacesContext facesContext)
-    {
-        facesContext.getExternalContext().getClientWindow().disableClientWindowRenderMode(facesContext);
-    }
-
-    @Override
-    public void enableClientWindowRenderMode(FacesContext facesContext)
-    {
-        facesContext.getExternalContext().getClientWindow().enableClientWindowRenderMode(facesContext);
-    }
-    
-    @Override
-    public boolean isClientWindowRenderModeEnabled(FacesContext facesContext)
-    {
-        return facesContext.getExternalContext().getClientWindow().isClientWindowRenderModeEnabled(facesContext);
+        if (facesContext.getExternalContext().getClientWindow() != null)
+        {
+            return facesContext.getExternalContext().getClientWindow().getId();
+        }
+        
+        return null;
     }
 }

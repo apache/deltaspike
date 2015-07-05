@@ -38,7 +38,9 @@ public class JsfModuleConfig implements DeltaSpikeConfig
 
     private static final long serialVersionUID = -487295181899986237L;
 
-    protected Boolean delegatedWindowHandlingEnabled;
+    private volatile Boolean initialized;
+    private boolean delegatedWindowHandlingEnabled;
+    private boolean jsf22Available;
 
     protected JsfModuleConfig()
     {
@@ -111,26 +113,13 @@ public class JsfModuleConfig implements DeltaSpikeConfig
      */
     public ClientWindowConfig.ClientWindowRenderMode getDefaultWindowMode()
     {
-        if (this.delegatedWindowHandlingEnabled == null)
-        {
-            lazyInitDelegatedWindowHandlingEnabled();
-        }
+        lazyInit();
 
         if (this.delegatedWindowHandlingEnabled)
         {
             return ClientWindowConfig.ClientWindowRenderMode.DELEGATED;
         }
         return null;
-    }
-
-    protected synchronized void lazyInitDelegatedWindowHandlingEnabled()
-    {
-        if (this.delegatedWindowHandlingEnabled != null)
-        {
-            return;
-        }
-
-        this.delegatedWindowHandlingEnabled = isDelegatedWindowHandlingEnabled();
     }
 
     /**
@@ -150,22 +139,57 @@ public class JsfModuleConfig implements DeltaSpikeConfig
         return true;
     }
 
-    protected boolean isDelegatedWindowHandlingEnabled()
+    public boolean isJsf22Available()
     {
-        if (ClassUtils.tryToLoadClassForName(CLIENT_WINDOW_CLASS_NAME) == null)
+        lazyInit();
+        
+        return this.jsf22Available;
+    }
+    
+    public boolean isDelegatedWindowHandlingEnabled()
+    {
+        lazyInit();
+        
+        return this.delegatedWindowHandlingEnabled;
+    }
+    
+    private void lazyInit()
+    {
+        if (this.initialized == null)
         {
-            return false;
+            init();
         }
+    }
 
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-
-        if (facesContext == null) // can happen in case of a very simple test-setup without a mocked jsf container
+    protected synchronized void init()
+    {
+        if (this.initialized == null)
         {
-            return false;
-        }
-        String configuredWindowHandling = facesContext.getExternalContext()
-                                .getInitParameter(CLIENT_WINDOW_CONFIG_KEY);
+            this.jsf22Available = ClassUtils.tryToLoadClassForName(CLIENT_WINDOW_CLASS_NAME) != null;
 
-        return !(configuredWindowHandling == null || "none".equalsIgnoreCase(configuredWindowHandling.trim()));
+            if (!this.jsf22Available)
+            {
+                this.delegatedWindowHandlingEnabled = false;
+            }
+            else
+            {
+                FacesContext facesContext = FacesContext.getCurrentInstance();
+
+                // can happen in case of a very simple test-setup without a mocked jsf container
+                if (facesContext == null)
+                {
+                    this.delegatedWindowHandlingEnabled = false;
+                }
+                else
+                {
+                    
+                    String initParam = facesContext.getExternalContext().getInitParameter(CLIENT_WINDOW_CONFIG_KEY);
+                    this.delegatedWindowHandlingEnabled =
+                            !(initParam == null || "none".equalsIgnoreCase(initParam.trim()));
+                }
+            }
+            
+            this.initialized = true;
+        }
     }
 }

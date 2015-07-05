@@ -87,7 +87,8 @@ public class JsfClientWindowAwareLifecycleWrapper extends LifecycleWrapper
 
             if (!facesContext.getResponseComplete() && !"default".equals(windowId))
             {
-                facesContext.getExternalContext().setClientWindow(new ClientWindowAdapter(clientWindow));
+                facesContext.getExternalContext().setClientWindow(
+                        new ClientWindowAdapter(clientWindow, delegateWindowHandling));
             }
         }
     }
