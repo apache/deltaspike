@@ -29,6 +29,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.lifecycle.Lifecycle;
 import javax.faces.lifecycle.LifecycleWrapper;
 import java.lang.reflect.Field;
+import javax.faces.FacesException;
 
 //ATTENTION: don't rename/move this class as long as we need the workaround in impl-ee6
 //(further details are available at: DELTASPIKE-655 and DELTASPIKE-659)
@@ -46,6 +47,7 @@ public class JsfClientWindowAwareLifecycleWrapper extends LifecycleWrapper
         this.wrapped = wrapped;
     }
 
+    @Override
     public Lifecycle getWrapped()
     {
         return wrapped;
@@ -54,10 +56,7 @@ public class JsfClientWindowAwareLifecycleWrapper extends LifecycleWrapper
     @Override
     public void attachWindow(FacesContext facesContext)
     {
-        if (this.initialized == null)
-        {
-            lazyInit();
-        }
+        lazyInit();
 
         if (this.delegateWindowHandling)
         {
@@ -87,8 +86,7 @@ public class JsfClientWindowAwareLifecycleWrapper extends LifecycleWrapper
 
             if (!facesContext.getResponseComplete() && !"default".equals(windowId))
             {
-                facesContext.getExternalContext().setClientWindow(
-                        new ClientWindowAdapter(clientWindow, delegateWindowHandling));
+                facesContext.getExternalContext().setClientWindow(new ClientWindowAdapter(clientWindow));
             }
         }
     }
@@ -144,6 +142,20 @@ public class JsfClientWindowAwareLifecycleWrapper extends LifecycleWrapper
         }
     }
 
+    @Override
+    public void render(FacesContext context) throws FacesException
+    {
+        lazyInit();
+
+        // prevent jfwid rendering
+        if (!delegateWindowHandling && context.getExternalContext().getClientWindow() != null)
+        {
+            context.getExternalContext().getClientWindow().disableClientWindowRenderMode(context);
+        }
+        
+        super.render(context);
+    }
+    
     private void lazyInit()
     {
         if (this.initialized == null)
@@ -155,12 +167,12 @@ public class JsfClientWindowAwareLifecycleWrapper extends LifecycleWrapper
     private synchronized void init()
     {
         // switch into paranoia mode
-        if (initialized == null)
+        if (this.initialized == null)
         {
-            delegateWindowHandling = ClientWindowConfig.ClientWindowRenderMode.DELEGATED.equals(
+            this.delegateWindowHandling = ClientWindowConfig.ClientWindowRenderMode.DELEGATED.equals(
                 BeanProvider.getContextualReference(JsfModuleConfig.class).getDefaultWindowMode());
 
-            initialized = true;
+            this.initialized = true;
         }
     }
 }

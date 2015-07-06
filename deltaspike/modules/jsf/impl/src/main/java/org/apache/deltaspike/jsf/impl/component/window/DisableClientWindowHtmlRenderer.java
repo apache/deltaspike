@@ -25,7 +25,6 @@ import javax.faces.render.FacesRenderer;
 import javax.faces.render.Renderer;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;
-import org.apache.deltaspike.jsf.impl.scope.window.ClientWindowAdapter;
 import org.apache.deltaspike.jsf.spi.scope.window.ClientWindow;
 
 @FacesRenderer(componentFamily = DisableClientWindowComponent.COMPONENT_FAMILY,
@@ -42,32 +41,40 @@ public class DisableClientWindowHtmlRenderer extends Renderer
     {
         lazyInit();
         
-        boolean clientWindowRenderModeEnabled = clientWindow.isClientWindowRenderModeEnabled(context);
+        boolean dsClientWindowRenderModeEnabled = clientWindow.isClientWindowRenderModeEnabled(context);
+        boolean jsfClientWindowRenderModeEnabled = false;
         
         if (jsfModuleConfig.isJsf22Available())
         {
-            Boolean jsfClientWindowRenderModeEnabled =
-                    ClientWindowAdapter.isJsf22ClientWindowRenderModeEnabled(context);
-            if (jsfClientWindowRenderModeEnabled != null)
+            if (context.getExternalContext().getClientWindow() != null)
             {
-                clientWindowRenderModeEnabled = clientWindowRenderModeEnabled || jsfClientWindowRenderModeEnabled;
+                jsfClientWindowRenderModeEnabled =
+                        context.getExternalContext().getClientWindow().isClientWindowRenderModeEnabled(context);
             }
         }
         
         try
         {
-            if (clientWindowRenderModeEnabled)
+            if (dsClientWindowRenderModeEnabled)
             {
                 clientWindow.disableClientWindowRenderMode(context);
+            }
+            if (jsfClientWindowRenderModeEnabled)
+            {
+                context.getExternalContext().getClientWindow().disableClientWindowRenderMode(context);
             }
 
             super.encodeChildren(context, component);
         }
         finally
         {
-            if (clientWindowRenderModeEnabled)
+            if (dsClientWindowRenderModeEnabled)
             {
                 clientWindow.enableClientWindowRenderMode(context);
+            }
+            if (jsfClientWindowRenderModeEnabled)
+            {
+                context.getExternalContext().getClientWindow().enableClientWindowRenderMode(context);
             }
         }
     }

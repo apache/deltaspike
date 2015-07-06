@@ -27,7 +27,6 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.deltaspike.core.spi.scope.window.WindowContext;
 import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;
-import org.apache.deltaspike.jsf.impl.scope.window.ClientWindowAdapter;
 import org.apache.deltaspike.jsf.impl.util.ClientWindowHelper;
 import org.apache.deltaspike.jsf.spi.scope.window.ClientWindow;
 import org.apache.deltaspike.jsf.spi.scope.window.ClientWindowConfig;
@@ -145,14 +144,6 @@ public abstract class AbstractClientWindowStrategy implements ClientWindow
             Map<Object, Object> attrMap = facesContext.getAttributes();
             attrMap.put(PER_USE_CLIENT_WINDOW_URL_QUERY_PARAMETER_DISABLED_KEY, Boolean.TRUE);
         }
-
-        if (jsfModuleConfig.isJsf22Available())
-        {
-            if (facesContext.getExternalContext().getClientWindow() != null)
-            {
-                facesContext.getExternalContext().getClientWindow().disableClientWindowRenderMode(facesContext);
-            }
-        }
     }
 
     @Override
@@ -163,28 +154,11 @@ public abstract class AbstractClientWindowStrategy implements ClientWindow
             Map<Object, Object> attrMap = facesContext.getAttributes();
             attrMap.remove(PER_USE_CLIENT_WINDOW_URL_QUERY_PARAMETER_DISABLED_KEY);
         }
-        
-        if (jsfModuleConfig.isJsf22Available())
-        {
-            if (facesContext.getExternalContext().getClientWindow() != null)
-            {
-                facesContext.getExternalContext().getClientWindow().enableClientWindowRenderMode(facesContext);
-            }
-        }
     }
 
     @Override
     public boolean isClientWindowRenderModeEnabled(FacesContext facesContext)
     {
-        // skip dswid rendering if JSF2.2 render mode is disabled
-        if (jsfModuleConfig.isJsf22Available())
-        {
-            if (ClientWindowAdapter.isJsf22ClientWindowRenderModeEnabled(facesContext) == false)
-            {
-                return false;
-            }
-        }
-
         if (isSupportClientWindowRenderingMode())
         {
             Map<Object, Object> attrMap = facesContext.getAttributes();

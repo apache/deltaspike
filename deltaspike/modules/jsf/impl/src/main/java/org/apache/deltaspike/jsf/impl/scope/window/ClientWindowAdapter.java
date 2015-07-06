@@ -34,32 +34,10 @@ import java.util.Map;
 public class ClientWindowAdapter extends ClientWindow
 {
     private final org.apache.deltaspike.jsf.spi.scope.window.ClientWindow window;
-    private final boolean delegateWindowHandling;
 
-    public ClientWindowAdapter(org.apache.deltaspike.jsf.spi.scope.window.ClientWindow window,
-            boolean delegateWindowHandling)
+    public ClientWindowAdapter(org.apache.deltaspike.jsf.spi.scope.window.ClientWindow window)
     {
         this.window = window;
-        this.delegateWindowHandling = delegateWindowHandling;
-    }
-
-    public static Boolean isJsf22ClientWindowRenderModeEnabled(FacesContext context)
-    {
-        ClientWindow clientWindow = context.getExternalContext().getClientWindow();
-        if (clientWindow != null)
-        {
-            if (clientWindow instanceof ClientWindowAdapter)
-            {
-                ClientWindowAdapter clientWindowAdapter = (ClientWindowAdapter) clientWindow;
-                return clientWindowAdapter.isOriginalClientWindowRenderModeEnabled(context);
-            }
-            else
-            {
-                return clientWindow.isClientWindowRenderModeEnabled(context);
-            }
-        }
-        
-        return null;
     }
     
     @Override
@@ -79,21 +57,5 @@ public class ClientWindowAdapter extends ClientWindow
     {
         //currently not needed by the window-handling of DeltaSpike
         return Collections.emptyMap();
-    }
-    
-    @Override
-    public boolean isClientWindowRenderModeEnabled(FacesContext context)
-    {
-        if (!delegateWindowHandling)
-        {
-            return false;
-        }
-        
-        return super.isClientWindowRenderModeEnabled(context);
-    }
-    
-    protected boolean isOriginalClientWindowRenderModeEnabled(FacesContext context)
-    {
-        return super.isClientWindowRenderModeEnabled(context);
     }
 }
