@@ -22,8 +22,8 @@ import org.apache.deltaspike.data.api.SingleResultType;
 import org.apache.deltaspike.data.api.mapping.QueryInOutMapper;
 import org.apache.deltaspike.data.impl.meta.RepositoryMethod;
 import org.apache.deltaspike.data.impl.param.Parameters;
+import org.apache.deltaspike.data.impl.util.EntityUtils;
 import org.apache.deltaspike.data.impl.util.bean.Destroyable;
-import org.apache.deltaspike.data.impl.util.jpa.PersistenceUnitUtilDelegateFactory;
 import org.apache.deltaspike.data.spi.QueryInvocationContext;
 
 import javax.persistence.EntityManager;
@@ -92,7 +92,16 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
     {
         try
         {
-            return PersistenceUnitUtilDelegateFactory.get(entityManager).getIdentifier(entity) == null;
+            if (EntityUtils.primaryKeyValue(entity) == null)
+            {
+                return true;
+            }
+
+            if (!entityManager.contains(entity) && countCheck(entity))
+            {
+                return true;
+            }
+            return false;
         }
         catch (IllegalArgumentException e)
         {
@@ -291,6 +300,23 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
     private boolean hasQueryHints(Method method)
     {
         return extractQueryHints(method) != null;
+    }
+
+    private boolean countCheck(Object entity)
+    {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(e) FROM " + getEntityClass()
+                .getSimpleName() + " e ");
+        sql.append("WHERE e.");
+        sql.append(EntityUtils.primaryKey(getEntityClass()).getName());
+        sql.append(" = " + EntityUtils.primaryKeyValue(entity));
+
+        final Query query = entityManager.createQuery(sql.toString());
+        final Long result = (Long) query.getSingleResult();
+        if (Long.valueOf(0).equals(result))
+        {
+            return true;
+        }
+        return false;
     }
 
 }

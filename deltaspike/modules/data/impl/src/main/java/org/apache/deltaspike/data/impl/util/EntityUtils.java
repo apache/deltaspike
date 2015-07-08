@@ -85,7 +85,7 @@ public final class EntityUtils
         return new EntityVerifier().verify(entityClass);
     }
 
-    private static Property<Serializable> primaryKey(Class<?> entityClass)
+    public static Property<Serializable> primaryKey(Class<?> entityClass)
     {
         for (PropertyCriteria c : criteriaList(entityClass))
         {
