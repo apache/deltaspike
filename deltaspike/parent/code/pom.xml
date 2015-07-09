@@ -888,9 +888,9 @@
                     <scope>provided</scope>
                 </dependency>
                 <dependency>
-                    <groupId>org.wildfly</groupId>
+                    <groupId>org.wildfly.arquillian</groupId>
                     <artifactId>wildfly-arquillian-container-managed</artifactId>
-                    <version>${wildfly.version}</version>
+                    <version>1.0.0.Final</version>
                     <scope>test</scope>
                 </dependency>
                 <dependency>
