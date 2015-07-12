@@ -16,23 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.api.partialbean.shared;
+package org.apache.deltaspike.test.core.api.partialbean.uc007;
 
-import javax.enterprise.context.RequestScoped;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import javax.enterprise.inject.Stereotype;
+import org.apache.deltaspike.test.core.api.partialbean.shared.CustomInterceptor;
 
-@RequestScoped
-public class CustomInterceptorState
-{
-    private boolean intercepted;
-
-    public boolean isIntercepted()
-    {
-        return intercepted;
-    }
-
-    public void setIntercepted(boolean intercepted)
-    {
-        this.intercepted = intercepted;
-    }
-
+@Inherited
+@Target({ ElementType.TYPE, ElementType.METHOD, ElementType.FIELD })
+@Retention(RetentionPolicy.RUNTIME)
+@Stereotype
+@CustomInterceptor
+public @interface CustomInterceptorStereotype {
+    
 }

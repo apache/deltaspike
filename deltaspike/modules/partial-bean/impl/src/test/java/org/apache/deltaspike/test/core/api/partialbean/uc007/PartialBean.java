@@ -35,4 +35,10 @@ public abstract class PartialBean
     {
         String a = "test";
     }
+    
+    @CustomInterceptorStereotype
+    public void doSomething2()
+    {
+        String a = "test2";
+    }
 }

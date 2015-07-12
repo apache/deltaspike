@@ -84,6 +84,20 @@ public class MethodLevelInterceptorTest
         partialBean.doSomething();
         Assert.assertEquals(true, state.isIntercepted());
     }
+    
+    @Test
+    public void testMethodLevelInterceptorStereotype() throws Exception
+    {
+        // this test is known to not work under weld-2.0.0.Final and weld-2.0.0.SP1
+        Assume.assumeTrue(!CdiContainerUnderTest.is(CONTAINER_WELD_2_0_0));
+
+        PartialBean partialBean = BeanProvider.getContextualReference(PartialBean.class);
+        CustomInterceptorState state = BeanProvider.getContextualReference(CustomInterceptorState.class);
+
+        Assert.assertNotNull(partialBean);
+        partialBean.doSomething2();
+        Assert.assertEquals(true, state.isIntercepted());
+    }
 
     @Test
     public void testMethodLevelInterceptorOnAbstractMethod() throws Exception

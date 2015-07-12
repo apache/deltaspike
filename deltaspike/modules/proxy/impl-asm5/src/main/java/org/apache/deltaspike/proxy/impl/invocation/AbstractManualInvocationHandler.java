@@ -76,39 +76,59 @@ public abstract class AbstractManualInvocationHandler implements InvocationHandl
 
     protected List<Interceptor<?>> resolveInterceptors(Object instance, Method method)
     {
-        Annotation[] interceptorBindings = extractInterceptorBindings(instance, method);
+        BeanManager beanManager = BeanManagerProvider.getInstance().getBeanManager();
+        
+        Annotation[] interceptorBindings = extractInterceptorBindings(beanManager, instance, method);
         if (interceptorBindings.length > 0)
         {
-            BeanManager beanManager = BeanManagerProvider.getInstance().getBeanManager();
             return beanManager.resolveInterceptors(InterceptionType.AROUND_INVOKE, interceptorBindings);
         }
 
         return null;
     }
 
-    // TODO stereotypes
-    protected Annotation[] extractInterceptorBindings(Object instance, Method method)
+    protected Annotation[] extractInterceptorBindings(BeanManager beanManager, Object instance, Method method)
     {
         ArrayList<Annotation> bindings = new ArrayList<Annotation>();
 
-        for (Annotation annotation : instance.getClass().getDeclaredAnnotations())
-        {
-            if (annotation.annotationType().isAnnotationPresent(InterceptorBinding.class)
-                    && !bindings.contains(annotation))
-            {
-                bindings.add(annotation);
-            }
-        }
-
-        for (Annotation annotation : method.getDeclaredAnnotations())
-        {
-            if (annotation.annotationType().isAnnotationPresent(InterceptorBinding.class)
-                    && !bindings.contains(annotation))
-            {
-                bindings.add(annotation);
-            }
-        }
+        addInterceptorBindings(beanManager, bindings, instance.getClass().getDeclaredAnnotations());
+        addInterceptorBindings(beanManager, bindings, method.getDeclaredAnnotations());
 
         return bindings.toArray(new Annotation[bindings.size()]);
+    }
+    
+    protected void addInterceptorBindings(BeanManager beanManager, ArrayList<Annotation> bindings,
+            Annotation[] declaredAnnotations)
+    {
+        for (Annotation annotation : declaredAnnotations)
+        {
+            if (bindings.contains(annotation))
+            {
+                continue;
+            }
+            
+            Class<? extends Annotation> annotationType = annotation.annotationType();
+            
+            if (annotationType.isAnnotationPresent(InterceptorBinding.class))
+            {
+                bindings.add(annotation);
+            }
+            
+            if (beanManager.isStereotype(annotationType))
+            {
+                for (Annotation subAnnotation : annotationType.getDeclaredAnnotations())
+                {                    
+                    if (bindings.contains(subAnnotation))
+                    {
+                        continue;
+                    }
+
+                    if (subAnnotation.annotationType().isAnnotationPresent(InterceptorBinding.class))
+                    {
+                        bindings.add(subAnnotation);
+                    }  
+                }
+            }
+        }
     }
 }

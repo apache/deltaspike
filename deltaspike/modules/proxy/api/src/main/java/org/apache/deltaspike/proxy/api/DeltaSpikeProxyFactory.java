@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import javax.enterprise.inject.spi.BeanManager;
 
 import javax.interceptor.InterceptorBinding;
 
@@ -77,21 +78,22 @@ public abstract class DeltaSpikeProxyFactory
         return GeneratorHolder.generator;
     }
 
-    public <T> Class<T> getProxyClass(Class<T> targetClass,
+    public <T> Class<T> getProxyClass(BeanManager beanManager, Class<T> targetClass,
             Class<? extends InvocationHandler> delegateInvocationHandlerClass)
     {
         // check if a proxy is already defined for this class
         Class<T> proxyClass = ClassUtils.tryToLoadClassForName(constructProxyClassName(targetClass), targetClass);
         if (proxyClass == null)
         {
-            proxyClass = createProxyClass(targetClass.getClassLoader(), targetClass, delegateInvocationHandlerClass);
+            proxyClass = createProxyClass(beanManager, targetClass.getClassLoader(), targetClass,
+                    delegateInvocationHandlerClass);
         }
 
         return proxyClass;
     }
 
-    private synchronized <T> Class<T> createProxyClass(ClassLoader classLoader, Class<T> targetClass,
-            Class<? extends InvocationHandler> delegateInvocationHandlerClass)
+    private synchronized <T> Class<T> createProxyClass(BeanManager beanManager, ClassLoader classLoader,
+            Class<T> targetClass, Class<? extends InvocationHandler> delegateInvocationHandlerClass)
     {
         Class<T> proxyClass = ClassUtils.tryToLoadClassForName(constructProxyClassName(targetClass), targetClass);
         if (proxyClass == null)
@@ -103,7 +105,7 @@ public abstract class DeltaSpikeProxyFactory
             // check if a interceptor is defined on class level. if not, skip interceptor methods
             if (delegateMethods != null
                     && interceptMethods.size() > 0
-                    && !containsInterceptorBinding(targetClass.getDeclaredAnnotations()))
+                    && !containsInterceptorBinding(beanManager, targetClass.getDeclaredAnnotations()))
             {
                 // loop every method and check if a interceptor is defined on the method -> otherwise don't overwrite
                 // interceptMethods
@@ -111,7 +113,7 @@ public abstract class DeltaSpikeProxyFactory
                 while (iterator.hasNext())
                 {
                     Method method = iterator.next();
-                    if (!containsInterceptorBinding(method.getDeclaredAnnotations()))
+                    if (!containsInterceptorBinding(beanManager, method.getDeclaredAnnotations()))
                     {
                         iterator.remove();
                     }
@@ -134,15 +136,28 @@ public abstract class DeltaSpikeProxyFactory
 
         return proxyClass;
     }
-    
-    // TODO stereotypes
-    protected boolean containsInterceptorBinding(Annotation[] annotations)
+
+    protected boolean containsInterceptorBinding(BeanManager beanManager, Annotation[] annotations)
     {
         for (Annotation annotation : annotations)
-        {
-            if (annotation.annotationType().isAnnotationPresent(InterceptorBinding.class))
+        {            
+            Class<? extends Annotation> annotationType = annotation.annotationType();
+            
+            if (annotationType.isAnnotationPresent(InterceptorBinding.class))
             {
                 return true;
+            }
+
+            if (beanManager.isStereotype(annotationType))
+            {                
+                boolean containsInterceptorBinding = containsInterceptorBinding(
+                        beanManager,
+                        annotationType.getDeclaredAnnotations());
+                
+                if (containsInterceptorBinding)
+                {
+                    return true;
+                }
             }
         }
         
