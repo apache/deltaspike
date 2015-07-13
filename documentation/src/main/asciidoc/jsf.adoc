@@ -1,4 +1,4 @@
-:moduledeps: core, security
+:moduledeps: core, security, proxy
 :moduleconf: api:org.apache.deltaspike.jsf.api.config.base.JsfBaseConfig, api:org.apache.deltaspike.jsf.api.config.JsfModuleConfig
 
 = JSF Module

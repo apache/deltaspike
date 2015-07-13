@@ -39,6 +39,7 @@
             <li><a href="jpa.html">JPA</a></li>
             <li><a href="jsf.html">JSF</a></li>
             <li><a href="partial-bean.html">Partial-Bean</a></li>
+            <li><a href="proxy.html">Proxy</a></li>
             <li><a href="scheduler.html">Scheduler</a></li>
             <li><a href="security.html">Security</a></li>
             <li><a href="servlet.html">Servlet</a></li>

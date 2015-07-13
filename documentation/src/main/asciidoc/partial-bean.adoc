@@ -1,4 +1,4 @@
-:moduledeps: core
+:moduledeps: core, proxy
 
 = Partial-Bean Module
 
