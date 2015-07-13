@@ -18,25 +18,41 @@
  */
 package org.apache.deltaspike.servlet.impl.produce;
 
+import org.apache.deltaspike.core.spi.activation.Deactivatable;
+import org.apache.deltaspike.core.util.ClassDeactivationUtils;
+
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.ServletRequestListener;
 
 /**
  * This class stores the ServletRequest in the {@link RequestResponseHolder}.
  */
-public class RequestResponseHolderListener implements ServletRequestListener
+public class RequestResponseHolderListener implements ServletRequestListener, Deactivatable
 {
+
+    private final boolean activated;
+
+    public RequestResponseHolderListener()
+    {
+        this.activated = ClassDeactivationUtils.isActivated(this.getClass());
+    }
 
     @Override
     public void requestInitialized(ServletRequestEvent sre)
     {
-        RequestResponseHolder.REQUEST.bind(sre.getServletRequest());
+        if (activated)
+        {
+            RequestResponseHolder.REQUEST.bind(sre.getServletRequest());
+        }
     }
 
     @Override
     public void requestDestroyed(ServletRequestEvent sre)
     {
-        RequestResponseHolder.REQUEST.release();
+        if (activated)
+        {
+            RequestResponseHolder.REQUEST.release();
+        }
     }
 
 }
