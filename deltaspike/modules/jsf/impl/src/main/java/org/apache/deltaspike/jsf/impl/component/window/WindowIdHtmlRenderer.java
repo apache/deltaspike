@@ -73,8 +73,7 @@ public class WindowIdHtmlRenderer extends Renderer
         ResponseWriter writer = context.getResponseWriter();
         writer.startElement("script", component);
         writer.writeAttribute("type", "text/javascript", null);
-        writer.write("window.deltaspikeWindowId='" + windowId + "';");
-        writer.write("window.deltaspikeClientWindowRenderMode='" + clientWindowRenderMode + "';");
+        writer.write("dswh.init('" + windowId + "','" + clientWindowRenderMode + "'");
         
         // see #729
         if (clientWindow.isInitialRedirectSupported(context))
@@ -83,7 +82,7 @@ public class WindowIdHtmlRenderer extends Renderer
             if (cookie != null && cookie instanceof Cookie)
             {
                 Cookie servletCookie = (Cookie) cookie;
-                writer.write("window.deltaspikeInitialRedirectWindowId='" + servletCookie.getValue() + "';");
+                writer.write(",{'initialRedirectWindowId':'" + servletCookie.getValue() + "'}");
 
                 // expire/remove cookie
                 servletCookie.setMaxAge(0);
@@ -91,6 +90,7 @@ public class WindowIdHtmlRenderer extends Renderer
             }
         }
 
+        writer.write(");");
         writer.endElement("script");
     }
 
