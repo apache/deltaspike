@@ -42,7 +42,14 @@ public class RequestResponseHolderListener implements ServletRequestListener, De
     {
         if (activated)
         {
-            RequestResponseHolder.REQUEST.bind(sre.getServletRequest());
+            /*
+             * For some reason Tomcat seems to call requestInitialized() more than
+             * once for a request. Not sure if this allowed according to the spec.
+             */
+            if (!RequestResponseHolder.REQUEST.isBound())
+            {
+                RequestResponseHolder.REQUEST.bind(sre.getServletRequest());
+            }
         }
     }
 
