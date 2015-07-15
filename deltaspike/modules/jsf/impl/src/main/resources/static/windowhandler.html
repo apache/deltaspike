@@ -154,6 +154,12 @@ window.onload = function() {
             urlId = null;
         }
     }
+    // occurs with the "duplicate tab" feature of chrome
+    else if (windowId === 'tempWindowId') {
+        window.name = '';
+        windowId = 'automatedEntryPoint';
+        urlId = null;
+    }
 
     // 3 seconds expiry time
     var expdt = new Date();
