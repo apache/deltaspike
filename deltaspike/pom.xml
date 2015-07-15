@@ -74,25 +74,6 @@
                     </configuration>
                 </plugin>
 
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-remote-resources-plugin</artifactId>
-                    <version>1.3</version>
-                    <executions>
-                        <execution>
-                            <id>process-remote-resources</id>
-                            <goals>
-                                <goal>process</goal>
-                            </goals>
-                            <configuration>
-                                <resourceBundles>
-                                    <!-- Include the Incubating disclaimer -->
-                                    <resourceBundle>org.apache:apache-incubator-disclaimer-resource-bundle:1.1</resourceBundle>
-                                </resourceBundles>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
                 <!-- Javadoc plugin -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
