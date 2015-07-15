@@ -91,7 +91,7 @@ window.dswh = window.dswh || {
             },
             
             overwriteOnClickEvents : function() {
-                if (dswh.utils.isHtml5()) {
+                if (dswh.utils.isHtml5() && dswh.cfg.storeWindowTree) {
                     var links = document.getElementsByTagName("a");
                     for (var i = 0; i < links.length; i++) {
                         if (!links[i].onclick) {

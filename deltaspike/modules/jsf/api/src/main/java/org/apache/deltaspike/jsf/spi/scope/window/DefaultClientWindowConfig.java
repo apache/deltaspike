@@ -243,4 +243,10 @@ public class DefaultClientWindowConfig implements ClientWindowConfig
     {
         return this.maxWindowContextCount;
     }
+    
+    @Override
+    public boolean isClientWindowStoreWindowTreeEnabled()
+    {
+        return true;
+    }
 }

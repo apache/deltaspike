@@ -74,8 +74,10 @@ public class WindowIdHtmlRenderer extends Renderer
         writer.startElement("script", component);
         writer.writeAttribute("type", "text/javascript", null);
         writer.write("(function(){");
-        writer.write("dswh.init('" + windowId + "','" + clientWindowRenderMode + "'");
+        writer.write("dswh.init('" + windowId + "','" + clientWindowRenderMode + "',{");
 
+        writer.write("'storeWindowTree':'" + clientWindowConfig.isClientWindowStoreWindowTreeEnabled() + "'");
+        
         // see #729
         if (clientWindow.isInitialRedirectSupported(context))
         {
@@ -83,7 +85,7 @@ public class WindowIdHtmlRenderer extends Renderer
             if (cookie != null && cookie instanceof Cookie)
             {
                 Cookie servletCookie = (Cookie) cookie;
-                writer.write(",{'initialRedirectWindowId':'" + servletCookie.getValue() + "'}");
+                writer.write(",'initialRedirectWindowId':'" + servletCookie.getValue() + "'");
 
                 // expire/remove cookie
                 servletCookie.setMaxAge(0);
@@ -91,7 +93,7 @@ public class WindowIdHtmlRenderer extends Renderer
             }
         }
 
-        writer.write(");");
+        writer.write("});");
         writer.write("})();");
         writer.endElement("script");
     }
