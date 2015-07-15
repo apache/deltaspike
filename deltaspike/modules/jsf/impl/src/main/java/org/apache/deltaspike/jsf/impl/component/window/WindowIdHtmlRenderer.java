@@ -58,7 +58,7 @@ public class WindowIdHtmlRenderer extends Renderer
         super.encodeBegin(context, component);
 
         lazyInit();
-        
+
         String windowId = clientWindow.getWindowId(context);
         String clientWindowRenderMode = clientWindowConfig.getClientWindowRenderMode(context).name();
 
@@ -73,8 +73,9 @@ public class WindowIdHtmlRenderer extends Renderer
         ResponseWriter writer = context.getResponseWriter();
         writer.startElement("script", component);
         writer.writeAttribute("type", "text/javascript", null);
+        writer.write("(function(){");
         writer.write("dswh.init('" + windowId + "','" + clientWindowRenderMode + "'");
-        
+
         // see #729
         if (clientWindow.isInitialRedirectSupported(context))
         {
@@ -91,6 +92,7 @@ public class WindowIdHtmlRenderer extends Renderer
         }
 
         writer.write(");");
+        writer.write("})();");
         writer.endElement("script");
     }
 
