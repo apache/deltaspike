@@ -89,15 +89,15 @@ Further details are available at http://www.apache.org/dev/.
 |mailto:users-subscribe@deltaspike.apache.org[Subscribe]
 |mailto:users-unsubscribe@deltaspike.apache.org[Unsubscribe]
 |http://mail-archives.apache.org/mod_mbox/deltaspike-users/[Archive]
-|http://apache-deltaspike-discussions.2316169.n4.nabble.com/[Nabble]
-|http://markmail.org/search/?q=list%3Aorg.apache.deltaspike-users+order%3Adate-backward[MarkMail]
+|
+|
 
 |mailto:dev@deltaspike.apache.org[Developer List]
 |mailto:dev-subscribe@deltaspike.apache.org[Subscribe]
 |mailto:dev-unsubscribe@deltaspike.apache.org[Unsubscribe]
 |http://mail-archives.apache.org/mod_mbox/deltaspike-dev/[Archive]
-|http://apache-deltaspike-discussions.2316169.n4.nabble.com/[Nabble]
-|http://markmail.org/search/?q=list%3Aorg.apache.deltaspike-dev+order%3Adate-backward[MarkMail]
+|
+|
 
 |mailto:commits@deltaspike.apache.org[Committer List]
 |mailto:commits-subscribe@deltaspike.apache.org[Subscribe]
