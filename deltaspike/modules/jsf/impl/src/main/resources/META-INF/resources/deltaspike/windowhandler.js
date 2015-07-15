@@ -25,7 +25,11 @@ window.dswh = window.dswh || {
     init : function(windowId, clientWindowRenderMode, cfg) {
         this.windowId = windowId;
         this.clientWindowRenderMode = clientWindowRenderMode;
-        this.cfg = cfg;
+        if (cfg) {
+            this.cfg = cfg;
+        } else {
+            this.cfg = {};
+        }
 
         var targetStrategy = this.strategy[clientWindowRenderMode];
         if (targetStrategy) {
