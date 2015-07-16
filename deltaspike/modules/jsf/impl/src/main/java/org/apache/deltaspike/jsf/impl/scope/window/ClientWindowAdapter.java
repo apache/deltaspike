@@ -39,7 +39,7 @@ public class ClientWindowAdapter extends ClientWindow
     {
         this.window = window;
     }
-    
+
     @Override
     public void decode(FacesContext context)
     {
@@ -58,4 +58,11 @@ public class ClientWindowAdapter extends ClientWindow
         //currently not needed by the window-handling of DeltaSpike
         return Collections.emptyMap();
     }
+
+    @Override
+    public boolean isClientWindowRenderModeEnabled(FacesContext context)
+    {
+        return false;
+    }
+
 }
