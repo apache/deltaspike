@@ -22,7 +22,6 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import javax.servlet.http.Cookie;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
@@ -43,11 +42,6 @@ import org.apache.deltaspike.jsf.api.config.base.JsfBaseConfig;
 @SessionScoped
 public class DefaultClientWindowConfig implements ClientWindowConfig
 {
-    /**
-     * We will set a cookie with this very name if a noscript link got clicked by the user
-     */
-    public static final String COOKIE_NAME_NOSCRIPT_ENABLED = "deltaspikeNoScriptEnabled";
-
     private static final long serialVersionUID = -708423418378550210L;
 
     /**
@@ -96,17 +90,6 @@ public class DefaultClientWindowConfig implements ClientWindowConfig
                 {
                     // no info means that it is default -> true
                     javaScriptEnabled = Boolean.TRUE;
-
-                    FacesContext facesContext = FacesContext.getCurrentInstance();
-                    if (facesContext != null)
-                    {
-                        Cookie cookie = (Cookie) facesContext.getExternalContext().
-                                getRequestCookieMap().get(COOKIE_NAME_NOSCRIPT_ENABLED);
-                        if (cookie != null)
-                        {
-                            javaScriptEnabled = Boolean.parseBoolean(cookie.getValue());
-                        }
-                    }
                 }
             }
         }
@@ -243,7 +226,7 @@ public class DefaultClientWindowConfig implements ClientWindowConfig
     {
         return this.maxWindowContextCount;
     }
-    
+
     @Override
     public boolean isClientWindowStoreWindowTreeEnabled()
     {
