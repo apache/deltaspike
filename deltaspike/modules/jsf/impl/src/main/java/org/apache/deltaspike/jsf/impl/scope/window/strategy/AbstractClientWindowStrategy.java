@@ -79,9 +79,15 @@ public abstract class AbstractClientWindowStrategy implements ClientWindow
 
         if (windowId != null)
         {
-            if (windowId.length() > this.maxWindowIdCount)
+            // don't cut the windowId generated from JSF
+            ClientWindowConfig.ClientWindowRenderMode clientWindowRenderMode =
+                    clientWindowConfig.getClientWindowRenderMode(facesContext);
+            if (!ClientWindowConfig.ClientWindowRenderMode.DELEGATED.equals(clientWindowRenderMode))
             {
-                windowId = windowId.substring(0, this.maxWindowIdCount);
+                if (windowId.length() > this.maxWindowIdCount)
+                {
+                    windowId = windowId.substring(0, this.maxWindowIdCount);
+                }
             }
 
             requestMap.put(CACHE_WINDOW_ID, windowId);
@@ -135,7 +141,7 @@ public abstract class AbstractClientWindowStrategy implements ClientWindow
         Map<String, String> requestParameters = facesContext.getExternalContext().getRequestParameterMap();
         return requestParameters.get(ClientWindowHelper.RequestParameters.GET_WINDOW_ID);
     }
-    
+
     @Override
     public void disableClientWindowRenderMode(FacesContext facesContext)
     {
@@ -178,7 +184,7 @@ public abstract class AbstractClientWindowStrategy implements ClientWindow
     {
         return false;
     }
-    
+
     @Override
     public Map<String, String> getQueryURLParameters(FacesContext facesContext)
     {

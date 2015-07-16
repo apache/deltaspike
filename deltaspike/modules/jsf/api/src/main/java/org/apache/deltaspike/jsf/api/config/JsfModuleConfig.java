@@ -126,7 +126,7 @@ public class JsfModuleConfig implements DeltaSpikeConfig
      * Defines the {@link javax.enterprise.Qualifier} which will be used to fire the
      * {@link org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent}
      * for unhandled JSF exceptions.
-     * 
+     *
      * @return the {@link javax.enterprise.Qualifier}.
      */
     public Class<? extends Annotation> getExceptionQualifier()
@@ -142,17 +142,10 @@ public class JsfModuleConfig implements DeltaSpikeConfig
     public boolean isJsf22Available()
     {
         lazyInit();
-        
+
         return this.jsf22Available;
     }
-    
-    public boolean isDelegatedWindowHandlingEnabled()
-    {
-        lazyInit();
-        
-        return this.delegatedWindowHandlingEnabled;
-    }
-    
+
     private void lazyInit()
     {
         if (this.initialized == null)
@@ -182,13 +175,13 @@ public class JsfModuleConfig implements DeltaSpikeConfig
                 }
                 else
                 {
-                    
+
                     String initParam = facesContext.getExternalContext().getInitParameter(CLIENT_WINDOW_CONFIG_KEY);
                     this.delegatedWindowHandlingEnabled =
                             !(initParam == null || "none".equalsIgnoreCase(initParam.trim()));
                 }
             }
-            
+
             this.initialized = true;
         }
     }

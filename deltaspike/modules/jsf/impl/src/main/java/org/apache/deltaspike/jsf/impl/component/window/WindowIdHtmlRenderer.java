@@ -60,24 +60,29 @@ public class WindowIdHtmlRenderer extends Renderer
         lazyInit();
 
         String windowId = clientWindow.getWindowId(context);
-        String clientWindowRenderMode = clientWindowConfig.getClientWindowRenderMode(context).name();
+        ClientWindowConfig.ClientWindowRenderMode clientWindowRenderMode =
+                clientWindowConfig.getClientWindowRenderMode(context);
 
-        //already ensured by DefaultClientWindow
-        //just to ensure that we don't get a security issue in case of a customized client-window implementation
-        //will never happen usually -> no real overhead
-        if (windowId != null && windowId.length() > this.maxWindowIdCount)
+        // don't cut the windowId generated from JSF
+        if (!ClientWindowConfig.ClientWindowRenderMode.DELEGATED.equals(clientWindowRenderMode))
         {
-            windowId = windowId.substring(0, this.maxWindowIdCount);
+            //already ensured by DefaultClientWindow
+            //just to ensure that we don't get a security issue in case of a customized client-window implementation
+            //will never happen usually -> no real overhead
+            if (windowId != null && windowId.length() > this.maxWindowIdCount)
+            {
+                windowId = windowId.substring(0, this.maxWindowIdCount);
+            }
         }
 
         ResponseWriter writer = context.getResponseWriter();
         writer.startElement("script", component);
         writer.writeAttribute("type", "text/javascript", null);
         writer.write("(function(){");
-        writer.write("dswh.init('" + windowId + "','" + clientWindowRenderMode + "',{");
+        writer.write("dswh.init('" + windowId + "','" + clientWindowRenderMode.name() + "',{");
 
         writer.write("'storeWindowTree':'" + clientWindowConfig.isClientWindowStoreWindowTreeEnabled() + "'");
-        
+
         // see #729
         if (clientWindow.isInitialRedirectSupported(context))
         {
