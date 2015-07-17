@@ -32,6 +32,7 @@ import org.apache.deltaspike.testcontrol.api.TestControl;
 import org.apache.deltaspike.testcontrol.api.literal.TestControlLiteral;
 import org.apache.deltaspike.testcontrol.spi.ExternalContainer;
 import org.apache.deltaspike.testcontrol.spi.TestAware;
+import org.apache.deltaspike.testcontrol.spi.TestControlValidator;
 import org.apache.deltaspike.testcontrol.spi.junit.TestStatementDecoratorFactory;
 import org.junit.Test;
 import org.junit.internal.runners.statements.FailOnTimeout;
@@ -479,7 +480,7 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
                 restrictedScopes.add(SessionScoped.class);
             }
 
-            startScopes(container, restrictedScopes.toArray(new Class[restrictedScopes.size()]));
+            startScopes(container, testClass, null, restrictedScopes.toArray(new Class[restrictedScopes.size()]));
         }
 
         private void bootExternalContainers(Class testClass)
@@ -584,7 +585,7 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
             ProjectStageProducer.setProjectStage(this.projectStage);
 
             setCurrentTestMethod(testMethod);
-            startScopes(CdiContainerLoader.getCdiContainer());
+            startScopes(CdiContainerLoader.getCdiContainer(), testMethod.getDeclaringClass(), testMethod);
         }
 
         void applyAfterMethodConfig()
@@ -609,7 +610,10 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
             CdiTestSuiteRunner.setContainerStarted(true);
         }
 
-        private void startScopes(CdiContainer container, Class<? extends Annotation>... restrictedScopes)
+        private void startScopes(CdiContainer container,
+                                 Class testClass,
+                                 Method testMethod,
+                                 Class<? extends Annotation>... restrictedScopes)
         {
             try
             {
@@ -621,9 +625,38 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
 
                 Collections.addAll(scopeClasses, this.testControl.startScopes());
 
-                if (this.testControl.startScopes().length == 0)
+                if (scopeClasses.isEmpty())
                 {
                     addScopesForDefaultBehavior(scopeClasses);
+                }
+                else
+                {
+                    List<TestControlValidator> testControlValidatorList =
+                        ServiceUtils.loadServiceImplementations(TestControlValidator.class);
+
+                    for (TestControlValidator testControlValidator : testControlValidatorList)
+                    {
+                        if (testControlValidator instanceof TestAware)
+                        {
+                            if (testMethod != null)
+                            {
+                                ((TestAware)testControlValidator).setTestMethod(testMethod);
+                            }
+                            ((TestAware)testControlValidator).setTestClass(testClass);
+                        }
+                        try
+                        {
+                            testControlValidator.validate(this.testControl);
+                        }
+                        finally
+                        {
+                            if (testControlValidator instanceof TestAware)
+                            {
+                                ((TestAware)testControlValidator).setTestClass(null);
+                                ((TestAware)testControlValidator).setTestMethod(null);
+                            }
+                        }
+                    }
                 }
 
                 for (Class<? extends Annotation> scopeAnnotation : scopeClasses)
