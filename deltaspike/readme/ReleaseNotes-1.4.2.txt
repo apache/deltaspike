@@ -1,0 +1,42 @@
+Release Notes - Apache DeltaSpike - Version 1.4.2
+
+Bug
+
+    [DELTASPIKE-830] - windowhandling doesn't work correctly when onload defined on h:body
+    [DELTASPIKE-887] - ds:windowId should initialize the windowhandler script
+    [DELTASPIKE-929] - Weld test profile is broken
+    [DELTASPIKE-930] - Fix data module tests on GF
+    [DELTASPIKE-931] - Integration tests fail when dependencies are class folders, not JARs
+    [DELTASPIKE-939] - dswid=tempWindowId for every duplicated tab in Chrome/Firefox
+    [DELTASPIKE-941] - JPA link broken in Data Module documentation
+    [DELTASPIKE-947] - StackOverFlow with DELEGATED window mode and undefined javax.faces.CLIENT_WINDOW_MODE
+    [DELTASPIKE-954] - CLIENTWINDOW windowhandler.html contains unreplaced variable
+    [DELTASPIKE-958] - remove outdated information
+    [DELTASPIKE-959] - DS cuts the windowId generated from JSF 2.2
+    [DELTASPIKE-960] - WindowIdHtmlRenderer needs to use maxWindowIdCount for window-id cookies
+
+Improvement
+
+    [DELTASPIKE-673] - CdiQueryInvocationContext#isNew does not work well with OpenJpa and detached entities
+    [DELTASPIKE-928] - Allow to disable storeWindowTree() on ClientWindow mode
+    [DELTASPIKE-932] - Refactor ClientWindow server side
+    [DELTASPIKE-933] - Upgrade to Arquillian 1.1.8.Final
+    [DELTASPIKE-934] - @Query metadata should be considered for any method expression
+    [DELTASPIKE-935] - ds:disableClientWindow should also disable JSF 2.2 rendering mode
+    [DELTASPIKE-945] - Verify WildFly 9 profile
+    [DELTASPIKE-946] - Prevent jfwid rendering
+    [DELTASPIKE-948] - CdiQueryInvocationContext#isNew isn't portable across jpa providers
+    [DELTASPIKE-949] - RequestResponseHolderListener should be deactivatable
+    [DELTASPIKE-950] - RequestResponseHolderListener fails if requestInitialized() is called more than once
+    [DELTASPIKE-951] - validate the content of TestControl#startScopes
+    [DELTASPIKE-953] - Refactor ClientWindow client side
+
+New Feature
+
+    [DELTASPIKE-904] - Stereotype support for interceptor binding lookup on partial beans
+    [DELTASPIKE-910] - Add EntityRepository.getPrimaryKey(E entity)
+    [DELTASPIKE-922] - OSGi support for Security Module
+
+Task
+
+    [DELTASPIKE-961] - prepare v1.4.2
