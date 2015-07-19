@@ -63,16 +63,13 @@ public class WindowIdHtmlRenderer extends Renderer
         ClientWindowConfig.ClientWindowRenderMode clientWindowRenderMode =
                 clientWindowConfig.getClientWindowRenderMode(context);
 
+        boolean delegatedWindowMode =
+            ClientWindowConfig.ClientWindowRenderMode.DELEGATED.equals(clientWindowRenderMode);
+
         // don't cut the windowId generated from JSF
-        if (!ClientWindowConfig.ClientWindowRenderMode.DELEGATED.equals(clientWindowRenderMode))
+        if (!delegatedWindowMode)
         {
-            //already ensured by DefaultClientWindow
-            //just to ensure that we don't get a security issue in case of a customized client-window implementation
-            //will never happen usually -> no real overhead
-            if (windowId != null && windowId.length() > this.maxWindowIdCount)
-            {
-                windowId = windowId.substring(0, this.maxWindowIdCount);
-            }
+            windowId = secureWindowId(windowId);
         }
 
         ResponseWriter writer = context.getResponseWriter();
@@ -84,14 +81,13 @@ public class WindowIdHtmlRenderer extends Renderer
         writer.write("'storeWindowTree':'" + clientWindowConfig.isClientWindowStoreWindowTreeEnabled() + "'");
 
         // see #729
-        if (clientWindow.isInitialRedirectSupported(context))
+        if (!delegatedWindowMode && clientWindow.isInitialRedirectSupported(context))
         {
             Object cookie = ClientWindowHelper.getRequestWindowIdCookie(context, windowId);
             if (cookie != null && cookie instanceof Cookie)
             {
                 Cookie servletCookie = (Cookie) cookie;
-                writer.write(",'initialRedirectWindowId':'" + servletCookie.getValue() + "'");
-
+                writer.write(",'initialRedirectWindowId':'" + secureWindowId(servletCookie.getValue()) + "'");
                 // expire/remove cookie
                 servletCookie.setMaxAge(0);
                 ((HttpServletResponse) context.getExternalContext().getResponse()).addCookie(servletCookie);
@@ -101,6 +97,16 @@ public class WindowIdHtmlRenderer extends Renderer
         writer.write("});");
         writer.write("})();");
         writer.endElement("script");
+    }
+
+    protected String secureWindowId(String windowId)
+    {
+        //restrict the length to prevent script-injection
+        if (windowId != null && windowId.length() > this.maxWindowIdCount)
+        {
+            windowId = windowId.substring(0, this.maxWindowIdCount);
+        }
+        return windowId;
     }
 
     private void lazyInit()
@@ -118,5 +124,4 @@ public class WindowIdHtmlRenderer extends Renderer
             }
         }
     }
-
 }
