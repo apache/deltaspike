@@ -117,7 +117,16 @@ public abstract class JsfUtils
                     {
                         finalUrl.append("&");
                     }
-                    finalUrl.append(key);
+                    
+                    if (encodeValues)
+                    {
+                        finalUrl.append(JsfUtils.encodeURLParameterValue(key, externalContext));
+                    }
+                    else
+                    {
+                        finalUrl.append(key);
+                    }
+
                     finalUrl.append("=");
 
                     if (encodeValues)
@@ -166,7 +175,15 @@ public abstract class JsfUtils
             finalUrl.append("?");
         }
 
-        finalUrl.append(name);
+        if (encodeValues)
+        {
+            finalUrl.append(JsfUtils.encodeURLParameterValue(name, externalContext));
+        }
+        else
+        {
+            finalUrl.append(name);
+        }
+
         finalUrl.append("=");
 
         if (encodeValues)
@@ -216,7 +233,15 @@ public abstract class JsfUtils
                         finalUrl.append("&");
                     }
 
-                    finalUrl.append(entry.getKey());
+                    if (encodeValues)
+                    {
+                        finalUrl.append(JsfUtils.encodeURLParameterValue(entry.getKey(), externalContext));
+                    }
+                    else
+                    {
+                        finalUrl.append(entry.getKey());
+                    }
+
                     finalUrl.append("=");
 
                     if (encodeValues)
