@@ -118,25 +118,7 @@ public abstract class JsfUtils
                         finalUrl.append("&");
                     }
                     
-                    if (encodeValues)
-                    {
-                        finalUrl.append(JsfUtils.encodeURLParameterValue(key, externalContext));
-                    }
-                    else
-                    {
-                        finalUrl.append(key);
-                    }
-
-                    finalUrl.append("=");
-
-                    if (encodeValues)
-                    {
-                        finalUrl.append(JsfUtils.encodeURLParameterValue(parameterValue, externalContext));
-                    }
-                    else
-                    {
-                        finalUrl.append(parameterValue);
-                    }
+                    appendUrlParameter(finalUrl, key, parameterValue, encodeValues, externalContext);
                 }
             }
         }
@@ -175,25 +157,7 @@ public abstract class JsfUtils
             finalUrl.append("?");
         }
 
-        if (encodeValues)
-        {
-            finalUrl.append(JsfUtils.encodeURLParameterValue(name, externalContext));
-        }
-        else
-        {
-            finalUrl.append(name);
-        }
-
-        finalUrl.append("=");
-
-        if (encodeValues)
-        {
-            finalUrl.append(JsfUtils.encodeURLParameterValue(value, externalContext));
-        }
-        else
-        {
-            finalUrl.append(value);
-        }
+        appendUrlParameter(finalUrl, name, value, encodeValues, externalContext);
 
         return finalUrl.toString();
     }
@@ -233,25 +197,7 @@ public abstract class JsfUtils
                         finalUrl.append("&");
                     }
 
-                    if (encodeValues)
-                    {
-                        finalUrl.append(JsfUtils.encodeURLParameterValue(entry.getKey(), externalContext));
-                    }
-                    else
-                    {
-                        finalUrl.append(entry.getKey());
-                    }
-
-                    finalUrl.append("=");
-
-                    if (encodeValues)
-                    {
-                        finalUrl.append(JsfUtils.encodeURLParameterValue(value, externalContext));
-                    }
-                    else
-                    {
-                        finalUrl.append(value);
-                    }
+                    appendUrlParameter(finalUrl, entry.getKey(), value, encodeValues, externalContext);
                 }
             }
         }
@@ -259,6 +205,29 @@ public abstract class JsfUtils
         return finalUrl.toString();
     }
 
+    protected static void appendUrlParameter(StringBuilder url, String name, String value, boolean encode, ExternalContext externalContext)
+    {
+        if (encode)
+        {
+            url.append(encodeURLParameterValue(name, externalContext));
+        }
+        else
+        {
+            url.append(name);
+        }
+
+        url.append("=");
+
+        if (encode)
+        {
+            url.append(encodeURLParameterValue(value, externalContext));
+        }
+        else
+        {
+            url.append(value);
+        }
+    }
+    
     /**
      * Encodes the given value using URLEncoder.encode() with the charset returned
      * from ExternalContext.getResponseCharacterEncoding().
