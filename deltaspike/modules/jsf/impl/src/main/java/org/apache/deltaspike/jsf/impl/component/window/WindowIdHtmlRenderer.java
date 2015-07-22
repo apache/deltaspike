@@ -78,7 +78,7 @@ public class WindowIdHtmlRenderer extends Renderer
         writer.write("(function(){");
         writer.write("dswh.init('" + windowId + "','" + clientWindowRenderMode.name() + "',{");
 
-        writer.write("'storeWindowTree':'" + clientWindowConfig.isClientWindowStoreWindowTreeEnabled() + "'");
+        writer.write("'storeWindowTree':" + clientWindowConfig.isClientWindowStoreWindowTreeEnabled());
 
         // see #729
         if (!delegatedWindowMode && clientWindow.isInitialRedirectSupported(context))
