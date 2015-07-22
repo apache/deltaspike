@@ -46,7 +46,7 @@ deploy a demo app especially with jsf-impl-ee6 to an ee6 server and check the lo
 
 -----------------------------------------------------------------------------------------------------------------------
 //install a version of git which is compatible with the release-plugin (e.g. v1.8.3.2)
-git checkout -b deltaspike-[release version]
+git checkout -b ds-[release version]
 
 mvn release:prepare -Pdistribution -DreleaseProfiles=distribution
 
@@ -62,7 +62,7 @@ mvn release:perform -Pdistribution -DreleaseProfiles=distribution
 //push the release-branch and tag to a third-party git repo
 git remote add vote https://github.com/[user]/deltaspike-vote
 git push -u vote master
-git push vote deltaspike-[release version]
+git push vote ds-[release version]
 git push vote --tags
 -----------------------------------------------------------------------------------------------------------------------
 
@@ -145,9 +145,9 @@ Always do a merge in this case (not a rebase):
 
 -----------------------------------------------------------------------------------------------------------------------
 git checkout master
-git merge deltaspike-[version]
+git merge ds-[version]
+git push origin ds-[version]
 git push origin deltaspike-[version]
-git push origin deltaspike-project-[version]
 git push origin master
 -----------------------------------------------------------------------------------------------------------------------
 
