@@ -117,7 +117,7 @@ public abstract class JsfUtils
                     {
                         finalUrl.append("&");
                     }
-                    
+
                     appendUrlParameter(finalUrl, key, parameterValue, encodeValues, externalContext);
                 }
             }
@@ -176,7 +176,7 @@ public abstract class JsfUtils
         {
             return url;
         }
-        
+
         StringBuilder finalUrl = new StringBuilder(url);
         boolean existingParameters = url.contains("?");
 
@@ -205,7 +205,8 @@ public abstract class JsfUtils
         return finalUrl.toString();
     }
 
-    protected static void appendUrlParameter(StringBuilder url, String name, String value, boolean encode, ExternalContext externalContext)
+    protected static void appendUrlParameter(StringBuilder url, String name, String value, boolean encode,
+            ExternalContext externalContext)
     {
         if (encode)
         {
@@ -227,7 +228,7 @@ public abstract class JsfUtils
             url.append(value);
         }
     }
-    
+
     /**
      * Encodes the given value using URLEncoder.encode() with the charset returned
      * from ExternalContext.getResponseCharacterEncoding().
