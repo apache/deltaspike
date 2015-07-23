@@ -79,7 +79,7 @@ public interface Messages
 ---------------------------------------------
 
 MessageBundle methods which are used as JsfMessage can return a `org.apache.deltaspike.core.api.message.Message` or a String.
-In case of a String we use it for both the summary and detail information on the FacesMessage. 
+In case of a String we use it for both the summary and detail information on the FacesMessage.
 
 If a Message is returned, we lookup the 'detail' and 'summary' categories (see `org.apache.deltaspike.core.api.message.Message#toString(String)` for creating the FacesMessage.
 
@@ -422,7 +422,7 @@ DeltaSpike provides an CDI context for the JSF 2.0/2.1
 === JSF 2.0 Scopes
 
 JSF 2.0 introduced new annotations as well as a new scope - the View
-Scope. CODI allows to use all the CDI mechanisms in beans annotated
+Scope. DeltaSpike allows to use all the CDI mechanisms in beans annotated
 with:
 
 * javax.faces.bean.ApplicationScoped
