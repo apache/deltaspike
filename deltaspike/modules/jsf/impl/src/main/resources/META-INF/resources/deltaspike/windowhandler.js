@@ -17,11 +17,11 @@
  * under the License.
  */
 window.dswh = window.dswh || {
-   
+
     windowId : null,
     clientWindowRenderMode : null,
     cfg: null,
-   
+
     init : function(windowId, clientWindowRenderMode, cfg) {
         this.windowId = windowId;
         this.clientWindowRenderMode = clientWindowRenderMode;
@@ -34,7 +34,7 @@ window.dswh = window.dswh || {
         var targetStrategy = this.strategy[clientWindowRenderMode];
         if (targetStrategy) {
             targetStrategy.validate();
-            
+
             // early init
             // this is required if e.g. the onload attr is defined on the body tag and our onload handler won't be called
             // ATTENTION: the ds:windowId component must be placed as last body tag
@@ -63,25 +63,25 @@ window.dswh = window.dswh || {
                 } finally {
                     targetStrategy.init(false);
                 }
-            };            
+            };
         }
     },
 
     strategy : {
-       
+
         'CLIENTWINDOW' : {
-            
+
             validate : function() {
                 this.cleanupCookies();
                 this.assertWindowId();
             },
-            
+
             init : function(ajax) {
                 this.overwriteOnClickEvents();
 
                 dswh.utils.appendHiddenWindowIdToForms();
             },
-            
+
             assertWindowId : function() {
                 // ensure that windowIds get checked even if no windowhandler.html is used
                 if (!window.name || window.name.length < 1) {
@@ -89,39 +89,91 @@ window.dswh = window.dswh || {
                     window.location = dswh.utils.setUrlParam(window.location.href, 'dswid', null);
                 }
             },
-            
+
             overwriteOnClickEvents : function() {
-                if (dswh.utils.isHtml5() && dswh.cfg.storeWindowTree) {
+
+                var tokenizedRedirectEnabled = dswh.cfg.tokenizedRedirect;
+                var storeWindowTreeEnabled = dswh.utils.isHtml5() && dswh.cfg.storeWindowTree;
+
+                if (dswh.cfg.tokenizedRedirect || storeWindowTreeEnabled) {
                     var links = document.getElementsByTagName("a");
                     for (var i = 0; i < links.length; i++) {
-                        if (!links[i].onclick) {
-                            links[i].onclick = function() {
-                                dswh.strategy.CLIENTWINDOW.storeWindowTree();
-                                return true;
-                            };
-                        } else {
-                            // prevent double decoration
-                            if (!("" + links[i].onclick).match(".*storeWindowTree().*")) {
-                                //the function wrapper is important otherwise the
-                                //last onclick handler would be assigned to oldonclick
-                                (function storeEvent() {
-                                    var oldonclick = links[i].onclick;
-                                    links[i].onclick = function(evt) {
-                                        //ie handling added
-                                        evt = evt || window.event;
+                        var link = links[i];
 
-                                        return dswh.strategy.CLIENTWINDOW.storeWindowTree() && oldonclick.bind(this)(evt);
-                                    };
-                                })();
+                        if (storeWindowTreeEnabled) {
+                            if (!link.onclick) {
+                                link.onclick = function() {
+                                    dswh.strategy.CLIENTWINDOW.storeWindowTree();
+                                    return true;
+                                };
+                            } else {
+                                // prevent double decoration
+                                if (!("" + link.onclick).match(".*storeWindowTree().*")) {
+                                    //the function wrapper is important otherwise the
+                                    //last onclick handler would be assigned to oldonclick
+                                    (function storeEvent() {
+                                        var oldonclick = link.onclick;
+                                        link.onclick = function(evt) {
+                                            //ie handling added
+                                            evt = evt || window.event;
+
+                                            return dswh.strategy.CLIENTWINDOW.storeWindowTree() && oldonclick.bind(this)(evt);
+                                        };
+                                    })();
+                                }
+                            }
+                        }
+
+                        if (tokenizedRedirectEnabled && dswh.strategy.CLIENTWINDOW.tokenizedRedirectRequired(link) === true) {
+                            if (!link.onclick) {
+                                link.onclick = function() {
+                                    dswh.strategy.CLIENTWINDOW.tokenizedRedirect(this);
+                                    return false;
+                                };
+                            } else {
+                                // prevent double decoration
+                                if (!("" + link.onclick).match(".*tokenizedRedirect.*")) {
+                                    //the function wrapper is important otherwise the
+                                    //last onclick handler would be assigned to oldonclick
+                                    (function storeEvent() {
+                                        var oldonclick = link.onclick;
+                                        link.onclick = function(evt) {
+                                            //ie handling added
+                                            evt = evt || window.event;
+
+                                            var proceed = oldonclick.bind(this)(evt);
+                                            if (typeof proceed === 'undefined' || proceed === true) {
+                                                dswh.strategy.CLIENTWINDOW.tokenizedRedirect(this);
+                                                return false;
+                                            }
+                                            return proceed;
+                                        };
+                                    })();
+                                }
                             }
                         }
                     }
                 }
             },
-            
+
+            tokenizedRedirectRequired : function(link) {
+                // skip link without href
+                if (link.href && link.href.length > 0) {
+                    return true;
+                }
+
+                return false;
+            },
+
+            tokenizedRedirect : function(link) {
+                var requestToken = dswh.utils.generateRequestToken();
+                dswh.utils.storeCookie('dsrwid-' + requestToken, dswh.windowId, 3);
+                window.location = dswh.utils.setUrlParam(link.href, 'dsrid', requestToken);
+            },
+
             /**
              * store the current body in the html5 localstorage
-             */ 
+             */
             storeWindowTree : function() {
                 // first we store all CSS we also need on the intermediate page
                 var headNodes = document.getElementsByTagName("head")[0].childNodes;
@@ -149,7 +201,7 @@ window.dswh = window.dswh || {
                 localStorage.setItem(window.name + '_bodyAttrs', body.getAttribute("class"));
                 return true;
             },
-            
+
             cleanupCookies : function() {
                 var dsrid = dswh.utils.getUrlParameter(window.location.href, 'dsrid');
                 if (dsrid) {
@@ -159,12 +211,12 @@ window.dswh = window.dswh || {
         },
 
         'LAZY' : {
-            
+
             validate : function() {
                 this.cleanupCookies();
                 this.assertWindowId();
             },
-            
+
             init : function(ajax) {
                 dswh.utils.appendHiddenWindowIdToForms();
             },
@@ -179,13 +231,13 @@ window.dswh = window.dswh || {
                     if (dswid) {
                         // initial redirect case
                         // the windowId is valid - we don't need to a second request
-                        if (dswh.cfg.initialRedirectWindowId && dswid === dswh.cfg.initialRedirectWindowId) {                    
+                        if (dswh.cfg.initialRedirectWindowId && dswid === dswh.cfg.initialRedirectWindowId) {
                             window.name = dswh.cfg.initialRedirectWindowId;
                         }
                         else {
                             // -- url param available, we must recreate a new windowId to be sure that it is new and valid --
 
-                            // set tempWindowId to remember the current state                
+                            // set tempWindowId to remember the current state
                             window.name = 'tempWindowId';
                             // we remove the dswid if available and redirect to the same url again to create a new windowId
                             window.location = dswh.utils.setUrlParam(window.location.href, 'dswid', null);
@@ -210,7 +262,7 @@ window.dswh = window.dswh || {
                     }
                 }
             },
-            
+
             cleanupCookies : function() {
                 var dswid = dswh.utils.getUrlParameter(window.location.href, 'dswid');
                 if (dswid) {
@@ -219,9 +271,9 @@ window.dswh = window.dswh || {
             }
         }
     },
-    
+
     utils : {
-        
+
         isHtml5 : function() {
             try {
                 return !!localStorage.getItem;
@@ -237,7 +289,7 @@ window.dswh = window.dswh || {
             }
             return someArray.join("|||");
         },
-        
+
         equalsIgnoreCase : function(source, destination) {
             //either both are not set or null
             if (!source && !destination) {
@@ -249,7 +301,7 @@ window.dswh = window.dswh || {
             //in any other case we do a strong string comparison
             return source.toLowerCase() === destination.toLowerCase();
         },
-        
+
         getUrlParameter : function (uri, name) {
             // create an anchor object with the uri and let the browser parse it
             var a = document.createElement('a');
@@ -300,7 +352,7 @@ window.dswh = window.dswh || {
             }
             return newQuery;
         },
-        
+
         appendHiddenWindowIdToForms : function() {
             var forms = document.getElementsByTagName("form");
             for (var i = 0; i < forms.length; i++) {
@@ -316,13 +368,25 @@ window.dswh = window.dswh || {
                 dspwid.value = dswh.windowId;
             }
         },
-        
+
         expireCookie : function(cookieName) {
             var date = new Date();
             date.setTime(date.getTime()-(10*24*60*60*1000)); // - 10 day
             var expires = ";max-age=0;expires=" + date.toGMTString();
 
             document.cookie = cookieName + "=" + expires + "; path=/";
+        },
+
+        generateRequestToken : function() {
+            return Math.floor(Math.random() * 999);
+        },
+
+        storeCookie : function(name, value, seconds) {
+            var expiresDate = new Date();
+            expiresDate.setTime(expiresDate.getTime() + (seconds * 1000));
+            var expires = "; expires=" + expiresDate.toGMTString();
+
+            document.cookie = name + '=' + value + expires + "; path=/";
         }
     }
 };

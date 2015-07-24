@@ -232,4 +232,10 @@ public class DefaultClientWindowConfig implements ClientWindowConfig
     {
         return true;
     }
+
+    @Override
+    public boolean isClientWindowTokenizedRedirectEnabled()
+    {
+        return false;
+    }
 }

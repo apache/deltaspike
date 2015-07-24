@@ -86,13 +86,15 @@ public interface ClientWindowConfig extends Serializable
      * @return the prepared html which gets sent out to the client as intermediate client window.
      */
     String getClientWindowHtml();
-    
+
     /**
      * @return whether localStorage is used in the browser to store the HTML content between client redirects.
      *          Currently it's only used by {@link ClientWindowRenderMode#CLIENTWINDOW}.
      * @see windowhandler.html
      */
-    boolean isClientWindowStoreWindowTreeEnabled(); 
+    boolean isClientWindowStoreWindowTreeEnabled();
+
+    boolean isClientWindowTokenizedRedirectEnabled();
 
     /**
      * Restricts the number of active windows.
