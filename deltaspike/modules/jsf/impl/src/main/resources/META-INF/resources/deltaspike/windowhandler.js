@@ -95,7 +95,7 @@ window.dswh = window.dswh || {
                 var tokenizedRedirectEnabled = dswh.cfg.tokenizedRedirect;
                 var storeWindowTreeEnabled = dswh.utils.isHtml5() && dswh.cfg.storeWindowTree;
 
-                if (dswh.cfg.tokenizedRedirect || storeWindowTreeEnabled) {
+                if (tokenizedRedirectEnabled || storeWindowTreeEnabled) {
                     var links = document.getElementsByTagName("a");
                     for (var i = 0; i < links.length; i++) {
                         var link = links[i];
