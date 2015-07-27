@@ -21,11 +21,13 @@ package org.apache.deltaspike.data.impl.handler;
 import org.apache.deltaspike.data.test.TransactionalTestCase;
 import org.apache.deltaspike.data.test.domain.Simple;
 import org.apache.deltaspike.data.test.domain.Simple2;
+import org.apache.deltaspike.data.test.domain.SimpleStringId;
 import org.apache.deltaspike.data.test.domain.Simple_;
 import org.apache.deltaspike.data.test.service.ExtendedRepositoryAbstract;
 import org.apache.deltaspike.data.test.service.ExtendedRepositoryAbstract2;
 import org.apache.deltaspike.data.test.service.ExtendedRepositoryAbstract4;
 import org.apache.deltaspike.data.test.service.ExtendedRepositoryInterface;
+import org.apache.deltaspike.data.test.service.SimpleStringIdRepository;
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
@@ -37,6 +39,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.metamodel.SingularAttribute;
+
 import java.util.List;
 
 import static org.apache.deltaspike.data.test.util.TestDeployments.initDeployment;
@@ -57,6 +60,7 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
                 .addClasses(ExtendedRepositoryAbstract.class)
                 .addClasses(ExtendedRepositoryAbstract2.class)
                 .addClasses(ExtendedRepositoryAbstract4.class)
+                .addClasses(SimpleStringIdRepository.class)
                 .addPackage(Simple.class.getPackage());
     }
 
@@ -71,6 +75,9 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
 
     @Inject
     private ExtendedRepositoryAbstract4 repoAbstract4;
+
+    @Inject
+    private SimpleStringIdRepository stringIdRepo;
 
     @Produces
     @PersistenceContext
@@ -122,6 +129,20 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
         // then
         assertEquals(simple.getId(), fetch.getId());
     }
+
+    @Test
+    public void should_save_with_string_id()
+    {
+        // given
+        SimpleStringId foo = new SimpleStringId("foo", "bar");
+
+        // when
+        foo = stringIdRepo.save(foo);
+
+        // then
+        assertNotNull(foo);
+    }
+
 
     @Test
     public void should_refresh() throws Exception
