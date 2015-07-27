@@ -304,13 +304,14 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
 
     private boolean countCheck(Object entity)
     {
-        StringBuilder sql = new StringBuilder("SELECT COUNT(e) FROM " + getEntityClass()
+        StringBuilder jpql = new StringBuilder("SELECT COUNT(e) FROM " + getEntityClass()
                 .getSimpleName() + " e ");
-        sql.append("WHERE e.");
-        sql.append(EntityUtils.primaryKey(getEntityClass()).getName());
-        sql.append(" = " + EntityUtils.primaryKeyValue(entity));
+        jpql.append("WHERE e.");
+        jpql.append(EntityUtils.primaryKey(getEntityClass()).getName());
+        jpql.append(" = :id");
 
-        final Query query = entityManager.createQuery(sql.toString());
+        final Query query = entityManager.createQuery(jpql.toString());
+        query.setParameter("id", EntityUtils.primaryKeyValue(entity));
         final Long result = (Long) query.getSingleResult();
         if (Long.valueOf(0).equals(result))
         {
