@@ -42,6 +42,28 @@ public interface CoreBaseConfig extends DeltaSpikeBaseConfig
                         .getValue();
     }
 
+    interface Validation
+    {
+        ViolationMode VIOLATION_MODE =
+                ConfigResolver.resolve("deltaspike.validation.violation-mode")
+                        .as(ViolationMode.class, new ConfigResolver.Converter<ViolationMode>()
+                        {
+                            @Override
+                            public ViolationMode convert(String value)
+                            {
+                                return ViolationMode.valueOf(value);
+                            }
+                        })
+                        .withCurrentProjectStage(true)
+                        .withDefault(ViolationMode.FAIL)
+                        .getValue();
+
+        enum ViolationMode
+        {
+            IGNORE, WARN, FAIL
+        }
+    }
+
     interface MBeanIntegration
     {
         Boolean AUTO_UNREGISTER =

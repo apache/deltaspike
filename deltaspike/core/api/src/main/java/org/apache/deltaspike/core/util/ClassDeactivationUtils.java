@@ -19,6 +19,7 @@
 package org.apache.deltaspike.core.util;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
+import org.apache.deltaspike.core.api.config.base.CoreBaseConfig;
 import org.apache.deltaspike.core.spi.activation.ClassDeactivator;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 
@@ -149,6 +150,25 @@ public abstract class ClassDeactivationUtils
     //synchronized isn't needed - #initDeactivatableCacheFor is already synchronized
     private static List<ClassDeactivator> initConfiguredClassDeactivators(ClassLoader classLoader)
     {
+        if (!ServiceUtils.loadServiceImplementations(ClassDeactivator.class).isEmpty())
+        {
+            CoreBaseConfig.Validation.ViolationMode violationMode = CoreBaseConfig.Validation.VIOLATION_MODE;
+
+            String message = "It isn't supported to configure " + ClassDeactivator.class.getName() +
+                    " via the std. service-loader config. " +
+                    "Please remove all META-INF/services/" + ClassDeactivator.class.getName() + " files. " +
+                    "Please configure it via the DeltaSpike-Config (e.g. META-INF/apache-deltaspike.properties).";
+
+            if (violationMode == CoreBaseConfig.Validation.ViolationMode.FAIL)
+            {
+                throw new IllegalStateException(message);
+            }
+            else if (violationMode == CoreBaseConfig.Validation.ViolationMode.WARN)
+            {
+                LOG.warning(message);
+            }
+        }
+
         List<String> classDeactivatorClassNames = ConfigResolver.getAllPropertyValues(ClassDeactivator.class.getName());
 
         List<ClassDeactivator> classDeactivators = new ArrayList<ClassDeactivator>();
