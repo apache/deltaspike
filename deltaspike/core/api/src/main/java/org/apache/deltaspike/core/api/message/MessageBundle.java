@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.core.api.message;
 
+import javax.enterprise.inject.Stereotype;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -63,6 +64,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * Debug hint: Set a breakpoint in <code>MessageBundleInvocationHandler#invoke</code>. This will get called for every
  * message bundle invocation.</p>
  */
+@Stereotype
+
 @Target({ TYPE })
 @Retention(RUNTIME)
 @Documented
