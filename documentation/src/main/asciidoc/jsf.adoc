@@ -131,9 +131,9 @@ not feasible as general solution.
 
 Each GET request results in an intermediate small html page which checks
 if the browser tab fits the requested windowId. When the windowId is
-valid, a unique token (called `dsRid`) will be generated for the current
+valid, a unique token (called `dsrid`) will be generated for the current
 request and added to the URL. In addition a cookie with with the
-dsRid/windowId will be added. On the server side, the verified windowId
+dsrid/dswid will be added. On the server side, the verified windowId
 will be extracted from the cookie. For POST request detection, the
 windowId will be added as hidden input to all forms.
 
@@ -159,7 +159,9 @@ parse a request and decide upon the UserAgent or any other information
 if a client will get an intermediate page or if he gets the result page
 directly.
 
-===== Change windowhandler.html
+===== Configuration
+
+====== Change windowhandler.html
 
 To customize the look and feel of the windowhandler.html, you can simply
 provide a own via:
@@ -173,6 +175,51 @@ public class MyClientWindowConfig extends DefaultClientWindowConfig
     public String getClientWindowHtml()
     {
         return "<html><body>Loading...</body></html>";
+    }
+}
+-------------------------------------------------------------------
+
+If you didn't copy the JS logic from our default windowhandler.html or
+if you would like to always show your custom html instead the 'screenshot', you should disable logic via:
+
+[source,java]
+-------------------------------------------------------------------
+@Specializes
+public class MyClientWindowConfig extends DefaultClientWindowConfig
+{
+    @Override
+    public String isClientWindowStoreWindowTreeEnabled()
+    {
+        return false;
+    }
+}
+-------------------------------------------------------------------
+
+====== Minimize windowhandler.html streaming
+
+It's possible to reduce the windowhandler.html streaming if we overwrite the onclick event of all links to mark the next request as 'valid'.
+The onclick handler appends a request token to the URL and creates a cookie for the request token.
+
+You can enable this via:
+
+[source,java]
+-------------------------------------------------------------------
+@Specializes
+public class MyClientWindowConfig extends DefaultClientWindowConfig
+{
+    @Override
+    public String isClientWindowTokenizedRedirectEnabled()
+    {
+        return true;
+    }
+
+    /**
+     * This isn't required anymore when #isClientWindowTokenizedRedirectEnabled is set to true.
+     */
+    @Override
+    public String isClientWindowStoreWindowTreeEnabled()
+    {
+        return false;
     }
 }
 -------------------------------------------------------------------
