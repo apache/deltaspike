@@ -290,6 +290,14 @@ window.dswh = window.dswh || {
             return someArray.join("|||");
         },
 
+        unstringify : function(serialized) {
+            if (JSON) {
+                return JSON.parse(serialized);
+            }
+
+            return serialized.split("|||");
+        },
+
         equalsIgnoreCase : function(source, destination) {
             //either both are not set or null
             if (!source && !destination) {

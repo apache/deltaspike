@@ -31,6 +31,7 @@ import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;
 import org.apache.deltaspike.jsf.api.config.base.JsfBaseConfig;
+import org.apache.deltaspike.jsf.util.ValueExpressionEvaluationInputStream;
 
 /**
  * <p>Default implementation of {@link ClientWindowConfig}.
@@ -150,6 +151,8 @@ public class DefaultClientWindowConfig implements ClientWindowConfig
         }
 
         InputStream is = ClassUtils.getClassLoader(null).getResourceAsStream(getClientWindowResourceLocation());
+        // wrap InputStream to evaluate EL expressions like resource includes
+        is = new ValueExpressionEvaluationInputStream(FacesContext.getCurrentInstance(), is);
         StringBuffer sb = new StringBuffer();
         try
         {

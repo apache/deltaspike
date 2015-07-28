@@ -20,163 +20,126 @@
  under the License.
 -->
 <html>
+    <head>
+        <title>Loading...</title>
+        <script type="text/javascript" src="#{resource['deltaspike/windowhandler.js']}"></script>
+    </head>
+    <body>
+        <div id="message" style="position:absolute;left:40%;top:40%">
+            Your browser does not support JavaScript.
+            Click <a href="$$noscriptUrl$$">here</a> to continue without JavaScript.
+        </div>
+    </body>
 
-<head><title>Loading...</title></head>
-<body><div id="message" style="position:absolute;left:40%;top:40%">
-    Your browser does not support JavaScript.
-    Click <a href="$$noscriptUrl$$">here</a> to continue without JavaScript.
-</div></body>
-
-<script type="text/javascript" >
-function isHtml5() {
-    try { return !!localStorage.getItem;
-    } catch(e) { return false; }
-}
-function unstringify(serialized) {
-    if (JSON) { return JSON.parse(serialized); }
-    return serialized.split("|||");
-}
-function getOldBody() {
-    if (window.name.length != null) {
-        return localStorage.getItem(window.name + '_body');
-    }
-}
-function getOldBodyAttrs() {
-    if (window.name.length != null) {
-        return localStorage.getItem(window.name + '_bodyAttrs');
-    }
-}
-function getOldCss() {
-    if (window.name.length != null) {
-        return unstringify(localStorage.getItem(window.name + '_css'));
-    }
-}
-
-function addCss(url) {
-    var newSS = document.createElement("style");
-    newSS.setAttribute("rel", "stylesheet");
-    newSS.setAttribute("type", "text/css");
-    newSS.appendChild(document.createTextNode("@import url(" +url + ");"));
-    document.getElementsByTagName("head")[0].appendChild(newSS);
-}
-
-function loadCss(clean) {
-    if (!isHtml5()) { // only do this stuff on html browsers
-        return;
-    }
-    var oldCss  = getOldCss();
-    if (window.name && oldCss) {
-        for (i=0; oldCss && i< oldCss.length; i++) {
-            addCss(oldCss[i]);
-        }
-        if (clean) {
-            localStorage.removeItem(window.name + '_css');
-        }
-    }
-}
-
-function replaceContent() {
-    if (!isHtml5()) { // only do this stuff on html browsers
-        document.getElementById('message').textContent = "Loading...";
-        return;
-    }
-    loadCss(false);
-
-    var oldBody = getOldBody();
-
-    if (window.name && oldBody) {
-        document.body.innerHTML = oldBody;
-
-        //X TODO should restore all attribs of the body tag
-        document.body.setAttribute("class", getOldBodyAttrs());
-        document.body.setAttribute("style", " cursor: wait !important;");
-
-        localStorage.removeItem(window.name + '_body');
-        localStorage.removeItem(window.name + '_bodyAttrs');
-
-        // overlay the doc with an un-clickable full-size div
-        var newDiv = document.createElement("div");
-        newDiv.setAttribute("style", "position:absolute; z-index:1000; background-color:transparent; top:0; left:0; width:100%; height: 100%");
-        newDiv.setAttribute("class", "fulldiv");
-        document.body.appendChild(newDiv);
-    } else {
-        document.getElementById('message').textContent = "Loading...";
-    }
-}
-
-function setUrlParam(baseUrl, paramName, paramValue) {
-    var query = baseUrl;
-    var vars = query.split(/&|\?/g);
-    var newQuery = "";
-    var iParam = 0;
-    var paramFound = false;
-    for (var i=0; vars != null && i < vars.length; i++) {
-        var pair = vars[i].split("=");
-        if (pair.length == 1) {
-            newQuery = pair[0];
-        } else {
-            if (pair[0] != paramName) {
-                var amp = iParam++ > 0 ? "&" : "?";
-                newQuery =  newQuery + amp + pair[0] + "=" + pair[1];
-            } else {
-                paramFound = true;
-                var amp = iParam++ > 0 ? "&" : "?";
-                newQuery =  newQuery + amp + paramName + "=" + paramValue;
+    <script type="text/javascript" >
+        function getOldBody() {
+            if (window.name.length !== null) {
+                return localStorage.getItem(window.name + '_body');
             }
         }
-    }
-    if (!paramFound) {
-        var amp = iParam++ > 0 ? "&" : "?";
-        newQuery =  newQuery + amp + paramName + "=" + paramValue;
-    }
-    return newQuery;
-}
-
-replaceContent();
-
-window.onload = function() {
-    // uncomment the following line to debug the intermediate page
-    // if (!confirm('reload?')) { return true; }
-
-    loadCss(true);
-    // this will be replaced in the phase listener
-    var windowId = window.name;
-    var urlId = windowId;
-    if (!windowId || windowId.length < 1) {
-        var newWindowId = '$$windowIdValue$$';
-        if (newWindowId != 'uninitializedWindowId') {
-            window.name = newWindowId; // set the window.name with our windowId
-            windowId = newWindowId;
-            urlId = windowId;
+        function getOldBodyAttrs() {
+            if (window.name.length !== null) {
+                return localStorage.getItem(window.name + '_bodyAttrs');
+            }
         }
-        else {
-            windowId = 'automatedEntryPoint';
-            urlId = null;
+        function getOldCss() {
+            if (window.name.length !== null) {
+                return dswh.utils.unstringify(localStorage.getItem(window.name + '_css'));
+            }
         }
-    }
-    // occurs with the "duplicate tab" feature of chrome
-    else if (windowId === 'tempWindowId') {
-        window.name = '';
-        windowId = 'automatedEntryPoint';
-        urlId = null;
-    }
 
-    // 3 seconds expiry time
-    var expdt = new Date();
-    expdt.setTime(expdt.getTime()+(3*1000));
-    var expires = "; expires="+expdt.toGMTString();
+        function addCss(url) {
+            var newSS = document.createElement("style");
+            newSS.setAttribute("rel", "stylesheet");
+            newSS.setAttribute("type", "text/css");
+            newSS.appendChild(document.createTextNode("@import url(" +url + ");"));
+            document.getElementsByTagName("head")[0].appendChild(newSS);
+        }
 
-    var requestToken = Math.floor(Math.random()*999);
-    var newUrl = setUrlParam(window.location.href, "dsrid", requestToken);
+        function loadCss(clean) {
+            if (!dswh.utils.isHtml5()) { // only do this stuff on html5 browsers
+                return;
+            }
+            var oldCss  = getOldCss();
+            if (window.name && oldCss) {
+                for (i=0; oldCss && i< oldCss.length; i++) {
+                    addCss(oldCss[i]);
+                }
+                if (clean) {
+                    localStorage.removeItem(window.name + '_css');
+                }
+            }
+        }
 
-    // we still add hte windowId page param to support lazy windowId dropping for some clients
-    newUrl = setUrlParam(newUrl, "dswid", urlId);
+        function replaceContent() {
+            if (!dswh.utils.isHtml5()) { // only do this stuff on html browsers
+                document.getElementById('message').textContent = "Loading...";
+                return;
+            }
+            loadCss(false);
 
-    document.cookie = 'dsrwid-' + requestToken + '=' + windowId + expires+"; path=/";
+            var oldBody = getOldBody();
 
-    window.location = newUrl;
-}
-</script>
+            if (window.name && oldBody) {
+                document.body.innerHTML = oldBody;
+
+                //X TODO should restore all attributes of the body tag
+                document.body.setAttribute("class", getOldBodyAttrs());
+                document.body.setAttribute("style", " cursor: wait !important;");
+
+                localStorage.removeItem(window.name + '_body');
+                localStorage.removeItem(window.name + '_bodyAttrs');
+
+                // overlay the doc with an un-clickable full-size div
+                var newDiv = document.createElement("div");
+                newDiv.setAttribute("style", "position:absolute; z-index:1000; background-color:transparent; top:0; left:0; width:100%; height: 100%");
+                newDiv.setAttribute("class", "fulldiv");
+                document.body.appendChild(newDiv);
+            } else {
+                document.getElementById('message').textContent = "Loading...";
+            }
+        }
+
+        replaceContent();
+
+        window.onload = function() {
+            // uncomment the following line to debug the intermediate page
+            // if (!confirm('reload?')) { return true; }
+
+            loadCss(true);
+
+            var windowId = window.name;
+            var urlId = windowId;
+            if (!windowId || windowId.length < 1) {
+                var newWindowId = '$$windowIdValue$$';
+                if (newWindowId !== 'uninitializedWindowId') {
+                    window.name = newWindowId; // set the window.name with our windowId
+                    windowId = newWindowId;
+                    urlId = windowId;
+                }
+                else {
+                    windowId = 'automatedEntryPoint';
+                    urlId = null;
+                }
+            }
+            // occurs with the "duplicate tab" feature of chrome
+            else if (windowId === 'tempWindowId') {
+                window.name = '';
+                windowId = 'automatedEntryPoint';
+                urlId = null;
+            }
+
+            var requestToken = dswh.utils.generateRequestToken();
+
+            var redirectUrl = window.location.href;
+            redirectUrl = dswh.utils.setUrlParam(redirectUrl, "dsrid", requestToken);
+            // we still add the windowId page param to support lazy windowId dropping for some clients
+            redirectUrl = dswh.utils.setUrlParam(redirectUrl, "dswid", urlId);
+
+            dswh.utils.storeCookie('dsrwid-' + requestToken, windowId, 3);
+
+            window.location = redirectUrl;
+        };
+    </script>
 
 </html>
-
