@@ -26,10 +26,13 @@ import java.lang.annotation.Target;
 
 import org.apache.deltaspike.partialbean.api.PartialBeanBinding;
 
+import javax.enterprise.inject.Stereotype;
+
 /**
  * The Repository annotation needs to be present in order to have the
  * interface or class to be processed by the CDI extension.
  */
+@Stereotype
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Inherited
