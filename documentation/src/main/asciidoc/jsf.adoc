@@ -212,15 +212,6 @@ public class MyClientWindowConfig extends DefaultClientWindowConfig
     {
         return true;
     }
-
-    /**
-     * This isn't required anymore when #isClientWindowTokenizedRedirectEnabled is set to true.
-     */
-    @Override
-    public String isClientWindowStoreWindowTreeEnabled()
-    {
-        return false;
-    }
 }
 -------------------------------------------------------------------
 
