@@ -23,6 +23,7 @@ import org.apache.deltaspike.core.api.exception.control.HandlerMethod;
 import org.apache.deltaspike.core.api.literal.AnyLiteral;
 import org.apache.deltaspike.core.util.HierarchyDiscovery;
 
+import javax.enterprise.inject.Typed;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -34,6 +35,7 @@ import java.util.Set;
  * (highest to lowest) and finally hierarchy (least to most specific).
  */
 @SuppressWarnings({ "MethodWithMoreThanThreeNegations" })
+@Typed()
 public final class ExceptionHandlerComparator implements Comparator<HandlerMethod<?>>
 {
     /**
