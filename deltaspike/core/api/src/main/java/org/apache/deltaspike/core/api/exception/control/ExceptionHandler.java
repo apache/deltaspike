@@ -19,6 +19,7 @@
 
 package org.apache.deltaspike.core.api.exception.control;
 
+import javax.enterprise.inject.Stereotype;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -31,6 +32,8 @@ import java.lang.annotation.Target;
  * @see BeforeHandles
  * @see Handles
  */
+@Stereotype
+
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Documented
