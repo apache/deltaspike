@@ -18,15 +18,15 @@
  */
 package org.apache.deltaspike.data.impl.meta.unit;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.apache.deltaspike.data.impl.meta.unit.EntityDescriptorReader.MappingFile;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import java.io.IOException;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 public class PersistenceUnitReader extends DescriptorReader
 {
@@ -51,13 +51,13 @@ public class PersistenceUnitReader extends DescriptorReader
             Node node = list.item(i);
             String unitName = extractUnitName(node);
             String baseUrl = extractBaseUrl(descriptor.getUrl(), PersistenceUnit.RESOURCE_PATH);
-            List<EntityDescriptor> entities = extractMappings((Element) node, baseUrl);
+            List<EntityDescriptor> entities = extractMappings((Element) node, baseUrl, unitName);
             result.add(new PersistenceUnit(unitName, entities));
         }
         return result;
     }
 
-    private List<EntityDescriptor> extractMappings(Element element, String baseUrl)
+    private List<EntityDescriptor> extractMappings(Element element, String baseUrl, String unitName)
     {
         try
         {
@@ -65,12 +65,7 @@ public class PersistenceUnitReader extends DescriptorReader
             List<EntityDescriptor> entities = new LinkedList<EntityDescriptor>();
             List<MappedSuperclassDescriptor> superClasses = new LinkedList<MappedSuperclassDescriptor>();
             NodeList list = element.getElementsByTagName("mapping-file");
-            for (int i = 0; i < list.getLength(); i++)
-            {
-                MappingFile mappings = reader.readAll(baseUrl, list.item(i).getTextContent());
-                entities.addAll(mappings.getEntities());
-                superClasses.addAll(mappings.getSuperClasses());
-            }
+            readMappingFiles(baseUrl, unitName, reader, entities, superClasses, list);
             MappingFile mappings = reader.readDefaultOrm(baseUrl);
             entities.addAll(mappings.getEntities());
             superClasses.addAll(mappings.getSuperClasses());
@@ -80,6 +75,27 @@ public class PersistenceUnitReader extends DescriptorReader
         catch (Exception e)
         {
             throw new RuntimeException("Failed initializing mapping files", e);
+        }
+    }
+
+    private void readMappingFiles(String baseUrl, String unitName, EntityDescriptorReader reader,
+                                  List<EntityDescriptor> entities, List<MappedSuperclassDescriptor> superClasses,
+                                  NodeList list)
+    {
+        for (int i = 0; i < list.getLength(); i++)
+        {
+            String resource = list.item(i).getTextContent();
+            try
+            {
+                MappingFile mappings = reader.readAll(baseUrl, resource);
+                entities.addAll(mappings.getEntities());
+                superClasses.addAll(mappings.getSuperClasses());
+            }
+            catch (Exception e)
+            {
+                throw new RuntimeException("[PersistenceUnit: " + unitName + "] " +
+                        "Unable to resolve named mapping-file [" + resource + "]");
+            }
         }
     }
 
