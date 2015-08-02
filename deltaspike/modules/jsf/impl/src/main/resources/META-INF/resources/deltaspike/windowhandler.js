@@ -368,12 +368,12 @@ window.dswh = window.dswh || {
                 var dspwid = form.elements["dspwid"];
                 if (!dspwid) {
                     dspwid = document.createElement("INPUT");
-                    dspwid.name = "dspwid";
-                    dspwid.type = "hidden";
+                    dspwid.setAttribute("name", "dspwid");
+                    dspwid.setAttribute("type", "hidden");
                     form.appendChild(dspwid);
                 }
 
-                dspwid.value = dswh.windowId;
+                dspwid.setAttribute("value", dswh.windowId);
             }
         },
 
