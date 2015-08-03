@@ -23,29 +23,36 @@
         <title>Loading...</title>
         <meta http-equiv="content-type" content="text/html;charset=utf-8" />
         <script type="text/javascript" src="#{resource['deltaspike/windowhandler.js']}"></script>
+        <style type="text/css">
+            #message {
+                width: 350px;
+                height: 50px;
+                margin: -25px 0 0 -175px;
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                font-family: arial,sans-serif;
+                font-size: 16px;
+                text-align: center;
+            }
+        </style>
     </head>
     <body>
-        <div id="message" style="position:absolute;left:40%;top:40%">
-            Your browser does not support JavaScript.
+        <div id="message" style="">
+            Your browser does not support JavaScript.<br/>
             Click <a href="$$noscriptUrl$$">here</a> to continue without JavaScript.
         </div>
 
         <script type="text/javascript">
             //<![CDATA[
             function getOldBody() {
-                if (window.name.length !== null) {
-                    return localStorage.getItem(window.name + '_body');
-                }
+                return localStorage.getItem(window.name + '_body');
             }
             function getOldBodyAttrs() {
-                if (window.name.length !== null) {
-                    return localStorage.getItem(window.name + '_bodyAttrs');
-                }
+                return localStorage.getItem(window.name + '_bodyAttrs');
             }
             function getOldCss() {
-                if (window.name.length !== null) {
-                    return dswh.utils.unstringify(localStorage.getItem(window.name + '_css'));
-                }
+                return dswh.utils.unstringify(localStorage.getItem(window.name + '_css'));
             }
 
             function addCss(url) {
@@ -61,7 +68,7 @@
                     return;
                 }
                 
-                if (!window.name) {
+                if (!window.name || window.name.length === null) {
                     return;
                 }
                 
@@ -82,7 +89,7 @@
                     return;
                 }
                 
-                if (!window.name) {
+                if (!window.name || window.name.length === null) {
                     return;
                 }
                 
@@ -152,5 +159,4 @@
             //]]>
         </script>
     </body>
-
 </html>
