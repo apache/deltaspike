@@ -102,7 +102,7 @@ following lookup chain until we found a configured value.
 ==== getPropertyAwarePropertyValue()
 
 The method
-`ConfigResolver#getProjectStageAwarePropertyValue(String key, String property)`
+`ConfigResolver#getPropertyAwarePropertyValue(String key, String property)`
 first looks up the configured value of the given property and uses this
 value to determine the final lookup path. All those lookups take the
 <<projectstage.adoc#,DeltaSpike ProjectStage>> mechanism into account.
