@@ -100,10 +100,16 @@ window.dswh = window.dswh || {
                     for (var i = 0; i < links.length; i++) {
                         var link = links[i];
 
-                        if (storeWindowTreeEnabled) {
+                        if (dswh.strategy.CLIENTWINDOW.isHrefDefined(link) === true) {
                             if (!link.onclick) {
                                 link.onclick = function() {
-                                    dswh.strategy.CLIENTWINDOW.storeWindowTree();
+                                    if (storeWindowTreeEnabled) {
+                                        dswh.strategy.CLIENTWINDOW.storeWindowTree();
+                                    }
+                                    if (tokenizedRedirectEnabled) {
+                                        dswh.strategy.CLIENTWINDOW.tokenizedRedirect(this);
+                                        return false;
+                                    }
                                     return true;
                                 };
                             } else {
@@ -117,34 +123,16 @@ window.dswh = window.dswh || {
                                             //ie handling added
                                             evt = evt || window.event;
 
-                                            return dswh.strategy.CLIENTWINDOW.storeWindowTree() && oldonclick.bind(this)(evt);
-                                        };
-                                    })();
-                                }
-                            }
-                        }
-
-                        if (tokenizedRedirectEnabled && dswh.strategy.CLIENTWINDOW.tokenizedRedirectRequired(link) === true) {
-                            if (!link.onclick) {
-                                link.onclick = function() {
-                                    dswh.strategy.CLIENTWINDOW.tokenizedRedirect(this);
-                                    return false;
-                                };
-                            } else {
-                                // prevent double decoration
-                                if (!("" + link.onclick).match(".*tokenizedRedirect.*")) {
-                                    //the function wrapper is important otherwise the
-                                    //last onclick handler would be assigned to oldonclick
-                                    (function storeEvent() {
-                                        var oldonclick = link.onclick;
-                                        link.onclick = function(evt) {
-                                            //ie handling added
-                                            evt = evt || window.event;
-
                                             var proceed = oldonclick.bind(this)(evt);
                                             if (typeof proceed === 'undefined' || proceed === true) {
-                                                dswh.strategy.CLIENTWINDOW.tokenizedRedirect(this);
-                                                return false;
+                                                if (storeWindowTreeEnabled) {
+                                                    dswh.strategy.CLIENTWINDOW.storeWindowTree();
+                                                }
+                                                
+                                                if (tokenizedRedirectEnabled) {
+                                                    dswh.strategy.CLIENTWINDOW.tokenizedRedirect(this);
+                                                    return false;
+                                                }
                                             }
                                             return proceed;
                                         };
@@ -156,7 +144,7 @@ window.dswh = window.dswh || {
                 }
             },
 
-            tokenizedRedirectRequired : function(link) {
+            isHrefDefined : function(link) {
                 // skip link without href
                 if (link.href && link.href.length > 0) {
                     return true;
