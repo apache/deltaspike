@@ -77,8 +77,13 @@ public class WindowIdHtmlRenderer extends Renderer
         writer.write("(function(){");
         writer.write("dswh.init('" + windowId + "','" + clientWindowRenderMode.name() + "',{");
 
-        writer.write("'storeWindowTree':" + clientWindowConfig.isClientWindowStoreWindowTreeEnabled());
-        writer.write(",'tokenizedRedirect':" + clientWindowConfig.isClientWindowTokenizedRedirectEnabled());
+        writer.write("'tokenizedRedirect':" + clientWindowConfig.isClientWindowTokenizedRedirectEnabled());
+        writer.write(",'storeWindowTreeOnLinkClick':"
+                + clientWindowConfig.isClientWindowStoreWindowTreeEnabledOnLinkClick());
+        writer.write(",'storeWindowTreeOnButtonClick':"
+                + clientWindowConfig.isClientWindowStoreWindowTreeEnabledOnButtonClick());
+        writer.write(",'storeWindowTreeOnAjaxRequest':"
+                + clientWindowConfig.isClientWindowStoreWindowTreeEnabledOnAjaxRequest());
 
         // see #729
         if (!delegatedWindowMode && clientWindow.isInitialRedirectSupported(context))

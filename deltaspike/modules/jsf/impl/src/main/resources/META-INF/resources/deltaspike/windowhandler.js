@@ -77,9 +77,26 @@ window.dswh = window.dswh || {
             },
 
             init : function(ajax) {
-                this.overwriteOnClickEvents();
+                this.overwriteLinkOnClickEvents();
+                this.overwriteButtonOnClickEvents();
 
                 dswh.utils.appendHiddenWindowIdToForms();
+                
+                if (ajax === false && dswh.utils.isHtml5() && dswh.cfg.storeWindowTreeOnAjaxRequest) {
+                    // JSF ajax callback
+                    jsf.ajax.addOnEvent(function(event) {
+                        if (event.status === "begin") {
+                            dswh.strategy.CLIENTWINDOW.storeWindowTree();
+                        }
+                    });
+
+                    // PF ajax callback
+                    if (window.$ && window.PrimeFaces) {
+                        $(document).on('pfAjaxSend', function () {
+                            dswh.strategy.CLIENTWINDOW.storeWindowTree();
+                        });
+                    }
+                }
             },
 
             assertWindowId : function() {
@@ -90,10 +107,10 @@ window.dswh = window.dswh || {
                 }
             },
 
-            overwriteOnClickEvents : function() {
+            overwriteLinkOnClickEvents : function() {
 
                 var tokenizedRedirectEnabled = dswh.cfg.tokenizedRedirect;
-                var storeWindowTreeEnabled = dswh.utils.isHtml5() && dswh.cfg.storeWindowTree;
+                var storeWindowTreeEnabled = dswh.utils.isHtml5() && dswh.cfg.storeWindowTreeOnLinkClick;
 
                 if (tokenizedRedirectEnabled || storeWindowTreeEnabled) {
                     var links = document.getElementsByTagName("a");
@@ -135,6 +152,41 @@ window.dswh = window.dswh || {
                                                 }
                                             }
                                             return proceed;
+                                        };
+                                    })();
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            
+            overwriteButtonOnClickEvents : function() {
+
+                var storeWindowTreeEnabled = dswh.utils.isHtml5() && dswh.cfg.storeWindowTreeOnButtonClick;
+                
+                if (storeWindowTreeEnabled) {
+                    var inputs = document.getElementsByTagName("input");
+                    for (var i = 0; i < inputs.length; i++) {
+                        var input = inputs[i];
+                        if (input.getAttribute("type") === "submit" || input.getAttribute("type") === "button") {
+                            if (!input.onclick) {
+                                input.onclick = function() {
+                                    dswh.strategy.CLIENTWINDOW.storeWindowTree();
+                                    return true;
+                                };
+                            } else {
+                                // prevent double decoration
+                                if (!("" + input.onclick).match(".*storeWindowTree().*")) {
+                                    //the function wrapper is important otherwise the
+                                    //last onclick handler would be assigned to oldonclick
+                                    (function storeEvent() {
+                                        var oldonclick = input.onclick;
+                                        input.onclick = function(evt) {
+                                            //ie handling added
+                                            evt = evt || window.event;
+
+                                            return dswh.strategy.CLIENTWINDOW.storeWindowTree() && oldonclick.bind(this)(evt);
                                         };
                                     })();
                                 }
