@@ -1,0 +1,28 @@
+Release Notes - Apache DeltaSpike - Version 1.5.0
+
+Bug
+
+    [DELTASPIKE-963] - Header injection due to unescaped key in JsfUtils
+    [DELTASPIKE-965] - EntityRepository.save() is broken for entities with String ID
+    [DELTASPIKE-971] - CLIENTWINDOW mode broken in IE10
+
+Improvement
+
+    [DELTASPIKE-613] - Avoid windowhandler.html in GET requests from links
+    [DELTASPIKE-817] - API and Core contain types recognized as managed beans but declaring an illegal bean type
+    [DELTASPIKE-853] - Use @Stereotype for interface/enum/implicit bean discovery
+    [DELTASPIKE-897] - check configuration of a ClassDeactivator
+    [DELTASPIKE-928] - Allow to disable storeWindowTree() on ClientWindow mode
+    [DELTASPIKE-942] - DeltaSpike fails to start with corrupted persistence.xml file.
+    [DELTASPIKE-962] - Refactor windowhandler.html
+    [DELTASPIKE-966] - Document ClientWindow configuration
+    [DELTASPIKE-968] - ClientWindowMode shows white loading page for button navigation
+    [DELTASPIKE-969] - Minor doc fixes around data module.
+    [DELTASPIKE-972] - Center windowhandler.html messages
+    [DELTASPIKE-973] - Fixed method name in Configuration doc
+    [DELTASPIKE-975] - dependent-scoped EntityManagerResolver get destroyed too early
+
+Task
+
+    [DELTASPIKE-964] - Publish Javadoc 1.4.2
+    [DELTASPIKE-980] - prepare v1.5.0
