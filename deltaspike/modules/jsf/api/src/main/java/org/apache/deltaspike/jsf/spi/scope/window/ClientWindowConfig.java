@@ -88,14 +88,31 @@ public interface ClientWindowConfig extends Serializable
     String getClientWindowHtml();
 
     /**
-     * @return whether localStorage is used in the browser to store the HTML content between client redirects.
-     *          Currently it's only used by {@link ClientWindowRenderMode#CLIENTWINDOW}.
+     * @return Whether the DOM tree should stored in the localStorage for the windowhandler.html
+     *         when clicking on a link.
+     *         Currently it's only used by {@link ClientWindowRenderMode#CLIENTWINDOW}.
      * @see windowhandler.html
      */
-    boolean isClientWindowStoreWindowTreeEnabled();
+    boolean isClientWindowStoreWindowTreeEnabledOnLinkClick();
+
+    /**
+     * @return Whether the DOM tree should stored in the localStorage for the windowhandler.html
+     *         when sending a AJAX request.
+     *         Currently it's only used by {@link ClientWindowRenderMode#CLIENTWINDOW}.
+     * @see windowhandler.html
+     */
+    boolean isClientWindowStoreWindowTreeEnabledOnAjaxRequest();
+    
+    /**
+     * @return Whether the DOM tree should stored in the localStorage for the windowhandler.html
+     *         when clicking on a button.
+     *         Currently it's only used by {@link ClientWindowRenderMode#CLIENTWINDOW}.
+     * @see windowhandler.html
+     */
+    boolean isClientWindowStoreWindowTreeEnabledOnButtonClick();
 
     boolean isClientWindowTokenizedRedirectEnabled();
-
+    
     /**
      * Restricts the number of active windows.
      *

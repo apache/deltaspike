@@ -36,6 +36,8 @@ public class EntityManagerLookup
     @Any
     private Instance<EntityManager> entityManager;
 
+    private DependentProvider<? extends EntityManagerResolver> dependentResolverProvider;
+
     public EntityManager lookupFor(final RepositoryComponent repository)
     {
         EntityManager result = null;
@@ -45,8 +47,8 @@ public class EntityManagerLookup
             if (!repository.isEntityManagerResolverIsNormalScope())
             {
                 final DependentProvider<? extends EntityManagerResolver> resolver = lookupResolver(emrc);
+                dependentResolverProvider = resolver;
                 result = resolver.get().resolveEntityManager();
-                resolver.destroy();
             }
             else
             {
@@ -62,6 +64,14 @@ public class EntityManagerLookup
             result.setFlushMode(repository.getEntityManagerFlushMode());
         }
         return result;
+    }
+
+    public void release()
+    {
+        if (dependentResolverProvider != null)
+        {
+            dependentResolverProvider.destroy();
+        }
     }
 
     private DependentProvider<? extends EntityManagerResolver> lookupResolver(

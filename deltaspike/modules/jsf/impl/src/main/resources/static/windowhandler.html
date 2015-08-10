@@ -1,6 +1,5 @@
-<!DOCTYPE html
-  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!--
  Licensed to the Apache Software Foundation (ASF) under one
  or more contributor license agreements.  See the NOTICE file
@@ -19,127 +18,145 @@
  specific language governing permissions and limitations
  under the License.
 -->
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>Loading...</title>
+        <meta http-equiv="content-type" content="text/html;charset=utf-8" />
         <script type="text/javascript" src="#{resource['deltaspike/windowhandler.js']}"></script>
+        <style type="text/css">
+            #message {
+                width: 350px;
+                height: 50px;
+                margin: -25px 0 0 -175px;
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                font-family: arial,sans-serif;
+                font-size: 16px;
+                text-align: center;
+            }
+        </style>
     </head>
     <body>
-        <div id="message" style="position:absolute;left:40%;top:40%">
-            Your browser does not support JavaScript.
+        <div id="message" style="">
+            Your browser does not support JavaScript.<br/>
             Click <a href="$$noscriptUrl$$">here</a> to continue without JavaScript.
         </div>
-    </body>
 
-    <script type="text/javascript" >
-        function getOldBody() {
-            if (window.name.length !== null) {
+        <script type="text/javascript">
+            //<![CDATA[
+            function getOldBody() {
                 return localStorage.getItem(window.name + '_body');
             }
-        }
-        function getOldBodyAttrs() {
-            if (window.name.length !== null) {
+            function getOldBodyAttrs() {
                 return localStorage.getItem(window.name + '_bodyAttrs');
             }
-        }
-        function getOldCss() {
-            if (window.name.length !== null) {
+            function getOldCss() {
                 return dswh.utils.unstringify(localStorage.getItem(window.name + '_css'));
             }
-        }
 
-        function addCss(url) {
-            var newSS = document.createElement("style");
-            newSS.setAttribute("rel", "stylesheet");
-            newSS.setAttribute("type", "text/css");
-            newSS.appendChild(document.createTextNode("@import url(" +url + ");"));
-            document.getElementsByTagName("head")[0].appendChild(newSS);
-        }
-
-        function loadCss(clean) {
-            if (!dswh.utils.isHtml5()) { // only do this stuff on html5 browsers
-                return;
+            function addCss(url) {
+                var newSS = document.createElement("style");
+                newSS.setAttribute("rel", "stylesheet");
+                newSS.setAttribute("type", "text/css");
+                newSS.appendChild(document.createTextNode("@import url(" +url + ");"));
+                document.getElementsByTagName("head")[0].appendChild(newSS);
             }
-            var oldCss  = getOldCss();
-            if (window.name && oldCss) {
-                for (i=0; oldCss && i< oldCss.length; i++) {
-                    addCss(oldCss[i]);
+
+            function loadCss(clean) {
+                if (!dswh.utils.isHtml5()) { // only do this stuff on html5 browsers
+                    return;
                 }
-                if (clean) {
-                    localStorage.removeItem(window.name + '_css');
+                
+                if (!window.name || window.name.length === null) {
+                    return;
+                }
+                
+                var oldCss = getOldCss();
+                if (oldCss) {
+                    for (var i = 0; i < oldCss.length; i++) {
+                        addCss(oldCss[i]);
+                    }
+                    if (clean) {
+                        localStorage.removeItem(window.name + '_css');
+                    }
                 }
             }
-        }
 
-        function replaceContent() {
-            if (!dswh.utils.isHtml5()) { // only do this stuff on html browsers
-                document.getElementById('message').textContent = "Loading...";
-                return;
-            }
-            loadCss(false);
-
-            var oldBody = getOldBody();
-
-            if (window.name && oldBody) {
-                document.body.innerHTML = oldBody;
-
-                //X TODO should restore all attributes of the body tag
-                document.body.setAttribute("class", getOldBodyAttrs());
-                document.body.setAttribute("style", " cursor: wait !important;");
-
-                localStorage.removeItem(window.name + '_body');
-                localStorage.removeItem(window.name + '_bodyAttrs');
-
-                // overlay the doc with an un-clickable full-size div
-                var newDiv = document.createElement("div");
-                newDiv.setAttribute("style", "position:absolute; z-index:1000; background-color:transparent; top:0; left:0; width:100%; height: 100%");
-                newDiv.setAttribute("class", "fulldiv");
-                document.body.appendChild(newDiv);
-            } else {
-                document.getElementById('message').textContent = "Loading...";
-            }
-        }
-
-        replaceContent();
-
-        window.onload = function() {
-            // uncomment the following line to debug the intermediate page
-            // if (!confirm('reload?')) { return true; }
-
-            loadCss(true);
-
-            var windowId = window.name;
-            var urlId = windowId;
-            if (!windowId || windowId.length < 1) {
-                var newWindowId = '$$windowIdValue$$';
-                if (newWindowId !== 'uninitializedWindowId') {
-                    window.name = newWindowId; // set the window.name with our windowId
-                    windowId = newWindowId;
-                    urlId = windowId;
+            function replaceContent() {
+                if (!dswh.utils.isHtml5()) { // only do this stuff on html browsers
+                    document.getElementById('message').textContent = "Loading...";
+                    return;
                 }
-                else {
+                
+                if (!window.name || window.name.length === null) {
+                    return;
+                }
+                
+                loadCss(false);
+
+                var oldBody = getOldBody();
+                if (oldBody) {
+                    document.body.innerHTML = oldBody;
+
+                    //X TODO should restore all attributes of the body tag
+                    document.body.setAttribute("class", getOldBodyAttrs());
+                    document.body.setAttribute("style", " cursor: wait !important;");
+
+                    localStorage.removeItem(window.name + '_body');
+                    localStorage.removeItem(window.name + '_bodyAttrs');
+
+                    // overlay the doc with an un-clickable full-size div
+                    var newDiv = document.createElement("div");
+                    newDiv.setAttribute("style", "position:absolute; z-index:1000; background-color:transparent; top:0; left:0; width:100%; height: 100%");
+                    newDiv.setAttribute("class", "fulldiv");
+                    document.body.appendChild(newDiv);
+                } else {
+                    document.getElementById('message').textContent = "Loading...";
+                }
+            }
+
+            replaceContent();
+
+            window.onload = function() {
+                // uncomment the following line to debug the intermediate page
+                // if (!confirm('reload?')) { return true; }
+
+                loadCss(true);
+
+                var windowId = window.name;
+                var urlId = windowId;
+                if (!windowId || windowId.length < 1) {
+                    var newWindowId = '$$windowIdValue$$';
+                    if (newWindowId !== 'uninitializedWindowId') {
+                        window.name = newWindowId; // set the window.name with our windowId
+                        windowId = newWindowId;
+                        urlId = windowId;
+                    }
+                    else {
+                        windowId = 'automatedEntryPoint';
+                        urlId = null;
+                    }
+                }
+                // occurs with the "duplicate tab" feature of chrome
+                else if (windowId === 'tempWindowId') {
+                    window.name = '';
                     windowId = 'automatedEntryPoint';
                     urlId = null;
                 }
-            }
-            // occurs with the "duplicate tab" feature of chrome
-            else if (windowId === 'tempWindowId') {
-                window.name = '';
-                windowId = 'automatedEntryPoint';
-                urlId = null;
-            }
 
-            var requestToken = dswh.utils.generateRequestToken();
+                var requestToken = dswh.utils.generateRequestToken();
 
-            var redirectUrl = window.location.href;
-            redirectUrl = dswh.utils.setUrlParam(redirectUrl, "dsrid", requestToken);
-            // we still add the windowId page param to support lazy windowId dropping for some clients
-            redirectUrl = dswh.utils.setUrlParam(redirectUrl, "dswid", urlId);
+                var redirectUrl = window.location.href;
+                redirectUrl = dswh.utils.setUrlParam(redirectUrl, "dsrid", requestToken);
+                // we still add the windowId page param to support lazy windowId dropping for some clients
+                redirectUrl = dswh.utils.setUrlParam(redirectUrl, "dswid", urlId);
 
-            dswh.utils.storeCookie('dsrwid-' + requestToken, windowId, 3);
+                dswh.utils.storeCookie('dsrwid-' + requestToken, windowId, 3);
 
-            window.location = redirectUrl;
-        };
-    </script>
-
+                window.location = redirectUrl;
+            };
+            //]]>
+        </script>
+    </body>
 </html>

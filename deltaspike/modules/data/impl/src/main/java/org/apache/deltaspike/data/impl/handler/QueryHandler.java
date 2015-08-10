@@ -94,6 +94,7 @@ public class QueryHandler implements Serializable, InvocationHandler
         }
         finally
         {
+            entityManagerLookup.release();
             context.dispose();
         }
     }

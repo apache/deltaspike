@@ -73,13 +73,17 @@ public class WindowIdHtmlRenderer extends Renderer
         }
 
         ResponseWriter writer = context.getResponseWriter();
-        writer.startElement("script", component);
-        writer.writeAttribute("type", "text/javascript", null);
+        writer.write("<script type=\"text/javascript\">");
         writer.write("(function(){");
         writer.write("dswh.init('" + windowId + "','" + clientWindowRenderMode.name() + "',{");
 
-        writer.write("'storeWindowTree':" + clientWindowConfig.isClientWindowStoreWindowTreeEnabled());
-        writer.write(",'tokenizedRedirect':" + clientWindowConfig.isClientWindowTokenizedRedirectEnabled());
+        writer.write("'tokenizedRedirect':" + clientWindowConfig.isClientWindowTokenizedRedirectEnabled());
+        writer.write(",'storeWindowTreeOnLinkClick':"
+                + clientWindowConfig.isClientWindowStoreWindowTreeEnabledOnLinkClick());
+        writer.write(",'storeWindowTreeOnButtonClick':"
+                + clientWindowConfig.isClientWindowStoreWindowTreeEnabledOnButtonClick());
+        writer.write(",'storeWindowTreeOnAjaxRequest':"
+                + clientWindowConfig.isClientWindowStoreWindowTreeEnabledOnAjaxRequest());
 
         // see #729
         if (!delegatedWindowMode && clientWindow.isInitialRedirectSupported(context))
@@ -97,7 +101,7 @@ public class WindowIdHtmlRenderer extends Renderer
 
         writer.write("});");
         writer.write("})();");
-        writer.endElement("script");
+        writer.write("</script>");
     }
 
     protected String secureWindowId(String windowId)

@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!--
     Licensed to the Apache Software Foundation (ASF) under one
     or more contributor license agreements.  See the NOTICE file
@@ -17,51 +18,48 @@
     specific language governing permissions and limitations
     under the License.
 -->
-<!DOCTYPE html
-        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ds="http://deltaspike.apache.org/jsf">
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ds="http://deltaspike.apache.org/jsf">
 
-<h:head>
-    <title>DeltaSpike JSF Playground</title>
-</h:head>
+    <f:view contentType="text/html">
+        <h:head>
+            <title>DeltaSpike JSF Playground</title>
+        </h:head>
+        <h:body>
+            <h:form>
+                <ds:windowId/>
 
-<h:body>
-    <h:form>
-        <ds:windowId/>
-
-        DS WindowId: #{dsWindowContext.currentWindowId}
-        <br />
-        <br />
-        <h:link value="GET Link" outcome="test.xhtml" />
-        <br />
-        <br />
-        <h:commandLink value="Postback">
-        </h:commandLink>
-        <br />
-        <br />
-        <h:commandLink value="Postback with outcome" action="test.xhtml?faces-redirect=true">
-        </h:commandLink>
-        <br />
-        <br />
-        <h:commandLink value="AJAX Postback">
-            <f:ajax render="@form" execute="@this" />
-        </h:commandLink>
-        <br />
-        <br />
-        <h:commandLink value="AJAX Postback with outcome" action="test.xhtml?faces-redirect=true">
-            <f:ajax render="@form" execute="@this" />
-        </h:commandLink>
-        <br />
-        <br />
-        Last time linkAction: #{viewActionController.lastTimeLinkAction} <br/>
-        <h:commandLink value="AJAX action" action="#{viewActionController.linkAction}">
-            <f:ajax render="@form" execute="@this" />
-        </h:commandLink>
-    </h:form>
-    
-</h:body>
-
+                DS WindowId: #{dsWindowContext.currentWindowId}
+                <br />
+                <br />
+                <h:link value="GET Link" outcome="test.xhtml" />
+                <br />
+                <br />
+                <h:commandLink value="Postback">
+                </h:commandLink>
+                <br />
+                <br />
+                <h:commandLink value="Postback with outcome" action="test.xhtml?faces-redirect=true">
+                </h:commandLink>
+                <br />
+                <br />
+                <h:commandLink value="AJAX Postback">
+                    <f:ajax render="@form" execute="@this" />
+                </h:commandLink>
+                <br />
+                <br />
+                <h:commandLink value="AJAX Postback with outcome" action="test.xhtml?faces-redirect=true">
+                    <f:ajax render="@form" execute="@this" />
+                </h:commandLink>
+                <br />
+                <br />
+                Last time linkAction: #{viewActionController.lastTimeLinkAction} <br/>
+                <h:commandLink value="AJAX action" action="#{viewActionController.linkAction}">
+                    <f:ajax render="@form" execute="@this" />
+                </h:commandLink>
+            </h:form>
+        </h:body>
+    </f:view>
 </html>

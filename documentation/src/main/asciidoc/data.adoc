@@ -77,9 +77,8 @@ Profile. Other configurations like running it inside Tomcat or even a
 Java SE application should be possible - you need to include a JPA
 provider as well as a CDI container to your application manually.
 
-Also note that in order to use abstract classes as repositories, this
-currently requires the presence of the
-http://www.javassist.org[javassist] library in your classpath.
+As of DeltaSpike v1.4.0, the Data module internally leverages the Proxy module, which wraps ASM 5.  No external
+dependencies required, and now we have full support for interceptors on partial beans.
 
 === 3. Complete Additional Project Configuration
 
