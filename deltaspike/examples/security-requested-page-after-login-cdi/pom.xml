@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.apache.deltaspike.examples</groupId>
         <artifactId>examples-project</artifactId>
-        <version>1.5.0</version>
+        <version>1.5.1-SNAPSHOT</version>
     </parent>
     
     <artifactId>deltaspike-security-requested-page-after-login-cdi</artifactId>
