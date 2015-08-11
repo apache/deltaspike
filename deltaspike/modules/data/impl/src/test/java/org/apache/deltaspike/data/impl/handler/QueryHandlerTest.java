@@ -255,6 +255,8 @@ public class QueryHandlerTest extends TransactionalTestCase
         // then
         assertNotNull(result);
         assertEquals(2, result.size());
+        assertTrue(result.get(0) instanceof Simple);
+        assertEquals(name, result.get(0).getName());
     }
 
     @Test
