@@ -20,12 +20,10 @@ regards,
 [name]
 -----------------------------------------------------------------------------------------------------------------------
 
- - Check the documentation
- - Check https://analysis.apache.org/dashboard/index/87921
- - Check diff with tag of [version-1]
  - Check the jenkins builds
  - Create release notes and commit them to deltaspike/readme/ (format [ReleaseNotes][version].txt)
  - Update version number in documentation/src/main/asciidoc/configure.adoc
+ - Update the build (version.deltaspike.latest.stable and version.deltaspike.latest.snapshot)
 
 test at least:
 
@@ -49,6 +47,8 @@ deploy a demo app especially with jsf-impl-ee6 to an ee6 server and check the lo
 git checkout -b ds-[release version]
 
 mvn release:prepare -Pdistribution -DreleaseProfiles=distribution
+
+//copy prepared workspace (to continue faster if an upload fails in the next step)
 
 //hint: dois not use -DdryRun=true -- since it can break the next step
 mvn release:perform -Pdistribution -DreleaseProfiles=distribution
@@ -154,7 +154,7 @@ git push origin master
 
  - Create the release at jira
  - Close the corresponding tickets of the version
- - Wait some hours and check http://repo2.maven.org/maven2/org/apache/deltaspike
+ - Wait some minutes and check http://repo2.maven.org/maven2/org/apache/deltaspike
 
 
 === Upload Artifacts
@@ -177,6 +177,7 @@ via CMS:
  - Update download links: http://deltaspike.apache.org/download.html
  - Update news: http://deltaspike.apache.org/news.html
  - Update version: http://deltaspike.apache.org/index.html
+ - Deploy the site
 
 === Announce the Release
 
