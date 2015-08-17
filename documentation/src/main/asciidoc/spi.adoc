@@ -44,6 +44,19 @@ public class CustomClassDeactivator implements ClassDeactivator
 
 A class-deactivator will be resolved from the environment via the default resolvers or via a custom resolver which allows to use any type of configuration-format. (see `org.apache.deltaspike.core.api.config.ConfigResolver`). The key is the fully qualified name of the interface (`org.apache.deltaspike.core.spi.activation.ClassDeactivator`).
 
+Starting with (TBD v1.5.1), Apache DeltaSpike ships a default Class Deactivator.  It is designed mostly for testing purposes, but is meant to reduce code overhead
+and allow configuration to drive classes to deactivate.  It is built upon the `ConfigSource` paradigm, which allows for configuration based keys to deactivate your
+classes.  If you're not using any other ConfigSource, you can simply add entries to `META-INF/apache-deltaspike.properties` to disable classes at runtime.  Here's an
+example configuration
+
+[source]
+----------------------------------------------------------------------------
+org.apache.deltaspike.core.spi.activation.ClassDeactivator=org.apache.deltaspike.core.impl.activation.DefaultClassDeactivator
+deactivate.org.apache.deltaspike.test.core.impl.activation.DeactivatedClass=true
+----------------------------------------------------------------------------
+
+By listing the class in the properties file and setting the value to `true`, the class will be deactivated.  This is valid for anything where `Boolean.valueOf` returns true.
+
 == ConfigSource
 
 [TODO]
