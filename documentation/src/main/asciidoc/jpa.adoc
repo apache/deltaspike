@@ -32,7 +32,7 @@ Add the JPA module to the list of dependencies in the project `pom.xml` file usi
 ----
 
 === 2. Enable the Transaction Interceptor
-For CDI 1.0 (or DeltaSpike v1.1.0 and earlier together with CDI 1.1+), you must enable the transaction interceptor in the project `beans.xml` file:
+If you are using CDI 1.0 or CDI 1.1+ with DeltaSpike v1.1.0 and earlier, you must enable the transaction interceptor in the project `beans.xml` file:
 
 [source,xml]
 ----
@@ -541,6 +541,11 @@ in the beans.xml which is called
 </beans>
 ----------------------------------------------------------------------------------------------------
 
+Alternatively, you may expect that your transactions are started at a higher level, e.g. you're exposing a REST API
+and the endpoints themselves are either `@Transactional` or Stateless session beans, either with container managed
+Transactions, you would use `org.apache.deltaspike.jpa.impl.transaction.ContainerManagedTransactionStrategy`.  This
+is the strategy to use if you are leveraging `@PersistenceContext` to inject your `EntityManager`.
+
 If you have multiple persistence units and you have to use both
 transaction types or the settings for development have to be different
 than the production settings, you can use
@@ -548,8 +553,8 @@ than the production settings, you can use
 instead.
 
 NOTE: In case of some versions of Weld (or OpenWebBeans in BDA mode), you have
-to configure it as global-alternative instead of an `<alternatives>` in
-beans.xml. That means you have to add, for example,
+to configure it as a <<spi.adoc#GlobalAlternative,global alternative>> instead of an `alternative` in
+`beans.xml`. That means you have to add, for example,
 `globalAlternatives.org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy 
 =org.apache.deltaspike.jpa.impl.transaction.BeanManagedUserTransactionStrategy`
-to `/META-INF/apache-deltaspike.properties`
+to `/META-INF/apache-deltaspike.properties`.
