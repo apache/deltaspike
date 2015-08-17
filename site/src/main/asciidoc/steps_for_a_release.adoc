@@ -178,6 +178,12 @@ via CMS:
  - Update news: http://deltaspike.apache.org/news.html
  - Update version: http://deltaspike.apache.org/index.html
  - Deploy the site
+   * mvn site deploy
+   * mvn clean javadoc:aggregate scm-publish:publish-scm or javadoc.sh
+
+=== Update report
+
+ - https://reporter.apache.org/?deltaspike
 
 === Announce the Release
 
