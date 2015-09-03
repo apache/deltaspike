@@ -22,6 +22,7 @@ import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.api.provider.DependentProvider;
 import org.apache.deltaspike.core.impl.util.JndiUtils;
 import org.apache.deltaspike.core.util.ExceptionUtils;
+import org.apache.deltaspike.jpa.api.config.base.JpaBaseConfig;
 import org.apache.deltaspike.jpa.api.transaction.TransactionConfig;
 import org.apache.deltaspike.jpa.impl.transaction.context.EntityManagerEntry;
 
@@ -130,7 +131,7 @@ public class BeanManagedUserTransactionStrategy extends ResourceLocalTransaction
             @Override
             public Integer getUserTransactionTimeoutInSeconds()
             {
-                return null;
+                return JpaBaseConfig.UserTransaction.TIMEOUT_IN_SECONDS;
             }
         };
     }

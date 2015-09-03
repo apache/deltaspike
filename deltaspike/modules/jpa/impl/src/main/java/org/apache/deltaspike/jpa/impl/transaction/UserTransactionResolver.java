@@ -18,10 +18,14 @@
  */
 package org.apache.deltaspike.jpa.impl.transaction;
 
+import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.core.api.provider.DependentProvider;
 import org.apache.deltaspike.core.impl.util.JndiUtils;
+import org.apache.deltaspike.jpa.api.config.base.JpaBaseConfig;
 
-import javax.annotation.Resource;
 import javax.enterprise.context.Dependent;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.inject.Inject;
 import javax.transaction.UserTransaction;
 import java.io.Serializable;
 
@@ -30,28 +34,56 @@ import java.io.Serializable;
 @Dependent
 public class UserTransactionResolver implements Serializable
 {
-    protected static final String USER_TRANSACTION_JNDI_NAME = "java:comp/UserTransaction";
-
     private static final long serialVersionUID = -1432802805095533499L;
 
-    @Resource
-    private UserTransaction userTransaction;
+    @Inject
+    private BeanManager beanManager;
 
     public UserTransaction resolveUserTransaction()
     {
+        UserTransaction userTransaction;
+
+        try
+        {
+            DependentProvider<ManagedUserTransactionResolver> provider =
+                BeanProvider.getDependent(this.beanManager, ManagedUserTransactionResolver.class);
+
+            userTransaction = provider.get().resolveUserTransaction();
+
+            provider.destroy();
+        }
+        catch (Throwable t)
+        {
+            //it was just a try
+            userTransaction = null;
+        }
+
         if (userTransaction != null)
         {
             return userTransaction;
         }
 
-        try
+        String jndiName = JpaBaseConfig.UserTransaction.JNDI_NAME;
+
+        String[] jndiNames = jndiName.split(",");
+
+        for (String currentJndiName : jndiNames)
         {
-            return JndiUtils.lookup(USER_TRANSACTION_JNDI_NAME, UserTransaction.class);
+            try
+            {
+                userTransaction = JndiUtils.lookup(currentJndiName, UserTransaction.class);
+
+                if (userTransaction != null)
+                {
+                    break;
+                }
+            }
+            catch (Exception e)
+            {
+                userTransaction = null;
+            }
         }
-        catch (Exception e)
-        {
-            // do nothing it was just a try
-            return null;
-        }
+
+        return userTransaction;
     }
 }
