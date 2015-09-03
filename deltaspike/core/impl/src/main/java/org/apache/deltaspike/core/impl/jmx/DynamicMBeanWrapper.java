@@ -25,6 +25,7 @@ import org.apache.deltaspike.core.api.jmx.MBean;
 import org.apache.deltaspike.core.api.jmx.NotificationInfo;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.core.util.ExceptionUtils;
 
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
@@ -353,17 +354,10 @@ public class DynamicMBeanWrapper extends NotificationBroadcasterSupport implemen
             {
                 return operations.get(actionName).invoke(instance(), params);
             }
-            catch (IllegalArgumentException e)
+            catch (Exception e)
             {
                 LOGGER.log(Level.SEVERE, actionName + "can't be invoked", e);
-            }
-            catch (IllegalAccessException e)
-            {
-                LOGGER.log(Level.SEVERE, actionName + "can't be invoked", e);
-            }
-            catch (InvocationTargetException e)
-            {
-                LOGGER.log(Level.SEVERE, actionName + "can't be invoked", e);
+                throw ExceptionUtils.throwAsRuntimeException(e);
             }
             finally
             {
