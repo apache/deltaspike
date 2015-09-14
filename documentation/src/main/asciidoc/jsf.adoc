@@ -161,6 +161,29 @@ directly.
 
 ===== Configuration
 
+====== Reduce windowhandler.html flickering
+
+Per default we only overwrite the onclick events of all links on the current page to make a 'screenshot' between requests.
+We also provide a mechanism to store the 'screenshot' on ajax requests (e.g. Post-Redirect-Get via p:remoteCommand or other components) or on every button onclick:
+
+[source,java]
+-------------------------------------------------------------------
+@Specializes
+public class MyClientWindowConfig extends DefaultClientWindowConfig
+{
+    @Override
+    public boolean isClientWindowStoreWindowTreeEnabledOnAjaxRequest()
+    {
+        return true;
+    }
+    
+    @Override
+    public boolean isClientWindowStoreWindowTreeEnabledOnButtonClick()
+    {
+        return true;
+    }
+}
+
 ====== Change windowhandler.html
 
 To customize the look and feel of the windowhandler.html, you can simply
@@ -188,7 +211,19 @@ if you would like to always show your custom html instead the 'screenshot', you 
 public class MyClientWindowConfig extends DefaultClientWindowConfig
 {
     @Override
-    public String isClientWindowStoreWindowTreeEnabled()
+    public boolean isClientWindowStoreWindowTreeEnabledOnLinkClick()
+    {
+        return false;
+    }
+    
+    @Override
+    public boolean isClientWindowStoreWindowTreeEnabledOnAjaxRequest()
+    {
+        return false;
+    }
+    
+    @Override
+    public boolean isClientWindowStoreWindowTreeEnabledOnButtonClick()
     {
         return false;
     }
