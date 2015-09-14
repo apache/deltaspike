@@ -47,6 +47,7 @@ public class AsmProxyClassGenerator implements ProxyClassGenerator
     private static final Type TYPE_CLASS = Type.getType(Class.class);
     private static final Type TYPE_OBJECT = Type.getType(Object.class);
 
+    @Override
     public <T> Class<T> generateProxyClass(ClassLoader classLoader,
             Class<T> targetClass,
             Class<? extends InvocationHandler> delegateInvocationHandlerClass,

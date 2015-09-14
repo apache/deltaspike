@@ -22,6 +22,26 @@ import java.lang.reflect.InvocationHandler;
 
 public interface ProxyClassGenerator
 {
+    /**
+     * Generates a proxy class from the given source class.
+     * The proxy class will be generated in the same package as the original class
+     * and the suffix will be appended to the name of the class.
+     * 
+     * @param <T> The target class.
+     * @param classLoader The {@link ClassLoader} to be used to define the proxy class.
+     * @param targetClass The class to proxy.
+     * @param delegateInvocationHandlerClass The {@link InvocationHandler} which will be used for the delegateMethods.
+     * @param suffix The classname suffix.
+     * @param superAccessorMethodSuffix It's required to generate methods which just invokes the original method.
+     *                                  We generate them with the same name as the original method
+     *                                  and append the suffix.
+     * @param additionalInterfaces Additional interfaces which should be implemented.
+     * @param delegateMethods Methods which should be delegated to the {@code delegateInvocationHandlerClass}
+     *                        instead of invoking the original method.
+     * @param interceptMethods Methods which should be intercepted (to call interceptors or decorators)
+     *                         before invoking the original method.
+     * @return The generated proxy class.
+     */
     <T> Class<T> generateProxyClass(ClassLoader classLoader,
                                     Class<T> targetClass,
                                     Class<? extends InvocationHandler> delegateInvocationHandlerClass,
