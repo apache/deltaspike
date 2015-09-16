@@ -26,6 +26,7 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
+import javax.persistence.Version;
 
 import org.apache.deltaspike.data.impl.meta.unit.PersistenceUnits;
 import org.apache.deltaspike.data.impl.meta.verifier.EntityVerifier;
@@ -110,5 +111,31 @@ public final class EntityUtils
             criteria.add(new NamedPropertyCriteria(fromMappingFiles));
         }
         return criteria;
+    }
+
+    public static Property<Serializable> getVersionProperty(Object entity)
+    {
+        Class<?> entityClass = entity.getClass();
+        List<PropertyCriteria> criteriaList = new LinkedList<PropertyCriteria>();
+        criteriaList.add(new AnnotatedPropertyCriteria(Version.class));
+
+        String fromMappingFiles = PersistenceUnits.instance().versionField(entityClass);
+        if (fromMappingFiles != null)
+        {
+            criteriaList.add(new NamedPropertyCriteria(fromMappingFiles));
+        }
+
+        for (PropertyCriteria criteria : criteriaList)
+        {
+            PropertyQuery<Serializable> query =
+                PropertyQueries.<Serializable> createQuery(entityClass).addCriteria(criteria);
+            Property<Serializable> result = query.getFirstResult();
+            if (result != null)
+            {
+                return result;
+            }
+        }
+
+        return null;
     }
 }

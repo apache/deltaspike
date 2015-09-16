@@ -60,6 +60,16 @@ public final class PersistenceUnits
         return null;
     }
 
+    public String versionField(Class<?> entityClass)
+    {
+        EntityDescriptor entity = find(entityClass);
+        if (entity != null)
+        {
+            return entity.getVersion();
+        }
+        return null;
+    }
+
     public Class<?> primaryKeyIdClass(Class<?> entityClass)
     {
         EntityDescriptor entity = find(entityClass);

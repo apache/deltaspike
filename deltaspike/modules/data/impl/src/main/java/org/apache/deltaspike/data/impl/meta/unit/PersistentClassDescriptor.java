@@ -31,15 +31,18 @@ abstract class PersistentClassDescriptor
     protected final Class<?> entityClass;
     protected final Class<? extends Serializable> idClass;
     protected final String id;
+    protected final String version;
     private PersistentClassDescriptor parent;
 
-    PersistentClassDescriptor(String name, String packageName, String className, String idClass, String id)
+    PersistentClassDescriptor(String name, String packageName, String className, String idClass, String id,
+                              String version)
     {
         Class<?> clazz = entityClass(className, packageName);
         this.name = name;
         this.entityClass = clazz;
         this.idClass = idClass(clazz, idClass, packageName, id);
         this.id = id;
+        this.version = version;
     }
 
     public Class<? extends Serializable> getIdClass()
@@ -50,6 +53,11 @@ abstract class PersistentClassDescriptor
     public String getId()
     {
         return id;
+    }
+
+    public String getVersion()
+    {
+        return version;
     }
 
     public String getName()

@@ -56,9 +56,9 @@ public class EntityDescriptorReader extends DescriptorReader
         {
             @Override
             protected EntityDescriptor instance(String name, String packageName, String className,
-                                      String idClass, String id, String tableName)
+                                      String idClass, String id, String version, String tableName)
             {
-                return new EntityDescriptor(name, packageName, className, idClass, id, tableName);
+                return new EntityDescriptor(name, packageName, className, idClass, id, version, tableName);
             }
 
             @Override
@@ -72,9 +72,9 @@ public class EntityDescriptorReader extends DescriptorReader
         {
             @Override
             protected MappedSuperclassDescriptor instance(String name, String packageName, String className,
-                                                String idClass, String id)
+                                                String idClass, String id, String version)
             {
-                return new MappedSuperclassDescriptor(name, packageName, className, idClass, id);
+                return new MappedSuperclassDescriptor(name, packageName, className, idClass, id, version);
             }
 
             @Override
@@ -148,6 +148,7 @@ public class EntityDescriptorReader extends DescriptorReader
         protected String className;
         protected String idClass;
         protected String id;
+        protected String version;
         protected String embeddedId;
 
         public List<T> build(Document doc)
@@ -161,6 +162,7 @@ public class EntityDescriptorReader extends DescriptorReader
                 this.className = extractAttribute(mappings.item(i), "class");
                 this.idClass = extractNodeAttribute((Element) mappings.item(i), "id-class", "class");
                 this.id = extractNodeAttribute((Element) mappings.item(i), "id", "name");
+                this.version = extractNodeAttribute((Element) mappings.item(i), "version", "name");
                 this.embeddedId = extractNodeAttribute((Element) mappings.item(i), "embedded-id", "name");
                 addFields((Element) mappings.item(i));
                 addInResult();
@@ -177,14 +179,15 @@ public class EntityDescriptorReader extends DescriptorReader
 
     private abstract class MappedSuperClassBuilder<T extends PersistentClassDescriptor> extends PersistenceBuilder
     {
-        protected abstract T instance(String name, String packageName, String className, String idClass, String id);
+        protected abstract T instance(String name, String packageName, String className, String idClass, String id,
+                                      String version);
 
         protected abstract String tagName();
 
         @Override
         protected void addInResult()
         {
-            result.add(instance(name, packageName, className, idClass, id != null ? id : embeddedId));
+            result.add(instance(name, packageName, className, idClass, id != null ? id : embeddedId, version));
         }
 
         @Override
@@ -200,14 +203,15 @@ public class EntityDescriptorReader extends DescriptorReader
         protected String tableName;
 
         protected abstract T instance(String name, String packageName, String className, String idClass, String id,
-                            String tableName);
+                                      String version, String tableName);
 
         protected abstract String tagName();
 
         @Override
         protected void addInResult()
         {
-            result.add(instance(name, packageName, className, idClass, id != null ? id : embeddedId, tableName));
+            result.add(instance(name, packageName, className, idClass, id != null ? id : embeddedId,
+                version, tableName));
         }
 
         @Override

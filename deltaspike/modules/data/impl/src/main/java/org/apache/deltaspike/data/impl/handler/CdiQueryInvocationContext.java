@@ -22,6 +22,7 @@ import org.apache.deltaspike.data.api.SingleResultType;
 import org.apache.deltaspike.data.api.mapping.QueryInOutMapper;
 import org.apache.deltaspike.data.impl.meta.RepositoryMethod;
 import org.apache.deltaspike.data.impl.param.Parameters;
+import org.apache.deltaspike.data.impl.property.Property;
 import org.apache.deltaspike.data.impl.util.EntityUtils;
 import org.apache.deltaspike.data.impl.util.bean.Destroyable;
 import org.apache.deltaspike.data.spi.QueryInvocationContext;
@@ -30,6 +31,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import javax.persistence.Query;
 import javax.persistence.QueryHint;
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
@@ -92,6 +94,12 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
     {
         try
         {
+            Property<Serializable> versionProperty = EntityUtils.getVersionProperty(entity);
+            if (versionProperty != null)
+            {
+                return versionProperty.getValue(entity) == null;
+            }
+
             if (EntityUtils.primaryKeyValue(entity) == null)
             {
                 return true;

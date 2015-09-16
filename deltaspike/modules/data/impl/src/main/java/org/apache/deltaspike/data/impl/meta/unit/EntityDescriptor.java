@@ -27,9 +27,10 @@ class EntityDescriptor extends PersistentClassDescriptor
 
     protected final String tableName;
 
-    EntityDescriptor(String name, String packageName, String className, String idClass, String id, String tableName)
+    EntityDescriptor(String name, String packageName, String className, String idClass, String id,
+                     String version, String tableName)
     {
-        super(name, packageName, className, idClass, id);
+        super(name, packageName, className, idClass, id, version);
         this.tableName = tableName;
     }
 

@@ -25,9 +25,10 @@ import java.io.Serializable;
 class MappedSuperclassDescriptor extends PersistentClassDescriptor
 {
 
-    MappedSuperclassDescriptor(String name, String packageName, String className, String idClass, String id)
+    MappedSuperclassDescriptor(String name, String packageName, String className, String idClass, String id,
+                               String version)
     {
-        super(name, packageName, className, idClass, id);
+        super(name, packageName, className, idClass, id, version);
     }
 
     @Override
