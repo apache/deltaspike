@@ -41,6 +41,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -160,10 +161,8 @@ public class BeanBuilder<T>
             {
                 this.types.add(c);
             }
-            for (Class<?> i : type.getJavaClass().getInterfaces())
-            {
-                this.types.add(i);
-            }
+            Collections.addAll(this.types, type.getJavaClass().getInterfaces());
+            this.types.add(Object.class);
         }        
 
         if (qualifiers.isEmpty())
