@@ -38,7 +38,7 @@ public interface CoreBaseConfig extends DeltaSpikeBaseConfig
                 ConfigResolver.resolve("deltaspike.interceptor.priority")
                         .as(Integer.class)
                         .withCurrentProjectStage(true)
-                        .withDefault(0)
+                        .withDefault(999) //PLATFORM_BEFORE is 0, LIBRARY_BEFORE is 1000 and APPLICATION is 2000
                         .getValue();
     }
 
