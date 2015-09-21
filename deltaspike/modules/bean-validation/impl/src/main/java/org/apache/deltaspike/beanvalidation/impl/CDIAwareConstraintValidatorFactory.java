@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.beanvalidation.impl;
 
+import java.lang.reflect.Method;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,6 +27,7 @@ import javax.validation.ConstraintValidatorFactory;
 import javax.validation.Validation;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.core.util.ReflectionUtils;
 
 /**
  * A factory for creating CDI Aware/Enabled ConstraintValidators.
@@ -34,6 +36,9 @@ import org.apache.deltaspike.core.api.provider.BeanProvider;
 public class CDIAwareConstraintValidatorFactory implements
         ConstraintValidatorFactory
 {
+    private static final String RELEASE_INSTANCE_METHOD_NAME = "releaseInstance";
+    private static Boolean releaseInstanceMethodFound;
+    private static Method releaseInstanceMethod;
 
     private final Logger log = Logger
             .getLogger(CDIAwareConstraintValidatorFactory.class.toString());
@@ -53,8 +58,7 @@ public class CDIAwareConstraintValidatorFactory implements
     @Override
     public <T extends ConstraintValidator<?, ?>> T getInstance(Class<T> validatorClass)
     {
-        T resolvedInst = null;
-        resolvedInst = BeanProvider.getContextualReference(validatorClass,true);
+        T resolvedInst = BeanProvider.getContextualReference(validatorClass, true);
         if (resolvedInst == null)
         {
             if (log.isLoggable(Level.CONFIG))
@@ -67,4 +71,45 @@ public class CDIAwareConstraintValidatorFactory implements
         return resolvedInst;
     }
 
+    //BV v1.1+
+    public void releaseInstance(ConstraintValidator<?, ?> constraintValidator)
+    {
+        if (releaseInstanceMethodFound == null)
+        {
+            lazyInit();
+        }
+        if (Boolean.TRUE.equals(releaseInstanceMethodFound))
+        {
+            ReflectionUtils.invokeMethod(this.delegate, releaseInstanceMethod, Void.class, true, constraintValidator);
+        }
+    }
+
+    private synchronized void lazyInit()
+    {
+        if (releaseInstanceMethodFound != null)
+        {
+            return;
+        }
+
+        Class<?> currentClass = delegate.getClass();
+        while (currentClass != null && !Object.class.getName().equals(currentClass.getName()))
+        {
+            for (Method currentMethod : currentClass.getDeclaredMethods())
+            {
+                if (RELEASE_INSTANCE_METHOD_NAME.equals(currentMethod.getName()) &&
+                        currentMethod.getParameterTypes().length == 1 &&
+                        currentMethod.getParameterTypes()[0].equals(ConstraintValidator.class))
+                {
+                    releaseInstanceMethod = currentMethod;
+                    releaseInstanceMethodFound = true;
+                    return;
+                }
+
+            }
+
+            currentClass = currentClass.getSuperclass();
+        }
+
+        releaseInstanceMethodFound = false;
+    }
 }
