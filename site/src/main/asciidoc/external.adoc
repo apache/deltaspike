@@ -82,6 +82,11 @@ Application that shows a microblog using DeltaSpike
 
 **Source code:** https://github.com/rafabene/demo_deltaspike
 
+=== Why you should consider using Apache DeltaSpike
+Blog post demonstrating 5 features of Apache DeltaSpike
+
+**Blog post:** http://www.thedevpiece.com/why-you-should-consider-using-apache-deltaspike/
+
 == Magazines
 
 === [pt-BR] Brazilian Java Magazine
