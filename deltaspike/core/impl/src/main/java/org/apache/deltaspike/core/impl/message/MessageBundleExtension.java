@@ -185,7 +185,10 @@ public class MessageBundleExtension implements Extension, Deactivatable
         @Override
         public void destroy(Bean<T> bean, T instance, CreationalContext<T> creationalContext)
         {
-            invocationHandlerProvider.destroy();
+            if (invocationHandlerProvider != null)
+            {
+                invocationHandlerProvider.destroy();
+            }
         }
 
         private <T> T createMessageBundleProxy(Class<T> type, MessageBundleInvocationHandler handler)
