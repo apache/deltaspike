@@ -20,11 +20,14 @@ package org.apache.deltaspike.test.core.api.config.propertyconfigsource;
 
 import javax.inject.Inject;
 
+import org.apache.deltaspike.test.utils.CdiContainerUnderTest;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Test;
 
 public class BaseTestConfigProperty
 {
+    private static final String CONTAINER_WLS12 = "wls-12.*";
 
     protected final static String CONFIG_FILE_NAME = "myconfig.properties";
 
@@ -34,6 +37,9 @@ public class BaseTestConfigProperty
     @Test
     public void testInjectConfig()
     {
+        //needed until DELTASPIKE-996 is resolved across containers
+        Assume.assumeTrue(!CdiContainerUnderTest.is(CONTAINER_WLS12));
+
         Assert.assertEquals("psAwareStringValue", myBean.getStringConfig());
         Assert.assertEquals("DEFAULT", myBean.getStringConfigWithDefault());
         Assert.assertEquals("stringValue", myBean.getStringConfigWithoutProjectStage());
