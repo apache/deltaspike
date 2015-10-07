@@ -81,7 +81,7 @@ window.dswh = window.dswh || {
                 this.overwriteButtonOnClickEvents();
 
                 dswh.utils.appendHiddenWindowIdToForms();
-                
+
                 if (ajax === false && dswh.utils.isHtml5() && dswh.cfg.storeWindowTreeOnAjaxRequest) {
                     // JSF ajax callback
                     jsf.ajax.addOnEvent(function(event) {
@@ -145,7 +145,7 @@ window.dswh = window.dswh || {
                                                 if (storeWindowTreeEnabled) {
                                                     dswh.strategy.CLIENTWINDOW.storeWindowTree();
                                                 }
-                                                
+
                                                 if (tokenizedRedirectEnabled) {
                                                     dswh.strategy.CLIENTWINDOW.tokenizedRedirect(this);
                                                     return false;
@@ -160,11 +160,11 @@ window.dswh = window.dswh || {
                     }
                 }
             },
-            
+
             overwriteButtonOnClickEvents : function() {
 
                 var storeWindowTreeEnabled = dswh.utils.isHtml5() && dswh.cfg.storeWindowTreeOnButtonClick;
-                
+
                 if (storeWindowTreeEnabled) {
                     var inputs = document.getElementsByTagName("input");
                     for (var i = 0; i < inputs.length; i++) {
@@ -292,8 +292,14 @@ window.dswh = window.dswh || {
                 }
                 else {
                     if (window.name === 'tempWindowId') {
-                        // we triggered the windowId recreation last request - use it now!
-                        window.name = dswid;
+                        if (dswid) {
+                            // we triggered the windowId recreation last request - use it now!
+                            window.name = dswid;
+                        }
+                        else {
+                            // it could be from dswh.windowId in case of open in new tab and initial redirect is disabled
+                            window.name = dswh.windowId;
+                        }
                     }
                     else if (window.name !== dswid) {
                         // window.name doesn't match requested windowId
