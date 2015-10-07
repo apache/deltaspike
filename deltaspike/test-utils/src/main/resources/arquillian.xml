@@ -41,6 +41,21 @@
         </configuration>
     </container>
 
+    <container qualifier="wls-managed-12c">
+        <configuration>
+            <property name="middlewareHome">${MW_HOME}</property>
+            <property name="wlHome">${MW_HOME}/wlserver</property>
+            <property name="domainDirectory">${DS_DOMAIN_DIR}</property>
+            <property name="target">${DS_DOMAIN_TARGET}</property>
+            <property name="adminUrl">${DS_ADMIN_URL}</property>
+            <property name="adminUserName">${DS_ADMIN_USER}</property>
+            <property name="adminPassword">${DS_ADMIN_PSWD}</property>
+            <!-- for debugging uncomment: -->
+            <!--<property name="jvmOptions">-XX:MaxPermSize=256m -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005</property>-->
+            <property name="timeout">600</property>
+        </configuration>
+    </container>
+
     <container qualifier="tomee">
         <configuration>
             <!-- tomee gets copied to this directory during the build -->

@@ -1135,6 +1135,77 @@
         </profile>
 
         <profile>
+            <id>wls-managed-12c</id>
+
+            <properties>
+                <cdicontainer.version>wls-${wls.version}</cdicontainer.version>
+            </properties>
+
+            <dependencies>
+
+                <dependency>
+                    <groupId>javax.enterprise</groupId>
+                    <artifactId>cdi-api</artifactId>
+                    <version>1.0-SP4</version>
+                    <scope>provided</scope>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.jboss.arquillian.container</groupId>
+                    <artifactId>arquillian-wls-managed-12.1</artifactId>
+                    <version>1.0.0.Alpha3</version>
+                    <scope>test</scope>
+                </dependency>
+
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${maven.surefire.plugin.version}</version>
+                        <configuration>
+                            <systemProperties>
+                                <arquillian.launch>wls-managed-12c</arquillian.launch>
+                                <org.apache.deltaspike.ProjectStage>UnitTest</org.apache.deltaspike.ProjectStage>
+                                <cdicontainer.version>${cdicontainer.version}</cdicontainer.version>
+                            </systemProperties>
+                            <systemPropertyVariables>
+                                <!--
+                                installation directory of wls - root of folders like wlserver,...
+                                e.g.: export MW_HOME=/servers/weblogic/Oracle_Home
+                                -->
+                                <MW_HOME>${env.MW_HOME}</MW_HOME>
+                                <!--
+                                domain used to run ds-tests - root of folders like servers,...
+                                e.g.: export DS_DOMAIN_DIR=/deltaspike/deltaspike-1.5.0/mytest
+                                -->
+                                <DS_DOMAIN_DIR>${env.DS_DOMAIN_DIR}</DS_DOMAIN_DIR>
+                                <!-- e.g.: export DS_DOMAIN_TARGET=myserver -->
+                                <DS_DOMAIN_TARGET>${env.DS_DOMAIN_TARGET}</DS_DOMAIN_TARGET>
+                                <!-- e.g.: export DS_ADMIN_URL=t3://localhost:7001 -->
+                                <DS_ADMIN_URL>${env.DS_ADMIN_URL}</DS_ADMIN_URL>
+                                <!-- e.g.: export DS_ADMIN_USER=weblogic -->
+                                <DS_ADMIN_USER>${env.DS_ADMIN_USER}</DS_ADMIN_USER>
+                                <!-- e.g.: export DS_ADMIN_PSWD=weblogic1-->
+                                <DS_ADMIN_PSWD>${env.DS_ADMIN_PSWD}</DS_ADMIN_PSWD>
+                            </systemPropertyVariables>
+
+                            <!-- we just use groups to mark that a test should be executed only
+                            with specific environments. even though a java-ee6 application server has to be able to run
+                            all tests in theory, we have to exclude some tests because there are e.g. packaging issues or
+                            there are currently issues with arquillian. if a test isn't restricted to an environment,
+                            no category is used for the test-class. -->
+                            <excludedGroups>
+                                org.apache.deltaspike.test.category.SeCategory
+                            </excludedGroups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
             <!--
              * Glassfish will be downloaded as maven dependency
              *
