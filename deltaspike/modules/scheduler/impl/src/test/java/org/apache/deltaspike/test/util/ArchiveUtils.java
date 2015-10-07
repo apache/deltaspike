@@ -37,7 +37,8 @@ public class ArchiveUtils
                 "META-INF/beans.xml",
                 new String[]{"org.apache.deltaspike.core",
                         "org.apache.deltaspike.test.category",
-                        "org.apache.deltaspike.scheduler"},
+                        "org.apache.deltaspike.scheduler",
+                        "org.quartz"},
                 null,
                 "ds-core_and_scheduler");
     }

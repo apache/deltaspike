@@ -47,7 +47,6 @@ public class ScopeNotStartedTest
 
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "scopeNotStartedTest.jar")
                 .addPackage(CustomSchedulerWarFileTest.class.getPackage().getName())
-                .addPackage(Job.class.getPackage().getName())
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsResource(new StringAsset(MockedScheduler.class.getName()),
                         "META-INF/services/" + Scheduler.class.getName())
