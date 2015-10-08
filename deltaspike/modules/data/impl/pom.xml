@@ -295,6 +295,19 @@
                 </testResources>
             </build>
         </profile>
+        <profile>
+            <id>wls-managed-12c</id>
+            <build>
+                <testResources>
+                    <testResource>
+                        <directory>src/test/resources</directory>
+                    </testResource>
+                    <testResource>
+                        <directory>src/test/resources-weblogic</directory>
+                    </testResource>
+                </testResources>
+            </build>
+        </profile>
     </profiles>
 
 </project>
