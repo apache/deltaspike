@@ -25,6 +25,7 @@
             <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
             <property name="eclipselink.logging.level" value="FINE"/>
             <property name="eclipselink.logging.parameters" value="true" />
+            <property name="eclipselink.deploy-on-startup" value="true" />
         </properties>
     </persistence-unit>
 </persistence>
