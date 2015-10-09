@@ -29,6 +29,7 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.quartz.Job;
@@ -55,6 +56,10 @@ public class ScopeNotStartedTest
 
         return ShrinkWrap.create(WebArchive.class, archiveName + ".war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndSchedulerArchive())
+                .addAsLibraries(Maven.resolver().loadPomFromFile("pom.xml").resolve(
+                        "org.quartz-scheduler:quartz")
+                        .withTransitivity()
+                        .asFile())
                 .addAsLibraries(testJar)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
