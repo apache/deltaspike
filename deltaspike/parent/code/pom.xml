@@ -1109,6 +1109,12 @@
                         <artifactId>maven-surefire-plugin</artifactId>
                         <version>${maven.surefire.plugin.version}</version>
                         <configuration>
+                            <!-- until DELTASPIKE-996 is resolved -->
+                            <excludes>
+                                <exclude>**/BaseTestConfigProperty.java</exclude>
+                                <exclude>**/ConfigPropertyWARTest.java</exclude>
+                                <exclude>**/ConfigPropertyEARTest.java</exclude>
+                            </excludes>
                             <systemProperties>
                                 <arquillian.launch>wls-remote-12c</arquillian.launch>
                                 <org.apache.deltaspike.ProjectStage>UnitTest</org.apache.deltaspike.ProjectStage>
@@ -1165,6 +1171,12 @@
                         <artifactId>maven-surefire-plugin</artifactId>
                         <version>${maven.surefire.plugin.version}</version>
                         <configuration>
+                            <!-- until DELTASPIKE-996 is resolved -->
+                            <excludes>
+                                <exclude>**/BaseTestConfigProperty.java</exclude>
+                                <exclude>**/ConfigPropertyWARTest.java</exclude>
+                                <exclude>**/ConfigPropertyEARTest.java</exclude>
+                            </excludes>
                             <systemProperties>
                                 <arquillian.launch>wls-managed-12c</arquillian.launch>
                                 <org.apache.deltaspike.ProjectStage>UnitTest</org.apache.deltaspike.ProjectStage>
