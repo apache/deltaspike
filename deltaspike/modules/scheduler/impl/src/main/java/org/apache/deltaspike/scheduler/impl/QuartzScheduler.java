@@ -439,14 +439,16 @@ public class QuartzScheduler implements Scheduler<Job>
 
         private void stopStartedScopes()
         {
+            if (this.contextControl == null)
+            {
+                return;
+            }
+
             while (!this.scopes.empty())
             {
                 this.contextControl.get().stopContext(this.scopes.pop());
             }
-            if (this.contextControl != null)
-            {
-                this.contextControl.destroy();
-            }
+            this.contextControl.destroy();
         }
     }
 
