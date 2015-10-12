@@ -443,7 +443,10 @@ public class QuartzScheduler implements Scheduler<Job>
             {
                 this.contextControl.get().stopContext(this.scopes.pop());
             }
-            this.contextControl.destroy();
+            if (this.contextControl != null)
+            {
+                this.contextControl.destroy();
+            }
         }
     }
 
