@@ -20,6 +20,7 @@ package org.apache.deltaspike.core.util;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.config.base.CoreBaseConfig;
+import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.spi.activation.ClassDeactivator;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 
@@ -41,7 +42,7 @@ public abstract class ClassDeactivationUtils
     /**
      * This Map holds the ClassLoader as first level to make it possible to have different configurations per 
      * WebApplication in an EAR or other Multi-ClassLoader scenario.
-     * 
+     *
      * The Map then contains a List of {@link ClassDeactivator}s in order of their configured ordinal.
      */
     private static Map<ClassLoader, List<ClassDeactivator>> classDeactivatorMap
@@ -53,7 +54,9 @@ public abstract class ClassDeactivationUtils
      */
     private static Map<Class<? extends Deactivatable>, Boolean> activationStatusCache
         = new ConcurrentHashMap<Class<? extends Deactivatable>, Boolean>();
-    
+
+    private static ProjectStage previouslyDetectedProjectStage;
+
     private ClassDeactivationUtils()
     {
         // prevent instantiation
@@ -67,19 +70,43 @@ public abstract class ClassDeactivationUtils
      */
     public static boolean isActivated(Class<? extends Deactivatable> targetClass)
     {
-        Boolean activatedClassCacheEntry = activationStatusCache.get(targetClass);
+        performProjectStageDependentCleanup();
+
+        //just to support parallel access to #isActivated (+ reset) in project-stage unit-test and development
+        Map<Class<? extends Deactivatable>, Boolean> activeCache = activationStatusCache;
+        Boolean activatedClassCacheEntry = activeCache.get(targetClass);
 
         if (activatedClassCacheEntry == null)
         {
-            initDeactivatableCacheFor(targetClass);
-            activatedClassCacheEntry = activationStatusCache.get(targetClass);
+            initDeactivatableCacheFor(targetClass, activeCache);
+            activatedClassCacheEntry = activeCache.get(targetClass);
         }
         return activatedClassCacheEntry;
     }
 
-    private static synchronized void initDeactivatableCacheFor(Class<? extends Deactivatable> targetClass)
+    private static void performProjectStageDependentCleanup()
     {
-        Boolean activatedClassCacheEntry = activationStatusCache.get(targetClass);
+        ProjectStage currentProjectStage = ProjectStageProducer.getInstance().getProjectStage();
+
+        if (previouslyDetectedProjectStage != currentProjectStage)
+        {
+            previouslyDetectedProjectStage = currentProjectStage;
+            //don't use #clear to support parallel access to #isActivated (+ reset) without synchronization
+            activationStatusCache = new ConcurrentHashMap<Class<? extends Deactivatable>, Boolean>();
+
+            //#clear is ok here due to the handling in the synchronized method #initDeactivatableCacheFor
+            classDeactivatorMap.clear();
+        }
+        else if (currentProjectStage == ProjectStage.UnitTest || currentProjectStage == ProjectStage.Development)
+        {
+            activationStatusCache = new ConcurrentHashMap<Class<? extends Deactivatable>, Boolean>();
+        }
+    }
+
+    private static synchronized void initDeactivatableCacheFor(Class<? extends Deactivatable> targetClass,
+                                                               Map<Class<? extends Deactivatable>, Boolean> activeCache)
+    {
+        Boolean activatedClassCacheEntry = activeCache.get(targetClass);
 
         if (activatedClassCacheEntry != null) //double-check
         {
@@ -122,12 +149,13 @@ public abstract class ClassDeactivationUtils
             }
         }
 
-        cacheResult(targetClass, isActivated);
+        cacheResult(targetClass, isActivated, activeCache);
     }
 
-    private static void cacheResult(Class<? extends Deactivatable> targetClass, Boolean activated)
+    private static void cacheResult(Class<? extends Deactivatable> targetClass, Boolean activated,
+                                    Map<Class<? extends Deactivatable>, Boolean> activeCache)
     {
-        activationStatusCache.put(targetClass, activated);
+        activeCache.put(targetClass, activated);
         LOG.info("class: " + targetClass.getName() + " activated=" + activated);
     }
 

@@ -77,6 +77,7 @@ public class TestConfigSource implements ConfigSource
         props.put("deltaspike.test.class-value", "org.apache.deltaspike.test.api.config.TestConfigSource");
         props.put("deltaspike.test.date-value", "2014-12-24");
         props.put("deltaspike.test.invalid-value", "wrong");
+        props.put("org.apache.deltaspike.core.spi.activation.ClassDeactivator","org.apache.deltaspike.core.util.activation.EditableTestDeactivator");
     }
 
     @Override
