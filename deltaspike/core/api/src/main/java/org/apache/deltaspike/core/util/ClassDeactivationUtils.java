@@ -18,15 +18,17 @@
  */
 package org.apache.deltaspike.core.util;
 
-import org.apache.deltaspike.core.api.projectstage.ProjectStage;
+import org.apache.deltaspike.core.api.config.ConfigResolver;
+import org.apache.deltaspike.core.api.config.base.CoreBaseConfig;
+import org.apache.deltaspike.core.spi.activation.ClassDeactivator;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
-import org.apache.deltaspike.core.util.activation.BaseClassDeactivationController;
-import org.apache.deltaspike.core.util.activation.CachingClassDeactivationController;
-import org.apache.deltaspike.core.util.activation.NonCachingClassDeactivationController;
 
 import javax.enterprise.inject.Typed;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 
 /**
  * Helper methods for {@link ClassDeactivator}
@@ -34,11 +36,24 @@ import java.util.List;
 @Typed()
 public abstract class ClassDeactivationUtils
 {
-    private static final List<ProjectStage> NON_CACHING_PROJECT_STAGES =
-        Arrays.asList(ProjectStage.Development,ProjectStage.UnitTest);
+    private static final Logger LOG = Logger.getLogger(ClassDeactivationUtils.class.getName());
 
-    private static BaseClassDeactivationController classDeactivationController = null;
+    /**
+     * This Map holds the ClassLoader as first level to make it possible to have different configurations per 
+     * WebApplication in an EAR or other Multi-ClassLoader scenario.
+     * 
+     * The Map then contains a List of {@link ClassDeactivator}s in order of their configured ordinal.
+     */
+    private static Map<ClassLoader, List<ClassDeactivator>> classDeactivatorMap
+        = new ConcurrentHashMap<ClassLoader, List<ClassDeactivator>>();
 
+    /**
+     * Cache for the result. It won't contain many classes but it might be accessed frequently.
+     * Valid entries are only true or false. If an entry isn't available or null, it gets calculated.
+     */
+    private static Map<Class<? extends Deactivatable>, Boolean> activationStatusCache
+        = new ConcurrentHashMap<Class<? extends Deactivatable>, Boolean>();
+    
     private ClassDeactivationUtils()
     {
         // prevent instantiation
@@ -52,30 +67,130 @@ public abstract class ClassDeactivationUtils
      */
     public static boolean isActivated(Class<? extends Deactivatable> targetClass)
     {
-        return getController().isActivated(targetClass);
+        Boolean activatedClassCacheEntry = activationStatusCache.get(targetClass);
+
+        if (activatedClassCacheEntry == null)
+        {
+            initDeactivatableCacheFor(targetClass);
+            activatedClassCacheEntry = activationStatusCache.get(targetClass);
+        }
+        return activatedClassCacheEntry;
     }
 
-    private static BaseClassDeactivationController getController()
+    private static synchronized void initDeactivatableCacheFor(Class<? extends Deactivatable> targetClass)
     {
-        if (classDeactivationController == null)
+        Boolean activatedClassCacheEntry = activationStatusCache.get(targetClass);
+
+        if (activatedClassCacheEntry != null) //double-check
         {
-            classDeactivationController = calculateControllerToUse();
+            return;
         }
 
-        return classDeactivationController;
+        List<ClassDeactivator> classDeactivators = getClassDeactivators();
+
+        Boolean isActivated = Boolean.TRUE;
+        Class<? extends ClassDeactivator> deactivatedBy = null;
+
+        LOG.fine("start evaluation if " + targetClass.getName() + " is de-/activated");
+
+        // we get the classActivators ordered by it's ordinal
+        // thus the last one which returns != null 'wins' ;)
+        for (ClassDeactivator classDeactivator : classDeactivators)
+        {
+            Boolean isLocallyActivated = classDeactivator.isActivated(targetClass);
+
+            if (isLocallyActivated != null)
+            {
+                isActivated = isLocallyActivated;
+
+                /*
+                * Check and log the details across class-deactivators
+                */
+                if (!isActivated)
+                {
+                    deactivatedBy = classDeactivator.getClass();
+                    LOG.fine("Deactivating class " + targetClass);
+                }
+                else if (deactivatedBy != null)
+                {
+                    LOG.fine("Reactivation of: " + targetClass.getName() + " by " +
+                            classDeactivator.getClass().getName() +
+                            " - original deactivated by: " + deactivatedBy.getName() + ".\n" +
+                            "If that isn't the intended behaviour, you have to use a higher ordinal for " +
+                            deactivatedBy.getName());
+                }
+            }
+        }
+
+        cacheResult(targetClass, isActivated);
     }
 
-    private static BaseClassDeactivationController calculateControllerToUse()
+    private static void cacheResult(Class<? extends Deactivatable> targetClass, Boolean activated)
     {
-        ProjectStage currentProjectStage = ProjectStageProducer.getInstance().getProjectStage();
+        activationStatusCache.put(targetClass, activated);
+        LOG.info("class: " + targetClass.getName() + " activated=" + activated);
+    }
 
-        if (NON_CACHING_PROJECT_STAGES.contains(currentProjectStage))
+    /**
+     * @return the List of configured @{link ClassDeactivator}s for the current context ClassLoader.
+     */
+    private static List<ClassDeactivator> getClassDeactivators()
+    {
+        ClassLoader classLoader = ClassUtils.getClassLoader(null);
+        List<ClassDeactivator> classDeactivators = classDeactivatorMap.get(classLoader);
+
+        if (classDeactivators == null)
         {
-            return new NonCachingClassDeactivationController();
+            return initConfiguredClassDeactivators(classLoader);
         }
-        else
+
+        return classDeactivators;
+    }
+
+    //synchronized isn't needed - #initDeactivatableCacheFor is already synchronized
+    private static List<ClassDeactivator> initConfiguredClassDeactivators(ClassLoader classLoader)
+    {
+        if (!ServiceUtils.loadServiceImplementations(ClassDeactivator.class).isEmpty())
         {
-            return new CachingClassDeactivationController();
+            CoreBaseConfig.Validation.ViolationMode violationMode = CoreBaseConfig.Validation.VIOLATION_MODE;
+
+            String message = "It isn't supported to configure " + ClassDeactivator.class.getName() +
+                    " via the std. service-loader config. " +
+                    "Please remove all META-INF/services/" + ClassDeactivator.class.getName() + " files. " +
+                    "Please configure it via the DeltaSpike-Config (e.g. META-INF/apache-deltaspike.properties).";
+
+            if (violationMode == CoreBaseConfig.Validation.ViolationMode.FAIL)
+            {
+                throw new IllegalStateException(message);
+            }
+            else if (violationMode == CoreBaseConfig.Validation.ViolationMode.WARN)
+            {
+                LOG.warning(message);
+            }
         }
+
+        List<String> classDeactivatorClassNames = ConfigResolver.getAllPropertyValues(ClassDeactivator.class.getName());
+
+        List<ClassDeactivator> classDeactivators = new ArrayList<ClassDeactivator>();
+
+        for (String classDeactivatorClassName : classDeactivatorClassNames)
+        {
+            LOG.fine("processing ClassDeactivator: " + classDeactivatorClassName);
+
+            try
+            {
+                ClassDeactivator currentClassDeactivator =
+                        (ClassDeactivator) ClassUtils.instantiateClassForName(classDeactivatorClassName);
+                classDeactivators.add(currentClassDeactivator);
+            }
+            catch (Exception e)
+            {
+                LOG.warning(classDeactivatorClassName + " can't be instantiated");
+                throw new IllegalStateException(e);
+            }
+        }
+
+        classDeactivatorMap.put(classLoader, classDeactivators);
+        return classDeactivators;
     }
 }
