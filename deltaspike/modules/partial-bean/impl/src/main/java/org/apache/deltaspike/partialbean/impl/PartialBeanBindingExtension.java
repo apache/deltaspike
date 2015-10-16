@@ -18,13 +18,20 @@
  */
 package org.apache.deltaspike.partialbean.impl;
 
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Observes;
+import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.AfterBeanDiscovery;
 import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.Bean;
@@ -33,7 +40,10 @@ import javax.enterprise.inject.spi.BeforeBeanDiscovery;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 
+import org.apache.deltaspike.core.api.literal.DefaultLiteral;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
+import org.apache.deltaspike.core.util.AnnotationUtils;
+import org.apache.deltaspike.core.util.BeanUtils;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.core.util.bean.BeanBuilder;
 import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
@@ -141,6 +151,14 @@ public class PartialBeanBindingExtension implements Extension, Deactivatable
                     if (partialBean != null)
                     {
                         afterBeanDiscovery.addBean(partialBean);
+
+                        List<Bean> partialProducerBeans =
+                            createPartialProducersDefinedIn(partialBean, afterBeanDiscovery, beanManager);
+
+                        for (Bean partialProducerBean : partialProducerBeans)
+                        {
+                            afterBeanDiscovery.addBean(partialProducerBean);
+                        }
                     }
                 }
             }
@@ -148,7 +166,6 @@ public class PartialBeanBindingExtension implements Extension, Deactivatable
 
         this.descriptors.clear();
     }
-
 
     protected <T> Bean<T> createPartialBean(Class<T> beanClass, PartialBeanDescriptor descriptor,
             AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager)
@@ -190,5 +207,111 @@ public class PartialBeanBindingExtension implements Extension, Deactivatable
         }
 
         return null;
+    }
+
+    /*
+     * logic for partial-producers
+     */
+
+    protected List<Bean> createPartialProducersDefinedIn(
+        Bean partialBean, AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager)
+    {
+        Class currentClass = partialBean.getBeanClass();
+        return createPartialProducersDefinedIn(partialBean, afterBeanDiscovery, beanManager, currentClass);
+    }
+
+    private List<Bean> createPartialProducersDefinedIn(
+        Bean partialBean, AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager, Class currentClass)
+    {
+        List<Bean> result = new ArrayList<Bean>();
+
+        while (currentClass != null && !Object.class.getName().equals(currentClass.getName()))
+        {
+            for (Class interfaceClass : currentClass.getInterfaces())
+            {
+                if (interfaceClass.getName().startsWith("java.") || interfaceClass.getName().startsWith("javax."))
+                {
+                    continue;
+                }
+                result.addAll(
+                    createPartialProducersDefinedIn(partialBean, afterBeanDiscovery, beanManager, interfaceClass));
+            }
+
+            for (Method currentMethod : currentClass.getDeclaredMethods())
+            {
+                if (currentMethod.isAnnotationPresent(Produces.class))
+                {
+                    if (currentMethod.getParameterTypes().length > 0)
+                    {
+                        afterBeanDiscovery.addDefinitionError(
+                            new IllegalStateException(
+                                "Producer-methods in partial-beans currently don't support injection-points. " +
+                                "Please remove the parameters from " +
+                                currentMethod.toString() + " in " + currentClass.getName()));
+                    }
+
+                    DeltaSpikePartialProducerLifecycle lifecycle =
+                        new DeltaSpikePartialProducerLifecycle(partialBean.getBeanClass(), currentMethod);
+
+                    Class<? extends Annotation> scopeClass =
+                        extractScope(currentMethod.getDeclaredAnnotations(), beanManager);
+
+                    Class<?> producerResultType = currentMethod.getReturnType();
+
+                    boolean passivationCapable =
+                        Serializable.class.isAssignableFrom(producerResultType) || producerResultType.isPrimitive();
+
+                    Set<Annotation> qualifiers = extractQualifiers(currentMethod.getDeclaredAnnotations(), beanManager);
+
+                    BeanBuilder<?> beanBuilder = new BeanBuilder(beanManager)
+                            .beanClass(producerResultType)
+                            .types(Object.class, producerResultType)
+                            .qualifiers(qualifiers)
+                            .passivationCapable(passivationCapable)
+                            .scope(scopeClass)
+                            .id(createPartialProducerId(currentClass, currentMethod, qualifiers))
+                            .beanLifecycle(lifecycle);
+
+                    result.add(beanBuilder.create());
+                }
+            }
+
+            currentClass = currentClass.getSuperclass();
+        }
+
+        return result;
+    }
+
+    private Set<Annotation> extractQualifiers(Annotation[] annotations, BeanManager beanManager)
+    {
+        Set<Annotation> result = BeanUtils.getQualifiers(beanManager, annotations);
+
+        if (result.isEmpty())
+        {
+            result.add(new DefaultLiteral());
+        }
+        return result;
+    }
+
+    private Class<? extends Annotation> extractScope(Annotation[] annotations, BeanManager beanManager)
+    {
+        for (Annotation annotation : annotations)
+        {
+            if (beanManager.isScope(annotation.annotationType()))
+            {
+                return annotation.annotationType();
+            }
+        }
+        return Dependent.class;
+    }
+
+    private String createPartialProducerId(Class currentClass, Method currentMethod, Set<Annotation> qualifiers)
+    {
+        int qualifierHashCode = 0;
+        for (Annotation qualifier : qualifiers)
+        {
+            qualifierHashCode += AnnotationUtils.getQualifierHashCode(qualifier);
+        }
+        return "PartialProducer#" + currentClass.getName() + "#" + currentMethod.getName() + "#" + qualifierHashCode;
     }
 }
