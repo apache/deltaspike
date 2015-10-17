@@ -25,10 +25,14 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.persistence.PersistenceException;
 
 import org.apache.deltaspike.core.api.lifecycle.Initialized;
+import org.apache.deltaspike.core.util.AbstractInvocationContext;
+import org.apache.deltaspike.core.util.AnnotationUtils;
+import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.core.util.ProxyUtils;
 import org.apache.deltaspike.data.api.QueryInvocationException;
 import org.apache.deltaspike.data.api.Repository;
@@ -37,6 +41,8 @@ import org.apache.deltaspike.data.impl.builder.QueryBuilderFactory;
 import org.apache.deltaspike.data.impl.meta.RepositoryComponent;
 import org.apache.deltaspike.data.impl.meta.RepositoryComponents;
 import org.apache.deltaspike.data.impl.meta.RepositoryMethod;
+import org.apache.deltaspike.jpa.api.transaction.Transactional;
+import org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy;
 
 /**
  * Entry point for query processing.
@@ -65,8 +71,45 @@ public class QueryHandler implements Serializable, InvocationHandler
     @Inject
     private QueryRunner runner;
 
+    @Inject
+    private BeanManager beanManager;
+
+    @Inject
+    private TransactionStrategy transactionStrategy;
+
     @Override
-    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
+    public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable
+    {
+        Transactional transactionalAnnotation =
+            AnnotationUtils.extractAnnotationFromMethodOrClass(
+                this.beanManager, method, proxy.getClass(), Transactional.class);
+
+        if (transactionalAnnotation != null)
+        {
+            return transactionStrategy.execute(
+                new AbstractInvocationContext<Object>(proxy, method, args, null)
+                {
+                    @Override
+                    public Object proceed() throws Exception
+                    {
+                        try
+                        {
+                            return process(proxy, method, args);
+                        }
+                        catch (Throwable t)
+                        {
+                            throw ExceptionUtils.throwAsRuntimeException(t);
+                        }
+                    }
+                });
+        }
+        else
+        {
+            return process(proxy, method, args);
+        }
+    }
+
+    public Object process(Object proxy, Method method, Object[] args) throws Throwable
     {
         CdiQueryInvocationContext queryContext = null;
         try
