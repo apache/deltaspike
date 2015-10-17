@@ -18,33 +18,27 @@
  */
 package org.apache.deltaspike.proxy.impl.invocation;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.Typed;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InterceptionType;
 import javax.enterprise.inject.spi.Interceptor;
-import javax.interceptor.InvocationContext;
+
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
+import org.apache.deltaspike.core.util.AbstractInvocationContext;
 
 /**
- * {@link InvocationContext} implementation to support manual interceptor invocation before invoking the
+ * {@link javax.interceptor.InvocationContext}
+ * implementation to support manual interceptor invocation before invoking the
  * original logic via the given {@link AbstractManualInvocationHandler}.
  */
 @Typed
-public class ManualInvocationContext<T, H> implements InvocationContext
+public class ManualInvocationContext<T, H> extends AbstractInvocationContext<T>
 {
     protected List<Interceptor<H>> interceptors;
     protected int interceptorIndex;
-    protected T target;
-    protected Method method;
-    protected Object[] parameters;
-    protected Map<String, Object> contextData;
-    protected Object timer;
     protected AbstractManualInvocationHandler manualInvocationHandler;
 
     protected BeanManager beanManager;
@@ -55,48 +49,12 @@ public class ManualInvocationContext<T, H> implements InvocationContext
     public ManualInvocationContext(AbstractManualInvocationHandler manualInvocationHandler,
             List<Interceptor<H>> interceptors, T target, Method method, Object[] parameters, Object timer)
     {
+        super(target, method, parameters, timer);
+
         this.manualInvocationHandler = manualInvocationHandler;
         this.interceptors = interceptors;
-        this.target = target;
-        this.method = method;
-        this.parameters = parameters;
-        this.timer = timer;
 
         this.interceptorIndex = 0;
-    }
-
-    @Override
-    public Object getTarget()
-    {
-        return target;
-    }
-
-    @Override
-    public Method getMethod()
-    {
-        return method;
-    }
-
-    @Override
-    public Object[] getParameters()
-    {
-        return parameters;
-    }
-
-    @Override
-    public void setParameters(Object[] os)
-    {
-        parameters = os;
-    }
-
-    @Override
-    public Map<String, Object> getContextData()
-    {
-        if (contextData == null)
-        {
-            contextData = new HashMap<String, Object>();
-        }
-        return contextData;
     }
 
     @Override
@@ -158,19 +116,6 @@ public class ManualInvocationContext<T, H> implements InvocationContext
             throw new ManualInvocationThrowableWrapperException(e);
         }
 
-        return null;
-    }
-
-    @Override
-    public Object getTimer()
-    {
-        return timer;
-    }
-
-    // @Override
-    // CDI 1.1 compatibility
-    public Constructor getConstructor()
-    {
         return null;
     }
 

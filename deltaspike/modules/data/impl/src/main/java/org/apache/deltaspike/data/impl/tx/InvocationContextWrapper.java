@@ -18,64 +18,13 @@
  */
 package org.apache.deltaspike.data.impl.tx;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.interceptor.InvocationContext;
-
+import org.apache.deltaspike.core.util.AbstractInvocationContext;
 import org.apache.deltaspike.data.impl.handler.CdiQueryInvocationContext;
 
-public abstract class InvocationContextWrapper implements InvocationContext
+public abstract class InvocationContextWrapper extends AbstractInvocationContext<Object>
 {
-
-    private final CdiQueryInvocationContext context;
-
     public InvocationContextWrapper(CdiQueryInvocationContext context)
     {
-        this.context = context;
+        super(context.getProxy(), context.getMethod(), context.getMethodParameters(), null);
     }
-
-    // @Override - forward compatibility to interceptors API 1.2
-    public Constructor<?> getConstructor()
-    {
-        return null;
-    }
-
-    @Override
-    public Map<String, Object> getContextData()
-    {
-        return new HashMap<String, Object>(0);
-    }
-
-    @Override
-    public Method getMethod()
-    {
-        return context.getMethod();
-    }
-
-    @Override
-    public Object[] getParameters()
-    {
-        return context.getMethodParameters();
-    }
-
-    @Override
-    public Object getTarget()
-    {
-        return context.getProxy();
-    }
-
-    @Override
-    public Object getTimer()
-    {
-        return null;
-    }
-
-    @Override
-    public void setParameters(Object[] args)
-    {
-    }
-
 }
