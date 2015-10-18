@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.data.impl.tx;
 
-import org.apache.deltaspike.core.util.AbstractInvocationContext;
+import org.apache.deltaspike.core.util.interceptor.AbstractInvocationContext;
 import org.apache.deltaspike.data.impl.handler.CdiQueryInvocationContext;
 
 public abstract class InvocationContextWrapper extends AbstractInvocationContext<Object>

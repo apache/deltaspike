@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.util;
+package org.apache.deltaspike.core.util.interceptor;
 
 import javax.enterprise.inject.Typed;
 import javax.interceptor.InvocationContext;

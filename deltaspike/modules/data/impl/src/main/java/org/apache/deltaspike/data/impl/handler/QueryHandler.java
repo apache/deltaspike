@@ -30,7 +30,7 @@ import javax.inject.Inject;
 import javax.persistence.PersistenceException;
 
 import org.apache.deltaspike.core.api.lifecycle.Initialized;
-import org.apache.deltaspike.core.util.AbstractInvocationContext;
+import org.apache.deltaspike.core.util.interceptor.AbstractInvocationContext;
 import org.apache.deltaspike.core.util.AnnotationUtils;
 import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.core.util.ProxyUtils;

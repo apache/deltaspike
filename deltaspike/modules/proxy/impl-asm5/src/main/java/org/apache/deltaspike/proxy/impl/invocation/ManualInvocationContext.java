@@ -27,7 +27,7 @@ import javax.enterprise.inject.spi.InterceptionType;
 import javax.enterprise.inject.spi.Interceptor;
 
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
-import org.apache.deltaspike.core.util.AbstractInvocationContext;
+import org.apache.deltaspike.core.util.interceptor.AbstractInvocationContext;
 
 /**
  * {@link javax.interceptor.InvocationContext}
