@@ -47,6 +47,8 @@ import java.util.logging.Logger;
 public class MBeanExtension implements Extension, Deactivatable
 {
     private static final Logger LOGGER = Logger.getLogger(MBeanExtension.class.getName());
+    private static final String DEFAULT_TYPE = "MBeans";
+    private static final String DEFAULT_CATEGORY = "org.apache.deltaspike";
 
     private final Map<Class<?>, DynamicMBeanWrapper> wrappers = new ConcurrentHashMap<Class<?>, DynamicMBeanWrapper>();
 
@@ -98,16 +100,40 @@ public class MBeanExtension implements Extension, Deactivatable
         String objectNameValue = mBeanAnnotation.objectName();
         if (objectNameValue.isEmpty())
         {
-            String name = mBeanAnnotation.name();
-            if (name.isEmpty())
+            final String type = getConfigurableAttribute(mBeanAnnotation.type(), DEFAULT_TYPE);
+            final String category = getConfigurableAttribute(mBeanAnnotation.category(), DEFAULT_CATEGORY);
+            final String properties = getConfigurableAttribute(mBeanAnnotation.properties(), "");
+            final String name = mBeanAnnotation.name();
+
+            final StringBuilder builder = new StringBuilder(category).append(':');
+            if (!properties.contains("type="))
             {
-                name = clazz.getName();
+                builder.append("type=").append(type);
             }
-
-            final String type = getConfigurableAttribute(mBeanAnnotation.type(), "MBeans");
-            final String category = getConfigurableAttribute(mBeanAnnotation.category(), "org.apache.deltaspike");
-
-            objectNameValue = category + ":type=" + type + ",name=" + name;
+            else if (!DEFAULT_TYPE.equals(type))
+            {
+                LOGGER.warning("type() ignored on " + clazz + " since properties contains it.");
+            }
+            if (!properties.contains("name="))
+            {
+                if (!name.isEmpty() || properties.isEmpty())
+                {
+                    builder.append(",name=");
+                    if (name.isEmpty())
+                    {
+                        builder.append(clazz.getName());
+                    }
+                    else
+                    {
+                        builder.append(name);
+                    }
+                } // else skip. type is important in JMX but name is a fully custom property so we are able to skip it
+            }
+            if (!properties.isEmpty())
+            {
+                builder.append(',').append(properties);
+            }
+            objectNameValue = builder.toString();
         }
 
         final ObjectName objectName = new ObjectName(objectNameValue);

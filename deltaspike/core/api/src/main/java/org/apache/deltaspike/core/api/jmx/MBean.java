@@ -52,6 +52,12 @@ public @interface MBean
     String name() default "";
 
     /**
+     * @return the properties part of the objectName if no objectName was specified.
+     *         If name and type are specified this segment is concatenated after.
+     */
+    String properties() default "";
+
+    /**
      * @return the type to use if no objectName was specified. Default is <pre>MBeans</pre> and can be
      *         overriden either directly by the value or by a key used to resolve a value using
      *         {@link org.apache.deltaspike.core.api.config.ConfigResolver}. It is a key if the value is between
