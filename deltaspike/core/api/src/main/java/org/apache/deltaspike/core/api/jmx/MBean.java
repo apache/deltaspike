@@ -52,6 +52,14 @@ public @interface MBean
     String name() default "";
 
     /**
+     * @return the type to use if no objectName was specified. Default is <pre>MBeans</pre> and can be
+     *         overriden either directly by the value or by a key used to resolve a value using
+     *         {@link org.apache.deltaspike.core.api.config.ConfigResolver}. It is a key if the value is between
+     *         brackets.
+     */
+    String type() default "";
+
+    /**
      * @return the direct object name used to export the decorated bean.
      */
     String objectName() default "";

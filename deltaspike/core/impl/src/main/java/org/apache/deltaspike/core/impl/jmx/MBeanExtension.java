@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.core.impl.jmx;
 
-import org.apache.deltaspike.core.api.config.base.CoreBaseConfig;
 import org.apache.deltaspike.core.api.config.ConfigResolver;
+import org.apache.deltaspike.core.api.config.base.CoreBaseConfig;
 import org.apache.deltaspike.core.api.jmx.JmxBroadcaster;
 import org.apache.deltaspike.core.api.jmx.MBean;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
@@ -99,21 +99,15 @@ public class MBeanExtension implements Extension, Deactivatable
         if (objectNameValue.isEmpty())
         {
             String name = mBeanAnnotation.name();
-
             if (name.isEmpty())
             {
                 name = clazz.getName();
             }
 
-            String category = mBeanAnnotation.category().trim();
+            final String type = getConfigurableAttribute(mBeanAnnotation.type(), "MBeans");
+            final String category = getConfigurableAttribute(mBeanAnnotation.category(), "org.apache.deltaspike");
 
-            if (category.startsWith("{") && category.endsWith("}"))
-            {
-                category = ConfigResolver.getPropertyValue(
-                    category.substring(1, category.length() - 1), "org.apache.deltaspike");
-            }
-
-            objectNameValue = category + ":type=MBeans,name=" + name;
+            objectNameValue = category + ":type=" + type + ",name=" + name;
         }
 
         final ObjectName objectName = new ObjectName(objectNameValue);
@@ -131,7 +125,7 @@ public class MBeanExtension implements Extension, Deactivatable
         objectNames.add(objectName);
         wrappers.put(clazz, mbean);
 
-        LOGGER.info("Registered MBean " + objectName.getCanonicalName());
+        LOGGER.info("Registered MBean " + objectName); // don't use canonical name cause it can reorder properties
     }
 
     private Annotation[] qualifiers(final AnnotatedType<?> annotatedBeanClass, final BeanManager bm)
@@ -162,5 +156,15 @@ public class MBeanExtension implements Extension, Deactivatable
     private MBeanServer mBeanServer()
     {
         return ManagementFactory.getPlatformMBeanServer();
+    }
+
+    private String getConfigurableAttribute(final String annotationAttributeValue, final String defaultValue)
+    {
+        String val = annotationAttributeValue.trim();
+        if (val.startsWith("{") && val.endsWith("}"))
+        {
+            val = ConfigResolver.getPropertyValue(val.substring(1, val.length() - 1), defaultValue);
+        }
+        return val == null || val.isEmpty() ? defaultValue : val;
     }
 }
