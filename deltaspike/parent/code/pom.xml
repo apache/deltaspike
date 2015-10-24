@@ -1114,6 +1114,8 @@
                                 <exclude>**/BaseTestConfigProperty.java</exclude>
                                 <exclude>**/ConfigPropertyWARTest.java</exclude>
                                 <exclude>**/ConfigPropertyEARTest.java</exclude>
+                                <exclude>**/CustomTypeTest.java</exclude>
+                                <exclude>**/CustomPropertiesTest.java</exclude>
                             </excludes>
                             <systemProperties>
                                 <arquillian.launch>wls-remote-12c</arquillian.launch>
@@ -1176,6 +1178,8 @@
                                 <exclude>**/BaseTestConfigProperty.java</exclude>
                                 <exclude>**/ConfigPropertyWARTest.java</exclude>
                                 <exclude>**/ConfigPropertyEARTest.java</exclude>
+                                <exclude>**/CustomTypeTest.java</exclude>
+                                <exclude>**/CustomPropertiesTest.java</exclude>
                             </excludes>
                             <systemProperties>
                                 <arquillian.launch>wls-managed-12c</arquillian.launch>
