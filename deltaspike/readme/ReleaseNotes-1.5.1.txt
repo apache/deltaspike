@@ -1,0 +1,39 @@
+Release Notes - Apache DeltaSpike - Version 1.5.1
+
+Bug
+
+    [DELTASPIKE-984] - DynamicMBeanWrapper throws misleading MBeanException saying that the required action does not exist when MBean method (deliberately) throws an exception
+    [DELTASPIKE-985] - It's not possible to run tests against latest WildFly
+    [DELTASPIKE-990] - BeanBuilder#readFromType drops java.lang.Object as type
+    [DELTASPIKE-993] - Disabled initialRedirect is generating dswid=null
+    [DELTASPIKE-994] - MessageBundleExtension: NPE on Shutdown
+    [DELTASPIKE-997] - org.apache.deltaspike.data.impl.meta.unit.PersistenceUnitsTest fails on weblogic
+    [DELTASPIKE-999] - several tests failing on weblogic due to missing org.quartz.utils package
+    [DELTASPIKE-1002] - NPE when job startScopes is set to empty
+
+Improvement
+
+    [DELTASPIKE-986] - support for atomikos
+    [DELTASPIKE-987] - check for @Version
+    [DELTASPIKE-991] - javax.interceptor.Interceptor.Priority.PLATFORM_BEFORE is used per default
+    [DELTASPIKE-992] - optional support for bv 1.1
+    [DELTASPIKE-1001] - Skip caching ClassDeactivation for some project stages
+    [DELTASPIKE-1004] - unified base-implementation for InvocationContext
+    [DELTASPIKE-1008] - Introduce @MBean.type() to customize type in JMX bean objectName
+
+New Feature
+
+    [DELTASPIKE-955] - Built in class deactivator
+    [DELTASPIKE-1003] - support @Produces in partial-beans
+    [DELTASPIKE-1005] - @Transactional and @TransactionScoped support for @Repository
+
+Task
+
+    [DELTASPIKE-952] - Document Proxy Module
+    [DELTASPIKE-956] - Clearly document transaction integration patterns for repository classes
+    [DELTASPIKE-979] - Document new ClientWindowConfig modes
+    [DELTASPIKE-981] - update site and javadoc to 1.5.0
+    [DELTASPIKE-983] - Investigate issue with DeltaSpike Validation Module
+    [DELTASPIKE-995] - Define a weblogic managed profile for arquillian tests
+    [DELTASPIKE-998] - many deltaspike/modules/data/impl tests fail on weblogic.
+    [DELTASPIKE-1000] - prepare v1.5.1
