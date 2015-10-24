@@ -23,12 +23,12 @@
     <parent>
         <groupId>org.apache.deltaspike.modules</groupId>
         <artifactId>modules-project</artifactId>
-        <version>1.5.1-SNAPSHOT</version>
+        <version>1.5.1</version>
     </parent>
 
     <groupId>org.apache.deltaspike.modules</groupId>
     <artifactId>partial-bean-module-project</artifactId>
-    <version>1.5.1-SNAPSHOT</version>
+    <version>1.5.1</version>
     <packaging>pom</packaging>
 
     <name>Apache DeltaSpike Partial-Bean-Module</name>
