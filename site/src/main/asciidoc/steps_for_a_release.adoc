@@ -22,8 +22,6 @@ regards,
 
  - Check the jenkins builds
  - Create release notes and commit them to deltaspike/readme/ (format [ReleaseNotes][version].txt)
- - Update version number in documentation/src/main/asciidoc/configure.adoc
- - Update the build (version.deltaspike.latest.stable and version.deltaspike.latest.snapshot)
 
 test at least:
 
@@ -163,6 +161,9 @@ git push origin master
 svn co https://dist.apache.org/repos/dist/release/deltaspike
 mkdir [version]
 //add and commit the artifacts (at least *source-release.zip + asc, md5, sha1)
+//use the artifacts from:
+//  http://repo1.maven.org/maven2/org/apache/deltaspike/deltaspike/[version]/
+//  http://repo1.maven.org/maven2/org/apache/deltaspike/distribution/distribution-full/[version]/
 -----------------------------------------------------------------------------------------------------------------------
 
 === Check Downloads
@@ -172,14 +173,20 @@ mkdir [version]
 
 === Update site content
 
-via CMS:
-
- - Update download links: http://deltaspike.apache.org/download.html
+via source:
+ - Update the build (version.deltaspike.latest.stable and version.deltaspike.latest.snapshot)
  - Update news: http://deltaspike.apache.org/news.html
+
+via CMS:
  - Update version: http://deltaspike.apache.org/index.html
- - Deploy the site
+
+deploy the site
    * mvn site deploy
+   * mvn clean site-deploy -Pstaging
+   * mvn clean site-deploy
    * mvn clean javadoc:aggregate scm-publish:publish-scm or javadoc.sh
+   * update cms workspace
+   * publish content via https://cms.apache.org/deltaspike/publish
 
 === Update report
 
