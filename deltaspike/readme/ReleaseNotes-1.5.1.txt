@@ -2,6 +2,7 @@ Release Notes - Apache DeltaSpike - Version 1.5.1
 
 Bug
 
+    [DELTASPIKE-978] - ClassCastException with Native Queries
     [DELTASPIKE-984] - DynamicMBeanWrapper throws misleading MBeanException saying that the required action does not exist when MBean method (deliberately) throws an exception
     [DELTASPIKE-985] - It's not possible to run tests against latest WildFly
     [DELTASPIKE-990] - BeanBuilder#readFromType drops java.lang.Object as type
