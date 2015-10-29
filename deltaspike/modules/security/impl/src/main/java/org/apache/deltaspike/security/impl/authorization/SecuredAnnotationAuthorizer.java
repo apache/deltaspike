@@ -84,10 +84,11 @@ public class SecuredAnnotationAuthorizer
 
         Method method = invocationContext.getMethod();
 
-        result.addAll(SecurityUtils.getAllAnnotations(method.getAnnotations(),
-            new HashSet<Integer>()));
         result.addAll(SecurityUtils.getAllAnnotations(method.getDeclaringClass().getAnnotations(),
             new HashSet<Integer>()));
+        //later on method-level annotations need to overrule class-level annotations -> don't change the order
+        result.addAll(SecurityUtils.getAllAnnotations(method.getAnnotations(),
+                new HashSet<Integer>()));
 
         return result;
     }
