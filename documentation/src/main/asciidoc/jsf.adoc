@@ -167,7 +167,7 @@ Per default we only overwrite the onclick events of all links on the current pag
 We also provide a mechanism to store the 'screenshot' on ajax requests (e.g. Post-Redirect-Get via p:remoteCommand or other components) or on every button onclick:
 
 [source,java]
--------------------------------------------------------------------
+----------------------------------------------------------------------------
 @Specializes
 public class MyClientWindowConfig extends DefaultClientWindowConfig
 {
@@ -183,7 +183,7 @@ public class MyClientWindowConfig extends DefaultClientWindowConfig
         return true;
     }
 }
--------------------------------------------------------------------
+----------------------------------------------------------------------------
 
 ====== Change windowhandler.html
 
@@ -191,7 +191,7 @@ To customize the look and feel of the windowhandler.html, you can simply
 provide a own via:
 
 [source,java]
--------------------------------------------------------------------
+----------------------------------------------------------------------------
 @Specializes
 public class MyClientWindowConfig extends DefaultClientWindowConfig
 {
@@ -201,13 +201,13 @@ public class MyClientWindowConfig extends DefaultClientWindowConfig
         return "<html><body>Loading...</body></html>";
     }
 }
--------------------------------------------------------------------
+----------------------------------------------------------------------------
 
 If you didn't copy the JS logic from our default windowhandler.html or
 if you would like to always show your custom html instead the 'screenshot', you should disable logic via:
 
 [source,java]
--------------------------------------------------------------------
+----------------------------------------------------------------------------
 @Specializes
 public class MyClientWindowConfig extends DefaultClientWindowConfig
 {
@@ -229,7 +229,7 @@ public class MyClientWindowConfig extends DefaultClientWindowConfig
         return false;
     }
 }
--------------------------------------------------------------------
+----------------------------------------------------------------------------
 
 ====== Minimize windowhandler.html streaming
 
@@ -239,7 +239,7 @@ The onclick handler appends a request token to the URL and creates a cookie for 
 You can enable this via:
 
 [source,java]
--------------------------------------------------------------------
+----------------------------------------------------------------------------
 @Specializes
 public class MyClientWindowConfig extends DefaultClientWindowConfig
 {
@@ -249,7 +249,7 @@ public class MyClientWindowConfig extends DefaultClientWindowConfig
         return true;
     }
 }
--------------------------------------------------------------------
+----------------------------------------------------------------------------
 
 ==== LAZY
 
@@ -347,12 +347,12 @@ Similiar to JSF 2.2' `disableClientWindow` attribute,
 of the windowId to all links of all child components:
 
 [source,xml]
--------------------------------------------------------------------
+----------------------------------------------------------------------------
 <ds:disableClientWindow>
     <h:link value="Link without windowId" outcome="target.xhtml" />
 </ds:disableClientWindow>
 <h:link value="Link with windowId" outcome="target.xhtml"/>
--------------------------------------------------------------------
+----------------------------------------------------------------------------
 
 ==== Number of Active Windows
 
