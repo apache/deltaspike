@@ -183,6 +183,7 @@ public class MyClientWindowConfig extends DefaultClientWindowConfig
         return true;
     }
 }
+-------------------------------------------------------------------
 
 ====== Change windowhandler.html
 
