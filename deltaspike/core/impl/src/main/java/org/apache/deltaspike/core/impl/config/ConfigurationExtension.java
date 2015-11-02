@@ -37,8 +37,10 @@ import org.apache.deltaspike.core.api.config.PropertyFileConfig;
 import org.apache.deltaspike.core.api.exclude.Exclude;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.spi.config.ConfigSource;
+import org.apache.deltaspike.core.spi.config.ConfigValidator;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.core.util.ClassUtils;
+import org.apache.deltaspike.core.util.ServiceUtils;
 
 /**
  * This extension handles {@link org.apache.deltaspike.core.api.config.PropertyFileConfig}s
@@ -136,6 +138,8 @@ public class ConfigurationExtension implements Extension, Deactivatable
 
         // finally add all
         ConfigResolver.addConfigSources(configSources);
+
+        processConfigurationValidation(adv);
     }
 
     /**
@@ -205,6 +209,24 @@ public class ConfigurationExtension implements Extension, Deactivatable
         {
             throw new IllegalStateException(
                 propertyFileConfigClass.getName() + " points to an invalid file: '" + fileName + "'", e);
+        }
+    }
+
+    protected void processConfigurationValidation(AfterDeploymentValidation adv)
+    {
+        for (ConfigValidator configValidator : ServiceUtils.loadServiceImplementations(ConfigValidator.class))
+        {
+            Set<String> violations = configValidator.processValidation();
+
+            if (violations == null)
+            {
+                continue;
+            }
+
+            for (String violation : violations)
+            {
+                adv.addDeploymentProblem(new IllegalStateException(violation));
+            }
         }
     }
 }
