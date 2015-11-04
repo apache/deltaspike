@@ -29,6 +29,7 @@ import javax.enterprise.inject.spi.AfterBeanDiscovery;
 import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.BeforeBeanDiscovery;
+import javax.enterprise.inject.spi.BeforeShutdown;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 
@@ -58,13 +59,14 @@ public class RepositoryExtension implements Extension, Deactivatable
 
     private static final Logger log = Logger.getLogger(RepositoryExtension.class.getName());
 
+    private static RepositoryComponents staticComponents = new RepositoryComponents();
+
     private final List<RepositoryDefinitionException> definitionExceptions =
             new LinkedList<RepositoryDefinitionException>();
 
     private Boolean isActivated = true;
 
     private RepositoryComponents components = new RepositoryComponents();
-
 
     void beforeBeanDiscovery(@Observes BeforeBeanDiscovery before)
     {
@@ -104,6 +106,7 @@ public class RepositoryExtension implements Extension, Deactivatable
                     return;
                 }
                 components.add(repoClass);
+                staticComponents.add(repoClass);
             }
             catch (RepositoryDefinitionException e)
             {
@@ -140,10 +143,27 @@ public class RepositoryExtension implements Extension, Deactivatable
     {
         return annotated.getJavaClass().equals(AbstractEntityRepository.class);
     }
-    
+
     public RepositoryComponents getComponents()
     {
-        return components;
+        RepositoryComponents result = new RepositoryComponents();
+        if (components.getRepositories().isEmpty() && !staticComponents.getRepositories().isEmpty())
+        {
+            result.addAll(staticComponents.getRepositories());
+        }
+
+        if (!components.getRepositories().isEmpty())
+        {
+            result.addAll(components.getRepositories());
+        }
+
+        return result;
     }
 
+    protected void cleanup(@Observes BeforeShutdown beforeShutdown)
+    {
+        //we can reset it in any case,
+        //because every application produced a copy as application-scoped bean (see RepositoryComponentsFactory)
+        staticComponents.getRepositories().clear();
+    }
 }
