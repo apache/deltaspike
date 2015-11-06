@@ -9,6 +9,10 @@ The Core module provides fundamental and defining DeltaSpike API and utility cla
 Instructions for configuring your projects to use the DeltaSpike Core module are detailed in
 <<configure#, Configure DeltaSpike in Your Projects>> as part of the general instructions for configuring your projects for DeltaSpike.
 
+== Project Setup
+
+Add Core-API and Core-Impl to your project as detailed in <<configure#, Configure DeltaSpike Core in Your Projects>>. For Maven-independent projects, see <<configure#config-maven-indep,Configure DeltaSpike Core in Maven-independent Projects>>.
+
 == DeltaSpike Configuration
 
 DeltaSpike provides a very flexible application configuration mechanism. Its main goal is to make it possible
