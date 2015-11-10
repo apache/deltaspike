@@ -55,10 +55,21 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * {@link org.apache.deltaspike.core.api.message.MessageContext#messageSource(String...)}. The fully qualified class
  * name of the interface annotated with &#064;MessageBundle will automatically be registered as additional
  * <code>messageSource</code> for those messages.</p>
+ * <p>
+ * By default the Message Source is a resource bundle with the same name as the {@code &#064;MessageBundle}
+ * annotated interface, e.g. {@code com.acme.MyMessages_en.properties}.
+ * </p>
  *
  * <p>
  * <code>&#064;MessageBundle</code> can be combined with {@link MessageContextConfig} to further customize the
- * message resolution and processing.</p>
+ * message resolution and processing. To use a different resourcebundle, e.g. {@code somepath/myownmessages_en.properties}
+ * you might write:
+ * <pre>
+ * &#064;MessageBundle
+ * &#064;MessageContextConfig(messageSource = "somepath/myownmessages")
+ * </pre>
+ * 
+ * </p>
  *
  * <p>
  * Debug hint: Set a breakpoint in <code>MessageBundleInvocationHandler#invoke</code>. This will get called for every
