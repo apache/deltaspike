@@ -62,8 +62,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  *
  * <p>
  * <code>&#064;MessageBundle</code> can be combined with {@link MessageContextConfig} to further customize the
- * message resolution and processing. To use a different resourcebundle, e.g. {@code somepath/myownmessages_en.properties}
- * you might write:
+ * message resolution and processing. To use a different resourcebundle, e.g. 
+ * {@code somepath/myownmessages_en.properties} you might write:
  * <pre>
  * &#064;MessageBundle
  * &#064;MessageContextConfig(messageSource = "somepath/myownmessages")
