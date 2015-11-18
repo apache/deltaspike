@@ -45,7 +45,7 @@ public class OrmXmlBasedRepositoryTest extends TransactionalTestCase
     @Deployment
     public static Archive<?> deployment()
     {
-        return initDeployment("(.*mapped.*)|(.*test.*)")
+        return initDeployment()
                 .addClasses(MappedOneRepository.class)
                 .addAsLibraries(
                         ShrinkWrap.create(JavaArchive.class, "domain.jar")

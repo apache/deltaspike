@@ -46,7 +46,7 @@ public class AuditEntityListenerTest extends TransactionalTestCase
     {
         return initDeployment()
                 .addPackage(AuditEntityListener.class.getPackage())
-                .addAsWebInfResource("test-orm.xml", ArchivePaths.create("classes/META-INF/orm.xml"))
+                .addAsWebInfResource("test-orm.xml", "classes/META-INF/orm.xml")
                 .addPackage(AuditedEntity.class.getPackage());
     }
 

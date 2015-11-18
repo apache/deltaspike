@@ -46,9 +46,11 @@ public class DisabledRepositoryTest
                 .addClasses(SimpleRepository.class,
                         RepositoryDeactivator.class,
                         DisabledRepository.class
-                )
-                .addAsWebInfResource("disabled/META-INF/apache-deltaspike.properties",
-                        "classes/META-INF/apache-deltaspike.properties");
+                );
+
+        archive.delete("WEB-INF/classes/META-INF/apache-deltaspike.properties");
+        archive.addAsWebInfResource("disabled/META-INF/apache-deltaspike.properties",
+                "classes/META-INF/apache-deltaspike.properties");
         return archive;
     }
 

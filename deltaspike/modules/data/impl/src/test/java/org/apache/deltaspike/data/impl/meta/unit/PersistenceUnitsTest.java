@@ -18,17 +18,11 @@
  */
 package org.apache.deltaspike.data.impl.meta.unit;
 
-import static org.apache.deltaspike.data.test.util.TestDeployments.TEST_FILTER;
-import static org.apache.deltaspike.data.test.util.TestDeployments.addDependencies;
-import static org.apache.deltaspike.data.test.util.TestDeployments.createApiArchive;
-import static org.apache.deltaspike.data.test.util.TestDeployments.createImplPackages;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import org.apache.deltaspike.data.impl.RepositoryDefinitionException;
-import org.apache.deltaspike.data.impl.RepositoryExtension;
 import org.apache.deltaspike.data.impl.meta.RepositoryEntity;
 import org.apache.deltaspike.data.test.domain.Parent;
 import org.apache.deltaspike.data.test.domain.TeeId;
@@ -36,14 +30,11 @@ import org.apache.deltaspike.data.test.domain.mapped.MappedOne;
 import org.apache.deltaspike.data.test.domain.mapped.MappedThree;
 import org.apache.deltaspike.data.test.domain.mapped.MappedTwo;
 import org.apache.deltaspike.data.test.service.MappedOneRepository;
-import org.apache.deltaspike.data.test.util.Logging;
+import org.apache.deltaspike.data.test.util.TestDeployments;
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ArchivePaths;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -57,22 +48,16 @@ public class PersistenceUnitsTest
     @Deployment
     public static Archive<?> deployment()
     {
-        Logging.reconfigure();
-        return addDependencies(ShrinkWrap
-                .create(WebArchive.class, "test.war")
-                .addClass(WebProfileCategory.class)
-                .addAsLibrary(createApiArchive())
-                .addPackages(true, TEST_FILTER, createImplPackages())
-                .addPackages(true, Parent.class.getPackage())
-                .addClasses(RepositoryExtension.class, RepositoryDefinitionException.class,
-                        MappedOneRepository.class)
+        WebArchive war = TestDeployments.initDeployment();
+
+        war.delete("WEB-INF/classes/META-INF/persistence.xml");
+
+        return war.addPackages(true, Parent.class.getPackage())
+                .addClasses(MappedOneRepository.class)
                 .addAsWebInfResource("test-mapped-persistence.xml",
-                        ArchivePaths.create("classes/META-INF/persistence.xml"))
-                .addAsWebInfResource("test-default-orm.xml", ArchivePaths.create("classes/META-INF/orm.xml"))
-                .addAsWebInfResource("test-custom-orm.xml", ArchivePaths.create("classes/META-INF/custom-orm.xml"))
-                .addAsWebInfResource(EmptyAsset.INSTANCE, ArchivePaths.create("beans.xml"))
-                .addAsWebInfResource("META-INF/services/javax.enterprise.inject.spi.Extension",
-                        ArchivePaths.create("classes/META-INF/services/javax.enterprise.inject.spi.Extension")));
+                        "classes/META-INF/persistence.xml")
+                .addAsWebInfResource("test-default-orm.xml", "classes/META-INF/orm.xml")
+                .addAsWebInfResource("test-custom-orm.xml", "classes/META-INF/custom-orm.xml");
     }
 
     @Test
@@ -147,13 +132,6 @@ public class PersistenceUnitsTest
         assertEquals(Long.class, entity1.getPrimaryClass());
         assertEquals(TeeId.class, entity2.getPrimaryClass());
         assertEquals(Long.class, entity3.getPrimaryClass());
-    }
-
-    @Test
-    public void should_read_table_name()
-    {
-        String entityTableName = PersistenceUnits.instance().entityTableName(MappedThree.class);
-        assertEquals("mapped_three_table", entityTableName);
     }
 
 }

@@ -51,6 +51,7 @@ public class TransactionalQueryRunnerTest
     {
         return initDeployment()
                 .addClasses(ExtendedRepositoryInterface.class)
+                .addClass(TransactionalQueryRunnerWrapper.class)
                 .addPackage(Simple.class.getPackage());
     }
 
