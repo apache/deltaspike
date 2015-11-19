@@ -87,6 +87,11 @@ public interface Message extends Serializable
      * message we will first search for a messageTemplate with the given category by just adding an underscore '_' and
      * the category String to the {@link #getTemplate()}. If no such template exists we will fall back to the version
      * without the category String.
+     * <p>
+     * DeltaSpike JSF messages e.g. distinguish between categories
+     * {@code &quot;summary&quot;} and {@code &quot;detail&quot;}
+     * to allow a short and a more detailed explanation in Error, Warn and Info popups at the same time.
+     * </p>
      */
     String toString(String category);
 

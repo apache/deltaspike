@@ -68,7 +68,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * &#064;MessageBundle
  * &#064;MessageContextConfig(messageSource = "somepath/myownmessages")
  * </pre>
- * 
+ *
  * </p>
  *
  * <p>
