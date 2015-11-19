@@ -45,16 +45,6 @@
 
         <script type="text/javascript">
             //<![CDATA[
-            function getOldBody() {
-                return localStorage.getItem(window.name + '_body');
-            }
-            function getOldBodyAttrs() {
-                return localStorage.getItem(window.name + '_bodyAttrs');
-            }
-            function getOldCss() {
-                return dswh.utils.unstringify(localStorage.getItem(window.name + '_css'));
-            }
-
             function addCss(url) {
                 var newSS = document.createElement("style");
                 newSS.setAttribute("rel", "stylesheet");
@@ -64,15 +54,12 @@
             }
 
             function loadCss(clean) {
-                if (!dswh.utils.isHtml5()) { // only do this stuff on html5 browsers
+                // We don't need to restore the old css on initial requests or if < html5
+                if (!dswh.utils.isHtml5() || !window.name) {
                     return;
                 }
-                
-                if (!window.name || window.name.length === null) {
-                    return;
-                }
-                
-                var oldCss = getOldCss();
+
+                var oldCss = dswh.utils.unstringify(localStorage.getItem(window.name + '_css'));
                 if (oldCss) {
                     for (var i = 0; i < oldCss.length; i++) {
                         addCss(oldCss[i]);
@@ -84,35 +71,43 @@
             }
 
             function replaceContent() {
-                if (!dswh.utils.isHtml5()) { // only do this stuff on html browsers
+                if (document.body.textContent) {
                     document.getElementById('message').textContent = "Loading...";
+                } else {
+                    document.getElementById('message').innerText = "Loading...";
+                }
+
+                // We don't need to restore the old windowtree on initial requests or if < html5
+                if (!dswh.utils.isHtml5() || !window.name) {
                     return;
                 }
-                
-                if (!window.name || window.name.length === null) {
-                    return;
-                }
-                
+
                 loadCss(false);
 
-                var oldBody = getOldBody();
+                var oldBody = localStorage.getItem(window.name + '_body');
                 if (oldBody) {
                     document.body.innerHTML = oldBody;
 
-                    //X TODO should restore all attributes of the body tag
-                    document.body.setAttribute("class", getOldBodyAttrs());
-                    document.body.setAttribute("style", " cursor: wait !important;");
+                    var attributes = dswh.utils.unstringify(localStorage.getItem(window.name + '_bodyAttributes'));
+                    for (var attributeName in attributes) {
+                        if (attributes.hasOwnProperty(attributeName)) {
+                            document.body.setAttribute(attributeName, attributes[attributeName]);
+                        }
+                    }
+
+                    window.scrollTo(localStorage.getItem(window.name + '_scrollLeft'),
+                                    localStorage.getItem(window.name + '_scrollTop'));
 
                     localStorage.removeItem(window.name + '_body');
-                    localStorage.removeItem(window.name + '_bodyAttrs');
+                    localStorage.removeItem(window.name + '_bodyAttributes');
+                    localStorage.removeItem(window.name + '_scrollTop');
+                    localStorage.removeItem(window.name + '_scrollLeft');
 
                     // overlay the doc with an un-clickable full-size div
-                    var newDiv = document.createElement("div");
-                    newDiv.setAttribute("style", "position:absolute; z-index:1000; background-color:transparent; top:0; left:0; width:100%; height: 100%");
-                    newDiv.setAttribute("class", "fulldiv");
-                    document.body.appendChild(newDiv);
-                } else {
-                    document.getElementById('message').textContent = "Loading...";
+                    var overlay = document.createElement("div");
+                    overlay.setAttribute("style", "cursor: wait !important; position:absolute; z-index:1000; background-color:transparent; top:0; left:0; width:100%; height: 100%; background: url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7);");
+                    overlay.setAttribute("class", "fulldiv");
+                    document.body.appendChild(overlay);
                 }
             }
 
@@ -120,7 +115,7 @@
 
             window.onload = function() {
                 // uncomment the following line to debug the intermediate page
-                // if (!confirm('reload?')) { return true; }
+                //if (!confirm('reload?')) { return true; }
 
                 loadCss(true);
 

@@ -235,11 +235,22 @@ window.dswh = window.dswh || {
                     }
                 }
                 localStorage.setItem(window.name + '_css', dswh.utils.stringify(oldSS));
+
                 var body = document.getElementsByTagName("body")[0];
                 localStorage.setItem(window.name + '_body', body.innerHTML);
-                //X TODO: store ALL attributes of the body tag
-                localStorage.setItem(window.name + '_bodyAttrs', body.getAttribute("class"));
-                return true;
+
+                var attributes = {};
+                for (var i = 0; i < body.attributes.length; i++) {
+                    var attribute = body.attributes[i];
+                    attributes[attribute.name] = attribute.value;
+                }
+                localStorage.setItem(window.name + '_bodyAttributes', dswh.utils.stringify(attributes));
+
+                var scrollTop = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
+                localStorage.setItem(window.name + '_scrollTop', scrollTop);
+
+                var scrollLeft = (window.pageXOffset || document.documentElement.scrollLeft) - (document.documentElement.clientLeft || 0);
+                localStorage.setItem(window.name + '_scrollLeft', scrollLeft);
             },
 
             cleanupCookies : function() {
@@ -444,3 +455,30 @@ window.dswh = window.dswh || {
         }
     }
 };
+
+// required for IE8
+if (!Function.prototype.bind) {
+    Function.prototype.bind = function (oThis) {
+        if (typeof this !== 'function') {
+            // closest thing possible to the ECMAScript 5
+            // internal IsCallable function
+            throw new TypeError('Function.prototype.bind - what is trying to be bound is not callable');
+        }
+
+        var aArgs = Array.prototype.slice.call(arguments, 1),
+                fToBind = this,
+                fNOP = function () {
+                },
+                fBound = function () {
+                    return fToBind.apply(this instanceof fNOP && oThis
+                            ? this
+                            : oThis,
+                            aArgs.concat(Array.prototype.slice.call(arguments)));
+                };
+
+        fNOP.prototype = this.prototype;
+        fBound.prototype = new fNOP();
+
+        return fBound;
+    };
+}
