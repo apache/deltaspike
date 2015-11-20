@@ -47,6 +47,12 @@ Presentation about DeltaSpike
 
 **Slides:** http://www.slideshare.net/os890/flexibilitaet-mit-cdi-und-apache-delta-spike
 
+=== [pt-BR] Deixando de refazer a roda com Apache DeltaSpike
+CDI e DeltaSpike presentation in TDC - The Developers Conference 2015
+
+**Video and Slides:** http://www.infoq.com/br/presentations/deixando-de-refazer-a-roda-com-apache-deltaspike
+
+
 == Examples
 
 === Confess 2012 Workshop Demo
@@ -100,6 +106,11 @@ Apache DeltaSpike: CDI Programável
 Apache DeltaSpike, a API de extensions do CDI
 
 **Online interview:** http://www.infoq.com/br/interviews/entrevista-rafael-benevides-delta-spike
+
+=== [pt-BR] InfoQ Brazil
+O que é DeltaSpike?
+
+**Online interview:** https://www.youtube.com/watch?v=jtCuxfPxDE8
 
 == Templates
 === Java SE + CDI + DS
