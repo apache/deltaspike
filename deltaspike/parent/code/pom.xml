@@ -37,8 +37,8 @@
     <properties>
         <container.unpack.directory>${java.io.tmpdir}/deltaspike-arquillian-containers</container.unpack.directory>
         <jboss.as.version>7.1.1.Final</jboss.as.version>
-        <wildfly.version>8.0.0.Final</wildfly.version>
-        <wildfly.arquillian.version>1.0.1.Final</wildfly.arquillian.version>
+        <wildfly.version>9.0.2.Final</wildfly.version>
+        <wildfly.arquillian.version>1.0.2.Final</wildfly.arquillian.version>
         <glassfish3.version>3.1.2.2</glassfish3.version>
         <glassfish4.version>4.0</glassfish4.version>
         <wls.version>12.1</wls.version>
@@ -783,7 +783,7 @@
             <!--
              * WildFly has to be locally installed and must be started
              *
-             * JBOSS_HOME must be set for this work correctly!
+             * JBOSS_HOME must be set for this to work correctly!
              *
              * Start the build with:
              * $> mvn clean install -Pwildfly-managed
@@ -828,7 +828,7 @@
                         <version>${maven.surefire.plugin.version}</version>
                         <configuration>
                             <systemProperties>
-                                <arquillian.launch>jbossas-managed-7</arquillian.launch>
+                                <arquillian.launch>wildfly-managed</arquillian.launch>
                                 <arquillian.xml>arquillian-jboss.xml</arquillian.xml>
                                 <org.apache.deltaspike.ProjectStage>UnitTest</org.apache.deltaspike.ProjectStage>
                                 <cdicontainer.version>${cdicontainer.version}</cdicontainer.version>
@@ -950,7 +950,7 @@
 
         <profile>
             <id>wildfly-remote</id>
-            <!-- AS7 must be started manually for this work correctly - debug hints see arquillian.xml -->
+            <!-- Wildfly must be started manually for this work correctly - for debug hints see arquillian-jboss.xml -->
 
             <properties>
                 <cdicontainer.version>wildfly-${wildfly.version}</cdicontainer.version>
@@ -991,7 +991,7 @@
                         <version>${maven.surefire.plugin.version}</version>
                         <configuration>
                             <systemProperties>
-                                <arquillian.launch>jbossas-remote-7</arquillian.launch>
+                                <arquillian.launch>wildfly-remote</arquillian.launch>
                                 <arquillian.xml>arquillian-jboss.xml</arquillian.xml>
                                 <org.apache.deltaspike.ProjectStage>UnitTest</org.apache.deltaspike.ProjectStage>
                                 <cdicontainer.version>${cdicontainer.version}</cdicontainer.version>

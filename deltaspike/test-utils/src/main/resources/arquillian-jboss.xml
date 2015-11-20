@@ -38,6 +38,15 @@
             <property name="cdicontainer.version">${cdicontainer.version}</property>
         </configuration>
     </container>
+    
+    <container qualifier="wildfly-managed">
+        <configuration>
+            <property name="javaVmArguments">-client -noverify -Xms64m -Xmx1024m -XX:MaxPermSize=512m -Dcdicontainer.version=${cdicontainer.version} ${jacoco.agent}</property>
+            <property name="outputToConsole">false</property>
+            <property name="allowConnectingToRunningServer">true</property>
+            <property name="cdicontainer.version">${cdicontainer.version}</property>
+        </configuration>
+    </container>
 
     <container qualifier="jbossas-build-managed-7">
         <configuration>
@@ -58,8 +67,8 @@
         </configuration>
     </container>
 
-    <container qualifier="jbossas-remote-7">
-        <!--
+    <!--Remote profiles
+    
         for remote debugging enable "remote socket debugging" - uncomment:
             set "JAVA_OPTS=%JAVA_OPTS% -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n"
         in
@@ -67,6 +76,12 @@
         and connect to
             port 8787
         -->
+    <container qualifier="jbossas-remote-7">
+        
+    </container>
+    
+    <container qualifier="wildfly-remote">
+        
     </container>
 
 </arquillian>
