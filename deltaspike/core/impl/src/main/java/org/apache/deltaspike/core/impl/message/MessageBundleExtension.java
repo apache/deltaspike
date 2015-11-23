@@ -30,7 +30,14 @@ import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.event.Observes;
-import javax.enterprise.inject.spi.*;
+import javax.enterprise.inject.spi.AfterBeanDiscovery;
+import javax.enterprise.inject.spi.AfterDeploymentValidation;
+import javax.enterprise.inject.spi.AnnotatedType;
+import javax.enterprise.inject.spi.Bean;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.BeforeBeanDiscovery;
+import javax.enterprise.inject.spi.Extension;
+import javax.enterprise.inject.spi.ProcessAnnotatedType;
 
 import org.apache.deltaspike.core.api.literal.DefaultLiteral;
 import org.apache.deltaspike.core.api.message.Message;
@@ -39,6 +46,7 @@ import org.apache.deltaspike.core.api.message.MessageTemplate;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.api.provider.DependentProvider;
 import org.apache.deltaspike.core.util.ClassUtils;
+import org.apache.deltaspike.core.util.ParentExtensionStorage;
 import org.apache.deltaspike.core.util.bean.BeanBuilder;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
@@ -62,6 +70,7 @@ public class MessageBundleExtension implements Extension, Deactivatable
     protected void init(@Observes BeforeBeanDiscovery beforeBeanDiscovery)
     {
         isActivated = ClassDeactivationUtils.isActivated(getClass());
+        ParentExtensionStorage.addExtension(this);
     }
 
     @SuppressWarnings("UnusedDeclaration")
@@ -132,6 +141,12 @@ public class MessageBundleExtension implements Extension, Deactivatable
             abd.addDefinitionError(new IllegalArgumentException("The following MessageBundle problems where found: " +
                     Arrays.toString(deploymentErrors.toArray())));
             return;
+        }
+
+        MessageBundleExtension parentExtension = ParentExtensionStorage.getParentExtension(this);
+        if (parentExtension != null)
+        {
+            messageBundleTypes.addAll(parentExtension.messageBundleTypes);
         }
 
         for (AnnotatedType<?> type : messageBundleTypes)
