@@ -196,13 +196,13 @@ public class ClientSideWindowStrategy extends AbstractClientWindowStrategy
 
         return "";
     }
-    
+
     @Override
     public String interceptRedirect(FacesContext facesContext, String url)
     {
         if (facesContext.getPartialViewContext().isAjaxRequest())
         {
-            String requestToken = newRequestToken();
+            String requestToken = generateNewRequestToken();
             String windowId = getWindowId(facesContext);
             
             ClientWindowHelper.addRequestWindowIdCookie(facesContext,
@@ -224,10 +224,5 @@ public class ClientSideWindowStrategy extends AbstractClientWindowStrategy
         }
         
         return url;
-    }
-    
-    protected String newRequestToken()
-    {
-        return "" + ((int) Math.floor(Math.random() * 999));
     }
 }

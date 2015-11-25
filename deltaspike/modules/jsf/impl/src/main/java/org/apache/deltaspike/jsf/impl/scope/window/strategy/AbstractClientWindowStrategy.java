@@ -104,6 +104,11 @@ public abstract class AbstractClientWindowStrategy implements ClientWindow
         return "" + (new Random()).nextInt() % 10000;
     }
 
+    protected String generateNewRequestToken()
+    {
+        return "" + ((int) Math.floor(Math.random() * 999));
+    }
+    
     protected boolean isPost(FacesContext facesContext)
     {
         if (facesContext.isPostback())
@@ -214,6 +219,6 @@ public abstract class AbstractClientWindowStrategy implements ClientWindow
     @Override
     public String interceptRedirect(FacesContext facesContext, String url)
     {
-        return url;
+        return ClientWindowHelper.appendWindowId(facesContext, url, this);
     }
 }

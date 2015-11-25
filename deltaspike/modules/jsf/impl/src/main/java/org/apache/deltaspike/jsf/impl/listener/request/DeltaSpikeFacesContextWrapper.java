@@ -38,10 +38,8 @@ import javax.faces.context.FacesContextWrapper;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
-import javax.faces.context.PartialViewContext;
 import org.apache.deltaspike.core.util.metadata.AnnotationInstanceProvider;
 import org.apache.deltaspike.jsf.impl.exception.control.BridgeExceptionHandlerWrapper;
-import org.apache.deltaspike.jsf.impl.navigation.DeltaSpikePartialViewContext;
 
 import org.apache.deltaspike.jsf.impl.navigation.NavigationHandlerAwareApplication;
 import org.apache.deltaspike.jsf.impl.security.SecurityAwareViewHandler;
@@ -99,13 +97,6 @@ class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
         }
 
         wrappedFacesContext.release();
-    }
-
-    @Override
-    public PartialViewContext getPartialViewContext()
-    {
-        PartialViewContext partialViewContext = getWrapped().getPartialViewContext();
-        return new DeltaSpikePartialViewContext(partialViewContext);
     }
     
     @Override

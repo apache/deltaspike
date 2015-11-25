@@ -51,9 +51,12 @@ public class DeltaSpikeExternalContextWrapper extends ExternalContextWrapper imp
             JsfUtils.saveFacesMessages(this.wrapped);
         }
 
-        String targetURL = ClientWindowHelper.appendWindowId(facesContext, url, this.clientWindow);
+        if (clientWindow != null)
+        {
+            url = clientWindow.interceptRedirect(facesContext, url);
+        }
 
-        this.wrapped.redirect(targetURL);
+        this.wrapped.redirect(url);
     }
 
     @Override
