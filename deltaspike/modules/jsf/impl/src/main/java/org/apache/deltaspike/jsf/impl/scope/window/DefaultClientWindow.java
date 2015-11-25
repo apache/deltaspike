@@ -94,6 +94,12 @@ public class DefaultClientWindow implements ClientWindow
         return getClientWindow(facesContext).isInitialRedirectSupported(facesContext);
     }
 
+    @Override
+    public String interceptRedirect(FacesContext facesContext, String url)
+    {
+        return getClientWindow(facesContext).interceptRedirect(facesContext, url);
+    }
+
     protected ClientWindow getClientWindow(FacesContext facesContext)
     {
         ClientWindowRenderMode clientWindowRenderMode = clientWindowConfig.getClientWindowRenderMode(facesContext);

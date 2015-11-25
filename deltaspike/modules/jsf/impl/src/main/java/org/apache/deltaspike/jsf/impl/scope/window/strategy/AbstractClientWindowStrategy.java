@@ -210,4 +210,10 @@ public abstract class AbstractClientWindowStrategy implements ClientWindow
     {
         return null;
     }
+    
+    @Override
+    public String interceptRedirect(FacesContext facesContext, String url)
+    {
+        return url;
+    }
 }

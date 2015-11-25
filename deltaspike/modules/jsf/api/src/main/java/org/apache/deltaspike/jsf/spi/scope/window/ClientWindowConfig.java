@@ -97,14 +97,6 @@ public interface ClientWindowConfig extends Serializable
 
     /**
      * @return Whether the DOM tree should stored in the localStorage for the windowhandler.html
-     *         when sending a AJAX request.
-     *         Currently it's only used by {@link ClientWindowRenderMode#CLIENTWINDOW}.
-     * @see windowhandler.html
-     */
-    boolean isClientWindowStoreWindowTreeEnabledOnAjaxRequest();
-    
-    /**
-     * @return Whether the DOM tree should stored in the localStorage for the windowhandler.html
      *         when clicking on a button.
      *         Currently it's only used by {@link ClientWindowRenderMode#CLIENTWINDOW}.
      * @see windowhandler.html

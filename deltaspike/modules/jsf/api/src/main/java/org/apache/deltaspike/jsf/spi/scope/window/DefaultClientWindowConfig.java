@@ -235,13 +235,7 @@ public class DefaultClientWindowConfig implements ClientWindowConfig
     {
         return true;
     }
-    
-    @Override
-    public boolean isClientWindowStoreWindowTreeEnabledOnAjaxRequest()
-    {
-        return false;
-    }
-    
+
     @Override
     public boolean isClientWindowStoreWindowTreeEnabledOnButtonClick()
     {

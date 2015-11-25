@@ -82,8 +82,6 @@ public class WindowIdHtmlRenderer extends Renderer
                 + clientWindowConfig.isClientWindowStoreWindowTreeEnabledOnLinkClick());
         writer.write(",'storeWindowTreeOnButtonClick':"
                 + clientWindowConfig.isClientWindowStoreWindowTreeEnabledOnButtonClick());
-        writer.write(",'storeWindowTreeOnAjaxRequest':"
-                + clientWindowConfig.isClientWindowStoreWindowTreeEnabledOnAjaxRequest());
 
         // see #729
         if (!delegatedWindowMode && clientWindow.isInitialRedirectSupported(context))

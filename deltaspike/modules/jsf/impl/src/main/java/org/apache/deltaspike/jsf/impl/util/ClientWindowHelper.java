@@ -81,7 +81,7 @@ public abstract class ClientWindowHelper
         //only #encodeResourceURL is portable currently
         url = facesContext.getExternalContext().encodeResourceURL(url);
 
-        // rember the initial redirect windowId till the next request - see #729
+        // remember the initial redirect windowId till the next request - see #729
         addRequestWindowIdCookie(facesContext, newWindowId, newWindowId);
 
         try

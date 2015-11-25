@@ -81,22 +81,6 @@ window.dswh = window.dswh || {
                 this.overwriteButtonOnClickEvents();
 
                 dswh.utils.appendHiddenWindowIdToForms();
-
-                if (ajax === false && dswh.utils.isHtml5() && dswh.cfg.storeWindowTreeOnAjaxRequest) {
-                    // JSF ajax callback
-                    jsf.ajax.addOnEvent(function(event) {
-                        if (event.status === "begin") {
-                            dswh.strategy.CLIENTWINDOW.storeWindowTree();
-                        }
-                    });
-
-                    // PF ajax callback
-                    if (window.$ && window.PrimeFaces) {
-                        $(document).on('pfAjaxSend', function () {
-                            dswh.strategy.CLIENTWINDOW.storeWindowTree();
-                        });
-                    }
-                }
             },
 
             assertWindowId : function() {

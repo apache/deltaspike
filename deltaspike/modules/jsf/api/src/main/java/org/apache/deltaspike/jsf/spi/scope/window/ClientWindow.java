@@ -76,4 +76,9 @@ public interface ClientWindow
      * @return true if the implementation possible sends an initial redirect.
      */
     boolean isInitialRedirectSupported(FacesContext facesContext);
+    
+    /**
+     * @return The new redirect url.
+     */
+    String interceptRedirect(FacesContext facesContext, String url);
 }

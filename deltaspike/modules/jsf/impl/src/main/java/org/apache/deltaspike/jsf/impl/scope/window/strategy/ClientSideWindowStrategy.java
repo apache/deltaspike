@@ -196,4 +196,38 @@ public class ClientSideWindowStrategy extends AbstractClientWindowStrategy
 
         return "";
     }
+    
+    @Override
+    public String interceptRedirect(FacesContext facesContext, String url)
+    {
+        if (facesContext.getPartialViewContext().isAjaxRequest())
+        {
+            String requestToken = newRequestToken();
+            String windowId = getWindowId(facesContext);
+            
+            ClientWindowHelper.addRequestWindowIdCookie(facesContext,
+                    requestToken,
+                    windowId);
+
+            url = JsfUtils.addParameter(facesContext.getExternalContext(),
+                    url,
+                    true,
+                    ClientWindowHelper.RequestParameters.GET_WINDOW_ID,
+                    windowId);
+            url = JsfUtils.addParameter(facesContext.getExternalContext(),
+                    url,
+                    true,
+                    ClientWindowHelper.RequestParameters.REQUEST_TOKEN,
+                    requestToken);
+
+            return url;
+        }
+        
+        return url;
+    }
+    
+    protected String newRequestToken()
+    {
+        return "" + ((int) Math.floor(Math.random() * 999));
+    }
 }
