@@ -200,7 +200,27 @@ public class ClientSideWindowStrategy extends AbstractClientWindowStrategy
     @Override
     public String interceptRedirect(FacesContext facesContext, String url)
     {
-        if (facesContext.getPartialViewContext().isAjaxRequest())
+        // following cases we can mark as valid next request:
+        // 1) request == !ajax and GET
+        //   A redirect via ExternalContext can only be done in a JSF request.
+        //   As the windowId is validated before the JSF lifecycle starts
+        //   (via windowhandler streaming/request token validation), we can assume that the current request
+        //   is valid and we can just mark the next request/redirect as valid, too.
+        // 2) request == ajax and POST
+        //   Ajax is always a "post back", so the browser tab was already validated in earlier requests.
+        //   
+        //   
+        // following cases we can NOT mark as valid next request:
+        // 1) request == !ajax and POST
+        //   This is a Post/Redirect/Get - as the post can be done to a new browser tab
+        //   (via the target attribute on the form), the windowId must NOT be valid.
+        // 2) request == ajax and GET
+        //   Not a common JSF request.
+        //   
+        boolean ajax = facesContext.getPartialViewContext().isAjaxRequest();
+        boolean post = isPost(facesContext);
+        boolean get = !post;
+        if ((!ajax && get) || (ajax && post))
         {
             String requestToken = generateNewRequestToken();
             String windowId = getWindowId(facesContext);
