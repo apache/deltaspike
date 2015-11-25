@@ -129,9 +129,11 @@ not feasible as general solution.
 
 ==== CLIENTWINDOW
 
-Each GET request results in an intermediate small html page which checks
-if the browser tab fits the requested windowId. When the windowId is
-valid, a unique token (called `dsrid`) will be generated for the current
+Each GET request results in an intermediate small HTML page (aka "windowhandler").
+If the window.name is empty, a new windowId will stored into window.name.
+If the window.name is already set, the windowhandler checks if the
+window.name equals the requested windowId. When the windowId is valid, a unique
+token (called `dsrid`) will be generated for the current
 request and added to the URL. In addition a cookie with with the
 dsrid/dswid will be added. On the server side, the verified windowId
 will be extracted from the cookie. For POST request detection, the
