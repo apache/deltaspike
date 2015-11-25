@@ -153,7 +153,7 @@ bgcolor which matches your application. For html-5 aware browsers we
 also got rid of this flickering by storing away a 'screenshot' of the
 first page in onclick() and immediately restore this 'screenshot' on the
 intermediate windowhandler.html page. Technically we do this by storing
-away the and css information into the html5 localStorage and restore them on the
+away the HTML DOM tree and css information into the html5 localStorage and restore them on the
 intermediate page. We also introduced a WindowConfig which is able to
 parse a request and decide upon the UserAgent or any other information
 if a client will get an intermediate page or if he gets the result page
@@ -164,19 +164,13 @@ directly.
 ====== Reduce windowhandler.html flickering
 
 Per default we only overwrite the onclick events of all links on the current page to make a 'screenshot' between requests.
-We also provide a mechanism to store the 'screenshot' on ajax requests (e.g. Post-Redirect-Get via p:remoteCommand or other components) or on every button onclick:
+We also provide a mechanism to store the 'screenshot' on every button onclick:
 
 [source,java]
 ----------------------------------------------------------------------------
 @Specializes
 public class MyClientWindowConfig extends DefaultClientWindowConfig
-{
-    @Override
-    public boolean isClientWindowStoreWindowTreeEnabledOnAjaxRequest()
-    {
-        return true;
-    }
-    
+{    
     @Override
     public boolean isClientWindowStoreWindowTreeEnabledOnButtonClick()
     {
@@ -216,13 +210,7 @@ public class MyClientWindowConfig extends DefaultClientWindowConfig
     {
         return false;
     }
-    
-    @Override
-    public boolean isClientWindowStoreWindowTreeEnabledOnAjaxRequest()
-    {
-        return false;
-    }
-    
+
     @Override
     public boolean isClientWindowStoreWindowTreeEnabledOnButtonClick()
     {
@@ -272,7 +260,8 @@ the URL.
 * It could happen that 2 tabs will share the same windowId for 1 request
 because the `LAZY` mode will check lazily, after rendering the view, if
 the windowId matches the `window.name`. Therefore it could happen that
-@ViewAccessScoped or other scopes will unintentionally be destroyed.
+scopes, which are based on the window handling (@ViewAccessScoped, @WindowScoped and @GroupedConversationScoped),
+will unintentionally be destroyed.
 
 
 ===== Workflow Example
