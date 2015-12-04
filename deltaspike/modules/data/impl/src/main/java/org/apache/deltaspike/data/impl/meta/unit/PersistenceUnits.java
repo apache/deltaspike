@@ -45,6 +45,18 @@ public final class PersistenceUnits
         persistenceUnits = readPersistenceXmls();
     }
 
+    public PersistenceUnit get(String name)
+    {
+        for (PersistenceUnit unit : persistenceUnits)
+        {
+            if (name.equalsIgnoreCase(unit.getUnitName()))
+            {
+                return unit;
+            }
+        }
+        return null;
+    }
+
     public boolean isEntity(Class<?> entityClass)
     {
         return find(entityClass) != null;

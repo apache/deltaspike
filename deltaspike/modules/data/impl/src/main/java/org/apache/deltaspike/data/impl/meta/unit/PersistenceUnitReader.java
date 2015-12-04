@@ -25,8 +25,10 @@ import org.w3c.dom.NodeList;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class PersistenceUnitReader extends DescriptorReader
 {
@@ -52,7 +54,8 @@ public class PersistenceUnitReader extends DescriptorReader
             String unitName = extractUnitName(node);
             String baseUrl = extractBaseUrl(descriptor.getUrl(), PersistenceUnit.RESOURCE_PATH);
             List<EntityDescriptor> entities = extractMappings((Element) node, baseUrl, unitName);
-            result.add(new PersistenceUnit(unitName, entities));
+            Map<String, String> properties = extractProperties((Element) node);
+            result.add(new PersistenceUnit(unitName, entities, properties));
         }
         return result;
     }
@@ -104,4 +107,24 @@ public class PersistenceUnitReader extends DescriptorReader
         return node.getAttributes().getNamedItem("name").getTextContent();
     }
 
+    private Map<String, String> extractProperties(Element element)
+    {
+        Map<String, String> propertiesMap = new HashMap<String, String>();
+
+        Node propertiesNode = element.getElementsByTagName("properties").item(0);
+        if (propertiesNode != null)
+        {
+            NodeList propertyNodes = propertiesNode.getChildNodes();
+            for (int i = 0; i < propertyNodes.getLength(); i++)
+            {
+                if ("property".equals(propertyNodes.item(i).getNodeName()))
+                {
+                    Element propertyNode = (Element) propertyNodes.item(i);
+                    propertiesMap.put(propertyNode.getAttribute("name"), propertyNode.getAttribute("value"));
+                }
+            }
+        }
+
+        return Collections.unmodifiableMap(propertiesMap);
+    }
 }

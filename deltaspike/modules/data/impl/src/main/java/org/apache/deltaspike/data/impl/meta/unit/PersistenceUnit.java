@@ -19,8 +19,9 @@
 package org.apache.deltaspike.data.impl.meta.unit;
 
 import java.util.List;
+import java.util.Map;
 
-class PersistenceUnit
+public class PersistenceUnit
 {
 
     public static final String RESOURCE_PATH = "META-INF/persistence.xml";
@@ -28,11 +29,13 @@ class PersistenceUnit
 
     private final String unitName;
     private final List<EntityDescriptor> entities;
+    private final Map<String, String> properties;
 
-    PersistenceUnit(String unitName, List<EntityDescriptor> entities)
+    PersistenceUnit(String unitName, List<EntityDescriptor> entities, Map<String, String> properties)
     {
         this.unitName = unitName;
         this.entities = entities;
+        this.properties = properties;
     }
 
     public EntityDescriptor find(Class<?> entityClass)
@@ -50,6 +53,11 @@ class PersistenceUnit
     public String getUnitName()
     {
         return unitName;
+    }
+    
+    public Map<String, String> getProperties()
+    {
+        return properties;
     }
 
     @Override
