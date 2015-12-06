@@ -23,11 +23,11 @@
     <parent>
         <groupId>org.apache.deltaspike.distribution</groupId>
         <artifactId>distributions-project</artifactId>
-        <version>1.5.2-SNAPSHOT</version>
+        <version>1.5.2</version>
     </parent>
 
     <artifactId>distributions-bom</artifactId>
-    <version>1.5.2-SNAPSHOT</version>
+    <version>1.5.2</version>
     <packaging>pom</packaging>
 
     <name>Apache DeltaSpike Distribution Bill of Materials</name>
