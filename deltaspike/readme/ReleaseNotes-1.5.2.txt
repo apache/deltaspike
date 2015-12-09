@@ -2,6 +2,7 @@ Release Notes - Apache DeltaSpike - Version 1.5.2
 
 Bug
 
+    [DELTASPIKE-839] - Data module test deployments pack individual classes instead of JARs
     [DELTASPIKE-1009] - unknown repository class
     [DELTASPIKE-1014] - SecuredAnnotationAuthorizer overwrites method-level annotation metadata with class-level annotation metadata
     [DELTASPIKE-1016] - JSF documentation broken
@@ -9,14 +10,10 @@ Bug
     [DELTASPIKE-1026] - WindowHandler: Loading... not displayed in IE8
     [DELTASPIKE-1027] - WindowHandler: "screenshot" still clickable in IE8
     [DELTASPIKE-1028] - WindowHandler: JS error on IE8
-    [DELTASPIKE-1030] - Initial redirect does not encode URL properly
-    [DELTASPIKE-1033] - BeanManagerProvider might create mem leaks
     [DELTASPIKE-1034] - DefaultEntityManagerHolder is not Serializeable
 
 Improvement
 
-    [DELTASPIKE-680] - Lazy init should not rely on BeanManagerProvider
-    [DELTASPIKE-872] - Support mocking on proxied beans
     [DELTASPIKE-989] - Document ClientWindow modes more detailed
     [DELTASPIKE-1015] - Support hierarchical BeanManager and Extensions
     [DELTASPIKE-1017] - spi for config-validation
@@ -33,10 +30,6 @@ New Feature
 
 Task
 
-    [DELTASPIKE-440] - discuss helper for adding deployment-problems
-    [DELTASPIKE-645] - review sonar findings
-    [DELTASPIKE-724] - upgrade version of the tomee-arquillian adapter
-    [DELTASPIKE-813] - improve basic core documentation
     [DELTASPIKE-982] - improve internal description of our release-steps
     [DELTASPIKE-1011] - re-visit excluded tests for the wls profiles
     [DELTASPIKE-1012] - update site and javadoc to 1.5.1
