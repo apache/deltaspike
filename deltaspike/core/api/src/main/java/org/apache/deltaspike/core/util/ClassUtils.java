@@ -114,6 +114,19 @@ public abstract class ClassUtils
     {
         return (Class<T>) tryToLoadClassForName(name);
     }
+    
+    /**
+     * Tries to load a class based on the given name and interface or abstract class.
+     * @param name name of the concrete class
+     * @param targetType target type (interface or abstract class)
+     * @param classLoader The {@link ClassLoader}.
+     * @param <T> current type
+     * @return loaded class or null if it isn't in the classpath
+     */
+    public static <T> Class<T> tryToLoadClassForName(String name, Class<T> targetType, ClassLoader classLoader)
+    {
+        return (Class<T>) tryToLoadClassForName(name, classLoader);
+    }
 
     /**
      * Tries to load a class based on the given name
@@ -125,6 +138,25 @@ public abstract class ClassUtils
         try
         {
             return loadClassForName(name);
+        }
+        catch (ClassNotFoundException e)
+        {
+            //do nothing - it's just a try
+            return null;
+        }
+    }
+    
+    /**
+     * Tries to load a class based on the given name
+     * @param name name of the class
+     * @param classLoader The {@link ClassLoader}.
+     * @return loaded class or <code>null</code> if it isn't in the classpath
+     */
+    public static Class tryToLoadClassForName(String name, ClassLoader classLoader)
+    {
+        try
+        {
+            return classLoader.loadClass(name);
         }
         catch (ClassNotFoundException e)
         {

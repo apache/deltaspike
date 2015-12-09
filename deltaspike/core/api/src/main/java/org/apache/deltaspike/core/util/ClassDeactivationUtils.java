@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -156,7 +157,10 @@ public abstract class ClassDeactivationUtils
                                     Map<Class<? extends Deactivatable>, Boolean> activeCache)
     {
         activeCache.put(targetClass, activated);
-        LOG.info("class: " + targetClass.getName() + " activated=" + activated);
+        if (LOG.isLoggable(Level.FINE))
+        {
+            LOG.fine("class: " + targetClass.getName() + " activated=" + activated);
+        }
     }
 
     /**
