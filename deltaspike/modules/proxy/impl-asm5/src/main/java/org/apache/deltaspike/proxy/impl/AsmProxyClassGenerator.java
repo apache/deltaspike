@@ -57,7 +57,7 @@ public class AsmProxyClassGenerator implements ProxyClassGenerator
             java.lang.reflect.Method[] delegateMethods,
             java.lang.reflect.Method[] interceptMethods)
     {
-        String proxyName = targetClass.getCanonicalName() + suffix;
+        String proxyName = targetClass.getName() + suffix;
         String classFileName = proxyName.replace('.', '/');
 
         byte[] proxyBytes = generateProxyClassBytes(targetClass, delegateInvocationHandlerClass,
