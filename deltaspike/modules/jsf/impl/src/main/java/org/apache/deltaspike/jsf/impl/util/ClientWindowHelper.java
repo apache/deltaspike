@@ -53,7 +53,24 @@ public abstract class ClientWindowHelper
         public static final String REQUEST_WINDOW_ID_PREFIX = "dsrwid-";
     }
 
+    public static String constructRequestUrl(ExternalContext externalContext)
+    {
+        String url = externalContext.getRequestContextPath()
+                + externalContext.getRequestServletPath();
 
+        if (externalContext.getRequestPathInfo() != null)
+        {
+            url += externalContext.getRequestPathInfo();
+        }
+        
+        url = JsfUtils.addRequestParameters(externalContext, url, true);
+        //TODO check if it isn't better to fix addRequestParameters itself
+        //only #encodeResourceURL is portable currently
+        url = externalContext.encodeResourceURL(url);
+        
+        return url;
+    }
+    
     /**
      * Handles the initial redirect for the LAZY mode, if no windowId is available in the current request URL.
      *
@@ -68,18 +85,7 @@ public abstract class ClientWindowHelper
 
         ExternalContext externalContext = facesContext.getExternalContext();
 
-        String url = externalContext.getRequestContextPath()
-                + externalContext.getRequestServletPath();
-
-        if (externalContext.getRequestPathInfo() != null)
-        {
-            url += externalContext.getRequestPathInfo();
-        }
-
-        url = JsfUtils.addRequestParameters(externalContext, url, true);
-        //TODO check if it isn't better to fix addRequestParameters itself
-        //only #encodeResourceURL is portable currently
-        url = facesContext.getExternalContext().encodeResourceURL(url);
+        String url = constructRequestUrl(externalContext);
 
         // remember the initial redirect windowId till the next request - see #729
         addRequestWindowIdCookie(facesContext, newWindowId, newWindowId);

@@ -44,6 +44,7 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.deltaspike.core.util.StringUtils;
 
 public abstract class JsfUtils
 {
@@ -187,6 +188,11 @@ public abstract class JsfUtils
                 if (!url.contains(entry.getKey() + "=" + value) &&
                         !url.contains(entry.getKey() + "=" + encodeURLParameterValue(value, externalContext)))
                 {
+                    if (StringUtils.isEmpty(entry.getKey()) && StringUtils.isEmpty(value))
+                    {
+                        continue;
+                    }
+
                     if (!existingParameters)
                     {
                         finalUrl.append("?");

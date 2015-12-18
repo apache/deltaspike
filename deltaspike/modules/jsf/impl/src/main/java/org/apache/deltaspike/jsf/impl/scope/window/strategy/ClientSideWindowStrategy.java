@@ -42,6 +42,7 @@ public class ClientSideWindowStrategy extends AbstractClientWindowStrategy
 
     private static final String UNINITIALIZED_WINDOW_ID_VALUE = "uninitializedWindowId";
     private static final String WINDOW_ID_REPLACE_PATTERN = "$$windowIdValue$$";
+    private static final String REQUEST_URL_REPLACE_PATTERN = "$$requestUrl$$";
     private static final String NOSCRIPT_URL_REPLACE_PATTERN = "$$noscriptUrl$$";
 
     /**
@@ -116,8 +117,13 @@ public class ClientSideWindowStrategy extends AbstractClientWindowStrategy
             }
 
             // set the windowId value in the javascript code
-            windowHandlerHtml = windowHandlerHtml.replace(WINDOW_ID_REPLACE_PATTERN, windowId);
-
+            windowHandlerHtml = windowHandlerHtml.replace(WINDOW_ID_REPLACE_PATTERN,
+                    windowId);
+            // set the current request url
+            // on the client we can't use window.location as the location
+            // could be a different when using forwards
+            windowHandlerHtml = windowHandlerHtml.replace(REQUEST_URL_REPLACE_PATTERN,
+                    ClientWindowHelper.constructRequestUrl(externalContext));
             // set the noscript-URL for users with no JavaScript
             windowHandlerHtml =
                     windowHandlerHtml.replace(NOSCRIPT_URL_REPLACE_PATTERN, getNoscriptUrl(externalContext));
