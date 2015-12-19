@@ -248,7 +248,7 @@ Repositories can be deactivated creating a <<spi.adoc#_classdeactivator,ClassDea
 
 The `EntityRepository` interface implements the <<core.adoc#_deactivatable,Deactivatable>> interface allowing it to be used in the ClassDeactivator.
 
-If your repository don't implement `EntityRepository` and you want to deactivate it, you will need to implement the <<core.adoc#_deactivatable,Deactivatable>>  interface yourself.
+If your repository does not implement `EntityRepository` and you want to deactivate it, you will need to implement the <<core.adoc#_deactivatable,Deactivatable>>  interface yourself.
 
 [source,java]
 ----------------------------------------
@@ -309,6 +309,29 @@ a JPA 2.0 `EntityManager`:
 -------------------------------------------------------------------------------------------------------
 @Repository
 public interface PersonRepository extends EntityRepository<Person, Long>, EntityManagerDelegate<Person>
+{
+    ...
+}
+-------------------------------------------------------------------------------------------------------
+
+This is equivalent to extending the `FullEntityRepository` interface:
+
+[source,java]
+-------------------------------------------------------------------------------------------------------
+@Repository
+public interface PersonRepository extends FullEntityRepository<Person, Long>
+{
+    ...
+}
+-------------------------------------------------------------------------------------------------------
+
+For abstract classes, there is a convenience base class `AbstractFullEntityRepository` which also
+implements `EntityManagerDelegate` and thus exposes most `EntityManager` methods:
+
+[source,java]
+-------------------------------------------------------------------------------------------------------
+@Repository
+public abstract PersonRepository extends AbstractFullEntityRepository<Person, Long>
 {
     ...
 }
