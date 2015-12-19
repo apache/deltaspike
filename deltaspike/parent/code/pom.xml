@@ -971,9 +971,9 @@
                     <scope>provided</scope>
                 </dependency>
                 <dependency>
-                    <groupId>org.wildfly</groupId>
+                    <groupId>org.wildfly.arquillian</groupId>
                     <artifactId>wildfly-arquillian-container-remote</artifactId>
-                    <version>${wildfly.version}</version>
+                    <version>${wildfly.arquillian.version}</version>
                     <scope>test</scope>
                 </dependency>
                 <dependency>
