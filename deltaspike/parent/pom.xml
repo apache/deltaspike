@@ -694,6 +694,14 @@
                 <scope>test</scope>
             </dependency>
 
+            <!-- TomEE 7.x dependencies -->
+            <dependency>
+                <groupId>org.apache.tomee</groupId>
+                <artifactId>arquillian-tomee-remote</artifactId>
+                <version>${tomee.version}</version>
+                <scope>test</scope>
+            </dependency>
+
             <!-- dependency for DELTASPIKE-113 -->
             <dependency>
                 <groupId>javassist</groupId>
