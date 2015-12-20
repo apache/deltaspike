@@ -108,6 +108,7 @@ public abstract class SimpleQueryInOutMapperBase<Entity, Dto> implements QueryIn
         return toEntity(newEntity(), dto);
     }
 
+    @SuppressWarnings("unchecked")
     protected Entity newEntity()
     {
         try
@@ -123,6 +124,7 @@ public abstract class SimpleQueryInOutMapperBase<Entity, Dto> implements QueryIn
         }
     }
 
+    @SuppressWarnings("unchecked")
     protected Entity findEntity(Object primaryKey)
     {
         return (Entity) context.getEntityManager().find(context.getEntityClass(), primaryKey);

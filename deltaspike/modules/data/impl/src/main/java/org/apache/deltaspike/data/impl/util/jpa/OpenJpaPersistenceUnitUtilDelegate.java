@@ -63,8 +63,8 @@ public class OpenJpaPersistenceUnitUtilDelegate implements PersistenceUnitUtil
             {
                 final Method method;
 
-                method = identifier.getClass().getMethod(methodName, null);
-                return method.invoke(identifier, null);
+                method = identifier.getClass().getMethod(methodName);
+                return method.invoke(identifier);
             }
         }
         catch (NoSuchMethodException e)

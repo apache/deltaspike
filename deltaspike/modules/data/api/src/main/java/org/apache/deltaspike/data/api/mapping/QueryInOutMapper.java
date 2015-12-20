@@ -21,7 +21,7 @@ package org.apache.deltaspike.data.api.mapping;
 import java.util.List;
 
 /**
- * Handels concrete mapping of query results and
+ * Handles concrete mapping of query results and
  * query input parameters.
  */
 public interface QueryInOutMapper<E>

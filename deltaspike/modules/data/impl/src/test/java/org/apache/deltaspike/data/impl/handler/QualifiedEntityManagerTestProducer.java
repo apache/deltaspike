@@ -240,6 +240,7 @@ public class QualifiedEntityManagerTestProducer
             throw new UnsupportedOperationException();
         }
 
+        @SuppressWarnings("rawtypes")
         @Override
         public Query createNativeQuery(String arg0, Class arg1)
         {

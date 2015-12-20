@@ -126,6 +126,7 @@ public final class QueryProcessorFactory
                         return null;
                     }
                 default:
+                    @SuppressWarnings("unchecked")
                     List<Object> queryResult = query.getResultList();
                     return queryResult.size() > 0 ? queryResult.get(0) : null;
             }

@@ -38,6 +38,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.SingularAttribute;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -130,12 +131,14 @@ public class EntityRepositoryHandler<E, PK extends Serializable>
         return executeExampleQuery(example, start, max, true, attributes);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<E> findAll()
     {
         return context.applyRestrictions(entityManager().createQuery(allQuery(), entityClass())).getResultList();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<E> findAll(int start, int max)
     {
@@ -170,6 +173,7 @@ public class EntityRepositoryHandler<E, PK extends Serializable>
         return executeCountQuery(example, true, attributes);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public PK getPrimaryKey(E entity)
     {

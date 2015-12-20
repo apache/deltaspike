@@ -62,7 +62,7 @@ public class RepositoryMethod
     private final RepositoryComponent repo;
     private final QueryRoot queryRoot;
     private final QueryProcessor queryProcessor;
-    private final Class<? extends QueryInOutMapper> mapper;
+    private final Class<? extends QueryInOutMapper<?>> mapper;
 
     private volatile Boolean queryInOutMapperIsNormalScope;
 
@@ -92,7 +92,7 @@ public class RepositoryMethod
         lazyInit();
         if (!queryInOutMapperIsNormalScope)
         {
-            final DependentProvider<? extends QueryInOutMapper> mappedProvider = BeanProvider.getDependent(mapper);
+            final DependentProvider<? extends QueryInOutMapper<?>> mappedProvider = BeanProvider.getDependent(mapper);
             result = mappedProvider.get();
             context.addDestroyable(new DependentProviderDestroyable(mappedProvider));
         }
@@ -157,7 +157,7 @@ public class RepositoryMethod
         }
     }
 
-    private Class<? extends QueryInOutMapper> extractMapper(Method queryMethod, RepositoryComponent repoComponent)
+    private Class<? extends QueryInOutMapper<?>> extractMapper(Method queryMethod, RepositoryComponent repoComponent)
     {
         if (queryMethod.isAnnotationPresent(MappingConfig.class))
         {

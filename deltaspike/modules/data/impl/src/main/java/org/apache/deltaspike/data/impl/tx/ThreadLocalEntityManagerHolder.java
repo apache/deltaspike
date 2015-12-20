@@ -29,6 +29,8 @@ import org.apache.deltaspike.jpa.impl.entitymanager.DefaultEntityManagerHolder;
 public class ThreadLocalEntityManagerHolder extends DefaultEntityManagerHolder
 {
 
+    private static final long serialVersionUID = 1L;
+
     private final ThreadLocal<EntityManager> holder = new ThreadLocal<EntityManager>();
 
     @Override

@@ -19,7 +19,6 @@
 package org.apache.deltaspike.data.test.service;
 
 import org.apache.deltaspike.data.api.AbstractEntityRepository;
-import org.apache.deltaspike.data.api.EntityManagerDelegate;
 import org.apache.deltaspike.data.api.Repository;
 import org.apache.deltaspike.data.test.domain.Simple;
 

@@ -43,6 +43,8 @@ public class QueryBuilderFactory implements Serializable
     private static final Map<MethodType, QueryInvocationLiteral> LITERALS =
             new HashMap<MethodType, QueryInvocationLiteral>()
             {
+                private static final long serialVersionUID = 1L;
+
                 {
                     put(ANNOTATED, new QueryInvocationLiteral(ANNOTATED));
                     put(DELEGATE, new QueryInvocationLiteral(DELEGATE));

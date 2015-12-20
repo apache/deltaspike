@@ -88,11 +88,12 @@ public class OrderBy<P, V> implements QueryProcessor<P>
             {
                 return true;
             }
-            if (o == null || getClass() != o.getClass())
+            if (getClass() != o.getClass())
             {
                 return false;
             }
 
+            @SuppressWarnings("unchecked")
             OrderByDefinition that = (OrderByDefinition) o;
 
             if (att != null ? !att.equals(that.att) : that.att != null)

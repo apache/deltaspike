@@ -52,7 +52,7 @@ public class EntityDescriptorReader extends DescriptorReader
 
     public MappingFile readFromDocument(Document doc)
     {
-        List<EntityDescriptor> entities = new EntityBuilder<EntityDescriptor>()
+        EntityBuilder<EntityDescriptor> entityDescriptorBuilder = new EntityBuilder<EntityDescriptor>()
         {
             @Override
             protected EntityDescriptor instance(String name, String packageName, String className,
@@ -66,25 +66,25 @@ public class EntityDescriptorReader extends DescriptorReader
             {
                 return "entity";
             }
-        }
-                .build(doc);
-        List<MappedSuperclassDescriptor> superClasses = new MappedSuperClassBuilder<MappedSuperclassDescriptor>()
-        {
-            @Override
-            protected MappedSuperclassDescriptor instance(String name, String packageName, String className,
-                                                String idClass, String id, String version)
+        };
+        
+        MappedSuperClassBuilder<MappedSuperclassDescriptor> superClassBuilder = 
+            new MappedSuperClassBuilder<MappedSuperclassDescriptor>()
             {
-                return new MappedSuperclassDescriptor(name, packageName, className, idClass, id, version);
-            }
+                @Override
+                protected MappedSuperclassDescriptor instance(String name, String packageName, String className,
+                                                    String idClass, String id, String version)
+                {
+                    return new MappedSuperclassDescriptor(name, packageName, className, idClass, id, version);
+                }
 
-            @Override
-            protected String tagName()
-            {
-                return "mapped-superclass";
-            }
-        }
-                .build(doc);
-        return new MappingFile(entities, superClasses);
+                @Override
+                protected String tagName()
+                {
+                    return "mapped-superclass";
+                }
+            };
+        return new MappingFile(entityDescriptorBuilder.build(doc), superClassBuilder.build(doc));
     }
 
     private String extractNodeAttribute(Element element, String childName, String attribute)
@@ -177,7 +177,7 @@ public class EntityDescriptorReader extends DescriptorReader
         protected abstract void addFields(Element element);
     }
 
-    private abstract class MappedSuperClassBuilder<T extends PersistentClassDescriptor> extends PersistenceBuilder
+    private abstract class MappedSuperClassBuilder<T extends PersistentClassDescriptor> extends PersistenceBuilder<T>
     {
         protected abstract T instance(String name, String packageName, String className, String idClass, String id,
                                       String version);
@@ -197,7 +197,7 @@ public class EntityDescriptorReader extends DescriptorReader
         }
     }
 
-    private abstract class EntityBuilder<T extends PersistentClassDescriptor> extends PersistenceBuilder
+    private abstract class EntityBuilder<T extends PersistentClassDescriptor> extends PersistenceBuilder<T>
     {
 
         protected String tableName;

@@ -33,7 +33,6 @@ import org.apache.deltaspike.data.test.domain.Principal;
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
