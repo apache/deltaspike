@@ -18,11 +18,14 @@
  */
 package org.apache.deltaspike.data.test.ee7.domain;
 
+import java.io.Serializable;
+
 import javax.persistence.Embeddable;
 
 @Embeddable
-public class EmbeddedSimple
+public class EmbeddedSimple implements Serializable
 {
+    private static final long serialVersionUID = 1L;
 
     private String embedd;
 

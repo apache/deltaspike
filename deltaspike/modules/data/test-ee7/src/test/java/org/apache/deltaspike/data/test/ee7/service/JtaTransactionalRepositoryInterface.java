@@ -20,7 +20,6 @@ package org.apache.deltaspike.data.test.ee7.service;
 
 import static javax.persistence.LockModeType.PESSIMISTIC_READ;
 
-import org.apache.deltaspike.data.api.EntityManagerDelegate;
 import org.apache.deltaspike.data.api.EntityRepository;
 import org.apache.deltaspike.data.api.Modifying;
 import org.apache.deltaspike.data.api.Query;
@@ -29,7 +28,7 @@ import org.apache.deltaspike.data.test.ee7.domain.Simple;
 
 @Repository
 @javax.transaction.Transactional
-public interface JtaTransactionalRepositoryInterface extends EntityRepository<Simple, Long>, EntityManagerDelegate<Simple>
+public interface JtaTransactionalRepositoryInterface extends EntityRepository<Simple, Long>
 {
 
     @Query(lock = PESSIMISTIC_READ)

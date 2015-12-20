@@ -42,7 +42,7 @@ import org.junit.runner.RunWith;
 
 @Category(WebEE7ProfileCategory.class)
 @RunWith(Arquillian.class)
-public class DeltaSpikeTransactionalTest
+public class DeltaSpikeTransactionalRepositoryInterfaceTest
 {
 
     public static String DS_PROPERTIES_WITH_ENV_AWARE_TX_STRATEGY
@@ -55,7 +55,7 @@ public class DeltaSpikeTransactionalTest
     public static Archive<?> deployment()
     {
         return initDeployment()
-                .addClasses(DeltaSpikeTransactionalRepositoryInterface.class)
+                .addClass(DeltaSpikeTransactionalRepositoryInterface.class)
                 .addClass(TransactionalQueryRunnerWrapper.class)
                 .addPackage(Simple.class.getPackage())
                 .addAsWebInfResource(new StringAsset(DS_PROPERTIES_WITH_ENV_AWARE_TX_STRATEGY),
@@ -111,18 +111,6 @@ public class DeltaSpikeTransactionalTest
     }
 
     @Test
-    @InSequence(4)
-    public void should_find_no_lock_without_transaction() throws Exception
-    {
-        // when
-        Simple simple = repository.findByNameNoLock(NAME);
-
-        // then
-        assertNotNull(simple);
-        assertTrue(wrapper.isRunInNonTx());
-    }
-
-    @Test
     @InSequence(10)
     public void should_cleanup() throws Exception
     {
@@ -134,5 +122,4 @@ public class DeltaSpikeTransactionalTest
     {
         wrapper.reset();
     }
-
 }

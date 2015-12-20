@@ -28,7 +28,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.apache.deltaspike.data.test.ee7.domain.Simple;
-import org.apache.deltaspike.data.test.ee7.service.JtaTransactionalRepositoryInterface;
+import org.apache.deltaspike.data.test.ee7.service.DeltaSpikeTransactionalRepositoryAbstract;
 import org.apache.deltaspike.test.category.WebEE7ProfileCategory;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -42,29 +42,28 @@ import org.junit.runner.RunWith;
 
 @Category(WebEE7ProfileCategory.class)
 @RunWith(Arquillian.class)
-public class JtaTransactionalTest
+public class DeltaSpikeTransactionalRepositoryAbstractTest
 {
 
-    public static String DS_PROPERTIES_WITH_CMT_STRATEGY
-        = "globalAlternatives.org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy="
-        + "org.apache.deltaspike.jpa.impl.transaction.ContainerManagedTransactionStrategy";
-
+    public static String DS_PROPERTIES_WITH_ENV_AWARE_TX_STRATEGY
+            = "globalAlternatives.org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy="
+            + "org.apache.deltaspike.jpa.impl.transaction.EnvironmentAwareTransactionStrategy";
+    
     private static final String NAME = "should_run_in_transaction";
 
     @Deployment
     public static Archive<?> deployment()
     {
         return initDeployment()
-                .addClasses(JtaTransactionalRepositoryInterface.class)
+                .addClass(DeltaSpikeTransactionalRepositoryAbstract.class)
                 .addClass(TransactionalQueryRunnerWrapper.class)
                 .addPackage(Simple.class.getPackage())
-                .addAsWebInfResource(new StringAsset(DS_PROPERTIES_WITH_CMT_STRATEGY),
+                .addAsWebInfResource(new StringAsset(DS_PROPERTIES_WITH_ENV_AWARE_TX_STRATEGY),
                     "classes/META-INF/apache-deltaspike.properties");
-                
     }
 
     @Inject
-    private JtaTransactionalRepositoryInterface repository;
+    private DeltaSpikeTransactionalRepositoryAbstract repository;
 
     @Produces
     @PersistenceContext
@@ -112,18 +111,6 @@ public class JtaTransactionalTest
     }
 
     @Test
-    @InSequence(4)
-    public void should_find_no_lock_without_transaction() throws Exception
-    {
-        // when
-        Simple simple = repository.findByNameNoLock(NAME);
-
-        // then
-        assertNotNull(simple);
-        assertTrue(wrapper.isRunInNonTx());
-    }
-
-    @Test
     @InSequence(10)
     public void should_cleanup() throws Exception
     {
@@ -135,5 +122,4 @@ public class JtaTransactionalTest
     {
         wrapper.reset();
     }
-
 }

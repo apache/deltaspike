@@ -20,8 +20,7 @@ package org.apache.deltaspike.data.test.ee7.service;
 
 import static javax.persistence.LockModeType.PESSIMISTIC_READ;
 
-import org.apache.deltaspike.data.api.EntityManagerDelegate;
-import org.apache.deltaspike.data.api.EntityRepository;
+import org.apache.deltaspike.data.api.AbstractEntityRepository;
 import org.apache.deltaspike.data.api.Modifying;
 import org.apache.deltaspike.data.api.Query;
 import org.apache.deltaspike.data.api.Repository;
@@ -29,13 +28,13 @@ import org.apache.deltaspike.data.test.ee7.domain.Simple;
 
 @Repository
 @org.apache.deltaspike.jpa.api.transaction.Transactional
-public interface DeltaSpikeTransactionalRepositoryInterface extends EntityRepository<Simple, Long>, EntityManagerDelegate<Simple>
+public abstract class DeltaSpikeTransactionalRepositoryAbstract extends AbstractEntityRepository<Simple, Long>
 {
 
     @Query(lock = PESSIMISTIC_READ)
-    Simple findByName(String name);
+    public abstract Simple findByName(String name);
 
     @Modifying @Query("delete from Simple")
-    int deleteAll();
+    public abstract int deleteAll();
 
 }

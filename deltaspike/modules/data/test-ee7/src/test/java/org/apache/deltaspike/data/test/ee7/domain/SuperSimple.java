@@ -18,11 +18,15 @@
  */
 package org.apache.deltaspike.data.test.ee7.domain;
 
+import java.io.Serializable;
+
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
-public class SuperSimple
+public class SuperSimple implements Serializable
 {
+    private static final long serialVersionUID = 1L;
+
     private String superName;
 
     public String getSuperName()

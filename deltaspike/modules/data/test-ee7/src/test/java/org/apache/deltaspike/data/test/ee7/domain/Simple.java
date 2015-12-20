@@ -41,11 +41,12 @@ import javax.persistence.TemporalType;
 @Table(name = "SIMPLE_TABLE")
 public class Simple extends SuperSimple
 {
-
     public static final String BY_NAME_LIKE = "simple.byNameLike";
     public static final String BY_NAME_ENABLED = "simple.byNameAndEnabled";
     public static final String BY_ID = "simple.byId";
 
+    private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue
     private Long id;
