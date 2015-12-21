@@ -181,12 +181,29 @@ window.dswh = window.dswh || {
             },
 
             isHrefDefined : function(link) {
-                // skip link without href
-                if (link.href && link.href.length > 0) {
-                    return true;
+
+                var href = link.getAttribute("href");
+
+                if (!href || href === null) {
+                    return false;
                 }
 
-                return false;
+                // trim
+                href = href.replace(/^\s+|\s+$/g, '');
+
+                if (href === '') {
+                    return false;
+                }
+
+                if (href === '#') {
+                    return false;
+                }
+
+                if (href.lastIndexOf('javascript:', 0) === 0) {
+                    return false;
+                }
+
+                return true;
             },
 
             tokenizedRedirect : function(link) {
