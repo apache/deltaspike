@@ -31,6 +31,10 @@
 
     <name>Apache DeltaSpike Data-Module Tests on Java EE 7</name>
 
+    <properties>
+        <deploy.skip>true</deploy.skip>
+    </properties>
+
     <build>
         <pluginManagement>
             <plugins>
@@ -44,6 +48,14 @@
             </plugins>
         </pluginManagement>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip>${deploy.skip}</skip> <!-- we don't deploy our test-modules upstream -->
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>org.bsc.maven</groupId>
                 <artifactId>maven-processor-plugin</artifactId>
