@@ -54,7 +54,7 @@ public class ScopedPartialBeanTest
     }
 
     @Test
-    @Ignore("Test to demonstrate a weld proxy issue")
+    @Ignore("Test to demonstrate WELD-2084")
     public void testPartialBeanWithApplicationScope() throws Throwable
     {
         CustomerRepository repository = BeanProvider.getContextualReference(CustomerRepository.class);
