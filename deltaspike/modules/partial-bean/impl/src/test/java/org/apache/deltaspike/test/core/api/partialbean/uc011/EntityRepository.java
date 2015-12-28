@@ -20,8 +20,8 @@ package org.apache.deltaspike.test.core.api.partialbean.uc011;
 
 import java.io.Serializable;
 
-public interface EntityRepository<E, PK extends Serializable> {
-
+public interface EntityRepository<E, PK extends Serializable>
+{
     E save(E entity);
     
     E findBy(PK primaryKey);
