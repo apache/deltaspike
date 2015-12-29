@@ -19,11 +19,16 @@
 package org.apache.deltaspike.data.test.ee7.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 @Entity
@@ -36,6 +41,10 @@ public class Flat implements Serializable
     @Id
     @GeneratedValue
     private Long id;
+    
+    @OneToMany(mappedBy = "flat", cascade = CascadeType.ALL)
+    @OrderColumn
+    private List<Tenant> tenants = new ArrayList<Tenant>();
 
     @ManyToOne
     private House house;
@@ -70,5 +79,17 @@ public class Flat implements Serializable
     public void setHouse(House house)
     {
         this.house = house;
+    }
+
+    
+    public List<Tenant> getTenants()
+    {
+        return tenants;
+    }
+
+    
+    public void setTenants(List<Tenant> tenants)
+    {
+        this.tenants = tenants;
     }
 }

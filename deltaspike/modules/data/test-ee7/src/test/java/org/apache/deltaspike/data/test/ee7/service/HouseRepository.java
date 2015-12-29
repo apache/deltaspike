@@ -42,6 +42,14 @@ public interface HouseRepository extends FullEntityRepository<House, Long>
     @EntityGraph("none")
     House fetchByNameWithInvalidGraph(String name);
 
+    @Query("select h from House h where h.name = ?1")
+    @EntityGraph(paths = {"flats", "garages"})
+    House fetchByNameWithDynamicGraph(String name);
+
+    @Query("select h from House h where h.name = ?1")
+    @EntityGraph(paths = {"flats.tenants", "garages"})
+    House fetchByNameWithFlatTenants(String name);
+
     @Modifying @Query("delete from House")
     int deleteAll();
 

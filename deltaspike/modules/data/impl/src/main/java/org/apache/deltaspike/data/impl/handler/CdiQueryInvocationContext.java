@@ -323,7 +323,15 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
         }
         
         String graphName = entityGraphAnn.value();
-        Object graph = EntityGraphHelper.getEntityGraph(getEntityManager(), graphName);
+        Object graph;
+        if (graphName.isEmpty())
+        {
+            graph = EntityGraphHelper.buildEntityGraph(getEntityManager(), entityClass, entityGraphAnn.paths());
+        }
+        else
+        {
+            graph = EntityGraphHelper.getEntityGraph(getEntityManager(), graphName);
+        }
         query.setHint(entityGraphAnn.type().getHintName(), graph);
     }
 

@@ -102,8 +102,6 @@ public class HouseRepositoryTest
     {
         House house = repository.findOptionalByName("Bellevue");
         assertNotNull(house);
-        assertNotNull(house.getId());
-        assertEquals("Bellevue", house.getName());
 
         PersistenceUnitUtil puu = entityManager.getEntityManagerFactory().getPersistenceUnitUtil();
 
@@ -117,8 +115,6 @@ public class HouseRepositoryTest
     {
         House house = repository.fetchByName("Bellevue");
         assertNotNull(house);
-        assertNotNull(house.getId());
-        assertEquals("Bellevue", house.getName());
 
         assertTrue(puu.isLoaded(house, "flats"));
         assertFalse(puu.isLoaded(house, "garages"));
@@ -139,6 +135,41 @@ public class HouseRepositoryTest
         }
     }
 
+    @Test
+    @InSequence(5)
+    public void should_build_dynamic_graph_from_paths() throws Exception
+    {
+        House house = repository.fetchByNameWithDynamicGraph("Bellevue");
+        assertNotNull(house);
+
+        assertTrue(puu.isLoaded(house, "flats"));
+        assertTrue(puu.isLoaded(house, "garages"));
+        
+        assertEquals(2, house.getFlats().size());
+        assertEquals(2, house.getGarages().size());
+
+        Flat flat = house.getFlats().get(0);
+        assertFalse(puu.isLoaded(flat, "tenants"));
+    }
+
+    @Test
+    @InSequence(6)
+    public void should_build_dynamic_graph_from_composite_paths() throws Exception
+    {
+        House house = repository.fetchByNameWithFlatTenants("Bellevue");
+        assertNotNull(house);
+
+        assertTrue(puu.isLoaded(house, "flats"));
+        assertTrue(puu.isLoaded(house, "garages"));
+        
+        assertEquals(2, house.getFlats().size());
+        assertEquals(2, house.getGarages().size());
+
+        Flat flat = house.getFlats().get(0);
+        assertTrue(puu.isLoaded(flat, "tenants"));
+        assertEquals(3, flat.getTenants().size());
+    }
+
     @Before
     public void init() throws Exception
     {
@@ -150,6 +181,20 @@ public class HouseRepositoryTest
             Flat flat1 = new Flat();
             flat1.setName("Flat 1");
             flat1.setHouse(house);
+            
+            Tenant alice = new Tenant();
+            alice.setName("Alice");
+            alice.setFlat(flat1);
+
+            Tenant bob = new Tenant();
+            bob.setName("Bob");
+            bob.setFlat(flat1);
+            
+            Tenant charlie = new Tenant();
+            charlie.setName("Charlie");
+            charlie.setFlat(flat1);
+            
+            flat1.setTenants(Arrays.asList(alice, bob, charlie));
 
             Flat flat2 = new Flat();
             flat2.setName("Flat 2");

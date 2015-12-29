@@ -30,6 +30,7 @@ import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
 import javax.persistence.NamedEntityGraphs;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 @NamedEntityGraphs({
@@ -50,9 +51,11 @@ public class House implements Serializable
     private String name;
 
     @OneToMany(mappedBy = "house", cascade = CascadeType.ALL)
+    @OrderColumn
     private List<Flat> flats = new ArrayList<Flat>();
 
     @OneToMany(mappedBy = "house", cascade = CascadeType.ALL)
+    @OrderColumn
     private List<Garage> garages = new ArrayList<Garage>();
 
     public Long getId()
