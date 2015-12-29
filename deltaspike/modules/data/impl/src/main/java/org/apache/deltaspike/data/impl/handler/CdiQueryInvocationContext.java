@@ -18,23 +18,26 @@
  */
 package org.apache.deltaspike.data.impl.handler;
 
+import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
+import javax.persistence.Query;
+import javax.persistence.QueryHint;
+
+import org.apache.deltaspike.data.api.EntityGraph;
 import org.apache.deltaspike.data.api.SingleResultType;
 import org.apache.deltaspike.data.api.mapping.QueryInOutMapper;
+import org.apache.deltaspike.data.impl.graph.EntityGraphHelper;
 import org.apache.deltaspike.data.impl.meta.RepositoryMethod;
 import org.apache.deltaspike.data.impl.param.Parameters;
 import org.apache.deltaspike.data.impl.property.Property;
 import org.apache.deltaspike.data.impl.util.EntityUtils;
 import org.apache.deltaspike.data.impl.util.bean.Destroyable;
 import org.apache.deltaspike.data.spi.QueryInvocationContext;
-
-import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
-import javax.persistence.Query;
-import javax.persistence.QueryHint;
-import java.io.Serializable;
-import java.lang.reflect.Method;
-import java.util.LinkedList;
-import java.util.List;
 
 public class CdiQueryInvocationContext implements QueryInvocationContext
 {
@@ -165,6 +168,7 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
                 query.setHint(hint.name(), hint.value());
             }
         }
+        applyEntityGraph(query, method);
         query = applyJpaQueryPostProcessors(query);
         return query;
     }
@@ -309,6 +313,21 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
     {
         return extractQueryHints(method) != null;
     }
+    
+    private void applyEntityGraph(Query query, Method method)
+    {
+        EntityGraph entityGraphAnn = method.getAnnotation(EntityGraph.class);
+        if (entityGraphAnn == null)
+        {
+            return;
+        }
+        
+        String graphName = entityGraphAnn.value();
+        Object graph = EntityGraphHelper.getEntityGraph(getEntityManager(), graphName);
+        query.setHint(entityGraphAnn.type().getHintName(), graph);
+    }
+
+    
 
     private boolean countCheck(Object entity)
     {
