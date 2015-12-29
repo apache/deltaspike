@@ -32,6 +32,10 @@
     <h:form>
         <ds:windowId/>
 
+        <h:inputText value="#{viewAccessScopedBean.value}">
+            <f:ajax execute="@this" render="@none" />
+        </h:inputText>
+        
         <h:commandButton value="Touch" action="#{viewAccessScopedBean.touch()}"/>
         <h:commandButton value="Touch via AJAX" action="#{viewAccessScopedBean.touch()}">
             <f:ajax render="@form" execute="@this" />

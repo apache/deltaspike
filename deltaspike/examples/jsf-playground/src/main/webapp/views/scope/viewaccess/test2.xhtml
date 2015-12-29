@@ -33,7 +33,7 @@
         <ds:windowId/>
 
         <!-- Just to touch the bean -->
-        #{viewAccessScopedBean.value}
+        Value: #{viewAccessScopedBean.value}
         
         <h:commandButton value="Touch" action="#{viewAccessScopedBean.touch()}"/>
         <h:commandButton value="Touch via AJAX" action="#{viewAccessScopedBean.touch()}">
