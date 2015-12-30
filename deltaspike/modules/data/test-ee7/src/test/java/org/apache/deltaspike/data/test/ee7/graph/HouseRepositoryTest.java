@@ -174,9 +174,11 @@ public class HouseRepositoryTest
     public void init() throws Exception
     {
         puu = entityManager.getEntityManagerFactory().getPersistenceUnitUtil();
-        tx.begin();
+
+        // TODO this causes a tx rollback on GlassFish 4 when run in a UserTransaction
         if (repository.count() == 0)
         {
+            tx.begin();
             House house = new House();
             Flat flat1 = new Flat();
             flat1.setName("Flat 1");
@@ -213,7 +215,7 @@ public class HouseRepositoryTest
             house.setGarages(Arrays.asList(garageA, garageB));
 
             entityManager.persist(house);
+            tx.commit();
         }
-        tx.commit();
     }
 }
