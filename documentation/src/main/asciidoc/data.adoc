@@ -314,7 +314,8 @@ public interface PersonRepository extends EntityRepository<Person, Long>, Entity
 }
 -------------------------------------------------------------------------------------------------------
 
-This is equivalent to extending the `FullEntityRepository` interface:
+Alternatively, you can extend the `FullEntityRepository` interface which is a short-hand for extending
+all of `EntityRepository`, `EntityManagerDelegate` and `CriteriaSupport`.
 
 [source,java]
 -------------------------------------------------------------------------------------------------------
@@ -326,7 +327,7 @@ public interface PersonRepository extends FullEntityRepository<Person, Long>
 -------------------------------------------------------------------------------------------------------
 
 For abstract classes, there is a convenience base class `AbstractFullEntityRepository` which also
-implements `EntityManagerDelegate` and thus exposes most `EntityManager` methods:
+implements `EntityManagerDelegate` and `CriteriaSupport` and thus exposes most `EntityManager` methods:
 
 [source,java]
 -------------------------------------------------------------------------------------------------------

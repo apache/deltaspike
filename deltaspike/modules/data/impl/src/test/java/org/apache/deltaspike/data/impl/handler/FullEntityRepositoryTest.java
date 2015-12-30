@@ -197,6 +197,20 @@ public class FullEntityRepositoryTest extends TransactionalTestCase
         assertEquals(simple.getId(), fetch.getId());
     }
 
+    @Test
+    public void should_find_by_criteria() throws Exception
+    {
+        // given
+        Simple simple = new Simple("criteria");
+        
+        // when
+        simple = repoAbstract.saveAndFlush(simple);
+        Simple fetch = repoAbstract.fetchByName("criteria");
+
+        // then
+        assertEquals(simple.getId(), fetch.getId());
+    }
+
     @Override
     protected EntityManager getEntityManager()
     {

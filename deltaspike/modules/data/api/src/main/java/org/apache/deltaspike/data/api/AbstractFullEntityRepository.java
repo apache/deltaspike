@@ -20,17 +20,19 @@ package org.apache.deltaspike.data.api;
 
 import java.io.Serializable;
 
+import org.apache.deltaspike.data.api.criteria.CriteriaSupport;
 
 /**
- * Full Repository base class to be extended by concrete implementations.
- * Unlike {@link AbstractEntityRepository}, this class exposes all methods
- * of the underlying EntityManager.
- *
- * @param <E>   Entity type.
- * @param <PK>  Primary key type.
+ * Full repository base class to be extended by concrete implementations. A convenience class
+ * combining {@code AbstractEntityRepository}, {@code EntityManagerDelegate} and
+ * {@code CriteriaSupport}.
+ * 
+ * @param <E>
+ *            Entity type.
+ * @param <PK>
+ *            Primary key type.
  */
-public abstract class AbstractFullEntityRepository<E, PK extends Serializable>
-    extends AbstractEntityRepository<E, PK>
-    implements EntityManagerDelegate<E>
+public abstract class AbstractFullEntityRepository<E, PK extends Serializable> extends
+    AbstractEntityRepository<E, PK> implements EntityManagerDelegate<E>, CriteriaSupport<E>
 {
 }

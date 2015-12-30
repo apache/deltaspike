@@ -21,6 +21,7 @@ package org.apache.deltaspike.data.test.service;
 import org.apache.deltaspike.data.api.AbstractFullEntityRepository;
 import org.apache.deltaspike.data.api.Repository;
 import org.apache.deltaspike.data.test.domain.Simple;
+import org.apache.deltaspike.data.test.domain.Simple_;
 
 @Repository
 public abstract class FullRepositoryAbstract
@@ -34,5 +35,10 @@ public abstract class FullRepositoryAbstract
     public String getEntityName()
     {
         return entityName();
+    }
+
+    public Simple fetchByName(String name)
+    {
+        return criteria().eq(Simple_.name, name).getOptionalResult();
     }
 }

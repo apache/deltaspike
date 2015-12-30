@@ -20,14 +20,16 @@ package org.apache.deltaspike.data.api;
 
 import java.io.Serializable;
 
+import org.apache.deltaspike.data.api.criteria.CriteriaSupport;
+
 /**
- * Full repository interface, including all methods not exposed by the base repository
- * interface.
+ * Full repository interface. A convenience class combining {@code EntityRepository},
+ * {@code EntityManagerDelegate} and {@code CriteriaSupport}.
  * 
  * @param <E>   Entity type.
  * @param <PK>  Primary key type.
  */
 public interface FullEntityRepository<E, PK extends Serializable> 
-    extends EntityRepository<E, PK>, EntityManagerDelegate<E>
+    extends EntityRepository<E, PK>, EntityManagerDelegate<E>, CriteriaSupport<E>
 {
 }
