@@ -170,6 +170,7 @@ public class SchedulerExtension implements Extension, Deactivatable
     {
         for (Scheduler scheduler : availableSchedulers)
         {
+            //in case of implementing the Scheduler interface directly
             for (Type interfaceClass : scheduler.getClass().getGenericInterfaces())
             {
                 if (!(interfaceClass instanceof ParameterizedType) ||
@@ -181,6 +182,19 @@ public class SchedulerExtension implements Extension, Deactivatable
                 if (jobClass.isAssignableFrom(((Class)((ParameterizedType)interfaceClass).getActualTypeArguments()[0])))
                 {
                     return scheduler;
+                }
+            }
+
+            //in case of extending e.g. AbstractQuartzScheduler
+            if (scheduler.getClass().getGenericSuperclass() instanceof ParameterizedType)
+            {
+                ParameterizedType parameterizedType = (ParameterizedType) scheduler.getClass().getGenericSuperclass();
+                for (Type typeArgument : parameterizedType.getActualTypeArguments())
+                {
+                    if (jobClass.isAssignableFrom((Class)typeArgument))
+                    {
+                        return scheduler;
+                    }
                 }
             }
         }

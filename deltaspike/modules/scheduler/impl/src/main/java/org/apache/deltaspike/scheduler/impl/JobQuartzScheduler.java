@@ -16,19 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.scheduler.custom;
+package org.apache.deltaspike.scheduler.impl;
 
-import org.apache.deltaspike.core.spi.activation.ClassDeactivator;
-import org.apache.deltaspike.core.spi.activation.Deactivatable;
+import org.quartz.Job;
 
-public class QuartzDeactivator implements ClassDeactivator
+//vetoed class (see SchedulerExtension)
+public class JobQuartzScheduler extends AbstractQuartzScheduler<Job>
 {
-    private static final long serialVersionUID = 6185043496640765473L;
-
     @Override
-    public Boolean isActivated(Class<? extends Deactivatable> targetClass)
+    protected Class<? extends Job> createFinalJobClass(Class<? extends Job> jobClass)
     {
-        return !"QuartzScheduler".equals(targetClass.getSimpleName()) &&
-                !"RunnableQuartzScheduler".equals(targetClass.getSimpleName());
+        return jobClass;
     }
 }

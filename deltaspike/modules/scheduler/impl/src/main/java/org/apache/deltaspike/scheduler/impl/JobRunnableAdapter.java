@@ -16,19 +16,26 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.scheduler.custom;
+package org.apache.deltaspike.scheduler.impl;
 
-import org.apache.deltaspike.core.spi.activation.ClassDeactivator;
-import org.apache.deltaspike.core.spi.activation.Deactivatable;
+import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.core.util.ClassUtils;
+import org.quartz.Job;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
 
-public class QuartzDeactivator implements ClassDeactivator
+import javax.enterprise.inject.Typed;
+
+@Typed()
+public class JobRunnableAdapter implements Job
 {
-    private static final long serialVersionUID = 6185043496640765473L;
-
     @Override
-    public Boolean isActivated(Class<? extends Deactivatable> targetClass)
+    public void execute(JobExecutionContext context) throws JobExecutionException
     {
-        return !"QuartzScheduler".equals(targetClass.getSimpleName()) &&
-                !"RunnableQuartzScheduler".equals(targetClass.getSimpleName());
+        Class<? extends Runnable> jobClass =
+            ClassUtils.tryToLoadClassForName(context.getJobDetail().getKey().getName(), Runnable.class);
+
+        Runnable runnableBean = BeanProvider.getContextualReference(jobClass);
+        runnableBean.run();
     }
 }

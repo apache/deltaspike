@@ -93,4 +93,12 @@
 # under the License.
 #####################################################################################
 
-org.apache.deltaspike.scheduler.impl.QuartzScheduler
+#only one of the following schedulers will get active
+
+#default scheduler:
+org.apache.deltaspike.scheduler.impl.JobQuartzScheduler
+
+#alternative scheduler - add
+# deltaspike.scheduler.job-class=java.lang.Runnable
+#to META-INF/apache-deltaspike.properties
+org.apache.deltaspike.scheduler.impl.RunnableQuartzScheduler

@@ -53,10 +53,9 @@ import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-//vetoed class (see SchedulerExtension)
-public class QuartzScheduler implements Scheduler<Job>
+public abstract class AbstractQuartzScheduler<T> implements Scheduler<T>
 {
-    private static final Logger LOG = Logger.getLogger(QuartzScheduler.class.getName());
+    private static final Logger LOG = Logger.getLogger(AbstractQuartzScheduler.class.getName());
     private static final Scheduled DEFAULT_SCHEDULED_LITERAL = AnnotationInstanceProvider.of(Scheduled.class);
 
     private static ThreadLocal<JobListenerContext> currentJobListenerContext = new ThreadLocal<JobListenerContext>();
@@ -166,7 +165,7 @@ public class QuartzScheduler implements Scheduler<Job>
     }
 
     @Override
-    public void registerNewJob(Class<? extends Job> jobClass)
+    public void registerNewJob(Class<? extends T> jobClass)
     {
         JobKey jobKey = createJobKey(jobClass);
 
@@ -186,7 +185,8 @@ public class QuartzScheduler implements Scheduler<Job>
 
             if (jobDetail == null)
             {
-                jobDetail = JobBuilder.newJob(jobClass)
+                Class<? extends Job> jobClassToAdd = createFinalJobClass(jobClass);
+                jobDetail = JobBuilder.newJob(jobClassToAdd)
                         .withDescription(description)
                         .withIdentity(jobKey)
                         .build();
@@ -229,7 +229,8 @@ public class QuartzScheduler implements Scheduler<Job>
             }
             else
             {
-                Logger.getLogger(QuartzScheduler.class.getName()).info(jobKey + " exists already and will be ignored.");
+                Logger.getLogger(AbstractQuartzScheduler.class.getName()).info(
+                    jobKey + " exists already and will be ignored.");
             }
         }
         catch (SchedulerException e)
@@ -238,8 +239,10 @@ public class QuartzScheduler implements Scheduler<Job>
         }
     }
 
+    protected abstract Class<? extends Job> createFinalJobClass(Class<? extends T> jobClass);
+
     @Override
-    public void startJobManually(Class<? extends Job> jobClass)
+    public void startJobManually(Class<? extends T> jobClass)
     {
         try
         {
@@ -252,7 +255,7 @@ public class QuartzScheduler implements Scheduler<Job>
     }
 
     @Override
-    public void interruptJob(Class<? extends Job> jobClass)
+    public void interruptJob(Class<? extends T> jobClass)
     {
         try
         {
@@ -265,7 +268,7 @@ public class QuartzScheduler implements Scheduler<Job>
     }
 
     @Override
-    public boolean deleteJob(Class<? extends Job> jobClass)
+    public boolean deleteJob(Class<? extends T> jobClass)
     {
         try
         {
@@ -278,7 +281,7 @@ public class QuartzScheduler implements Scheduler<Job>
     }
 
     @Override
-    public void pauseJob(Class<? extends Job> jobClass)
+    public void pauseJob(Class<? extends T> jobClass)
     {
         try
         {
@@ -291,7 +294,7 @@ public class QuartzScheduler implements Scheduler<Job>
     }
 
     @Override
-    public void resumeJob(Class<? extends Job> jobClass)
+    public void resumeJob(Class<? extends T> jobClass)
     {
         try
         {
@@ -304,7 +307,7 @@ public class QuartzScheduler implements Scheduler<Job>
     }
 
     @Override
-    public boolean isExecutingJob(Class<? extends Job> jobClass)
+    public boolean isExecutingJob(Class<? extends T> jobClass)
     {
         try
         {
@@ -332,7 +335,7 @@ public class QuartzScheduler implements Scheduler<Job>
         }
     }
 
-    private static JobKey createJobKey(Class<?> jobClass)
+    private JobKey createJobKey(Class<?> jobClass)
     {
         Scheduled scheduled = jobClass.getAnnotation(Scheduled.class);
 
@@ -342,13 +345,18 @@ public class QuartzScheduler implements Scheduler<Job>
         }
 
         String groupName = scheduled.group().getSimpleName();
-        String jobName = jobClass.getSimpleName();
+        String jobName = getJobName(jobClass);
 
         if (!Scheduled.class.getSimpleName().equals(groupName))
         {
             return new JobKey(jobName, groupName);
         }
         return new JobKey(jobName);
+    }
+
+    protected String getJobName(Class<?> jobClass)
+    {
+        return jobClass.getSimpleName();
     }
 
     private class InjectionAwareJobListener implements JobListener
@@ -417,7 +425,7 @@ public class QuartzScheduler implements Scheduler<Job>
         }
     }
 
-    private class JobListenerContext
+    private static class JobListenerContext
     {
         private Stack<Class<? extends Annotation>> scopes = new Stack<Class<? extends Annotation>>();
         private DependentProvider<ContextControl> contextControl;
