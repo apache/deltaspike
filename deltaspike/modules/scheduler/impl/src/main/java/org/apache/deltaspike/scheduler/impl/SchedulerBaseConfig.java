@@ -27,6 +27,7 @@ public interface SchedulerBaseConfig extends DeltaSpikeBaseConfig
     interface JobCustomization
     {
         String JOB_CLASS_NAME_KEY = "deltaspike.scheduler.job-class";
+        String RUNNABLE_ADAPTER_CLASS_NAME_KEY = "deltaspike.scheduler.runnable-adapter-class";
 
         //don't type it to class to keep quartz optional
         String DEFAULT_JOB_FACTORY_CLASS_NAME = ConfigResolver.resolve("deltaspike.scheduler.DefaultJobFactory")
@@ -38,6 +39,12 @@ public interface SchedulerBaseConfig extends DeltaSpikeBaseConfig
         String JOB_CLASS_NAME = ConfigResolver.resolve(JOB_CLASS_NAME_KEY)
                 .withCurrentProjectStage(true)
                 .withDefault("org.quartz.Job")
+                .getValue();
+
+        //don't type it to class to keep quartz optional (JobRunnableAdapter imports classes from quartz)
+        String RUNNABLE_ADAPTER_CLASS_NAME = ConfigResolver.resolve(RUNNABLE_ADAPTER_CLASS_NAME_KEY)
+                .withCurrentProjectStage(true)
+                .withDefault("org.apache.deltaspike.scheduler.impl.JobRunnableAdapter")
                 .getValue();
     }
 
