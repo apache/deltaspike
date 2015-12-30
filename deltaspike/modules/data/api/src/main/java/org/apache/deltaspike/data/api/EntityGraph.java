@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
  * Defines an entity graph to be applied to a query. This annotation can be added to any query
  * method of a repository class.
  * <p>
- * The arguments {@code value} and {@code paths} are mutually exclusive. If {@value is set}, it
+ * The arguments {@code value} and {@code paths} are mutually exclusive. If {@code value} is set, it
  * references a named entity graph defined by JPA metadata.
  * <p>
  * If {@code paths} is set, an entity graph is constructed programmatically from the list of

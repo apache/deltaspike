@@ -35,7 +35,6 @@ import javax.persistence.PersistenceUnitUtil;
 import javax.transaction.UserTransaction;
 
 import org.apache.deltaspike.data.api.QueryInvocationException;
-import org.apache.deltaspike.data.impl.graph.EntityGraphException;
 import org.apache.deltaspike.data.test.ee7.domain.Flat;
 import org.apache.deltaspike.data.test.ee7.domain.Garage;
 import org.apache.deltaspike.data.test.ee7.domain.House;
@@ -131,7 +130,7 @@ public class HouseRepositoryTest
         }
         catch (QueryInvocationException e)
         {
-            assertTrue(e.getCause() instanceof EntityGraphException);
+            assertTrue(e.getCause() instanceof IllegalArgumentException);
         }
     }
 

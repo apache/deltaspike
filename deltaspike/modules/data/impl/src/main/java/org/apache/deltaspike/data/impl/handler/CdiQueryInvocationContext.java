@@ -322,20 +322,9 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
             return;
         }
         
-        String graphName = entityGraphAnn.value();
-        Object graph;
-        if (graphName.isEmpty())
-        {
-            graph = EntityGraphHelper.buildEntityGraph(getEntityManager(), entityClass, entityGraphAnn.paths());
-        }
-        else
-        {
-            graph = EntityGraphHelper.getEntityGraph(getEntityManager(), graphName);
-        }
+        Object graph = EntityGraphHelper.getEntityGraph(getEntityManager(), entityClass, entityGraphAnn);
         query.setHint(entityGraphAnn.type().getHintName(), graph);
     }
-
-    
 
     private boolean countCheck(Object entity)
     {
@@ -354,5 +343,4 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
         }
         return false;
     }
-
 }
