@@ -23,13 +23,40 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Defines an entity graph to be applied to a query. This annotation can be added to any query
+ * method of a repository class.
+ * <p>
+ * The arguments {@code value} and {@code paths} are mutually exclusive. If {@value is set}, it
+ * references a named entity graph defined by JPA metadata.
+ * <p>
+ * If {@code paths} is set, an entity graph is constructed programmatically from the list of
+ * attribute paths.
+ * 
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface EntityGraph
 {
+    /**
+     * Name of a named entity graph.
+     * @return graph name
+     */
     String value() default "";
-    
+
+    /**
+     * Type of entity graph (fetch or load).
+     * @return graph type
+     */
     EntityGraphType type() default EntityGraphType.FETCH;
-    
+
+    /**
+     * List of attribute paths. Each path may have multiple components, separated
+     * by dots. A single component path adds an attribute node to the entity graph.
+     * A path {@code foo.bar.baz} adds an attribute node {@code baz} to a subgraph
+     * {@code bar} for the subgraph {@code foo}.
+     * 
+     * @return list of paths
+     */
     String[] paths() default { };
 }

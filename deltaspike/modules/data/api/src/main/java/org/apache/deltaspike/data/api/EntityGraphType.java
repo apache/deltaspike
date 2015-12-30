@@ -18,9 +18,16 @@
  */
 package org.apache.deltaspike.data.api;
 
+/**
+ * Entity graph type (fetch graph or load graph). The type determines
+ * the query hint name used to pass the entity graph to a query.
+ */
 public enum EntityGraphType
 {
+    /** Fetch graph. */
     FETCH("javax.persistence.fetchgraph"),
+
+    /** Load graph. */
     LOAD("javax.persistence.loadgraph");
     
     private String hintName;
@@ -30,6 +37,10 @@ public enum EntityGraphType
         this.hintName = hintName;
     }
     
+    /**
+     * Gets the query hint name corresponding to this type.
+     * @return hint name
+     */
     public String getHintName()
     {
         return hintName;
