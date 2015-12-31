@@ -347,17 +347,9 @@ public class QueryCriteria<C, R> implements Criteria<C, R>
         return result.toArray(new Selection<?>[] {});
     }
 
-    @SuppressWarnings("unchecked")
     private CriteriaQuery<R> createCriteriaQuery(CriteriaBuilder builder)
     {
-        if (resultClass.getName().startsWith("java.lang"))
-        {
-            return (CriteriaQuery<R>) builder.createQuery();
-        }
-        else
-        {
-            return builder.createQuery(resultClass);
-        }
+        return builder.createQuery(resultClass);
     }
 
     // --------------------------------------------------------------------
@@ -490,5 +482,4 @@ public class QueryCriteria<C, R> implements Criteria<C, R>
         add(new In<C, P>(att, values), values);
         return this;
     }
-
 }
