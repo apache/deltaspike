@@ -30,24 +30,24 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class OrderBy<P, V> implements QueryProcessor<P>
+public class OrderBy<P> implements QueryProcessor<P>
 {
 
-    private final List<OrderByDefinition> orderByDefinitions = new ArrayList<OrderByDefinition>();
+    private final List<OrderByDefinition<?>> orderByDefinitions = new ArrayList<OrderByDefinition<?>>();
 
-    public void add(SingularAttribute<? super P, V> att, OrderDirection dir)
+    public <V> void add(SingularAttribute<? super P, V> att, OrderDirection dir)
     {
-        orderByDefinitions.add(new OrderByDefinition(att, dir));
+        orderByDefinitions.add(new OrderByDefinition<V>(att, dir));
     }
 
     @Override
     public <R> void process(CriteriaQuery<R> query, CriteriaBuilder builder, Path<P> path)
     {
         List<Order> orders = new ArrayList<Order>();
-        Iterator<OrderByDefinition> iterator = orderByDefinitions.iterator();
+        Iterator<OrderByDefinition<?>> iterator = orderByDefinitions.iterator();
         while (iterator.hasNext())
         {
-            OrderByDefinition orderByDefinition = iterator.next();
+            OrderByDefinition<?> orderByDefinition = iterator.next();
             switch (orderByDefinition.getDir())
             {
                 case ASC:
@@ -60,7 +60,7 @@ public class OrderBy<P, V> implements QueryProcessor<P>
         query.orderBy(orders);
     }
 
-    private class OrderByDefinition
+    private class OrderByDefinition<V>
     {
         private final SingularAttribute<? super P, V> att;
         private final OrderDirection dir;
@@ -94,7 +94,7 @@ public class OrderBy<P, V> implements QueryProcessor<P>
             }
 
             @SuppressWarnings("unchecked")
-            OrderByDefinition that = (OrderByDefinition) o;
+            OrderByDefinition<V> that = (OrderByDefinition<V>) o;
 
             if (att != null ? !att.equals(that.att) : that.att != null)
             {

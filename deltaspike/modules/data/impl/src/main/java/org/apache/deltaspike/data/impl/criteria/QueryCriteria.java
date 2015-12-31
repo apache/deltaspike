@@ -81,7 +81,7 @@ public class QueryCriteria<C, R> implements Criteria<C, R>
     private final boolean ignoreNull = true;
     private boolean distinct = false;
 
-    private final OrderBy orderByProcessor = new OrderBy();
+    private final OrderBy<C> orderByProcessor = new OrderBy<C>();
     private final List<PredicateBuilder<C>> builders = new LinkedList<PredicateBuilder<C>>();
     private final List<QueryProcessor<C>> processors = new LinkedList<QueryProcessor<C>>();
     private final List<QuerySelection<? super C, ?>> selections = new LinkedList<QuerySelection<? super C, ?>>();
@@ -141,7 +141,7 @@ public class QueryCriteria<C, R> implements Criteria<C, R>
         try
         {
             CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-            CriteriaQuery<?> query = createCriteriaQuery(builder);
+            CriteriaQuery<R> query = createCriteriaQuery(builder);
             From<C, C> root = query.from(entityClass);
             if (!selections.isEmpty())
             {
@@ -332,12 +332,7 @@ public class QueryCriteria<C, R> implements Criteria<C, R>
         }
     }
 
-    private void add(QueryProcessor<C> proc)
-    {
-        processors.add(proc);
-    }
-
-    private void addOrderBy(SingularAttribute<? super C, ?> att, OrderDirection orderDirection)
+    private <P> void addOrderBy(SingularAttribute<? super C, P> att, OrderDirection orderDirection)
     {
         orderByProcessor.add(att, orderDirection);
     }
@@ -352,11 +347,12 @@ public class QueryCriteria<C, R> implements Criteria<C, R>
         return result.toArray(new Selection<?>[] {});
     }
 
-    private CriteriaQuery<?> createCriteriaQuery(CriteriaBuilder builder)
+    @SuppressWarnings("unchecked")
+    private CriteriaQuery<R> createCriteriaQuery(CriteriaBuilder builder)
     {
         if (resultClass.getName().startsWith("java.lang"))
         {
-            return builder.createQuery();
+            return (CriteriaQuery<R>) builder.createQuery();
         }
         else
         {
