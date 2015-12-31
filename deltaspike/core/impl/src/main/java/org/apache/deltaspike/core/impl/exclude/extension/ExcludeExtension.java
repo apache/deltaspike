@@ -289,6 +289,9 @@ public class ExcludeExtension implements Extension, Deactivatable
             //current bean is annotated with @Alternative and of the same type as the configured bean
             if (isAlternativeBeanImplementation && alternativeBeanClass.equals(currentBean))
             {
+                LOG.info(processAnnotatedType.getAnnotatedType().getJavaClass().getName() +
+                    " is configured as global-alternative");
+
                 //cdi 1.0
                 if (priorityAnnotationInstance == null)
                 {
