@@ -174,6 +174,64 @@ or
 </alternatives>
 -----------------------------------------------------------------------------
 
+== @Scheduled with java.lang.Runnable
+
+In several applications there is no need to use `JobExecutionContext` and therefore there shouldn't be the need to implement `org.quartz.Job`.
+For implementing custom schedulers which use custom job-types it was always possible to configure a custom class or interface
+by adding something like `deltaspike.scheduler.job-class=myPackage.MyJobType` to `META-INF/apache-deltaspike.properties`.
+At runtime the corresponding scheduler-implementation gets active.
+Since DeltaSpike v1.5.3, the scheduler-module supports `java.lang.Runnable` out-of-the-box by adding `deltaspike.scheduler.job-class=java.lang.Runnable`
+to `META-INF/apache-deltaspike.properties`.
+
+With that it's possible to use something like:
+
+[source,java]
+---------------------------------------------------------------------------------
+@Scheduled(cronExpression = "0 0/10 * * * ?")
+public class CdiAwareQuartzJob implements java.lang.Runnable
+{
+    @Inject
+    private MyService service;
+
+    @Override
+    public void run()
+    {
+        //...
+    }
+}
+---------------------------------------------------------------------------------
+
+Behind the scenes DeltaSpike registers an adapter for Quartz which just delegates to the `run`-method once the adapter gets called by Quartz.
+Technically you end up with almost the same, just with a reduced API for implementing (all) your scheduled jobs.
+Per default the adapter just calls the `run`-method directly, because Quartz executes the adapter in a new thread anyway.
+
+
+== Execute java.lang.Runnable with ManagedExecutorService
+
+If you would like to use e.g. the `ManagedExecutorService` (with EE7+) to run the jobs,
+you can provide a custom adapter by adding e.g.
+`deltaspike.scheduler.runnable-adapter-class=mypackage.DelegatingJobRunnableAdapter` to `META-INF/apache-deltaspike.properties`.
+Such an adapter just needs to implement `org.quartz.Job` and in case of EE7+ inject e.g. `ManagedExecutorService` as shown in the following example:
+
+[source,java]
+---------------------------------------------------------------------------------
+public class DelegatingJobRunnableAdapter implements Job
+{
+    @Resource
+    private ManagedExecutorService managedExecutorService;
+
+    @Override
+    public void execute(JobExecutionContext context) throws JobExecutionException
+    {
+        Class<? extends Runnable> jobClass =
+            ClassUtils.tryToLoadClassForName(context.getJobDetail().getKey().getName(), Runnable.class);
+
+        Runnable runnableBean = BeanProvider.getContextualReference(jobClass);
+        managedExecutorService.execute(runnableBean);
+    }
+}
+---------------------------------------------------------------------------------
+
 == Custom Scheduler
 
 It is possible to replace the default integration with Quartz. Any scheduler that supports cron-expressions for job-classes can be used.
