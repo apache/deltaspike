@@ -65,12 +65,13 @@ Scheduled jobs can have built-in CDI contexts started for the duration of their 
 </dependency>
 ----
 
-== @Scheduled
+== @Scheduled with org.quartz.Job or java.lang.Runnable
 
 Just annotate your Quartz-Jobs with `@Scheduled` and they will get
 picked up and passed to the scheduler automatically (during the
 bootstrapping process).
 
+.Scheduled task based on org.quartz.Job
 [source,java]
 ---------------------------------------------------------------------------------
 @Scheduled(cronExpression = "0 0/10 * * * ?")
@@ -87,7 +88,31 @@ public class CdiAwareQuartzJob implements org.quartz.Job
 }
 ---------------------------------------------------------------------------------
 
-In such Quartz-jobs CDI based dependency-injection is enabled.
+As an alternative it's possible to annotate an implementation of `java.lang.Runnable` (since DeltaSpike v1.5.3):
+
+.Scheduled task based on java.lang.Runnable
+[source,java]
+---------------------------------------------------------------------------------
+@Scheduled(cronExpression = "0 0/10 * * * ?")
+public class CdiAwareRunnableJob implements java.lang.Runnable
+{
+    @Inject
+    private MyService service;
+
+    @Override
+    public void run()
+    {
+        //...
+    }
+}
+---------------------------------------------------------------------------------
+
+Behind the scenes DeltaSpike registers an adapter for Quartz which just delegates to the `run`-method once the adapter gets called by Quartz.
+Technically you end up with almost the same, just with a reduced API for implementing (all) your scheduled jobs.
+Therefore the main difference is that your code is independent of Quartz-classes.
+However, you need to select `org.quartz.Job` or `java.lang.Runnable` for all your scheduled-tasks, bot not both!
+
+In such scheduled-tasks CDI based dependency-injection is enabled.
 Furthermore, the request- and session-scope get started (and stopped)
 per job-execution. Therefore, the container-control module (of
 DeltaSpike) is required. That can be controlled via
@@ -96,6 +121,8 @@ container-control module as well as `{}` for 'no scopes').
 
 With 'false' for `@Scheduled#onStartup`, it is even possible to
 schedule/install jobs dynamically.
+
+The following example shows how to use it, if you are using `org.quartz.Job` (and not `java.lang.Runnable`).
 
 .Example
 [source,java]
@@ -174,38 +201,6 @@ or
 </alternatives>
 -----------------------------------------------------------------------------
 
-== @Scheduled with java.lang.Runnable
-
-In several applications there is no need to use `JobExecutionContext` and therefore there shouldn't be the need to implement `org.quartz.Job`.
-For implementing custom schedulers which use custom job-types it was always possible to configure a custom class or interface
-by adding something like `deltaspike.scheduler.job-class=myPackage.MyJobType` to `META-INF/apache-deltaspike.properties`.
-At runtime the corresponding scheduler-implementation gets active.
-Since DeltaSpike v1.5.3, the scheduler-module supports `java.lang.Runnable` out-of-the-box by adding `deltaspike.scheduler.job-class=java.lang.Runnable`
-to `META-INF/apache-deltaspike.properties`.
-
-With that it's possible to use something like:
-
-[source,java]
----------------------------------------------------------------------------------
-@Scheduled(cronExpression = "0 0/10 * * * ?")
-public class CdiAwareQuartzJob implements java.lang.Runnable
-{
-    @Inject
-    private MyService service;
-
-    @Override
-    public void run()
-    {
-        //...
-    }
-}
----------------------------------------------------------------------------------
-
-Behind the scenes DeltaSpike registers an adapter for Quartz which just delegates to the `run`-method once the adapter gets called by Quartz.
-Technically you end up with almost the same, just with a reduced API for implementing (all) your scheduled jobs.
-Per default the adapter just calls the `run`-method directly, because Quartz executes the adapter in a new thread anyway.
-
-
 == Execute java.lang.Runnable with ManagedExecutorService
 
 If you would like to use e.g. the `ManagedExecutorService` (with EE7+) to run the jobs,
@@ -215,13 +210,13 @@ Such an adapter just needs to implement `org.quartz.Job` and in case of EE7+ inj
 
 [source,java]
 ---------------------------------------------------------------------------------
-public class DelegatingJobRunnableAdapter implements Job
+public class DelegatingJobRunnableAdapter implements java.lang.Runnable
 {
     @Resource
     private ManagedExecutorService managedExecutorService;
 
     @Override
-    public void execute(JobExecutionContext context) throws JobExecutionException
+    public void run()
     {
         Class<? extends Runnable> jobClass =
             ClassUtils.tryToLoadClassForName(context.getJobDetail().getKey().getName(), Runnable.class);
