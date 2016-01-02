@@ -86,7 +86,7 @@ public class SchedulerExtension implements Extension, Deactivatable
             return;
         }
 
-        if (!jobClass.isAssignableFrom(beanClass))
+        if (!jobClass.isAssignableFrom(beanClass) && !Runnable.class.isAssignableFrom(beanClass))
         {
             return;
         }
@@ -102,6 +102,18 @@ public class SchedulerExtension implements Extension, Deactivatable
     {
         if (!this.isActivated)
         {
+            return;
+        }
+
+        Class configuredJobClass = this.jobClass;
+
+        this.jobClass = resolveFinalJobType();
+
+        if (this.jobClass == null)
+        {
+            afterBeanDiscovery.addDefinitionError(new IllegalStateException("Please only annotate classes with @" +
+                Scheduled.class.getName() + " of type " +
+                configuredJobClass.getName() + " or of type " + Runnable.class.getName() + ", but not both!"));
             return;
         }
 
@@ -125,6 +137,43 @@ public class SchedulerExtension implements Extension, Deactivatable
 
             foundJobNames.add(jobClass.getSimpleName());
             this.scheduler.registerNewJob(jobClass);
+        }
+    }
+
+    /**
+     * Allows to support implementations of {@link java.lang.Runnable}
+     * annotated with {@link Scheduled} >without< explicit config.
+     * @return the job-type which will be used to select the scheduler
+     */
+    protected Class resolveFinalJobType()
+    {
+        Set<Class> foundTypes = new HashSet<Class>();
+
+        for (Class foundJobClass : this.foundManagedJobClasses)
+        {
+            if (jobClass.isAssignableFrom(foundJobClass))
+            {
+                foundTypes.add(jobClass);
+            }
+            else if (Runnable.class.isAssignableFrom(foundJobClass))
+            {
+                foundTypes.add(Runnable.class);
+            }
+        }
+
+        if (foundTypes.size() > 1)
+        {
+            return null;
+        }
+        else if (foundTypes.size() == 1)
+        {
+            return foundTypes.iterator().next();
+        }
+        else
+        {
+            //use the configured type
+            //it's still useful if there is no annotated job-class, but a dyn. usage of the scheduler is still possible
+            return jobClass;
         }
     }
 
