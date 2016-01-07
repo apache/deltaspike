@@ -32,6 +32,9 @@ import java.util.Arrays;
 import javax.enterprise.inject.Typed;
 
 import org.apache.deltaspike.proxy.spi.ProxyClassGenerator;
+import org.objectweb.asm.AnnotationVisitor;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
@@ -103,35 +106,60 @@ public class AsmProxyClassGenerator implements ProxyClassGenerator
         Type proxyType = Type.getObjectType(proxyName);
         Type delegateInvocationHandlerType = Type.getType(delegateInvocationHandlerClass);
 
-        ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+        final ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
         cw.visit(Opcodes.V1_6, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER, proxyType.getInternalName(), null,
                 superType.getInternalName(), interfaces);
-
-        // copy annotations
-        for (Annotation annotation : targetClass.getDeclaredAnnotations())
-        {
-            cw.visitAnnotation(Type.getDescriptor(annotation.annotationType()), true).visitEnd();
-        }
 
         defineInvocationHandlerField(cw, delegateInvocationHandlerType);
         defineDefaultConstructor(cw, proxyType, superType);
         defineDelegateInvocationHandlerConstructor(cw, proxyType, superType, delegateInvocationHandlerType);
         defineDeltaSpikeProxyMethods(cw, proxyType, delegateInvocationHandlerType);
 
-        for (java.lang.reflect.Method method : delegateMethods)
+        if (delegateMethods != null)
         {
-            defineMethod(cw, method, DelegateManualInvocationHandler.class);
+            for (java.lang.reflect.Method method : delegateMethods)
+            {
+                defineMethod(cw, method, DelegateManualInvocationHandler.class);
+            }
         }
 
-        for (java.lang.reflect.Method method : interceptMethods)
+        if (interceptMethods != null)
         {
-            defineSuperAccessorMethod(cw, method, superType, superAccessorMethodSuffix);
-            defineMethod(cw, method, InterceptManualInvocationHandler.class);
+            for (java.lang.reflect.Method method : interceptMethods)
+            {
+                defineSuperAccessorMethod(cw, method, superType, superAccessorMethodSuffix);
+                defineMethod(cw, method, InterceptManualInvocationHandler.class);
+            }
+        }
+
+        // copy all annotations from the source class
+        try
+        {
+            // ClassVisitor to intercept all annotation visits on the class
+            ClassVisitor cv = new ClassVisitor(Opcodes.ASM5)
+            {
+                @Override
+                public AnnotationVisitor visitAnnotation(String desc, boolean visible)
+                {
+                    return new CopyAnnotationVisitorAdapter(
+                            super.visitAnnotation(desc, visible),
+                            cw.visitAnnotation(desc, visible));
+                }
+            };
+
+            // visit class to proxy with our visitor to copy all annotations from the source class to our ClassWriter
+            String sourceClassFilename = targetClass.getName().replace('.', '/') + ".class";
+            ClassReader cr = new ClassReader(targetClass.getClassLoader().getResourceAsStream(sourceClassFilename));
+            cr.accept(cv, 0);
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
         }
 
         return cw.toByteArray();
     }
-
+    
     private static void defineInvocationHandlerField(ClassWriter cw, Type delegateInvocationHandlerType)
     {
         // generates
