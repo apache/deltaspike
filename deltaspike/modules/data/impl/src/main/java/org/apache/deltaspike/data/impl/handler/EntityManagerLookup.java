@@ -28,6 +28,7 @@ import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.api.provider.DependentProvider;
 import org.apache.deltaspike.data.api.EntityManagerResolver;
 import org.apache.deltaspike.data.impl.meta.RepositoryComponent;
+import org.apache.deltaspike.jpa.spi.entitymanager.ActiveEntityManagerHolder;
 
 public class EntityManagerLookup
 {
@@ -35,6 +36,9 @@ public class EntityManagerLookup
     @Inject
     @Any
     private Instance<EntityManager> entityManager;
+
+    @Inject
+    private ActiveEntityManagerHolder activeEntityManagerHolder;
 
     private DependentProvider<? extends EntityManagerResolver> dependentResolverProvider;
 
@@ -57,6 +61,11 @@ public class EntityManagerLookup
         }
         else
         {
+            if (activeEntityManagerHolder.isSet())
+            {
+                return activeEntityManagerHolder.get();
+            }
+
             result = entityManager.select(new DefaultLiteral()).get();
         }
         if (repository.hasEntityManagerFlushMode())

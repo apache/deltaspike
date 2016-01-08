@@ -18,22 +18,13 @@
  */
 package org.apache.deltaspike.data.impl.handler;
 
-import java.io.Serializable;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
-import javax.persistence.PersistenceException;
-
 import org.apache.deltaspike.core.api.lifecycle.Initialized;
-import org.apache.deltaspike.core.util.interceptor.AbstractInvocationContext;
+import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.AnnotationUtils;
 import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.core.util.ProxyUtils;
+import org.apache.deltaspike.core.util.interceptor.AbstractInvocationContext;
+import org.apache.deltaspike.core.util.metadata.AnnotationInstanceProvider;
 import org.apache.deltaspike.data.api.QueryInvocationException;
 import org.apache.deltaspike.data.api.Repository;
 import org.apache.deltaspike.data.impl.builder.QueryBuilder;
@@ -42,7 +33,21 @@ import org.apache.deltaspike.data.impl.meta.RepositoryComponent;
 import org.apache.deltaspike.data.impl.meta.RepositoryComponents;
 import org.apache.deltaspike.data.impl.meta.RepositoryMethod;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
+import org.apache.deltaspike.jpa.spi.entitymanager.ActiveEntityManagerHolder;
 import org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy;
+
+import javax.enterprise.inject.Any;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceException;
+import java.io.Serializable;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Entry point for query processing.
@@ -77,6 +82,9 @@ public class QueryHandler implements Serializable, InvocationHandler
     @Inject
     private TransactionStrategy transactionStrategy;
 
+    @Inject
+    private ActiveEntityManagerHolder activeEntityManagerHolder;
+
     @Override
     public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable
     {
@@ -86,6 +94,20 @@ public class QueryHandler implements Serializable, InvocationHandler
 
         if (transactionalAnnotation != null)
         {
+            if (transactionalAnnotation.qualifier().length > 1)
+            {
+                throw new IllegalStateException(proxy.getClass().getName() + " uses @" + Transactional.class.getName() +
+                    " with multiple qualifiers. That isn't supported with @" + Repository.class.getName());
+            }
+
+            Class<? extends Annotation> qualifier = transactionalAnnotation.qualifier()[0];
+            if (!Any.class.equals(qualifier))
+            {
+                EntityManager entityManager = BeanProvider.getContextualReference(
+                    EntityManager.class, false, AnnotationInstanceProvider.of(qualifier));
+                activeEntityManagerHolder.set(entityManager);
+            }
+
             return transactionStrategy.execute(
                 new AbstractInvocationContext<Object>(proxy, method, args, null)
                 {
