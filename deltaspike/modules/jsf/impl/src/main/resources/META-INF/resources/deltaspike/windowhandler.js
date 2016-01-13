@@ -170,7 +170,9 @@ window.dswh = window.dswh || {
                                             //ie handling added
                                             evt = evt || window.event;
 
-                                            return dswh.strategy.CLIENTWINDOW.storeWindowTree() && oldonclick.bind(this)(evt);
+                                            dswh.strategy.CLIENTWINDOW.storeWindowTree();
+
+                                            return oldonclick.bind(this)(evt);
                                         };
                                     })();
                                 }
