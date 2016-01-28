@@ -33,12 +33,160 @@
 
     <name>Apache DeltaSpike ContainerControl parent</name>
 
-    <modules>
-        <module>api</module>
-        <module>tck</module>
-        <module>impl-owb</module>
-        <module>impl-weld</module>
-        <module>impl-openejb</module>
-        <module>servlet</module>
-    </modules>
+    <profiles>
+        <profile>
+            <id>OWB</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+
+            <modules>
+                <module>api</module>
+                <module>impl-owb</module>
+                <module>servlet</module>
+                <module>tck</module>
+            </modules>
+        </profile>
+
+        <profile>
+            <id>OWB15</id>
+
+            <modules>
+                <module>api</module>
+                <module>impl-owb</module>
+                <module>servlet</module>
+                <module>tck</module>
+            </modules>
+        </profile>
+
+        <profile>
+            <id>Weld</id>
+
+            <modules>
+                <module>api</module>
+                <module>impl-weld</module>
+                <module>servlet</module>
+                <module>tck</module>
+            </modules>
+        </profile>
+
+        <profile>
+            <id>tomee-build-managed</id>
+
+            <modules>
+                <module>api</module>
+                <module>impl-openejb</module>
+                <module>tck</module>
+            </modules>
+        </profile>
+
+        <profile>
+            <id>tomee7-build-managed</id>
+
+            <modules>
+                <module>api</module>
+                <module>impl-openejb</module>
+                <module>tck</module>
+            </modules>
+        </profile>
+
+        <profile>
+            <id>jbossas-managed-7</id>
+
+            <modules>
+                <module>api</module>
+                <module>impl-weld</module>
+            </modules>
+        </profile>
+
+        <profile>
+            <id>jbossas-build-managed-7</id>
+
+            <modules>
+                <module>api</module>
+                <module>impl-weld</module>
+            </modules>
+        </profile>
+
+        <profile>
+            <id>jbossas-remote-7</id>
+
+            <modules>
+                <module>api</module>
+                <module>impl-weld</module>
+            </modules>
+        </profile>
+
+        <profile>
+            <id>wildfly-managed</id>
+
+            <modules>
+                <module>api</module>
+                <module>impl-weld</module>
+            </modules>
+        </profile>
+
+        <profile>
+            <id>wildfly-build-managed</id>
+
+            <modules>
+                <module>api</module>
+                <module>impl-weld</module>
+            </modules>
+        </profile>
+
+        <profile>
+            <id>wildfly-remote</id>
+
+            <modules>
+                <module>api</module>
+                <module>impl-weld</module>
+            </modules>
+        </profile>
+
+        <profile>
+            <id>glassfish-remote-3.1</id>
+
+            <modules>
+                <module>api</module>
+                <module>impl-weld</module>
+            </modules>
+        </profile>
+
+        <profile>
+            <id>wls-remote-12c</id>
+
+            <modules>
+                <module>api</module>
+                <module>impl-weld</module>
+            </modules>
+        </profile>
+
+        <profile>
+            <id>wls-managed-12c</id>
+
+            <modules>
+                <module>api</module>
+                <module>impl-weld</module>
+            </modules>
+        </profile>
+
+        <profile>
+            <id>glassfish-build-managed-3</id>
+
+            <modules>
+                <module>api</module>
+                <module>impl-weld</module>
+            </modules>
+        </profile>
+
+        <profile>
+            <id>glassfish-build-managed-4</id>
+
+            <modules>
+                <module>api</module>
+                <module>impl-weld</module>
+            </modules>
+        </profile>
+    </profiles>
 </project>
