@@ -71,6 +71,32 @@
         </profile>
 
         <profile>
+            <id>distribution</id>
+
+            <modules>
+                <module>api</module>
+                <module>impl-owb</module>
+                <module>impl-weld</module>
+                <module>impl-openejb</module>
+                <module>servlet</module>
+                <module>tck</module>
+            </modules>
+        </profile>
+
+        <profile>
+            <id>rat</id>
+
+            <modules>
+                <module>api</module>
+                <module>impl-owb</module>
+                <module>impl-weld</module>
+                <module>impl-openejb</module>
+                <module>servlet</module>
+                <module>tck</module>
+            </modules>
+        </profile>
+
+        <profile>
             <id>tomee-build-managed</id>
 
             <modules>
