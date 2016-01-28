@@ -22,6 +22,7 @@ import static org.apache.deltaspike.data.impl.util.ClassUtils.contains;
 import static org.apache.deltaspike.data.impl.util.ClassUtils.extract;
 
 import java.lang.reflect.Method;
+import javax.enterprise.context.ApplicationScoped;
 
 import javax.inject.Inject;
 
@@ -33,6 +34,7 @@ import org.apache.deltaspike.data.impl.meta.RequiresTransaction;
 import org.apache.deltaspike.jpa.spi.entitymanager.ActiveEntityManagerHolder;
 import org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy;
 
+@ApplicationScoped
 public class TransactionalQueryRunner implements QueryRunner
 {
 

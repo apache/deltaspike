@@ -22,9 +22,9 @@ import static org.apache.deltaspike.data.impl.meta.MethodType.ANNOTATED;
 import static org.apache.deltaspike.data.impl.meta.MethodType.DELEGATE;
 import static org.apache.deltaspike.data.impl.meta.MethodType.PARSE;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import javax.enterprise.context.ApplicationScoped;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.api.provider.DependentProvider;
@@ -35,10 +35,9 @@ import org.apache.deltaspike.data.impl.meta.QueryInvocationLiteral;
 import org.apache.deltaspike.data.impl.meta.RepositoryMethod;
 import org.apache.deltaspike.data.impl.util.bean.DependentProviderDestroyable;
 
-public class QueryBuilderFactory implements Serializable
+@ApplicationScoped
+public class QueryBuilderFactory
 {
-
-    private static final long serialVersionUID = 1L;
 
     private static final Map<MethodType, QueryInvocationLiteral> LITERALS =
             new HashMap<MethodType, QueryInvocationLiteral>()

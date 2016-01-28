@@ -23,7 +23,6 @@ import org.apache.deltaspike.data.impl.meta.extractor.AnnotationMetadataExtracto
 import org.apache.deltaspike.data.impl.meta.extractor.MetadataExtractor;
 import org.apache.deltaspike.data.impl.meta.extractor.TypeMetadataExtractor;
 
-import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
@@ -34,10 +33,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * Convenience class to access Repository and Repository method meta data.
  * Acts as repository for Repository related meta data.
  */
-public class RepositoryComponents implements Serializable
+public class RepositoryComponents
 {
-    private static final long serialVersionUID = 1L;
-
     private final Map<Class<?>, RepositoryComponent> repos = new ConcurrentHashMap<Class<?>, RepositoryComponent>();
 
     private final List<MetadataExtractor> extractors = Arrays.asList(new AnnotationMetadataExtractor(),

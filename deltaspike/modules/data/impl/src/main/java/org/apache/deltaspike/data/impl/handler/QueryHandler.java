@@ -48,16 +48,15 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.enterprise.context.ApplicationScoped;
 
 /**
  * Entry point for query processing.
  */
 @Repository
+@ApplicationScoped
 public class QueryHandler implements Serializable, InvocationHandler
 {
-
-    private static final long serialVersionUID = 1L;
-
     private static final Logger log = Logger.getLogger(QueryHandler.class.getName());
 
     @Inject
