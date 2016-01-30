@@ -162,9 +162,9 @@ public class QueryHandler implements Serializable, InvocationHandler
         }
         finally
         {
-            if (entityManagerRef != null && entityManagerRef.getEntityManagerResolverDependentProvider() != null)
+            if (entityManagerRef != null)
             {
-                entityManagerRef.getEntityManagerResolverDependentProvider().destroy();
+                entityManagerRef.release();
             }
             context.dispose();
         }

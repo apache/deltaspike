@@ -29,6 +29,14 @@ public class EntityManagerRef
     private EntityManager entityManager;
     private EntityManagerResolver entityManagerResolver;
 
+    public void release()
+    {
+        if (entityManagerResolverDependentProvider != null)
+        {
+            entityManagerResolverDependentProvider.destroy();
+        }
+    }
+
     public Class<? extends EntityManagerResolver> getEntityManagerResolverClass()
     {
         return entityManagerResolverClass;
