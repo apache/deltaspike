@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.data.impl.handler;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Any;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
@@ -25,14 +26,12 @@ import javax.persistence.EntityManager;
 
 import org.apache.deltaspike.core.api.literal.DefaultLiteral;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
-import org.apache.deltaspike.core.api.provider.DependentProvider;
-import org.apache.deltaspike.data.api.EntityManagerResolver;
 import org.apache.deltaspike.data.impl.meta.RepositoryComponent;
 import org.apache.deltaspike.jpa.spi.entitymanager.ActiveEntityManagerHolder;
 
-public class EntityManagerLookup
+@ApplicationScoped
+public class EntityManagerRefLookup
 {
-
     @Inject
     @Any
     private Instance<EntityManager> entityManager;
@@ -40,52 +39,54 @@ public class EntityManagerLookup
     @Inject
     private ActiveEntityManagerHolder activeEntityManagerHolder;
 
-    private DependentProvider<? extends EntityManagerResolver> dependentResolverProvider;
-
-    public EntityManager lookupFor(final RepositoryComponent repository)
+    public EntityManagerRef lookupReference(final RepositoryComponent repository)
     {
-        EntityManager result = null;
+        EntityManagerRef ref = new EntityManagerRef();
+
         if (repository.hasEntityManagerResolver())
         {
-            final Class<? extends EntityManagerResolver> emrc = repository.getEntityManagerResolverClass();
-            if (!repository.isEntityManagerResolverIsNormalScope())
+            ref.setEntityManagerResolverClass(
+                    repository.getEntityManagerResolverClass());
+            
+            if (repository.isEntityManagerResolverIsNormalScope())
             {
-                final DependentProvider<? extends EntityManagerResolver> resolver = lookupResolver(emrc);
-                dependentResolverProvider = resolver;
-                result = resolver.get().resolveEntityManager();
+                ref.setEntityManagerResolver(
+                        BeanProvider.getContextualReference(ref.getEntityManagerResolverClass()));
             }
             else
             {
-                result = BeanProvider.getContextualReference(emrc).resolveEntityManager();
+                ref.setEntityManagerResolverDependentProvider(
+                    BeanProvider.getDependent(ref.getEntityManagerResolverClass()));
+
+                ref.setEntityManagerResolver(
+                        ref.getEntityManagerResolverDependentProvider().get());
             }
+            
+            ref.setEntityManager(
+                    ref.getEntityManagerResolver().resolveEntityManager());
         }
         else
         {
             if (activeEntityManagerHolder.isSet())
             {
-                return activeEntityManagerHolder.get();
+                ref.setEntityManager(
+                        activeEntityManagerHolder.get());
+                
+                // TODO should we really not apply the FlushMode on the active EntityManager?
+                return ref;
             }
-
-            result = entityManager.select(new DefaultLiteral()).get();
+            else
+            {
+                ref.setEntityManager(
+                        entityManager.select(new DefaultLiteral()).get());
+            }
         }
+
         if (repository.hasEntityManagerFlushMode())
         {
-            result.setFlushMode(repository.getEntityManagerFlushMode());
+            ref.getEntityManager().setFlushMode(repository.getEntityManagerFlushMode());
         }
-        return result;
-    }
 
-    public void release()
-    {
-        if (dependentResolverProvider != null)
-        {
-            dependentResolverProvider.destroy();
-        }
-    }
-
-    private DependentProvider<? extends EntityManagerResolver> lookupResolver(
-            Class<? extends EntityManagerResolver> resolverClass)
-    {
-        return BeanProvider.getDependent(resolverClass);
+        return ref;
     }
 }

@@ -70,7 +70,7 @@ public class QueryHandler implements Serializable, InvocationHandler
     private CdiQueryContextHolder context;
 
     @Inject
-    private EntityManagerLookup entityManagerLookup;
+    private EntityManagerRefLookup entityManagerRefLookup;
 
     @Inject
     private QueryRunner runner;
@@ -133,12 +133,16 @@ public class QueryHandler implements Serializable, InvocationHandler
     public Object process(Object proxy, Method method, Object[] args) throws Throwable
     {
         CdiQueryInvocationContext queryContext = null;
+        EntityManagerRef entityManagerRef = null;
         try
         {
             List<Class<?>> candidates = ProxyUtils.getProxyAndBaseTypes(proxy.getClass());
             RepositoryComponent repo = components.lookupComponent(candidates);
             RepositoryMethod repoMethod = components.lookupMethod(repo.getRepositoryClass(), method);
-            queryContext = createContext(proxy, method, args, repo, repoMethod);
+
+            entityManagerRef = entityManagerRefLookup.lookupReference(repo);
+            queryContext = createContext(proxy, method, args, entityManagerRef.getEntityManager(), repoMethod);
+            
             QueryBuilder builder = queryBuilder.build(repoMethod, queryContext);
             Object result = runner.executeQuery(builder, queryContext);
             return result;
@@ -158,16 +162,19 @@ public class QueryHandler implements Serializable, InvocationHandler
         }
         finally
         {
-            entityManagerLookup.release();
+            if (entityManagerRef != null && entityManagerRef.getEntityManagerResolverDependentProvider() != null)
+            {
+                entityManagerRef.getEntityManagerResolverDependentProvider().destroy();
+            }
             context.dispose();
         }
     }
 
     private CdiQueryInvocationContext createContext(Object proxy, Method method,
-            Object[] args, RepositoryComponent repo, RepositoryMethod repoMethod)
+            Object[] args, EntityManager entityManager, RepositoryMethod repoMethod)
     {
         CdiQueryInvocationContext queryContext = new CdiQueryInvocationContext(proxy, method, args, repoMethod,
-                entityManagerLookup.lookupFor(repo));
+                entityManager);
         context.set(queryContext);
         queryContext.initMapper();
         return queryContext;
