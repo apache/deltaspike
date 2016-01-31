@@ -20,7 +20,7 @@ package org.apache.deltaspike.data.impl.meta.unit;
 
 import java.io.Serializable;
 
-import static org.apache.deltaspike.data.impl.util.QueryUtils.isEmpty;
+import static org.apache.deltaspike.core.util.StringUtils.isEmpty;
 
 class EntityDescriptor extends PersistentClassDescriptor
 {

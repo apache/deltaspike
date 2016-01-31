@@ -19,7 +19,7 @@
 package org.apache.deltaspike.data.impl.util;
 
 import java.text.MessageFormat;
-import java.util.Collection;
+import org.apache.deltaspike.core.util.StringUtils;
 
 public final class QueryUtils
 {
@@ -36,7 +36,7 @@ public final class QueryUtils
 
     public static String uncapitalize(String value)
     {
-        if (isEmpty(value))
+        if (StringUtils.isEmpty(value))
         {
             return null;
         }
@@ -45,26 +45,6 @@ public final class QueryUtils
             return value.toLowerCase();
         }
         return value.substring(0, 1).toLowerCase() + value.substring(1);
-    }
-
-    public static boolean isEmpty(String text)
-    {
-        return text == null || "".equals(text);
-    }
-
-    public static boolean isNotEmpty(String text)
-    {
-        return !isEmpty(text);
-    }
-
-    public static boolean isEmpty(Collection<?> collection)
-    {
-        return collection == null || collection.isEmpty();
-    }
-
-    public static boolean isEmpty(Object[] array)
-    {
-        return array == null || array.length == 0;
     }
 
     public static boolean isString(Object value)

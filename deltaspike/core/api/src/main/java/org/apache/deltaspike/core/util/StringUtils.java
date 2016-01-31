@@ -35,4 +35,9 @@ public abstract class StringUtils
     {
         return string == null || string.trim().isEmpty();
     }
+
+    public static boolean isNotEmpty(String text)
+    {
+        return !isEmpty(text);
+    }
 }

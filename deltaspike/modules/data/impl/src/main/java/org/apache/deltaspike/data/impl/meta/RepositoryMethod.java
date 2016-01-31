@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.data.impl.meta;
 
-import static org.apache.deltaspike.data.impl.util.QueryUtils.isNotEmpty;
+import static org.apache.deltaspike.core.util.StringUtils.isNotEmpty;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;

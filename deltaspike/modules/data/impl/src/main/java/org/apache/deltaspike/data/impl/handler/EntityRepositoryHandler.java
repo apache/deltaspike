@@ -46,7 +46,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.apache.deltaspike.data.impl.util.QueryUtils.isEmpty;
+import static org.apache.deltaspike.core.util.ArraysUtils.isEmpty;
 import static org.apache.deltaspike.data.impl.util.QueryUtils.isString;
 
 /**

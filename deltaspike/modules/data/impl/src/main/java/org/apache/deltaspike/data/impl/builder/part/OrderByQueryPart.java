@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.data.impl.builder.part;
 
-import static org.apache.deltaspike.data.impl.util.QueryUtils.isNotEmpty;
+import static org.apache.deltaspike.core.util.StringUtils.isNotEmpty;
 import static org.apache.deltaspike.data.impl.util.QueryUtils.splitByKeyword;
 import static org.apache.deltaspike.data.impl.util.QueryUtils.uncapitalize;
 

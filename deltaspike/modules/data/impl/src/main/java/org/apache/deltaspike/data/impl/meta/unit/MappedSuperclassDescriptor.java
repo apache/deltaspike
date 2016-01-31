@@ -18,9 +18,8 @@
  */
 package org.apache.deltaspike.data.impl.meta.unit;
 
-import static org.apache.deltaspike.data.impl.util.QueryUtils.isEmpty;
-
 import java.io.Serializable;
+import org.apache.deltaspike.core.util.StringUtils;
 
 class MappedSuperclassDescriptor extends PersistentClassDescriptor
 {
@@ -44,7 +43,7 @@ class MappedSuperclassDescriptor extends PersistentClassDescriptor
     @Override
     public String getId()
     {
-        if (isEmpty(id) && getParent() != null)
+        if (StringUtils.isEmpty(id) && getParent() != null)
         {
             return getParent().getId();
         }

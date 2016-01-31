@@ -28,7 +28,7 @@ import org.apache.deltaspike.data.impl.util.jpa.QueryStringExtractorFactory;
 import javax.persistence.EntityManager;
 import java.lang.reflect.Method;
 
-import static org.apache.deltaspike.data.impl.util.QueryUtils.isNotEmpty;
+import static org.apache.deltaspike.core.util.StringUtils.isNotEmpty;
 
 /**
  * Create the query based on method annotations.

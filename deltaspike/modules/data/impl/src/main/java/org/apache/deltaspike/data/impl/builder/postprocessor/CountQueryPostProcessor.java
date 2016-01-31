@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.data.impl.builder.postprocessor;
 
-import static org.apache.deltaspike.data.impl.util.QueryUtils.isNotEmpty;
+import static org.apache.deltaspike.core.util.StringUtils.isNotEmpty;
 import static org.apache.deltaspike.data.impl.util.QueryUtils.nullSafeValue;
 
 import java.util.logging.Level;

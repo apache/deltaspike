@@ -18,39 +18,22 @@
  */
 package org.apache.deltaspike.core.util;
 
+import java.util.Collection;
 import javax.enterprise.inject.Typed;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
- * A collection of utilities for working with Arrays
+ * A collection of utilities for working with Collections
  */
 @Typed()
-public abstract class ArraysUtils
+public abstract class CollectionUtils
 {
-    private ArraysUtils()
+    private CollectionUtils()
     {
         // prevent instantiation
     }
 
-    /**
-     * Create a set from an array. If the array contains duplicate objects, the
-     * last object in the array will be placed in resultant set.
-     *
-     * @param <T>   the type of the objects in the set
-     * @param array the array from which to create the set
-     * @return the created sets
-     */
-    public static <T> Set<T> asSet(T... array)
+    public static boolean isEmpty(Collection<?> collection)
     {
-        Set<T> result = new HashSet<T>();
-        Collections.addAll(result, array);
-        return result;
-    }
-
-    public static boolean isEmpty(Object[] array)
-    {
-        return array == null || array.length == 0;
+        return collection == null || collection.isEmpty();
     }
 }
