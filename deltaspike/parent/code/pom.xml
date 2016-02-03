@@ -1178,6 +1178,13 @@
                 </dependency>
 
                 <dependency>
+                    <groupId>javax</groupId>
+                    <artifactId>javaee-api</artifactId>
+                    <version>7.0</version>
+                    <scope>provided</scope>
+                </dependency>
+
+                <dependency>
                     <groupId>org.jboss.arquillian.container</groupId>
                     <artifactId>arquillian-wls-remote-12.1</artifactId>
                     <version>1.0.0.Alpha2</version>
@@ -1236,6 +1243,13 @@
                     <groupId>javax.enterprise</groupId>
                     <artifactId>cdi-api</artifactId>
                     <version>1.0-SP4</version>
+                    <scope>provided</scope>
+                </dependency>
+
+                <dependency>
+                    <groupId>javax</groupId>
+                    <artifactId>javaee-api</artifactId>
+                    <version>7.0</version>
                     <scope>provided</scope>
                 </dependency>
 
