@@ -370,7 +370,7 @@ window.dswh = window.dswh || {
             return source.toLowerCase() === destination.toLowerCase();
         },
 
-        getUrlParameter : function (uri, name) {
+        getUrlParameter : function(uri, name) {
             // create an anchor object with the uri and let the browser parse it
             var a = document.createElement('a');
             a.href = uri;
@@ -391,34 +391,54 @@ window.dswh = window.dswh || {
             return null;
         },
 
-        setUrlParam : function (baseUrl, paramName, paramValue) {
-            var query = baseUrl;
-            var vars = query.split(/&|\?/g);
-            var newQuery = "";
-            var iParam = 0;
-            var paramFound = false;
-            for (var i=0; vars != null && i < vars.length; i++) {
-                var pair = vars[i].split("=");
-                if (pair.length == 1) {
-                    newQuery = pair[0];
-                } else {
-                    if (pair[0] != paramName) {
-                        var amp = iParam++ > 0 ? "&" : "?";
-                        newQuery =  newQuery + amp + pair[0] + "=" + pair[1];
+        setUrlParam : function(uri, parameterName, parameterValue) {
+            var a = document.createElement('a');
+            a.href = uri.replace('?&', '?').replace('&&', '&');
+
+            // set empty string as value if not defined or empty
+            if (!parameterValue || parameterValue.replace(/^\s+|\s+$/g, '').length === 0) {
+                parameterValue = '';
+            }
+
+            // check if value is empty
+            if (parameterValue.length === 0) {
+
+                // both value and query string is empty (or doesn't contain the param), don't touch the url
+                if (a.search.length === 0 || a.search.indexOf(parameterName + "=") === -1) {
+                    return a.href;
+                }
+            }
+
+            // query string is empty, just append our new parameter
+            if (a.search.length === 0) {
+                a.search = '?' + encodeURIComponent(parameterName) + "=" + encodeURIComponent(parameterValue);
+
+                return a.href;
+            }
+
+            // loop old paramaters and build array with new parameters
+            var oldParameters = a.search.substring(1).split('&');
+            var newParameters = [];
+
+            for (var i = 0; i < oldParameters.length; i++) {
+                var oldParameterPair = oldParameters[i];
+                var oldParameterName = oldParameterPair.split('=')[0];
+                var oldParameterValue = oldParameterPair.split('=')[1];
+
+                // don't add empty parameters again
+                if (oldParameterValue && oldParameterValue.replace(/^\s+|\s+$/g, '').length > 0) {
+                    if (oldParameterName === parameterName) {
+                        newParameters.push(oldParameterName + "=" + encodeURIComponent(parameterValue));
                     } else {
-                        paramFound = true;
-                        if (paramValue) {
-                            var amp = iParam++ > 0 ? "&" : "?";
-                            newQuery =  newQuery + amp + paramName + "=" + paramValue;
-                        }
+                        newParameters.push(oldParameterName + "=" + oldParameterValue);
                     }
                 }
             }
-            if (!paramFound && paramValue) {
-                var amp = iParam++ > 0 ? "&" : "?";
-                newQuery =  newQuery + amp + paramName + "=" + paramValue;
-            }
-            return newQuery;
+
+            // join new parameters
+            a.search = '?' + newParameters.join('&');
+
+            return a.href;
         },
 
         appendHiddenWindowIdToForms : function() {
