@@ -1,0 +1,37 @@
+Release Notes - Apache DeltaSpike - Version 1.5.3
+
+Bug
+
+    [DELTASPIKE-1039] - LinkageError on container reboot
+    [DELTASPIKE-1043] - Loop redirect in error-page (404) with CLIENTWINDOW
+    [DELTASPIKE-1044] - ClientWindow - skip links with "empty" href
+    [DELTASPIKE-1046] - wildfly-remote profile is broken
+    [DELTASPIKE-1050] - EntityManagerLookup isn't thread-safe
+    [DELTASPIKE-1057] - Fix type parameters of OrderBy query processor
+    [DELTASPIKE-1061] - custom annotation member values
+    [DELTASPIKE-1063] - ClientWindow - StoreWindowTreeEnabledOnButtonClick prevents defined onclick
+    [DELTASPIKE-1071] - URLs like ?&dswid=XYZ lead to window cloning
+
+Improvement
+
+    [DELTASPIKE-1040] - ClassDeactivationUtils spams the log in ProjectStages Development and UnitTest
+    [DELTASPIKE-1048] - Fix compiler warnings in Data module
+    [DELTASPIKE-1049] - Avoid bean serializations / use ApplicationScoped instead Dependent for performance reasons
+    [DELTASPIKE-1055] - JobRunnableAdapter should be pluggable
+    [DELTASPIKE-1058] - add info in case of a global-alternative
+    [DELTASPIKE-1059] - integrate @Scheduled Runnable with exception-control
+    [DELTASPIKE-1062] - @Transactional and @TransactionScoped support for @Repository including qualifiers
+    [DELTASPIKE-1065] - improve build-config per profile
+    [DELTASPIKE-1072] - improve wls12 test-profiles
+
+New Feature
+
+    [DELTASPIKE-1045] - Convenience repository classes exposing all EntityManager methods
+    [DELTASPIKE-1054] - optional mode to switch from org.quartz.Job to java.lang.Runnable
+
+Task
+
+    [DELTASPIKE-1041] - update site and javadoc to 1.5.2
+    [DELTASPIKE-1056] - document optional mode for java.lang.Runnable with @Scheduled
+    [DELTASPIKE-1067] - Data module should use utils from core
+    [DELTASPIKE-1073] - prepare v1.5.3
