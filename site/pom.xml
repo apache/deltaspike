@@ -42,13 +42,13 @@
     <parent>
         <groupId>org.apache.deltaspike</groupId>
         <artifactId>deltaspike</artifactId>
-        <version>1.5.3</version>
+        <version>1.5.4-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>org.apache.deltaspike</groupId>
     <artifactId>deltaspike-site</artifactId>
-    <version>1.5.3</version>
+    <version>1.5.4-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Apache DeltaSpike Site</name>
