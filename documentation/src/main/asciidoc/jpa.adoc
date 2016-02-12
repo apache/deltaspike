@@ -218,6 +218,10 @@ public class EntityManagerProducer {
 ----
 
 Obtaining an EntityManager from an EntityManagerFactory is just a matter of calling `emfA.createEntityManager()`.
+DeltaSpike provides a built-in producer for `@PersistenceUnitName` qualified EntityManagerFactories.
+This producer also looks up  a property files with the name `persistence-{persistenceunit name}.properties` via the DeltaSpike `PropertyLoader`.
+For the example above this would be `persistence-puA.properties`.
+The properties in this file will be passed 1:1 to `Persistence#createEntityManagerFactory(properties)` by the built-in producer method.
 
 ==== Producing Multiple EntityManagers
 There are several ways to make multiple entity managers available for use in `@Transactional` methods, each suitable for a different situation.
