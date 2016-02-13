@@ -21,8 +21,16 @@ package org.apache.deltaspike.core.spi.activation;
 import java.io.Serializable;
 
 /**
- * <p>A class-deactivator allows to specify deactivated classes which can't be deactivated via std. CDI mechanisms.
- * This might be the case for CDI Extensions because CDI mechanisms are not available at startup time.</p>
+ * <p>DeltaSpike allows you to deactivate pre-configured parts (like Extensions, event-broadcasters,...).
+ * Therefore DeltaSpike offers {@link ClassDeactivator} and {@link Deactivatable}.</p>
+ *
+ * <p>A {@link ClassDeactivator} allows to specify deactivated classes (if they implement {@link Deactivatable})
+ * which can't be deactivated/customized via std. CDI mechanisms
+ * (like the veto-method or alternative/specialized CDI-beans).
+ * This might be the case e.g. for CDI Extensions because CDI mechanisms are not available at startup time.</p>
+ *
+ * <p>Use it mainly to deactivate specific parts explicitly (blacklist approach),
+ * if there is an issue with such parts (and waiting for the next release isn't an option).</p>
  *
  * <p>A class-deactivator will be resolved from the environment via the default resolvers or via a custom resolver which
  * allows to use any type of configuration-format. See {@link org.apache.deltaspike.core.api.config.ConfigResolver}

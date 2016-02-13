@@ -1084,18 +1084,30 @@ public class ACustomScopeContext implements Context, Serializable {
 
 == Deactivatable
 
-DeltaSpike allows you to deactivate its own Extensions. You just need to
-implement your <<spi.adoc#_classdeactivator,ClassDeactivator>>.
+DeltaSpike allows you to deactivate its own pre-configured parts (like Extensions, event-broadcasters,...).
+Therefore DeltaSpike offers `org.apache.deltaspike.core.spi.activation.ClassDeactivator` and
+`org.apache.deltaspike.core.spi.activation.Deactivatable`.
 
-The ClassDeactivator should be resolved by any ConfigSource using the
+A `ClassDeactivator` allows to specify deactivated classes (if they implement `Deactivatable`)
+which can't be deactivated/customized via std. CDI mechanisms
+(like the veto-method or alternative/specialized CDI-beans).
+This might be the case e.g. for CDI Extensions because CDI mechanisms are not available at startup time.
+
+Use it mainly to deactivate specific parts *explicitly* (blacklist approach),
+if there is an issue with such parts (and waiting for the next release isn't an option).
+
+You just need to implement your <<spi.adoc#_classdeactivator,ClassDeactivator>>.
+
+The `ClassDeactivator` should be resolved by any ConfigSource using the
 key `org.apache.deltaspike.core.spi.activation.ClassDeactivator`. For
-example, we can disable SecurityExtension having the following class:
+example, if we need to provide our own version of the SecurityExtension,
+we can disable the SecurityExtension provided by DeltaSpike with the following `ClassDeactivator`:
 
+.Disable a specific extension
 [source,java]
 --------------------------------------------------------------------------
 public class CustomClassDeactivator implements ClassDeactivator
 {
-
     private static final long serialVersionUID = 1L;
 
     @Override
@@ -1115,6 +1127,47 @@ other <<configuration.adoc#_configsources_provided_by_default,ConfigSource>>) wi
 
 ------------------------------------------------------------------------------------------
 org.apache.deltaspike.core.spi.activation.ClassDeactivator=org.test.CustomClassDeactivator
+------------------------------------------------------------------------------------------
+
+SecurityExtension still gets started, because it isn't possible to veto it, however, it isn't processing beans (once deactivated)
+and therefore it's e.g. possible to extend and customize the default implementation provided by DeltaSpike.
+
+The following listing shows how to enable only a minimal set of extensions.
+Technically that's possible, however, it isn't suggested to use such an approach,
+because you might disable mechanisms need later on (in your project).
+
+.Possible but not suggested
+[source,java]
+--------------------------------------------------------------------------
+public class WhitelistFilter implements ClassDeactivator
+{
+    private List<Class<?>> limitedExtensions =
+      new ArrayList<Class<?>>()
+    {{
+        add(ConfigurationExtension.class);
+        add(PartialBeanBindingExtension.class);
+        add(RepositoryExtension.class);
+    }};
+
+    @Override
+    public Boolean isActivated(
+      Class<? extends Deactivatable> deactivatableClass)
+    {
+        return !Extension.class.isAssignableFrom(deactivatableClass) ||
+            limitedExtensions.contains(deactivatableClass);
+    }
+}
+--------------------------------------------------------------------------
+
+Instead it's better to disable the part you really like to deactivate (see `CustomClassDeactivator`).
+
+=== Deactivate Deactivatable-Classes via Config
+
+The default implementation of `ClassDeactivator` allows to deactivate classes by adding config-entries to one of your config-sources (like `META-INF\apache-deltaspike.properties`).
+The following example shows how it would look like e.g. in case of the SecurityExtension:
+
+------------------------------------------------------------------------------------------
+deactivate.org.apache.deltaspike.security.impl.extension.SecurityExtension=true
 ------------------------------------------------------------------------------------------
 
 == Utilities
