@@ -393,7 +393,7 @@ window.dswh = window.dswh || {
 
         setUrlParam : function(uri, parameterName, parameterValue) {
             var a = document.createElement('a');
-            a.href = uri.replace('?&', '?').replace('&&', '&');
+            a.href = uri;
 
             // set empty string as value if not defined or empty
             if (!parameterValue || parameterValue.replace(/^\s+|\s+$/g, '').length === 0) {
@@ -422,15 +422,18 @@ window.dswh = window.dswh || {
 
             for (var i = 0; i < oldParameters.length; i++) {
                 var oldParameterPair = oldParameters[i];
-                var oldParameterName = oldParameterPair.split('=')[0];
-                var oldParameterValue = oldParameterPair.split('=')[1];
 
-                // don't add empty parameters again
-                if (oldParameterValue && oldParameterValue.replace(/^\s+|\s+$/g, '').length > 0) {
-                    if (oldParameterName === parameterName) {
-                        newParameters.push(oldParameterName + "=" + encodeURIComponent(parameterValue));
-                    } else {
-                        newParameters.push(oldParameterName + "=" + oldParameterValue);
+                if (oldParameterPair.length > 0) {
+                    var oldParameterName = oldParameterPair.split('=')[0];
+                    var oldParameterValue = oldParameterPair.split('=')[1];
+
+                    // don't add empty parameters again
+                    if (oldParameterValue && oldParameterValue.replace(/^\s+|\s+$/g, '').length > 0) {
+                        if (oldParameterName === parameterName) {
+                            newParameters.push(oldParameterName + "=" + encodeURIComponent(parameterValue));
+                        } else {
+                            newParameters.push(oldParameterName + "=" + oldParameterValue);
+                        }
                     }
                 }
             }
@@ -466,7 +469,7 @@ window.dswh = window.dswh || {
         },
 
         generateRequestToken : function() {
-            return Math.floor(Math.random() * 999);
+            return "" + Math.floor(Math.random() * 999);
         },
 
         storeCookie : function(name, value, seconds) {
