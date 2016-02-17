@@ -40,10 +40,21 @@
         </dependency>
         <dependency>
             <groupId>org.apache.deltaspike.test</groupId>
+            <artifactId>test-utils</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+<!--
+ hmm not sure how to deal with that!
+ We probably need this dependency to let maven resolve the dependency
+ and build order correctly.
+ But if we add it then we have the classes twice in the classpath :/
+        <dependency>
+            <groupId>org.apache.deltaspike.test</groupId>
             <artifactId>deltaspike-cdictrl-tck</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
+-->
 
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
