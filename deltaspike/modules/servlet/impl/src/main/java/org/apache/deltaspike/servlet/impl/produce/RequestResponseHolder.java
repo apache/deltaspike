@@ -59,6 +59,16 @@ class RequestResponseHolder<Type>
     {
         if (isBound())
         {
+            // ignore forwards - Tomcat calls #requestInitialized two times with form authentication
+            if (instance instanceof ServletRequest)
+            {
+                ServletRequest servletRequest = (ServletRequest) instance;
+                if (servletRequest.getAttribute("javax.servlet.forward.request_uri") != null)
+                {
+                    return;
+                }
+            }
+
             throw new IllegalStateException("There is already an instance bound to this thread.");
         }
         threadLocal.set(instance);
