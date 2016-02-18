@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.apache.deltaspike.modules</groupId>
         <artifactId>servlet-module-project</artifactId>
-        <version>1.5.4</version>
+        <version>1.5.5-SNAPSHOT</version>
     </parent>
 
     <artifactId>deltaspike-servlet-module-api</artifactId>
