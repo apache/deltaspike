@@ -1,0 +1,17 @@
+Release Notes - Apache DeltaSpike - Version 1.5.4
+
+Bug
+
+    [DELTASPIKE-1074] - Severe problem in setUrlParam() (windowhandler.js)
+    [DELTASPIKE-1078] - Request binding throws exception when using forwards
+
+Improvement
+
+    [DELTASPIKE-1076] - improve release-documentation
+    [DELTASPIKE-1077] - improve documentation about ClassDeactivator and Deactivatable
+
+Task
+
+    [DELTASPIKE-1075] - update site and javadoc to 1.5.3
+    [DELTASPIKE-1079] - update external resources
+    [DELTASPIKE-1080] - prepare v1.5.4
