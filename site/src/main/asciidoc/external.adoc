@@ -4,6 +4,10 @@
 
 A number of DeltaSpike examples and templates have been developed external to the DeltaSpike project. These extend the DeltaSpike resources from which you can see DeltaSpike in action. Brief information is given here about the examples and templates, with details of where they can be obtained from.
 
+== Books (free/online)
+
+**CDI@Work (chapter about DeltaSpike):** http://cdiatwork.irian.at/
+
 == Presentations
 
 === Apache DeltaSpike: The CDI toolbox
@@ -54,6 +58,20 @@ CDI e DeltaSpike presentation in TDC - The Developers Conference 2015
 
 
 == Examples
+
+=== IdeaFork (full)
+This example is a Java EE6 application which illustrates several features of CDI and DeltaSpike.
+It covers features of all modules provided by DeltaSpike.
+There are profiles to create web-archives for Apache TomEE, JBoss AS7 (and WildFly) and Oracle GlassFish3.
+The complexity is mixed. There are some simple examples as well as some more advanced cases.
+The repository contains every step (one commit is one step) described in the online-book.
+
+**Source code:** https://github.com/CDIatWork/IdeaFork
+
+=== [Preview] IdeaFork (lite)
+This example will be based on IdeaFork (full),
+but without some indirections which were needed to demonstrate different features of CDI and DeltaSpike (in a simple Application).
+
 
 === Confess 2012 Workshop Demo
 This example was prepared for the Confess workshop and demonstrates how to use DeltaSpike instead of and side-by-side with MyFaces CODI. The secured web application demonstrates presenting users with differentiating content based on their account status.
@@ -124,4 +142,30 @@ O que é DeltaSpike?
 
 === JSF + EJB + CDI + DS (EE-Server)
 **Source code:** https://github.com/os890/javaee_jsf_cdi_ejb_ds_project_template
+
+=== JSF + JPA + CDI + DS-Data (diff. EE-Server-Profiles)
+**Source code:** https://github.com/os890/javaee_jsf_cdi_jpa_data_ds_project_template
+
+=== JSF + JPA + CDI + DS-Data (Apache TomEE)
+**Source code:** https://github.com/os890/ds-data-project-template
+
+=== JSF + CDI + DS (Apache TomEE)
+**Source code:** https://github.com/os890/tomee-ds-project-template
+
+== Add-ons
+
+=== lbitonti@github
+This GitHub account contains e.g. a DBUnit Add-on for the Test-Control-Module of DeltaSpike.
+
+**Source code:** https://github.com/lbitonti/deltaspike-dbunit
+
+=== os890@github
+This GitHub account contains several DeltaSpike Add-ons e.g. to integrate CDI with other frameworks.
+
+**Source code:** https://github.com/os890/
+
+=== rmannibucau@github
+This GitHub account contains several DeltaSpike Add-ons e.g. an integration with the TomEE PasswordCipher API.
+
+**Source code:** https://github.com/rmannibucau/
 
