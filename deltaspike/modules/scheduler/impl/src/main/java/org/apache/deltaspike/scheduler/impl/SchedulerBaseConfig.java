@@ -28,6 +28,8 @@ public interface SchedulerBaseConfig extends DeltaSpikeBaseConfig
     {
         String JOB_CLASS_NAME_KEY = "deltaspike.scheduler.job-class";
         String RUNNABLE_ADAPTER_CLASS_NAME_KEY = "deltaspike.scheduler.runnable-adapter-class";
+        String DYNAMIC_EXPRESSION_OBSERVER_INTERVAL_KEY =
+            "deltaspike.scheduler.dynamic-expression.observer-interval";
 
         //don't type it to class to keep quartz optional
         String DEFAULT_JOB_FACTORY_CLASS_NAME = ConfigResolver.resolve("deltaspike.scheduler.DefaultJobFactory")
@@ -45,6 +47,12 @@ public interface SchedulerBaseConfig extends DeltaSpikeBaseConfig
         String RUNNABLE_ADAPTER_CLASS_NAME = ConfigResolver.resolve(RUNNABLE_ADAPTER_CLASS_NAME_KEY)
                 .withCurrentProjectStage(true)
                 .withDefault("org.apache.deltaspike.scheduler.impl.JobRunnableAdapter")
+                .getValue();
+
+        String DYNAMIC_EXPRESSION_OBSERVER_INTERVAL =
+                ConfigResolver.resolve(DYNAMIC_EXPRESSION_OBSERVER_INTERVAL_KEY)
+                .withCurrentProjectStage(true)
+                .withDefault("0 0/1 * * * ?")
                 .getValue();
     }
 

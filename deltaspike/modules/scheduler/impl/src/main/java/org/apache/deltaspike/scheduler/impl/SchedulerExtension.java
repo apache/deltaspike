@@ -45,6 +45,9 @@ public class SchedulerExtension implements Extension, Deactivatable
 {
     private static final Logger LOG = Logger.getLogger(SchedulerExtension.class.getName());
 
+    //keep it as a string (needed by some containers - due to the imports)
+    private static Set<String> classNamesToVeto = new HashSet<String>();
+
     private Boolean isActivated = true;
 
     private Set<Class> foundManagedJobClasses = new HashSet<Class>();
@@ -52,6 +55,11 @@ public class SchedulerExtension implements Extension, Deactivatable
     private Scheduler scheduler;
 
     private Class jobClass;
+
+    public SchedulerExtension()
+    {
+        classNamesToVeto.add("org.apache.deltaspike.scheduler.impl.DynamicExpressionObserverJob");
+    }
 
     protected void init(@Observes BeforeBeanDiscovery beforeBeanDiscovery)
     {
@@ -80,7 +88,7 @@ public class SchedulerExtension implements Extension, Deactivatable
         Class<X> beanClass = pat.getAnnotatedType().getJavaClass();
 
         //see SchedulerProducer
-        if (Scheduler.class.isAssignableFrom(beanClass))
+        if (Scheduler.class.isAssignableFrom(beanClass) || isInternalUnmanagedClass(beanClass))
         {
             pat.veto();
             return;
@@ -96,6 +104,11 @@ public class SchedulerExtension implements Extension, Deactivatable
         {
             this.foundManagedJobClasses.add(beanClass);
         }
+    }
+
+    private <X> boolean isInternalUnmanagedClass(Class<X> beanClass)
+    {
+        return classNamesToVeto.contains(beanClass.getName());
     }
 
     public <X> void scheduleJobs(@Observes AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager)

@@ -19,8 +19,10 @@
 package org.apache.deltaspike.scheduler.impl;
 
 import org.apache.deltaspike.cdise.api.ContextControl;
+import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.api.provider.DependentProvider;
+import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.core.util.PropertyFileUtils;
@@ -44,12 +46,14 @@ import org.quartz.impl.StdSchedulerFactory;
 
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Stack;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -191,11 +195,7 @@ public abstract class AbstractQuartzScheduler<T> implements Scheduler<T>
                         .withIdentity(jobKey)
                         .build();
 
-                trigger = TriggerBuilder.newTrigger()
-                        .withSchedule(CronScheduleBuilder.cronSchedule(scheduled.cronExpression()))
-                        .build();
-
-                this.scheduler.scheduleJob(jobDetail, trigger);
+                scheduleNewJob(scheduled, jobKey, jobDetail);
             }
             else if (scheduled.overrideOnStartup())
             {
@@ -203,12 +203,7 @@ public abstract class AbstractQuartzScheduler<T> implements Scheduler<T>
 
                 if (existingTriggers == null || existingTriggers.isEmpty())
                 {
-                    //TODO re-visit it
-                    trigger = TriggerBuilder.newTrigger()
-                            .withSchedule(CronScheduleBuilder.cronSchedule(scheduled.cronExpression()))
-                            .build();
-
-                    this.scheduler.scheduleJob(jobDetail, trigger);
+                    scheduleNewJob(scheduled, jobKey, jobDetail);
                     return;
                 }
 
@@ -220,12 +215,21 @@ public abstract class AbstractQuartzScheduler<T> implements Scheduler<T>
 
                 trigger = existingTriggers.iterator().next();
 
-                trigger = TriggerBuilder.newTrigger()
-                        .withIdentity(trigger.getKey())
-                        .withSchedule(CronScheduleBuilder.cronSchedule(scheduled.cronExpression()))
-                        .build();
+                if (scheduled.cronExpression().startsWith("{") && scheduled.cronExpression().endsWith("}"))
+                {
+                    this.scheduler.unscheduleJobs(Arrays.asList(trigger.getKey()));
 
-                this.scheduler.rescheduleJob(trigger.getKey(), trigger);
+                    scheduleNewJob(scheduled, jobKey, jobDetail);
+                }
+                else
+                {
+                    trigger = TriggerBuilder.newTrigger()
+                            .withIdentity(trigger.getKey())
+                            .withSchedule(CronScheduleBuilder.cronSchedule(scheduled.cronExpression()))
+                            .build();
+
+                    this.scheduler.rescheduleJob(trigger.getKey(), trigger);
+                }
             }
             else
             {
@@ -237,6 +241,74 @@ public abstract class AbstractQuartzScheduler<T> implements Scheduler<T>
         {
             throw ExceptionUtils.throwAsRuntimeException(e);
         }
+    }
+
+    private void scheduleNewJob(Scheduled scheduled, JobKey jobKey, JobDetail jobDetail) throws SchedulerException
+    {
+        String cronExpression = evaluateExpression(scheduled);
+        this.scheduler.scheduleJob(jobDetail, createTrigger(scheduled, jobKey, cronExpression));
+    }
+
+    private Trigger createTrigger(Scheduled scheduled, JobKey jobKey, String cronExpression) throws SchedulerException
+    {
+        UUID triggerKey = UUID.randomUUID();
+
+        if (!scheduled.cronExpression().endsWith(cronExpression))
+        {
+            createExpressionObserverJob(jobKey, triggerKey, scheduled.cronExpression(), cronExpression);
+        }
+
+        Trigger trigger = TriggerBuilder.newTrigger()
+                .forJob(jobKey)
+                .withIdentity(triggerKey.toString())
+                .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression))
+                .build();
+        return trigger;
+    }
+
+    private void createExpressionObserverJob(
+        JobKey jobKey, UUID triggerKey, String configExpression, String cronExpression) throws SchedulerException
+    {
+        if (!ClassDeactivationUtils.isActivated(DynamicExpressionObserverJob.class))
+        {
+            return;
+        }
+
+        JobKey observerJobKey =
+                new JobKey(jobKey.getName() + DynamicExpressionObserverJob.OBSERVER_POSTFIX, jobKey.getGroup());
+
+        JobDetail jobDetail  = JobBuilder.newJob(DynamicExpressionObserverJob.class)
+                .usingJobData(DynamicExpressionObserverJob.CONFIG_EXPRESSION_KEY, configExpression)
+                .usingJobData(DynamicExpressionObserverJob.TRIGGER_ID_KEY, triggerKey.toString())
+                .usingJobData(DynamicExpressionObserverJob.ACTIVE_CRON_EXPRESSION_KEY, cronExpression)
+                .withDescription("Config observer for: " + jobKey)
+                .withIdentity(observerJobKey)
+                .build();
+
+        Trigger trigger = TriggerBuilder.newTrigger()
+                .forJob(observerJobKey)
+                .withSchedule(CronScheduleBuilder.cronSchedule(
+                    SchedulerBaseConfig.JobCustomization.DYNAMIC_EXPRESSION_OBSERVER_INTERVAL))
+                .build();
+
+        this.scheduler.scheduleJob(jobDetail, trigger);
+    }
+
+    private String evaluateExpression(Scheduled scheduled)
+    {
+        String expression = scheduled.cronExpression();
+
+        if (expression.startsWith("{") && expression.endsWith("}"))
+        {
+            String configKey = expression.substring(1, expression.length() - 1);
+            expression = ConfigResolver.getProjectStageAwarePropertyValue(configKey, null);
+
+            if (expression == null)
+            {
+                throw new IllegalStateException("No config-value found for config-key: " + configKey);
+            }
+        }
+        return expression;
     }
 
     protected abstract Class<? extends Job> createFinalJobClass(Class<? extends T> jobClass);
