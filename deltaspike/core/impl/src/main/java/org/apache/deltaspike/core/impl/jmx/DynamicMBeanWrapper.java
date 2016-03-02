@@ -356,7 +356,7 @@ public class DynamicMBeanWrapper extends NotificationBroadcasterSupport implemen
             }
             catch (Exception e)
             {
-                LOGGER.log(Level.SEVERE, actionName + "can't be invoked", e);
+                LOGGER.log(Level.SEVERE, actionName + " can't be invoked", e);
                 throw ExceptionUtils.throwAsRuntimeException(e);
             }
             finally
