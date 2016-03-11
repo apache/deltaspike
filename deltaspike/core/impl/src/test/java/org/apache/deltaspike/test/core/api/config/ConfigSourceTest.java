@@ -18,6 +18,8 @@
  */
 package org.apache.deltaspike.test.core.api.config;
 
+import java.util.Map;
+
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.junit.Assert;
 import org.junit.Test;
@@ -92,6 +94,21 @@ public class ConfigSourceTest
         String secretVal = ConfigResolver.getPropertyValue("my.very.secret");
         Assert.assertNotNull(secretVal);
         Assert.assertEquals("a secret value: onlyIDoKnowIt", secretVal);
+    }
+
+    @Test
+    public void testEnvProperties() {
+        String javaHome = System.getenv("JAVA_HOME");
+        if (javaHome == null || javaHome.isEmpty())
+        {
+            // weird, should exist. Anyway, in that case we cannot test it.
+            return;
+        }
+
+        // we search for JAVA.HOME which should also give us JAVA_HOME
+        String value = ConfigResolver.getPropertyValue("JAVA.HOME");
+        Assert.assertNotNull(value);
+        Assert.assertEquals(javaHome, value);
     }
 
 
