@@ -129,9 +129,9 @@ public class PersistenceUnitsTest
         // then
         assertNotNull(entity1);
         assertNotNull(entity2);
-        assertEquals(Long.class, entity1.getPrimaryClass());
-        assertEquals(TeeId.class, entity2.getPrimaryClass());
-        assertEquals(Long.class, entity3.getPrimaryClass());
+        assertEquals(Long.class, entity1.getPrimaryKeyClass());
+        assertEquals(TeeId.class, entity2.getPrimaryKeyClass());
+        assertEquals(Long.class, entity3.getPrimaryKeyClass());
     }
 
 }

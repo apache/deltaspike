@@ -97,21 +97,25 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
     {
         try
         {
-            Property<Serializable> versionProperty = EntityUtils.getVersionProperty(entity);
+            Property<Serializable> versionProperty =
+                    repoMethod.getRepository().getRepositoryEntity().getVersionProperty();
             if (versionProperty != null)
             {
                 return versionProperty.getValue(entity) == null;
             }
 
-            if (EntityUtils.primaryKeyValue(entity) == null)
+            Property<Serializable> primaryKeyProperty =
+                    repoMethod.getRepository().getRepositoryEntity().getPrimaryKeyProperty();
+            if (EntityUtils.primaryKeyValue(entity, primaryKeyProperty) == null)
             {
                 return true;
             }
 
-            if (!entityManager.contains(entity) && countCheck(entity))
+            if (!entityManager.contains(entity) && countCheck(entity, primaryKeyProperty))
             {
                 return true;
             }
+
             return false;
         }
         catch (IllegalArgumentException e)
@@ -326,16 +330,16 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
         query.setHint(entityGraphAnn.type().getHintName(), graph);
     }
 
-    private boolean countCheck(Object entity)
+    private boolean countCheck(Object entity, Property<Serializable> primaryKeyProperty)
     {
         StringBuilder jpql = new StringBuilder("SELECT COUNT(e) FROM " + getEntityClass()
                 .getSimpleName() + " e ");
         jpql.append("WHERE e.");
-        jpql.append(EntityUtils.primaryKey(getEntityClass()).getName());
+        jpql.append(primaryKeyProperty.getName());
         jpql.append(" = :id");
 
         final Query query = entityManager.createQuery(jpql.toString());
-        query.setParameter("id", EntityUtils.primaryKeyValue(entity));
+        query.setParameter("id", EntityUtils.primaryKeyValue(entity, primaryKeyProperty));
         final Long result = (Long) query.getSingleResult();
         if (Long.valueOf(0).equals(result))
         {

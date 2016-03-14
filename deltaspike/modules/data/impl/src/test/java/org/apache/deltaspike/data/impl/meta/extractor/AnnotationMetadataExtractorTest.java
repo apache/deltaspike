@@ -43,7 +43,7 @@ public class AnnotationMetadataExtractorTest
         // then
         assertNotNull(result);
         assertEquals(Simple.class, result.getEntityClass());
-        assertEquals(Long.class, result.getPrimaryClass());
+        assertEquals(Long.class, result.getPrimaryKeyClass());
     }
 
     @Test

@@ -83,7 +83,7 @@ public class TypeMetadataExtractor implements MetadataExtractor
             }
             if (result != null && genericType instanceof Class)
             {
-                result.setPrimaryClass((Class<? extends Serializable>) genericType);
+                result.setPrimaryKeyClass((Class<? extends Serializable>) genericType);
                 return result;
             }
         }

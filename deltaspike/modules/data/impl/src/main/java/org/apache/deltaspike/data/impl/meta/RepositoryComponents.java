@@ -43,9 +43,7 @@ public class RepositoryComponents
     /**
      * Add a Repository class to the meta data repository.
      *
-     *
      * @param repoClass  The repo class.
-     * @return {@code true} if Repository class has been added, {@code false} otherwise.
      */
     public void add(Class<?> repoClass)
     {

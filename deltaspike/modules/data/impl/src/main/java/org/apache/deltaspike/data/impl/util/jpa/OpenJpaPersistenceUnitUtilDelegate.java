@@ -48,6 +48,7 @@ public class OpenJpaPersistenceUnitUtilDelegate implements PersistenceUnitUtil
         return persistenceUnitUtil.isLoaded(entity);
     }
 
+    @Override
     public Object getIdentifier(Object entity)
     {
         final String methodName = "getIdObject";

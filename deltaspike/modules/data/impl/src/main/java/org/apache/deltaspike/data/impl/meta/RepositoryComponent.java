@@ -37,7 +37,6 @@ import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.data.api.EntityManagerConfig;
 import org.apache.deltaspike.data.api.EntityManagerResolver;
 import org.apache.deltaspike.data.api.Repository;
-import org.apache.deltaspike.data.impl.util.EntityUtils;
 
 /**
  * Stores information about a specific Repository. Extracts information about:
@@ -56,20 +55,20 @@ public class RepositoryComponent
     private volatile Boolean entityManagerResolverIsNormalScope;
 
     private final Class<?> repoClass;
-    private final RepositoryEntity entityClass;
+    private final RepositoryEntity repositoryEntity;
     private final Class<? extends EntityManagerResolver> entityManagerResolver;
     private final FlushModeType entityManagerFlushMode;
 
     private final Map<Method, RepositoryMethod> methods = new HashMap<Method, RepositoryMethod>();
 
-    public RepositoryComponent(Class<?> repoClass, RepositoryEntity entityClass)
+    public RepositoryComponent(Class<?> repoClass, RepositoryEntity repositoryEntity)
     {
-        if (entityClass == null)
+        if (repositoryEntity == null)
         {
-            throw new IllegalArgumentException("Entity class cannot be null");
+            throw new IllegalArgumentException("repositoryEntity cannot be null");
         }
         this.repoClass = repoClass;
-        this.entityClass = entityClass;
+        this.repositoryEntity = repositoryEntity;
         this.entityManagerResolver = extractEntityManagerResolver(repoClass);
         this.entityManagerFlushMode = extractEntityManagerFlushMode(repoClass);
     }
@@ -110,7 +109,7 @@ public class RepositoryComponent
 
     public String getEntityName()
     {
-        return EntityUtils.entityName(entityClass.getEntityClass());
+        return repositoryEntity.getEntityName();
     }
 
     /**
@@ -143,7 +142,7 @@ public class RepositoryComponent
      */
     public Class<?> getEntityClass()
     {
-        return entityClass.getEntityClass();
+        return repositoryEntity.getEntityClass();
     }
 
     /**
@@ -153,9 +152,14 @@ public class RepositoryComponent
      */
     public Class<? extends Serializable> getPrimaryKey()
     {
-        return entityClass.getPrimaryClass();
+        return repositoryEntity.getPrimaryKeyClass();
     }
-
+    
+    public RepositoryEntity getRepositoryEntity()
+    {
+        return repositoryEntity;
+    }
+    
     /**
      * Returns the original Repository class this meta data is related to.
      *

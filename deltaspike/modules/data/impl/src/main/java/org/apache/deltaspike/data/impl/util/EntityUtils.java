@@ -24,9 +24,13 @@ import java.util.List;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
+import javax.persistence.Table;
 import javax.persistence.Version;
+import javax.persistence.metamodel.EntityType;
+import org.apache.deltaspike.core.util.StringUtils;
 
 import org.apache.deltaspike.data.impl.meta.unit.PersistenceUnits;
 import org.apache.deltaspike.data.impl.meta.verifier.EntityVerifier;
@@ -57,16 +61,21 @@ public final class EntityUtils
         {
             return clazz;
         }
-        Property<Serializable> property = primaryKey(entityClass);
+        Property<Serializable> property = primaryKeyProperty(entityClass);
         return property.getJavaClass();
     }
 
     public static Object primaryKeyValue(Object entity)
     {
-        Property<Serializable> property = primaryKey(entity.getClass());
-        return property.getValue(entity);
+        Property<Serializable> property = primaryKeyProperty(entity.getClass());
+        return primaryKeyValue(entity, property);
     }
 
+    public static Object primaryKeyValue(Object entity, Property<Serializable> primaryKeyProperty)
+    {
+        return primaryKeyProperty.getValue(entity);
+    }
+    
     public static String entityName(Class<?> entityClass)
     {
         String result = null;
@@ -81,12 +90,24 @@ public final class EntityUtils
         return (result != null && !"".equals(result)) ? result : entityClass.getSimpleName();
     }
 
+    public static String tableName(Class<?> entityClass, EntityManager entityManager)
+    {
+        String tableName = PersistenceUnits.instance().entityTableName(entityClass);
+        if (StringUtils.isEmpty(tableName))
+        {
+            EntityType<?> entityType = entityManager.getMetamodel().entity(entityClass);
+            Table tableAnnotation = entityClass.getAnnotation(Table.class);
+            return tableAnnotation == null ? entityType.getName() : tableAnnotation.name();
+        }
+        return tableName;
+    }
+    
     public static boolean isEntityClass(Class<?> entityClass)
     {
         return new EntityVerifier().verify(entityClass);
     }
 
-    public static Property<Serializable> primaryKey(Class<?> entityClass)
+    public static Property<Serializable> primaryKeyProperty(Class<?> entityClass)
     {
         for (PropertyCriteria c : criteriaList(entityClass))
         {
@@ -113,9 +134,8 @@ public final class EntityUtils
         return criteria;
     }
 
-    public static Property<Serializable> getVersionProperty(Object entity)
+    public static Property<Serializable> getVersionProperty(Class<?> entityClass)
     {
-        Class<?> entityClass = entity.getClass();
         List<PropertyCriteria> criteriaList = new LinkedList<PropertyCriteria>();
         criteriaList.add(new AnnotatedPropertyCriteria(Version.class));
 

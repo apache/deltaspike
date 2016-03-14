@@ -18,11 +18,9 @@
  */
 package org.apache.deltaspike.data.impl.handler;
 
-import org.apache.deltaspike.core.util.StringUtils;
 import org.apache.deltaspike.data.api.EntityRepository;
 import org.apache.deltaspike.data.impl.builder.QueryBuilder;
 import org.apache.deltaspike.data.impl.meta.RequiresTransaction;
-import org.apache.deltaspike.data.impl.meta.unit.PersistenceUnits;
 import org.apache.deltaspike.data.impl.property.Property;
 import org.apache.deltaspike.data.impl.property.query.NamedPropertyCriteria;
 import org.apache.deltaspike.data.impl.property.query.PropertyQueries;
@@ -33,10 +31,8 @@ import org.apache.deltaspike.data.spi.DelegateQueryHandler;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceUnitUtil;
-import javax.persistence.Table;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.SingularAttribute;
 
 import java.io.Serializable;
@@ -236,22 +232,12 @@ public class EntityRepositoryHandler<E, PK extends Serializable>
 
     public String tableName()
     {
-        final Class<?> entityClass = context.getEntityClass();
-        final String tableName = PersistenceUnits.instance().entityTableName(entityClass);
-        if (StringUtils.isEmpty(tableName))
-        {
-            final EntityType<?> entityType = entityManager().getMetamodel().entity(entityClass);
-            Table tableAnnotation = entityClass.getAnnotation(Table.class);
-            return (tableAnnotation == null)
-                    ? entityType.getName()
-                    : tableAnnotation.name();
-        }
-        return tableName;
+        return EntityUtils.tableName(context.getEntityClass(), entityManager());
     }
 
     public String entityName()
     {
-        return EntityUtils.entityName(entityClass());
+        return context.getRepositoryMethod().getRepository().getRepositoryEntity().getEntityName();
     }
 
     // ----------------------------------------------------------------------------

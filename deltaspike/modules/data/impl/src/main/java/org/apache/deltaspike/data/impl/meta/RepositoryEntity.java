@@ -19,19 +19,20 @@
 package org.apache.deltaspike.data.impl.meta;
 
 import java.io.Serializable;
+import org.apache.deltaspike.data.impl.property.Property;
+import org.apache.deltaspike.data.impl.util.EntityUtils;
 
 /**
- * Data structure to store information about an entity:
- * <ul>
- * <li>Stores the class of the entity</li>
- * <li>Stores the primary key class</li>
- * </ul>
+ * Data structure to store information about an entity.
  */
 public class RepositoryEntity
 {
 
     private Class<?> entityClass;
-    private Class<? extends Serializable> primaryClass;
+    private Class<? extends Serializable> primaryKeyClass;
+    private Property<Serializable> primaryKeyProperty;
+    private Property<Serializable> versionProperty;
+    private String entityName;
 
     public RepositoryEntity(Class<?> entityClass)
     {
@@ -41,7 +42,11 @@ public class RepositoryEntity
     public RepositoryEntity(Class<?> entityClass, Class<? extends Serializable> primaryClass)
     {
         this.entityClass = entityClass;
-        this.primaryClass = primaryClass;
+        this.primaryKeyClass = primaryClass;
+        
+        this.primaryKeyProperty = EntityUtils.primaryKeyProperty(entityClass);
+        this.versionProperty = EntityUtils.getVersionProperty(entityClass);
+        this.entityName = EntityUtils.entityName(entityClass);
     }
 
     public Class<?> getEntityClass()
@@ -54,14 +59,43 @@ public class RepositoryEntity
         this.entityClass = entityClass;
     }
 
-    public Class<? extends Serializable> getPrimaryClass()
+    public Class<? extends Serializable> getPrimaryKeyClass()
     {
-        return primaryClass;
+        return primaryKeyClass;
     }
 
-    public void setPrimaryClass(Class<? extends Serializable> primaryClass)
+    public void setPrimaryKeyClass(Class<? extends Serializable> primaryKeyClass)
     {
-        this.primaryClass = primaryClass;
+        this.primaryKeyClass = primaryKeyClass;
     }
 
+    public Property<Serializable> getVersionProperty()
+    {
+        return versionProperty;
+    }
+
+    public void setVersionProperty(Property<Serializable> versionProperty)
+    {
+        this.versionProperty = versionProperty;
+    }
+
+    public String getEntityName()
+    {
+        return entityName;
+    }
+
+    public void setEntityName(String entityName)
+    {
+        this.entityName = entityName;
+    }
+
+    public Property<Serializable> getPrimaryKeyProperty()
+    {
+        return primaryKeyProperty;
+    }
+
+    public void setPrimaryKeyProperty(Property<Serializable> primaryKeyProperty)
+    {
+        this.primaryKeyProperty = primaryKeyProperty;
+    }
 }
