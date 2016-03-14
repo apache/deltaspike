@@ -18,9 +18,6 @@
  */
 package org.apache.deltaspike.data.impl.builder;
 
-import static org.apache.deltaspike.data.impl.util.ClassUtils.contains;
-import static org.apache.deltaspike.data.impl.util.ClassUtils.extract;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Set;
@@ -33,6 +30,7 @@ import javax.inject.Inject;
 import javax.persistence.PersistenceException;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.data.api.QueryInvocationException;
 import org.apache.deltaspike.data.impl.handler.CdiQueryInvocationContext;
 import org.apache.deltaspike.data.impl.meta.MethodType;
@@ -74,7 +72,7 @@ public class DelegateQueryBuilder extends QueryBuilder
                 .getBeanDefinitions(DelegateQueryHandler.class, true, true);
         for (Bean<DelegateQueryHandler> bean : beans)
         {
-            if (contains(bean.getBeanClass(), context.getMethod()))
+            if (ClassUtils.containsMethod(bean.getBeanClass(), context.getMethod()))
             {
                 if (bean.getScope().equals(Dependent.class))
                 {
@@ -113,7 +111,7 @@ public class DelegateQueryBuilder extends QueryBuilder
     protected Object invoke(Object target, Method method, Object[] args) throws InvocationTargetException,
             IllegalAccessException
     {
-        Method extract = extract(target.getClass(), method);
+        Method extract = ClassUtils.extractMethod(target.getClass(), method);
         return extract.invoke(target, args);
     }
 

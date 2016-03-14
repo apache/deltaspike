@@ -18,13 +18,11 @@
  */
 package org.apache.deltaspike.data.impl.tx;
 
-import static org.apache.deltaspike.data.impl.util.ClassUtils.contains;
-import static org.apache.deltaspike.data.impl.util.ClassUtils.extract;
-
 import java.lang.reflect.Method;
 import javax.enterprise.context.ApplicationScoped;
 
 import javax.inject.Inject;
+import org.apache.deltaspike.core.util.ClassUtils;
 
 import org.apache.deltaspike.data.impl.builder.QueryBuilder;
 import org.apache.deltaspike.data.impl.handler.CdiQueryInvocationContext;
@@ -85,9 +83,9 @@ public class TransactionalQueryRunner implements QueryRunner
     {
         boolean requiresTx = false;
         Method method = context.getMethod();
-        if (contains(EntityRepositoryHandler.class, method))
+        if (ClassUtils.containsMethod(EntityRepositoryHandler.class, method))
         {
-            Method executed = extract(EntityRepositoryHandler.class, method);
+            Method executed = ClassUtils.extractMethod(EntityRepositoryHandler.class, method);
             requiresTx = executed.isAnnotationPresent(RequiresTransaction.class);
         }
         return requiresTx || context.getRepositoryMethod().requiresTransaction();

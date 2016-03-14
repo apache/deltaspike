@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.core.util;
 
+import java.lang.reflect.Method;
 import javax.enterprise.inject.Typed;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -320,5 +321,37 @@ public abstract class ClassUtils
 
         String classLocation = targetClass.getResource(targetClass.getSimpleName() + ".class").toString();
         return classLocation.substring(0, classLocation.indexOf(classFilePath) - 1) + manifestFilePath;
+    }
+    
+    /**
+     * Checks if the given class contains a method with the same signature.
+     * 
+     * @param targetClass The class to check
+     * @param method The source method
+     * @return if it contains a method with the same signature.
+     */
+    public static boolean containsMethod(Class<?> targetClass, Method method)
+    {
+        return extractMethod(targetClass, method) != null;
+    }
+
+    /**
+     * Extracts a method with same signature as the source method.
+     * 
+     * @param clazz The target class
+     * @param sourceMethod The source method.
+     * @return the extracted method or <code>null</code>
+     */
+    public static Method extractMethod(Class<?> clazz, Method sourceMethod)
+    {
+        try
+        {
+            String name = sourceMethod.getName();
+            return clazz != null ? clazz.getMethod(name, sourceMethod.getParameterTypes()) : null;
+        }
+        catch (NoSuchMethodException e)
+        {
+            return null;
+        }
     }
 }
