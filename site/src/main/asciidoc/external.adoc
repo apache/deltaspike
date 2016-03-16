@@ -8,6 +8,16 @@ A number of DeltaSpike examples and templates have been developed external to th
 
 **CDI@Work (chapter about DeltaSpike):** http://cdiatwork.irian.at/
 
+... is a free online book about CDI as well as Apache DeltaSpike.
+It covers basic information about CDI and DeltaSpike up to more advanced use-cases.
+An example for the latter is a type-safe configuration (interface-only)
+which allows you to resolve the configured values even from dynamic config-sources like a database and
+store them in a custom Config-Scoped cache which can be refreshed via CDI-events or a CRON based task or manually via JMX.
+
+The https://github.com/CDIatWork/[GitHub account] contains repositories e.g. for the sample application called IdeaFork.
+The commit-history follows the steps in the book. In most cases every commit translates to one step in the book.
+(Chapters are released once they are ready.)
+
 == Presentations
 
 === Apache DeltaSpike: The CDI toolbox
