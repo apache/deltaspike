@@ -68,9 +68,11 @@ The repository contains every step (one commit is one step) described in the onl
 
 **Source code:** https://github.com/CDIatWork/IdeaFork
 
-=== [Preview] IdeaFork (lite)
-This example will be based on IdeaFork (full),
+=== IdeaFork (lite)
+This example is based on IdeaFork (full),
 but without some indirections which were needed to demonstrate different features of CDI and DeltaSpike (in a simple Application).
+
+**Source code (beta - work in progress):** https://github.com/CDIatWork/IdeaForkLite_Beta
 
 
 === Confess 2012 Workshop Demo
