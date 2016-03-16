@@ -8,7 +8,7 @@ A number of DeltaSpike examples and templates have been developed external to th
 
 **CDI@Work (chapter about DeltaSpike):** http://cdiatwork.irian.at/
 
-... is a free online book about CDI as well as Apache DeltaSpike.
+CDI@Work is a free online book about CDI as well as Apache DeltaSpike.
 It covers basic information about CDI and DeltaSpike up to more advanced use-cases.
 An example for the latter is a type-safe configuration (interface-only)
 which allows you to resolve the configured values even from dynamic config-sources like a database and
