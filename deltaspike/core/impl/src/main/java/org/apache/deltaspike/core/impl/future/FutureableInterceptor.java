@@ -92,7 +92,8 @@ public class FutureableInterceptor implements Serializable
     {
         // validate usage
         final Class<?> returnType = ic.getMethod().getReturnType();
-        if (!COMPLETION_STAGE.isAssignableFrom(returnType) && !Future.class.isAssignableFrom(returnType))
+        if (!Future.class.isAssignableFrom(returnType) &&
+                (COMPLETION_STAGE == null || !COMPLETION_STAGE.isAssignableFrom(returnType)))
         {
             throw new IllegalArgumentException("Return type should be a CompletableStage or Future");
         }
