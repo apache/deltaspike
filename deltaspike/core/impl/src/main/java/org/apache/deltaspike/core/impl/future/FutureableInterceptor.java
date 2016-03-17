@@ -119,7 +119,7 @@ public class FutureableInterceptor implements Serializable
                 try
                 {
                     final Object proceed = ic.proceed();
-                    final Future<?> future = !COMPLETION_STAGE.isInstance(proceed) ?
+                    final Future<?> future = COMPLETION_STAGE == null || !COMPLETION_STAGE.isInstance(proceed) ?
                             Future.class.cast(proceed) :
                             Future.class.cast(COMPLETABLE_STAGE_TO_FUTURE.invoke(proceed));
                     /*
