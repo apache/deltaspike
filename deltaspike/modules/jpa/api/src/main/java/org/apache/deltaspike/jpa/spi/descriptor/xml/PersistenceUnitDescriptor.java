@@ -16,57 +16,65 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.data.impl.meta.unit;
+package org.apache.deltaspike.jpa.spi.descriptor.xml;
 
 import java.util.List;
 import java.util.Map;
 
-public class PersistenceUnit
+public class PersistenceUnitDescriptor
 {
+    private String name;
+    /*
+    private String transactionType;
+    private boolean excludeUnlistedClasses;
+    */
+    private List<EntityDescriptor> entityDescriptors;
+    private Map<String, String> properties;
 
-    public static final String RESOURCE_PATH = "META-INF/persistence.xml";
-    public static final String DEFAULT_ORM_PATH = "META-INF/orm.xml";
-
-    private final String unitName;
-    private final List<EntityDescriptor> entities;
-    private final Map<String, String> properties;
-
-    PersistenceUnit(String unitName, List<EntityDescriptor> entities, Map<String, String> properties)
+    public PersistenceUnitDescriptor(String name, List<EntityDescriptor> entityDescriptors,
+            Map<String, String> properties)
     {
-        this.unitName = unitName;
-        this.entities = entities;
+        this.name = name;
+        this.entityDescriptors = entityDescriptors;
         this.properties = properties;
     }
-
-    public EntityDescriptor find(Class<?> entityClass)
-    {
-        for (EntityDescriptor entity : entities)
-        {
-            if (entity.is(entityClass))
-            {
-                return entity;
-            }
-        }
-        return null;
-    }
-
-    public String getUnitName()
-    {
-        return unitName;
-    }
     
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
+    public List<EntityDescriptor> getEntityDescriptors()
+    {
+        return entityDescriptors;
+    }
+
+    public void setEntityDescriptors(List<EntityDescriptor> entityDescriptors)
+    {
+        this.entityDescriptors = entityDescriptors;
+    }
+
     public Map<String, String> getProperties()
     {
         return properties;
     }
 
+    public void setProperties(Map<String, String> properties)
+    {
+        this.properties = properties;
+    }
+    
     @Override
     public String toString()
     {
         StringBuilder builder = new StringBuilder();
-        builder.append("PersistenceUnit [unitName=").append(unitName)
-                .append(", entities=").append(entities).append("]");
+        builder.append("PersistenceUnit [name=").append(name)
+                .append(", entityDescriptors=").append(entityDescriptors).append("]");
         return builder.toString();
     }
-
 }

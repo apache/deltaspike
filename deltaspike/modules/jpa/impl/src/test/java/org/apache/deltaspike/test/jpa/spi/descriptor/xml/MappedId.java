@@ -16,19 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.data.impl.meta.verifier;
+package org.apache.deltaspike.test.jpa.spi.descriptor.xml;
 
-import javax.persistence.Entity;
-import org.apache.deltaspike.jpa.spi.descriptor.xml.PersistenceUnitDescriptorProvider;
-
-public class EntityVerifier implements Verifier<Class<?>>
+public class MappedId
 {
 
-    @Override
-    public boolean verify(Class<?> entity)
+    private Long id;
+
+    public Long getId()
     {
-        return entity.isAnnotationPresent(Entity.class)
-                || PersistenceUnitDescriptorProvider.getInstance().isEntity(entity);
+        return id;
+    }
+
+    public void setId(Long id)
+    {
+        this.id = id;
     }
 
 }

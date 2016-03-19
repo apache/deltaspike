@@ -16,57 +16,49 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.data.impl.meta.unit;
+package org.apache.deltaspike.jpa.spi.descriptor.xml;
 
 import java.util.List;
 
-public final class DescriptorHierarchyBuilder
+public final class AbstractEntityHierarchyBuilder
 {
-
-    private final List<EntityDescriptor> entities;
-    private final List<MappedSuperclassDescriptor> superClasses;
-
-    private DescriptorHierarchyBuilder(List<EntityDescriptor> entities,
-            List<MappedSuperclassDescriptor> superClasses)
+    private AbstractEntityHierarchyBuilder()
     {
-        this.entities = entities;
-        this.superClasses = superClasses;
     }
 
-    public static DescriptorHierarchyBuilder newInstance(List<EntityDescriptor> entities,
-            List<MappedSuperclassDescriptor> superClasses)
-    {
-        return new DescriptorHierarchyBuilder(entities, superClasses);
-    }
-
-    public void buildHierarchy()
+    public static void buildHierarchy(List<EntityDescriptor> entities, List<MappedSuperclassDescriptor> superClasses)
     {
         for (EntityDescriptor descriptor : entities)
         {
-            buildHierarchy(descriptor);
+            buildHierarchy(descriptor, entities, superClasses);
         }
     }
 
-    private void buildHierarchy(PersistentClassDescriptor descriptor)
+    protected static void buildHierarchy(AbstractEntityDescriptor descriptor,
+            List<EntityDescriptor> entities, List<MappedSuperclassDescriptor> superClasses)
     {
         Class<?> superClass = descriptor.getEntityClass().getSuperclass();
         while (superClass != null)
         {
-            PersistentClassDescriptor superDescriptor = findPersistentClassDescriptor(superClass);
+            AbstractEntityDescriptor superDescriptor =
+                    findPersistentClassDescriptor(superClass, entities, superClasses);
             if (superDescriptor != null)
             {
                 if (descriptor.getParent() == null)
                 {
-                    buildHierarchy(superDescriptor);
+                    buildHierarchy(superDescriptor, entities, superClasses);
                 }
+
                 descriptor.setParent(superDescriptor);
                 return;
             }
+
             superClass = superClass.getSuperclass();
         }
     }
 
-    private PersistentClassDescriptor findPersistentClassDescriptor(Class<?> superClass)
+    protected static AbstractEntityDescriptor findPersistentClassDescriptor(Class<?> superClass,
+            List<EntityDescriptor> entities, List<MappedSuperclassDescriptor> superClasses)
     {
         for (MappedSuperclassDescriptor descriptor : superClasses)
         {
@@ -75,6 +67,7 @@ public final class DescriptorHierarchyBuilder
                 return descriptor;
             }
         }
+
         for (EntityDescriptor descriptor : entities)
         {
             if (descriptor.getEntityClass().equals(superClass))
@@ -82,7 +75,7 @@ public final class DescriptorHierarchyBuilder
                 return descriptor;
             }
         }
+
         return null;
     }
-
 }

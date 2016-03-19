@@ -20,10 +20,12 @@ package org.apache.deltaspike.data.impl.meta.unit;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import org.apache.deltaspike.data.impl.meta.RepositoryEntity;
+import org.apache.deltaspike.data.impl.util.EntityUtils;
 import org.apache.deltaspike.data.test.domain.Parent;
 import org.apache.deltaspike.data.test.domain.TeeId;
 import org.apache.deltaspike.data.test.domain.mapped.MappedOne;
@@ -31,6 +33,8 @@ import org.apache.deltaspike.data.test.domain.mapped.MappedThree;
 import org.apache.deltaspike.data.test.domain.mapped.MappedTwo;
 import org.apache.deltaspike.data.test.service.MappedOneRepository;
 import org.apache.deltaspike.data.test.util.TestDeployments;
+import org.apache.deltaspike.jpa.spi.descriptor.xml.EntityDescriptor;
+import org.apache.deltaspike.jpa.spi.descriptor.xml.PersistenceUnitDescriptorProvider;
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -43,8 +47,7 @@ import org.junit.runner.RunWith;
 @RunWith(Arquillian.class)
 @Category(WebProfileCategory.class)
 public class PersistenceUnitsTest
-{
-
+{    
     @Deployment
     public static Archive<?> deployment()
     {
@@ -66,10 +69,10 @@ public class PersistenceUnitsTest
         // given
 
         // when
-        boolean positive1 = PersistenceUnits.instance().isEntity(MappedOne.class);
-        boolean positive2 = PersistenceUnits.instance().isEntity(MappedTwo.class);
-        boolean positive3 = PersistenceUnits.instance().isEntity(MappedThree.class);
-        boolean negative = PersistenceUnits.instance().isEntity(Long.class);
+        boolean positive1 = PersistenceUnitDescriptorProvider.getInstance().isEntity(MappedOne.class);
+        boolean positive2 = PersistenceUnitDescriptorProvider.getInstance().isEntity(MappedTwo.class);
+        boolean positive3 = PersistenceUnitDescriptorProvider.getInstance().isEntity(MappedThree.class);
+        boolean negative = PersistenceUnitDescriptorProvider.getInstance().isEntity(Long.class);
 
         // then
         assertTrue(positive1);
@@ -84,12 +87,14 @@ public class PersistenceUnitsTest
         // given
 
         // when
-        String idField1 = PersistenceUnits.instance().primaryKeyField(MappedOne.class);
-        String idField2 = PersistenceUnits.instance().primaryKeyField(MappedThree.class);
+        String[] idField1 = PersistenceUnitDescriptorProvider.getInstance().primaryKeyFields(MappedOne.class);
+        String[] idField2 = PersistenceUnitDescriptorProvider.getInstance().primaryKeyFields(MappedThree.class);
 
         // then
-        assertEquals("id", idField1);
-        assertEquals("id", idField2);
+        assertEquals(1, idField1.length);
+        assertEquals("id", idField1[0]);
+        assertEquals(1, idField2.length);
+        assertEquals("id", idField2[0]);
     }
 
     @Test
@@ -98,7 +103,7 @@ public class PersistenceUnitsTest
         // given
 
         // when
-        String name = PersistenceUnits.instance().entityName(MappedOne.class);
+        String name = PersistenceUnitDescriptorProvider.getInstance().entityName(MappedOne.class);
 
         // then
         assertEquals("Mapped_One", name);
@@ -110,7 +115,7 @@ public class PersistenceUnitsTest
         // given
 
         // when
-        Class<?> idClass = PersistenceUnits.instance().primaryKeyIdClass(MappedTwo.class);
+        Class<?> idClass = PersistenceUnitDescriptorProvider.getInstance().primaryKeyIdClass(MappedTwo.class);
 
         // then
         assertEquals(TeeId.class, idClass);
@@ -122,9 +127,9 @@ public class PersistenceUnitsTest
         // given
 
         // when
-        RepositoryEntity entity1 = PersistenceUnits.instance().lookupMetadata(MappedOne.class);
-        RepositoryEntity entity2 = PersistenceUnits.instance().lookupMetadata(MappedTwo.class);
-        RepositoryEntity entity3 = PersistenceUnits.instance().lookupMetadata(MappedThree.class);
+        RepositoryEntity entity1 = lookupMetadata(MappedOne.class);
+        RepositoryEntity entity2 = lookupMetadata(MappedTwo.class);
+        RepositoryEntity entity3 = lookupMetadata(MappedThree.class);
 
         // then
         assertNotNull(entity1);
@@ -134,4 +139,13 @@ public class PersistenceUnitsTest
         assertEquals(Long.class, entity3.getPrimaryKeyClass());
     }
 
+    protected RepositoryEntity lookupMetadata(Class<?> entityClass)
+    {
+        EntityDescriptor entity = PersistenceUnitDescriptorProvider.getInstance().find(entityClass);
+        if (entity != null)
+        {
+            return new RepositoryEntity(entityClass, EntityUtils.primaryKeyClass(entityClass));
+        }
+        return null;
+    }
 }

@@ -16,63 +16,45 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.data.impl.meta.unit;
+package org.apache.deltaspike.jpa.spi.descriptor.xml;
 
 import java.io.Serializable;
 
-import static org.apache.deltaspike.core.util.StringUtils.isEmpty;
-
-class EntityDescriptor extends PersistentClassDescriptor
+public class EntityDescriptor extends AbstractEntityDescriptor
 {
+    private String tableName;
 
-    protected final String tableName;
-
-    EntityDescriptor(String name, String packageName, String className, String idClass, String id,
-                     String version, String tableName)
+    public EntityDescriptor()
     {
-        super(name, packageName, className, idClass, id, version);
+    }
+
+    public EntityDescriptor(String[] id, String version, String name, Class<?> entityClass,
+            Class<? extends Serializable> idClass, AbstractEntityDescriptor parent,
+            String tableName)
+    {
+        super(id, version, name, entityClass, idClass, parent);
         this.tableName = tableName;
     }
-
-    public boolean is(Class<?> entityClass)
-    {
-        return this.entityClass.equals(entityClass);
-    }
-
-    @Override
-    public Class<? extends Serializable> getIdClass()
-    {
-        if (idClass == null && getParent() != null)
-        {
-            return getParent().getIdClass();
-        }
-        return super.getIdClass();
-    }
-
-    @Override
-    public String getId()
-    {
-        if (isEmpty(id) && getParent() != null)
-        {
-            return getParent().getId();
-        }
-        return super.getId();
-    }
-
+    
     public String getTableName()
     {
         return tableName;
     }
 
+    public void setTableName(String tableName)
+    {
+        this.tableName = tableName;
+    }
+    
     @Override
     public String toString()
     {
         StringBuilder builder = new StringBuilder();
         builder.append("EntityDescriptor ")
-                .append("[entityClass=").append(className(entityClass))
-                .append(", name=").append(name)
-                .append(", idClass=").append(className(idClass))
-                .append(", id=").append(id)
+                .append("[entityClass=").append(getEntityClass().getName())
+                .append(", name=").append(getName())
+                .append(", idClass=").append(getIdClass().getName())
+                .append(", id=").append(getId())
                 .append(", superClass=").append(getParent())
                 .append(", tableName=").append(tableName)
                 .append("]");

@@ -32,7 +32,6 @@ import javax.persistence.Version;
 import javax.persistence.metamodel.EntityType;
 import org.apache.deltaspike.core.util.StringUtils;
 
-import org.apache.deltaspike.data.impl.meta.unit.PersistenceUnits;
 import org.apache.deltaspike.data.impl.meta.verifier.EntityVerifier;
 import org.apache.deltaspike.data.impl.property.Property;
 import org.apache.deltaspike.data.impl.property.query.AnnotatedPropertyCriteria;
@@ -40,6 +39,7 @@ import org.apache.deltaspike.data.impl.property.query.NamedPropertyCriteria;
 import org.apache.deltaspike.data.impl.property.query.PropertyCriteria;
 import org.apache.deltaspike.data.impl.property.query.PropertyQueries;
 import org.apache.deltaspike.data.impl.property.query.PropertyQuery;
+import org.apache.deltaspike.jpa.spi.descriptor.xml.PersistenceUnitDescriptorProvider;
 
 public final class EntityUtils
 {
@@ -56,7 +56,7 @@ public final class EntityUtils
             return entityClass.getAnnotation(IdClass.class).value(); // Serializablity isn't required, could cause
                                                                      // problems
         }
-        Class clazz = PersistenceUnits.instance().primaryKeyIdClass(entityClass);
+        Class clazz = PersistenceUnitDescriptorProvider.getInstance().primaryKeyIdClass(entityClass);
         if (clazz != null)
         {
             return clazz;
@@ -85,14 +85,14 @@ public final class EntityUtils
         }
         else
         {
-            result = PersistenceUnits.instance().entityName(entityClass);
+            result = PersistenceUnitDescriptorProvider.getInstance().entityName(entityClass);
         }
         return (result != null && !"".equals(result)) ? result : entityClass.getSimpleName();
     }
 
     public static String tableName(Class<?> entityClass, EntityManager entityManager)
     {
-        String tableName = PersistenceUnits.instance().entityTableName(entityClass);
+        String tableName = PersistenceUnitDescriptorProvider.getInstance().entityTableName(entityClass);
         if (StringUtils.isEmpty(tableName))
         {
             EntityType<?> entityType = entityManager.getMetamodel().entity(entityClass);
@@ -109,7 +109,7 @@ public final class EntityUtils
 
     public static Property<Serializable> primaryKeyProperty(Class<?> entityClass)
     {
-        for (PropertyCriteria c : criteriaList(entityClass))
+        for (PropertyCriteria c : primaryKeyPropertyCriteriaList(entityClass))
         {
             PropertyQuery<Serializable> query = PropertyQueries.<Serializable> createQuery(entityClass)
                     .addCriteria(c);
@@ -121,15 +121,18 @@ public final class EntityUtils
         throw new IllegalStateException("Class " + entityClass + " has no id defined");
     }
 
-    private static List<PropertyCriteria> criteriaList(Class<?> entityClass)
+    private static List<PropertyCriteria> primaryKeyPropertyCriteriaList(Class<?> entityClass)
     {
         List<PropertyCriteria> criteria = new LinkedList<PropertyCriteria>();
         criteria.add(new AnnotatedPropertyCriteria(Id.class));
         criteria.add(new AnnotatedPropertyCriteria(EmbeddedId.class));
-        String fromMappingFiles = PersistenceUnits.instance().primaryKeyField(entityClass);
+        String[] fromMappingFiles = PersistenceUnitDescriptorProvider.getInstance().primaryKeyFields(entityClass);
         if (fromMappingFiles != null)
         {
-            criteria.add(new NamedPropertyCriteria(fromMappingFiles));
+            for (String id : fromMappingFiles)
+            {
+                criteria.add(new NamedPropertyCriteria(id));
+            }
         }
         return criteria;
     }
@@ -139,7 +142,7 @@ public final class EntityUtils
         List<PropertyCriteria> criteriaList = new LinkedList<PropertyCriteria>();
         criteriaList.add(new AnnotatedPropertyCriteria(Version.class));
 
-        String fromMappingFiles = PersistenceUnits.instance().versionField(entityClass);
+        String fromMappingFiles = PersistenceUnitDescriptorProvider.getInstance().versionField(entityClass);
         if (fromMappingFiles != null)
         {
             criteriaList.add(new NamedPropertyCriteria(fromMappingFiles));

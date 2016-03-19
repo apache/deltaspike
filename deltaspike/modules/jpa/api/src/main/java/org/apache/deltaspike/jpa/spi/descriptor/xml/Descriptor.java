@@ -16,15 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.data.impl.meta.unit;
+package org.apache.deltaspike.jpa.spi.descriptor.xml;
 
 import java.net.URL;
 
 import org.w3c.dom.Document;
 
-class Descriptor
+public class Descriptor
 {
-
     private final Document document;
     private final URL url;
 

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.data.impl.util.cl;
+package org.apache.deltaspike.core.util;
 
 import java.io.IOException;
 import java.net.URL;
@@ -64,6 +64,7 @@ public class AggregatedClassLoader extends ClassLoader
     public Enumeration<URL> getResources(String name) throws IOException
     {
         final Set<URL> result = new LinkedHashSet<URL>();
+        
         for (ClassLoader loader : classLoaders)
         {
             Enumeration<URL> urls = loader.getResources(name);
@@ -72,6 +73,7 @@ public class AggregatedClassLoader extends ClassLoader
                 result.add(urls.nextElement());
             }
         }
+        
         return new Enumeration<URL>()
         {
             private final Iterator<URL> iterator = result.iterator();

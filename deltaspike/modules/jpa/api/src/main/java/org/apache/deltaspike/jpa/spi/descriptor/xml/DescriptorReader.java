@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.data.impl.meta.unit;
+package org.apache.deltaspike.jpa.spi.descriptor.xml;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,18 +31,18 @@ import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import org.apache.deltaspike.core.util.AggregatedClassLoader;
 
-import org.apache.deltaspike.data.impl.util.cl.AggregatedClassLoader;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 abstract class DescriptorReader
 {
-    private static final Logger log = Logger.getLogger(DescriptorReader.class.getName());
+    private static final Logger LOG = Logger.getLogger(DescriptorReader.class.getName());
 
     private final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
-    List<Descriptor> readAllFromClassPath(String resource) throws IOException
+    protected List<Descriptor> readAllFromClassPath(String resource) throws IOException
     {
         List<Descriptor> result = new LinkedList<Descriptor>();
         Enumeration<URL> urls = classLoader().getResources(resource);
@@ -55,18 +55,18 @@ abstract class DescriptorReader
             }
             catch (Exception e)
             {
-                log.log(Level.WARNING, "Could not load " + resource + " from " + u, e);
+                LOG.log(Level.WARNING, "Could not load " + resource + " from " + u, e);
             }
         }
         return Collections.unmodifiableList(result);
     }
 
-    Descriptor readFromClassPath(String resource) throws IOException
+    protected Descriptor readFromClassPath(String resource) throws IOException
     {
         return readFromUrl(classLoader().getResource(resource));
     }
 
-    Descriptor readFromUrl(URL url) throws IOException
+    protected Descriptor readFromUrl(URL url) throws IOException
     {
         InputStream stream = url.openStream();
         try
@@ -88,7 +88,7 @@ abstract class DescriptorReader
         }
     }
 
-    Descriptor read(String baseUrl, String resource) throws IOException
+    protected Descriptor read(String baseUrl, String resource) throws IOException
     {
         try
         {
@@ -101,15 +101,14 @@ abstract class DescriptorReader
         }
     }
 
-    String extractBaseUrl(URL fileUrl, String resource)
+    protected String extractBaseUrl(URL fileUrl, String resource)
     {
         String file = fileUrl.toString();
         return file.substring(0, file.length() - resource.length());
     }
 
-    ClassLoader classLoader()
+    protected ClassLoader classLoader()
     {
         return AggregatedClassLoader.newInstance();
     }
-
 }

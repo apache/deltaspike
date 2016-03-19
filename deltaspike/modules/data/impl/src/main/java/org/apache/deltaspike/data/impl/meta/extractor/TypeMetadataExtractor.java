@@ -71,11 +71,17 @@ public class TypeMetadataExtractor implements MetadataExtractor
         {
             return null;
         }
+        
         ParameterizedType parametrizedType = (ParameterizedType) type;
         Type[] genericTypes = parametrizedType.getActualTypeArguments();
+        
         RepositoryEntity result = null;
-        for (Type genericType : genericTypes)
+        
+        // don't use a foreach here, we must be sure that the we first get the entity type
+        for (int i = 0; i < genericTypes.length; i++)
         {
+            Type genericType = genericTypes[i];
+            
             if (genericType instanceof Class && EntityUtils.isEntityClass((Class<?>) genericType))
             {
                 result = new RepositoryEntity((Class<?>) genericType);

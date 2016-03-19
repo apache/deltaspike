@@ -16,9 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.data.impl.meta.unit;
+package org.apache.deltaspike.jpa.spi.descriptor.xml;
 
-import org.apache.deltaspike.data.impl.meta.unit.EntityDescriptorReader.MappingFile;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -29,14 +28,20 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import javax.enterprise.inject.Typed;
 
-public class PersistenceUnitReader extends DescriptorReader
+@Typed
+public class PersistenceUnitDescriptorParser extends DescriptorReader
 {
+    public static final String RESOURCE_PATH = "META-INF/persistence.xml";
 
-    public List<PersistenceUnit> readAll() throws IOException
+    private final EntityMappingsDescriptorParser entityMappingsDescriptorParser
+        = new EntityMappingsDescriptorParser();
+    
+    public List<PersistenceUnitDescriptor> readAll() throws IOException
     {
-        List<PersistenceUnit> result = new LinkedList<PersistenceUnit>();
-        List<Descriptor> persistenceXmls = readAllFromClassPath(PersistenceUnit.RESOURCE_PATH);
+        List<PersistenceUnitDescriptor> result = new LinkedList<PersistenceUnitDescriptor>();
+        List<Descriptor> persistenceXmls = readAllFromClassPath(RESOURCE_PATH);
         for (Descriptor desc : persistenceXmls)
         {
             result.addAll(lookupUnits(desc));
@@ -44,35 +49,36 @@ public class PersistenceUnitReader extends DescriptorReader
         return Collections.unmodifiableList(result);
     }
 
-    private List<PersistenceUnit> lookupUnits(Descriptor descriptor)
+    protected List<PersistenceUnitDescriptor> lookupUnits(Descriptor descriptor)
     {
-        List<PersistenceUnit> result = new LinkedList<PersistenceUnit>();
+        List<PersistenceUnitDescriptor> result = new LinkedList<PersistenceUnitDescriptor>();
         NodeList list = descriptor.getDocument().getDocumentElement().getElementsByTagName("persistence-unit");
         for (int i = 0; i < list.getLength(); i++)
         {
             Node node = list.item(i);
+
             String unitName = extractUnitName(node);
-            String baseUrl = extractBaseUrl(descriptor.getUrl(), PersistenceUnit.RESOURCE_PATH);
+            String baseUrl = extractBaseUrl(descriptor.getUrl(), RESOURCE_PATH);
             List<EntityDescriptor> entities = extractMappings((Element) node, baseUrl, unitName);
             Map<String, String> properties = extractProperties((Element) node);
-            result.add(new PersistenceUnit(unitName, entities, properties));
+
+            result.add(new PersistenceUnitDescriptor(unitName, entities, properties));
         }
         return result;
     }
 
-    private List<EntityDescriptor> extractMappings(Element element, String baseUrl, String unitName)
+    protected List<EntityDescriptor> extractMappings(Element element, String baseUrl, String unitName)
     {
         try
         {
-            EntityDescriptorReader reader = new EntityDescriptorReader();
             List<EntityDescriptor> entities = new LinkedList<EntityDescriptor>();
             List<MappedSuperclassDescriptor> superClasses = new LinkedList<MappedSuperclassDescriptor>();
             NodeList list = element.getElementsByTagName("mapping-file");
-            readMappingFiles(baseUrl, unitName, reader, entities, superClasses, list);
-            MappingFile mappings = reader.readDefaultOrm(baseUrl);
-            entities.addAll(mappings.getEntities());
-            superClasses.addAll(mappings.getSuperClasses());
-            DescriptorHierarchyBuilder.newInstance(entities, superClasses).buildHierarchy();
+            readMappingFiles(baseUrl, unitName, entities, superClasses, list);
+            EntityMappingsDescriptor mappings = entityMappingsDescriptorParser.readDefaultOrm(baseUrl);
+            entities.addAll(mappings.getEntityDescriptors());
+            superClasses.addAll(mappings.getMappedSuperclassDescriptors());
+            AbstractEntityHierarchyBuilder.buildHierarchy(entities, superClasses);
             return entities;
         }
         catch (Exception e)
@@ -81,7 +87,7 @@ public class PersistenceUnitReader extends DescriptorReader
         }
     }
 
-    private void readMappingFiles(String baseUrl, String unitName, EntityDescriptorReader reader,
+    protected void readMappingFiles(String baseUrl, String unitName,
                                   List<EntityDescriptor> entities, List<MappedSuperclassDescriptor> superClasses,
                                   NodeList list)
     {
@@ -90,9 +96,9 @@ public class PersistenceUnitReader extends DescriptorReader
             String resource = list.item(i).getTextContent();
             try
             {
-                MappingFile mappings = reader.readAll(baseUrl, resource);
-                entities.addAll(mappings.getEntities());
-                superClasses.addAll(mappings.getSuperClasses());
+                EntityMappingsDescriptor mappings = entityMappingsDescriptorParser.readAll(baseUrl, resource);
+                entities.addAll(mappings.getEntityDescriptors());
+                superClasses.addAll(mappings.getMappedSuperclassDescriptors());
             }
             catch (Exception e)
             {
@@ -102,12 +108,12 @@ public class PersistenceUnitReader extends DescriptorReader
         }
     }
 
-    private String extractUnitName(Node node)
+    protected String extractUnitName(Node node)
     {
         return node.getAttributes().getNamedItem("name").getTextContent();
     }
 
-    private Map<String, String> extractProperties(Element element)
+    protected Map<String, String> extractProperties(Element element)
     {
         Map<String, String> propertiesMap = new HashMap<String, String>();
 

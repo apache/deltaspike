@@ -23,10 +23,10 @@ import static org.junit.Assert.assertNull;
 
 import java.util.LinkedList;
 import java.util.List;
+import org.apache.deltaspike.jpa.spi.descriptor.xml.AbstractEntityHierarchyBuilder;
+import org.apache.deltaspike.jpa.spi.descriptor.xml.EntityDescriptor;
+import org.apache.deltaspike.jpa.spi.descriptor.xml.MappedSuperclassDescriptor;
 
-import org.apache.deltaspike.data.impl.meta.unit.DescriptorHierarchyBuilder;
-import org.apache.deltaspike.data.impl.meta.unit.EntityDescriptor;
-import org.apache.deltaspike.data.impl.meta.unit.MappedSuperclassDescriptor;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -39,23 +39,21 @@ public class DescriptorHierarchyBuilderTest
     @Before
     public void before()
     {
-        entities.add(new EntityDescriptor("test", null, EntityLevel3.class.getName(), null, null, null, null));
-        entities.add(new EntityDescriptor("test", null, EntityLevel5.class.getName(), null, null, null, null));
+        entities.add(new EntityDescriptor(null, null, "test", EntityLevel3.class, null, null, null));
+        entities.add(new EntityDescriptor(null, null, "test", EntityLevel5.class, null, null, null));
 
-        superClasses.add(new MappedSuperclassDescriptor("test", null, MappedLevel1.class.getName(), null, "id", null));
-        superClasses.add(new MappedSuperclassDescriptor("test", null, MappedLevel4.class.getName(), null, null, null));
-        superClasses.add(new MappedSuperclassDescriptor("test", null, MappedUnrelated.class.getName(), null, null, null));
-        superClasses.add(new MappedSuperclassDescriptor("test", null, MappedLevel2.class.getName(), null, null, null));
+        superClasses.add(new MappedSuperclassDescriptor(new String[] { "id" }, null, "test", MappedLevel1.class,
+            null, null));
+        superClasses.add(new MappedSuperclassDescriptor(null, null, "test", MappedLevel4.class, null, null));
+        superClasses.add(new MappedSuperclassDescriptor(null, null, "test", MappedUnrelated.class, null, null));
+        superClasses.add(new MappedSuperclassDescriptor(null, null, "test", MappedLevel2.class, null, null));
     }
 
     @Test
     public void should_build_hierarchy()
     {
-        // given
-        DescriptorHierarchyBuilder builder = DescriptorHierarchyBuilder.newInstance(entities, superClasses);
-
         // when
-        builder.buildHierarchy();
+        AbstractEntityHierarchyBuilder.buildHierarchy(entities, superClasses);
 
         // then
         assertEquals(entities.size(), 2);
