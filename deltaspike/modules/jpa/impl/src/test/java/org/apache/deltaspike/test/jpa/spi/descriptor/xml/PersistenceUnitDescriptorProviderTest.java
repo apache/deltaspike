@@ -33,7 +33,7 @@ public class PersistenceUnitDescriptorProviderTest
     }
     
     @Test
-    public void bla()
+    public void testParentIdLookup()
     {
         String[] ids =
             PersistenceUnitDescriptorProvider.getInstance().primaryKeyFields(MappedThree.class);
