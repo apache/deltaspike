@@ -39,7 +39,6 @@ import org.apache.deltaspike.data.api.AbstractEntityRepository;
 import org.apache.deltaspike.data.api.AbstractFullEntityRepository;
 import org.apache.deltaspike.data.api.Repository;
 import org.apache.deltaspike.data.impl.meta.RepositoryComponents;
-import org.apache.deltaspike.jpa.spi.descriptor.xml.PersistenceUnitDescriptorProvider;
 
 /**
  * The main extension class for Repositories, based on PartialBeans. Handles following events:<br/>
@@ -72,12 +71,6 @@ public class RepositoryExtension implements Extension, Deactivatable
     void beforeBeanDiscovery(@Observes BeforeBeanDiscovery before)
     {
         isActivated = ClassDeactivationUtils.isActivated(getClass());
-
-        if (!isActivated)
-        {
-            return;
-        }
-        PersistenceUnitDescriptorProvider.getInstance().init();
     }
 
     @SuppressWarnings("unchecked")

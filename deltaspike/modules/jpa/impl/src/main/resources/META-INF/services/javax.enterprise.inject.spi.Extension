@@ -18,3 +18,4 @@
 #
 
 org.apache.deltaspike.jpa.impl.transaction.context.TransactionContextExtension
+org.apache.deltaspike.jpa.impl.descriptor.xml.PersistenceUnitDescriptorInitExtension
