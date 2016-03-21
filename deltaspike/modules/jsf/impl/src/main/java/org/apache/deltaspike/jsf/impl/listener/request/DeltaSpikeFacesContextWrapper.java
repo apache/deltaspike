@@ -20,9 +20,11 @@ package org.apache.deltaspike.jsf.impl.listener.request;
 
 import java.lang.annotation.Annotation;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
+import org.apache.deltaspike.core.api.projectstage.TestStage;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
+import org.apache.deltaspike.core.util.ProjectStageProducer;
 import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;
 import org.apache.deltaspike.jsf.impl.config.view.DefaultErrorViewAwareExceptionHandlerWrapper;
 import org.apache.deltaspike.jsf.impl.injection.InjectionAwareApplicationWrapper;
@@ -31,6 +33,7 @@ import org.apache.deltaspike.jsf.impl.message.FacesMessageEntry;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.faces.application.Application;
 import javax.faces.application.FacesMessage;
+import javax.faces.application.ProjectStage;
 import javax.faces.context.ExceptionHandler;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -66,6 +69,7 @@ class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
     private volatile Boolean isNavigationAwareApplicationWrapperActivated;
 
     private boolean preDestroyViewMapEventFilterMode;
+    private ProjectStage projectStage;
 
     DeltaSpikeFacesContextWrapper(FacesContext wrappedFacesContext, ClientWindow clientWindow)
     {
@@ -166,6 +170,28 @@ class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
             this.preDestroyViewMapEventFilterMode = ClassDeactivationUtils.isActivated(SecurityAwareViewHandler.class);
             this.isNavigationAwareApplicationWrapperActivated =
                 ClassDeactivationUtils.isActivated(NavigationHandlerAwareApplication.class);
+            org.apache.deltaspike.core.api.projectstage.ProjectStage dsProjectStage =
+                ProjectStageProducer.getInstance().getProjectStage();
+
+            for (ProjectStage ps : ProjectStage.values())
+            {
+                if (ps.name().equals(dsProjectStage.getClass().getSimpleName()))
+                {
+                    this.projectStage = ps;
+                    break;
+                }
+            }
+
+            if (this.projectStage == null && dsProjectStage instanceof TestStage)
+            {
+                this.projectStage = ProjectStage.Development;
+            }
+
+            if (this.projectStage == null)
+            {
+                this.projectStage = ProjectStage.Production;
+            }
+
             this.initialized = true;
         }
     }
@@ -214,7 +240,7 @@ class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
             wrappedApplication = new NavigationHandlerAwareApplication(wrappedApplication);
         }
         return new InjectionAwareApplicationWrapper(
-            wrappedApplication, this.jsfModuleConfig, this.preDestroyViewMapEventFilterMode);
+            wrappedApplication, this.jsfModuleConfig, this.preDestroyViewMapEventFilterMode, this.projectStage);
     }
 
     @Override

@@ -26,6 +26,7 @@ import org.apache.deltaspike.proxy.spi.DeltaSpikeProxy;
 import javax.faces.FacesException;
 import javax.faces.application.Application;
 import javax.faces.application.ApplicationWrapper;
+import javax.faces.application.ProjectStage;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.event.PreDestroyViewMapEvent;
@@ -39,15 +40,18 @@ public class InjectionAwareApplicationWrapper extends ApplicationWrapper
     private final boolean containerManagedValidatorsEnabled;
     private final boolean preDestroyViewMapEventFilterMode;
     private final boolean fullStateSavingFallbackEnabled;
+    private final ProjectStage projectStage;
 
     public InjectionAwareApplicationWrapper(
-        Application wrapped, JsfModuleConfig jsfModuleConfig, boolean preDestroyViewMapEventFilterMode)
+            Application wrapped, JsfModuleConfig jsfModuleConfig, boolean preDestroyViewMapEventFilterMode,
+            ProjectStage projectStage)
     {
         this.wrapped = wrapped;
         this.containerManagedConvertersEnabled = jsfModuleConfig.isContainerManagedConvertersEnabled();
         this.containerManagedValidatorsEnabled = jsfModuleConfig.isContainerManagedValidatorsEnabled();
         this.fullStateSavingFallbackEnabled = jsfModuleConfig.isFullStateSavingFallbackEnabled();
         this.preDestroyViewMapEventFilterMode = preDestroyViewMapEventFilterMode;
+        this.projectStage = projectStage;
     }
 
     @Override
@@ -94,6 +98,17 @@ public class InjectionAwareApplicationWrapper extends ApplicationWrapper
     public Validator createValidator(String validatorId) throws FacesException
     {
         return managedOrDefaultValidator(this.wrapped.createValidator(validatorId));
+    }
+
+
+    @Override
+    public ProjectStage getProjectStage()
+    {
+        if (this.projectStage == null)
+        {
+            return getWrapped().getProjectStage();
+        }
+        return this.projectStage;
     }
 
     private Validator managedOrDefaultValidator(Validator defaultResult)
