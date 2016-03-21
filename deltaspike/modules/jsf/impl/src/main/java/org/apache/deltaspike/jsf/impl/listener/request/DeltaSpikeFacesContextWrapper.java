@@ -187,9 +187,9 @@ class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
                 this.projectStage = ProjectStage.Development;
             }
 
-            if (this.projectStage == null)
+            if (this.projectStage == ProjectStage.Production)
             {
-                this.projectStage = ProjectStage.Production;
+                this.projectStage = null; //reset it to force the delegation to the default handling
             }
 
             this.initialized = true;
