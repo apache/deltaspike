@@ -16,22 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.proxy.impl.enablebeaninterceptors;
+package org.apache.deltaspike.proxy.impl.enableinterceptors;
 
-import java.io.Serializable;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
-import javax.interceptor.InvocationContext;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import javax.interceptor.InterceptorBinding;
 
-@Interceptor
-@MyBeanInterceptorBinding
-public class MyBeanInterceptor implements Serializable
+@InterceptorBinding
+@Documented
+@Inherited
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ ElementType.TYPE, ElementType.METHOD })
+public @interface MyBeanInterceptorBinding
 {
-    @AroundInvoke
-    public Object wrapBeanCandidate(InvocationContext invocationContext) throws Exception
-    {
-        ((MyBean) invocationContext.getTarget()).setIntercepted(true);
-        
-        return invocationContext.proceed();
-    }
+    
 }

@@ -16,15 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.proxy.impl.enablebeaninterceptors;
+package org.apache.deltaspike.proxy.impl.enableinterceptors;
 
 import javax.inject.Inject;
 import org.apache.deltaspike.test.proxy.impl.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.Asset;
-import org.jboss.shrinkwrap.api.asset.StringAsset;
+import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
@@ -32,28 +31,22 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-public class EnableBeanInterceptorsTest
+public class EnableInterceptors_WithoutInterceptor_Test
 {    
     @Deployment
     public static WebArchive war()
     {
-        Asset beansXml = new StringAsset(
-            "<beans><interceptors><class>" +
-                    MyBeanInterceptor.class.getName() +
-            "</class></interceptors></beans>"
-        );
-
-        String simpleName = EnableBeanInterceptorsTest.class.getSimpleName();
+        String simpleName = EnableInterceptors_WithoutInterceptor_Test.class.getSimpleName();
         String archiveName = simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1);
 
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, archiveName + ".jar")
-                .addPackage(EnableBeanInterceptorsTest.class.getPackage())
-                .addAsManifestResource(beansXml, "beans.xml");
+                .addPackage(EnableInterceptors_WithoutInterceptor_Test.class.getPackage())
+                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
         return ShrinkWrap.create(WebArchive.class, archiveName + ".war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndProxyArchive())
                 .addAsLibraries(testJar)
-                .addAsWebInfResource(beansXml, "beans.xml");
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
     @Inject
@@ -67,7 +60,7 @@ public class EnableBeanInterceptorsTest
         
         myBean.somethingIntercepted();
         
-        Assert.assertTrue(myBean.isIntercepted());
+        Assert.assertFalse(myBean.isIntercepted());
         Assert.assertTrue(myBean.isMethodCalled());
     }
 }

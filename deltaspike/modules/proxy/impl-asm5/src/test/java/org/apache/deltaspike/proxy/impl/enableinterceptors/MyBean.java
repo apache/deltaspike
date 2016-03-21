@@ -16,22 +16,40 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.proxy.impl.enablebeaninterceptors;
+package org.apache.deltaspike.proxy.impl.enableinterceptors;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import javax.interceptor.InterceptorBinding;
+import org.apache.deltaspike.core.api.exclude.Exclude;
 
-@InterceptorBinding
-@Documented
-@Inherited
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.TYPE, ElementType.METHOD })
-public @interface MyBeanInterceptorBinding
+@Exclude
+public class MyBean
 {
+    private boolean intercepted;
+    private boolean methodCalled;
+
+    public boolean isIntercepted()
+    {
+        return intercepted;
+    }
+
+    public void setIntercepted(boolean intercepted)
+    {
+        this.intercepted = intercepted;
+    }
+
+    public boolean isMethodCalled()
+    {
+        return methodCalled;
+    }
+
+    public void setMethodCalled(boolean methodCalled)
+    {
+        this.methodCalled = methodCalled;
+    }
     
+    
+    @MyBeanInterceptorBinding
+    public void somethingIntercepted()
+    {
+        methodCalled = true;
+    }
 }

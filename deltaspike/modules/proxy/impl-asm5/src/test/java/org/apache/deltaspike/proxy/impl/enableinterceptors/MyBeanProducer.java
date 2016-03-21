@@ -16,17 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.proxy.impl.enablebeaninterceptors;
+package org.apache.deltaspike.proxy.impl.enableinterceptors;
 
 import javax.enterprise.inject.Produces;
-import org.apache.deltaspike.proxy.api.EnableBeanInterceptors;
+import org.apache.deltaspike.proxy.api.EnableInterceptors;
 
 public class MyBeanProducer
 {
     @Produces
-    @EnableBeanInterceptors
+    @EnableInterceptors
     public MyBean produce()
     {
-        return new MyBean();
+        MyBean myBean = new MyBean();
+        return myBean;
     }
 }

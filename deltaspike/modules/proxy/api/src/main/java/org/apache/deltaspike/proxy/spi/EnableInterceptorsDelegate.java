@@ -16,22 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.proxy.api;
+package org.apache.deltaspike.proxy.spi;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import javax.interceptor.InterceptorBinding;
+import java.io.Serializable;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
 
-@InterceptorBinding
-@Documented
-@Inherited
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.TYPE, ElementType.METHOD })
-public @interface EnableBeanInterceptors
+public class EnableInterceptorsDelegate implements InvocationHandler, Serializable
 {
+    private final Object instance;
     
+    public EnableInterceptorsDelegate(Object instance)
+    {
+        this.instance = instance;
+    }
+    
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
+    {
+        return method.invoke(instance, args);
+    }
 }

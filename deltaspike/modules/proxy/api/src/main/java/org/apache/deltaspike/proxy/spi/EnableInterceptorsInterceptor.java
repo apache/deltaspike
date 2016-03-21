@@ -19,16 +19,17 @@
 package org.apache.deltaspike.proxy.spi;
 
 import java.io.Serializable;
+import java.lang.reflect.Constructor;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
-import org.apache.deltaspike.proxy.api.EnableBeanInterceptors;
+import org.apache.deltaspike.proxy.api.EnableInterceptors;
 
 @Interceptor
-@EnableBeanInterceptors
-public class EnableBeanInterceptorsInterceptor implements Serializable
+@EnableInterceptors
+public class EnableInterceptorsInterceptor implements Serializable
 {
     @Inject
     private BeanManager beanManager;
@@ -41,12 +42,14 @@ public class EnableBeanInterceptorsInterceptor implements Serializable
         if (beanCandidate == null)
         {
             throw new IllegalStateException("Can not apply "
-                    + EnableBeanInterceptors.class.getSimpleName()
+                    + EnableInterceptors.class.getSimpleName()
                     + " on a null instance!");
         }
 
-        Class proxy = EnableBeanInterceptorsProxyFactory.getInstance().getProxyClass(beanManager,
-                beanCandidate.getClass());
-        return proxy.newInstance();
+        Class proxyClass = EnableInterceptorsProxyFactory.getInstance().getProxyClass(beanManager,
+                beanCandidate.getClass(), EnableInterceptorsDelegate.class);
+                
+        Constructor constructor = proxyClass.getConstructor(EnableInterceptorsDelegate.class);
+        return constructor.newInstance(new EnableInterceptorsDelegate(beanCandidate));
     }
 }

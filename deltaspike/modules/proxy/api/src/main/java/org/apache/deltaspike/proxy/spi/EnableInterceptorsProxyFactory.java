@@ -19,14 +19,16 @@
 package org.apache.deltaspike.proxy.spi;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Iterator;
 import org.apache.deltaspike.proxy.api.DeltaSpikeProxyFactory;
 
-public class EnableBeanInterceptorsProxyFactory extends DeltaSpikeProxyFactory
+public class EnableInterceptorsProxyFactory extends DeltaSpikeProxyFactory
 {
-    private static final EnableBeanInterceptorsProxyFactory INSTANCE = new EnableBeanInterceptorsProxyFactory();
+    private static final EnableInterceptorsProxyFactory INSTANCE = new EnableInterceptorsProxyFactory();
     
-    public static EnableBeanInterceptorsProxyFactory getInstance()
+    public static EnableInterceptorsProxyFactory getInstance()
     {
         return INSTANCE;
     }
@@ -34,12 +36,33 @@ public class EnableBeanInterceptorsProxyFactory extends DeltaSpikeProxyFactory
     @Override
     protected ArrayList<Method> getDelegateMethods(Class<?> targetClass, ArrayList<Method> allMethods)
     {
+        ArrayList<Method> methods = new ArrayList<Method>();
+        
+        Iterator<Method> it = allMethods.iterator();
+        while (it.hasNext())
+        {
+            Method method = it.next();
+
+            if (Modifier.isPublic(method.getModifiers())
+                    && !Modifier.isFinal(method.getModifiers())
+                    && !Modifier.isAbstract(method.getModifiers()))
+            {
+                methods.add(method);
+            }
+        }
+        
+        return methods;
+    }
+    
+    @Override
+    protected ArrayList<Method> filterInterceptMethods(Class<?> targetClass, ArrayList<Method> allMethods)
+    {
         return null;
     }
 
     @Override
     protected String getProxyClassSuffix()
     {
-        return "$$DSBeanInterceptorProxy";
+        return "$$DSInterceptorProxy";
     }
 }

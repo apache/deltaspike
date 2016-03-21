@@ -118,7 +118,7 @@ public abstract class DeltaSpikeProxyFactory
             ArrayList<Method> delegateMethods = getDelegateMethods(targetClass, allMethods);
 
             // check if a interceptor is defined on class level. if not, skip interceptor methods
-            if (delegateMethods != null
+            if (interceptMethods != null
                     && interceptMethods.size() > 0
                     && !containsInterceptorBinding(beanManager, targetClass.getDeclaredAnnotations()))
             {
