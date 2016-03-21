@@ -18,10 +18,10 @@
  */
 package org.apache.deltaspike.proxy.spi;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Iterator;
+import javax.enterprise.inject.spi.BeanManager;
 import org.apache.deltaspike.proxy.api.DeltaSpikeProxyFactory;
 
 public class EnableInterceptorsProxyFactory extends DeltaSpikeProxyFactory
@@ -33,30 +33,47 @@ public class EnableInterceptorsProxyFactory extends DeltaSpikeProxyFactory
         return INSTANCE;
     }
    
-    @Override
-    protected ArrayList<Method> getDelegateMethods(Class<?> targetClass, ArrayList<Method> allMethods)
+    public static <T> T wrap(T obj, BeanManager beanManager)
     {
-        ArrayList<Method> methods = new ArrayList<Method>();
-        
-        Iterator<Method> it = allMethods.iterator();
-        while (it.hasNext())
+        if (obj == null)
         {
-            Method method = it.next();
-
-            if (Modifier.isPublic(method.getModifiers())
-                    && !Modifier.isFinal(method.getModifiers())
-                    && !Modifier.isAbstract(method.getModifiers()))
-            {
-                methods.add(method);
-            }
+            throw new IllegalArgumentException("obj must not be null!");
         }
         
-        return methods;
+        // generate proxy
+        Class proxyClass = EnableInterceptorsProxyFactory.getInstance().getProxyClass(beanManager,
+                obj.getClass(), EnableInterceptorsDelegate.class);
+
+        // delegate method calls to our original instance from the wrapped producer method
+        EnableInterceptorsDelegate delegate = new EnableInterceptorsDelegate(obj);
+
+        try
+        {
+            // instantiate proxy
+            Constructor constructor = proxyClass.getConstructor(EnableInterceptorsDelegate.class);
+            return (T) constructor.newInstance(delegate);
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException("Could not create proxy instance by class " + obj.getClass(), e);
+        }
     }
     
     @Override
+    protected ArrayList<Method> getDelegateMethods(Class<?> targetClass, ArrayList<Method> allMethods)
+    {
+        // the default #filterInterceptMethods filters all non-public, final and abstract methods
+        // which means actually every publich proxyable method
+        // as we need to delegate method call to the original object instance -> proxy all public methods
+        ArrayList<Method> delegateMethods = super.filterInterceptMethods(targetClass, allMethods);
+        return delegateMethods;
+    }
+
+    @Override
     protected ArrayList<Method> filterInterceptMethods(Class<?> targetClass, ArrayList<Method> allMethods)
     {
+        // we don't need to overwrite methods to just execute interceptors
+        // all method call are delegated to our EnableInterceptorsDelegate, to delegate to the original object instance
         return null;
     }
 

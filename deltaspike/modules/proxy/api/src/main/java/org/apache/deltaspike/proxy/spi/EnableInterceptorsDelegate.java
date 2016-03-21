@@ -22,6 +22,9 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
+/**
+ * {@link InvocationHandler} to delegate every method call to an provided object instance.
+ */
 public class EnableInterceptorsDelegate implements InvocationHandler, Serializable
 {
     private final Object instance;

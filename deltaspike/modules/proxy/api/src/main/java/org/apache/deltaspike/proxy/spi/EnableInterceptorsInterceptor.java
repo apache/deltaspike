@@ -19,7 +19,6 @@
 package org.apache.deltaspike.proxy.spi;
 
 import java.io.Serializable;
-import java.lang.reflect.Constructor;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
@@ -37,19 +36,8 @@ public class EnableInterceptorsInterceptor implements Serializable
     @AroundInvoke
     public Object wrapBeanCandidate(InvocationContext invocationContext) throws Exception
     {
-        Object beanCandidate = invocationContext.proceed();
+        Object producerResult = invocationContext.proceed();
         
-        if (beanCandidate == null)
-        {
-            throw new IllegalStateException("Can not apply "
-                    + EnableInterceptors.class.getSimpleName()
-                    + " on a null instance!");
-        }
-
-        Class proxyClass = EnableInterceptorsProxyFactory.getInstance().getProxyClass(beanManager,
-                beanCandidate.getClass(), EnableInterceptorsDelegate.class);
-                
-        Constructor constructor = proxyClass.getConstructor(EnableInterceptorsDelegate.class);
-        return constructor.newInstance(new EnableInterceptorsDelegate(beanCandidate));
+        return EnableInterceptorsProxyFactory.wrap(producerResult, beanManager);
     }
 }
