@@ -32,6 +32,7 @@ import javax.interceptor.InterceptorBinding;
 
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.ServiceUtils;
+import org.apache.deltaspike.proxy.spi.DummyInvocationHandler;
 import org.apache.deltaspike.proxy.spi.ProxyClassGenerator;
 
 public abstract class DeltaSpikeProxyFactory
@@ -99,6 +100,11 @@ public abstract class DeltaSpikeProxyFactory
         }
 
         return proxyClass;
+    }
+    
+    public <T> Class<T> getProxyClass(BeanManager beanManager, Class<T> targetClass)
+    {
+        return getProxyClass(beanManager, targetClass, DummyInvocationHandler.class);
     }
 
     private synchronized <T> Class<T> createProxyClass(BeanManager beanManager, ClassLoader classLoader,

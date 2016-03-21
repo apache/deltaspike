@@ -116,6 +116,12 @@
             <version>5.0.3</version>
             <optional>true</optional>
         </dependency>
+        
+        <dependency>
+            <groupId>org.apache.deltaspike.core</groupId>
+            <artifactId>deltaspike-core-impl</artifactId>
+            <scope>test</scope>
+        </dependency>
 	</dependencies>
 
 </project>
