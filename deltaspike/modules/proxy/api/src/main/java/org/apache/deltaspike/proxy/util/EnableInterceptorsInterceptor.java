@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.proxy.spi;
+package org.apache.deltaspike.proxy.util;
 
 import java.io.Serializable;
 import javax.enterprise.inject.spi.BeanManager;

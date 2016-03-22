@@ -16,9 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.proxy.spi;
+package org.apache.deltaspike.proxy.util;
 
+import java.io.Serializable;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import javax.enterprise.inject.spi.BeanManager;
@@ -27,12 +29,12 @@ import org.apache.deltaspike.proxy.api.DeltaSpikeProxyFactory;
 public class EnableInterceptorsProxyFactory extends DeltaSpikeProxyFactory
 {
     private static final EnableInterceptorsProxyFactory INSTANCE = new EnableInterceptorsProxyFactory();
-    
-    public static EnableInterceptorsProxyFactory getInstance()
+
+    private EnableInterceptorsProxyFactory()
     {
-        return INSTANCE;
+        
     }
-   
+
     public static <T> T wrap(T obj, BeanManager beanManager)
     {
         if (obj == null)
@@ -41,8 +43,7 @@ public class EnableInterceptorsProxyFactory extends DeltaSpikeProxyFactory
         }
         
         // generate proxy
-        Class proxyClass = EnableInterceptorsProxyFactory.getInstance().getProxyClass(beanManager,
-                obj.getClass(), EnableInterceptorsDelegate.class);
+        Class proxyClass = INSTANCE.getProxyClass(beanManager, obj.getClass(), EnableInterceptorsDelegate.class);
 
         // delegate method calls to our original instance from the wrapped producer method
         EnableInterceptorsDelegate delegate = new EnableInterceptorsDelegate(obj);
@@ -81,5 +82,24 @@ public class EnableInterceptorsProxyFactory extends DeltaSpikeProxyFactory
     protected String getProxyClassSuffix()
     {
         return "$$DSInterceptorProxy";
+    }
+    
+    /**
+     * {@link InvocationHandler} to delegate every method call to an provided object instance.
+     */
+    private static class EnableInterceptorsDelegate implements InvocationHandler, Serializable
+    {
+        private final Object instance;
+
+        public EnableInterceptorsDelegate(Object instance)
+        {
+            this.instance = instance;
+        }
+
+        @Override
+        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
+        {
+            return method.invoke(instance, args);
+        }
     }
 }
