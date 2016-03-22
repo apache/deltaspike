@@ -283,6 +283,19 @@
             </dependencies>
         </profile>
         <profile>
+            <id>tomee7-build-managed</id>
+            <build>
+                <testResources>
+                    <testResource>
+                        <directory>src/test/resources</directory>
+                    </testResource>
+                    <testResource>
+                        <directory>src/test/resources-openejb</directory>
+                    </testResource>
+                </testResources>
+            </build>
+        </profile>
+        <profile>
             <id>wls-remote-12c</id>
             <build>
                 <testResources>
