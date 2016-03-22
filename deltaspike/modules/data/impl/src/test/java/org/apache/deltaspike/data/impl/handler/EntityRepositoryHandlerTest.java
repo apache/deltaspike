@@ -79,10 +79,6 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
     @Inject
     private SimpleStringIdRepository stringIdRepo;
 
-    @Produces
-    @PersistenceContext
-    private EntityManager entityManager;
-
     @Test
     public void should_save() throws Exception
     {
@@ -121,7 +117,7 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
 
         // when
         simple = repo.saveAndFlush(simple);
-        Simple fetch = (Simple) entityManager
+        Simple fetch = (Simple) getEntityManager()
                 .createNativeQuery("select * from SIMPLE_TABLE where id = ?", Simple.class)
                 .setParameter(1, simple.getId())
                 .getSingleResult();
@@ -369,7 +365,7 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
         // when
         repo.remove(simple);
         repo.flush();
-        Simple lookup = entityManager.find(Simple.class, simple.getId());
+        Simple lookup = getEntityManager().find(Simple.class, simple.getId());
 
         // then
         assertNull(lookup);
@@ -382,7 +378,7 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
 
         // when
         repo.removeAndFlush(simple);
-        Simple lookup = entityManager.find(Simple.class, simple.getId());
+        Simple lookup = getEntityManager().find(Simple.class, simple.getId());
 
         // then
         assertNull(lookup);
@@ -397,7 +393,7 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
         repo.detach(simple);
         repo.attachAndRemove(simple);
         repo.flush();
-        Simple lookup = entityManager.find(Simple.class, simple.getId());
+        Simple lookup = getEntityManager().find(Simple.class, simple.getId());
 
         // then
         assertNull(lookup);
@@ -459,18 +455,12 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
         Long id = simple.getId();
 
         //when
-        entityManager.detach(simple);
+        getEntityManager().detach(simple);
         Long primaryKey = repo.getPrimaryKey(simple);
 
         // then
         assertNotNull(primaryKey);
         assertEquals(id, primaryKey);
-    }
-
-    @Override
-    protected EntityManager getEntityManager()
-    {
-        return entityManager;
     }
 
 }

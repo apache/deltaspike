@@ -19,6 +19,7 @@
 package org.apache.deltaspike.data.test;
 
 import javax.annotation.Resource;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.UserTransaction;
 
@@ -57,6 +58,11 @@ public abstract class TransactionalTestCase
         ut.rollback();
     }
 
-    protected abstract EntityManager getEntityManager();
+    @Inject private EntityManager entityManager;
+    
+    protected EntityManager getEntityManager()
+    {
+        return entityManager;
+    }
 
 }

@@ -57,10 +57,6 @@ public class OrmXmlBasedRepositoryTest extends TransactionalTestCase
                 .addAsWebInfResource("test-default-orm.xml", ArchivePaths.create("classes/META-INF/orm.xml"));
     }
 
-    @Produces
-    @PersistenceContext
-    private EntityManager entityManager;
-
     @Inject
     private MappedOneRepository mappedOneRepository;
 
@@ -79,17 +75,11 @@ public class OrmXmlBasedRepositoryTest extends TransactionalTestCase
         assertEquals(one.getId(), byName.getId());
     }
 
-    @Override
-    protected EntityManager getEntityManager()
-    {
-        return entityManager;
-    }
-
     private MappedOne createMappedOne(String name)
     {
         MappedOne result = new MappedOne(name);
-        entityManager.persist(result);
-        entityManager.flush();
+        getEntityManager().persist(result);
+        getEntityManager().flush();
         return result;
     }
 

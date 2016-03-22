@@ -49,9 +49,6 @@ public class AuditEntityListenerTest extends TransactionalTestCase
                 .addPackage(AuditedEntity.class.getPackage());
     }
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
     private final String who = "test999";
     private final Principal principal = new Principal(who);
 
@@ -68,7 +65,7 @@ public class AuditEntityListenerTest extends TransactionalTestCase
     {
         try
         {
-            entityManager.persist(principal);
+            getEntityManager().persist(principal);
         }
         catch (Throwable e)
         {
@@ -83,8 +80,8 @@ public class AuditEntityListenerTest extends TransactionalTestCase
         AuditedEntity entity = new AuditedEntity();
 
         // when
-        entityManager.persist(entity);
-        entityManager.flush();
+        getEntityManager().persist(entity);
+        getEntityManager().flush();
 
         // then
         assertNotNull(entity.getCreated());
@@ -97,13 +94,13 @@ public class AuditEntityListenerTest extends TransactionalTestCase
     {
         // given
         AuditedEntity entity = new AuditedEntity();
-        entityManager.persist(entity);
-        entityManager.flush();
+        getEntityManager().persist(entity);
+        getEntityManager().flush();
 
         // when
-        entity = entityManager.find(AuditedEntity.class, entity.getId());
+        entity = getEntityManager().find(AuditedEntity.class, entity.getId());
         entity.setName("test");
-        entityManager.flush();
+        getEntityManager().flush();
 
         // then
         assertNotNull(entity.getGregorianModified());
@@ -117,20 +114,14 @@ public class AuditEntityListenerTest extends TransactionalTestCase
         AuditedEntity entity = new AuditedEntity();
 
         // when
-        entityManager.persist(entity);
-        entityManager.flush();
+        getEntityManager().persist(entity);
+        getEntityManager().flush();
 
         // then
         assertNotNull(entity.getChanger());
         assertEquals(who, entity.getChanger());
         assertNotNull(entity.getPrincipal());
         assertEquals(who, entity.getPrincipal().getName());
-    }
-
-    @Override
-    protected EntityManager getEntityManager()
-    {
-        return entityManager;
     }
 
 }

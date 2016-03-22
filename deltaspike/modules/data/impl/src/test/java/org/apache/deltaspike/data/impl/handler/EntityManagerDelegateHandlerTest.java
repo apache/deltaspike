@@ -50,10 +50,6 @@ public class EntityManagerDelegateHandlerTest extends TransactionalTestCase
     @Inject
     private ExtendedRepositoryInterface repository;
 
-    @Produces
-    @PersistenceContext
-    private EntityManager entityManager;
-
     @Test
     public void should_delete_detached_entity() {
         // given
@@ -68,12 +64,6 @@ public class EntityManagerDelegateHandlerTest extends TransactionalTestCase
         assertNotNull(id);
         Simple search = repository.findBy(id);
         assertNull(search);
-    }
-
-    @Override
-    protected EntityManager getEntityManager()
-    {
-        return entityManager;
     }
 
 }

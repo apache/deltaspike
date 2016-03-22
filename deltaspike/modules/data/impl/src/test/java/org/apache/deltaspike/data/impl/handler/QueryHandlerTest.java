@@ -64,9 +64,6 @@ public class QueryHandlerTest extends TransactionalTestCase
     @Inject
     private Simple2Repository repo2;
 
-    @Produces
-    @PersistenceContext
-    private EntityManager entityManager;
 
     private SimpleBuilder builder;
 
@@ -435,20 +432,14 @@ public class QueryHandlerTest extends TransactionalTestCase
     @Before
     public void setup()
     {
-        builder = new SimpleBuilder(entityManager);
-    }
-
-    @Override
-    protected EntityManager getEntityManager()
-    {
-        return entityManager;
+        builder = new SimpleBuilder(getEntityManager());
     }
 
     private Simple2 createSimple2(String name)
     {
         Simple2 result = new Simple2(name);
-        entityManager.persist(result);
-        entityManager.flush();
+        getEntityManager().persist(result);
+        getEntityManager().flush();
         return result;
     }
 

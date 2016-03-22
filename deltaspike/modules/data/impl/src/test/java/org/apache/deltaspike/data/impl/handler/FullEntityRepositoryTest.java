@@ -56,10 +56,6 @@ public class FullEntityRepositoryTest extends TransactionalTestCase
     @Inject
     private FullRepositoryAbstract repoAbstract;
 
-    @Produces
-    @PersistenceContext
-    private EntityManager entityManager;
-
     @Test
     public void should_save() throws Exception
     {
@@ -188,7 +184,7 @@ public class FullEntityRepositoryTest extends TransactionalTestCase
 
         // when
         simple = repo.saveAndFlush(simple);
-        Simple fetch = (Simple) entityManager
+        Simple fetch = (Simple) getEntityManager()
                 .createNativeQuery("select * from SIMPLE_TABLE where id = ?", Simple.class)
                 .setParameter(1, simple.getId())
                 .getSingleResult();
@@ -209,12 +205,6 @@ public class FullEntityRepositoryTest extends TransactionalTestCase
 
         // then
         assertEquals(simple.getId(), fetch.getId());
-    }
-
-    @Override
-    protected EntityManager getEntityManager()
-    {
-        return entityManager;
     }
 
 }

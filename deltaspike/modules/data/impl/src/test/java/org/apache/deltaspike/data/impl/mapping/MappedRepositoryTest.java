@@ -72,10 +72,6 @@ public class MappedRepositoryTest extends TransactionalTestCase
     @Inject
     private SimpleMappedDtoRepository dtoRepository;
 
-    @Produces
-    @PersistenceContext
-    private EntityManager entityManager;
-
     @Test
     public void should_map_entityrepo_methods()
     {
@@ -87,7 +83,7 @@ public class MappedRepositoryTest extends TransactionalTestCase
         // when
         SimpleDto saved = repository.saveAndFlush(dto);
         SimpleDto loadedDto = repository.findBy(saved.getId());
-        Simple loaded = entityManager.find(Simple.class, saved.getId().getId());
+        Simple loaded = getEntityManager().find(Simple.class, saved.getId().getId());
 
         // then
         assertNotNull(loadedDto);
@@ -102,7 +98,7 @@ public class MappedRepositoryTest extends TransactionalTestCase
         // given
         Simple simple = new Simple("should_map_method_expression");
         simple.setEnabled(Boolean.TRUE);
-        entityManager.persist(simple);
+        getEntityManager().persist(simple);
 
         // when
         List<SimpleDto> result = repository.findByEnabled(Boolean.TRUE);
@@ -126,7 +122,7 @@ public class MappedRepositoryTest extends TransactionalTestCase
         // given
         Simple simple = new Simple("should_map_method_expression");
         simple.setEnabled(Boolean.TRUE);
-        entityManager.persist(simple);
+        getEntityManager().persist(simple);
 
         // when
         List<SimpleDto> result = repository.findByEnabled(new BooleanWrapper(Boolean.TRUE));
@@ -151,7 +147,7 @@ public class MappedRepositoryTest extends TransactionalTestCase
         final String name = "should_find_with_queryresult";
         Simple simple = new Simple(name);
         simple.setEnabled(Boolean.TRUE);
-        entityManager.persist(simple);
+        getEntityManager().persist(simple);
 
         // when
         List<SimpleDto> result = repository.findByNameToo(name)
@@ -185,7 +181,7 @@ public class MappedRepositoryTest extends TransactionalTestCase
         final String name = "should_update_existing_entity_with_simplemapper";
         Simple simple = new Simple(name);
         simple.setEnabled(Boolean.TRUE);
-        entityManager.persist(simple);
+        getEntityManager().persist(simple);
 
         SimpleDto dto = new SimpleDto();
         dto.setName(name + "_updated");
@@ -194,17 +190,11 @@ public class MappedRepositoryTest extends TransactionalTestCase
 
         // when
         dtoRepository.save(dto);
-        Simple lookup = entityManager.find(Simple.class, simple.getId());
+        Simple lookup = getEntityManager().find(Simple.class, simple.getId());
 
         // then
         assertNotNull(lookup);
         assertEquals(name + "_updated", lookup.getName());
-    }
-
-    @Override
-    protected EntityManager getEntityManager()
-    {
-        return entityManager;
     }
 
 }

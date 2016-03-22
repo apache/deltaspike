@@ -44,6 +44,11 @@ public abstract class TestDeployments {
      */
     public static WebArchive initDeployment()
     {
+        return initDeployment(true);
+    }
+
+    public static WebArchive initDeployment(boolean addDefaultEntityManagerProducer)
+    {
         Logging.reconfigure();
 
         WebArchive archive = ShrinkWrap
@@ -57,6 +62,11 @@ public abstract class TestDeployments {
                 .addAsWebInfResource(new StringAsset(DS_PROPERTIES_WITH_ENV_AWARE_TX_STRATEGY),
                         "classes/META-INF/apache-deltaspike.properties");
 
+        if (addDefaultEntityManagerProducer)
+        {
+            archive.addClass(EntityManagerProducer.class);
+        }
+        
         return archive;
     }
 

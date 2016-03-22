@@ -49,7 +49,7 @@ public class EntityManagerTest
     @Deployment
     public static Archive<?> deployment()
     {
-        return initDeployment()
+        return initDeployment(false)
                 .addPackage(Simple.class.getPackage())
                 .addClasses(SimpleRepositoryWithEntityManager.class,
                         SimpleRepositoryWithEntityManagerResolver.class,

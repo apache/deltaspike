@@ -58,10 +58,6 @@ public class TransactionalQueryRunnerTest
     @Inject
     private ExtendedRepositoryInterface repository;
 
-    @Produces
-    @PersistenceContext
-    private EntityManager entityManager;
-
     @Inject
     private TransactionalQueryRunnerWrapper wrapper;
 

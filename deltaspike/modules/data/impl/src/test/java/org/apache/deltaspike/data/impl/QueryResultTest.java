@@ -62,10 +62,6 @@ public class QueryResultTest extends TransactionalTestCase
     @Inject
     private SimpleRepository repo;
 
-    @Produces
-    @PersistenceContext
-    private EntityManager entityManager;
-
     private SimpleBuilder builder;
 
     @Test
@@ -361,7 +357,7 @@ public class QueryResultTest extends TransactionalTestCase
     public void should_paginate_with_orderby()
     {
         // given
-        SimpleStringIdBuilder builder = new SimpleStringIdBuilder(entityManager);
+        SimpleStringIdBuilder builder = new SimpleStringIdBuilder(getEntityManager());
 
 
         final String name = "should_paginate_with_orderby";
@@ -384,13 +380,7 @@ public class QueryResultTest extends TransactionalTestCase
     @Before
     public void setup()
     {
-        builder = new SimpleBuilder(entityManager);
-    }
-
-    @Override
-    protected EntityManager getEntityManager()
-    {
-        return entityManager;
+        builder = new SimpleBuilder(getEntityManager());
     }
 
 }

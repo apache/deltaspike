@@ -51,10 +51,6 @@ public class CdiQuerySpiTest extends TransactionalTestCase
                 .addPackage(Simple.class.getPackage());
     }
 
-    @Produces
-    @PersistenceContext
-    private EntityManager entityManager;
-
     @Inject
     private MySimpleRepository repo;
 
@@ -69,11 +65,5 @@ public class CdiQuerySpiTest extends TransactionalTestCase
 
         // then
         assertNotNull(simple.getId());
-    }
-
-    @Override
-    protected EntityManager getEntityManager()
-    {
-        return entityManager;
     }
 }

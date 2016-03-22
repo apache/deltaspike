@@ -66,10 +66,6 @@ public class CriteriaTest extends TransactionalTestCase
     @Inject
     private ParentRepository parentRepo;
 
-    @Produces
-    @PersistenceContext
-    private EntityManager entityManager;
-
     @Test
     public void should_create_criteria_query()
     {
@@ -119,8 +115,8 @@ public class CriteriaTest extends TransactionalTestCase
         parent.setOne(new OneToOne(nameOne));
         parent.add(new OneToMany(nameMany));
 
-        entityManager.persist(parent);
-        entityManager.flush();
+        getEntityManager().persist(parent);
+        getEntityManager().flush();
 
         // when
         List<Parent> result = parentRepo.joinQuery(name, nameOne, nameMany);
@@ -151,11 +147,11 @@ public class CriteriaTest extends TransactionalTestCase
         Parent parent4 = new Parent(name + "1");
         parent4.setValue(75L);
 
-        entityManager.persist(parent1);
-        entityManager.persist(parent2);
-        entityManager.persist(parent3);
-        entityManager.persist(parent4);
-        entityManager.flush();
+        getEntityManager().persist(parent1);
+        getEntityManager().persist(parent2);
+        getEntityManager().persist(parent3);
+        getEntityManager().persist(parent4);
+        getEntityManager().flush();
 
         // when
         List<Parent> result = parentRepo.orQuery(name + "1", name + "2");
@@ -174,11 +170,11 @@ public class CriteriaTest extends TransactionalTestCase
         Parent parent3 = new Parent(name + "19");
         Parent parent4 = new Parent(name + "02");
 
-        entityManager.persist(parent1);
-        entityManager.persist(parent2);
-        entityManager.persist(parent3);
-        entityManager.persist(parent4);
-        entityManager.flush();
+        getEntityManager().persist(parent1);
+        getEntityManager().persist(parent2);
+        getEntityManager().persist(parent3);
+        getEntityManager().persist(parent4);
+        getEntityManager().flush();
 
         // when
         List<Parent> result = parentRepo.orderedQuery();
@@ -198,8 +194,8 @@ public class CriteriaTest extends TransactionalTestCase
         final String name = "testCreateQueryWihtoutNulls";
         Parent parent = new Parent(name);
 
-        entityManager.persist(parent);
-        entityManager.flush();
+        getEntityManager().persist(parent);
+        getEntityManager().flush();
 
         // when
         List<Parent> result = parentRepo.nullAwareQuery(name, null, null);
@@ -218,8 +214,8 @@ public class CriteriaTest extends TransactionalTestCase
         parent.add(new OneToMany(name + "-1"));
         parent.add(new OneToMany(name + "-2"));
 
-        entityManager.persist(parent);
-        entityManager.flush();
+        getEntityManager().persist(parent);
+        getEntityManager().flush();
 
         // when
         Parent result = parentRepo.fetchQuery(name);
@@ -240,10 +236,10 @@ public class CriteriaTest extends TransactionalTestCase
         Parent parent2 = new Parent(name + "-2");
         Parent parent3 = new Parent(name + "-3");
 
-        entityManager.persist(parent1);
-        entityManager.persist(parent2);
-        entityManager.persist(parent3);
-        entityManager.flush();
+        getEntityManager().persist(parent1);
+        getEntityManager().persist(parent2);
+        getEntityManager().persist(parent3);
+        getEntityManager().flush();
 
         // when
         List<Parent> result = parentRepo.fetchByName(name + "-1", name + "-2", name + "-3");
@@ -384,8 +380,8 @@ public class CriteriaTest extends TransactionalTestCase
         final String name = "should_create_date_criteria";
         final Simple simple = new Simple(name);
         simple.setTemporal(new Date());
-        entityManager.persist(simple);
-        entityManager.flush();
+        getEntityManager().persist(simple);
+        getEntityManager().flush();
 
         Calendar cal = Calendar.getInstance();
         cal.setTime(simple.getTemporal());
@@ -410,8 +406,8 @@ public class CriteriaTest extends TransactionalTestCase
         final String superName = "super_should_create_date_criteria";
         final Simple simple = new Simple(name);
         simple.setSuperName(superName);
-        entityManager.persist(simple);
-        entityManager.flush();
+        getEntityManager().persist(simple);
+        getEntityManager().flush();
 
         // when
         final Simple result = repo.findBySuperName(superName);
@@ -450,19 +446,12 @@ public class CriteriaTest extends TransactionalTestCase
         assertEquals("should_apply_trim ", objects[2]);
     }
 
-
-    @Override
-    protected EntityManager getEntityManager()
-    {
-        return entityManager;
-    }
-
     private Simple createSimple(String name, Integer counter)
     {
         Simple result = new Simple(name);
         result.setCounter(counter);
-        entityManager.persist(result);
-        entityManager.flush();
+        getEntityManager().persist(result);
+        getEntityManager().flush();
         return result;
     }
 }
