@@ -60,7 +60,7 @@ public class EnableInterceptorsTest
     private MyBean myBean;
     
     @Test
-    public void testPartialBeanWithApplicationScope() throws Exception
+    public void testInterception() throws Exception
     {
         Assert.assertFalse(myBean.isIntercepted());
         Assert.assertFalse(myBean.isMethodCalled());
@@ -68,6 +68,18 @@ public class EnableInterceptorsTest
         myBean.somethingIntercepted();
         
         Assert.assertTrue(myBean.isIntercepted());
+        Assert.assertTrue(myBean.isMethodCalled());
+    }
+    
+    @Test
+    public void testNonInterception() throws Exception
+    {
+        Assert.assertFalse(myBean.isIntercepted());
+        Assert.assertFalse(myBean.isMethodCalled());
+        
+        myBean.somethingNotIntercepted();
+        
+        Assert.assertFalse(myBean.isIntercepted());
         Assert.assertTrue(myBean.isMethodCalled());
     }
 }

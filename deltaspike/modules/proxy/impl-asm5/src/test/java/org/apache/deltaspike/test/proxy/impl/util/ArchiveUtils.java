@@ -21,6 +21,7 @@ package org.apache.deltaspike.test.proxy.impl.util;
 import java.util.ArrayList;
 import java.util.Arrays;
 import org.apache.deltaspike.test.utils.ShrinkWrapArchiveUtil;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 
 public abstract class ArchiveUtils
@@ -39,10 +40,14 @@ public abstract class ArchiveUtils
                 "META-INF/beans.xml",
                 new String[] { "org.apache.deltaspike.core",
                         "org.apache.deltaspike.proxy",
-                        "org.apache.deltaspike.test.category" },
+                        "org.apache.deltaspike.test.category"},
                 new String[] { "META-INF.apache-deltaspike.properties" },
                 "ds-core_and_proxy");
         result.addAll(Arrays.asList(temp));
+
+        // add asm - it isn't shaded yet in the test phase
+        result.add(ShrinkWrap.create(JavaArchive.class, "ds-asm.jar")
+                    .addPackages(true, "org.objectweb.asm"));
 
         return result.toArray(new JavaArchive[result.size()]);
     }

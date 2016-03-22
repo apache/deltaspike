@@ -18,19 +18,19 @@
   ~ under the License.
   -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>org.apache.deltaspike.modules</groupId>
-		<artifactId>proxy-module-project</artifactId>
-		<version>1.5.5-SNAPSHOT</version>
-	</parent>
+    <parent>
+        <groupId>org.apache.deltaspike.modules</groupId>
+        <artifactId>proxy-module-project</artifactId>
+        <version>1.5.5-SNAPSHOT</version>
+    </parent>
 
-	<artifactId>deltaspike-proxy-module-impl-asm5</artifactId>
-	<packaging>bundle</packaging>
+    <artifactId>deltaspike-proxy-module-impl-asm5</artifactId>
+    <packaging>bundle</packaging>
 
-	<name>Apache DeltaSpike Proxy-Module Impl ASM5</name>
-    
+    <name>Apache DeltaSpike Proxy-Module Impl ASM5</name>
+
     <properties>
         <deltaspike.osgi.export.pkg>
             org.apache.deltaspike.proxy.impl.*
@@ -39,8 +39,6 @@
             *
         </deltaspike.osgi.import>
     </properties>
-
-
 
     <build>
         <plugins>
@@ -87,11 +85,11 @@
         </plugins>
     </build>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.apache.deltaspike.core</groupId>
-			<artifactId>deltaspike-core-api</artifactId>
-		</dependency>
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.deltaspike.core</groupId>
+            <artifactId>deltaspike-core-api</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.apache.deltaspike.modules</groupId>
@@ -116,12 +114,12 @@
             <version>5.0.3</version>
             <optional>true</optional>
         </dependency>
-        
+
         <dependency>
             <groupId>org.apache.deltaspike.core</groupId>
             <artifactId>deltaspike-core-impl</artifactId>
             <scope>test</scope>
         </dependency>
-	</dependencies>
+    </dependencies>
 
 </project>

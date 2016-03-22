@@ -45,10 +45,14 @@ public class MyBean
     {
         this.methodCalled = methodCalled;
     }
-    
-    
+
     @MyBeanInterceptorBinding
     public void somethingIntercepted()
+    {
+        methodCalled = true;
+    }
+
+    public void somethingNotIntercepted()
     {
         methodCalled = true;
     }
