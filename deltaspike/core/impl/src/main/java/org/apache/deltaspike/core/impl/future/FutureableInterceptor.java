@@ -20,6 +20,7 @@ package org.apache.deltaspike.core.impl.future;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.future.Futureable;
+import org.apache.deltaspike.core.impl.util.AnnotatedMethods;
 
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
@@ -174,19 +175,7 @@ public class FutureableInterceptor implements Serializable
         if (executorService == null)
         {
             final AnnotatedType<?> annotatedType = beanManager.createAnnotatedType(method.getDeclaringClass());
-            AnnotatedMethod<?> annotatedMethod = null;
-            for (final AnnotatedMethod<?> am : annotatedType.getMethods())
-            {
-                if (am.getJavaMember().equals(method))
-                {
-                    annotatedMethod = am;
-                    break;
-                }
-            }
-            if (annotatedMethod == null)
-            {
-                throw new IllegalStateException("No annotated method for " + method);
-            }
+            final AnnotatedMethod<?> annotatedMethod = AnnotatedMethods.findMethod(annotatedType, method);
             final Futureable methodConfig = annotatedMethod.getAnnotation(Futureable.class);
             final ExecutorService instance = manager.find(
                     (methodConfig == null ? annotatedType.getAnnotation(Futureable.class) : methodConfig).value());

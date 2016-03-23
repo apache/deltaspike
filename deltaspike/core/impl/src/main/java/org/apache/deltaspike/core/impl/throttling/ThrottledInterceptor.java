@@ -20,6 +20,7 @@ package org.apache.deltaspike.core.impl.throttling;
 
 import org.apache.deltaspike.core.api.throttling.Throttled;
 import org.apache.deltaspike.core.api.throttling.Throttling;
+import org.apache.deltaspike.core.impl.util.AnnotatedMethods;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Typed;
@@ -74,19 +75,7 @@ public class ThrottledInterceptor implements Serializable
             {
                 final Class declaringClass = method.getDeclaringClass();
                 final AnnotatedType<Object> annotatedType = beanManager.createAnnotatedType(declaringClass);
-                AnnotatedMethod<?> annotatedMethod = null;
-                for (final AnnotatedMethod<?> am : annotatedType.getMethods())
-                {
-                    if (am.getJavaMember().equals(method))
-                    {
-                        annotatedMethod = am;
-                        break;
-                    }
-                }
-                if (annotatedMethod == null)
-                {
-                    throw new IllegalStateException("No annotated method for " + method);
-                }
+                final AnnotatedMethod<?> annotatedMethod = AnnotatedMethods.findMethod(annotatedType, method);
 
                 Throttled config = annotatedMethod.getAnnotation(Throttled.class);
                 if (config == null)
