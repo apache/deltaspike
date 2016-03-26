@@ -26,6 +26,7 @@ public class MethodPrefix
     public static final String DEFAULT_OPT_PREFIX = "findOptionalBy";
     public static final String DEFAULT_ANY_PREFIX = "findAnyBy";
     public static final String DEFAULT_DELETE_PREFIX = "deleteBy";
+    public static final String DEFAULT_REMOVE_PREFIX = "removeBy";
 
     private final String customPrefix;
     private final String methodName;
@@ -86,7 +87,8 @@ public class MethodPrefix
 
     public boolean isDelete()
     {
-        return this.getPrefix().equalsIgnoreCase(DEFAULT_DELETE_PREFIX);
+        return this.getPrefix().equalsIgnoreCase(DEFAULT_DELETE_PREFIX) ||
+                this.getPrefix().equalsIgnoreCase(DEFAULT_REMOVE_PREFIX);
     }
 
     private static enum KnownQueryPrefix
@@ -116,6 +118,14 @@ public class MethodPrefix
             }
         },
         DELETE_DEFAULT(DEFAULT_DELETE_PREFIX)
+        {
+            @Override
+            public SingleResultType getStyle()
+            {
+                return SingleResultType.ANY;
+            }
+        },
+        REMOVE_DEFAULT(DEFAULT_REMOVE_PREFIX)
         {
             @Override
             public SingleResultType getStyle()

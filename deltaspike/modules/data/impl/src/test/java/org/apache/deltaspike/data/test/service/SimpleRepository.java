@@ -107,7 +107,11 @@ public abstract class SimpleRepository extends AbstractEntityRepository<Simple, 
 
     public abstract void deleteByName(String name);
 
+    public abstract void removeByName(String name);
+
     public abstract void deleteByNameAndEnabled(String name, boolean enable);
+
+    public abstract void removeByNameAndEnabled(String name, Boolean aTrue);
 
     @Override
     protected abstract EntityManager entityManager();
