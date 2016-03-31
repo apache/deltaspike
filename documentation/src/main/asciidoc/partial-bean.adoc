@@ -30,7 +30,7 @@ Add the Partial-Bean module to the list of dependencies in the project `pom.xml`
 </dependency>
 ----
 
-IMPORTANT: Currently CDI Interceptors applied via @Interceptors and @Decorator are not supported by partial beans!
+IMPORTANT: Currently CDI Interceptors applied via @Interceptors, @Intercepted and @Decorator are not supported by our proxies!
 
 
 == @PartialBeanBinding

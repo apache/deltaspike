@@ -7,7 +7,9 @@
 == Overview
 The Proxy Module provides a simple CDI based wrapper for creating dynamic proxies that can be used within other extensions. +
 The benefit of the DeltaSpike Proxy Module (compared to Javassist or any library) is that the DeltaSpike proxies will execute CDI interceptors. +
-The Proxy Module also provides the 'DeltaSpikeProxyContextualLifecycle', which enables you to dynamically register a proxy as CDI bean via our 'BeanBuilder'.
+The Proxy Module also provides the 'DeltaSpikeProxyContextualLifecycle', which enables you to dynamically register a proxy as CDI bean via the DeltaSpike 'BeanBuilder'.
+
+IMPORTANT: Currently CDI Interceptors applied via @Interceptors, @Intercepted and @Decorator are not supported by our proxies!
 
 === 1. Declare Proxy Module Dependencies
 
@@ -34,4 +36,65 @@ The currently provided implementation is a wrapper for ASM 5, which gets shaded 
 
 === 2. Extend `DeltaSpikeProxyFactory`
 
-The key to making the proxy module work is to provide an implementation of `DeltaSpikeProxyFactory` which will do your proxy work for you.  DeltaSpike ships a default one in the PartialBean module which demonstrates how its meant to work.
+The key to making the proxy module work is to provide an implementation of `DeltaSpikeProxyFactory` which will do your proxy work for you. +
+DeltaSpike ships 3 implementations which demonstrates how its meant to work: +
+
+- org.apache.deltaspike.partialbean.impl.PartialBeanProxyFactory
+- org.apache.deltaspike.proxy.util.EnableInterceptorsProxyFactory
+- org.apache.deltaspike.jsf.impl.injection.proxy.ConverterAndValidatorProxyFactory
+
+=== 3. Using `@EnableInterceptors`
+
+`@EnableInterceptors` allows you to enable your bean interceptors for @Produces, which is not supported via the CDI API. +
+Both interceptors on method and class level are supported.
+
+[source,java]
+--------------------------------------
+@MyCustomInterceptor
+public SomeServiceImpl implements SomeService
+{
+    @Transactional
+    public void doSomething()
+    {
+        ....
+    }
+}
+--------------------------------------
+
+[source,java]
+--------------------------------------
+@Produces
+@EnableInterceptors
+public SomeService produce()
+{
+    return new SomeServiceImpl();
+}
+--------------------------------------
+
+=== 4. Using `EnableInterceptorsProxyFactory`
+
+`@EnableInterceptors` is just a API for producers which is built on `EnableInterceptorsProxyFactory`. +
+With `EnableInterceptorsProxyFactory` you can just proxy an existing object and let it execute CDI interceptors, if they are defined on the given object class.
+
+[source,java]
+--------------------------------------
+@MyCustomInterceptor
+public SomeServiceImpl implements SomeService
+{
+    @Transactional
+    public void doSomething()
+    {
+        ....
+    }
+}
+--------------------------------------
+
+[source,java]
+--------------------------------------
+public void init()
+{
+    SomeServiceImpl myService = new SomeServiceImpl();
+    myService = EnableInterceptorsProxyFactory.wrap(myService, BeanManagerProvider.getInstance().getBeanManager());
+    myService.doSomething(); // will execute the interceptors
+}
+--------------------------------------
