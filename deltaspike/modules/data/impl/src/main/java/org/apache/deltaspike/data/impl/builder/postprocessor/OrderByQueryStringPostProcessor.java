@@ -31,17 +31,21 @@ public class OrderByQueryStringPostProcessor implements QueryStringPostProcessor
 
     private final String attribute;
     private OrderDirection direction;
+    private boolean appendEntityName;
 
-    public OrderByQueryStringPostProcessor(SingularAttribute<?, ?> attribute, OrderDirection direction)
+    public OrderByQueryStringPostProcessor(SingularAttribute<?, ?> attribute, OrderDirection direction,
+                                           boolean appendEntityName)
     {
         this.attribute = attribute.getName();
         this.direction = direction;
+        this.appendEntityName = appendEntityName;
     }
 
-    public OrderByQueryStringPostProcessor(String attribute, OrderDirection direction)
+    public OrderByQueryStringPostProcessor(String attribute, OrderDirection direction, boolean appendEntityName)
     {
         this.attribute = attribute;
         this.direction = direction;
+        this.appendEntityName = appendEntityName;
     }
 
     @Override
@@ -56,8 +60,14 @@ public class OrderByQueryStringPostProcessor implements QueryStringPostProcessor
         {
             builder.append(ORDER_BY);
         }
-        return builder.append(QueryBuilder.ENTITY_NAME)
-                .append(".").append(attribute)
+        if (appendEntityName)
+        {
+            builder.append(QueryBuilder.ENTITY_NAME)
+                .append(".");
+        }
+
+        return builder
+                .append(attribute)
                 .append(" ").append(direction)
                 .toString();
     }

@@ -377,6 +377,28 @@ public class QueryResultTest extends TransactionalTestCase
         assertEquals("b", resultList.get(1).getId());
     }
 
+    @Test
+    public void should_sort_all_result()
+    {
+        List<Simple> result = repo.queryAll()
+                .orderDesc("s.counter",false)
+                .orderAsc("s.enabled", false)
+                .getResultList();
+        // no real check here, verifying query syntax passes.
+        assertNotNull(result);
+    }
+
+    @Test
+    public void should_sort_name_results()
+    {
+        List<Simple> result = repo.queryResultWithNamed("name")
+                .orderDesc(Simple_.counter, true)
+                .orderAsc(Simple_.id)
+                .getResultList();
+        // no real check here, verifying query syntax passes.
+        assertNotNull(result);
+    }
+
     @Before
     public void setup()
     {

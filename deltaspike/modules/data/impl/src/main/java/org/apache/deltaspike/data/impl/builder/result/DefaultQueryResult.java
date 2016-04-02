@@ -58,28 +58,56 @@ public class DefaultQueryResult<T> implements QueryResult<T>
     @Override
     public <X> QueryResult<T> orderAsc(SingularAttribute<T, X> attribute)
     {
-        context.addQueryStringPostProcessor(new OrderByQueryStringPostProcessor(attribute, OrderDirection.ASC));
+        return orderAsc(attribute, true);
+    }
+
+    @Override
+    public <X> QueryResult<T> orderAsc(SingularAttribute<T, X> attribute, boolean appendEntityName)
+    {
+        context.addQueryStringPostProcessor(new OrderByQueryStringPostProcessor(attribute, OrderDirection.ASC,
+                appendEntityName));
         return this;
     }
 
     @Override
     public QueryResult<T> orderAsc(String attribute)
     {
-        context.addQueryStringPostProcessor(new OrderByQueryStringPostProcessor(attribute, OrderDirection.ASC));
+        return orderAsc(attribute, true);
+    }
+
+    @Override
+    public QueryResult<T> orderAsc(String attribute, boolean appendEntityName)
+    {
+        context.addQueryStringPostProcessor(new OrderByQueryStringPostProcessor(attribute, OrderDirection.ASC,
+                appendEntityName));
         return this;
     }
 
     @Override
     public <X> QueryResult<T> orderDesc(SingularAttribute<T, X> attribute)
     {
-        context.addQueryStringPostProcessor(new OrderByQueryStringPostProcessor(attribute, OrderDirection.DESC));
+        return orderDesc(attribute, true);
+    }
+
+    @Override
+    public <X> QueryResult<T> orderDesc(SingularAttribute<T, X> attribute, boolean appendEntityName)
+    {
+        context.addQueryStringPostProcessor(new OrderByQueryStringPostProcessor(attribute, OrderDirection.DESC,
+                appendEntityName));
         return this;
     }
 
     @Override
     public QueryResult<T> orderDesc(String attribute)
     {
-        context.addQueryStringPostProcessor(new OrderByQueryStringPostProcessor(attribute, OrderDirection.DESC));
+        return orderDesc(attribute, true);
+    }
+
+    @Override
+    public QueryResult<T> orderDesc(String attribute, boolean appendEntityName)
+    {
+        context.addQueryStringPostProcessor(new OrderByQueryStringPostProcessor(attribute, OrderDirection.DESC,
+                appendEntityName));
         return this;
     }
 
