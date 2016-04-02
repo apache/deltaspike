@@ -160,9 +160,19 @@ public class ProjectStageAwareSchedulerController
 }
 -------------------------------------------------------------------------------------
 
+== Configurable CRON expressions
+
+In some cases it might be useful to configure a cron-expression e.g. per Project-Stage.
+Therefore, DeltaSpike (v1.6.0+) allows to use keys instead of hardcoded expressions.
+
+In the previous examples we had e.g. `@Scheduled(cronExpression = "0 0/10 * * * ?")`.
+Instead of hardcoding it that way, it's possible to use e.g. `@Scheduled(cronExpression = "{myCronExpression}")` and
+in one of the active config-sources used by DeltaSpike a concrete expression can be defined e.g. via `myCronExpression=0 0/10 * * * ?`.
+Using e.g. `myCronExpression.Development=0 0/5 * * * ?` would allow to change the configured expression for Project-Stage development.
+
 == Manual Scheduler Control
 
-Th SPI allows to control the scheduler (or integrate any other
+The SPI allows to control the scheduler (or integrate any other
 compatible scheduler as an alternative to Quartz2)
 
 Via standard injection like
