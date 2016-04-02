@@ -645,8 +645,8 @@ the query:
 [source,java]
 -----------------------------------------------------------
 List<Person> result = personRepository.findAllByAge(18, 65)
-    .sortAsc(Person_.lastName)
-    .sortDesc(Person_.age)
+    .orderAsc(Person_.lastName)
+    .orderDesc(Person_.age)
     .lockMode(LockModeType.WRITE)
     .hint("org.hibernate.timeout", Integer.valueOf(10))
     .getResultList(); 
@@ -658,6 +658,11 @@ supported for Hibernate, EclipseLink and OpenJPA.
 
 Note that the `QueryResult` return type can also be used with method
 expressions.
+
+IMPORTANT: `QueryResult` is based on our internal understanding of your query
+DeltaSpike expects the alias used in your queries to refer to the entity as `e`
+You can disable this behavior by passing in false with your attribute, `.orderDesc("p.age", false)`
+which would add descending ordering to your existing query `select p from Person p`
 
 === Pagination
 
