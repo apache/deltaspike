@@ -33,7 +33,6 @@
     <modules>
         <module>api</module>
         <module>impl</module>
-        <module>test-ee7</module>
     </modules>
 
     <properties>
@@ -60,6 +59,13 @@
 
         </dependencies>
     </dependencyManagement>
-
+    <profiles>
+        <profile>
+            <id>ee7-tests</id>
+            <modules>
+                <module>test-ee7</module>
+            </modules>
+        </profile>
+    </profiles>
 </project>
 
