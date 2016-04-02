@@ -1,0 +1,34 @@
+Release Notes - Apache DeltaSpike - Version 1.6.0
+
+Sub-task
+
+    [DELTASPIKE-1100] - Support remove expressions
+
+Bug
+
+    [DELTASPIKE-1087] - core-jmx: missing blank in log statement
+    [DELTASPIKE-1097] - Fix Data Module tests for TomEE7
+    [DELTASPIKE-1107] - Wrong usage of Dependency Scope=Import in deltaspike-scheduler-module-impl
+
+Improvement
+
+    [DELTASPIKE-1066] - [perf] enhance caching in RepositoryEntity
+    [DELTASPIKE-1090] - ProjectStage config key with just uppercase letters and '_'
+    [DELTASPIKE-1092] - improve documentation
+    [DELTASPIKE-1095] - Move persistence/orm.xml mapping + parsing from DATA impl to JPA api/spi
+
+New Feature
+
+    [DELTASPIKE-1081] - Offer the possibility to provide the cron expression via configuration
+    [DELTASPIKE-1093] - add @Throttled
+    [DELTASPIKE-1094] - add @Futureable
+    [DELTASPIKE-1096] - project-stage bridge for jsf
+    [DELTASPIKE-1099] - @Locked: method access controlled by a ReadWriteLock
+
+Task
+
+    [DELTASPIKE-1068] - Merge data ClassUtils to core ClassUtils
+    [DELTASPIKE-1069] - evaluate interceptors for producer-methods
+    [DELTASPIKE-1082] - document configurable cron-expressions
+    [DELTASPIKE-1083] - update site and javadoc to 1.5.4
+    [DELTASPIKE-1106] - prepare v1.6.0
