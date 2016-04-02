@@ -8,7 +8,9 @@ Bug
 
     [DELTASPIKE-1087] - core-jmx: missing blank in log statement
     [DELTASPIKE-1097] - Fix Data Module tests for TomEE7
+    [DELTASPIKE-1105] - Cannot sort on a find all query
     [DELTASPIKE-1107] - Wrong usage of Dependency Scope=Import in deltaspike-scheduler-module-impl
+    [DELTASPIKE-1108] - Tests in 'deltaspike-data-module-test-ee7' fail with Weld and should be ignored
 
 Improvement
 
