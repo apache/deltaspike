@@ -89,6 +89,8 @@
                             <exclude>.idea/**/*</exclude>
                             <exclude>readme/**/*</exclude>
                             <exclude>**/*.log</exclude>
+                            <exclude>target/**</exclude>
+                            <exclude>**/*.iml</exclude>
                         </excludes>
                     </configuration>
                 </plugin>
