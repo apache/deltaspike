@@ -24,6 +24,13 @@ Add the Bean Validation module to the list of dependencies in the project `pom.x
 </dependency>
 ----
 
+Or if you're using Gradle, add these dependencies to your `build.gradle`:
+
+[source]
+----
+     runtime 'org.apache.deltaspike.modules:deltaspike-bean-validation-module-impl'
+----
+
 == Scoping
 
 A `ConstraintValidator` inherits the scope defined in the bean class.

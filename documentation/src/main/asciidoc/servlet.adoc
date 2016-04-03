@@ -30,6 +30,14 @@ Add the Servlet module to the list of dependencies in the project `pom.xml` file
 </dependency>
 ----
 
+Or if you're using Gradle, add these dependencies to your `build.gradle`:
+
+[source]
+----
+     runtime 'org.apache.deltaspike.modules:deltaspike-servlet-module-impl'
+     compile 'org.apache.deltaspike.modules:deltaspike-servlet-module-api'
+----
+
 === 2. Configure Listeners and Filters
 
 In most cases there is no need for any additional configuration beside

@@ -31,8 +31,16 @@ Add the JPA module to the list of dependencies in the project `pom.xml` file usi
 </dependency>
 ----
 
-=== 2. Enable the Transaction Interceptor
-If you are using CDI 1.0 or CDI 1.1+ with DeltaSpike v1.1.0 and earlier, you must enable the transaction interceptor in the project `beans.xml` file:
+Or if you're using Gradle, add these dependencies to your `build.gradle`:
+
+[source]
+----
+     runtime 'org.apache.deltaspike.modules:deltaspike-jpa-module-impl'
+     compile 'org.apache.deltaspike.modules:deltaspike-jpa-module-api'
+----
+
+=== 2. (Optional) Enable the Transaction Interceptor
+NOTE: If you are using CDI 1.0 or CDI 1.1+ with DeltaSpike v1.1.0 and earlier, you must enable the transaction interceptor in the project `beans.xml` file:
 
 [source,xml]
 ----

@@ -31,6 +31,14 @@ Add the JSF module to the list of dependencies in the project `pom.xml` file usi
 </dependency>
 ----
 
+Or if you're using Gradle, add these dependencies to your `build.gradle`:
+
+[source]
+----
+     runtime 'org.apache.deltaspike.modules:deltaspike-jsf-module-impl'
+     compile 'org.apache.deltaspike.modules:deltaspike-jsf-module-api'
+----
+
 Some EE6 servers cannot handle optional classes. From DeltaSpike 1.0.1, if you do not like the corresponding log entries during startup or the deployment fails, you can use an alternative impl-module (instead of deltaspike-jsf-module-impl):
 
 [source,xml]
@@ -41,6 +49,13 @@ Some EE6 servers cannot handle optional classes. From DeltaSpike 1.0.1, if you d
     <version>${deltaspike.version}</version>
     <scope>runtime</scope>
 </dependency>
+----
+
+Or if you're using Gradle, add these dependencies to your `build.gradle`:
+
+[source]
+----
+     runtime 'org.apache.deltaspike.modules:deltaspike-jsf-module-impl-ee6'
 ----
 
 .Support of EAR deployments

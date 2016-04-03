@@ -31,6 +31,14 @@ Add the Test-Control module to the list of dependencies in the project `pom.xml`
 </dependency>
 ----
 
+Or if you're using Gradle, add these dependencies to your `build.gradle`:
+
+[source]
+----
+     testCompile 'org.apache.deltaspike.modules:deltaspike-test-control-module-impl'
+     testRuntime 'org.apache.deltaspike.modules:deltaspike-test-control-module-api'
+----
+
 === 2. Declare CDI-implementation-specific dependencies
 
 The Test-Control module depends on the Container-Control module, which provides adapters for several major CDI implementations. Therefore, to use Test-Control, declare dependency on a CDI implementation and a corresponding Container Control implementation in the `pom.xml`.

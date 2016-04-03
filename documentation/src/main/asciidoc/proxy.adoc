@@ -32,6 +32,14 @@ Add the Proxy module to the list of dependencies in the project `pom.xml` file u
 </dependency>
 ----
 
+Or if you're using Gradle, add these dependencies to your `build.gradle`:
+
+[source]
+----
+     runtime 'org.apache.deltaspike.modules:deltaspike-proxy-module-impl'
+     compile 'org.apache.deltaspike.modules:deltaspike-proxy-module-api'
+----
+
 The currently provided implementation is a wrapper for ASM 5, which gets shaded into the implementation JAR.
 
 === 2. Extend `DeltaSpikeProxyFactory`

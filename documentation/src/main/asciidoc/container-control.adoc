@@ -24,6 +24,13 @@ Add the Container Control module to the list of dependencies in the project `pom
 </dependency>
 ----
 
+Or if you're using Gradle, add these dependencies to your `build.gradle`:
+
+[source]
+----
+     compile 'org.apache.deltaspike.cdictrl:deltaspike-cdictrl-api'
+----
+
 == Start the CDI Container from Your Project
 To start a CDI container in your application, you must instantiate a `CdiContainer` object and call the `#boot` method. When `#boot` is called, the `CdiContainer` scans CDI-enabled
 archives for beans and CDI extensions. Before the application exits, `#shutdown` must be called to correctly destroy all beans. An example is given in the code snippet here.
