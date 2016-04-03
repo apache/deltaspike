@@ -7,7 +7,7 @@ DeltaSpike requires a CDI implementation to be available in the Java environment
 == Java EE6+ Containers
 CDI is part of Java EE6 and later so CDI implementations are included as standard in Java EE6+ compliant environments. There is no additional CDI configuration needed besides including the CDI-obligatory `beans.xml` file in your project.
 
-JBoss Weld is integrated in Java EE application servers including WildFly, JBoss Enterprise Application Platform, GlassFish, and Oracle WebLogic.
+JBoss Weld is integrated in Java EE application servers including WildFly, JBoss Enterprise Application Platform, GlassFish, IBM WebSphere Application Server (8.5.5 and up) and Oracle WebLogic.
 
 Apache OpenWebBeans (OWB) is integrated in Java EE containers including Apache TomEE, Apache Geronimo, IBM WebSphere Application Server, and SiwPas.
 
@@ -20,40 +20,47 @@ CDI is not part of Java SE but it can still be used. JBoss Weld and Apache OpenW
 
 DeltaSpike provides a dedicated Container Control module to enable applications deployed in Java SE environments to boot a CDI container. The Container Control module consists of the API component and components specific to the JBoss Weld, Apache OpenWebBeans and Apache OpenEJB CDI containers. The DeltaSpike module provides a layer of abstraction from the specific CDI containers, enabling you to write container-independent code in your project.
 
-Instructions are provided here for adding the required resources to both Maven-based and Maven-independent projects and subsequently booting the CDI container from your project source code.
+Instructions are provided here for adding the required resources to Maven based, Gradle based and build independent projects and subsequently booting the CDI container from your project source code.
 
 === Declare CDI Dependencies 
 
-==== Dependencies for Maven-based Projects
+==== Dependencies for Maven and Gradle based Projects
 For Maven-based projects, the Container Control module is available in Maven Central together with the other DeltaSpike modules. You must configure your project to use the DeltaSpike Container Control API and one of the CDI container-specific modules.
 
-. Open the project `pom.xml` file for editing
-. Add the DeltaSpike Container Control API to the list of dependencies
+. Import the project as defined in link:/documentation/configure.html[Configure DeltaSpike in Your Projects]
+. Import the CDI Control API to your project.
+a. If you're using Maven, add the following to `pom.xml`
 +
 [source,xml]
 ----
 <dependency>
     <groupId>org.apache.deltaspike.cdictrl</groupId>
     <artifactId>deltaspike-cdictrl-api</artifactId>
-    <version>${deltaspike.version}</version>
     <scope>compile</scope>
 </dependency>
 ----
 +
-. Add CDI container dependencies for one of the container options listed here
-
+b. If you're using Gradle, add the following to `build.gradle`
 +
-.For JBoss Weld
-a. Add the JBoss Weld version to the list of properties, replacing the version as desired
+[source]
+----
+dependencies {
+    compile 'org.apache.deltaspike.cdictrl:deltaspike-cdictrl-api'
+}
+----
++
+. Add CDI container dependencies for one of the container options listed here
+- For JBoss Weld
+.. Add the JBoss Weld version to the list of properties, replacing the version as desired
 +
 [source,xml]
 ----
 <properties>
-    <weld.version>1.1.9.Final</weld.version>
+    <weld.version>2.3.3.Final</weld.version>
 </properties>
 ----
 +
-b. Add the JBoss Weld dependency to the list of dependencies
+.. Add the JBoss Weld dependency to the list of dependencies
 +
 [source,xml]
 ----
@@ -65,30 +72,40 @@ b. Add the JBoss Weld dependency to the list of dependencies
 </dependency>
 ----
 +
-c. Add the DeltaSpike Weld-specific Container Control module to the list of dependencies
+.. Add the DeltaSpike Weld-specific Container Control module to the list of dependencies
 +
 [source,xml]
 ----
 <dependency>
     <groupId>org.apache.deltaspike.cdictrl</groupId>
     <artifactId>deltaspike-cdictrl-weld</artifactId>
-    <version>${deltaspike.version}</version>
     <scope>runtime</scope>
 </dependency>
 ----
-
 +
-.For Apache OpenWebBeans
-a. Add the Apache OpenWebBeans version to the list of properties, replacing the version as desired
+- JBoss Weld with Gradle
+.. If you're using Gradle, add the following to `build.gradle`
++
+[source]
+----
+def weldVersion = '2.3.3.Final'
+dependencies {
+    runtime 'org.jboss.weld.se:weld-se:'+weldVersion
+    runtime 'org.apache.deltaspike.cdictrl:deltaspike-cdictrl-weld'
+}
+----
++
+- For Apache OpenWebBeans
+.. Add the Apache OpenWebBeans version to the list of properties, replacing the version as desired
 +
 [source,xml]
 ----
 <properties>
-    <owb.version>1.2.0</owb.version>
+    <owb.version>1.6.3</owb.version>
 </properties>
 ----
 +
-b. Add the Apache OpenWebBeans dependencies to the list of dependencies
+.. Add the Apache OpenWebBeans dependencies to the list of dependencies
 +
 [source,xml]
 ----
@@ -107,27 +124,44 @@ b. Add the Apache OpenWebBeans dependencies to the list of dependencies
 </dependency>
 ----
 +
-c. Add the DeltaSpike Apache OpenWebBeans-specific Container Control module to the list of dependencies
+.. Add the DeltaSpike Apache OpenWebBeans-specific Container Control module to the list of dependencies
 +
 [source,xml]
 ----
 <dependency>
     <groupId>org.apache.deltaspike.cdictrl</groupId>
     <artifactId>deltaspike-cdictrl-owb</artifactId>
-    <version>${deltaspike.version}</version>
     <scope>runtime</scope>
 </dependency>
 ----
-
-. Save the `pom.xml` file changes
-. Download all required dependencies
++
+- Apache OpenWebBeans with Gradle
+.. If you're using Gradle, add the following to `build.gradle`
++
+[source]
+----
+def owbVersion = '1.6.3'
+dependencies {
+    runtime 'org.apache.openwebbeans:openwebbeans-impl:'+owbVersion
+    compile 'org.apache.openwebbeans:openwebbeans-spi:'+owbVersion
+    runtime 'org.apache.deltaspike.cdictrl:deltaspike-cdictrl-owb'
+}
+----
++
+- Save the `pom.xml` file changes
 +
 ----
 mvn clean install
 ----
++
+- Save the `build.gradle` file changes
++
+----
+gradle build
+----
 
-==== Dependencies for Maven-independent Projects
-For Maven-independent projects, the Container Control module is distributed together with the other DeltaSpike modules in `distribution-fill-<version>.zip`. You must add two of the files from the `cdictrl` directory to your project, namely `deltaspike-cdictrl-api.jar` and the .jar file that corresponds to the CDI container you have chosen. Add these files to the project `WEB-INF/lib` or `EAR/lib` directory for .war and .ear projects respectively.
+==== Dependencies for build independent projects
+For build independent projects, the Container Control module is distributed together with the other DeltaSpike modules in `distribution-full-<version>.zip`. You must add two of the files from the `cdictrl` directory to your project, namely `deltaspike-cdictrl-api.jar` and the .jar file that corresponds to the CDI container you have chosen. Add these files to the project `WEB-INF/lib` or `EAR/lib` directory for .war and .ear projects respectively.
 
 == Next
 * For more information about the Container Control module, see <<container-control#,Container Control Module>>.
