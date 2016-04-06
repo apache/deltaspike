@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -594,6 +595,17 @@ public final class ConfigResolver
         TypedResolver<T> withStringDefault(String value);
 
         /**
+         * Specify that a resolved value will get cached for a certain amount of time.
+         * After the time expires the next {@link #getValue()} will again resolve the value
+         * from the underlying {@link ConfigResolver}.
+         *
+         * @param timeUnit the TimeUnit for the value
+         * @param value the amount of the TimeUnit to wait
+         * @return This builder
+         */
+        TypedResolver<T> cacheFor(TimeUnit timeUnit, long value);
+
+        /**
          * Returns the converted resolved filtered value.
          * @return the resolved value
          */
@@ -692,6 +704,10 @@ public final class ConfigResolver
 
         private Converter<?> converter;
 
+        private long cacheTimeMs = -1;
+        private volatile long reloadAfter = -1;
+        private T lastValue = null;
+
 
         private PropertyBuilder()
         {
@@ -741,6 +757,13 @@ public final class ConfigResolver
         }
 
         @Override
+        public TypedResolver<T> cacheFor(TimeUnit timeUnit, long value)
+        {
+            this.cacheTimeMs = timeUnit.toMillis(value);
+            return this;
+        }
+
+        @Override
         public TypedResolver<T> parameterizedBy(String propertyName)
         {
             this.propertyParameter = propertyName;
@@ -778,10 +801,25 @@ public final class ConfigResolver
         @Override
         public T getValue()
         {
+            if (cacheTimeMs > 0)
+            {
+                long now = System.currentTimeMillis();
+                if (now <= reloadAfter)
+                {
+                    return lastValue;
+                }
+                reloadAfter = now + cacheTimeMs;
+            }
+
             String valueStr = resolveStringValue();
             T value = convert(valueStr);
 
-            return fallbackToDefaultIfEmpty(keyResolved, value, defaultValue);
+            value = fallbackToDefaultIfEmpty(keyResolved, value, defaultValue);
+            if (cacheTimeMs > 0)
+            {
+                lastValue = value;
+            }
+            return value;
         }
 
         @Override

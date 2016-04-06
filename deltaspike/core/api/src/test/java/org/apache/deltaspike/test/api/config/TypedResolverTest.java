@@ -27,6 +27,7 @@ import org.junit.Test;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.concurrent.TimeUnit;
 
 public class TypedResolverTest
 {
@@ -197,6 +198,26 @@ public class TypedResolverTest
 
         Assert.assertEquals("testvalue", resolver2.getValue());
         Assert.assertEquals("testkey2", resolver2.getResolvedKey());
+    }
+
+    @Test
+    public void testWithCacheTime() throws Exception
+    {
+        ConfigResolver.TypedResolver<String> resolver = ConfigResolver.resolve("dataSource")
+            .withCurrentProjectStage(true)
+            .parameterizedBy("dbvendor")
+            .cacheFor(TimeUnit.MILLISECONDS, 5)
+            .withDefault("TESTDEFAULT");
+
+        Assert.assertEquals("TestDataSource", resolver.getValue());
+        Assert.assertEquals("TestDataSource", resolver.getValue());
+        Assert.assertEquals("dataSource", resolver.getKey());
+        Assert.assertEquals("TESTDEFAULT", resolver.getDefaultValue());
+        Assert.assertEquals("dataSource.mysql.UnitTest", resolver.getResolvedKey());
+
+        // because the clock steps in certain OS is only 16ms
+        Thread.sleep(35L);
+        Assert.assertEquals("TestDataSource", resolver.getValue());
     }
 
     public static class TestDateConverter implements ConfigResolver.Converter<Date> {
