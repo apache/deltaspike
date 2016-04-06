@@ -12,6 +12,11 @@ minor release to support Java 6.  Patch fixes on 1.6.x will continue
 to support it, but our next minor release (1.7.0) will require
 Java 7 at a minimum.
 
+== 24th Release (1.6.0) (02.04.2016)
+
+The Apache DeltaSpike team is pleased to announce the 24th release
+(v1.6.0).
+
 == 23rd Release (1.5.4) (18.02.2016)
 
 The Apache DeltaSpike team is pleased to announce the 23rd release
