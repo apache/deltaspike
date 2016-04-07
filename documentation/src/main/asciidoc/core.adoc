@@ -1170,6 +1170,14 @@ The following example shows how it would look like e.g. in case of the SecurityE
 deactivate.org.apache.deltaspike.security.impl.extension.SecurityExtension=true
 ------------------------------------------------------------------------------------------
 
+== Asynchronous Operations
+
+DeltaSpike provides support for executing code in an asynchronous manner.  The behavior is implemented as three different interceptors for your beans.
+
+- `@Futreable` - Designed for bean methods that return `Future`s of some form.  The method call will automatically be submitted to an `ExecutorService`
+- `@Locked` - Ability to prevent concurrent access to a method based on its usage of reads/writes.
+- `@Throttled` - Ability to limit how frequently a method can be invoked.
+
 == Utilities
 
 DeltaSpike provides many utility classes (no constructor / static
