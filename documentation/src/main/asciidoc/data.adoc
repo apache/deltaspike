@@ -653,8 +653,8 @@ the query:
 [source,java]
 -----------------------------------------------------------
 List<Person> result = personRepository.findAllByAge(18, 65)
-    .orderAsc(Person_.lastName)
-    .orderDesc(Person_.age)
+    .orderAsc("p.lastName", false)
+    .orderDesc("p.age", false)
     .lockMode(LockModeType.WRITE)
     .hint("org.hibernate.timeout", Integer.valueOf(10))
     .getResultList(); 
