@@ -446,9 +446,14 @@ public abstract class AbstractQuartzScheduler<T> implements Scheduler<T>
             Scheduled scheduled = jobClass.getAnnotation(Scheduled.class);
 
             //can happen with manually registered job-instances (via #unwrap)
-            if (scheduled == null)
+            if (scheduled == null && !jobClass.equals(DynamicExpressionObserverJob.class))
             {
                 scheduled = DEFAULT_SCHEDULED_LITERAL;
+            }
+
+            if (scheduled == null)
+            {
+                return;
             }
 
             JobListenerContext jobListenerContext = new JobListenerContext();
