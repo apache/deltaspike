@@ -25,6 +25,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.apache.deltaspike.core.api.config.ConfigResolver;
+
 /**
  * Support for Containers with 'hierarchic BeanManagers'
  * This is mostly useful for EAR applications.
@@ -38,6 +40,10 @@ import java.util.Set;
  * To acknowledge this solution we provide a mechanism to lookup 'parent Extensions'
  * which is very similar to handling parent ClassLoaders.
  *
+ * Please note that you need to enable this handling if you are running DeltaSpike
+ * in an EAR on a container which supports parent Extensions.
+ * You can do that by settting {@link #CONFIG_ENABLE_PARENT_EXTENSION} to &quote;true&quote;
+ *
  * All your Extension has to do is to register itself in
  * {@link javax.enterprise.inject.spi.BeforeBeanDiscovery}.
  * Later at boot time the Extension can lookup it's parent Extension instance and
@@ -47,6 +53,10 @@ import java.util.Set;
  */
 public final class ParentExtensionStorage
 {
+    /**
+     * Enable DeltaSpike ParentExtension handling by setting this configuration option to &quote;true&quote;
+     */
+    public static final String CONFIG_ENABLE_PARENT_EXTENSION = "deltaspike.parent.extension.enabled";
 
     private static Set<ExtensionStorageInfo> extensionStorage = new HashSet<ExtensionStorageInfo>();
 
@@ -61,16 +71,27 @@ public final class ParentExtensionStorage
      */
     public static synchronized void addExtension(Extension extension)
     {
-        removeAbandonedExtensions();
+        if (usingParentExtension())
+        {
+            removeAbandonedExtensions();
 
-        ClassLoader classLoader = ClassUtils.getClassLoader(null);
-        extensionStorage.add(new ExtensionStorageInfo(classLoader, extension));
+            ClassLoader classLoader = ClassUtils.getClassLoader(null);
+            extensionStorage.add(new ExtensionStorageInfo(classLoader, extension));
+        }
     }
 
     /**
      * When adding a new Extension we also clean up ExtensionInfos
      * from ClassLoaders which got unloaded.
      */
+
+    private static boolean usingParentExtension()
+    {
+        final boolean usingParentExtension =
+            Boolean.parseBoolean(ConfigResolver.getPropertyValue(CONFIG_ENABLE_PARENT_EXTENSION));
+        return usingParentExtension;
+    }
+
     private static void removeAbandonedExtensions()
     {
         Iterator<ExtensionStorageInfo> it = extensionStorage.iterator();
@@ -89,17 +110,20 @@ public final class ParentExtensionStorage
      */
     public static synchronized <T extends Extension> T getParentExtension(Extension extension)
     {
-        ClassLoader parentClassLoader = ClassUtils.getClassLoader(null).getParent();
-
-        Iterator<ExtensionStorageInfo> extIt = extensionStorage.iterator();
-        while (extIt.hasNext())
+        if (usingParentExtension())
         {
-            ExtensionStorageInfo extensionInfo = extIt.next();
-            if (!extensionInfo.isAbandoned() && // weak reference case
-                extension.getClass().equals(extensionInfo.getExtension().getClass()) &&
-                extensionInfo.getClassLoader().equals(parentClassLoader))
+            ClassLoader parentClassLoader = ClassUtils.getClassLoader(null).getParent();
+
+            Iterator<ExtensionStorageInfo> extIt = extensionStorage.iterator();
+            while (extIt.hasNext())
             {
-                return (T) extensionInfo.getExtension();
+                ExtensionStorageInfo extensionInfo = extIt.next();
+                if (!extensionInfo.isAbandoned() && // weak reference case
+                    extension.getClass().equals(extensionInfo.getExtension().getClass()) &&
+                    extensionInfo.getClassLoader().equals(parentClassLoader))
+                {
+                    return (T) extensionInfo.getExtension();
+                }
             }
         }
         return null;
