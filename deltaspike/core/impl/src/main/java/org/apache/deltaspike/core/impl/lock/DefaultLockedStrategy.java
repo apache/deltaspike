@@ -18,25 +18,30 @@
  */
 package org.apache.deltaspike.core.impl.lock;
 
-import org.apache.deltaspike.core.api.lock.Locked;
 import org.apache.deltaspike.core.spi.lock.LockedStrategy;
 
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
-import java.io.Serializable;
+import java.util.concurrent.locks.Lock;
 
-@Locked
-@Interceptor
-public class LockedInterceptor implements Serializable
+@Dependent
+public class DefaultLockedStrategy implements LockedStrategy
 {
     @Inject
-    private LockedStrategy lockedStrategy;
+    private LockSupplierStorage lockSupplierStorage;
 
-    @AroundInvoke
-    public Object invoke(final InvocationContext ic) throws Exception
+    @Override
+    public Object execute(InvocationContext ic) throws Exception
     {
-        return lockedStrategy.execute(ic);
+        final Lock lock = lockSupplierStorage.getLockSupplier(ic).get();
+        try
+        {
+            return ic.proceed();
+        }
+        finally
+        {
+            lock.unlock();
+        }
     }
 }
