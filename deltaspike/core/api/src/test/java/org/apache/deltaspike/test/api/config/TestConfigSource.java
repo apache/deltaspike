@@ -78,6 +78,17 @@ public class TestConfigSource implements ConfigSource
         props.put("deltaspike.test.date-value", "2014-12-24");
         props.put("deltaspike.test.invalid-value", "wrong");
         props.put("org.apache.deltaspike.core.spi.activation.ClassDeactivator","org.apache.deltaspike.core.util.activation.EditableTestDeactivator");
+
+        // test for variable replacement
+        props.put("deltaspike.test.host.url", "http://localhost:12345");
+        props.put("deltaspike.test.someapp.soap.endpoint", "${deltaspike.test.host.url}/someservice/myendpoint");
+
+        props.put("deltaspike.test.nonexisting.variable", "${does.not.exist}/someservice/myendpoint");
+
+        props.put("deltaspike.test.recursive.variable1", "${deltaspike.test.recursive.variable2}/ohgosh/${deltaspike.test.recursive.variable3}");
+        props.put("deltaspike.test.recursive.variable2", "pre-${deltaspike.test.recursive.variable3}-post");
+        props.put("deltaspike.test.recursive.variable3", "crazy");
+
     }
 
     @Override

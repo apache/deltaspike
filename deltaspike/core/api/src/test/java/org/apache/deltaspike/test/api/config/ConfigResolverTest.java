@@ -27,6 +27,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class ConfigResolverTest
 {
@@ -132,6 +133,30 @@ public class ConfigResolverTest
         Assert.assertEquals(1, allPropertyValues.size());
         Assert.assertEquals("shouldGetDecrypted: value", allPropertyValues.get(0));
 
+    }
+
+    @Test
+    public void testConfigVariableReplacement()
+    {
+        String url = ConfigResolver.getPropertyValue("deltaspike.test.someapp.soap.endpoint", "", true);
+        Assert.assertEquals("http://localhost:12345/someservice/myendpoint", url);
+    }
+
+    @Test
+    public void testConfigVariableNotExisting()
+    {
+        String url = ConfigResolver.getPropertyValue("deltaspike.test.nonexisting.variable", "", true);
+        Assert.assertEquals("${does.not.exist}/someservice/myendpoint", url);
+
+    }
+    @Test
+    public void testConfigVariableRecursiveDeclaration()
+    {
+        String url = ConfigResolver.getPropertyValue("deltaspike.test.recursive.variable1", "", true);
+        Assert.assertEquals("pre-crazy-post/ohgosh/crazy", url);
+
+        ConfigResolver.TypedResolver<String> tr = ConfigResolver.resolve("deltaspike.test.recursive.variable1").evaluateVariables(true);
+        Assert.assertEquals("pre-crazy-post/ohgosh/crazy", tr.getValue());
     }
 
     public static class TestConfigFilter implements ConfigFilter

@@ -173,6 +173,35 @@ public final class ConfigResolver
         return fallbackToDefaultIfEmpty(key, value, defaultValue);
     }
 
+    public static String getPropertyValue(String key, String defaultValue, boolean evaluateVariables)
+    {
+        String value = getPropertyValue(key, defaultValue);
+        if (value != null && evaluateVariables)
+        {
+            int startVar = 0;
+            while ((startVar = value.indexOf("${", startVar)) >= 0)
+            {
+                int endVar = value.indexOf("}", startVar);
+                if (endVar <= 0)
+                {
+                    break;
+                }
+                String variable = value.substring(startVar + 2, endVar);
+                if (variable.isEmpty())
+                {
+                    break;
+                }
+                String variableValue = getPropertyValue(variable, null, true);
+                if (variableValue != null)
+                {
+                    value = value.replace("${" + variable + "}", variableValue);
+                }
+                startVar++;
+            }
+        }
+        return value;
+    }
+
     /**
      * Resolves the value configured for the given key.
      *
@@ -606,6 +635,21 @@ public final class ConfigResolver
         TypedResolver<T> cacheFor(TimeUnit timeUnit, long value);
 
         /**
+         * Whether to evaluate variables in configured values.
+         * A variable starts with '${' and ends with '}', e.g.
+         * <pre>
+         * mycompany.some.url=${myserver.host}/some/path
+         * myserver.host=http://localhost:8081
+         * </pre>
+         * If 'evaluateVariables' is enabled, the result for the above key
+         * {@code "mycompany.some.url"} would be:
+         * {@code "http://localhost:8081/some/path"}
+         * @param evaluateVariables whether to evaluate variables in values or not
+         * @return This builder
+         */
+        TypedResolver<T> evaluateVariables(boolean evaluateVariables);
+
+        /**
          * Returns the converted resolved filtered value.
          * @return the resolved value
          */
@@ -704,6 +748,8 @@ public final class ConfigResolver
 
         private Converter<?> converter;
 
+        private boolean evaluateVariables = false;
+
         private long cacheTimeMs = -1;
         private volatile long reloadAfter = -1;
         private T lastValue = null;
@@ -799,6 +845,13 @@ public final class ConfigResolver
         }
 
         @Override
+        public TypedResolver<T> evaluateVariables(boolean evaluateVariables)
+        {
+            this.evaluateVariables = evaluateVariables;
+            return this;
+        }
+
+        @Override
         public T getValue()
         {
             if (cacheTimeMs > 0)
@@ -875,7 +928,7 @@ public final class ConfigResolver
             }
 
             // make initial resolution of longest key
-            value = getPropertyValue(keyResolved);
+            value = getPropertyValue(keyResolved, null, evaluateVariables);
 
             // try fallbacks if not strictly
             if (value == null && !strictly)
@@ -889,7 +942,7 @@ public final class ConfigResolver
                     case 2:
                         // try base.param
                         keyResolved = keyOriginal + "." + parameterValue;
-                        value = getPropertyValue(keyResolved);
+                        value = getPropertyValue(keyResolved, null, evaluateVariables);
 
                         if (value != null)
                         {
@@ -899,7 +952,7 @@ public final class ConfigResolver
                         // try base.ps
                         ps = getProjectStage();
                         keyResolved = keyOriginal + "." + ps;
-                        value = getPropertyValue(keyResolved);
+                        value = getPropertyValue(keyResolved, null, evaluateVariables);
 
                         if (value != null)
                         {
@@ -909,7 +962,7 @@ public final class ConfigResolver
                     case 1:
                         // try base
                         keyResolved = keyOriginal;
-                        value = getPropertyValue(keyResolved);
+                        value = getPropertyValue(keyResolved, null, evaluateVariables);
                         return value;
 
                     default:
