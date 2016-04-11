@@ -18,25 +18,21 @@
  */
 package org.apache.deltaspike.core.impl.throttling;
 
-import org.apache.deltaspike.core.api.throttling.Throttled;
 import org.apache.deltaspike.core.spi.throttling.ThrottledStrategy;
 
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
-import java.io.Serializable;
 
-@Throttled
-@Interceptor
-public class ThrottledInterceptor implements Serializable
+@Dependent
+public class DefaultThrottledStrategy implements ThrottledStrategy
 {
     @Inject
-    private ThrottledStrategy throttledStrategy;
+    private InvokerStorage metadata;
 
-    @AroundInvoke
-    public Object invoke(final InvocationContext ic) throws Exception
+    @Override
+    public Object execute(InvocationContext ic) throws Exception
     {
-        return throttledStrategy.execute(ic);
+        return metadata.getOrCreateInvoker(ic).invoke(ic);
     }
 }
