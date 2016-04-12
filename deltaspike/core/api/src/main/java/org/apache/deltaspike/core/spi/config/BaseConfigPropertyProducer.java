@@ -133,6 +133,8 @@ public abstract class BaseConfigPropertyProducer
             resolver.parameterizedBy(parameterizedBy);
         }
 
+        resolver.evaluateVariables(configProperty.evaluateVariables());
+
         return resolver.getValue();
     }
 

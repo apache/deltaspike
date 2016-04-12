@@ -88,6 +88,10 @@ public class SettingsBean
     @ConfigProperty(name = "configPropertyTrue8")
     private Boolean booleanPropertyTrue8;
 
+    @Inject
+    @ConfigProperty(name = "testDbConfig")
+    private String dbConfig;
+
     protected SettingsBean()
     {
     }
@@ -183,5 +187,10 @@ public class SettingsBean
     public Boolean getBooleanPropertyTrue8()
     {
         return booleanPropertyTrue8;
+    }
+
+    public String getDbConfig()
+    {
+        return dbConfig;
     }
 }

@@ -136,4 +136,12 @@ public @interface ConfigProperty
 
     @Nonbinding
     String parameterizedBy() default NULL;
+
+    /**
+     * Whether to resolve 'variables' in configured values.
+     *
+     * @see org.apache.deltaspike.core.api.config.ConfigResolver.TypedResolver#evaluateVariables(boolean)
+     */
+    @Nonbinding
+    boolean evaluateVariables() default true;
 }

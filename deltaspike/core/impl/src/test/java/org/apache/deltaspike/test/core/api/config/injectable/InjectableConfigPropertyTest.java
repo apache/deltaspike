@@ -76,6 +76,8 @@ public class InjectableConfigPropertyTest
         Assert.assertEquals("14", settingsBean.getProperty3Filled());
         Assert.assertEquals("myDefaultValue", settingsBean.getProperty3Defaulted());
         Assert.assertEquals(42, settingsBean.getProperty4Defaulted());
+
+        Assert.assertEquals("some setting for prodDB", settingsBean.getDbConfig());
     }
 
     @Test
