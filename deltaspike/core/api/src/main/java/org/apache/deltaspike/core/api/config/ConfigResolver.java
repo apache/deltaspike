@@ -650,6 +650,13 @@ public final class ConfigResolver
         TypedResolver<T> evaluateVariables(boolean evaluateVariables);
 
         /**
+         * Whether to log picking up any value changes as INFO.
+         *
+         * @return This builder
+         */
+        TypedResolver<T> logChanges(boolean logChanges);
+
+        /**
          * Returns the converted resolved filtered value.
          * @return the resolved value
          */
@@ -749,6 +756,7 @@ public final class ConfigResolver
         private Converter<?> converter;
 
         private boolean evaluateVariables = false;
+        private boolean logChanges = false;
 
         private long cacheTimeMs = -1;
         private volatile long reloadAfter = -1;
@@ -852,6 +860,13 @@ public final class ConfigResolver
         }
 
         @Override
+        public TypedResolver<T> logChanges(boolean logChanges)
+        {
+            this.logChanges = logChanges;
+            return this;
+        }
+
+        @Override
         public T getValue()
         {
             if (cacheTimeMs > 0)
@@ -868,10 +883,18 @@ public final class ConfigResolver
             T value = convert(valueStr);
 
             value = fallbackToDefaultIfEmpty(keyResolved, value, defaultValue);
+
+            if (logChanges && (value != null && lastValue == null || !value.equals(lastValue)) )
+            {
+                LOG.log(Level.INFO, "New value {0} for key {1}.",
+                    new Object[]{filterConfigValueForLog(keyOriginal, valueStr), keyOriginal});
+            }
+
             if (cacheTimeMs > 0)
             {
                 lastValue = value;
             }
+
             return value;
         }
 

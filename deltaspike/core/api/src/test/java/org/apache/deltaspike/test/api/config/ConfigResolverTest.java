@@ -155,7 +155,8 @@ public class ConfigResolverTest
         String url = ConfigResolver.getPropertyValue("deltaspike.test.recursive.variable1", "", true);
         Assert.assertEquals("pre-crazy-post/ohgosh/crazy", url);
 
-        ConfigResolver.TypedResolver<String> tr = ConfigResolver.resolve("deltaspike.test.recursive.variable1").evaluateVariables(true);
+        ConfigResolver.TypedResolver<String> tr = ConfigResolver.resolve("deltaspike.test.recursive.variable1")
+            .evaluateVariables(true).logChanges(true);
         Assert.assertEquals("pre-crazy-post/ohgosh/crazy", tr.getValue());
     }
 
