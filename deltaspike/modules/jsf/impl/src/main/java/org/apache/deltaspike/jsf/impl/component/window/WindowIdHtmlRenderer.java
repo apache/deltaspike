@@ -59,18 +59,20 @@ public class WindowIdHtmlRenderer extends Renderer
 
         lazyInit();
 
-        String windowId = clientWindow.getWindowId(context);
         ClientWindowConfig.ClientWindowRenderMode clientWindowRenderMode =
                 clientWindowConfig.getClientWindowRenderMode(context);
 
+        // see DELTASPIKE-1113
         boolean delegatedWindowMode =
             ClientWindowConfig.ClientWindowRenderMode.DELEGATED.equals(clientWindowRenderMode);
-
-        // don't cut the windowId generated from JSF
-        if (!delegatedWindowMode)
+        if (delegatedWindowMode)
         {
-            windowId = secureWindowId(windowId);
+            return;
         }
+
+        String windowId = clientWindow.getWindowId(context);
+        // just to get sure if a user provides a own client window
+        windowId = secureWindowId(windowId);
 
         ResponseWriter writer = context.getResponseWriter();
         writer.write("<script type=\"text/javascript\">");
