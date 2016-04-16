@@ -237,6 +237,31 @@ or
 </alternatives>
 -----------------------------------------------------------------------------
 
+== Manual scheduling
+
+If the SPI provided by `org.apache.deltaspike.scheduler.spi.Scheduler` doesn't provide a method you are looking for,
+you can use `#unwrap` to access the underlying scheduler.
+Per default DeltaSpike uses an implementation of `org.quartz.Scheduler`.
+Therefore, it's possible to inject `org.apache.deltaspike.scheduler.spi.Scheduler` and use it like in the following example:
+
+[source,java]
+----------------------------------------------------------------------------------------------
+public class ManualJobScheduler
+{
+    @Inject
+    private Scheduler<Job> scheduler;
+
+    @Override
+    public void scheduleJob(JobDetail jobDetail, Trigger trigger) throws SchedulerException
+    {
+        this.scheduler.unwrap(org.quartz.Scheduler.class).scheduleJob(jobDetail, trigger);
+    }
+}
+----------------------------------------------------------------------------------------------
+
+With that it's e.g. possible to schedule quartz-jobs based on the same quartz-job(-class), but with different triggers,...
+Also manually scheduled jobs benefit from DeltaSpike features like the support of `@Inject` in the job-instances.
+
 == Execute java.lang.Runnable with ManagedExecutorService
 
 If you would like to use e.g. the `ManagedExecutorService` (with EE7+) to run the jobs,
