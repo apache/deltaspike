@@ -20,6 +20,8 @@ package org.apache.deltaspike.core.api.config.base;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 
+import java.util.concurrent.TimeUnit;
+
 public interface CoreBaseConfig extends DeltaSpikeBaseConfig
 {
     interface BeanManagerIntegration
@@ -87,5 +89,15 @@ public interface CoreBaseConfig extends DeltaSpikeBaseConfig
                             .withDefault(1024)
                             .getValue();
         }
+    }
+
+    interface TimeoutCustomization
+    {
+        Integer FUTUREABLE_TERMINATION_TIMEOUT_IN_MILLISECONDS =
+                ConfigResolver.resolve("deltaspike.futureable.termination-timeout_in_milliseconds")
+                        .as(Integer.class)
+                        .withCurrentProjectStage(true)
+                        .withDefault((int) TimeUnit.MINUTES.toMillis(1))
+                        .getValue();
     }
 }

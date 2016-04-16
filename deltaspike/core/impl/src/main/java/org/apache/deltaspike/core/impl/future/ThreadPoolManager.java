@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.core.impl.future;
 
-import org.apache.deltaspike.core.api.config.ConfigResolver;
+import org.apache.deltaspike.core.api.config.base.CoreBaseConfig;
 
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
@@ -39,8 +39,7 @@ public class ThreadPoolManager
     private void shutdown()
     {
         closed = true;
-        final String propertyValue = ConfigResolver.getPropertyValue("deltaspike.future.timeout");
-        final long timeout = propertyValue == null ? TimeUnit.MINUTES.toMillis(1) : Integer.parseInt(propertyValue);
+        final long timeout = CoreBaseConfig.TimeoutCustomization.FUTUREABLE_TERMINATION_TIMEOUT_IN_MILLISECONDS;
         for (final ExecutorService es : pools.values())
         {
             es.shutdown();
