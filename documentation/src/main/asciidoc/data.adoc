@@ -271,6 +271,83 @@ public interface PersonRepository implements Deactivatable{
 }    
 ----------------------------------------
 
+=== Support of @TransactionScoped EntityManagers
+
+For using `@TransactionScoped` beans like a `@TransactionScoped`-`EntityManager`,
+you need to annotate the Data-repository with @Transactional explicitly or one of the beans in the call-hierarchy.
+That's needed, because the context bound to `@TransactionScoped` needs to be active,
+before the `@TransactionScoped`-`EntityManager` gets resolved (internally).
+
+The following examples illustrate the described usages:
+
+.@TransactionScoped EntityManager combined with a simple repository
+[source,java]
+---------------------------------------------------------------------------------------
+public class EntityManagerProducer
+{
+    @Produces
+    @TransactionScoped
+    public EntityManager create() { ... }
+
+    public void close(@Disposes EntityManager em)  { ... }
+}
+
+@ApplicationScoped
+public class MyService
+{
+    @Inject
+    private MyRepository myRepository;
+
+    public void create()
+    {
+        //...
+        this.myRepository.save(...); //executed in a transaction
+        //...
+    }
+}
+
+@Transactional
+@Repository
+public interface MyRepository extends EntityRepository<MyEntity, String>
+{
+  //...
+}
+---------------------------------------------------------------------------------------
+
+.@TransactionScoped EntityManager combined with a simple repository called by a transactional bean
+[source,java]
+---------------------------------------------------------------------------------------
+public class EntityManagerProducer
+{
+    @Produces
+    @TransactionScoped
+    public EntityManager create() { ... }
+
+    public void close(@Disposes EntityManager em)  { ... }
+}
+
+@Transactional
+@ApplicationScoped
+public class MyService
+{
+    @Inject
+    private MyRepository myRepository;
+
+    public void create() //executed in a transaction
+    {
+        //...
+        this.myRepository.save(...);
+        //...
+    }
+}
+
+@Repository
+public interface MyRepository extends EntityRepository<MyEntity, String>
+{
+  //...
+}
+---------------------------------------------------------------------------------------
+
 === Using Multiple EntityManagers
 
 While most applications will run just fine with a single
