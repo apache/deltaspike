@@ -138,15 +138,28 @@ public class ConfigResolverTest
     @Test
     public void testConfigVariableReplacement()
     {
-        String url = ConfigResolver.getPropertyValue("deltaspike.test.someapp.soap.endpoint", "", true);
-        Assert.assertEquals("http://localhost:12345/someservice/myendpoint", url);
+        {
+            String url = ConfigResolver.getPropertyValue("deltaspike.test.someapp.soap.endpoint", "", true);
+            Assert.assertEquals("http://localhost:12345/someservice/myendpoint", url);
+        }
+
+        {
+            String url = ConfigResolver.getPropertyValue("deltaspike.test.someapp.soap.endpoint", true);
+            Assert.assertEquals("http://localhost:12345/someservice/myendpoint", url);
+        }
     }
 
     @Test
     public void testConfigVariableNotExisting()
     {
-        String url = ConfigResolver.getPropertyValue("deltaspike.test.nonexisting.variable", "", true);
-        Assert.assertEquals("${does.not.exist}/someservice/myendpoint", url);
+        {
+            String url = ConfigResolver.getPropertyValue("deltaspike.test.nonexisting.variable", "", true);
+            Assert.assertEquals("${does.not.exist}/someservice/myendpoint", url);
+        }
+        {
+            String url = ConfigResolver.getPropertyValue("deltaspike.test.nonexisting.variable", true);
+            Assert.assertEquals("${does.not.exist}/someservice/myendpoint", url);
+        }
 
     }
     @Test

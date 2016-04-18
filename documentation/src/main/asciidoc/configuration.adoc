@@ -142,6 +142,22 @@ This makes the overall calculation a bit slower, but allows for values
 to change dynamically if someone likes to for example implement a
 `JmxConfigSource` (not yet part of DeltaSpike, but easily implementable).
 
+=== Variable Replacement in Configured Values
+
+Since version 1.6.1, DeltaSpike also supports using 'variables' inside configured values.
+You can e.g. define a single configuration key for your server and use it in other configuration values
+-----------------------------------------------------------------
+document.server.url=http://localhost:8081
+myapp.document.lists=${document.server.url}/docapp/list
+myapp.document.admin=${document.server.url}/docadmin/app
+-----------------------------------------------------------------
+
+A variable name starts with `${` and ends with `}`.
+
+Variable support is enabled by default.
+If you like to use the `ConfigResolver` without variable support you need to use the methods with the `evaluateVariables` parameter set to `false`.
+
+
 === TypedResolver API
 
 Very often the configured values represent more than just strings -- number types and booleans are commonly used as

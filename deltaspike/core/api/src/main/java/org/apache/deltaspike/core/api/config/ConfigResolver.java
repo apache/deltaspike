@@ -168,38 +168,14 @@ public final class ConfigResolver
      */
     public static String getPropertyValue(String key, String defaultValue)
     {
-        String value = getPropertyValue(key);
-
-        return fallbackToDefaultIfEmpty(key, value, defaultValue);
+        return getPropertyValue(key, defaultValue, true);
     }
 
     public static String getPropertyValue(String key, String defaultValue, boolean evaluateVariables)
     {
-        String value = getPropertyValue(key, defaultValue);
-        if (value != null && evaluateVariables)
-        {
-            int startVar = 0;
-            while ((startVar = value.indexOf("${", startVar)) >= 0)
-            {
-                int endVar = value.indexOf("}", startVar);
-                if (endVar <= 0)
-                {
-                    break;
-                }
-                String variable = value.substring(startVar + 2, endVar);
-                if (variable.isEmpty())
-                {
-                    break;
-                }
-                String variableValue = getPropertyValue(variable, null, true);
-                if (variableValue != null)
-                {
-                    value = value.replace("${" + variable + "}", variableValue);
-                }
-                startVar++;
-            }
-        }
-        return value;
+        String value = getPropertyValue(key, evaluateVariables);
+
+        return fallbackToDefaultIfEmpty(key, value, defaultValue);
     }
 
     /**
@@ -212,6 +188,20 @@ public final class ConfigResolver
      */
     public static String getPropertyValue(String key)
     {
+        return getPropertyValue(key, true);
+    }
+
+    /**
+     * Resolves the value configured for the given key.
+     *
+     * @param key the property key
+     * @param evaluateVariables whether to evaluate any '${variablename}' variable expressions
+     *
+     * @return the configured property value from the {@link ConfigSource} with the highest ordinal or null if there is
+     *         no configured value for it
+     */
+    public static String getPropertyValue(String key, boolean evaluateVariables)
+    {
         ConfigSource[] appConfigSources = getConfigSources();
 
         String value;
@@ -223,6 +213,32 @@ public final class ConfigResolver
             {
                 LOG.log(Level.FINE, "found value {0} for key {1} in ConfigSource {2}.",
                         new Object[]{filterConfigValueForLog(key, value), key, configSource.getConfigName()});
+
+                if (evaluateVariables)
+                {
+                    // recursively resolve any ${varName} in the value
+                    int startVar = 0;
+                    while ((startVar = value.indexOf("${", startVar)) >= 0)
+                    {
+                        int endVar = value.indexOf("}", startVar);
+                        if (endVar <= 0)
+                        {
+                            break;
+                        }
+                        String varName = value.substring(startVar + 2, endVar);
+                        if (varName.isEmpty())
+                        {
+                            break;
+                        }
+                        String variableValue = getPropertyValue(varName, true);
+                        if (variableValue != null)
+                        {
+                            value = value.replace("${" + varName + "}", variableValue);
+                        }
+                        startVar++;
+                    }
+                }
+
                 return filterConfigValue(key, value);
             }
 
