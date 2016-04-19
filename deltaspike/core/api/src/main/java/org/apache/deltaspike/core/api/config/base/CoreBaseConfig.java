@@ -100,4 +100,14 @@ public interface CoreBaseConfig extends DeltaSpikeBaseConfig
                         .withDefault((int) TimeUnit.MINUTES.toMillis(1))
                         .getValue();
     }
+
+    interface ParentExtensionCustomization
+    {
+        Boolean PARENT_EXTENSION_ENABLED =
+                ConfigResolver.resolve("deltaspike.parent.extension.enabled")
+                        .as(Boolean.class)
+                        .withCurrentProjectStage(true)
+                        .withDefault(Boolean.FALSE)
+                        .getValue();
+    }
 }

@@ -25,7 +25,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.apache.deltaspike.core.api.config.ConfigResolver;
+import org.apache.deltaspike.core.api.config.base.CoreBaseConfig;
 
 /**
  * Support for Containers with 'hierarchic BeanManagers'
@@ -42,7 +42,7 @@ import org.apache.deltaspike.core.api.config.ConfigResolver;
  *
  * Please note that you need to enable this handling if you are running DeltaSpike
  * in an EAR on a container which supports parent Extensions.
- * You can do that by settting {@link #CONFIG_ENABLE_PARENT_EXTENSION} to &quote;true&quote;
+ * You can do that by settting {@code "deltaspike.parent.extension.enabled"} to &quote;true&quote;
  *
  * All your Extension has to do is to register itself in
  * {@link javax.enterprise.inject.spi.BeforeBeanDiscovery}.
@@ -50,13 +50,11 @@ import org.apache.deltaspike.core.api.config.ConfigResolver;
  * e.g. check which classes got scanned in the parent ClassLoader.
  *
  * The ExtensionInfo automatically gets removed if the webapp gets undeployed.
+ *
+ * @see org.apache.deltaspike.core.api.config.base.CoreBaseConfig.ParentExtensionCustomization
  */
 public final class ParentExtensionStorage
 {
-    /**
-     * Enable DeltaSpike ParentExtension handling by setting this configuration option to &quote;true&quote;
-     */
-    public static final String CONFIG_ENABLE_PARENT_EXTENSION = "deltaspike.parent.extension.enabled";
 
     private static Set<ExtensionStorageInfo> extensionStorage = new HashSet<ExtensionStorageInfo>();
 
@@ -87,9 +85,7 @@ public final class ParentExtensionStorage
 
     private static boolean usingParentExtension()
     {
-        final boolean usingParentExtension =
-            Boolean.parseBoolean(ConfigResolver.getPropertyValue(CONFIG_ENABLE_PARENT_EXTENSION));
-        return usingParentExtension;
+        return CoreBaseConfig.ParentExtensionCustomization.PARENT_EXTENSION_ENABLED;
     }
 
     private static void removeAbandonedExtensions()
