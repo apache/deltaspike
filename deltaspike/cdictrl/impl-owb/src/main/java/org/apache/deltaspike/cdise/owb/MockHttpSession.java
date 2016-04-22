@@ -19,6 +19,8 @@
 package org.apache.deltaspike.cdise.owb;
 
 import java.util.Enumeration;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
@@ -30,6 +32,8 @@ import javax.servlet.http.HttpSessionContext;
 public class MockHttpSession implements HttpSession
 {
     private String sessionId;
+
+    private Map<String, Object> sessionMap = new ConcurrentHashMap<String, Object>();
 
     public MockHttpSession(String sessionId)
     {
@@ -72,12 +76,12 @@ public class MockHttpSession implements HttpSession
 
     public Object getAttribute(String name)
     {
-        return null;
+        return this.sessionMap.get(name);
     }
 
     public Object getValue(String name)
     {
-        return null;
+        return getAttribute(name);
     }
 
     public Enumeration getAttributeNames()
@@ -92,22 +96,27 @@ public class MockHttpSession implements HttpSession
 
     public void setAttribute(String name, Object value)
     {
+        this.sessionMap.put(name, value);
     }
 
     public void putValue(String name, Object value)
     {
+        setAttribute(name, value);
     }
 
     public void removeAttribute(String name)
     {
+        this.sessionMap.remove(name);
     }
 
     public void removeValue(String name)
     {
+        removeAttribute(name);
     }
 
     public void invalidate()
     {
+        this.sessionMap.clear();
     }
 
     public boolean isNew()
