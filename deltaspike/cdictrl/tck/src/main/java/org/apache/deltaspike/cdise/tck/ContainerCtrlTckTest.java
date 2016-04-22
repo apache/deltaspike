@@ -271,4 +271,82 @@ public class ContainerCtrlTckTest
 
         cdiContainer.shutdown();
     }
+
+    @Test
+    public void testNewRequests()
+    {
+        CdiContainer cdiContainer = CdiContainerLoader.getCdiContainer();
+        Assert.assertNotNull(cdiContainer);
+
+        cdiContainer.boot();
+        cdiContainer.getContextControl().startContext(SessionScoped.class);
+        cdiContainer.getContextControl().startContext(RequestScoped.class);
+
+        BeanManager beanManager = cdiContainer.getBeanManager();
+        Assert.assertNotNull(beanManager);
+
+        TestUser testUser = resolveInstance(beanManager, TestUser.class);
+
+        Assert.assertNotNull(testUser);
+        testUser.setName("tester");
+
+
+        CarRepair carRepair = resolveInstance(beanManager, CarRepair.class);
+
+        Assert.assertNotNull(carRepair);
+
+        Car car = carRepair.getCar();
+
+        Assert.assertNotNull(car);
+        Assert.assertNotNull(car.getUser());
+        Assert.assertEquals("tester", car.getUser().getName());
+
+
+        carRepair.getCar().getUser().setName("tck-tester");
+        Assert.assertEquals("tck-tester", testUser.getName());
+
+        cdiContainer.getContextControl().stopContext(RequestScoped.class);
+        cdiContainer.getContextControl().startContext(RequestScoped.class);
+
+        try
+        {
+            testUser = resolveInstance(beanManager, TestUser.class);
+
+            Assert.assertNotNull(testUser);
+            Assert.assertNotNull(testUser.getName());
+            Assert.assertEquals("tck-tester", testUser.getName());
+        }
+        catch (ContextNotActiveException e)
+        {
+            Assert.fail(e.getMessage());
+        }
+
+        try
+        {
+            carRepair = resolveInstance(beanManager, CarRepair.class);
+
+            Assert.assertNotNull(carRepair);
+
+            car = carRepair.getCar();
+
+            Assert.assertNotNull(car);
+            Assert.assertNotNull(car.getUser());
+            Assert.assertNotNull(car.getUser().getName());
+            Assert.assertEquals("tck-tester", car.getUser().getName());
+        }
+        catch (ContextNotActiveException e)
+        {
+            Assert.fail(e.getMessage());
+        }
+
+        cdiContainer.shutdown();
+    }
+
+    private <T> T resolveInstance(BeanManager beanManager, Class<T> beanClass)
+    {
+        Set<Bean<?>> beans = beanManager.getBeans(beanClass);
+        Bean<?> bean = beanManager.resolve(beans);
+
+        return (T) beanManager.getReference(bean, beanClass, beanManager.createCreationalContext(bean));
+    }
 }
