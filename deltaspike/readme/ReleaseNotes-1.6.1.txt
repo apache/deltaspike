@@ -1,0 +1,27 @@
+Release Notes - Apache DeltaSpike - Version 1.6.1
+
+Improvement
+
+    [DELTASPIKE-1113] - WindowIdHtmlRenderer should skip DELEGATED
+    [DELTASPIKE-1116] - allow conditional injection-point customization in test-classes
+    [DELTASPIKE-1118] - ThrottledInterceptor needs to use an InterceptorStrategy
+    [DELTASPIKE-1119] - FutureableInterceptor needs to use an InterceptorStrategy
+    [DELTASPIKE-1120] - LockedInterceptor needs to use an InterceptorStrategy
+    [DELTASPIKE-1124] - optimize internal handling of cron-config updates
+    [DELTASPIKE-1125] - make ParentExtension mechanism configurable
+    [DELTASPIKE-1130] - improve cdi-ctrl-tck
+    [DELTASPIKE-1131] - improve MockHttpSession
+
+New Feature
+
+    [DELTASPIKE-1117] - add cache(long ms) to ConfigResolver.TypedResolver
+    [DELTASPIKE-1126] - variable support in ConfigResolver
+
+Task
+
+    [DELTASPIKE-1006] - document @Transactional and @TransactionScoped support for @Repository
+    [DELTASPIKE-1032] - document creating quartz scheduling jobs at runtime
+    [DELTASPIKE-1112] - Document - getting started w/ DeltaSpike using Gradle
+    [DELTASPIKE-1114] - update site and javadoc to 1.6.0
+    [DELTASPIKE-1128] - add deltaspike.future.timeout to CoreBaseConfig
+    [DELTASPIKE-1132] - prepare v1.6.1
