@@ -78,12 +78,14 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
     private static final Logger LOGGER = Logger.getLogger(CdiTestRunner.class.getName());
 
     private static final boolean USE_TEST_CLASS_AS_CDI_BEAN;
+    private static final boolean ALLOW_INJECTION_POINT_MANIPULATION;
 
     private static Set<Integer> notifierIdentities = new CopyOnWriteArraySet<Integer>();
 
     static
     {
         USE_TEST_CLASS_AS_CDI_BEAN = TestBaseConfig.ContainerIntegration.USE_TEST_CLASS_AS_CDI_BEAN;
+        ALLOW_INJECTION_POINT_MANIPULATION = TestBaseConfig.MockIntegration.ALLOW_MANUAL_INJECTION_POINT_MANIPULATION;
     }
 
     private static ThreadLocal<Boolean> automaticScopeHandlingActive = new ThreadLocal<Boolean>();
@@ -309,7 +311,10 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
 
             if (!USE_TEST_CLASS_AS_CDI_BEAN || beans == null || beans.isEmpty())
             {
-                BeanProvider.injectFields(this.originalTarget); //fallback to simple injection
+                if (!ALLOW_INJECTION_POINT_MANIPULATION)
+                {
+                    BeanProvider.injectFields(this.originalTarget); //fallback to simple injection
+                }
                 invokeMethod(this.originalTarget);
             }
             else

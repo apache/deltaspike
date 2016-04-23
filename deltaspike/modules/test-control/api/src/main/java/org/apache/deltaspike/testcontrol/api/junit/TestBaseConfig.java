@@ -43,6 +43,8 @@ public interface TestBaseConfig extends DeltaSpikeBaseConfig
     {
         String ALLOW_MOCKED_BEANS_KEY = "deltaspike.testcontrol.mock-support.allow_mocked_beans";
         String ALLOW_MOCKED_PRODUCERS_KEY = "deltaspike.testcontrol.mock-support.allow_mocked_producers";
+        String ALLOW_MANUAL_INJECTION_POINT_MANIPULATION_KEY =
+            "deltaspike.testcontrol.mock-support.allow_manual_injection-point_manipulation";
 
         Boolean ALLOW_MOCKED_BEANS = ConfigResolver.resolve(ALLOW_MOCKED_BEANS_KEY)
                 .as(Boolean.class)
@@ -56,5 +58,14 @@ public interface TestBaseConfig extends DeltaSpikeBaseConfig
                 .withDefault(Boolean.FALSE)
                 .getValue();
 
+        //if enabled it's possible to change the value of injection-points after the injection-process and
+        //before test-execution. that allows to replace injection-points (e.g. with a mock) conditionally
+        //via a test-rule or @Before
+        Boolean ALLOW_MANUAL_INJECTION_POINT_MANIPULATION =
+            ConfigResolver.resolve(ALLOW_MANUAL_INJECTION_POINT_MANIPULATION_KEY)
+                .as(Boolean.class)
+                .withCurrentProjectStage(true)
+                .withDefault(Boolean.FALSE)
+                .getValue();
     }
 }
