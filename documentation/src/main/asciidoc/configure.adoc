@@ -92,10 +92,12 @@ dependencies {
 }
 sourceSets {
    main {
-     //For CDI to work, need to put the resources and classes in the same directory
-     output.resourcesDir = 'build/classes/main'
-     output.classesDir   = 'build/classes/main'
+     //To use standard bean discovery mechanisms, CDI expects beans.xml to be in your classes directory
+     output.resourcesDir = output.classesDir
    }
+   test {
+        output.resourcesDir = output.classesDir
+   } // and any other sourceSet you might have.
  }
 ----
 
