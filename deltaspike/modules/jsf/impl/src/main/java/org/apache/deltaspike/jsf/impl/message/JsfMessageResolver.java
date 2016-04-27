@@ -37,7 +37,7 @@ public class JsfMessageResolver extends DefaultMessageResolver
 
         FacesContext facesContext = FacesContext.getCurrentInstance();
 
-        if (facesContext == null)
+        if (facesContext == null || facesContext.getCurrentPhaseId() == null)
         {
             return result;
         }

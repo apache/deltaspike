@@ -37,7 +37,7 @@ public class JsfAwareLocaleResolver extends DefaultLocaleResolver
     public Locale getLocale()
     {
         FacesContext facesContext = FacesContext.getCurrentInstance();
-        if (facesContext != null)
+        if (facesContext != null && facesContext.getCurrentPhaseId() != null)
         {
             UIViewRoot viewRoot = facesContext.getViewRoot();
             Locale result = null;
