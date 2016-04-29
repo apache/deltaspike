@@ -31,6 +31,8 @@ import javax.inject.Inject;
 import javax.interceptor.InvocationContext;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -43,6 +45,17 @@ public class DefaultFutureableStrategy implements FutureableStrategy
     private static final Class<?> COMPLETION_STAGE;
     private static final Class<?> COMPLETABLE_FUTURE;
     private static final Method COMPLETABLE_STAGE_TO_FUTURE;
+
+    // only for weld1
+    private static final boolean IS_WELD1;
+    private static final ThreadLocal<LinkedList<CallKey>> STACK = new ThreadLocal<LinkedList<CallKey>>()
+    {
+        @Override
+        protected LinkedList<CallKey> initialValue()
+        {
+            return new LinkedList<CallKey>();
+        }
+    };
 
     static
     {
@@ -63,6 +76,23 @@ public class DefaultFutureableStrategy implements FutureableStrategy
         COMPLETION_STAGE = completionStageClass;
         COMPLETABLE_FUTURE = completableFutureClass;
         COMPLETABLE_STAGE_TO_FUTURE = completionStageClassToCompletableFuture;
+
+        { // workaround for weld -> use a thread local to track the invocations
+            boolean weld1 = false;
+            try
+            {
+                final Class<?> impl = Thread.currentThread().getContextClassLoader()
+                        .loadClass("org.jboss.weld.manager.BeanManagerImpl");
+                final Package pck = impl.getPackage();
+                weld1 = "Weld Implementation".equals(pck.getImplementationTitle())
+                        && pck.getSpecificationVersion() != null && pck.getSpecificationVersion().startsWith("1.1.");
+            }
+            catch (final Throwable cnfe)
+            {
+                // no-op
+            }
+            IS_WELD1 = weld1;
+        }
     }
 
     @Inject
@@ -78,6 +108,33 @@ public class DefaultFutureableStrategy implements FutureableStrategy
     @Override
     public Object execute(final InvocationContext ic) throws Exception
     {
+        final CallKey invocationKey;
+        if (IS_WELD1)
+        {
+            invocationKey = new CallKey(ic);
+            { // weld1 workaround
+                final LinkedList<CallKey> stack = STACK.get();
+                if (!stack.isEmpty() && stack.getLast().equals(invocationKey))
+                {
+                    try
+                    {
+                        return ic.proceed();
+                    }
+                    finally
+                    {
+                        if (stack.isEmpty())
+                        {
+                            STACK.remove();
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            invocationKey = null;
+        }
+
         // validate usage
         final Class<?> returnType = ic.getMethod().getReturnType();
         if (!Future.class.isAssignableFrom(returnType) &&
@@ -104,6 +161,16 @@ public class DefaultFutureableStrategy implements FutureableStrategy
             @Override
             public Object call() throws Exception
             {
+                final LinkedList<CallKey> callStack;
+                if (IS_WELD1)
+                {
+                    callStack = STACK.get();
+                    callStack.add(invocationKey);
+                }
+                else
+                {
+                    callStack = null;
+                }
                 try
                 {
                     final Object proceed = ic.proceed();
@@ -119,6 +186,17 @@ public class DefaultFutureableStrategy implements FutureableStrategy
                 catch (final Exception e)
                 {
                     throw ExceptionUtils.throwAsRuntimeException(e);
+                }
+                finally
+                {
+                    if (IS_WELD1)
+                    {
+                        callStack.removeLast();
+                        if (callStack.isEmpty())
+                        {
+                            STACK.remove();
+                        }
+                    }
                 }
             }
         };
@@ -151,5 +229,40 @@ public class DefaultFutureableStrategy implements FutureableStrategy
             executorService = instance;
         }
         return executorService;
+    }
+
+    private static final class CallKey
+    {
+        private final InvocationContext ic;
+        private final int hash;
+
+        private CallKey(final InvocationContext ic)
+        {
+            this.ic = ic;
+
+            final Object[] parameters = ic.getParameters();
+            this.hash = ic.getMethod().hashCode() + (parameters == null ? 0 : Arrays.hashCode(parameters));
+        }
+
+        @Override
+        public boolean equals(final Object o)
+        {
+            return this == o || !(o == null || getClass() != o.getClass()) && equals(ic, CallKey.class.cast(o).ic);
+        }
+
+        @Override
+        public int hashCode()
+        {
+            return hash;
+        }
+
+        private boolean equals(final InvocationContext ic1, final InvocationContext ic2)
+        {
+            final Object[] parameters1 = ic1.getParameters();
+            final Object[] parameters2 = ic2.getParameters();
+            return ic2.getMethod().equals(ic1.getMethod()) &&
+                    (parameters1 == parameters2 ||
+                    (parameters1 != null && parameters2 != null && Arrays.equals(parameters1, ic2.getParameters())));
+        }
     }
 }
