@@ -885,14 +885,14 @@ public final class ConfigResolver
         @Override
         public T getValue()
         {
+            long now = -1;
             if (cacheTimeMs > 0)
             {
-                long now = System.currentTimeMillis();
+                now = System.currentTimeMillis();
                 if (now <= reloadAfter)
                 {
                     return lastValue;
                 }
-                reloadAfter = now + cacheTimeMs;
             }
 
             String valueStr = resolveStringValue();
@@ -909,6 +909,7 @@ public final class ConfigResolver
             if (cacheTimeMs > 0)
             {
                 lastValue = value;
+                reloadAfter = now + cacheTimeMs;
             }
 
             return value;
