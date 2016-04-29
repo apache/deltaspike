@@ -90,6 +90,7 @@
                             <exclude>readme/**/*</exclude>
                             <exclude>**/*.log</exclude>
                             <exclude>target/**</exclude>
+                            <exclude>test-ee7/target/**</exclude>
                             <exclude>**/*.iml</exclude>
                         </excludes>
                     </configuration>
