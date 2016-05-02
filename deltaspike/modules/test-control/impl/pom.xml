@@ -166,20 +166,16 @@
             </dependencies>
         </profile>
         <profile>
-            <id>Weld</id>
+            <id>Weld1</id>
             <dependencies>
+                <!-- Adding a test dependency needed for Weld 1.x -->
                 <dependency>
                     <groupId>org.apache.deltaspike.cdictrl</groupId>
                     <artifactId>deltaspike-cdictrl-weld</artifactId>
                     <scope>test</scope>
                 </dependency>
-
-                <dependency>
-                    <groupId>org.jboss.weld.se</groupId>
-                    <artifactId>weld-se-core</artifactId>
-                    <version>${weld.version}</version>
-                    <scope>test</scope>
-                </dependency>
+                
+                <!-- The remaining bits of this profile are located under deltaspike/parent/code/pom.xml -->
             </dependencies>
         </profile>
     </profiles>

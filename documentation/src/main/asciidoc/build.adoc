@@ -25,11 +25,25 @@ Tests can be executed with both the JBoss Weld and Apache OpenWebBeans CDI imple
 |===
 |Container |Command to Execute Arquillian Tests
 
-|JBoss Weld
+|JBoss Weld 1.x (CDI 1.0)
 |
 [source,shell]
 ----
-$ mvn clean install -PWeld
+$ mvn clean install -PWeld1 -Dweld.version=1.1.33.Final
+----
+
+|JBoss Weld 2.x (CDI 1.2)
+|
+[source,shell]
+----
+$ mvn clean install -PWeld2 -Dweld.version=2.3.4.Final
+----
+
+|JBoss Weld 3.x (CDI 2.0)
+|
+[source,shell]
+----
+$ mvn clean install -PWeld3 -Dweld.version=3.0.0.Alpha16
 ----
 
 |Apache OpenWebBeans
