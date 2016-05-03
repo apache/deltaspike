@@ -41,7 +41,7 @@
         <wildfly.arquillian.version>1.0.2.Final</wildfly.arquillian.version>
         <glassfish3.version>3.1.2.2</glassfish3.version>
         <glassfish4.version>4.0</glassfish4.version>
-        <wls.version>12.1</wls.version>
+        <wls.version>12.1</wls.version>   
     </properties>
 
 
@@ -309,6 +309,12 @@
             <!-- use this profile to compile and test DeltaSpike with JBoss Weld 1.x on an embedded container-->
             <id>Weld1</id>
 
+            <properties>
+                <!-- Minimal supported version of Weld 1.x -->
+                <weld.version>1.1.9.Final</weld.version>
+                <cdicontainer.version>weld-${weld.version}</cdicontainer.version>
+            </properties>
+            
             <dependencyManagement>
                 <dependencies>
                     <!-- Weld Core BOM - used to fetch version of artifacts only -->
@@ -343,19 +349,74 @@
                     <groupId>org.jboss.weld.se</groupId>
                     <artifactId>weld-se-core</artifactId>
                 </dependency>
-                <!-- needed for modules/test-control tests -->
-<!--                <dependency>
-                    <groupId>org.apache.deltaspike.cdictrl</groupId>
-                    <artifactId>deltaspike-cdictrl-weld</artifactId>
+                
+                <!--Other than Weld dependencies-->
+                <dependency>
+                    <groupId>javax.el</groupId>
+                    <artifactId>el-api</artifactId>
+                    <version>${weld.el.api}</version>
                     <scope>test</scope>
-                </dependency>-->
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.geronimo.specs</groupId>
+                    <artifactId>geronimo-jta_1.1_spec</artifactId>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.geronimo.specs</groupId>
+                    <artifactId>geronimo-interceptor_1.1_spec</artifactId>
+                </dependency>
+
+                <!-- Test dependencies -->
+                <dependency>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-simple</artifactId>
+                    <version>${weld.sfl4j}</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-validator</artifactId>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.jboss.arquillian.container</groupId>
+                    <artifactId>arquillian-weld-ee-embedded-1.1</artifactId>
+                    <version>${arquillian-weld.version}</version>
+                    <scope>test</scope>
+                </dependency>
             </dependencies>
+            
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <systemProperties>
+                                <cdicontainer.version>${cdicontainer.version}</cdicontainer.version>
+                            </systemProperties>
+                            <!-- Ignore these groups because they don't work with embedded Weld -->
+                            <excludedGroups>
+                                org.apache.deltaspike.test.category.WebProfileCategory,
+                                org.apache.deltaspike.test.category.WebEE7ProfileCategory,
+                                org.apache.deltaspike.test.category.FullProfileCategory,
+                                org.apache.deltaspike.test.category.EnterpriseArchiveProfileCategory
+                            </excludedGroups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
         
         <profile>
             <!-- use this profile to compile and test DeltaSpike with JBoss Weld 2.x on an embedded container -->
             <id>Weld2</id>
 
+            <properties>
+                <weld.version>2.3.4.Final</weld.version>
+                <cdicontainer.version>weld-${weld.version}</cdicontainer.version>
+            </properties>
+            
             <dependencyManagement>
                 <dependencies>
                     <!-- Weld Core BOM - used to fetch version of artifacts only -->
@@ -394,13 +455,74 @@
                     <groupId>org.jboss.weld</groupId>
                     <artifactId>weld-api</artifactId>
                 </dependency>
+                
+                <!--Other than Weld dependencies-->
+                <dependency>
+                    <groupId>javax.el</groupId>
+                    <artifactId>el-api</artifactId>
+                    <version>${weld.el.api}</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.geronimo.specs</groupId>
+                    <artifactId>geronimo-jta_1.1_spec</artifactId>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.geronimo.specs</groupId>
+                    <artifactId>geronimo-interceptor_1.1_spec</artifactId>
+                </dependency>
+
+                <!-- Test dependencies -->
+                <dependency>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-simple</artifactId>
+                    <version>${weld.sfl4j}</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-validator</artifactId>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.jboss.arquillian.container</groupId>
+                    <artifactId>arquillian-weld-ee-embedded-1.1</artifactId>
+                    <version>${arquillian-weld.version}</version>
+                    <scope>test</scope>
+                </dependency>
             </dependencies>
+            
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <systemProperties>
+                                <cdicontainer.version>${cdicontainer.version}</cdicontainer.version>
+                            </systemProperties>
+                            <!-- Ignore these groups because they don't work with embedded Weld -->
+                            <excludedGroups>
+                                org.apache.deltaspike.test.category.WebProfileCategory,
+                                org.apache.deltaspike.test.category.WebEE7ProfileCategory,
+                                org.apache.deltaspike.test.category.FullProfileCategory,
+                                org.apache.deltaspike.test.category.EnterpriseArchiveProfileCategory
+                            </excludedGroups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
             
         <profile>
             <!-- use this profile to compile and test DeltaSpike with JBoss Weld 3.x on an embedded container -->
             <id>Weld3</id>
 
+            <properties>
+                <weld.version>3.0.0.Alpha16</weld.version>
+                <cdicontainer.version>weld-${weld.version}</cdicontainer.version>
+            </properties>
+            
             <dependencyManagement>
                 <dependencies>
                     <!-- Weld Core BOM - used to fetch version of artifacts only -->
@@ -455,22 +577,43 @@
                     <groupId>org.jboss.weld</groupId>
                     <artifactId>weld-api</artifactId>
                 </dependency>
+                
+                <!--Other than Weld dependencies-->
+                <dependency>
+                    <groupId>javax.el</groupId>
+                    <artifactId>el-api</artifactId>
+                    <version>${weld.el.api}</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.geronimo.specs</groupId>
+                    <artifactId>geronimo-jta_1.1_spec</artifactId>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.geronimo.specs</groupId>
+                    <artifactId>geronimo-interceptor_1.1_spec</artifactId>
+                </dependency>
+
+                <!-- Test dependencies -->
+                <dependency>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-simple</artifactId>
+                    <version>${weld.sfl4j}</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-validator</artifactId>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.jboss.arquillian.container</groupId>
+                    <artifactId>arquillian-weld-ee-embedded-1.1</artifactId>
+                    <version>${arquillian-weld.version}</version>
+                    <scope>test</scope>
+                </dependency>
             </dependencies>
-        </profile>
-        
-        <profile>
-            <!-- This profile is automatically activated when using -Dweld.version=...
-            and contains common dependencies (e.g. test dependencies) and build setup -->
-            <id>Weld-common-setup</id>
-            <activation>
-                <property>
-                    <name>weld.version</name>
-                </property>
-            </activation>
-            
-            <properties>
-                <cdicontainer.version>weld-${weld.version}</cdicontainer.version>
-            </properties>
             
             <build>
                 <plugins>
@@ -491,44 +634,6 @@
                     </plugin>
                 </plugins>
             </build>
-
-            <dependencies>
-                <!--Other than Weld dependencies-->
-                <dependency>
-                    <groupId>javax.el</groupId>
-                    <artifactId>el-api</artifactId>
-                    <version>2.2</version>
-                    <scope>test</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.apache.geronimo.specs</groupId>
-                    <artifactId>geronimo-jta_1.1_spec</artifactId>
-                    <scope>test</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.apache.geronimo.specs</groupId>
-                    <artifactId>geronimo-interceptor_1.1_spec</artifactId>
-                </dependency>
-
-                <!-- Test dependencies -->
-                <dependency>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-simple</artifactId>
-                    <version>1.7.2</version>
-                    <scope>test</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.hibernate</groupId>
-                    <artifactId>hibernate-validator</artifactId>
-                    <scope>test</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.jboss.arquillian.container</groupId>
-                    <artifactId>arquillian-weld-ee-embedded-1.1</artifactId>
-                    <version>${arquillian-weld.version}</version>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
         </profile>
 
         <profile>
