@@ -49,7 +49,8 @@
     <properties>
         <java.version>1.6</java.version>
         <owb.version>1.2.7</owb.version>
-        <weld.version>1.1.28.Final</weld.version>
+        <!-- Weld profiles (in parent/code/pom.xml) override this version -->
+        <weld.version>1.1.9.Final</weld.version>
 
         <!-- for cdictrl-openejb -->
         <openejb.version>4.7.0</openejb.version>
@@ -135,6 +136,10 @@
         <!-- validator related -->
         <hibernate.validator.version>4.3.1.Final</hibernate.validator.version>
         <bval.version>0.5</bval.version>
+        
+        <!-- Versions of common dependencies within Weld profiles -->
+        <weld.el.api>2.2</weld.el.api>
+        <weld.sfl4j>1.7.2</weld.sfl4j>
 
     </properties>
 
