@@ -29,20 +29,29 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
+
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import org.apache.deltaspike.core.impl.future.FutureableInterceptor;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
+import org.jboss.shrinkwrap.descriptor.api.Descriptors;
+import org.jboss.shrinkwrap.descriptor.api.beans10.BeansDescriptor;
+
 @RunWith(Arquillian.class)
 public class FutureableTest {
     @Deployment
     public static WebArchive deploy()
     {
+        // create beans.xml with added interceptor
+        BeansDescriptor beans = Descriptors.create(BeansDescriptor.class);
+        beans.getOrCreateInterceptors().clazz(FutureableInterceptor.class.getName());
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "FutureableTest.jar")
                 .addPackage(Service.class.getPackage().getName())
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsManifestResource(new StringAsset(beans.exportAsString()), "beans.xml");
 
         return ShrinkWrap.create(WebArchive.class, "FutureableTest.war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())

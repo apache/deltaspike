@@ -67,6 +67,13 @@
             <artifactId>geronimo-ejb_3.1_spec</artifactId>
             <scope>test</scope>
         </dependency>
+        
+        <!-- Allows to create beans.xml files with certain content -->        
+        <dependency>
+            <groupId>org.jboss.shrinkwrap.descriptors</groupId>
+            <artifactId>shrinkwrap-descriptors-impl-javaee</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 </project>
