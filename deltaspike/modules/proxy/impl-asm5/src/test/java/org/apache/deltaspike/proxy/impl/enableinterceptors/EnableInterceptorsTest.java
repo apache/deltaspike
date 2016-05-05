@@ -19,14 +19,17 @@
 package org.apache.deltaspike.proxy.impl.enableinterceptors;
 
 import javax.inject.Inject;
+
+import org.apache.deltaspike.proxy.util.EnableInterceptorsInterceptor;
 import org.apache.deltaspike.test.proxy.impl.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.shrinkwrap.descriptor.api.Descriptors;
+import org.jboss.shrinkwrap.descriptor.api.beans10.BeansDescriptor;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,23 +40,25 @@ public class EnableInterceptorsTest
     @Deployment
     public static WebArchive war()
     {
-        Asset beansXml = new StringAsset(
-            "<beans><interceptors><class>" +
-                    MyBeanInterceptor.class.getName() +
-            "</class></interceptors></beans>"
-        );
-
         String simpleName = EnableInterceptorsTest.class.getSimpleName();
         String archiveName = simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1);
 
+        // CDI 1.0/Weld 1.x needs EnableInterceptorsInterceptor
+        BeansDescriptor beansWithEnablingInterceptor = Descriptors.create(BeansDescriptor.class);
+        beansWithEnablingInterceptor.getOrCreateInterceptors().clazz(EnableInterceptorsInterceptor.class.getName());
+        
+        // war archive needs MyBeanInterceptor enabled
+        BeansDescriptor beans = Descriptors.create(BeansDescriptor.class);
+        beans.getOrCreateInterceptors().clazz(MyBeanInterceptor.class.getName());
+          
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, archiveName + ".jar")
                 .addPackage(EnableInterceptorsTest.class.getPackage())
-                .addAsManifestResource(beansXml, "beans.xml");
+                .addAsManifestResource(new StringAsset(beansWithEnablingInterceptor.exportAsString()), "beans.xml");
 
         return ShrinkWrap.create(WebArchive.class, archiveName + ".war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndProxyArchive())
                 .addAsLibraries(testJar)
-                .addAsWebInfResource(beansXml, "beans.xml");
+                .addAsWebInfResource(new StringAsset(beans.exportAsString()), "beans.xml");
     }
 
     @Inject
