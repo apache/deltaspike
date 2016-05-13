@@ -21,6 +21,7 @@ package org.apache.deltaspike.test.api.config;
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.spi.config.ConfigFilter;
+import org.apache.deltaspike.core.spi.config.ConfigSource;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
 import org.junit.Assert;
 import org.junit.Before;
@@ -160,8 +161,8 @@ public class ConfigResolverTest
             String url = ConfigResolver.getPropertyValue("deltaspike.test.nonexisting.variable", true);
             Assert.assertEquals("${does.not.exist}/someservice/myendpoint", url);
         }
-
     }
+
     @Test
     public void testConfigVariableRecursiveDeclaration()
     {
@@ -171,6 +172,44 @@ public class ConfigResolverTest
         ConfigResolver.TypedResolver<String> tr = ConfigResolver.resolve("deltaspike.test.recursive.variable1")
             .evaluateVariables(true).logChanges(true);
         Assert.assertEquals("pre-crazy-post/ohgosh/crazy", tr.getValue());
+    }
+
+    @Test
+    public void testTypedResolver_NonExistingValue()
+    {
+        final String key = "non.existing.key";
+
+        ConfigResolver.TypedResolver<String> resolver = ConfigResolver.resolve(key)
+            .logChanges(true);
+
+        Assert.assertNull(resolver.getValue());
+
+        setTestConfigSourceValue(key, "somevalue");
+        Assert.assertEquals("somevalue", resolver.getValue());
+
+        setTestConfigSourceValue(key, null);
+        Assert.assertNull(resolver.getValue());
+    }
+
+    private void setTestConfigSourceValue(String key, String value)
+    {
+        ConfigSource[] configSources = ConfigResolver.getConfigSources();
+        for (ConfigSource configSource : configSources)
+        {
+            if (configSource instanceof TestConfigSource)
+            {
+                if (value == null)
+                {
+                    configSource.getProperties().remove(key);
+                }
+                else
+                {
+                    configSource.getProperties().put(key, value);
+                }
+
+                break;
+            }
+        }
     }
 
     public static class TestConfigFilter implements ConfigFilter
@@ -195,4 +234,5 @@ public class ConfigResolverTest
             return value;
         }
     }
+
 }

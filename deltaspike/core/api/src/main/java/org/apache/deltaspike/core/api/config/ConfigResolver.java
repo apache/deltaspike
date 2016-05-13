@@ -900,15 +900,16 @@ public final class ConfigResolver
 
             value = fallbackToDefaultIfEmpty(keyResolved, value, defaultValue);
 
-            if (logChanges && (value != null && lastValue == null || !value.equals(lastValue)) )
+            if (logChanges && (value != null && !value.equals(lastValue) || (value == null && lastValue != null)) )
             {
                 LOG.log(Level.INFO, "New value {0} for key {1}.",
                     new Object[]{filterConfigValueForLog(keyOriginal, valueStr), keyOriginal});
             }
 
+            lastValue = value;
+
             if (cacheTimeMs > 0)
             {
-                lastValue = value;
                 reloadAfter = now + cacheTimeMs;
             }
 
