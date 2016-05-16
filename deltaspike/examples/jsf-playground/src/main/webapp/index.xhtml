@@ -44,6 +44,17 @@
     <h:link value="Lazy" outcome="views/windowhandling/lazy/test.jsf" /> <br/>
     <h:link value="Lazy without JS" outcome="views/windowhandling/lazy/testWithoutJS.jsf" /> <br/>
     <h:link value="Lazy ViewAction" outcome="views/windowhandling/lazy/viewAction.jsf" /> <br/>
+    
+    
+    <br/>
+    <br/>
+    'window.name': <input id="windowname" />
+    <button onclick="window.name = document.getElementById('windowname').value; return false;">set</button>
+    <script type="text/javascript">
+        document.getElementById('windowname').value = window.name;
+    </script>
+    
+    
 </h:body>
 
 </html>
