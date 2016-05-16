@@ -33,5 +33,7 @@ public class TransactionalBean
     @Transactional
     public void executeInTransaction()
     {
+        //just access the transaction-scoped bean
+        entityManager.getTransaction();
     }
 }
