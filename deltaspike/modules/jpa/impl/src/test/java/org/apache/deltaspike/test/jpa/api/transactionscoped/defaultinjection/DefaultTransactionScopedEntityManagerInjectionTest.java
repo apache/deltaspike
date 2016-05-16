@@ -114,6 +114,8 @@ public class DefaultTransactionScopedEntityManagerInjectionTest
     @Test
     public void invalidEntityManagerUsageAfterTransaction()
     {
+        transactionalBean.executeInTransaction();
+
         try
         {
             //not available because there is no transactional method
