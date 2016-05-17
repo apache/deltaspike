@@ -424,7 +424,7 @@ window.dswh = window.dswh || {
                 for (var i = 0; i < queryParameters.length; i++) {
                     var queryParameter = queryParameters[i].split("=");
                     if (queryParameter[0] === name) {
-                        return queryParameter.length > 1 ? queryParameter[1] : "";
+                        return queryParameter.length > 1 ? decodeURIComponent(queryParameter[1]) : "";
                     }
                 }
             }
