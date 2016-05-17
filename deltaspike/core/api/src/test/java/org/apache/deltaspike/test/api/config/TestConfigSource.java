@@ -89,6 +89,8 @@ public class TestConfigSource implements ConfigSource
         props.put("deltaspike.test.recursive.variable2", "pre-${deltaspike.test.recursive.variable3}-post");
         props.put("deltaspike.test.recursive.variable3", "crazy");
 
+        props.put("deltaspike.test.projectstagefallback.UnitTest", "");
+        props.put("deltaspike.test.projectstagefallback", "Value without ProjectStage");
     }
 
     @Override

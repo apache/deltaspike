@@ -28,7 +28,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class ConfigResolverTest
 {
@@ -82,6 +81,12 @@ public class ConfigResolverTest
         Assert.assertEquals("testvalue", ConfigResolver.getPropertyValue("testkey3", null));
         Assert.assertEquals("", ConfigResolver.getProjectStageAwarePropertyValue("testkey3"));
         Assert.assertEquals(DEFAULT_VALUE, ConfigResolver.getProjectStageAwarePropertyValue("testkey3", DEFAULT_VALUE));
+
+        Assert.assertEquals(DEFAULT_VALUE, ConfigResolver.getProjectStageAwarePropertyValue("deltaspike.test.projectstagefallback", DEFAULT_VALUE));
+        Assert.assertEquals("", ConfigResolver.getProjectStageAwarePropertyValue("deltaspike.test.projectstagefallback"));
+
+        Assert.assertEquals(DEFAULT_VALUE, ConfigResolver.resolve("deltaspike.test.projectstagefallback").as(String.class).withDefault(DEFAULT_VALUE).withCurrentProjectStage(true).getValue());
+        Assert.assertEquals("", ConfigResolver.resolve("deltaspike.test.projectstagefallback").as(String.class).withCurrentProjectStage(true).getValue());
     }
 
     @Test

@@ -171,6 +171,7 @@ public final class ConfigResolver
         return getPropertyValue(key, defaultValue, true);
     }
 
+
     public static String getPropertyValue(String key, String defaultValue, boolean evaluateVariables)
     {
         String value = getPropertyValue(key, evaluateVariables);
@@ -759,6 +760,7 @@ public final class ConfigResolver
 
         private Class<?> configEntryType = String.class;
 
+        private boolean withDefault = false;
         private T defaultValue;
 
         private boolean projectStageAware = true;
@@ -810,6 +812,7 @@ public final class ConfigResolver
         public TypedResolver<T> withDefault(T value)
         {
             defaultValue = value;
+            withDefault = true;
             return this;
         }
 
@@ -823,6 +826,7 @@ public final class ConfigResolver
             }
 
             defaultValue = convert(value);
+            withDefault = true;
             return this;
         }
 
@@ -898,7 +902,10 @@ public final class ConfigResolver
             String valueStr = resolveStringValue();
             T value = convert(valueStr);
 
-            value = fallbackToDefaultIfEmpty(keyResolved, value, defaultValue);
+            if (withDefault)
+            {
+                value = fallbackToDefaultIfEmpty(keyResolved, value, defaultValue);
+            }
 
             if (logChanges && (value != null && !value.equals(lastValue) || (value == null && lastValue != null)) )
             {
@@ -969,7 +976,7 @@ public final class ConfigResolver
             }
 
             // make initial resolution of longest key
-            value = getPropertyValue(keyResolved, null, evaluateVariables);
+            value = getPropertyValue(keyResolved, evaluateVariables);
 
             // try fallbacks if not strictly
             if (value == null && !strictly)
