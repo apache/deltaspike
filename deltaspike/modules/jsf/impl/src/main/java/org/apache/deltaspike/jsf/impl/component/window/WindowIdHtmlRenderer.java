@@ -42,7 +42,7 @@ public class WindowIdHtmlRenderer extends Renderer
 {
     private volatile ClientWindow clientWindow;
     private volatile ClientWindowConfig clientWindowConfig;
-    private int maxWindowIdCount = 10;
+    private int maxWindowIdLength = 10;
 
     /**
      * 'deltaspikeJsWindowId' will be used to:
@@ -77,7 +77,9 @@ public class WindowIdHtmlRenderer extends Renderer
         ResponseWriter writer = context.getResponseWriter();
         writer.write("<script type=\"text/javascript\">");
         writer.write("(function(){");
-        writer.write("dswh.init('" + windowId + "','" + clientWindowRenderMode.name() + "',{");
+        writer.write("dswh.init('" + windowId + "','"
+                + clientWindowRenderMode.name() + "',"
+                + maxWindowIdLength + ",{");
 
         writer.write("'tokenizedRedirect':" + clientWindowConfig.isClientWindowTokenizedRedirectEnabled());
         writer.write(",'storeWindowTreeOnLinkClick':"
@@ -107,9 +109,9 @@ public class WindowIdHtmlRenderer extends Renderer
     protected String secureWindowId(String windowId)
     {
         //restrict the length to prevent script-injection
-        if (windowId != null && windowId.length() > this.maxWindowIdCount)
+        if (windowId != null && windowId.length() > this.maxWindowIdLength)
         {
-            windowId = windowId.substring(0, this.maxWindowIdCount);
+            windowId = windowId.substring(0, this.maxWindowIdLength);
         }
         return windowId;
     }
@@ -124,7 +126,7 @@ public class WindowIdHtmlRenderer extends Renderer
                 {
                     clientWindowConfig = BeanProvider.getContextualReference(ClientWindowConfig.class);
                     clientWindow = BeanProvider.getContextualReference(ClientWindow.class);
-                    maxWindowIdCount = ClientWindowHelper.getMaxWindowIdLength();
+                    maxWindowIdLength = ClientWindowHelper.getMaxWindowIdLength();
                 }
             }
         }

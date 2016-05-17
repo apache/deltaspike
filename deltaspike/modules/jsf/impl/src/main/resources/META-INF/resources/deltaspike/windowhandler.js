@@ -22,11 +22,20 @@ window.dswh = window.dswh || {
 
     windowId : null,
     clientWindowRenderMode : null,
-    cfg: null,
+    maxWindowIdLength : 10,
+    cfg : null,
 
-    init : function(windowId, clientWindowRenderMode, cfg) {
+    init : function(windowId, clientWindowRenderMode, maxWindowIdLength, cfg) {
+
+        if (dswh.DEBUG_MODE === true) {
+            console.log('---- DeltaSpike WindowHandler ----');
+            console.log('#init(\'' + windowId + '\', \'' + clientWindowRenderMode + '\',' + maxWindowIdLength + ',' + dswh.utils.stringify(cfg) + ')');
+            console.log('window.name: ' + window.name);
+        }
+
         this.windowId = windowId;
         this.clientWindowRenderMode = clientWindowRenderMode;
+        this.maxWindowIdLength = maxWindowIdLength;
         if (cfg) {
             this.cfg = cfg;
         } else {
@@ -35,16 +44,26 @@ window.dswh = window.dswh || {
 
         var targetStrategy = this.strategy[clientWindowRenderMode];
         if (targetStrategy) {
+            if (dswh.DEBUG_MODE === true) {
+                console.log(clientWindowRenderMode + ' #validate');
+            }
+
             targetStrategy.validate();
 
             // early init
             // this is required if e.g. the onload attr is defined on the body tag and our onload handler won't be called
             // ATTENTION: the ds:windowId component must be placed as last body tag
+            if (dswh.DEBUG_MODE === true) {
+                console.log(clientWindowRenderMode + ' #init(false)');
+            }
             targetStrategy.init(false);
 
             // JSF ajax callback
             jsf.ajax.addOnEvent(function(event) {
                 if (event.status === "success") {
+                    if (dswh.DEBUG_MODE === true) {
+                        console.log(clientWindowRenderMode + ' #init(true)');
+                    }
                     targetStrategy.init(true);
                 }
             });
@@ -52,6 +71,9 @@ window.dswh = window.dswh || {
             // PF ajax callback
             if (window.$ && window.PrimeFaces) {
                 $(document).on('pfAjaxComplete', function () {
+                    if (dswh.DEBUG_MODE === true) {
+                        console.log(clientWindowRenderMode + ' #init(true)');
+                    }
                     targetStrategy.init(true);
                 });
             }
@@ -63,6 +85,9 @@ window.dswh = window.dswh || {
                 try {
                     (oldWindowOnLoad) ? oldWindowOnLoad(evt) : null;
                 } finally {
+                    if (dswh.DEBUG_MODE === true) {
+                        console.log(clientWindowRenderMode + ' #init(false)');
+                    }
                     targetStrategy.init(false);
                 }
             };
@@ -274,25 +299,14 @@ window.dswh = window.dswh || {
             },
 
             init : function(ajax) {
-                if (dswh.DEBUG_MODE === true) {
-                    console.log('LAZY#init');
-                }
-
                 dswh.utils.appendHiddenWindowIdToForms();
             },
 
             assertWindowId : function() {
-                if (dswh.DEBUG_MODE === true) {
-                    console.log('LAZY#assertWindowId');
-                }
-
                 var dswid = dswh.utils.getUrlParameter(window.location.href, 'dswid');
 
                 if (dswh.DEBUG_MODE === true) {
-                    console.log('window.name: ' + window.name);
                     console.log('dswid: ' + dswid);
-                    console.log('windowId: ' + dswh.windowId);
-                    console.log('initialRedirectWindowId: ' + dswh.cfg.initialRedirectWindowId);
                 }
 
                 // window.name is null which means that "open in new tab/window" was used
