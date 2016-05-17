@@ -18,6 +18,8 @@
  */
 window.dswh = window.dswh || {
 
+    DEBUG_MODE : false,
+
     windowId : null,
     clientWindowRenderMode : null,
     cfg: null,
@@ -272,11 +274,26 @@ window.dswh = window.dswh || {
             },
 
             init : function(ajax) {
+                if (dswh.DEBUG_MODE === true) {
+                    console.log('LAZY#init');
+                }
+
                 dswh.utils.appendHiddenWindowIdToForms();
             },
 
             assertWindowId : function() {
+                if (dswh.DEBUG_MODE === true) {
+                    console.log('LAZY#assertWindowId');
+                }
+
                 var dswid = dswh.utils.getUrlParameter(window.location.href, 'dswid');
+
+                if (dswh.DEBUG_MODE === true) {
+                    console.log('window.name: ' + window.name);
+                    console.log('dswid: ' + dswid);
+                    console.log('windowId: ' + dswh.windowId);
+                    console.log('initialRedirectWindowId: ' + dswh.cfg.initialRedirectWindowId);
+                }
 
                 // window.name is null which means that "open in new tab/window" was used
                 if (!window.name || window.name.length < 1) {
@@ -287,9 +304,17 @@ window.dswh = window.dswh || {
                         // the windowId is valid - we don't need to a second request
                         if (dswh.cfg.initialRedirectWindowId && dswid === dswh.cfg.initialRedirectWindowId) {
                             window.name = dswh.cfg.initialRedirectWindowId;
+
+                            if (dswh.DEBUG_MODE === true) {
+                                console.log('overtake initialRedirectWindowId');
+                            }
                         }
                         else {
                             // -- url param available, we must recreate a new windowId to be sure that it is new and valid --
+
+                            if (dswh.DEBUG_MODE === true) {
+                                console.log('request new windowId');
+                            }
 
                             // set tempWindowId to remember the current state
                             window.name = 'tempWindowId';
@@ -302,6 +327,10 @@ window.dswh = window.dswh || {
 
                         // this means that the initial redirect is disabled and we can just use the windowId as window.name
                         window.name = dswh.windowId;
+
+                        if (dswh.DEBUG_MODE === true) {
+                            console.log('assign window.name from windowId');
+                        }
                     }
                 }
                 else {
@@ -309,13 +338,25 @@ window.dswh = window.dswh || {
                         if (dswid) {
                             // we triggered the windowId recreation last request - use it now!
                             window.name = dswid;
+
+                            if (dswh.DEBUG_MODE === true) {
+                                console.log('assign window.name from request parameter');
+                            }
                         }
                         else {
                             // it could be from dswh.windowId in case of open in new tab and initial redirect is disabled
                             window.name = dswh.windowId;
+
+                            if (dswh.DEBUG_MODE === true) {
+                                console.log('assign window.name from windowId');
+                            }
                         }
                     }
                     else if (window.name !== dswid) {
+                        if (dswh.DEBUG_MODE === true) {
+                            console.log('reload view with window.name');
+                        }
+
                         // window.name doesn't match requested windowId
                         // -> redirect to the same view with current window.name / windowId
                         window.location = dswh.utils.setUrlParam(window.location.href, 'dswid', window.name);
