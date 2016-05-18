@@ -511,10 +511,11 @@ window.dswh = window.dswh || {
                 return a.href;
             }
 
-            // loop old paramaters and build array with new parameters
             var oldParameters = a.search.substring(1).split('&');
             var newParameters = [];
+            newParameters.push(parameterName + "=" + encodeURIComponent(parameterValue));
 
+            // loop old parameters, remove empty ones and remove the parameter with the same name as the new one
             for (var i = 0; i < oldParameters.length; i++) {
                 var oldParameterPair = oldParameters[i];
 
@@ -524,9 +525,8 @@ window.dswh = window.dswh || {
 
                     // don't add empty parameters again
                     if (oldParameterValue && oldParameterValue.replace(/^\s+|\s+$/g, '').length > 0) {
-                        if (oldParameterName === parameterName) {
-                            newParameters.push(oldParameterName + "=" + encodeURIComponent(parameterValue));
-                        } else {
+                        // skip the the old parameter if it's the same as the new parameter
+                        if (oldParameterName !== parameterName) {
                             newParameters.push(oldParameterName + "=" + oldParameterValue);
                         }
                     }
