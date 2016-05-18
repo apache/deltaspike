@@ -115,30 +115,62 @@
             replaceContent();
 
             window.onload = function() {
-                // uncomment the following line to debug the intermediate page
-                //if (!confirm('reload?')) { return true; }
+                if (dswh.DEBUG_MODE === true){
+                    if (!confirm('reload?')) {
+                        return true;
+                    }
+                }
 
                 loadCss(true);
 
-                var windowId = window.name;
-                var urlId = windowId;
-                if (!windowId || windowId.length < 1) {
-                    var newWindowId = '$$windowIdValue$$';
-                    if (newWindowId !== 'uninitializedWindowId') {
-                        window.name = newWindowId; // set the window.name with our windowId
-                        windowId = newWindowId;
-                        urlId = windowId;
-                    }
-                    else {
-                        windowId = 'automatedEntryPoint';
-                        urlId = null;
-                    }
-                }
-                // occurs with the "duplicate tab" feature of chrome
-                else if (windowId === dswh.TEMP_WINDOW_NAME) {
+                var windowId = dswh.utils.getWindowIdFromWindowName();
+                var urlWindowId = windowId;
+
+                function requestNewWindowId() {
                     window.name = '';
                     windowId = 'automatedEntryPoint';
-                    urlId = null;
+                    urlWindowId = null;
+                }
+
+                dswh.utils.log('------- DeltaSpike windowhandler.html -------');
+                dswh.utils.log('windowId: ' + windowId);
+                dswh.utils.log('window.name: ' + window.name);
+
+                if (dswh.utils.isWindowNameDefined()) {
+                    if (!dswh.utils.isManagedWindowName()) {
+
+                        dswh.utils.log('window name unmanaged - request new windowId');
+
+                        requestNewWindowId();
+                    }
+                    else {
+                        // occurs with the "duplicate tab" feature of chrome
+                        if (windowId === dswh.TEMP_WINDOW_NAME) {
+
+                            dswh.utils.log('window name is temporary - request new windowId');
+
+                            requestNewWindowId();
+                        }
+                    }
+                }
+                // window name is undefined, which means that "open in new tab/window" was used
+                else {
+                    var newWindowId = '$$windowIdValue$$';
+
+                    dswh.utils.log('newWindowId ' + newWindowId);
+
+                    if (newWindowId === 'uninitializedWindowId') {
+                        dswh.utils.log('windowId not initialized - request new windowId');
+
+                        requestNewWindowId();
+                    }
+                    else {
+                        dswh.utils.log('assign window name from newWindowId');
+
+                        dswh.utils.setWindowIdAsWindowName(newWindowId); // set the window.name with our windowId
+                        windowId = newWindowId;
+                        urlWindowId = newWindowId;
+                    }
                 }
 
                 var requestToken = dswh.utils.generateRequestToken();
@@ -146,7 +178,7 @@
                 var redirectUrl = '$$requestUrl$$';
                 redirectUrl = dswh.utils.setUrlParam(redirectUrl, "dsrid", requestToken);
                 // we still add the windowId page param to support lazy windowId dropping for some clients
-                redirectUrl = dswh.utils.setUrlParam(redirectUrl, "dswid", urlId);
+                redirectUrl = dswh.utils.setUrlParam(redirectUrl, "dswid", urlWindowId);
 
                 dswh.utils.storeCookie('dsrwid-' + requestToken, windowId, 3);
 

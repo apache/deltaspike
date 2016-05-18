@@ -20,6 +20,7 @@ window.dswh = window.dswh || {
 
     DEBUG_MODE : false,
     TEMP_WINDOW_NAME : 'tempWindowId',
+    MANAGED_WINDOW_NAME_PREFIX : 'ds-',
 
     windowId : null,
     clientWindowRenderMode : null,
@@ -28,11 +29,9 @@ window.dswh = window.dswh || {
 
     init : function(windowId, clientWindowRenderMode, maxWindowIdLength, cfg) {
 
-        if (dswh.DEBUG_MODE === true) {
-            console.log('---- DeltaSpike WindowHandler ----');
-            console.log('#init(\'' + windowId + '\', \'' + clientWindowRenderMode + '\',' + maxWindowIdLength + ',' + dswh.utils.stringify(cfg) + ')');
-            console.log('window.name: ' + window.name);
-        }
+        dswh.utils.log('------- DeltaSpike windowhandler.js -------');
+        dswh.utils.log('--- #init(\'' + windowId + '\', \'' + clientWindowRenderMode + '\',' + maxWindowIdLength + ',' + dswh.utils.stringify(cfg) + ')');
+        dswh.utils.log('window.name: ' + window.name);
 
         this.windowId = windowId;
         this.clientWindowRenderMode = clientWindowRenderMode;
@@ -45,26 +44,20 @@ window.dswh = window.dswh || {
 
         var targetStrategy = this.strategy[clientWindowRenderMode];
         if (targetStrategy) {
-            if (dswh.DEBUG_MODE === true) {
-                console.log(clientWindowRenderMode + ' #validate');
-            }
+            dswh.utils.log('--- #validate');
 
             targetStrategy.validate();
 
             // early init
             // this is required if e.g. the onload attr is defined on the body tag and our onload handler won't be called
             // ATTENTION: the ds:windowId component must be placed as last body tag
-            if (dswh.DEBUG_MODE === true) {
-                console.log(clientWindowRenderMode + ' #init(false)');
-            }
+            dswh.utils.log('--- #init(false)');
             targetStrategy.init(false);
 
             // JSF ajax callback
             jsf.ajax.addOnEvent(function(event) {
                 if (event.status === "success") {
-                    if (dswh.DEBUG_MODE === true) {
-                        console.log(clientWindowRenderMode + ' #init(true)');
-                    }
+                    dswh.utils.log('--- #init(true)');
                     targetStrategy.init(true);
                 }
             });
@@ -72,9 +65,7 @@ window.dswh = window.dswh || {
             // PF ajax callback
             if (window.$ && window.PrimeFaces) {
                 $(document).on('pfAjaxComplete', function () {
-                    if (dswh.DEBUG_MODE === true) {
-                        console.log(clientWindowRenderMode + ' #init(true)');
-                    }
+                    dswh.utils.log('--- #init(true)');
                     targetStrategy.init(true);
                 });
             }
@@ -86,9 +77,7 @@ window.dswh = window.dswh || {
                 try {
                     (oldWindowOnLoad) ? oldWindowOnLoad(evt) : null;
                 } finally {
-                    if (dswh.DEBUG_MODE === true) {
-                        console.log(clientWindowRenderMode + ' #init(false)');
-                    }
+                    dswh.utils.log('--- #init(false)');
                     targetStrategy.init(false);
                 }
             };
@@ -112,10 +101,12 @@ window.dswh = window.dswh || {
             },
 
             assertWindowId : function() {
+                dswh.utils.log('--- #assertWindowId');
+
                 // ensure that windowIds get checked even if no windowhandler.html is used
-                if (!window.name || window.name.length < 1) {
-                    window.name = dswh.TEMP_WINDOW_NAME;
-                    window.location = dswh.utils.setUrlParam(window.location.href, 'dswid', null);
+                if (!dswh.utils.isWindowNameDefined() || !dswh.utils.isManagedWindowName()) {
+                    dswh.utils.log('window name not defined or unmanaged - request new windowId');
+                    dswh.utils.requestNewWindowId();
                 }
             },
 
@@ -123,6 +114,10 @@ window.dswh = window.dswh || {
 
                 var tokenizedRedirectEnabled = dswh.cfg.tokenizedRedirect;
                 var storeWindowTreeEnabled = dswh.utils.isHtml5() && dswh.cfg.storeWindowTreeOnLinkClick;
+
+                dswh.utils.log('--- #overwriteLinkOnClickEvents');
+                dswh.utils.log('tokenizedRedirect: ' + dswh.cfg.tokenizedRedirect);
+                dswh.utils.log('storeWindowTreeOnLinkClick: ' + dswh.cfg.storeWindowTreeOnLinkClick);
 
                 if (tokenizedRedirectEnabled || storeWindowTreeEnabled) {
                     var links = document.getElementsByTagName("a");
@@ -176,6 +171,9 @@ window.dswh = window.dswh || {
             overwriteButtonOnClickEvents : function() {
 
                 var storeWindowTreeEnabled = dswh.utils.isHtml5() && dswh.cfg.storeWindowTreeOnButtonClick;
+
+                dswh.utils.log('--- #overwriteButtonOnClickEvents');
+                dswh.utils.log('storeWindowTreeOnButtonClick: ' + dswh.cfg.storeWindowTreeOnButtonClick);
 
                 if (storeWindowTreeEnabled) {
                     var inputs = document.getElementsByTagName("input");
@@ -237,6 +235,9 @@ window.dswh = window.dswh || {
             },
 
             tokenizedRedirect : function(link) {
+
+                dswh.utils.log('--- #tokenizedRedirect');
+
                 var requestToken = dswh.utils.generateRequestToken();
                 dswh.utils.storeCookie('dsrwid-' + requestToken, dswh.windowId, 3);
                 window.location = dswh.utils.setUrlParam(link.href, 'dsrid', requestToken);
@@ -246,6 +247,9 @@ window.dswh = window.dswh || {
              * store the current body in the html5 localstorage
              */
             storeWindowTree : function() {
+
+                dswh.utils.log('--- #storeWindowTree');
+
                 // first we store all CSS we also need on the intermediate page
                 var headNodes = document.getElementsByTagName("head")[0].childNodes;
                 var oldSS = new Array();
@@ -285,6 +289,8 @@ window.dswh = window.dswh || {
             },
 
             cleanupCookies : function() {
+                dswh.utils.log('--- #cleanupCookies');
+
                 var dsrid = dswh.utils.getUrlParameter(window.location.href, 'dsrid');
                 if (dsrid) {
                     dswh.utils.expireCookie('dsrwid-' + dsrid);
@@ -306,90 +312,86 @@ window.dswh = window.dswh || {
             assertWindowId : function() {
                 var dswid = dswh.utils.getUrlParameter(window.location.href, 'dswid');
 
-                if (dswh.DEBUG_MODE === true) {
-                    console.log('dswid: ' + dswid);
+                dswh.utils.log('--- #assertWindowId');
+                dswh.utils.log('dswid: ' + dswid);
+
+                // window name is defined -> existing tab
+                if (dswh.utils.isWindowNameDefined()) {
+
+                    // is the current window name a already managed by DS?
+                    if (dswh.utils.isManagedWindowName()) {
+
+                        var windowId = dswh.utils.getWindowIdFromWindowName();
+
+                        // we triggered the windowId recreation last request
+                        if (windowId === dswh.TEMP_WINDOW_NAME) {
+                            // enabled initial redirect
+                            // -> use the new windowId from the url
+                            if (dswid) {
+                                dswh.utils.log('assign window name from request parameter');
+
+                                dswh.utils.setWindowIdAsWindowName(dswid);
+                            }
+                            // disabled initial redirect
+                            // -> use the new windowId from the rendered config as no url param is available
+                            else {
+                                dswh.utils.log('assign window name from server windowId');
+
+                                dswh.utils.setWindowIdAsWindowName(dswh.windowId);
+                            }
+                        }
+                        // security check like on the server side
+                        else if (windowId.length > dswh.maxWindowIdLength) {
+                            dswh.utils.log('window id from window name exeeds maxWindowIdLength - request new windowId');
+
+                            dswh.utils.requestNewWindowId();
+                        }
+                        // window name doesn't match requested windowId
+                        // -> redirect to the same view with current windowId from the window name
+                        else if (windowId !== dswid) {
+                            dswh.utils.log('reload url with window name');
+
+                            window.location = dswh.utils.setUrlParam(window.location.href, 'dswid', windowId);
+                        }
+                    }
+                    else {
+                        dswh.utils.log('window name is unmanaged - request new windowId');
+
+                        dswh.utils.requestNewWindowId();
+                    }
                 }
-
-                // window.name is null which means that "open in new tab/window" was used
-                if (!window.name || window.name.length < 1) {
-
+                // window name is undefined -> "open in new tab/window" was used
+                else {
                     // url param available?
                     if (dswid) {
-                        // initial redirect case
-                        // the windowId is valid - we don't need to a second request
+                        // initial redirect
+                        // -> the windowId is valid - we don't need to a second request
                         if (dswh.cfg.initialRedirectWindowId && dswid === dswh.cfg.initialRedirectWindowId) {
-                            window.name = dswh.cfg.initialRedirectWindowId;
+                            dswh.utils.log('assign window name from initialRedirectWindowId');
 
-                            if (dswh.DEBUG_MODE === true) {
-                                console.log('overtake initialRedirectWindowId');
-                            }
+                            dswh.utils.setWindowIdAsWindowName(dswh.cfg.initialRedirectWindowId);
                         }
+                        // != initial redirect
+                        // -> request a new windowId to avoid multiple tabs with the same windowId
                         else {
-                            // -- url param available, we must recreate a new windowId to be sure that it is new and valid --
+                            dswh.utils.log('request new windowId');
 
-                            if (dswh.DEBUG_MODE === true) {
-                                console.log('request new windowId');
-                            }
-
-                            // set temp window name to remember the current state
-                            window.name = dswh.TEMP_WINDOW_NAME;
-                            // we remove the dswid if available and redirect to the same url again to create a new windowId
-                            window.location = dswh.utils.setUrlParam(window.location.href, 'dswid', null);
+                            dswh.utils.requestNewWindowId();
                         }
                     }
+                    // as no url parameter is available, the request is a new tab with disabled initial redirect
+                    // -> just use the windowId from the renderer
                     else if (dswh.windowId) {
-                        // -- no dswid in the url -> an initial request without initial redirect --
+                        dswh.utils.log('assign window name from server windowId');
 
-                        // this means that the initial redirect is disabled and we can just use the windowId as window.name
-                        window.name = dswh.windowId;
-
-                        if (dswh.DEBUG_MODE === true) {
-                            console.log('assign window.name from windowId');
-                        }
-                    }
-                }
-                else {
-                    if (window.name === dswh.TEMP_WINDOW_NAME) {
-                        if (dswid) {
-                            // we triggered the windowId recreation last request - use it now!
-                            window.name = dswid;
-
-                            if (dswh.DEBUG_MODE === true) {
-                                console.log('assign window.name from request parameter');
-                            }
-                        }
-                        else {
-                            // it could be from dswh.windowId in case of open in new tab and initial redirect is disabled
-                            window.name = dswh.windowId;
-
-                            if (dswh.DEBUG_MODE === true) {
-                                console.log('assign window.name from windowId');
-                            }
-                        }
-                    }
-                    else if (window.name.length > dswh.maxWindowIdLength) {
-                        if (dswh.DEBUG_MODE === true) {
-                            console.log('current window.name exeeds maxWindowIdLength - request new windowId');
-                        }
-
-                        // set temp window name to remember the current state
-                        window.name = dswh.TEMP_WINDOW_NAME;
-                        // we remove the dswid if available and redirect to the same url again to create a new windowId
-                        window.location = dswh.utils.setUrlParam(window.location.href, 'dswid', null);
-                    }
-                    else if (window.name !== dswid) {
-                        if (dswh.DEBUG_MODE === true) {
-                            console.log('reload view with window.name');
-                        }
-
-                        // window.name doesn't match requested windowId
-                        // -> redirect to the same view with current window.name / windowId
-                        window.location = dswh.utils.setUrlParam(window.location.href, 'dswid', window.name);
+                        dswh.utils.setWindowIdAsWindowName(dswh.windowId);
                     }
                 }
             },
 
             cleanupCookies : function() {
+                dswh.utils.log('--- #cleanupCookies');
+
                 var dswid = dswh.utils.getUrlParameter(window.location.href, 'dswid');
                 if (dswid) {
                     dswh.utils.expireCookie('dsrwid-' + dswid);
@@ -399,6 +401,33 @@ window.dswh = window.dswh || {
     },
 
     utils : {
+
+        isWindowNameDefined : function() {
+            return window.name && window.name.length > 0;
+        },
+
+        isManagedWindowName : function() {
+            if (!window.name) {
+                return false;
+            }
+
+            return window.name.indexOf(dswh.MANAGED_WINDOW_NAME_PREFIX) === 0;
+        },
+
+        getWindowIdFromWindowName : function() {
+            return window.name.substring(dswh.MANAGED_WINDOW_NAME_PREFIX.length);
+        },
+
+        setWindowIdAsWindowName : function(windowId) {
+            window.name = dswh.MANAGED_WINDOW_NAME_PREFIX + windowId;
+        },
+
+        requestNewWindowId : function() {
+            // set temp window name to remember the current state
+            dswh.utils.setWindowIdAsWindowName(dswh.TEMP_WINDOW_NAME);
+            // we remove the dswid if available and redirect to the same url again to create a new windowId
+            window.location = dswh.utils.setUrlParam(window.location.href, 'dswid', null);
+        },
 
         isHtml5 : function() {
             try {
@@ -544,6 +573,12 @@ window.dswh = window.dswh || {
             var expires = "; expires=" + expiresDate.toGMTString();
 
             document.cookie = name + '=' + value + expires + "; path=/";
+        },
+
+        log : function(message) {
+            if (dswh.DEBUG_MODE === true) {
+                console.log(message);
+            }
         }
     }
 };
