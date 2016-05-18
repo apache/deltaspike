@@ -19,6 +19,7 @@
 window.dswh = window.dswh || {
 
     DEBUG_MODE : false,
+    TEMP_WINDOW_NAME : 'tempWindowId',
 
     windowId : null,
     clientWindowRenderMode : null,
@@ -113,7 +114,7 @@ window.dswh = window.dswh || {
             assertWindowId : function() {
                 // ensure that windowIds get checked even if no windowhandler.html is used
                 if (!window.name || window.name.length < 1) {
-                    window.name = 'tempWindowId';
+                    window.name = dswh.TEMP_WINDOW_NAME;
                     window.location = dswh.utils.setUrlParam(window.location.href, 'dswid', null);
                 }
             },
@@ -330,8 +331,8 @@ window.dswh = window.dswh || {
                                 console.log('request new windowId');
                             }
 
-                            // set tempWindowId to remember the current state
-                            window.name = 'tempWindowId';
+                            // set temp window name to remember the current state
+                            window.name = dswh.TEMP_WINDOW_NAME;
                             // we remove the dswid if available and redirect to the same url again to create a new windowId
                             window.location = dswh.utils.setUrlParam(window.location.href, 'dswid', null);
                         }
@@ -348,7 +349,7 @@ window.dswh = window.dswh || {
                     }
                 }
                 else {
-                    if (window.name === 'tempWindowId') {
+                    if (window.name === dswh.TEMP_WINDOW_NAME) {
                         if (dswid) {
                             // we triggered the windowId recreation last request - use it now!
                             window.name = dswid;
@@ -365,6 +366,16 @@ window.dswh = window.dswh || {
                                 console.log('assign window.name from windowId');
                             }
                         }
+                    }
+                    else if (window.name.length > dswh.maxWindowIdLength) {
+                        if (dswh.DEBUG_MODE === true) {
+                            console.log('current window.name exeeds maxWindowIdLength - request new windowId');
+                        }
+
+                        // set temp window name to remember the current state
+                        window.name = dswh.TEMP_WINDOW_NAME;
+                        // we remove the dswid if available and redirect to the same url again to create a new windowId
+                        window.location = dswh.utils.setUrlParam(window.location.href, 'dswid', null);
                     }
                     else if (window.name !== dswid) {
                         if (dswh.DEBUG_MODE === true) {
