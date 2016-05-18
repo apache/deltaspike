@@ -223,6 +223,28 @@ public class CustomDateConverter implements ConfigResolver.Converter<Date> {
 }
 ------------------------------------------------------------------------------------------
 
+==== Dynamic Reloading
+
+The TypedResolver can also be used to efficiently cache configured values.
+That way you can pick up configuration which might get changed during runtime on the fly.
+E.g. if you have a ConfigSource which picks up the values from a database table.
+Instead of resolving the configured value at the beginning you simply invoke `.getValue()` on your TypedResolver each time you need the value.
+
+.Working with dynamically changing values
+[source,java]
+-----------------------------------------------------------------
+private ConfigResolver.TypedResolver<String> urlConfig
+    = ConfigResolver.resolve("myapp.some.remote.rest.url")
+                    .logChanges(true)
+                    .cacheFor(TimeUnit.MINUTES, 5);
+
+...
+
+connecTo( urlConfig.getValue() );
+-----------------------------------------------------------------
+The sample above will log any value changes in the configuration (`logChanges(true)`) and internally cache the configured value for 5 minutes (`cacheFor(TimeUnit.MINUTES, 5)`).
+Only after that time the configured value will get evaluate again.
+
 === Injection of configured values into beans using @ConfigProperty
 
 DeltaSpike provides a way to inject configured values into your code via the qualifier `@ConfigProperty`.
