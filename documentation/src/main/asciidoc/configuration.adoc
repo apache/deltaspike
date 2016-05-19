@@ -141,6 +141,7 @@ cached in the ConfigResolver but might be cached in the ConfigSources.
 This makes the overall calculation a bit slower, but allows for values
 to change dynamically if someone likes to for example implement a
 `JmxConfigSource` (not yet part of DeltaSpike, but easily implementable).
+You can also use the <<configuration.adoc#DynamicReloading,TypedResolver>> with the `cacheFor(TimeUnit, long)` setting to cache the resolved values on the caller side.
 
 === Variable Replacement in Configured Values
 
@@ -244,6 +245,9 @@ connecTo( urlConfig.getValue() );
 -----------------------------------------------------------------
 The sample above will log any value changes in the configuration (`logChanges(true)`) and internally cache the configured value for 5 minutes (`cacheFor(TimeUnit.MINUTES, 5)`).
 Only after that time the configured value will get evaluate again.
+
+TIP: Note that the 'cache' is only held within the very TypedResolver instance.
+If you use different `TypedResolver` instances (e.g. in different classes) then you might get different cache timeouts.
 
 === Injection of configured values into beans using @ConfigProperty
 
