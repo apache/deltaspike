@@ -238,7 +238,7 @@ window.dswh = window.dswh || {
 
                 dswh.utils.log('--- #tokenizedRedirect');
 
-                var requestToken = dswh.utils.generateRequestToken();
+                var requestToken = dswh.utils.generateNewRequestToken();
                 dswh.utils.storeCookie('dsrwid-' + requestToken, dswh.windowId, 3);
                 window.location = dswh.utils.setUrlParam(link.href, 'dsrid', requestToken);
             },
@@ -563,8 +563,12 @@ window.dswh = window.dswh || {
             document.cookie = cookieName + "=" + expires + "; path=/";
         },
 
-        generateRequestToken : function() {
+        generateNewRequestToken : function() {
             return "" + Math.floor(Math.random() * 999);
+        },
+        
+        generateNewWindowId : function() {
+            return "" + Math.floor((Math.random() * (9999 - 1000)) + 1000);
         },
 
         storeCookie : function(name, value, seconds) {

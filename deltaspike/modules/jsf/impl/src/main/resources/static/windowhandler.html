@@ -173,7 +173,7 @@
                     }
                 }
 
-                var requestToken = dswh.utils.generateRequestToken();
+                var requestToken = dswh.utils.generateNewRequestToken();
 
                 var redirectUrl = '$$requestUrl$$';
                 redirectUrl = dswh.utils.setUrlParam(redirectUrl, "dsrid", requestToken);
