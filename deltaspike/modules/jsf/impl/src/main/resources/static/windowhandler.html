@@ -124,12 +124,10 @@
                 loadCss(true);
 
                 var windowId = dswh.utils.getWindowIdFromWindowName();
-                var urlWindowId = windowId;
 
                 function requestNewWindowId() {
-                    window.name = '';
-                    windowId = 'automatedEntryPoint';
-                    urlWindowId = null;
+                    windowId = dswh.utils.generateNewWindowId();
+                    dswh.utils.setWindowIdAsWindowName(windowId);
                 }
 
                 dswh.utils.log('------- DeltaSpike windowhandler.html -------');
@@ -169,7 +167,6 @@
 
                         dswh.utils.setWindowIdAsWindowName(newWindowId); // set the window.name with our windowId
                         windowId = newWindowId;
-                        urlWindowId = newWindowId;
                     }
                 }
 
@@ -178,7 +175,7 @@
                 var redirectUrl = '$$requestUrl$$';
                 redirectUrl = dswh.utils.setUrlParam(redirectUrl, "dsrid", requestToken);
                 // we still add the windowId page param to support lazy windowId dropping for some clients
-                redirectUrl = dswh.utils.setUrlParam(redirectUrl, "dswid", urlWindowId);
+                redirectUrl = dswh.utils.setUrlParam(redirectUrl, "dswid", windowId);
 
                 dswh.utils.storeCookie('dsrwid-' + requestToken, windowId, 3);
 
