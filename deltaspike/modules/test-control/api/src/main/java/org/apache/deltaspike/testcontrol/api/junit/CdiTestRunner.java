@@ -265,7 +265,7 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
         Statement result = super.withAfterClasses(statement);
         if (!CdiTestSuiteRunner.isContainerStarted())
         {
-            return new AfterClassStatement(result, this.testContext, notifierIdentities);
+            return new AfterClassStatement(result, this.testContext);
         }
         return result;
     }
@@ -377,22 +377,17 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
     {
         private final Statement wrapped;
         private final ContainerAwareTestContext testContext;
-        private Set<Integer> notifierIdentities;
 
         public AfterClassStatement(Statement statement,
-                                   ContainerAwareTestContext testContext,
-                                   Set<Integer> notifierIdentities)
+                                   ContainerAwareTestContext testContext)
         {
             this.wrapped = statement;
             this.testContext = testContext;
-            this.notifierIdentities = notifierIdentities;
         }
 
         @Override
         public void evaluate() throws Throwable
         {
-            notifierIdentities.clear();
-
             try
             {
                 wrapped.evaluate();
