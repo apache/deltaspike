@@ -124,7 +124,9 @@ window.dswh = window.dswh || {
                     for (var i = 0; i < links.length; i++) {
                         var link = links[i];
 
-                        if (dswh.strategy.CLIENTWINDOW.isHrefDefined(link) === true) {
+                        var target = link.getAttribute('target');
+
+                        if (dswh.strategy.CLIENTWINDOW.isHrefDefined(link) === true && (!target || target === '_self')) {
                             if (!link.onclick) {
                                 link.onclick = function() {
                                     if (storeWindowTreeEnabled) {
@@ -566,7 +568,7 @@ window.dswh = window.dswh || {
         generateNewRequestToken : function() {
             return "" + Math.floor(Math.random() * 999);
         },
-        
+
         generateNewWindowId : function() {
             return "" + Math.floor((Math.random() * (9999 - 1000)) + 1000);
         },
