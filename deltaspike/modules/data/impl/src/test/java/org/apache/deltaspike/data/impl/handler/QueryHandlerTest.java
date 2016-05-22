@@ -27,11 +27,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
 import javax.persistence.NonUniqueResultException;
-import javax.persistence.PersistenceContext;
 
 import org.apache.deltaspike.data.test.TransactionalTestCase;
 import org.apache.deltaspike.data.test.domain.Simple;
@@ -455,10 +452,38 @@ public class QueryHandlerTest extends TransactionalTestCase
         builder.createSimple(name);
 
         // when
-        Simple result = repo.findByNameIgnoreCase("should_create_case_insensitive_query_for_equals");
+        Simple result = repo.findByNameIgnoreCase(name.toLowerCase());
 
         // then
         assertEquals(name, result.getName());
+    }
+
+    @Test
+    public void should_find_first_2()
+    {
+        final String name = "Should_Create_Case_Insensitive_Query_for_Equals";
+        builder.createSimple(name);
+        builder.createSimple(name);
+        builder.createSimple(name);
+        builder.createSimple("this is something else");
+
+        List<Simple> result = repo.findFirst2ByName(name);
+
+        assertEquals(2, result.size());
+    }
+
+    @Test
+    public void should_find_top_2()
+    {
+        final String name = "Should_Create_Case_Insensitive_Query_for_Equals";
+        builder.createSimple(name);
+        builder.createSimple(name);
+        builder.createSimple(name);
+        builder.createSimple("this is something else");
+
+        List<Simple> result = repo.findTop2ByName(name);
+
+        assertEquals(2, result.size());
     }
 
     @Before

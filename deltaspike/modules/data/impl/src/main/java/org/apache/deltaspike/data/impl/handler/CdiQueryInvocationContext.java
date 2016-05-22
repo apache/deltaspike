@@ -60,7 +60,7 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
     {
         this.entityManager = entityManager;
         this.args = args == null ? new Object[]{} : args;
-        this.params = Parameters.create(method, this.args);
+        this.params = Parameters.create(method, this.args, repoMethod);
         this.proxy = proxy;
         this.method = method;
         this.repoMethod = repoMethod;

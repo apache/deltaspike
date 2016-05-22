@@ -20,6 +20,9 @@ package org.apache.deltaspike.data.impl.meta;
 
 import org.apache.deltaspike.data.api.SingleResultType;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class MethodPrefix
 {
     public static final String DEFAULT_PREFIX = "findBy";
@@ -28,13 +31,22 @@ public class MethodPrefix
     public static final String DEFAULT_DELETE_PREFIX = "deleteBy";
     public static final String DEFAULT_REMOVE_PREFIX = "removeBy";
 
+    private static final String FIND_FIRST_PREFIX = "find(First|Top)(\\d+)By";
+    private static final String FIND_FIRST_PREFIX_PATTERN = FIND_FIRST_PREFIX + "(.+)";
+    private static final Pattern DIGIT_PATTERN = Pattern.compile("\\d+");
+
     private final String customPrefix;
     private final String methodName;
+    private int definedMaxResults = 0;
 
     public MethodPrefix(String customPrefix, String methodName)
     {
         this.customPrefix = customPrefix;
         this.methodName = methodName;
+        if (this.methodName != null)
+        {
+            this.parseMaxResults();
+        }
     }
 
     public String removePrefix(String queryPart)
@@ -91,54 +103,46 @@ public class MethodPrefix
                 this.getPrefix().equalsIgnoreCase(DEFAULT_REMOVE_PREFIX);
     }
 
-    private static enum KnownQueryPrefix
+    public int getDefinedMaxResults()
     {
-        DEFAULT(DEFAULT_PREFIX)
+        return definedMaxResults;
+    }
+
+    private void parseMaxResults()
+    {
+        if (this.methodName.matches(FIND_FIRST_PREFIX_PATTERN))
+        {
+            Matcher matcher = DIGIT_PATTERN.matcher(this.methodName);
+            if (matcher.find())
+            {
+                this.definedMaxResults = Integer.parseInt(matcher.group());
+            }
+        }
+    }
+
+    private enum KnownQueryPrefix
+    {
+        DEFAULT(DEFAULT_PREFIX, SingleResultType.JPA),
+        FIND_FIRST(FIND_FIRST_PREFIX, SingleResultType.JPA)
         {
             @Override
-            public SingleResultType getStyle()
+            public String removePrefix(String queryPart)
             {
-                return SingleResultType.JPA;
+                return queryPart.replaceFirst(FIND_FIRST_PREFIX,"");
             }
         },
-        OPTIONAL(DEFAULT_OPT_PREFIX)
-        {
-            @Override
-            public SingleResultType getStyle()
-            {
-                return SingleResultType.OPTIONAL;
-            }
-        },
-        ANY(DEFAULT_ANY_PREFIX)
-        {
-            @Override
-            public SingleResultType getStyle()
-            {
-                return SingleResultType.ANY;
-            }
-        },
-        DELETE_DEFAULT(DEFAULT_DELETE_PREFIX)
-        {
-            @Override
-            public SingleResultType getStyle()
-            {
-                return SingleResultType.ANY;
-            }
-        },
-        REMOVE_DEFAULT(DEFAULT_REMOVE_PREFIX)
-        {
-            @Override
-            public SingleResultType getStyle()
-            {
-                return SingleResultType.ANY;
-            }
-        };
+        OPTIONAL(DEFAULT_OPT_PREFIX,SingleResultType.OPTIONAL),
+        ANY(DEFAULT_ANY_PREFIX, SingleResultType.ANY),
+        DELETE_DEFAULT(DEFAULT_DELETE_PREFIX, SingleResultType.ANY),
+        REMOVE_DEFAULT(DEFAULT_REMOVE_PREFIX, SingleResultType.ANY);
 
         private final String prefix;
+        private final SingleResultType singleResultType;
 
-        private KnownQueryPrefix(String prefix)
+        KnownQueryPrefix(String prefix, SingleResultType singleResultType)
         {
             this.prefix = prefix;
+            this.singleResultType = singleResultType;
         }
 
         public String removePrefix(String queryPart)
@@ -151,10 +155,17 @@ public class MethodPrefix
             return prefix;
         }
 
-        public abstract SingleResultType getStyle();
+        public SingleResultType getStyle()
+        {
+            return this.singleResultType;
+        }
 
         public static KnownQueryPrefix fromMethodName(String name)
         {
+            if (name.matches(FIND_FIRST_PREFIX_PATTERN))
+            {
+                return FIND_FIRST;
+            }
             for (KnownQueryPrefix mapping : values())
             {
                 if (name.startsWith(mapping.getPrefix()))

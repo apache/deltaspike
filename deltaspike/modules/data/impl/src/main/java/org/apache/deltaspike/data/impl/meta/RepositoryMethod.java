@@ -223,6 +223,11 @@ public class RepositoryMethod
         return mapper != null;
     }
 
+    public int getDefinedMaxResults()
+    {
+        return this.methodPrefix.getDefinedMaxResults();
+    }
+
     public SingleResultType getSingleResultStyle()
     {
         if (method.isAnnotationPresent(Query.class))

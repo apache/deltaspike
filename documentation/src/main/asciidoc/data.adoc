@@ -521,6 +521,25 @@ public interface PersonRepository extends EntityRepository<Person, Long>
 } 
 ------------------------------------------------------------------------------
 
+=== Query Limits
+
+Starting with Apache DeltaSpike 1.6.2, you can apply query limits using method
+expressions.  They can be applied using `First` or `Top` keywords, in a method
+like this
+
+[source,java]
+------------------------------------------------------------------------------
+@Repository
+public interface PersonRepository extends EntityRepository<Person, Long>
+{
+
+    List<Person> findFirst2ByLastNameOrderByAgeAscLastNameDesc(String lastName);
+
+    List<Person> findTop2ByLastNameOrderByAgeAscLastNameDesc(String lastName);
+
+}
+------------------------------------------------------------------------------
+
 === Nested Properties
 
 To create a comparison on a nested property, the traversal parts can be
