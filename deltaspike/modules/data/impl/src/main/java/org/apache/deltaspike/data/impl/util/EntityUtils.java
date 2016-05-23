@@ -104,7 +104,7 @@ public final class EntityUtils
     
     public static boolean isEntityClass(Class<?> entityClass)
     {
-        return new EntityVerifier().verify(entityClass);
+        return EntityVerifier.INSTANCE.verify(entityClass);
     }
 
     public static Property<Serializable> primaryKeyProperty(Class<?> entityClass)

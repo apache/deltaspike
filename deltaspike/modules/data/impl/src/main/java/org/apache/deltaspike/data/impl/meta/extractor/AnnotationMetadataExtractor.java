@@ -21,25 +21,17 @@ package org.apache.deltaspike.data.impl.meta.extractor;
 import org.apache.deltaspike.data.api.Repository;
 import org.apache.deltaspike.data.impl.meta.RepositoryEntity;
 import org.apache.deltaspike.data.impl.meta.verifier.EntityVerifier;
-import org.apache.deltaspike.data.impl.meta.verifier.Verifier;
 import org.apache.deltaspike.data.impl.util.EntityUtils;
 
 public class AnnotationMetadataExtractor implements MetadataExtractor
 {
-
-    private final Verifier<Class<?>> verifier;
-
-    public AnnotationMetadataExtractor()
-    {
-        this.verifier = new EntityVerifier();
-    }
 
     @Override
     public RepositoryEntity extract(Class<?> repoClass)
     {
         Repository repo = repoClass.getAnnotation(Repository.class);
         Class<?> repoEntity = repo.forEntity();
-        boolean isEntityClass = !Object.class.equals(repoEntity) && verifier.verify(repoEntity);
+        boolean isEntityClass = !Object.class.equals(repoEntity) && EntityVerifier.INSTANCE.verify(repoEntity);
         if (isEntityClass)
         {
             return new RepositoryEntity(repoEntity, EntityUtils.primaryKeyClass(repoEntity));

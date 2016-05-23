@@ -23,6 +23,7 @@ import org.apache.deltaspike.jpa.spi.descriptor.xml.PersistenceUnitDescriptorPro
 
 public class EntityVerifier implements Verifier<Class<?>>
 {
+    public static final EntityVerifier INSTANCE = new EntityVerifier();
 
     @Override
     public boolean verify(Class<?> entity)
