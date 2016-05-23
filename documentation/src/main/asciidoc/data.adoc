@@ -266,7 +266,7 @@ public abstract class PersonRepository implements Deactivatable {
 }
 
 @Repository(forEntity = Person.class)
-public interface PersonRepository implements Deactivatable{
+public interface PersonRepository extends Deactivatable {
     ...
 }    
 ----------------------------------------
