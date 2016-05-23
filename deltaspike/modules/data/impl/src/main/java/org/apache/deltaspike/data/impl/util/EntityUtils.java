@@ -32,7 +32,6 @@ import javax.persistence.Version;
 import javax.persistence.metamodel.EntityType;
 import org.apache.deltaspike.core.util.StringUtils;
 
-import org.apache.deltaspike.data.impl.meta.verifier.EntityVerifier;
 import org.apache.deltaspike.data.impl.property.Property;
 import org.apache.deltaspike.data.impl.property.query.AnnotatedPropertyCriteria;
 import org.apache.deltaspike.data.impl.property.query.NamedPropertyCriteria;
@@ -109,7 +108,8 @@ public final class EntityUtils
 
     public static boolean isEntityClass(Class<?> entityClass)
     {
-        return EntityVerifier.INSTANCE.verify(entityClass);
+        return entityClass.isAnnotationPresent(Entity.class)
+                || PersistenceUnitDescriptorProvider.getInstance().isEntity(entityClass);
     }
 
     public static Property<Serializable> primaryKeyProperty(Class<?> entityClass)

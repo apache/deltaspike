@@ -20,7 +20,7 @@ package org.apache.deltaspike.data.impl.util;
 
 import java.io.Serializable;
 
-import org.apache.deltaspike.data.impl.util.EntityUtils;
+import org.apache.deltaspike.data.test.domain.Simple;
 import org.apache.deltaspike.data.test.domain.Tee;
 import org.apache.deltaspike.data.test.domain.Tee2;
 import org.apache.deltaspike.data.test.domain.TeeId;
@@ -52,5 +52,33 @@ public class EntityUtilsTest
 
         // then
         Assert.assertEquals(TeeId.class, pkClass);
+    }
+    
+    @Test
+    public void should_accept_entity_class()
+    {
+        // given
+
+        // when
+        boolean isValid = EntityUtils.isEntityClass(Simple.class);
+
+        // then
+        Assert.assertTrue(isValid);
+    }
+
+    @Test
+    public void should_not_accept_class_without_entity_annotation()
+    {
+        // given
+
+        // when
+        boolean isValid = EntityUtils.isEntityClass(EntityWithoutId.class);
+
+        // then
+        Assert.assertFalse(isValid);
+    }
+
+    private static class EntityWithoutId
+    {
     }
 }
