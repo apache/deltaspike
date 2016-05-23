@@ -128,15 +128,22 @@ window.dswh = window.dswh || {
 
                         if (dswh.strategy.CLIENTWINDOW.isHrefDefined(link) === true && (!target || target === '_self')) {
                             if (!link.onclick) {
-                                link.onclick = function() {
-                                    if (storeWindowTreeEnabled) {
-                                        dswh.strategy.CLIENTWINDOW.storeWindowTree();
+                                link.onclick = function(evt) {
+                                    // IE handling added
+                                    evt = evt || window.event;
+                                    
+                                    // skip open in new tab
+                                    if (!evt.ctrlKey) {                                    
+                                        if (storeWindowTreeEnabled) {
+                                            dswh.strategy.CLIENTWINDOW.storeWindowTree();
+                                        }
+                                        if (tokenizedRedirectEnabled) {
+                                            dswh.strategy.CLIENTWINDOW.tokenizedRedirect(this);
+                                            return false;
+                                        }
+
+                                        return true;
                                     }
-                                    if (tokenizedRedirectEnabled) {
-                                        dswh.strategy.CLIENTWINDOW.tokenizedRedirect(this);
-                                        return false;
-                                    }
-                                    return true;
                                 };
                             } else {
                                 // prevent double decoration
@@ -146,18 +153,22 @@ window.dswh = window.dswh || {
                                     (function storeEvent() {
                                         var oldonclick = link.onclick;
                                         link.onclick = function(evt) {
-                                            //ie handling added
+                                            // IE handling added
                                             evt = evt || window.event;
 
                                             var proceed = oldonclick.bind(this)(evt);
                                             if (typeof proceed === 'undefined' || proceed === true) {
-                                                if (storeWindowTreeEnabled) {
-                                                    dswh.strategy.CLIENTWINDOW.storeWindowTree();
-                                                }
+                                                
+                                                // skip open in new tab
+                                                if (!evt.ctrlKey) { 
+                                                    if (storeWindowTreeEnabled) {
+                                                        dswh.strategy.CLIENTWINDOW.storeWindowTree();
+                                                    }
 
-                                                if (tokenizedRedirectEnabled) {
-                                                    dswh.strategy.CLIENTWINDOW.tokenizedRedirect(this);
-                                                    return false;
+                                                    if (tokenizedRedirectEnabled) {
+                                                        dswh.strategy.CLIENTWINDOW.tokenizedRedirect(this);
+                                                        return false;
+                                                    }
                                                 }
                                             }
                                             return proceed;
