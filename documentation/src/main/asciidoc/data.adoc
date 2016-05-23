@@ -465,13 +465,13 @@ module can translate method names following a given format and directly
 generate the query implementation out of it (in EBNF-like form):
 
 ----------------------------------------------------------------------------------
-(Entity|List<Entity>) findBy(Property[Comparator]){Operator Property [Comparator]}
+(Entity|List<Entity>) (prefix)(Property[Comparator]){Operator Property [Comparator]}
 ----------------------------------------------------------------------------------
 
 Or in more concrete words:
 
 * The query method must either return an entity or a list of entities.
-* It must start with the `findBy` keyword (or related `findOptionalBy`, `findAnyBy`).
+* It must start with the `findBy` prefix (or related `findOptionalBy`, `findAnyBy`, `findAll`, `findFirst` or `findTop`).
 * Followed by a property of the Repository entity and an optional comparator (we'll define this later). The property will be used in the query together with the comparator. Note that the number of arguments passed to the method depend on the comparator.
 * You can add more blocks of property-comparator which have to be concatenated by a boolean operator. This is either an `And` or `Or`.
 
@@ -524,8 +524,8 @@ public interface PersonRepository extends EntityRepository<Person, Long>
 === Query Limits
 
 Starting with Apache DeltaSpike 1.6.2, you can apply query limits using method
-expressions.  They can be applied using `First` or `Top` keywords, in a method
-like this
+expressions.  They can be applied using `findFirst` or `findTop` prefixes in a
+method like this:
 
 [source,java]
 ------------------------------------------------------------------------------
@@ -539,6 +539,10 @@ public interface PersonRepository extends EntityRepository<Person, Long>
 
 }
 ------------------------------------------------------------------------------
+
+The number following the prefix indicates how many to limit by, when setting
+the `maxResults` attribute of the underlying query.  You can pair this with
+a `@FirstResult` parameter to give consistent paging.
 
 Query Limits can be applied even when there is no where clause defined by your
 query.
