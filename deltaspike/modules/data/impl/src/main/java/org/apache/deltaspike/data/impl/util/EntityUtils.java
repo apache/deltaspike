@@ -95,13 +95,18 @@ public final class EntityUtils
         String tableName = PersistenceUnitDescriptorProvider.getInstance().entityTableName(entityClass);
         if (StringUtils.isEmpty(tableName))
         {
-            EntityType<?> entityType = entityManager.getMetamodel().entity(entityClass);
             Table tableAnnotation = entityClass.getAnnotation(Table.class);
-            return tableAnnotation == null ? entityType.getName() : tableAnnotation.name();
+            if (tableAnnotation != null && StringUtils.isNotEmpty(tableAnnotation.name()))
+            {
+                return tableAnnotation.name();
+            }
+
+            EntityType<?> entityType = entityManager.getMetamodel().entity(entityClass);
+            return entityType.getName();
         }
         return tableName;
     }
-    
+
     public static boolean isEntityClass(Class<?> entityClass)
     {
         return EntityVerifier.INSTANCE.verify(entityClass);
