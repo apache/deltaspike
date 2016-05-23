@@ -63,4 +63,35 @@ public class MethodPrefixTest
 
         assertEquals(0, maxResults);
     }
+
+    @Test
+    public void shouldParseOrderByEmailDesc()
+    {
+        MethodPrefix methodPrefix = new MethodPrefix("","findFirst3OrderByEmailDesc");
+
+        String resultingQuery = methodPrefix.removePrefix("findFirst3OrderByEmailDesc");
+
+        assertEquals("OrderByEmailDesc", resultingQuery);
+    }
+
+    @Test
+    public void shouldParseOrderByEmail()
+    {
+        MethodPrefix methodPrefix = new MethodPrefix("","findFirst3OrderByEmail");
+
+        String resultingQuery = methodPrefix.removePrefix("findFirst3OrderByEmail");
+
+        assertEquals("OrderByEmail", resultingQuery);
+    }
+
+    @Test
+    public void shouldParseFindAllOrderByName()
+    {
+        MethodPrefix methodPrefix = new MethodPrefix("","findAllOrderByName");
+
+        String resultingQuery = methodPrefix.removePrefix("findAllOrderByName");
+
+        assertEquals("OrderByName", resultingQuery);
+    }
+
 }

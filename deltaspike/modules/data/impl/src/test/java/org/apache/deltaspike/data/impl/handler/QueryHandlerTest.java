@@ -61,7 +61,6 @@ public class QueryHandlerTest extends TransactionalTestCase
     @Inject
     private Simple2Repository repo2;
 
-
     private SimpleBuilder builder;
 
     @Test
@@ -484,6 +483,37 @@ public class QueryHandlerTest extends TransactionalTestCase
         List<Simple> result = repo.findTop2ByName(name);
 
         assertEquals(2, result.size());
+    }
+
+    @Test
+    public void should_find_top_3_ordered()
+    {
+        builder.createSimple("zebra");
+        builder.createSimple("willow");
+        builder.createSimple("kangaroo");
+        builder.createSimple("bologna");
+
+        List<Simple> result = repo.findFirst3OrderByName();
+
+        assertEquals("bologna", result.get(0).getName());
+        assertEquals("kangaroo", result.get(1).getName());
+        assertEquals("willow", result.get(2).getName());
+    }
+
+    @Test
+    public void should_find_all_ordered()
+    {
+        builder.createSimple("zebra");
+        builder.createSimple("willow");
+        builder.createSimple("kangaroo");
+        builder.createSimple("bologna");
+
+        List<Simple> result = repo.findAllOrderByName();
+
+        assertEquals("bologna", result.get(0).getName());
+        assertEquals("kangaroo", result.get(1).getName());
+        assertEquals("willow", result.get(2).getName());
+        assertEquals("zebra", result.get(3).getName());
     }
 
     @Before

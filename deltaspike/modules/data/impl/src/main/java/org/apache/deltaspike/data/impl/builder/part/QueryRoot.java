@@ -138,7 +138,9 @@ public class QueryRoot extends QueryPart
 
     private boolean hasQueryConditions(String[] orderByParts)
     {
-        return !methodPrefix.getPrefix().equals(orderByParts[0]);
+        String orderByPart = orderByParts[0];
+        String prefix = methodPrefix.getPrefix();
+        return !prefix.equals(orderByPart) && !orderByPart.matches(prefix);
     }
 
     private String removePrefix(String queryPart)

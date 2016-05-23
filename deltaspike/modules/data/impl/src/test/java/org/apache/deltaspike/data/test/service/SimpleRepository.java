@@ -89,6 +89,10 @@ public abstract class SimpleRepository extends AbstractEntityRepository<Simple, 
 
     public abstract List<Simple> findTop2ByName(String name);
 
+    public abstract List<Simple> findFirst3OrderByName();
+
+    public abstract List<Simple> findAllOrderByName();
+
     public abstract List<Simple> findByOrderByCounterAscIdDesc();
 
     @Query(value = "SELECT * from SIMPLE_TABLE s WHERE s.name = ?1", isNative = true)

@@ -30,9 +30,10 @@ public class MethodPrefix
     public static final String DEFAULT_ANY_PREFIX = "findAnyBy";
     public static final String DEFAULT_DELETE_PREFIX = "deleteBy";
     public static final String DEFAULT_REMOVE_PREFIX = "removeBy";
+    private static final String FIND_ALL_PREFIX = "findAll";
 
-    private static final String FIND_FIRST_PREFIX = "find(First|Top)(\\d+)By";
-    private static final String FIND_FIRST_PREFIX_PATTERN = FIND_FIRST_PREFIX + "(.+)";
+    private static final String FIND_FIRST_PREFIX = "find(First|Top)(\\d+)(By)*";
+    private static final String FIND_FIRST_PREFIX_PATTERN = FIND_FIRST_PREFIX + "(.*)";
     private static final Pattern DIGIT_PATTERN = Pattern.compile("\\d+");
 
     private final String customPrefix;
@@ -103,7 +104,7 @@ public class MethodPrefix
                 this.getPrefix().equalsIgnoreCase(DEFAULT_REMOVE_PREFIX);
     }
 
-    public int getDefinedMaxResults()
+    int getDefinedMaxResults()
     {
         return definedMaxResults;
     }
@@ -123,8 +124,14 @@ public class MethodPrefix
     private enum KnownQueryPrefix
     {
         DEFAULT(DEFAULT_PREFIX, SingleResultType.JPA),
+        ALL(FIND_ALL_PREFIX, SingleResultType.JPA),
         FIND_FIRST(FIND_FIRST_PREFIX, SingleResultType.JPA)
         {
+            @Override
+            public boolean matches(String name)
+            {
+                return name.matches(FIND_FIRST_PREFIX_PATTERN);
+            }
             @Override
             public String removePrefix(String queryPart)
             {
@@ -160,15 +167,16 @@ public class MethodPrefix
             return this.singleResultType;
         }
 
+        public boolean matches(String name)
+        {
+            return name.startsWith(getPrefix());
+        }
+
         public static KnownQueryPrefix fromMethodName(String name)
         {
-            if (name.matches(FIND_FIRST_PREFIX_PATTERN))
-            {
-                return FIND_FIRST;
-            }
             for (KnownQueryPrefix mapping : values())
             {
-                if (name.startsWith(mapping.getPrefix()))
+                if (mapping.matches(name))
                 {
                     return mapping;
                 }

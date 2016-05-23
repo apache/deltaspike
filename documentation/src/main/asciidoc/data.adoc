@@ -540,6 +540,25 @@ public interface PersonRepository extends EntityRepository<Person, Long>
 }
 ------------------------------------------------------------------------------
 
+Query Limits can be applied even when there is no where clause defined by your
+query.
+
+[source,java]
+------------------------------------------------------------------------------
+@Repository
+public interface PersonRepository extends EntityRepository<Person, Long>
+{
+
+    List<Person> findAllOrderByAgeAsc();
+
+    List<Person> findTop20OrderByLastNameDesc();
+
+}
+------------------------------------------------------------------------------
+
+The first query finding all entries ordered by age, and the second only 20
+ordered by last name.
+
 === Nested Properties
 
 To create a comparison on a nested property, the traversal parts can be
