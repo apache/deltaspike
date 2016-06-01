@@ -19,6 +19,7 @@
 package org.apache.deltaspike.data.impl.handler;
 
 import org.apache.deltaspike.data.api.EntityRepository;
+import org.apache.deltaspike.data.api.Query;
 import org.apache.deltaspike.data.impl.builder.QueryBuilder;
 import org.apache.deltaspike.data.impl.meta.RequiresTransaction;
 import org.apache.deltaspike.data.impl.property.Property;
@@ -31,14 +32,17 @@ import org.apache.deltaspike.data.spi.DelegateQueryHandler;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceUnitUtil;
+import javax.persistence.QueryHint;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.metamodel.SingularAttribute;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -100,7 +104,20 @@ public class EntityRepositoryHandler<E, PK extends Serializable>
     @Override
     public E findBy(PK primaryKey)
     {
-        return entityManager().find(entityClass(), primaryKey);
+        Query query = context.getMethod().getAnnotation(Query.class);
+        if (query != null && query.hints().length > 0)
+        {
+            Map<String, Object> hints = new HashMap<String, Object>();
+            for (QueryHint hint : query.hints())
+            {
+                hints.put(hint.name(), hint.value());
+            }
+            return entityManager().find(entityClass(), primaryKey, hints);
+        }
+        else
+        {
+            return entityManager().find(entityClass(), primaryKey);
+        }
     }
 
     @Override

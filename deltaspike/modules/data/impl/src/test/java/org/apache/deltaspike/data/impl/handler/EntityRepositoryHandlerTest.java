@@ -27,6 +27,8 @@ import org.apache.deltaspike.data.test.service.ExtendedRepositoryAbstract;
 import org.apache.deltaspike.data.test.service.ExtendedRepositoryAbstract2;
 import org.apache.deltaspike.data.test.service.ExtendedRepositoryAbstract4;
 import org.apache.deltaspike.data.test.service.ExtendedRepositoryInterface;
+import org.apache.deltaspike.data.test.service.IntermediateRepository;
+import org.apache.deltaspike.data.test.service.SimpleIntermediateRepository;
 import org.apache.deltaspike.data.test.service.SimpleStringIdRepository;
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -34,12 +36,8 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.metamodel.SingularAttribute;
-
 import java.util.List;
 
 import static org.apache.deltaspike.data.test.util.TestDeployments.initDeployment;
@@ -59,8 +57,8 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
                 .addClasses(ExtendedRepositoryInterface.class)
                 .addClasses(ExtendedRepositoryAbstract.class)
                 .addClasses(ExtendedRepositoryAbstract2.class)
-                .addClasses(ExtendedRepositoryAbstract4.class)
-                .addClasses(SimpleStringIdRepository.class)
+                .addClasses(ExtendedRepositoryAbstract4.class, IntermediateRepository.class)
+                .addClasses(SimpleStringIdRepository.class, SimpleIntermediateRepository.class)
                 .addPackage(Simple.class.getPackage());
     }
 
@@ -78,6 +76,9 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
 
     @Inject
     private SimpleStringIdRepository stringIdRepo;
+
+    @Inject
+    private SimpleIntermediateRepository intermediate;
 
     @Test
     public void should_save() throws Exception
@@ -461,6 +462,20 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
         // then
         assertNotNull(primaryKey);
         assertEquals(id, primaryKey);
+    }
+
+    @Test
+    public void should_query_with_hints()
+    {
+        Simple simple = testData.createSimple("should_return_entity_primary_key");
+        Long id = simple.getId();
+
+        getEntityManager().flush();
+        getEntityManager().clear();
+
+        Simple found = intermediate.findBy(id);
+
+        assertEquals(id, found.getId());
     }
 
 }
