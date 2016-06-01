@@ -72,7 +72,7 @@ public class DelegateQueryBuilder extends QueryBuilder
                 .getBeanDefinitions(DelegateQueryHandler.class, true, true);
         for (Bean<DelegateQueryHandler> bean : beans)
         {
-            if (ClassUtils.containsMethod(bean.getBeanClass(), context.getMethod()))
+            if (ClassUtils.containsPossiblyGenericMethod(bean.getBeanClass(), context.getMethod()))
             {
                 if (bean.getScope().equals(Dependent.class))
                 {
@@ -111,7 +111,7 @@ public class DelegateQueryBuilder extends QueryBuilder
     protected Object invoke(Object target, Method method, Object[] args) throws InvocationTargetException,
             IllegalAccessException
     {
-        Method extract = ClassUtils.extractMethod(target.getClass(), method);
+        Method extract = ClassUtils.extractPossiblyGenericMethod(target.getClass(), method);
         return extract.invoke(target, args);
     }
 

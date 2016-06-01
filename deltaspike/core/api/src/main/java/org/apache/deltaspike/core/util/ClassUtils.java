@@ -354,4 +354,69 @@ public abstract class ClassUtils
             return null;
         }
     }
+
+    /**
+     * Checks if the given class has a method with the same signature, taking in to account generic types
+     * @param targetClass
+     * @param method
+     * @return if it contains a method with the same signature.
+     */
+    public static boolean containsPossiblyGenericMethod(Class<?> targetClass, Method method)
+    {
+        return extractPossiblyGenericMethod(targetClass, method) != null;
+    }
+
+    /**
+     * Extracts a method matching the source method, allowing generic type parameters to be substituted as
+     * long as they are properly castable.
+     *
+     * @param clazz The target class
+     * @param sourceMethod The source method.
+     * @return the extracted method or <code>null</code>
+     */
+    public static Method extractPossiblyGenericMethod(Class<?> clazz, Method sourceMethod)
+    {
+        Method exactMethod = extractMethod(clazz, sourceMethod);
+        if (exactMethod == null)
+        {
+            String methodName = sourceMethod.getName();
+            Class<?>[] parameterTypes = sourceMethod.getParameterTypes();
+            for (Method method : clazz.getMethods())
+            {
+                if (method.getName().equals(methodName) &&
+                        allSameType(method.getParameterTypes(), parameterTypes))
+                {
+                    return method;
+                }
+            }
+            return null;
+        }
+        else
+        {
+            return exactMethod;
+        }
+    }
+
+    /**
+     * Whether all of the parameters from left to right are equivalent.
+     * In order to support generics, it takes the form of left.isAssignableFrom(right)
+     * @param left left hand side to check
+     * @param right right hand side to check
+     * @return whether all of the left classes can be assigned to the right hand side types
+     */
+    private static boolean allSameType(Class<?>[] left, Class<?>[] right)
+    {
+        if (left.length != right.length)
+        {
+            return false;
+        }
+        for (int p = 0; p < left.length; p++)
+        {
+            if (!left[p].isAssignableFrom(right[p]))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 }

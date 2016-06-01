@@ -19,10 +19,19 @@
 
 package org.apache.deltaspike.data.test.service;
 
+import org.apache.deltaspike.data.api.EntityRepository;
+import org.apache.deltaspike.data.api.Query;
 import org.apache.deltaspike.data.api.Repository;
 import org.apache.deltaspike.data.test.domain.Simple;
 
+import javax.persistence.QueryHint;
+
 @Repository
-public interface SimpleIntermediateRepository extends IntermediateRepository<Simple, Long>
+public interface SimpleIntermediateRepository extends EntityRepository<Simple, Long>
 {
+    @Query(hints = {
+            @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "some.invalid.value"),
+            @QueryHint(name = "org.hibernate.comment", value = "I'm a little comment short and stout")
+    })
+    Simple findBy(Long id);
 }

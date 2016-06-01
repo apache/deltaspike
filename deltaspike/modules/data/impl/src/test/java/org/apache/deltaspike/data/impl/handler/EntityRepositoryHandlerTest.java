@@ -27,7 +27,6 @@ import org.apache.deltaspike.data.test.service.ExtendedRepositoryAbstract;
 import org.apache.deltaspike.data.test.service.ExtendedRepositoryAbstract2;
 import org.apache.deltaspike.data.test.service.ExtendedRepositoryAbstract4;
 import org.apache.deltaspike.data.test.service.ExtendedRepositoryInterface;
-import org.apache.deltaspike.data.test.service.IntermediateRepository;
 import org.apache.deltaspike.data.test.service.SimpleIntermediateRepository;
 import org.apache.deltaspike.data.test.service.SimpleStringIdRepository;
 import org.apache.deltaspike.test.category.WebProfileCategory;
@@ -57,7 +56,7 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
                 .addClasses(ExtendedRepositoryInterface.class)
                 .addClasses(ExtendedRepositoryAbstract.class)
                 .addClasses(ExtendedRepositoryAbstract2.class)
-                .addClasses(ExtendedRepositoryAbstract4.class, IntermediateRepository.class)
+                .addClasses(ExtendedRepositoryAbstract4.class)
                 .addClasses(SimpleStringIdRepository.class, SimpleIntermediateRepository.class)
                 .addPackage(Simple.class.getPackage());
     }
