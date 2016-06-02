@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.data.impl.builder;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.Query;
 
 import org.apache.deltaspike.data.impl.builder.part.QueryRoot;
@@ -27,6 +28,7 @@ import org.apache.deltaspike.data.impl.meta.QueryInvocation;
 import org.apache.deltaspike.data.impl.param.Parameters;
 
 @QueryInvocation(MethodType.PARSE)
+@ApplicationScoped
 public class MethodQueryBuilder extends QueryBuilder
 {
 

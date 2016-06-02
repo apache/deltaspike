@@ -27,18 +27,15 @@ import java.util.Map;
 import javax.enterprise.context.ApplicationScoped;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
-import org.apache.deltaspike.core.api.provider.DependentProvider;
 import org.apache.deltaspike.data.api.QueryResult;
 import org.apache.deltaspike.data.impl.handler.CdiQueryInvocationContext;
 import org.apache.deltaspike.data.impl.meta.MethodType;
 import org.apache.deltaspike.data.impl.meta.QueryInvocationLiteral;
 import org.apache.deltaspike.data.impl.meta.RepositoryMethod;
-import org.apache.deltaspike.data.impl.util.bean.DependentProviderDestroyable;
 
 @ApplicationScoped
 public class QueryBuilderFactory
 {
-
     private static final Map<MethodType, QueryInvocationLiteral> LITERALS =
             new HashMap<MethodType, QueryInvocationLiteral>()
             {
@@ -53,14 +50,13 @@ public class QueryBuilderFactory
 
     public QueryBuilder build(RepositoryMethod method, CdiQueryInvocationContext context)
     {
-        DependentProvider<QueryBuilder> builder = BeanProvider.getDependent(
+        QueryBuilder builder = BeanProvider.getContextualReference(
                 QueryBuilder.class, LITERALS.get(method.getMethodType()));
-        context.addDestroyable(new DependentProviderDestroyable(builder));
         if (method.returns(QueryResult.class))
         {
-            return new WrappedQueryBuilder(builder.get());
+            return new WrappedQueryBuilder(builder);
         }
-        return builder.get();
+        return builder;
     }
 
 }

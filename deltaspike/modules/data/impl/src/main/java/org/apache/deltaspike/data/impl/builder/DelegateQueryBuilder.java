@@ -21,6 +21,7 @@ package org.apache.deltaspike.data.impl.builder;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Set;
+import javax.enterprise.context.ApplicationScoped;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.context.spi.CreationalContext;
@@ -39,6 +40,7 @@ import org.apache.deltaspike.data.impl.util.bean.BeanDestroyable;
 import org.apache.deltaspike.data.spi.DelegateQueryHandler;
 
 @QueryInvocation(MethodType.DELEGATE)
+@ApplicationScoped
 public class DelegateQueryBuilder extends QueryBuilder
 {
     @Inject

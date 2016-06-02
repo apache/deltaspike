@@ -60,7 +60,7 @@ public class QueryHandler implements Serializable, InvocationHandler
     private static final Logger log = Logger.getLogger(QueryHandler.class.getName());
 
     @Inject
-    private QueryBuilderFactory queryBuilder;
+    private QueryBuilderFactory queryBuilderFactory;
 
     @Inject
     @Initialized
@@ -143,7 +143,7 @@ public class QueryHandler implements Serializable, InvocationHandler
             entityManagerRef = entityManagerRefLookup.lookupReference(repo);
             queryContext = createContext(proxy, method, args, entityManagerRef.getEntityManager(), repoMethod);
             
-            QueryBuilder builder = queryBuilder.build(repoMethod, queryContext);
+            QueryBuilder builder = queryBuilderFactory.build(repoMethod, queryContext);
             Object result = runner.executeQuery(builder, queryContext);
             return result;
         }
