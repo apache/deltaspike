@@ -98,6 +98,11 @@ public class RepositoryComponents
     {
         return lookupComponent(repoClass).lookupMethod(method);
     }
+    
+    public RepositoryMethod lookupMethod(RepositoryComponent component, Method method)
+    {
+        return component.lookupMethod(method);
+    }
 
     private RepositoryEntity extractEntityMetaData(Class<?> repoClass)
     {

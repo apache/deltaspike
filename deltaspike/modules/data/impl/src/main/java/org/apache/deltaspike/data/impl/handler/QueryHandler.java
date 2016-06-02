@@ -138,7 +138,7 @@ public class QueryHandler implements Serializable, InvocationHandler
         {
             List<Class<?>> candidates = ProxyUtils.getProxyAndBaseTypes(proxy.getClass());
             RepositoryComponent repo = components.lookupComponent(candidates);
-            RepositoryMethod repoMethod = components.lookupMethod(repo.getRepositoryClass(), method);
+            RepositoryMethod repoMethod = components.lookupMethod(repo, method);
 
             entityManagerRef = entityManagerRefLookup.lookupReference(repo);
             queryContext = createContext(proxy, method, args, entityManagerRef.getEntityManager(), repoMethod);
