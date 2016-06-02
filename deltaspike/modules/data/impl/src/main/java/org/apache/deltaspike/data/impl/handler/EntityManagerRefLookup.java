@@ -19,12 +19,9 @@
 package org.apache.deltaspike.data.impl.handler;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Any;
-import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
-import org.apache.deltaspike.core.api.literal.DefaultLiteral;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.data.impl.meta.RepositoryComponent;
 import org.apache.deltaspike.jpa.spi.entitymanager.ActiveEntityManagerHolder;
@@ -33,8 +30,7 @@ import org.apache.deltaspike.jpa.spi.entitymanager.ActiveEntityManagerHolder;
 public class EntityManagerRefLookup
 {
     @Inject
-    @Any
-    private Instance<EntityManager> entityManager;
+    private EntityManager entityManager;
 
     @Inject
     private ActiveEntityManagerHolder activeEntityManagerHolder;
@@ -56,7 +52,7 @@ public class EntityManagerRefLookup
             else
             {
                 ref.setEntityManagerResolverDependentProvider(
-                    BeanProvider.getDependent(ref.getEntityManagerResolverClass()));
+                        BeanProvider.getDependent(ref.getEntityManagerResolverClass()));
 
                 ref.setEntityManagerResolver(
                         ref.getEntityManagerResolverDependentProvider().get());
@@ -77,8 +73,7 @@ public class EntityManagerRefLookup
             }
             else
             {
-                ref.setEntityManager(
-                        entityManager.select(new DefaultLiteral()).get());
+                ref.setEntityManager(entityManager);
             }
         }
 
