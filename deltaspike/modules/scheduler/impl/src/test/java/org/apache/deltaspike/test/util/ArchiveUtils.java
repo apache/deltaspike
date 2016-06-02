@@ -18,7 +18,10 @@
  */
 package org.apache.deltaspike.test.util;
 
+import org.apache.deltaspike.cdise.api.ContextControl;
+import org.apache.deltaspike.test.utils.CdiContainerUnderTest;
 import org.apache.deltaspike.test.utils.ShrinkWrapArchiveUtil;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 
 /**
@@ -40,5 +43,17 @@ public class ArchiveUtils
                         "org.apache.deltaspike.scheduler"},
                 null,
                 "ds-core_and_scheduler");
+    }
+
+    public static JavaArchive getContextControlForDeployment()
+    {
+        JavaArchive jar = ShrinkWrap.create(JavaArchive.class, "cdi-control.jar")
+                .addClass(ContextControl.class);
+
+        if (CdiContainerUnderTest.is("owb"))
+        {
+            jar.addPackage("org.apache.deltaspike.cdise.owb");
+        }
+        return jar;
     }
 }

@@ -56,6 +56,7 @@ public class ScopeNotStartedTest
 
         return ShrinkWrap.create(WebArchive.class, archiveName + ".war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndSchedulerArchive())
+                .addAsLibraries(ArchiveUtils.getContextControlForDeployment())
                 .addAsLibraries(Maven.resolver().loadPomFromFile("pom.xml").resolve(
                         "org.quartz-scheduler:quartz")
                         .withTransitivity()

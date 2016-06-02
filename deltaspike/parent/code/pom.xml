@@ -733,6 +733,7 @@
             <id>tomee7-build-managed</id>
 
             <properties>
+                <tomee.version>7.0.0</tomee.version>
                 <cdicontainer.version>tomee-${tomee.version}</cdicontainer.version>
             </properties>
 
