@@ -477,4 +477,15 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
         assertEquals(id, found.getId());
     }
 
+    @Test
+    public void should_query_names()
+    {
+        String name = "should_return_entity_primary_key";
+        testData.createSimple(name);
+
+        List<String> names = intermediate.findAllNames();
+
+        assertEquals(name, names.get(0));
+    }
+
 }

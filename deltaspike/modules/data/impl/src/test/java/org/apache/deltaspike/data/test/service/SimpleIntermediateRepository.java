@@ -25,6 +25,7 @@ import org.apache.deltaspike.data.api.Repository;
 import org.apache.deltaspike.data.test.domain.Simple;
 
 import javax.persistence.QueryHint;
+import java.util.List;
 
 @Repository
 public interface SimpleIntermediateRepository extends EntityRepository<Simple, Long>
@@ -34,4 +35,7 @@ public interface SimpleIntermediateRepository extends EntityRepository<Simple, L
             @QueryHint(name = "org.hibernate.comment", value = "I'm a little comment short and stout")
     })
     Simple findBy(Long id);
+
+    @Query(value = "select name from simple_table", isNative = true, returnsEntity = false)
+    List<String> findAllNames();
 }

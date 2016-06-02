@@ -70,7 +70,14 @@ public class AnnotatedQueryBuilder extends QueryBuilder
         else if (query.isNative())
         {
             String jpqlQuery = context.applyQueryStringPostProcessors(query.value());
-            result = params.applyTo(entityManager.createNativeQuery(jpqlQuery, context.getEntityClass()));
+            if (query.returnsEntity())
+            {
+                result = params.applyTo(entityManager.createNativeQuery(jpqlQuery, context.getEntityClass()));
+            }
+            else
+            {
+                result = params.applyTo(entityManager.createNativeQuery(jpqlQuery));
+            }
         }
         else
         {
