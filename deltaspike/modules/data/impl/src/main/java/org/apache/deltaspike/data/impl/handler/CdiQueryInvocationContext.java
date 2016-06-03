@@ -278,7 +278,15 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
 
     public SingleResultType getSingleResultStyle()
     {
-        return repoMethod.getSingleResultStyle();
+        SingleResultType baseSingleResultType = repoMethod.getSingleResultStyle();
+        if (repoMethod.isOptional() && baseSingleResultType == SingleResultType.JPA)
+        {
+            return SingleResultType.OPTIONAL;
+        }
+        else
+        {
+            return baseSingleResultType;
+        }
     }
 
     public Object getProxy()
@@ -346,5 +354,10 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
             return true;
         }
         return false;
+    }
+
+    public boolean isOptional()
+    {
+        return this.repoMethod.isOptional();
     }
 }

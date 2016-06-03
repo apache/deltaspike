@@ -398,6 +398,20 @@ public class QueryResultTest extends TransactionalTestCase
         // no real check here, verifying query syntax passes.
         assertNotNull(result);
     }
+//    TODO Figure out a way to test this that doesn't require java 8
+//    @Test
+//    public void shouldFindbyIdOptional()
+//    {
+//        Simple simple = builder.createSimple("bob");
+//
+//        java.util.Optional<Simple> optional = repo.findById(simple.getId());
+//        assertTrue(optional.isPresent());
+//
+//        long nextId = simple.getId() + 1;
+//
+//        repo.findById(nextId);
+//        assertFalse(optional.isPresent());
+//    }
 
     @Before
     public void setup()

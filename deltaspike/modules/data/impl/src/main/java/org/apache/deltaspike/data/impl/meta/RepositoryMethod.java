@@ -32,6 +32,7 @@ import javax.persistence.LockModeType;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.api.provider.DependentProvider;
+import org.apache.deltaspike.core.util.OptionalUtil;
 import org.apache.deltaspike.data.api.Modifying;
 import org.apache.deltaspike.data.api.Query;
 import org.apache.deltaspike.data.api.SingleResultType;
@@ -63,6 +64,7 @@ public class RepositoryMethod
     private final QueryRoot queryRoot;
     private final QueryProcessor queryProcessor;
     private final Class<? extends QueryInOutMapper<?>> mapper;
+    private final boolean isOptional;
 
     private volatile Boolean queryInOutMapperIsNormalScope;
 
@@ -75,6 +77,7 @@ public class RepositoryMethod
         this.queryRoot = initQueryRoot();
         this.queryProcessor = QueryProcessorFactory.newInstance(method, methodPrefix).build();
         this.mapper = extractMapper(method, repo);
+        this.isOptional = OptionalUtil.isOptionalReturned(this.method);
     }
 
     public boolean returns(Class<?> returnType)
@@ -247,4 +250,8 @@ public class RepositoryMethod
         return hasLockMode || method.isAnnotationPresent(Modifying.class);
     }
 
+    public boolean isOptional()
+    {
+        return this.isOptional;
+    }
 }

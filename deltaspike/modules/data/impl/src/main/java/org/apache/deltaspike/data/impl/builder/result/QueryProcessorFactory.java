@@ -24,6 +24,7 @@ import java.util.List;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
+import org.apache.deltaspike.core.util.OptionalUtil;
 import org.apache.deltaspike.data.api.Modifying;
 import org.apache.deltaspike.data.api.QueryResult;
 import org.apache.deltaspike.data.api.SingleResultType;
@@ -112,6 +113,7 @@ public final class QueryProcessorFactory
         public Object executeQuery(Query query, CdiQueryInvocationContext context)
         {
             SingleResultType style = context.getSingleResultStyle();
+            Object result = null;
             switch (style)
             {
                 case JPA:
@@ -119,16 +121,24 @@ public final class QueryProcessorFactory
                 case OPTIONAL:
                     try
                     {
-                        return query.getSingleResult();
+                        result = query.getSingleResult();
                     }
                     catch (NoResultException e)
                     {
-                        return null;
                     }
+                    break;
                 default:
                     @SuppressWarnings("unchecked")
                     List<Object> queryResult = query.getResultList();
-                    return queryResult.size() > 0 ? queryResult.get(0) : null;
+                    result = queryResult.size() > 0 ? queryResult.get(0) : null;
+            }
+            if (context.isOptional())
+            {
+                return OptionalUtil.wrap(result);
+            }
+            else
+            {
+                return result;
             }
         }
     }
