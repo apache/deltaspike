@@ -58,25 +58,12 @@ public class EntityManagerRefLookup
             
             BeanManager beanManager = BeanManagerProvider.getInstance().getBeanManager();
             Set<Bean<?>> beans = beanManager.getBeans(EntityManager.class);
+            Bean<?> bean = beanManager.resolve(beans);
 
-            if (!beans.isEmpty() && beans.size() == 1)
-            {
-                Class<? extends Annotation> scope = beanManager.resolve(beans).getScope();
-                globalEntityManagerIsNormalScope = beanManager.isNormalScope(scope);
-
-                if (globalEntityManagerIsNormalScope)
-                {
-                    Bean<?> bean = beans.iterator().next();
-                    globalEntityManager = (EntityManager) beanManager.getReference(bean,
-                            EntityManager.class,
-                            beanManager.createCreationalContext(bean));
-                }
-            }
-            else
-            {
-                throw new IllegalArgumentException(
-                        "None or multiple EntityManager's found with the default qualifier.");
-            }            
+            globalEntityManagerIsNormalScope = beanManager.isNormalScope(bean.getScope());
+            globalEntityManager = (EntityManager) beanManager.getReference(bean,
+                    EntityManager.class,
+                    beanManager.createCreationalContext(bean));       
         }
     }
     
