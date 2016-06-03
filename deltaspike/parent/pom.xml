@@ -380,6 +380,15 @@
             </roles>
             <timezone>+1</timezone>
         </developer>
+	<developer>
+            <id>manovotn</id>
+            <name>Matej Novotny</name>
+            <email>manovotn@apache.org</email>
+            <roles>
+                <role>Committer</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
     </developers>
 
     <dependencyManagement>
