@@ -24,13 +24,20 @@ import org.apache.deltaspike.data.api.EntityManagerResolver;
 
 public class EntityManagerRef
 {
-    private Class<? extends EntityManagerResolver> entityManagerResolverClass;
-    private DependentProvider<? extends EntityManagerResolver> entityManagerResolverDependentProvider;
     private EntityManager entityManager;
+    private DependentProvider<? extends EntityManager> entityManagerDependentProvider;
+    
+    private Class<? extends EntityManagerResolver> entityManagerResolverClass;
     private EntityManagerResolver entityManagerResolver;
-
+    private DependentProvider<? extends EntityManagerResolver> entityManagerResolverDependentProvider;
+        
     public void release()
     {
+        if (entityManagerDependentProvider != null)
+        {
+            entityManagerDependentProvider.destroy();
+        }
+        
         if (entityManagerResolverDependentProvider != null)
         {
             entityManagerResolverDependentProvider.destroy();
@@ -76,5 +83,16 @@ public class EntityManagerRef
     public void setEntityManagerResolver(EntityManagerResolver entityManagerResolver)
     {
         this.entityManagerResolver = entityManagerResolver;
+    }
+
+    public DependentProvider<? extends EntityManager> getEntityManagerDependentProvider()
+    {
+        return entityManagerDependentProvider;
+    }
+
+    public void setEntityManagerDependentProvider(
+            DependentProvider<? extends EntityManager> entityManagerDependentProvider)
+    {
+        this.entityManagerDependentProvider = entityManagerDependentProvider;
     }
 }
