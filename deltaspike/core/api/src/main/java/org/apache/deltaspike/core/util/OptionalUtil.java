@@ -66,11 +66,9 @@ public abstract class OptionalUtil
         }
         catch (IllegalAccessException e)
         {
-            e.printStackTrace();
         }
         catch (InvocationTargetException e)
         {
-            e.printStackTrace();
         }
         return null;
     }
