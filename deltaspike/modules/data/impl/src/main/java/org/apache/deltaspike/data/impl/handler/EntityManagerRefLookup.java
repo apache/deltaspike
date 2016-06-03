@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.data.impl.handler;
 
-import java.lang.annotation.Annotation;
 import java.util.Set;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.spi.Bean;
@@ -60,10 +59,18 @@ public class EntityManagerRefLookup
             Set<Bean<?>> beans = beanManager.getBeans(EntityManager.class);
             Bean<?> bean = beanManager.resolve(beans);
 
+            if (bean == null)
+            {
+                throw new IllegalStateException("Could not find EntityManager with default qualifier.");
+            }
+            
             globalEntityManagerIsNormalScope = beanManager.isNormalScope(bean.getScope());
-            globalEntityManager = (EntityManager) beanManager.getReference(bean,
-                    EntityManager.class,
-                    beanManager.createCreationalContext(bean));       
+            if (globalEntityManagerIsNormalScope)
+            {
+                globalEntityManager = (EntityManager) beanManager.getReference(bean,
+                        EntityManager.class,
+                        beanManager.createCreationalContext(bean));       
+            }
         }
     }
     
