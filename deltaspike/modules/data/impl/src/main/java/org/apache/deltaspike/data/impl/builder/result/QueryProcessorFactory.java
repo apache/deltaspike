@@ -25,6 +25,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import org.apache.deltaspike.core.util.OptionalUtil;
+import org.apache.deltaspike.core.util.StreamUtil;
 import org.apache.deltaspike.data.api.Modifying;
 import org.apache.deltaspike.data.api.QueryResult;
 import org.apache.deltaspike.data.api.SingleResultType;
@@ -69,6 +70,10 @@ public final class QueryProcessorFactory
         {
             return new ListQueryProcessor();
         }
+        if (streams())
+        {
+            return new StreamQueryProcessor();
+        }
         if (isModifying())
         {
             return new ExecuteUpdateQueryProcessor(returns(Void.TYPE));
@@ -89,6 +94,11 @@ public final class QueryProcessorFactory
         return method.getReturnType().isAssignableFrom(clazz);
     }
 
+    private boolean streams()
+    {
+        return StreamUtil.isStreamReturned(method);
+    }
+
     private static final class ListQueryProcessor implements QueryProcessor
     {
         @Override
@@ -104,6 +114,15 @@ public final class QueryProcessorFactory
         public Object executeQuery(Query query, CdiQueryInvocationContext context)
         {
             return query;
+        }
+    }
+
+    private static final class StreamQueryProcessor implements QueryProcessor
+    {
+        @Override
+        public Object executeQuery(Query query, CdiQueryInvocationContext context)
+        {
+            return StreamUtil.wrap(query.getResultList());
         }
     }
 

@@ -901,6 +901,29 @@ annotations, the `singleResult` attribute can be overridden with the
 
 This option will not throw an exception.
 
+=== Java 8 Semantics
+
+Repositories support returning instances of `java.util.Optional` and `java.util.stream.Stream` for any method.
+
+[source,java]
+-----------------------------------------------------------------------
+@Repository(forEntity = Person.class)
+public interface PersonRepository
+{
+
+    Optional<Person> findBySsn(String ssn);
+
+    Stream<Person> findByLocation(String location);
+
+}
+-----------------------------------------------------------------------
+
+Queries returning `Optional<T>` will behave like `SingleResultType.OPTIONAL`, if the data is present, return the single
+result, otherwise return `Optional.empty()`.  You can override this by using `SingleResultType.ANY` which takes the first
+result of the list, or else `empty()`.
+
+Queries returning `Stream<T>` act as a simple wrapper for `query.getResultList().stream()` to give back the results.
+
 == Transactions
 
 If you call any method expression, `@Query`-annotated method or a method

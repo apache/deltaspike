@@ -22,48 +22,49 @@ package org.apache.deltaspike.core.util;
 import javax.enterprise.inject.Typed;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collection;
 
 @Typed()
-public abstract class OptionalUtil
+public abstract class StreamUtil
 {
-    private static boolean optionalSupported = true;
-    private static Class<?> optionalClass;
-    private static Method optionalMethod;
+    private static boolean streamSupported = true;
+    private static Class<?> streamClass;
+    private static Method streamMethod;
 
     static
     {
         try
         {
-            optionalClass = Class.forName("java.util.Optional");
-            optionalMethod = optionalClass.getMethod("ofNullable", Object.class);
+            streamClass = Class.forName("java.util.stream.Stream");
+            streamMethod = Collection.class.getMethod("stream");
         }
         catch (Exception e)
         {
-            optionalSupported = false;
-            optionalClass = null;
-            optionalMethod = null;
+            streamSupported = false;
+            streamClass = null;
+            streamMethod = null;
         }
     }
 
-    public static boolean isOptionalSupported()
+    public static boolean isStreamSupported()
     {
-        return optionalSupported;
+        return streamSupported;
     }
 
-    public static boolean isOptionalReturned(Method method)
+    public static boolean isStreamReturned(Method method)
     {
-        return optionalSupported && optionalClass.isAssignableFrom(method.getReturnType());
+        return isStreamSupported() && streamClass.isAssignableFrom(method.getReturnType());
     }
 
     public static Object wrap(Object input)
     {
-        if (!optionalSupported)
+        if (!isStreamSupported() || input == null)
         {
             return input;
         }
         try
         {
-            return optionalMethod.invoke(null, input);
+            return streamMethod.invoke(input);
         }
         catch (IllegalAccessException e)
         {

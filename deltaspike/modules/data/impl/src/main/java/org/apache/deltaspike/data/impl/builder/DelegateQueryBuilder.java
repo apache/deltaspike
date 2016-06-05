@@ -20,6 +20,7 @@ package org.apache.deltaspike.data.impl.builder;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.Set;
 import javax.enterprise.context.ApplicationScoped;
 
@@ -32,6 +33,8 @@ import javax.persistence.PersistenceException;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.ClassUtils;
+import org.apache.deltaspike.core.util.OptionalUtil;
+import org.apache.deltaspike.core.util.StreamUtil;
 import org.apache.deltaspike.data.api.QueryInvocationException;
 import org.apache.deltaspike.data.impl.handler.CdiQueryInvocationContext;
 import org.apache.deltaspike.data.impl.meta.MethodType;
@@ -54,7 +57,19 @@ public class DelegateQueryBuilder extends QueryBuilder
             DelegateQueryHandler delegate = selectDelegate(context);
             if (delegate != null)
             {
-                return invoke(delegate, context);
+                Object result = invoke(delegate, context);
+                if (result instanceof Collection && StreamUtil.isStreamReturned(context.getMethod()))
+                {
+                    return StreamUtil.wrap(result);
+                }
+                else if (OptionalUtil.isOptionalReturned(context.getMethod()))
+                {
+                    return OptionalUtil.wrap(result);
+                }
+                else
+                {
+                    return result;
+                }
             }
         }
         catch (PersistenceException e)

@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.data.impl.handler;
 
+import org.apache.deltaspike.core.util.OptionalUtil;
 import org.apache.deltaspike.data.api.EntityRepository;
 import org.apache.deltaspike.data.api.Query;
 import org.apache.deltaspike.data.impl.builder.QueryBuilder;
@@ -118,6 +119,19 @@ public class EntityRepositoryHandler<E, PK extends Serializable>
         {
             return entityManager().find(entityClass(), primaryKey);
         }
+    }
+
+    public Object findOptional(PK primaryKey)
+    {
+        Object found = null;
+        try
+        {
+            found = findBy(primaryKey);
+        }
+        catch (Exception e)
+        {
+        }
+        return OptionalUtil.wrap(found);
     }
 
     @Override
