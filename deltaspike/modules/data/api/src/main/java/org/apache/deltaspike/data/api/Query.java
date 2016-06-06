@@ -79,11 +79,4 @@ public @interface Query
      * Exceptions thrown on non-single result queries.
      */
     SingleResultType singleResult() default SingleResultType.JPA;
-
-    /**
-     * For native queries only, whether or not this query returns the defined entity class or not.
-     * Due to type erasure from generics, we don't have runtime information about the return collection
-     */
-    boolean returnsEntity() default true;
-
 }
