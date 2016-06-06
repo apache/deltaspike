@@ -488,4 +488,26 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
         assertEquals(name, names.get(0));
     }
 
+    @Test
+    public void should_query_by_name()
+    {
+        String name = "should_return_entity_primary_key";
+        Simple simple = testData.createSimple(name);
+
+        Simple byName = stringIdRepo.findByName(name);
+
+        assertEquals(simple, byName);
+    }
+
+    @Test
+    public void should_query_list_by_name()
+    {
+        String name = "should_return_entity_primary_key";
+        Simple simple = testData.createSimple(name);
+
+        List<Simple> byName = stringIdRepo.findByName2(name);
+
+        assertEquals(byName.size(), 1);
+        assertEquals(simple, byName.get(0));
+    }
 }

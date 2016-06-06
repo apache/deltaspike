@@ -25,8 +25,11 @@ import org.apache.deltaspike.data.impl.meta.QueryInvocation;
 import org.apache.deltaspike.data.impl.param.Parameters;
 import org.apache.deltaspike.data.impl.util.jpa.QueryStringExtractorFactory;
 
+import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 
 import static org.apache.deltaspike.core.util.StringUtils.isNotEmpty;
@@ -72,9 +75,10 @@ public class AnnotatedQueryBuilder extends QueryBuilder
         else if (query.isNative())
         {
             String jpqlQuery = context.applyQueryStringPostProcessors(query.value());
-            if (query.returnsEntity())
+            Class<?> resultType = getQueryResultType(context.getMethod());
+            if (isEntityType(resultType))
             {
-                result = params.applyTo(entityManager.createNativeQuery(jpqlQuery, context.getEntityClass()));
+                result = params.applyTo(entityManager.createNativeQuery(jpqlQuery, resultType));
             }
             else
             {
@@ -90,4 +94,19 @@ public class AnnotatedQueryBuilder extends QueryBuilder
         return context.applyRestrictions(result);
     }
 
+    private boolean isEntityType(Class<?> cls)
+    {
+        return cls.getAnnotation(Entity.class) != null;
+    }
+
+    private Class<?> getQueryResultType(Method m)
+    {
+        Class<?> rt = m.getReturnType();
+        if (rt.isAssignableFrom(List.class) && rt != Object.class)
+        {
+            ParameterizedType pt = (ParameterizedType) m.getGenericReturnType();
+            return (Class<?>) pt.getActualTypeArguments()[0];
+        }
+        return rt;
+    }
 }

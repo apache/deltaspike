@@ -36,6 +36,6 @@ public interface SimpleIntermediateRepository extends EntityRepository<Simple, L
     })
     Simple findBy(Long id);
 
-    @Query(value = "select name from simple_table", isNative = true, returnsEntity = false)
+    @Query(value = "select name from simple_table", isNative = true)
     List<String> findAllNames();
 }

@@ -18,11 +18,20 @@
  */
 package org.apache.deltaspike.data.test.service;
 
+import java.util.List;
+
 import org.apache.deltaspike.data.api.EntityRepository;
+import org.apache.deltaspike.data.api.Query;
 import org.apache.deltaspike.data.api.Repository;
+import org.apache.deltaspike.data.test.domain.Simple;
 import org.apache.deltaspike.data.test.domain.SimpleStringId;
 
 @Repository
 public interface SimpleStringIdRepository extends EntityRepository<SimpleStringId, String>
 {
+    @Query("SELECT s FROM Simple s WHERE s.name = ?1")
+    Simple findByName(String name);
+
+    @Query("SELECT s FROM Simple s WHERE s.name = ?1")
+    List<Simple> findByName2(String name);
 }
