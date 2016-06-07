@@ -21,6 +21,8 @@ package org.apache.deltaspike.data.impl.builder;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import javax.enterprise.context.ApplicationScoped;
 
@@ -49,12 +51,15 @@ public class DelegateQueryBuilder extends QueryBuilder
     @Inject
     private BeanManager beanManager;
 
+    private final Map<Method, Bean<DelegateQueryHandler>> lookupCache
+        = new HashMap<Method, Bean<DelegateQueryHandler>>();
+    
     @Override
     public Object execute(CdiQueryInvocationContext context)
     {
         try
         {
-            DelegateQueryHandler delegate = selectDelegate(context);
+            DelegateQueryHandler delegate = lookup(context);
             if (delegate != null)
             {
                 Object result = invoke(delegate, context);
@@ -83,24 +88,41 @@ public class DelegateQueryBuilder extends QueryBuilder
         throw new QueryInvocationException("No DelegateQueryHandler found", context);
     }
 
-    private DelegateQueryHandler selectDelegate(CdiQueryInvocationContext context)
+    private DelegateQueryHandler lookup(CdiQueryInvocationContext context)
     {
-        Set<Bean<DelegateQueryHandler>> beans = BeanProvider
-                .getBeanDefinitions(DelegateQueryHandler.class, true, true);
-        for (Bean<DelegateQueryHandler> bean : beans)
+        Bean<DelegateQueryHandler> selectedBean = lookupCache.get(context.getMethod());
+        
+        if (selectedBean == null)
         {
-            if (ClassUtils.containsPossiblyGenericMethod(bean.getBeanClass(), context.getMethod()))
+            Set<Bean<DelegateQueryHandler>> beans = BeanProvider
+                    .getBeanDefinitions(DelegateQueryHandler.class, true, true);
+            for (Bean<DelegateQueryHandler> bean : beans)
             {
-                if (bean.getScope().equals(Dependent.class))
+                if (ClassUtils.containsPossiblyGenericMethod(bean.getBeanClass(), context.getMethod()))
                 {
-                    CreationalContext<DelegateQueryHandler> cc = beanManager.createCreationalContext(bean);
-                    DelegateQueryHandler instance = (DelegateQueryHandler) beanManager.getReference(
-                            bean, DelegateQueryHandler.class, cc);
-                    context.addDestroyable(new BeanDestroyable<DelegateQueryHandler>(bean, instance, cc));
-                    return instance;
+                    selectedBean = bean;
                 }
-                return (DelegateQueryHandler) BeanProvider.getContextualReference(bean.getBeanClass());
             }
+            
+            if (selectedBean != null)
+            {
+                lookupCache.put(context.getMethod(), selectedBean);
+            }
+        }
+        
+        
+        if (selectedBean != null)
+        {
+            CreationalContext<DelegateQueryHandler> cc = beanManager.createCreationalContext(selectedBean);
+            DelegateQueryHandler instance = (DelegateQueryHandler) beanManager.getReference(
+                    selectedBean, DelegateQueryHandler.class, cc);
+            
+            if (selectedBean.getScope().equals(Dependent.class))
+            {
+                context.addDestroyable(new BeanDestroyable<DelegateQueryHandler>(selectedBean, instance, cc));
+            }
+
+            return instance;
         }
         return null;
     }
@@ -109,7 +131,8 @@ public class DelegateQueryBuilder extends QueryBuilder
     {
         try
         {
-            return invoke(delegate, context.getMethod(), context.getMethodParameters());
+            Method extract = ClassUtils.extractPossiblyGenericMethod(delegate.getClass(), context.getMethod());
+            return extract.invoke(delegate, context.getMethodParameters());
         }
         catch (InvocationTargetException e)
         {
@@ -124,12 +147,4 @@ public class DelegateQueryBuilder extends QueryBuilder
             throw new RuntimeException(e);
         }
     }
-
-    protected Object invoke(Object target, Method method, Object[] args) throws InvocationTargetException,
-            IllegalAccessException
-    {
-        Method extract = ClassUtils.extractPossiblyGenericMethod(target.getClass(), method);
-        return extract.invoke(target, args);
-    }
-
 }
