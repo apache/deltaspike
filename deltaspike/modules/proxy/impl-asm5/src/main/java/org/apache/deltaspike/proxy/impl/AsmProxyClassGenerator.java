@@ -53,7 +53,6 @@ public class AsmProxyClassGenerator implements ProxyClassGenerator
     @Override
     public <T> Class<T> generateProxyClass(ClassLoader classLoader,
             Class<T> targetClass,
-            Class<? extends InvocationHandler> delegateInvocationHandlerClass,
             String suffix,
             String superAccessorMethodSuffix,
             Class<?>[] additionalInterfaces,
@@ -63,7 +62,7 @@ public class AsmProxyClassGenerator implements ProxyClassGenerator
         String proxyName = targetClass.getName() + suffix;
         String classFileName = proxyName.replace('.', '/');
 
-        byte[] proxyBytes = generateProxyClassBytes(targetClass, delegateInvocationHandlerClass,
+        byte[] proxyBytes = generateProxyClassBytes(targetClass,
                 classFileName, superAccessorMethodSuffix, additionalInterfaces, delegateMethods, interceptMethods);
 
         Class<T> proxyClass = (Class<T>) loadClass(classLoader, proxyName, proxyBytes,
@@ -73,7 +72,6 @@ public class AsmProxyClassGenerator implements ProxyClassGenerator
     }
 
     private static byte[] generateProxyClassBytes(Class<?> targetClass,
-            Class<? extends InvocationHandler> delegateInvocationHandlerClass,
             String proxyName,
             String superAccessorMethodSuffix,
             Class<?>[] additionalInterfaces,
@@ -104,7 +102,7 @@ public class AsmProxyClassGenerator implements ProxyClassGenerator
 
         Type superType = Type.getType(superClass);
         Type proxyType = Type.getObjectType(proxyName);
-        Type delegateInvocationHandlerType = Type.getType(delegateInvocationHandlerClass);
+        Type delegateInvocationHandlerType = Type.getType(InvocationHandler.class);
 
         final ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
         cw.visit(Opcodes.V1_6, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER, proxyType.getInternalName(), null,

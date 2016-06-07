@@ -33,7 +33,6 @@ public class AsmProxyClassGeneratorTest
         AsmProxyClassGenerator asmProxyClassGenerator = new AsmProxyClassGenerator();
         proxyClass = asmProxyClassGenerator.generateProxyClass(TestClass.class.getClassLoader(),
                 TestClass.class,
-                TestInvocationHandler.class,
                 "$Test",
                 "$super",
                 null,
