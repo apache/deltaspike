@@ -69,12 +69,10 @@ public class PartialBeanAsAbstractClassTest
         
         PartialBeanProxyFactory.getInstance().getProxyClass(
                 beanManager,
-                PartialBean.class,
-                TestPartialBeanHandler.class);
+                PartialBean.class);
         
         PartialBeanProxyFactory.getInstance().getProxyClass(
                 beanManager,
-                PartialBean.class,
-                TestPartialBeanHandler.class);
+                PartialBean.class);
     }
 }
