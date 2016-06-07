@@ -121,9 +121,6 @@ public abstract class SimpleRepository extends AbstractEntityRepository<Simple, 
 
     public abstract void removeByNameAndEnabled(String name, Boolean aTrue);
 
-//    TODO Figure out a way to test this that doesn't require java 8
-//    public abstract java.util.Optional<Simple> findById(Long id);
-
     @Override
     protected abstract EntityManager entityManager();
 }
