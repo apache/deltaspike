@@ -40,8 +40,10 @@ import javax.persistence.PersistenceContext;
 import javax.transaction.UserTransaction;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static org.apache.deltaspike.data.test.java8.util.TestDeployments.initDeployment;
@@ -146,5 +148,16 @@ public class Java8Test
         Optional<Simple> found = simpleRepository2.findByName(name);
 
         Assert.assertTrue(found.isPresent());
+    }
+
+    @Test
+    public void shouldFindNamesAsStream()
+    {
+        entityManager.persist(new Simple("a"));
+        entityManager.persist(new Simple("b"));
+
+        Stream<String> names = simpleRepository2.findSimpleNames();
+
+        Assert.assertEquals(asList("a","b"), names.collect(toList()));
     }
 }

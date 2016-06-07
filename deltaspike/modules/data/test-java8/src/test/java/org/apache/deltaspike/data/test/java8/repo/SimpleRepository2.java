@@ -25,10 +25,14 @@ import org.apache.deltaspike.data.api.SingleResultType;
 import org.apache.deltaspike.data.test.java8.entity.Simple;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Repository(forEntity = Simple.class)
 public interface SimpleRepository2
 {
     @Query(singleResult = SingleResultType.ANY)
     Optional<Simple> findByName(String name);
+
+    @Query(value = "select name from simple_table", isNative = true)
+    Stream<String> findSimpleNames();
 }
