@@ -96,27 +96,20 @@ public abstract class DeltaSpikeProxyFactory
         return proxyClass;
     }
     
-    public <T> Class<T> getProxyClass(BeanManager beanManager, Class<T> targetClass,
-            Class<? extends InvocationHandler> delegateInvocationHandlerClass)
+    public <T> Class<T> getProxyClass(BeanManager beanManager, Class<T> targetClass)
     {
         // check if a proxy is already defined for this class
         Class<T> proxyClass = resolveAlreadyDefinedProxyClass(targetClass);
         if (proxyClass == null)
         {
-            proxyClass = createProxyClass(beanManager, targetClass.getClassLoader(), targetClass,
-                    delegateInvocationHandlerClass);
+            proxyClass = createProxyClass(beanManager, targetClass.getClassLoader(), targetClass);
         }
 
         return proxyClass;
     }
-    
-    public <T> Class<T> getProxyClass(BeanManager beanManager, Class<T> targetClass)
-    {
-        return getProxyClass(beanManager, targetClass, DummyInvocationHandler.class);
-    }
 
     private synchronized <T> Class<T> createProxyClass(BeanManager beanManager, ClassLoader classLoader,
-            Class<T> targetClass, Class<? extends InvocationHandler> delegateInvocationHandlerClass)
+            Class<T> targetClass)
     {
         Class<T> proxyClass = resolveAlreadyDefinedProxyClass(targetClass);
         if (proxyClass == null)
@@ -147,7 +140,6 @@ public abstract class DeltaSpikeProxyFactory
 
             proxyClass = proxyClassGenerator.generateProxyClass(classLoader,
                     targetClass,
-                    delegateInvocationHandlerClass,
                     getProxyClassSuffix(),
                     SUPER_ACCESSOR_METHOD_SUFFIX,
                     getAdditionalInterfacesToImplement(targetClass),

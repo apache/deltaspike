@@ -59,7 +59,7 @@ public class DeltaSpikeProxyContextualLifecycle<T, H extends InvocationHandler> 
     {
         this.targetClass = targetClass;
         this.delegateInvocationHandlerClass = delegateInvocationHandlerClass;
-        this.proxyClass = proxyFactory.getProxyClass(beanManager, targetClass, delegateInvocationHandlerClass);
+        this.proxyClass = proxyFactory.getProxyClass(beanManager, targetClass);
 
         if (!targetClass.isInterface())
         {
@@ -82,7 +82,7 @@ public class DeltaSpikeProxyContextualLifecycle<T, H extends InvocationHandler> 
             else
             {
                 H delegateInvocationHandler = instantiateDelegateInvocationHandler();
-                Constructor<T> constructor = proxyClass.getConstructor(delegateInvocationHandlerClass);
+                Constructor<T> constructor = proxyClass.getConstructor(InvocationHandler.class);
                 instance = constructor.newInstance(delegateInvocationHandler);
             }
 

@@ -18,8 +18,6 @@
  */
 package org.apache.deltaspike.proxy.spi;
 
-import java.lang.reflect.InvocationHandler;
-
 public interface ProxyClassGenerator
 {
     /**
@@ -30,7 +28,6 @@ public interface ProxyClassGenerator
      * @param <T> The target class.
      * @param classLoader The {@link ClassLoader} to be used to define the proxy class.
      * @param targetClass The class to proxy.
-     * @param delegateInvocationHandlerClass The {@link InvocationHandler} which will be used for the delegateMethods.
      * @param suffix The classname suffix.
      * @param superAccessorMethodSuffix It's required to generate methods which just invokes the original method.
      *                                  We generate them with the same name as the original method
@@ -44,7 +41,6 @@ public interface ProxyClassGenerator
      */
     <T> Class<T> generateProxyClass(ClassLoader classLoader,
                                     Class<T> targetClass,
-                                    Class<? extends InvocationHandler> delegateInvocationHandlerClass,
                                     String suffix,
                                     String superAccessorMethodSuffix,
                                     Class<?>[] additionalInterfaces,

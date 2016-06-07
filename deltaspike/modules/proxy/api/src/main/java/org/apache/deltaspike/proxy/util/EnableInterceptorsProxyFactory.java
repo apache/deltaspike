@@ -43,7 +43,7 @@ public class EnableInterceptorsProxyFactory extends DeltaSpikeProxyFactory
         }
         
         // generate proxy
-        Class proxyClass = INSTANCE.getProxyClass(beanManager, obj.getClass(), EnableInterceptorsDelegate.class);
+        Class proxyClass = INSTANCE.getProxyClass(beanManager, obj.getClass());
 
         // delegate method calls to our original instance from the wrapped producer method
         EnableInterceptorsDelegate delegate = new EnableInterceptorsDelegate(obj);
@@ -51,7 +51,7 @@ public class EnableInterceptorsProxyFactory extends DeltaSpikeProxyFactory
         try
         {
             // instantiate proxy
-            Constructor constructor = proxyClass.getConstructor(EnableInterceptorsDelegate.class);
+            Constructor constructor = proxyClass.getConstructor(InvocationHandler.class);
             return (T) constructor.newInstance(delegate);
         }
         catch (Exception e)
