@@ -503,6 +503,9 @@ expressions:
 Note that DeltaSpike will validate those expressions during startup, so
 you will notice early in case you have a typo in those expressions.
 
+Also note that as of 1.7, the Entity type returned can either by the
+entity defined in this repository, or any other entity in your persistence
+unit, or any primitive type supported by your JPA implementation.
 
 === Query Ordering
 
