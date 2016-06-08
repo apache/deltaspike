@@ -18,26 +18,26 @@
  */
 package org.apache.deltaspike.proxy.impl.invocation;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 import javax.enterprise.inject.Typed;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.InterceptionType;
 import javax.enterprise.inject.spi.Interceptor;
-import javax.interceptor.InterceptorBinding;
-import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
+import org.apache.deltaspike.core.api.provider.BeanProvider;
 
 @Typed
 public abstract class AbstractManualInvocationHandler implements InvocationHandler
 {
+    private volatile Boolean initialized;
+    private InterceptorLookup interceptorLookup;
+    
     @Override
     public Object invoke(Object proxy, Method method, Object[] parameters) throws Throwable
     {
+        lazyInit();
+
         // check if interceptors are defined, otherwise just call the original logik
-        List<Interceptor<?>> interceptors = resolveInterceptors(proxy, method);
+        List<Interceptor<?>> interceptors = interceptorLookup.lookup(proxy, method);
         if (interceptors != null && interceptors.size() > 0)
         {
             try
@@ -74,61 +74,24 @@ public abstract class AbstractManualInvocationHandler implements InvocationHandl
      */
     protected abstract Object proceedOriginal(Object proxy, Method method, Object[] parameters) throws Throwable;
 
-    protected List<Interceptor<?>> resolveInterceptors(Object instance, Method method)
-    {
-        BeanManager beanManager = BeanManagerProvider.getInstance().getBeanManager();
-        
-        Annotation[] interceptorBindings = extractInterceptorBindings(beanManager, instance, method);
-        if (interceptorBindings.length > 0)
-        {
-            return beanManager.resolveInterceptors(InterceptionType.AROUND_INVOKE, interceptorBindings);
-        }
-
-        return null;
-    }
-
-    protected Annotation[] extractInterceptorBindings(BeanManager beanManager, Object instance, Method method)
-    {
-        ArrayList<Annotation> bindings = new ArrayList<Annotation>();
-
-        addInterceptorBindings(beanManager, bindings, instance.getClass().getDeclaredAnnotations());
-        addInterceptorBindings(beanManager, bindings, method.getDeclaredAnnotations());
-
-        return bindings.toArray(new Annotation[bindings.size()]);
-    }
     
-    protected void addInterceptorBindings(BeanManager beanManager, ArrayList<Annotation> bindings,
-            Annotation[] declaredAnnotations)
+    
+    private void lazyInit()
     {
-        for (Annotation annotation : declaredAnnotations)
+        if (this.initialized == null)
         {
-            if (bindings.contains(annotation))
-            {
-                continue;
-            }
-            
-            Class<? extends Annotation> annotationType = annotation.annotationType();
-            
-            if (annotationType.isAnnotationPresent(InterceptorBinding.class))
-            {
-                bindings.add(annotation);
-            }
-            
-            if (beanManager.isStereotype(annotationType))
-            {
-                for (Annotation subAnnotation : annotationType.getDeclaredAnnotations())
-                {                    
-                    if (bindings.contains(subAnnotation))
-                    {
-                        continue;
-                    }
+            init();
+        }
+    }
 
-                    if (subAnnotation.annotationType().isAnnotationPresent(InterceptorBinding.class))
-                    {
-                        bindings.add(subAnnotation);
-                    }  
-                }
-            }
+    private synchronized void init()
+    {
+        // switch into paranoia mode
+        if (this.initialized == null)
+        {
+            this.initialized = true;
+            
+            this.interceptorLookup = BeanProvider.getContextualReference(InterceptorLookup.class);
         }
     }
 }
