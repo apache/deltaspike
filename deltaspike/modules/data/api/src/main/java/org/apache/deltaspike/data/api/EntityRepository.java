@@ -23,73 +23,15 @@ import java.util.List;
 
 import javax.persistence.metamodel.SingularAttribute;
 
-import org.apache.deltaspike.core.spi.activation.Deactivatable;
-
 /**
  * Base Repository interface. All methods are implemented by the CDI extension.
  *
  * @param <E>   Entity type.
  * @param <PK>  Primary key type.
  */
-public interface EntityRepository<E, PK extends Serializable> extends Deactivatable
+public interface EntityRepository<E, PK extends Serializable> extends EntityPersistenceRepository<E, PK>,
+        EntityCountRepository<E>
 {
-
-    /**
-     * Persist (new entity) or merge the given entity. The distinction on calling either
-     * method is done based on the primary key field being null or not.
-     * If this results in wrong behavior for a specific case, consider using the
-     * {@link org.apache.deltaspike.data.api.EntityManagerDelegate} which offers both
-     * {@code persist} and {@code merge}.
-     * @param entity            Entity to save.
-     * @return                  Returns the modified entity.
-     */
-    E save(E entity);
-
-    /**
-     * {@link #save(Object)}s the given entity and flushes the persistence context afterwards.
-     * @param entity            Entity to save.
-     * @return                  Returns the modified entity.
-     */
-    E saveAndFlush(E entity);
-
-    /**
-     * {@link #save(Object)}s the given entity and flushes the persistence context afterwards,
-     * followed by a refresh (e.g. to load DB trigger modifications).
-     * @param entity            Entity to save.
-     * @return                  Returns the modified entity.
-     */
-    E saveAndFlushAndRefresh(E entity);
-
-    /**
-     * Convenience access to {@link javax.persistence.EntityManager#remove(Object)}.
-     * @param entity            Entity to remove.
-     */
-    void remove(E entity);
-
-    /**
-     * Convenience access to {@link javax.persistence.EntityManager#remove(Object)}
-     * with a following flush.
-     * @param entity            Entity to remove.
-     */
-    void removeAndFlush(E entity);
-
-    /**
-     * Convenience access to {@link javax.persistence.EntityManager#remove(Object)}
-     * with an detached entity.
-     * @param entity            Entity to remove.
-     */
-    void attachAndRemove(E entity);
-
-    /**
-     * Convenience access to {@link javax.persistence.EntityManager#refresh(Object)}.
-     * @param entity            Entity to refresh.
-     */
-    void refresh(E entity);
-
-    /**
-     * Convenience access to {@link javax.persistence.EntityManager#flush()}.
-     */
-    void flush();
 
     /**
      * Entity lookup by primary key. Convenicence method around
@@ -149,37 +91,4 @@ public interface EntityRepository<E, PK extends Serializable> extends Deactivata
      * @return                  List of entities matching the example, or empty if none found.
      */
     List<E> findByLike(E example, int start, int max, SingularAttribute<E, ?>... attributes);
-
-    /**
-     * Count all existing entities of entity class {@code <E>}.
-     * @return                  Counter.
-     */
-    Long count();
-
-    /**
-     * Count existing entities of entity class {@code <E>}
-     * with for a given object and a specific set of properties..
-     * @param example           Sample entity. Query all like.
-     * @param attributes        Which attributes to consider for the query.
-     *
-     * @return                  Counter.
-     */
-    Long count(E example, SingularAttribute<E, ?>... attributes);
-
-    /**
-     * Count existing entities of entity class using the like operator for String attributes {@code <E>}
-     * with for a given object and a specific set of properties..
-     * @param example           Sample entity. Query all like.
-     * @param attributes        Which attributes to consider for the query.
-     *
-     * @return                  Counter.
-     */
-    Long countLike(E example, SingularAttribute<E, ?>... attributes);
-
-    /**
-     * Return the id of the entity. Returns null if the entity does not yet have an id.
-     * @param example           Sample entity.
-     * @return                  id of the entity
-     */
-    PK getPrimaryKey(E example);
 }
