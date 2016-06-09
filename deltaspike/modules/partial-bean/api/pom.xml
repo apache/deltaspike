@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.apache.deltaspike.modules</groupId>
         <artifactId>partial-bean-module-project</artifactId>
-        <version>1.7.0</version>
+        <version>1.7.1-SNAPSHOT</version>
     </parent>
 
     <groupId>org.apache.deltaspike.modules</groupId>
