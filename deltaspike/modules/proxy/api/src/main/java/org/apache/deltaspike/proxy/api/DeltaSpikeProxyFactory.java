@@ -19,7 +19,6 @@
 package org.apache.deltaspike.proxy.api;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -76,15 +75,6 @@ public abstract class DeltaSpikeProxyFactory
             GeneratorHolder.generator = proxyClassGeneratorList.get(0);
         }
         return GeneratorHolder.generator;
-    }
-    
-    private static class DummyInvocationHandler implements InvocationHandler
-    {
-        @Override
-        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
-        {
-            return null;
-        }
     }
 
     public <T> Class<T> resolveAlreadyDefinedProxyClass(Class<T> targetClass)
