@@ -1,0 +1,54 @@
+Release Notes - DeltaSpike - Version 1.7.0
+
+Sub-task
+    [DELTASPIKE-1102] - Support TOP and FIRST
+
+Bug
+    [DELTASPIKE-1089] - No possible to select non Entity object via Native query
+    [DELTASPIKE-1138] - FutureableTest not compatible with weld v1.x
+    [DELTASPIKE-1139] - TypedResolver might prematurely return null under high load
+    [DELTASPIKE-1141] - @Futureable @Locked and @EnableInterceptor cannot work with CDI 1.0/Weld 1.x
+    [DELTASPIKE-1142] - Documentation wrong: an interface does not implement another interface
+    [DELTASPIKE-1144] - Existing window name may lead to infinite redirects
+    [DELTASPIKE-1147] - TypedResolver behaves different than ConfigResolver
+    [DELTASPIKE-1151] - CdiTestSuiteRunner.LogRunListener logs multiple times
+    [DELTASPIKE-1156] - Scheduler tests are failing in TomEE
+    [DELTASPIKE-1158] - It is not possible to override generic methods defined within delegates
+
+Improvement
+
+    [DELTASPIKE-1088] - Provide a BOM for deltaspike with no transitive dependencies
+    [DELTASPIKE-1091] - Weld core BOM update in next 2.3/3.x release
+    [DELTASPIKE-1135] - Cannot use typesafe messages on Application scope initialization observer
+    [DELTASPIKE-1148] - Reduce redirects in CLIENTWINDOW mode when opening a link in a new tab
+    [DELTASPIKE-1149] - CLIENTWINDOW tokenizedRedirect should ignore ctrl-key
+    [DELTASPIKE-1150] - Ignore "external" links in CLIENTWINDOW-mode
+    [DELTASPIKE-1153] - Expand query support to not require a where clause
+    [DELTASPIKE-1154] - [perf] use EntityVerifier in a static way
+    [DELTASPIKE-1155] - tableName fallback to Metamodel only when not defined on @Table
+    [DELTASPIKE-1159] - BOM Needs a dependency management section
+    [DELTASPIKE-1161] - [perf] avoid Instance#Select
+    [DELTASPIKE-1162] - [perf] avoid duplicate RepositoryComponent lookup
+    [DELTASPIKE-1163] - [perf] avoid duplicate RepositoryComponent lookup
+    [DELTASPIKE-1164] - [perf] QueryBuilder can be ApplicationScoped
+    [DELTASPIKE-1168] - [perf] optimize DelegateQueryBuilder#selectDelegate
+    [DELTASPIKE-1169] - Separate concerns of EntityRepository
+    [DELTASPIKE-1170] - Proxy should be invocationHandler class independent
+    [DELTASPIKE-1171] - [perf] cache interceptors per proxy method
+
+New Feature
+
+    [DELTASPIKE-1036] - Repositories should support java.util.Optional as return type
+    [DELTASPIKE-1152] - Add support for firstXX in query method expressions
+    [DELTASPIKE-1157] - Repository.findBy methods do not allow an override to add query hints.
+    [DELTASPIKE-1160] - Not possible to select non Entity or other Entity object via Native query
+    [DELTASPIKE-1165] - Repositories support returning Stream<E> in addition to List<E>
+
+Task
+
+    [DELTASPIKE-1047] - Setup builds for TomEE 7
+    [DELTASPIKE-1136] - update site and javadoc to 1.6.1
+    [DELTASPIKE-1140] - improve build for ee7-tests
+    [DELTASPIKE-1145] - improve tests with @TransactionScoped
+    [DELTASPIKE-1146] - improve test-code of TransactionalBean#executeInTransaction
+    [DELTASPIKE-1166] - Prep the 1.7 release
