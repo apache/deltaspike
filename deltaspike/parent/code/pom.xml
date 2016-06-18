@@ -304,7 +304,8 @@
                 </dependency>
             </dependencies>
         </profile>
-
+        <!-- please note that when changing any of these weld profiles, they are also used in some projects.
+        Make sure to update all pom's, if required -->
         <profile>
             <!-- use this profile to compile and test DeltaSpike with JBoss Weld 1.x on an embedded container-->
             <id>Weld1</id>

@@ -22,9 +22,9 @@
 
     <parent>
         <groupId>org.apache.deltaspike</groupId>
-        <artifactId>parent</artifactId>
+        <artifactId>parent-code</artifactId>
         <version>1.7.0-SNAPSHOT</version>
-        <relativePath>../parent/pom.xml</relativePath>
+        <relativePath>../parent/code/pom.xml</relativePath>
     </parent>
 
     <groupId>org.apache.deltaspike.cdictrl</groupId>
@@ -60,7 +60,29 @@
         </profile>
 
         <profile>
-            <id>Weld</id>
+            <id>Weld1</id>
+
+            <modules>
+                <module>api</module>
+                <module>impl-weld</module>
+                <module>servlet</module>
+                <module>tck</module>
+            </modules>
+        </profile>
+
+        <profile>
+            <id>Weld2</id>
+
+            <modules>
+                <module>api</module>
+                <module>impl-weld</module>
+                <module>servlet</module>
+                <module>tck</module>
+            </modules>
+        </profile>
+
+        <profile>
+            <id>Weld3</id>
 
             <modules>
                 <module>api</module>
