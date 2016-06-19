@@ -27,7 +27,7 @@ test at least:
 
 -----------------------------------------------------------------------------------------------------------------------
 mvn clean install -POWB
-mvn clean install -PWeld
+mvn clean install -PWeld1
 mvn clean install -Prat
 mvn clean install -Ptomee-build-managed
 mvn clean install -Pjbossas-build-managed-7
