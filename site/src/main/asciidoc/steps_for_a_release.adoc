@@ -53,8 +53,9 @@ mvn release:perform -Pdistribution -DreleaseProfiles=distribution
 
 //!!!check the created commits including user-name and email
 
+// Verify the release in the staging repository:
 //login to https://repository.apache.org/ and go to "Staging Repositories"
-//check esp. .../org/apache/deltaspike/deltaspike-project/[version]/deltaspike-project-[version]-source-release.zip
+//check esp. .../org/apache/deltaspike/deltaspike/[version]/deltaspike-[version]-source-release.zip
 //close the repository
 
 //push the release-branch and tag to a third-party git repo
@@ -97,8 +98,8 @@ Thanks,
 [name]
 
 [1] https://repository.apache.org/content/repositories/...
-[2] https://repository.apache.org/content/repositories/.../org/apache/deltaspike/deltaspike-project/[version]/deltaspike-project-[version]-source-release.zip
-[3] https://github.com/[user]/deltaspike-vote/tree/deltaspike-project-[version]
+[2] https://repository.apache.org/content/repositories/.../org/apache/deltaspike/deltaspike/[version]/deltaspike-[version]-source-release.zip
+[3] https://github.com/[user]/deltaspike-vote/tree/deltaspike-[version]
 [4] http://www.apache.org/foundation/voting.html#ReleaseVotes
 -----------------------------------------------------------------------------------------------------------------------
 
@@ -140,7 +141,6 @@ If the binding majority approved the vote continue.
 
 Always do a merge in this case (not a rebase):
 
-
 -----------------------------------------------------------------------------------------------------------------------
 git checkout master
 git merge ds-[version]
@@ -149,9 +149,9 @@ git push origin deltaspike-[version]
 git push origin master
 -----------------------------------------------------------------------------------------------------------------------
 
-
- - Create the release at jira
- - Close the corresponding tickets of the version
+ - Close the the JIRA tickets for the newly released version
+ - Close the release in JIRA
+ - Ensure the next version is available in JIRA
  - Wait some minutes and check http://repo2.maven.org/maven2/org/apache/deltaspike
 
 
@@ -164,6 +164,8 @@ mkdir [version]
 //use the artifacts from:
 //  http://repo1.maven.org/maven2/org/apache/deltaspike/deltaspike/[version]/
 //  http://repo1.maven.org/maven2/org/apache/deltaspike/distribution/distribution-full/[version]/
+svn rm {old-version}
+svn add {version}
 -----------------------------------------------------------------------------------------------------------------------
 
 === Check Downloads
@@ -172,6 +174,10 @@ mkdir [version]
  - http://www.us.apache.org/dist/deltaspike
 
 === Update site content
+
+Update Javadocs:
+ - git checkout {version}
+ - cd deltaspike && ./javadoc.sh
 
 via source:
  - Update the build (version.deltaspike.latest.stable and version.deltaspike.latest.snapshot)
@@ -205,13 +211,13 @@ The Apache DeltaSpike team is pleased to announce the 6th release of DeltaSpike.
 Apache DeltaSpike is not a CDI-container, but a portable CDI extension.
 
 Documentation:
-http://deltaspike.apache.org/documentation.html
+http://deltaspike.apache.org/documentation/
 
 Download:
 http://deltaspike.apache.org/download.html
 
 Release Notes:
-http://s.apache.org/DeltaSpike_06
+http://s.apache.org/DeltaSpike_[version]
 
 Enjoy!
 
