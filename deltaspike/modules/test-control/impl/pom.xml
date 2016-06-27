@@ -178,6 +178,32 @@
                 <!-- The remaining bits of this profile are located under deltaspike/parent/code/pom.xml -->
             </dependencies>
         </profile>
+        <profile>
+            <id>Weld2</id>
+            <dependencies>
+                <!-- Adding a test dependency needed for Weld 1.x -->
+                <dependency>
+                    <groupId>org.apache.deltaspike.cdictrl</groupId>
+                    <artifactId>deltaspike-cdictrl-weld</artifactId>
+                    <scope>test</scope>
+                </dependency>
+
+                <!-- The remaining bits of this profile are located under deltaspike/parent/code/pom.xml -->
+            </dependencies>
+        </profile>
+        <profile>
+            <id>Weld3</id>
+            <dependencies>
+                <!-- Adding a test dependency needed for Weld 1.x -->
+                <dependency>
+                    <groupId>org.apache.deltaspike.cdictrl</groupId>
+                    <artifactId>deltaspike-cdictrl-weld</artifactId>
+                    <scope>test</scope>
+                </dependency>
+
+                <!-- The remaining bits of this profile are located under deltaspike/parent/code/pom.xml -->
+            </dependencies>
+        </profile>
     </profiles>
 
 </project>
