@@ -189,7 +189,7 @@ public class RepositoryMethod
             return;
         }
 
-        if (queryInOutMapperIsNormalScope != null && beanManager != null)
+        if (beanManager != null)
         {
             final Set<Bean<?>> beans = beanManager.getBeans(mapper);
             final Class<? extends Annotation> scope = beanManager.resolve(beans).getScope();

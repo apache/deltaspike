@@ -73,15 +73,16 @@ public abstract class SimpleQueryInOutMapperBase<Entity, Dto> implements QueryIn
     @Override
     public Object mapResultList(final List<Entity> result)
     {
-        final List<Object> mapped = new ArrayList<Object>(result.size());
         if (result != null)
         {
+            final List<Object> mapped = new ArrayList<Object>(result.size());
             for (final Entity a : result)
             {
                 mapped.add(mapResult(a));
             }
+            return mapped;
         }
-        return mapped;
+        return new ArrayList<Object>();
     }
 
     @Override
