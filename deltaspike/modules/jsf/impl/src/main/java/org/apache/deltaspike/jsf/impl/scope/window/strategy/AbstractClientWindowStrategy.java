@@ -101,12 +101,12 @@ public abstract class AbstractClientWindowStrategy implements ClientWindow
     protected String generateNewWindowId()
     {
         //X TODO proper mechanism
-        return "" + (new Random()).nextInt() % 10000;
+        return Integer.toString((new Random()).nextInt() % 10000);
     }
 
     protected String generateNewRequestToken()
     {
-        return "" + ((int) Math.floor(Math.random() * 999));
+        return Integer.toString((int) Math.floor(Math.random() * 999));
     }
     
     protected boolean isPost(FacesContext facesContext)

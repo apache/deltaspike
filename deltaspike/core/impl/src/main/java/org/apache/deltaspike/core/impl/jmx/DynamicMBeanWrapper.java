@@ -159,7 +159,7 @@ public class DynamicMBeanWrapper extends NotificationBroadcasterSupport implemen
                     }
                     else
                     {
-                        methodName = "" + Character.toUpperCase(fieldName.charAt(0));
+                        methodName = Character.toString(Character.toUpperCase(fieldName.charAt(0)));
                     }
 
                     Method setter = null;
