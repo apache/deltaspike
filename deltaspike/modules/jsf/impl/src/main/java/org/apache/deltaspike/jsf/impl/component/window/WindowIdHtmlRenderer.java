@@ -88,7 +88,7 @@ public class WindowIdHtmlRenderer extends Renderer
                 + clientWindowConfig.isClientWindowStoreWindowTreeEnabledOnButtonClick());
 
         // see #729
-        if (!delegatedWindowMode && clientWindow.isInitialRedirectSupported(context))
+        if (clientWindow.isInitialRedirectSupported(context))
         {
             Object cookie = ClientWindowHelper.getRequestWindowIdCookie(context, windowId);
             if (cookie != null && cookie instanceof Cookie)
