@@ -231,7 +231,7 @@ public class DefaultQueryResult<T> implements QueryResult<T>
     public T getAnyResult()
     {
         List<T> queryResult = getResultList();
-        return queryResult.size() > 0 ? queryResult.get(0) : null;
+        return !queryResult.isEmpty() ? queryResult.get(0) : null;
     }
 
     @Override

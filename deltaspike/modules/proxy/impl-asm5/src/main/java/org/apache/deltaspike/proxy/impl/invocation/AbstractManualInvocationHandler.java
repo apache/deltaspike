@@ -38,7 +38,7 @@ public abstract class AbstractManualInvocationHandler implements InvocationHandl
 
         // check if interceptors are defined, otherwise just call the original logik
         List<Interceptor<?>> interceptors = interceptorLookup.lookup(proxy, method);
-        if (interceptors != null && interceptors.size() > 0)
+        if (interceptors != null && !interceptors.isEmpty())
         {
             try
             {

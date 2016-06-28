@@ -337,7 +337,7 @@ public class AsmProxyClassGenerator implements ProxyClassGenerator
 
         // catch checked exceptions and rethrow it
         boolean throwableCatched = false;
-        if (exceptionsToCatch.size() > 0)
+        if (!exceptionsToCatch.isEmpty())
         {
             rethrow = mg.mark();
             mg.visitVarInsn(Opcodes.ASTORE, 1);

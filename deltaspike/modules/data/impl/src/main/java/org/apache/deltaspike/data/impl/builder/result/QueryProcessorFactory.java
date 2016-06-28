@@ -149,7 +149,7 @@ public final class QueryProcessorFactory
                 default:
                     @SuppressWarnings("unchecked")
                     List<Object> queryResult = query.getResultList();
-                    result = queryResult.size() > 0 ? queryResult.get(0) : null;
+                    result = !queryResult.isEmpty() ? queryResult.get(0) : null;
             }
             if (context.isOptional())
             {

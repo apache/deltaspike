@@ -221,7 +221,7 @@ public class SchedulerExtension implements Extension, Deactivatable
                 afterBeanDiscovery.addDefinitionError(t);
             }
         }
-        else if (this.foundManagedJobClasses.size() > 0)
+        else if (!this.foundManagedJobClasses.isEmpty())
         {
             LOG.warning(
                 this.foundManagedJobClasses.size() + " scheduling-jobs found, but there is no configured scheduler");

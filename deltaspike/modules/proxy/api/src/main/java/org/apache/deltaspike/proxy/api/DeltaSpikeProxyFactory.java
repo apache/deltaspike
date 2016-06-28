@@ -110,7 +110,7 @@ public abstract class DeltaSpikeProxyFactory
 
             // check if a interceptor is defined on class level. if not, skip interceptor methods
             if (interceptMethods != null
-                    && interceptMethods.size() > 0
+                    && !interceptMethods.isEmpty()
                     && !containsInterceptorBinding(beanManager, targetClass.getDeclaredAnnotations()))
             {
                 // loop every method and check if a interceptor is defined on the method -> otherwise don't overwrite

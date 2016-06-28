@@ -125,7 +125,7 @@ public class SecuredAnnotationAuthorizer
 
                 violations = voter.checkPermission(voterContext);
 
-                if (violations != null && violations.size() > 0)
+                if (violations != null && !violations.isEmpty())
                 {
                     if (voterContext instanceof EditableAccessDecisionVoterContext)
                     {

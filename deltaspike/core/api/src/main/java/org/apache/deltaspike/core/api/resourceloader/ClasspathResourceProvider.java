@@ -120,7 +120,7 @@ public class ClasspathResourceProvider extends AbstractResourceProvider
 
     private String urlsToString(List<URL> urls, String name)
     {
-        if (urls.size() == 0)
+        if (urls.isEmpty())
         {
             return String.format("No resources found for '%s'",name);
         }
