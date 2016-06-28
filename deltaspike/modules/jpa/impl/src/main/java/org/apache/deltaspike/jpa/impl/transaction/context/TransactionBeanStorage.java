@@ -183,7 +183,7 @@ public class TransactionBeanStorage
 
         destroyBeans(currentTci.contextualInstances);
 
-        if (oldTci.size() > 0)
+        if (!oldTci.isEmpty())
         {
             currentTci = oldTci.pop();
             endTransactionScope();

@@ -132,7 +132,7 @@ public class QueryCriteria<C, R> implements Criteria<C, R>
     public R getAnyResult()
     {
         List<R> queryResult = getResultList();
-        return queryResult.size() > 0 ? queryResult.get(0) : null;
+        return !queryResult.isEmpty() ? queryResult.get(0) : null;
     }
 
     @Override
