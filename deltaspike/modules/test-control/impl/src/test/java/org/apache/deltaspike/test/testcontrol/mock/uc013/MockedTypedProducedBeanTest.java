@@ -27,7 +27,6 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
-import javax.enterprise.inject.Typed;
 import javax.inject.Inject;
 
 //Usually NOT needed! Currently only needed due to our arquillian-setup

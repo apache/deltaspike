@@ -23,10 +23,7 @@ import org.apache.deltaspike.security.api.authorization.AccessDecisionVoterConte
 import org.apache.deltaspike.security.api.authorization.SecurityViolation;
 
 import javax.enterprise.context.RequestScoped;
-import javax.interceptor.InvocationContext;
-import java.lang.reflect.Method;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
 @RequestScoped

@@ -18,8 +18,6 @@
  */
 package org.apache.deltaspike.test.core.api.config;
 
-import java.util.Map;
-
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.junit.Assert;
 import org.junit.Test;

@@ -20,10 +20,8 @@ package org.apache.deltaspike.test.jsf.impl.config.view.custom.uc007;
 
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
 import org.apache.deltaspike.core.spi.config.view.ViewConfigRoot;
-import org.apache.deltaspike.jsf.api.config.view.View;
 import org.apache.deltaspike.jsf.impl.config.view.DefaultViewConfigInheritanceStrategy;
 
-import static org.apache.deltaspike.jsf.api.config.view.View.ViewParameterMode.INCLUDE;
 
 //just for testing root-node replacement in combination with a view-config
 @ViewConfigRoot(viewConfigInheritanceStrategy = DefaultViewConfigInheritanceStrategy.class)
