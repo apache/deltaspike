@@ -36,7 +36,6 @@ import javax.inject.Inject;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Tests for {@link org.apache.deltaspike.core.api.message.MessageTemplate}

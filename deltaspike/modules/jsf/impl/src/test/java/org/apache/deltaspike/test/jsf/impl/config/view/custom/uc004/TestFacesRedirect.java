@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.test.jsf.impl.config.view.custom.uc004;
 
-import org.apache.deltaspike.core.api.config.view.metadata.ViewMetaData;
 import org.apache.deltaspike.jsf.api.config.view.View;
 
 import javax.enterprise.inject.Stereotype;

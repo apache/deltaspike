@@ -28,13 +28,10 @@ import static org.junit.Assert.fail;
 
 import java.util.List;
 
-import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
 import javax.persistence.FlushModeType;
 import javax.persistence.LockModeType;
 import javax.persistence.NonUniqueResultException;
-import javax.persistence.PersistenceContext;
 
 import org.apache.deltaspike.data.api.QueryResult;
 import org.apache.deltaspike.data.test.TransactionalTestCase;
