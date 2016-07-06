@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.proxy.impl.invocation;
 
+import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.proxy.spi.DeltaSpikeProxy;
 
 import java.lang.reflect.InvocationHandler;
@@ -32,11 +33,10 @@ import javax.enterprise.inject.Typed;
 @Typed
 public class DelegateManualInvocationHandler extends AbstractManualInvocationHandler
 {
-    private static final DelegateManualInvocationHandler INSTANCE = new DelegateManualInvocationHandler();
-    
     public static Object staticInvoke(Object proxy, Method method, Object[] parameters) throws Throwable
     {
-        return INSTANCE.invoke(proxy, method, parameters);
+        DelegateManualInvocationHandler handler = BeanProvider.getContextualReference(DelegateManualInvocationHandler.class);
+        return handler.invoke(proxy, method, parameters);
     }
     
     @Override

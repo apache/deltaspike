@@ -29,9 +29,6 @@ import org.apache.deltaspike.test.testcontrol.shared.ApplicationScopedBean;
 
 //Usually NOT needed! Currently only needed due to our arquillian-setup
 @Category(SeCategory.class)
-
-
-
 @RunWith(CdiTestSuiteRunner.class) //starts container once (for the whole suite)
 @Suite.SuiteClasses({
         RequestAndSessionScopePerTestMethodTest.class,
