@@ -21,11 +21,9 @@ package org.apache.deltaspike.proxy.impl.invocation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.List;
-import javax.enterprise.inject.Typed;
 import javax.enterprise.inject.spi.Interceptor;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 
-@Typed
 public abstract class AbstractManualInvocationHandler implements InvocationHandler
 {
     private volatile Boolean initialized;

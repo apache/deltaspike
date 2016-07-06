@@ -24,18 +24,19 @@ import org.apache.deltaspike.proxy.spi.DeltaSpikeProxy;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
-import javax.enterprise.inject.Typed;
+import javax.enterprise.context.ApplicationScoped;
 
 /**
  * {@link AbstractManualInvocationHandler} which delegates the method call to the defined {@link InvocationHandler}
  * in {@link DeltaSpikeProxy#getDelegateInvocationHandler()}.
  */
-@Typed
+@ApplicationScoped
 public class DelegateManualInvocationHandler extends AbstractManualInvocationHandler
 {
     public static Object staticInvoke(Object proxy, Method method, Object[] parameters) throws Throwable
     {
-        DelegateManualInvocationHandler handler = BeanProvider.getContextualReference(DelegateManualInvocationHandler.class);
+        DelegateManualInvocationHandler handler = BeanProvider
+              .getContextualReference(DelegateManualInvocationHandler.class);
         return handler.invoke(proxy, method, parameters);
     }
     

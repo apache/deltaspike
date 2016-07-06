@@ -24,17 +24,18 @@ import org.apache.deltaspike.proxy.api.DeltaSpikeProxyFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import javax.enterprise.inject.Typed;
+import javax.enterprise.context.ApplicationScoped;
 
 /**
  * {@link AbstractManualInvocationHandler} which just delegates to the original method after invoking interceptors.
  */
-@Typed
+@ApplicationScoped
 public class InterceptManualInvocationHandler extends AbstractManualInvocationHandler
 {
     public static Object staticInvoke(Object proxy, Method method, Object[] parameters) throws Throwable
     {
-        InterceptManualInvocationHandler handler = BeanProvider.getContextualReference(InterceptManualInvocationHandler.class);
+        InterceptManualInvocationHandler handler = BeanProvider
+              .getContextualReference(InterceptManualInvocationHandler.class);
         return handler.invoke(proxy, method, parameters);
     }
     
