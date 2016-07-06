@@ -41,6 +41,7 @@
         <wildfly.arquillian.version>1.0.2.Final</wildfly.arquillian.version>
         <glassfish3.version>3.1.2.2</glassfish3.version>
         <glassfish4.version>4.0</glassfish4.version>
+        <payara.version>4.1.1.162</payara.version>
         <wls.version>12.1</wls.version>
     </properties>
 
@@ -1722,6 +1723,121 @@
                                         <!-- Replace the default datasource with an in-memory one -->
                                         <replace file="${container.unpack.directory}/glassfish4/glassfish/domains/domain1/config/domain.xml" token="datasource-classname=&quot;org.apache.derby.jdbc.ClientDataSource&quot;" value="datasource-classname=&quot;org.apache.derby.jdbc.EmbeddedDataSource&quot;" />
                                         <replace file="${container.unpack.directory}/glassfish4/glassfish/domains/domain1/config/domain.xml" token="value=&quot;sun-appserv-samples&quot;" value="value=&quot;memory:deltaspike&quot;" />
+
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <!--
+             * Payara will be downloaded as maven dependency
+             *
+             * Start the build with:
+             * $> mvn clean install -Ppayara-build-managed-4
+             *
+             -->
+            <id>payara-build-managed-4</id>
+
+            <properties>
+                <cdicontainer.version>payara-${payara.version}</cdicontainer.version>
+            </properties>
+
+            <dependencies>
+                <dependency>
+                    <groupId>javax.enterprise</groupId>
+                    <artifactId>cdi-api</artifactId>
+                    <version>1.2</version>
+                    <scope>provided</scope>
+                </dependency>
+                <dependency>
+                    <groupId>javax.inject</groupId>
+                    <artifactId>javax.inject</artifactId>
+                    <version>1</version>
+                    <scope>provided</scope>
+                </dependency>
+                <!-- Also works fine with Payara -->
+                <dependency>
+                    <groupId>org.jboss.arquillian.container</groupId>
+                    <artifactId>arquillian-glassfish-managed-3.1</artifactId>
+                    <version>1.0.0.CR4</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <systemProperties>
+                                <arquillian.launch>glassfish-build-managed-4</arquillian.launch>
+                                <arquillian.glassfish4_home>${container.unpack.directory}/payara41</arquillian.glassfish4_home>
+                                <org.apache.deltaspike.ProjectStage>UnitTest</org.apache.deltaspike.ProjectStage>
+                                <cdicontainer.version>${cdicontainer.version}</cdicontainer.version>
+                            </systemProperties>
+                            <!-- we just use groups to mark that a test should be executed only
+                            with specific environments. even though a java-ee6 application server has to be able to run
+                            all tests in theory, we have to exclude some tests because there are e.g. packaging issues or
+                            there are currently issues with arquillian. if a test isn't restricted to an environment,
+                            no category is used for the test-class. -->
+                            <excludedGroups>
+                                org.apache.deltaspike.test.category.SeCategory
+                            </excludedGroups>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>unpack-glassfish4</id>
+                                <phase>generate-test-resources</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>fish.payara.blue.distributions</groupId>
+                                            <artifactId>payara</artifactId>
+                                            <version>${payara.version}</version>
+                                            <outputDirectory>${container.unpack.directory}</outputDirectory>
+                                            <type>zip</type>
+                                            <overWrite>false</overWrite>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>prepare-glassfish4</id>
+                                <phase>process-test-resources</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+
+                                        <!-- Change all TCP ports from "xxxx" to "2xxxx" -->
+                                        <replaceregexp file="${container.unpack.directory}/payara41/glassfish/domains/domain1/config/domain.xml" match="port=&quot;(\d{4})&quot;" replace="port=&quot;2\1&quot;" flags="g" />
+                                        <replace file="${container.unpack.directory}/payara41/glassfish/domains/domain1/config/domain.xml" token="value=&quot;7676&quot;" value="value=&quot;27676&quot;" />
+
+                                        <!-- Replace the default datasource with an in-memory one -->
+                                        <replace file="${container.unpack.directory}/payara41/glassfish/domains/domain1/config/domain.xml" token="datasource-classname=&quot;org.apache.derby.jdbc.ClientDataSource&quot;" value="datasource-classname=&quot;org.apache.derby.jdbc.EmbeddedDataSource&quot;" />
+                                        <replace file="${container.unpack.directory}/payara41/glassfish/domains/domain1/config/domain.xml" token="value=&quot;sun-appserv-samples&quot;" value="value=&quot;memory:deltaspike&quot;" />
 
                                     </target>
                                 </configuration>
