@@ -254,5 +254,14 @@
                 <module>impl-weld</module>
             </modules>
         </profile>
+
+        <profile>
+            <id>payara-build-managed-4</id>
+
+            <modules>
+                <module>api</module>
+                <module>impl-weld</module>
+            </modules>
+        </profile>
     </profiles>
 </project>
