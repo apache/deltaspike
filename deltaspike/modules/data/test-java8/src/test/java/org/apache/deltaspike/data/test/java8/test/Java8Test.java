@@ -43,6 +43,8 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
+import java.util.Collections;
+import java.util.List;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static org.apache.deltaspike.data.test.java8.util.TestDeployments.initDeployment;
@@ -156,7 +158,9 @@ public class Java8Test
         entityManager.persist(new Simple("b"));
 
         Stream<String> names = simpleRepository2.findSimpleNames();
+        final List<String> actualSorted = names.collect(toList());
+        Collections.sort(actualSorted);
 
-        Assert.assertEquals(asList("a","b"), names.collect(toList()));
+        Assert.assertEquals(asList("a","b"), actualSorted);
     }
 }
