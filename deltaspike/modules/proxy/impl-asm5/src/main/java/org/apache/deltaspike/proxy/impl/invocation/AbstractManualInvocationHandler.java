@@ -18,22 +18,20 @@
  */
 package org.apache.deltaspike.proxy.impl.invocation;
 
+import javax.enterprise.inject.spi.Interceptor;
+import javax.inject.Inject;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.List;
-import javax.enterprise.inject.spi.Interceptor;
-import org.apache.deltaspike.core.api.provider.BeanProvider;
 
 public abstract class AbstractManualInvocationHandler implements InvocationHandler
 {
-    private volatile Boolean initialized;
+    @Inject
     private InterceptorLookup interceptorLookup;
-    
+
     @Override
     public Object invoke(Object proxy, Method method, Object[] parameters) throws Throwable
     {
-        lazyInit();
-
         // check if interceptors are defined, otherwise just call the original logik
         List<Interceptor<?>> interceptors = interceptorLookup.lookup(proxy, method);
         if (interceptors != null && !interceptors.isEmpty())
@@ -41,7 +39,7 @@ public abstract class AbstractManualInvocationHandler implements InvocationHandl
             try
             {
                 ManualInvocationContext invocationContext =
-                        new ManualInvocationContext(this, interceptors, proxy, method, parameters, null);
+                      new ManualInvocationContext(this, interceptors, proxy, method, parameters, null);
 
                 Object returnValue = invocationContext.proceed();
 
@@ -63,33 +61,12 @@ public abstract class AbstractManualInvocationHandler implements InvocationHandl
 
     /**
      * Calls the original logic after invoking the interceptor chain.
-     * 
+     *
      * @param proxy The current proxy instance.
      * @param method The current invoked method.
      * @param parameters The method parameter.
      * @return The original value from the original method.
-     * @throws Throwable 
+     * @throws Throwable
      */
     protected abstract Object proceedOriginal(Object proxy, Method method, Object[] parameters) throws Throwable;
-
-    
-    
-    private void lazyInit()
-    {
-        if (this.initialized == null)
-        {
-            init();
-        }
-    }
-
-    private synchronized void init()
-    {
-        // switch into paranoia mode
-        if (this.initialized == null)
-        {
-            this.initialized = true;
-            
-            this.interceptorLookup = BeanProvider.getContextualReference(InterceptorLookup.class);
-        }
-    }
 }
