@@ -36,12 +36,14 @@ import org.jboss.arquillian.junit.InSequence;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
 @Category(WebEE7ProfileCategory.class)
 @RunWith(Arquillian.class)
+@Ignore("Due to injection point issue in Wildfly 10 - DELTASPIKE-1060")
 public class JtaTransactionalRepositoryInterfaceTest
 {
 

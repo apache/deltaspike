@@ -62,6 +62,12 @@
     <profiles>
         <profile>
             <id>ee7-tests</id>
+            <activation>
+                <property>
+                    <name>wildfly.version</name>
+                    <value>10.0.0.Final</value>
+                </property>
+            </activation>
             <modules>
                 <module>test-ee7</module>
             </modules>
