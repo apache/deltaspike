@@ -70,15 +70,15 @@ public class ConfigResolverTest
         ProjectStageProducer.setProjectStage(ProjectStage.UnitTest);
         Assert.assertNull(ConfigResolver.getProjectStageAwarePropertyValue("notexisting", null));
 
-        Assert.assertEquals("testvalue", ConfigResolver.getPropertyValue("testkey", null));
+        Assert.assertEquals("testvalue", ConfigResolver.getPropertyValue("testkey"));
         Assert.assertEquals("unittestvalue", ConfigResolver.getProjectStageAwarePropertyValue("testkey"));
         Assert.assertEquals("unittestvalue", ConfigResolver.getProjectStageAwarePropertyValue("testkey", null));
 
-        Assert.assertEquals("testvalue", ConfigResolver.getPropertyValue("testkey2", null));
+        Assert.assertEquals("testvalue", ConfigResolver.getPropertyValue("testkey2"));
         Assert.assertEquals("testvalue", ConfigResolver.getProjectStageAwarePropertyValue("testkey2"));
         Assert.assertEquals("testvalue", ConfigResolver.getProjectStageAwarePropertyValue("testkey2", null));
 
-        Assert.assertEquals("testvalue", ConfigResolver.getPropertyValue("testkey3", null));
+        Assert.assertEquals("testvalue", ConfigResolver.getPropertyValue("testkey3"));
         Assert.assertEquals("", ConfigResolver.getProjectStageAwarePropertyValue("testkey3"));
         Assert.assertEquals(DEFAULT_VALUE, ConfigResolver.getProjectStageAwarePropertyValue("testkey3", DEFAULT_VALUE));
 
@@ -96,15 +96,15 @@ public class ConfigResolverTest
 
         Assert.assertNull(ConfigResolver.getPropertyAwarePropertyValue("notexisting", null));
 
-        Assert.assertEquals("testvalue", ConfigResolver.getPropertyValue("testkey", null));
+        Assert.assertEquals("testvalue", ConfigResolver.getPropertyValue("testkey"));
         Assert.assertEquals("unittestvalue", ConfigResolver.getPropertyAwarePropertyValue("testkey", "dbvendor"));
         Assert.assertEquals("unittestvalue", ConfigResolver.getPropertyAwarePropertyValue("testkey", "dbvendor", null));
 
-        Assert.assertEquals("testvalue", ConfigResolver.getPropertyValue("testkey2", null));
+        Assert.assertEquals("testvalue", ConfigResolver.getPropertyValue("testkey2"));
         Assert.assertEquals("testvalue", ConfigResolver.getPropertyAwarePropertyValue("testkey2", "dbvendor"));
         Assert.assertEquals("testvalue", ConfigResolver.getPropertyAwarePropertyValue("testkey2", "dbvendor", null));
 
-        Assert.assertEquals("testvalue", ConfigResolver.getPropertyValue("testkey3", null));
+        Assert.assertEquals("testvalue", ConfigResolver.getPropertyValue("testkey3"));
         Assert.assertEquals("", ConfigResolver.getPropertyAwarePropertyValue("testkey3", "dbvendor"));
         Assert.assertEquals(DEFAULT_VALUE, ConfigResolver.getPropertyAwarePropertyValue("testkey3", "dbvendor", DEFAULT_VALUE));
 
@@ -194,6 +194,19 @@ public class ConfigResolverTest
 
         setTestConfigSourceValue(key, null);
         Assert.assertNull(resolver.getValue());
+    }
+    
+    @Test
+    public void testProjectStageAwarePropertyValueReference() {
+        final String expected = 
+                "projectStageAware-exampleEntry-1-is-tomato-UnitTest";
+        
+        final String projectStageAwareExampleEntry1 = 
+                ConfigResolver.getProjectStageAwarePropertyValue(
+                "deltaspike.test.exampleEntry-2", 
+                "");
+        
+        Assert.assertEquals(expected, projectStageAwareExampleEntry1);
     }
 
     private void setTestConfigSourceValue(String key, String value)

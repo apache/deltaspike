@@ -91,6 +91,12 @@ public class TestConfigSource implements ConfigSource
 
         props.put("deltaspike.test.projectstagefallback.UnitTest", "");
         props.put("deltaspike.test.projectstagefallback", "Value without ProjectStage");
+        
+        // ProjectStage aware property value with resolved reference
+        props.put("deltaspike.test.exampleEntry-1", "tomato");
+        props.put("deltaspike.test.exampleEntry-1.UnitTest", "tomato-UnitTest");
+        props.put("deltaspike.test.exampleEntry-2", "default-exampleEntry-1-is-${deltaspike.test.exampleEntry-1}");
+        props.put("deltaspike.test.exampleEntry-2.UnitTest", "projectStageAware-exampleEntry-1-is-${deltaspike.test.exampleEntry-1}");
     }
 
     @Override

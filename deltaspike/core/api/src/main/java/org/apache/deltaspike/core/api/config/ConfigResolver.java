@@ -174,7 +174,10 @@ public final class ConfigResolver
 
     public static String getPropertyValue(String key, String defaultValue, boolean evaluateVariables)
     {
-        String value = getPropertyValue(key, evaluateVariables);
+        String value = getPropertyValue(
+                key, 
+                new ConfigResolverContext()
+                        .setEvaluateVariables(evaluateVariables));
 
         return fallbackToDefaultIfEmpty(key, value, defaultValue);
     }
@@ -189,7 +192,9 @@ public final class ConfigResolver
      */
     public static String getPropertyValue(String key)
     {
-        return getPropertyValue(key, true);
+        return getPropertyValue(
+                key, 
+                new ConfigResolverContext().setEvaluateVariables(true));
     }
 
     /**
@@ -203,51 +208,10 @@ public final class ConfigResolver
      */
     public static String getPropertyValue(String key, boolean evaluateVariables)
     {
-        ConfigSource[] appConfigSources = getConfigSources();
-
-        String value;
-        for (ConfigSource configSource : appConfigSources)
-        {
-            value = configSource.getPropertyValue(key);
-
-            if (value != null)
-            {
-                LOG.log(Level.FINE, "found value {0} for key {1} in ConfigSource {2}.",
-                        new Object[]{filterConfigValueForLog(key, value), key, configSource.getConfigName()});
-
-                if (evaluateVariables)
-                {
-                    // recursively resolve any ${varName} in the value
-                    int startVar = 0;
-                    while ((startVar = value.indexOf("${", startVar)) >= 0)
-                    {
-                        int endVar = value.indexOf("}", startVar);
-                        if (endVar <= 0)
-                        {
-                            break;
-                        }
-                        String varName = value.substring(startVar + 2, endVar);
-                        if (varName.isEmpty())
-                        {
-                            break;
-                        }
-                        String variableValue = getPropertyValue(varName, true);
-                        if (variableValue != null)
-                        {
-                            value = value.replace("${" + varName + "}", variableValue);
-                        }
-                        startVar++;
-                    }
-                }
-
-                return filterConfigValue(key, value);
-            }
-
-            LOG.log(Level.FINER, "NO value found for key {0} in ConfigSource {1}.",
-                    new Object[]{key, configSource.getConfigName()});
-        }
-
-        return null;
+        return getPropertyValue(
+                key, 
+                new ConfigResolverContext()
+                        .setEvaluateVariables(evaluateVariables));        
     }
 
     /**
@@ -271,12 +235,18 @@ public final class ConfigResolver
      */
     public static String getProjectStageAwarePropertyValue(String key)
     {
+        ConfigResolverContext configResolverContext = 
+                new ConfigResolverContext()
+                    .setProjectStageAware(true)
+                    .setEvaluateVariables(true);
+        
         ProjectStage ps = getProjectStage();
 
-        String value = getPropertyValue(key + '.' + ps);
+        String value = getPropertyValue(key + '.' + ps, configResolverContext);
         if (value == null)
         {
-            value = getPropertyValue(key);
+            configResolverContext.setProjectStageAware(false);            
+            value = getPropertyValue(key, configResolverContext);
         }
 
         return value;
@@ -376,6 +346,73 @@ public final class ConfigResolver
         String value = getPropertyAwarePropertyValue(key, property);
 
         return fallbackToDefaultIfEmpty(key, value, defaultValue);
+    }
+    
+    private static String getPropertyValue(String key, ConfigResolverContext configResolverContext)
+    {
+        ConfigSource[] appConfigSources = getConfigSources();
+
+        String value;
+        for (ConfigSource configSource : appConfigSources)
+        {
+            value = configSource.getPropertyValue(key);
+
+            if (value != null)
+            {
+                LOG.log(Level.FINE, "found value {0} for key {1} in ConfigSource {2}.",
+                        new Object[]{filterConfigValueForLog(key, value), key, configSource.getConfigName()});
+
+                if (configResolverContext.isEvaluateVariables())
+                {
+                    value = resolveVariables(value, configResolverContext);
+                }
+
+                return filterConfigValue(key, value);
+            }
+
+            LOG.log(Level.FINER, "NO value found for key {0} in ConfigSource {1}.",
+                    new Object[]{key, configSource.getConfigName()});
+        }
+
+        return null;        
+    }
+
+    /**
+     * recursively resolve any ${varName} in the value
+     */
+    private static String resolveVariables(String value, ConfigResolverContext configResolverContext)
+    {
+        int startVar = 0;
+        while ((startVar = value.indexOf("${", startVar)) >= 0)
+        {
+            int endVar = value.indexOf("}", startVar);
+            if (endVar <= 0)
+            {
+                break;
+            }
+            String varName = value.substring(startVar + 2, endVar);
+            if (varName.isEmpty())
+            {
+                break;
+            }
+            
+            String variableValue;
+            if (configResolverContext.isProjectStageAware())
+            {
+                variableValue = getProjectStageAwarePropertyValue(varName);
+            }
+            else
+            {
+                variableValue = getPropertyValue(varName, true);
+            }
+            
+            if (variableValue != null)
+            {
+                value = value.replace("${" + varName + "}", variableValue);
+            }
+            startVar++;
+        }
+        return value;
     }
 
     /**
