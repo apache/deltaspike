@@ -1,0 +1,11 @@
+Release Notes - DeltaSpike - Version 1.7.1
+
+Bug
+    [DELTASPIKE-1167] - deltaspike configuration: Variable Replacement in Configured Values is NOT (!) stage aware
+    [DELTASPIKE-1173] - DefaultEntityManagerHolder is not registered in uber jars when discovery is annotated
+    [DELTASPIKE-1175] - Weld(1|2|3) profiles do not activate Weld profile in cdictrl
+    [DELTASPIKE-1179] - [Deltaspike Data] ContextNotActiveException: WELD-001303: No active contexts for scope type javax.enterprise.context.ApplicationScoped
+    [DELTASPIKE-1183] - NPE in proxy handler with concurrent requests
+
+Improvement
+    [DELTASPIKE-1180] - Remove unused imports
