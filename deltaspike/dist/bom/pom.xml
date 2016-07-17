@@ -28,7 +28,7 @@
 
     <groupId>org.apache.deltaspike.distribution</groupId>
     <artifactId>distributions-bom</artifactId>
-    <version>1.7.1-SNAPSHOT</version>
+    <version>1.7.1</version>
     <packaging>pom</packaging>
 
     <name>Apache DeltaSpike Distribution Bill of Materials</name>
@@ -238,4 +238,8 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+  <scm>
+    <tag>deltaspike-1.7.1</tag>
+  </scm>
 </project>
