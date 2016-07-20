@@ -18,14 +18,19 @@
  */
 package org.apache.deltaspike.core.impl.jmx;
 
-import org.apache.deltaspike.core.api.config.ConfigResolver;
-import org.apache.deltaspike.core.api.jmx.JmxBroadcaster;
-import org.apache.deltaspike.core.api.jmx.JmxManaged;
-import org.apache.deltaspike.core.api.jmx.MBean;
-import org.apache.deltaspike.core.api.jmx.NotificationInfo;
-import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
-import org.apache.deltaspike.core.api.provider.BeanProvider;
-import org.apache.deltaspike.core.util.ExceptionUtils;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
@@ -41,22 +46,21 @@ import javax.management.MBeanException;
 import javax.management.MBeanInfo;
 import javax.management.MBeanNotificationInfo;
 import javax.management.MBeanOperationInfo;
+import javax.management.MBeanParameterInfo;
 import javax.management.Notification;
 import javax.management.NotificationBroadcasterSupport;
 import javax.management.ReflectionException;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.apache.deltaspike.core.api.config.ConfigResolver;
+import org.apache.deltaspike.core.api.jmx.JmxBroadcaster;
+import org.apache.deltaspike.core.api.jmx.JmxManaged;
+import org.apache.deltaspike.core.api.jmx.JmxParameter;
+import org.apache.deltaspike.core.api.jmx.MBean;
+import org.apache.deltaspike.core.api.jmx.NotificationInfo;
+import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
+import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.core.util.ExceptionUtils;
+import org.apache.deltaspike.core.util.ParameterUtil;
 
 /**
  * This class is the MBean implementation of a CDI bean.
@@ -134,8 +138,46 @@ public class DynamicMBeanWrapper extends NotificationBroadcasterSupport implemen
             operations.put(method.getName(), method);
 
             String operationDescr = getDescription(annotation.description(), method.getName());
+            
+            Annotation[][] parametersAnnotations = method.getParameterAnnotations();
+            Class<?>[] parameterTypes = method.getParameterTypes();
+            MBeanParameterInfo[] parameterInfos = new MBeanParameterInfo[parameterTypes.length];
+            for (int i = 0; i < parametersAnnotations.length; i++)
+            {
+                String parameterDescription = null;
+                String parameterName = "p" + (i + 1);
+                String java8ParameterName = ParameterUtil.getName(method, i);
+                if (java8ParameterName != null)
+                {
+                    parameterName = java8ParameterName;
+                }
+                for (int j = 0; j < parametersAnnotations[i].length; j++)
+                {
+                    if (parametersAnnotations[i][j] instanceof JmxParameter)
+                    {
+                        JmxParameter jmxParameter = (JmxParameter) parametersAnnotations[i][j];
+                        if (!"".equals(jmxParameter.name()))
+                        {
+                            parameterName = jmxParameter.name();
+                        }
+                        if (!"".equals(jmxParameter.description()))
+                        {
+                            parameterDescription = jmxParameter.description();
+                        }
+                    }
+                }
+                parameterInfos[i] = new MBeanParameterInfo(parameterName,
+                    parameterTypes[i].getName(),
+                    parameterDescription
+                );
+            }
 
-            operationInfos.add(new MBeanOperationInfo(operationDescr, method));
+            operationInfos.add(new MBeanOperationInfo(method.getName(),
+                operationDescr,
+                parameterInfos,
+                method.getReturnType().getName(),
+                MBeanOperationInfo.UNKNOWN
+            ));
         }
 
         Class<?> clazz = annotatedMBean;

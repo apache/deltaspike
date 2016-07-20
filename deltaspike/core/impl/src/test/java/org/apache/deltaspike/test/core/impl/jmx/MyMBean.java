@@ -20,6 +20,7 @@ package org.apache.deltaspike.test.core.impl.jmx;
 
 import org.apache.deltaspike.core.api.jmx.JmxBroadcaster;
 import org.apache.deltaspike.core.api.jmx.JmxManaged;
+import org.apache.deltaspike.core.api.jmx.JmxParameter;
 import org.apache.deltaspike.core.api.jmx.MBean;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -52,7 +53,7 @@ public class MyMBean
     }
 
     @JmxManaged(description = "multiply counter")
-    public int multiply(final int n)
+    public int multiply(@JmxParameter(name = "multiplier", description = "the multiplier") final int n)
     {
         return counter * n;
     }

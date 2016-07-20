@@ -63,5 +63,9 @@ public abstract class SimpleRegistrationTest {
         myMBean.broadcast();
         assertEquals(1, notifications.size());
         assertEquals(10L, notifications.iterator().next().getSequenceNumber());
+        
+        MBeanParameterInfo parameterInfo = server.getMBeanInfo(on).getOperations()[0].getSignature()[0];
+        assertEquals("multiplier", parameterInfo.getName());
+        assertEquals("the multiplier", parameterInfo.getDescription());
     }
 }
