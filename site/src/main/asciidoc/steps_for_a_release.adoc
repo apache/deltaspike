@@ -208,7 +208,19 @@ deploy the site
 
 The Apache DeltaSpike team is pleased to announce the 6th release of DeltaSpike.
 
-Apache DeltaSpike is not a CDI-container, but a portable CDI extension.
+Apache DeltaSpike is  a suite of portable CDI (Contexts & Dependency Injection) extensions intended to make application development easier when working with CDI and Java EE.  Some of its key features include:
+
+- A core runtime that supports component configuration, type safe messaging and internationalization, and exception handling.
+- A suite of utilities to make programmatic bean lookup easier.
+- A plugin for Java SE to bootstrap both JBoss Weld and Apache OpenWebBeans outside of a container.
+- JSF integration, including backporting of JSF 2.2 features for Java EE 6.
+- JPA integration and transaction support.
+- A Data module, to create an easy to use repository pattern on top of JPA.
+- Quartz integration
+
+Testing support is also provided, to allow you to do low level unit testing of your CDI enabled projects.
+
+More can be found on our website - https://deltaspike.apache.org
 
 Documentation:
 http://deltaspike.apache.org/documentation/
