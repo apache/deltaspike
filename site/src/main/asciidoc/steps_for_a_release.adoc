@@ -223,13 +223,13 @@ Testing support is also provided, to allow you to do low level unit testing of y
 More can be found on our website - https://deltaspike.apache.org
 
 Documentation:
-http://deltaspike.apache.org/documentation/
+https://deltaspike.apache.org/documentation/
 
 Download:
-http://deltaspike.apache.org/download.html
+https://deltaspike.apache.org/download.html
 
 Release Notes:
-http://s.apache.org/DeltaSpike_[version]
+https://s.apache.org/DeltaSpike_[version]
 
 Enjoy!
 
