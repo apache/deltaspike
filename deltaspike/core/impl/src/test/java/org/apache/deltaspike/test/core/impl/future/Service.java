@@ -21,6 +21,8 @@ package org.apache.deltaspike.test.core.impl.future;
 import org.apache.deltaspike.core.api.future.Futureable;
 
 import javax.enterprise.context.ApplicationScoped;
+
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -29,6 +31,21 @@ import java.util.concurrent.TimeoutException;
 @ApplicationScoped
 public class Service
 {
+
+    @Futureable
+    public void thatSLong(final long sleep, CountDownLatch latch) {
+    	try
+        {
+            Thread.sleep(sleep);
+            latch.countDown();
+        }
+        catch (final InterruptedException e)
+        {
+            Thread.interrupted();
+            throw new IllegalStateException(e);
+        }
+    }
+
     @Futureable // or CompletableFuture<String>
     public Future<String> thatSLong(final long sleep)
     {
