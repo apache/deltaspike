@@ -30,8 +30,10 @@ import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -61,6 +63,24 @@ public class FutureableTest {
 
     @Inject
     private Service service;
+    
+    @Test
+    public void voidTest()
+    {
+    	CountDownLatch latch = new CountDownLatch(1);
+    	service.thatSLong(1000, latch);
+    	try
+    	{
+    		if (!latch.await(2000, TimeUnit.MILLISECONDS)) {
+    			fail("Asynchronous call should have terminated");
+    		}
+    	}
+    	catch (final InterruptedException e)
+        {
+            Thread.interrupted();
+            fail();
+        }
+    }
 
     @Test
     public void future()

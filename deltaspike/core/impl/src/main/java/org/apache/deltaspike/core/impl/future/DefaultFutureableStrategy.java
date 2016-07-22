@@ -138,9 +138,10 @@ public class DefaultFutureableStrategy implements FutureableStrategy
         // validate usage
         final Class<?> returnType = ic.getMethod().getReturnType();
         if (!Future.class.isAssignableFrom(returnType) &&
+                !void.class.isAssignableFrom(returnType) &&
                 (COMPLETION_STAGE == null || !COMPLETION_STAGE.isAssignableFrom(returnType)))
         {
-            throw new IllegalArgumentException("Return type should be a CompletableStage or Future");
+            throw new IllegalArgumentException("Return type should be a CompletableStage, Future or Void");
         }
 
         if (configByMethod == null)
@@ -202,6 +203,13 @@ public class DefaultFutureableStrategy implements FutureableStrategy
         };
 
         final ExecutorService pool = getOrCreatePool(ic);
+        
+        if (void.class.isAssignableFrom(returnType))
+        {
+            pool.submit(invocation);
+            return null;
+        }
+        
         if (COMPLETABLE_FUTURE == null)  // not on java 8 can only be a future
         {
             return pool.submit(invocation);
