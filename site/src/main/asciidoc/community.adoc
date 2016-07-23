@@ -44,8 +44,8 @@ publish it.
 Before you get a committer you have to contribute to our effort. E.g.
 you can help users, participate in discussions on the dev list, submit
 patches,... . Therefore, it's essential to file a/n
-http://www.apache.org/licenses/icla.txt[(I)CLA] or
-http://www.apache.org/licenses/cla-corporate.txt[CLA] and send it to
+http://www.apache.org/licenses/icla.pdf[ICLA] or
+http://www.apache.org/licenses/cla-corporate.txt[CCLA] and send it to
 secretary at apache dot org (or fax it) as early as possible.
 
 If you would like to submit a patch through Jira, you can have a look at
@@ -88,21 +88,21 @@ Further details are available at http://www.apache.org/dev/.
 |mailto:users@deltaspike.apache.org[User List]
 |mailto:users-subscribe@deltaspike.apache.org[Subscribe]
 |mailto:users-unsubscribe@deltaspike.apache.org[Unsubscribe]
-|http://mail-archives.apache.org/mod_mbox/deltaspike-users/[Archive]
+|link:++https://lists.apache.org/list.html?users@deltaspike.apache.org++[Archive]
 |
 |
 
 |mailto:dev@deltaspike.apache.org[Developer List]
 |mailto:dev-subscribe@deltaspike.apache.org[Subscribe]
 |mailto:dev-unsubscribe@deltaspike.apache.org[Unsubscribe]
-|http://mail-archives.apache.org/mod_mbox/deltaspike-dev/[Archive]
+|link:++https://lists.apache.org/list.html?dev@deltaspike.apache.org++[Archive]
 |
 |
 
 |mailto:commits@deltaspike.apache.org[Committer List]
 |mailto:commits-subscribe@deltaspike.apache.org[Subscribe]
 |mailto:commits-unsubscribe@deltaspike.apache.org[Unsubscribe]
-|http://mail-archives.apache.org/mod_mbox/deltaspike-commits/[Archive]
+|link:++https://lists.apache.org/list.html?commits@deltaspike.apache.org++[Archive]
 |
 |
 |
@@ -140,4 +140,4 @@ $ irssi
 -------------------------------------
 
 If you are new to IRC you can use the pre-configures web-client you can
-find http://people.apache.org/~gpetracek/deltaspike/freenode.html[here].
+find https://kiwiirc.com/client/irc.freenode.net/#deltaspike[here].

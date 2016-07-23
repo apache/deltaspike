@@ -82,12 +82,72 @@ Finally you can push your changes to the ASF git repo
 $ git push
 -----------
 
-
 == Contribution workflow
 
+Please understand that our contribution workflow is designed for outside contributions.  They should represent your
+changes and your changes alone.  Any other contributors should raise their own pull request or submit their own patch.
+Committers should continue to follow the discussion flow for complex changes, and merge their changes when ready.
+
+=== Raising Pull Requests
+
+You should use the following workflow if you plan to contribute features or bug fixes to Apache DeltaSpike via GitHub
+
+First, fork our repository https://github.com/apache/deltaspike[on github]
+
+Second, clone it locally and add our upstream as a remote
+
+----------------------
+$ git clone https://github.com/<YOUR USERNAME>/deltaspike
+$ git remote add asf https://git-wip-us.apache.org/repos/asf/deltaspike.git
+----------------------
+
+Third, find a JIRA ticket to work on.  When you do, use that as your branch name
+
+---------------------------------
+$ git checkout -b DELTASPIKE-XXX
+---------------------------------
+
+Now you can start to work on your patch. When you are finished, commit
+your changes. But don't forget to **add the name of the JIRA issue to
+the commit message**.
+
+-------------------------------------------------
+$ git commit -am "DELTASPIKE-XXX: Fixed some issue"
+-------------------------------------------------
+
+Once you're done with your changes, make sure you're up to date and rebase from master
+
+-------------------------------------------------
+$ git pull asf master --rebase
+-------------------------------------------------
+
+Next, push your branch to GitHub
+
+-------------------------------------------------
+$ git push origin DELTASPIKE-XXX
+-------------------------------------------------
+
+Finally, raise your PR.  If you go to your GitHub fork of DeltaSpike, you should see an option to create a PR
+
+=== Merging Pull Requests
+
+Whenever a PR gets created for DeltaSpike, an email is sent to the dev@deltaspike.  It will include the subject
+
+-------------------------------------------------
+[GitHub] deltaspike pull request #00: DELTASPIKE-XXX some changes
+-------------------------------------------------
+
+Which will contain the instructions
+
+-------------------------------------------------
+You can merge this pull request into a Git repository by running:
+
+$ git pull https://github.com/<GITHUB USERNAME>/deltaspike DELTASPIKE-XXX
+-------------------------------------------------
+
+As long as you don't rebase, pushing the result of this pull will merge the change into our git repository and close the PR.  If there are any issues with the patch, you can monitor the build status from the PR, where we run some smoke tests against the commit to ensure its working.  Please make the requestor aware of any issues identified (e.g. code quality, formatting, missing tests, etc).
 
 === Creating patches
-
 
 You should use the following workflow, if you plan to contribute patches or new features to DeltaSpike.
 
@@ -109,7 +169,7 @@ your changes. But don't forget to **add the name of the JIRA issue to
 the commit message**.
 
 -------------------------------------------------
-$ git add -am "DELTASPIKE-XXX: Fixed some issue"
+$ git commit -am "DELTASPIKE-XXX: Fixed some issue"
 -------------------------------------------------
 
 For small patches we recommend to do a single commit containing your
@@ -172,8 +232,8 @@ $ git branch -d DELTASPIKE-XXX
 
 
 All discussions which lead to a decision take place on the mailing list.
-Sometimes it's required to show-case an idea esp. if the solution is
-more than few lines. As shown above it makes sense to use local branches
+Sometimes it's required to show-case an idea especially if the solution is
+more than a few lines. As shown above it makes sense to use local branches
 for developing new parts. Git allows to push such local branches to a
 public repository. So it's easier to share it with the community for
 discussing it. The following listings show an example in combination
