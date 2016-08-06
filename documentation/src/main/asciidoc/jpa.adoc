@@ -564,9 +564,11 @@ than the production settings, you can use
 `org.apache.deltaspike.jpa.impl.transaction.EnvironmentAwareTransactionStrategy`
 instead.
 
-NOTE: In case of some versions of Weld (or OpenWebBeans in BDA mode), you have
+NOTE: In case of some versions of Weld - including several versions of JBoss EAP/Wildfly and Websphere Liberty Profile -
+or OpenWebBeans in BDA mode - which is not the default one, you have
 to configure it as a <<spi.adoc#GlobalAlternative,global alternative>> instead of an `alternative` in
 `beans.xml`. That means you have to add, for example,
 `globalAlternatives.org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy 
-=org.apache.deltaspike.jpa.impl.transaction.BeanManagedUserTransactionStrategy`
+=org.apache.deltaspike.jpa.impl.transaction.BeanManagedUserTransactionStrategy` or 
+`globalAlternatives.org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy = org.apache.deltaspike.jpa.impl.transaction.ContainerManagedTransactionStrategy` 
 to `/META-INF/apache-deltaspike.properties`.
