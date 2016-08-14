@@ -34,7 +34,8 @@ import javax.persistence.criteria.CriteriaQuery;
  */
 @Repository
 public abstract class AbstractEntityRepository<E, PK extends Serializable>
-        implements EntityRepository<E, PK>
+        implements EntityRepository<E, PK>, EntityPersistenceRepository<E, PK>,
+        EntityCountRepository<E>
 {
 
     /**
