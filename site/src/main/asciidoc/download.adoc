@@ -36,7 +36,7 @@ v{latestStable}
 == Maven Dependencies
 
 
-Details are available /documentation/configure.html#MavenProjects[here].
+Details are available https://deltaspike.apache.org/documentation/configure.html#MavenProjects[here].
 
 
 == Previous Releases
