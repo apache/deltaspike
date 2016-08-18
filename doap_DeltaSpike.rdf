@@ -28,12 +28,22 @@
     <homepage rdf:resource="http://deltaspike.apache.org" />
     <asfext:pmc rdf:resource="http://deltaspike.apache.org" />
     <shortdesc>DeltaSpike is a collection of portable Extensions for CDI Containers</shortdesc>
-    <description>Apache DeltaSpike is a portable JSR-299 CDI (Contexts and Dependency Injection for Java) Extension library which contains lots of useful tools and helpers which are missing in the CDI core spec.
+    <description>Apache DeltaSpike is  a suite of portable CDI (Contexts & Dependency
+Injection) extensions intended to make application development easier when
+working with CDI and Java EE.  Some of its key features include:
 
-DeltaSpike is not a CDI-container itself, but a portable
-Extension library which can run on all CDI-containers!
+- A core runtime that supports component configuration, type safe messaging
+and internationalization, and exception handling.
+- A suite of utilities to make programmatic bean lookup easier.
+- A plugin for Java SE to bootstrap both JBoss Weld and Apache OpenWebBeans
+outside of a container.
+- JSF integration, including backporting of JSF 2.2 features for Java EE 6.
+- JPA integration and transaction support.
+- A Data module, to create an easy to use repository pattern on top of JPA.
+- Quartz integration
 
-DeltaSpike is tested and runs on many Java EE Servers like Apache TomEE, Red Hat JBoss Application Server, JBoss Wildfly, Oracle WebLogic, Oracle Glassfish, IBM WebSphere, and also on simple Servlet containers like Apache Tomcat or Jetty in combination with either JBoss Weld or Apache OpenWebBeans.</description>
+Testing support is also provided, to allow you to do low level unit testing
+of your CDI enabled projects.</description>
     <bug-database rdf:resource="https://issues.apache.org/jira/browse/DELTASPIKE" />
     <mailing-list rdf:resource="http://deltaspike.apache.org/community.html#mailing-lists" />
     <programming-language>Java</programming-language>
