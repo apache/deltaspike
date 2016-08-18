@@ -427,7 +427,7 @@ constructor) and specify the target-type via `@TypedMock`.
 
 === JSF (via MyFaces-Test)
 
-add on of
+add one of
 
 * org.apache.deltaspike.testcontrol.impl.jsf.MockedJsf2TestContainer
 * org.apache.deltaspike.testcontrol.impl.jsf.MockedJsfTestContainerAdapter
@@ -436,7 +436,7 @@ add on of
 
 as content to
 
-/META-INF/services/org.apache.deltaspike.testcontrol.spi.ExternalContainer
+`/META-INF/services/org.apache.deltaspike.testcontrol.spi.ExternalContainer`
 
 (in your config-folder for tests, e.g. test/resources)
 
@@ -570,13 +570,17 @@ for resources to point to where the compiled code lives.  This is an example of 
 ----------------------------------------------------------------------------------------------------------
 sourceSets {
     main {
-        output.resourcesDir = 'build/classes/main'
-        output.classesDir   = 'build/classes/main'
+        output.resourcesDir = output.classesDir
     }
     test {
-        output.resourcesDir = 'build/classes/test'
-        output.classesDir   = 'build/classes/test'
+        output.resourcesDir = output.classesDir
     }
+}
+
+// ensure you're excluding duplicates
+
+jar {
+    duplicatesStrategy = 'exclude'
 }
 ----------------------------------------------------------------------------------------------------------
 
