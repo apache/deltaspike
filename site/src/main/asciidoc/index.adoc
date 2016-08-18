@@ -4,8 +4,7 @@
 |===
 || *About Apache DeltaSpike*
 | image:logo.png[image]
-
-link:documentation/overview.html[View details »]| DeltaSpike consists of a number of portable CDI extensions that provide
+| DeltaSpike consists of a number of portable CDI extensions that provide
 useful features for Java application developers.
 
 We will also ensure true portability! We are testing DeltaSpike on
@@ -13,29 +12,35 @@ different CDI implementations like Apache OpenWebBeans and JBoss Weld,
 and also on different Java EE servers like Apache Tomcat and TomEE,
 JBoss AS7, WildFly 8.x and 9.x, Oracle GlassFish 3.1+ and 4.x+, IBM
 WebSphere 8.x, Oracle WebLogic Server 12c, Jetty, and others.
+
+link:documentation/overview.html[View details »]
 |===
 
-[options="header,footer"]
+[cols="1,3,4",options="header,footer"]
 |===
-|*Latest Award* | *News*
+| |*Latest Award* | *Modules*
+| image:DukeChoice-100x176.png[image]
 | In 2014, DeltaSpike became a Duke’s Choice Award winner. The Duke’s
 Choice Awards celebrate extreme innovation in the world of Java
 technology and are granted to the most innovative projects using the
 Java platform.
 
-image:DukeChoice-100x176.png[image] | Apache DeltaSpike 1.7.1 is now out!
-
-link:/news.html#_27th_release_1_7_1_20_07_2016[View details »]
-|===
-
-[options="header,footer"]
-|===
-|*Modules* | *Examples*
 | CDI extensions created by the Apache DeltaSpike community are packaged
 as modules. They offer additional functionality not provided out of the
 box by the CDI spec (Security, JPA, …)
 
-link:/documentation/modules.html[View details »]| See the following examples which are part of the project to discover how
+link:/documentation/modules.html[View details »]
+
+|===
+
+[options="header,footer"]
+|===
+|*News* | *Examples*
+| Apache DeltaSpike 1.7.1 is now out!
+
+link:/news.html#_27th_release_1_7_1_20_07_2016[View details »]
+
+| See the following examples which are part of the project to discover how
 to use DeltaSpike project.
 
 link:examples.html[View details »]
