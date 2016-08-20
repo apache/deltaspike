@@ -28,7 +28,7 @@
     <homepage rdf:resource="http://deltaspike.apache.org" />
     <asfext:pmc rdf:resource="http://deltaspike.apache.org" />
     <shortdesc>DeltaSpike is a collection of portable Extensions for CDI Containers</shortdesc>
-    <description>Apache DeltaSpike is  a suite of portable CDI (Contexts & Dependency
+    <description>Apache DeltaSpike is  a suite of portable CDI (Contexts &amp; Dependency
 Injection) extensions intended to make application development easier when
 working with CDI and Java EE.  Some of its key features include:
 
@@ -45,7 +45,7 @@ outside of a container.
 Testing support is also provided, to allow you to do low level unit testing
 of your CDI enabled projects.</description>
     <bug-database rdf:resource="https://issues.apache.org/jira/browse/DELTASPIKE" />
-    <mailing-list rdf:resource="http://deltaspike.apache.org/community.html#mailing-lists" />
+    <mailing-list rdf:resource="http://deltaspike.apache.org/community.html#Mailinglists" />
     <programming-language>Java</programming-language>
     <category rdf:resource="http://projects.apache.org/category/javaee" />
     <repository>
