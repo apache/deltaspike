@@ -94,7 +94,10 @@ public class WeldContextControl implements ContextControl
     }
 
     /**
-     * Currently we can't stop the {@link ApplicationScoped} due to WELD-1072
+     * Stops Conversation, Request and Session contexts.
+     * Does NOT stop Application context, only invalidates 
+     * App scoped beans, as in Weld this context always active and clears
+     * automatically on shutdown.
      *
      * {@inheritDoc}
      */
@@ -104,7 +107,7 @@ public class WeldContextControl implements ContextControl
         stopConversationScope();
         stopRequestScope();
         stopSessionScope();
-        stopApplicationScope(); //can't be done because of WELD-1072
+        stopApplicationScope();
     }
 
     @Override
@@ -129,21 +132,25 @@ public class WeldContextControl implements ContextControl
     }
 
     /*
-     * start scopes
+     * This is a no-op method. In Weld Application Context is active as soon as the container starts
      */
     private void startApplicationScope()
     {
-        // Welds ApplicationContext is always active
-        // No need to attach any ThreadLocals...
+        // No-op, in Weld Application context is always active
     }
 
+    /**
+     * Weld Application context is active from container start to its shutdown
+     * This method merely clears out all ApplicationScoped beans BUT the context
+     * will still be active which may result in immediate re-creation of some beans.
+     */
     private void stopApplicationScope()
     {
         // Welds ApplicationContext gets cleaned at shutdown.
-        //X TODO if we really drop the context then we might trash EE
-        //X if we do not do it then we loose the ability to cleanup ApplicationScoped beans
+        // Weld App context should be always active
         if (applicationContext.isActive())
         {
+            // destroys the bean instances, but the context stays active
             applicationContext.invalidate();
 
             //needed for weld < v1.1.9

@@ -33,6 +33,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import javax.enterprise.context.ConversationScoped;
+import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.SessionScoped;
+
 /**
  * Weld specific implementation of {@link org.apache.deltaspike.cdise.api.CdiContainer}.
  */
@@ -83,7 +87,10 @@ public class WeldContainerControl implements CdiContainer
         {
             try
             {
-                ctxCtrl.stopContexts();
+                // stops all built-in contexts except for ApplicationScoped as that one is handled by Weld
+                ctxCtrl.stopContext(ConversationScoped.class);
+                ctxCtrl.stopContext(RequestScoped.class);
+                ctxCtrl.stopContext(SessionScoped.class);
                 ctxCtrlBean.destroy(ctxCtrl, ctxCtrlCreationalContext);
             }
             catch (Exception e)
