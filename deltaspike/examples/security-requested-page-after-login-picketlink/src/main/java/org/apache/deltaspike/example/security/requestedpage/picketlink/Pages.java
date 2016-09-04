@@ -31,14 +31,16 @@ public interface Pages
     }
 
     @Folder(name = "/secured")
+    @Secured(LoggedInAccessDecisionVoter.class)
     interface Secure
-    {
-
-        @Secured(LoggedInAccessDecisionVoter.class)
+    {   
         class Home implements ViewConfig
         {
         }
-
+        
+        class Test implements ViewConfig
+        {
+        }
     }
 
 }
