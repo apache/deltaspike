@@ -94,6 +94,11 @@
                     <skip>${deploy.skip}</skip> <!-- we don't deploy our samples upstream -->
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.wildfly.plugins</groupId>
+                <artifactId>wildfly-maven-plugin</artifactId>
+                <version>1.1.0.Alpha8</version>
+            </plugin>
         </plugins>
     </build>
 </project>
