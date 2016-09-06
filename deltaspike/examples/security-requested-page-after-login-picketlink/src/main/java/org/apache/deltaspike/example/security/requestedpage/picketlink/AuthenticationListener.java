@@ -44,8 +44,9 @@ public class AuthenticationListener
     {
         this.viewNavigationHandler.navigateTo(Pages.Login.class);
     }
-    
-    public void handleLogout(@Observes PostLoggedOutEvent event) {
+
+    public void handleLogout(@Observes PostLoggedOutEvent event)
+    {
         this.viewNavigationHandler.navigateTo(Pages.Login.class);
     }
 }
