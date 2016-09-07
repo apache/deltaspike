@@ -21,6 +21,7 @@ package org.apache.deltaspike.example.security.requestedpage.picketlink;
 import org.apache.deltaspike.core.api.config.view.navigation.ViewNavigationHandler;
 import org.picketlink.authentication.event.LoggedInEvent;
 import org.picketlink.authentication.event.LoginFailedEvent;
+import org.picketlink.authentication.event.PostLoggedOutEvent;
 
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
@@ -44,4 +45,8 @@ public class AuthenticationListener
         this.viewNavigationHandler.navigateTo(Pages.Login.class);
     }
 
+    public void handleLogout(@Observes PostLoggedOutEvent event)
+    {
+        this.viewNavigationHandler.navigateTo(Pages.Login.class);
+    }
 }
