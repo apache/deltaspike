@@ -74,15 +74,15 @@ class DeltaSpikeLifecycleWrapper extends Lifecycle
 
         lazyInit();
 
+        //TODO broadcastApplicationStartupBroadcaster();
+        broadcastInitializedJsfRequestEvent(facesContext);
+
         // ClientWindow handling
         String windowId = clientWindow.getWindowId(facesContext);
         if (windowId != null)
         {
             windowContext.activateWindow(windowId);
         }
-        
-        //TODO broadcastApplicationStartupBroadcaster();
-        broadcastInitializedJsfRequestEvent(facesContext);
 
         if (!FacesContext.getCurrentInstance().getResponseComplete())
         {
