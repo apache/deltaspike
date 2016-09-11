@@ -59,6 +59,7 @@
         <module>security-requested-page-after-login-cdi</module>
         <module>security-requested-page-after-login-picketlink</module>
         <module>scheduler-playground</module>
+        <module>jpa-examples</module>
     </modules>
 
     <properties>
@@ -93,6 +94,12 @@
                 <configuration>
                     <skip>${deploy.skip}</skip> <!-- we don't deploy our samples upstream -->
                 </configuration>
+            </plugin>
+            <!-- run mvn wildfly:deploy to deploy the sample to wildfly -->
+            <plugin>
+                <groupId>org.wildfly.plugins</groupId>
+                <artifactId>wildfly-maven-plugin</artifactId>
+                <version>1.0.1.Final</version>
             </plugin>
         </plugins>
     </build>
