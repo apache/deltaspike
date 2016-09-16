@@ -26,6 +26,7 @@
         <navigation-case>
             <from-outcome>persisted</from-outcome>
             <to-view-id>/list.xhtml</to-view-id>
+            <redirect />
         </navigation-case>
     </navigation-rule>    
 
