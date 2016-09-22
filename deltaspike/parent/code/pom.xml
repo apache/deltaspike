@@ -1054,24 +1054,28 @@
 
         <profile>
             <!--
-             * WildFly has to be locally installed and must be started
+             * WildFly has to be locally installed
              *
              * JBOSS_HOME must be set for this to work correctly!
              *
              * Start the build with:
-             * $> mvn clean install -Pwildfly-managed
+             * $> mvn clean install -Pwildfly-managed -Dweld.version=xxx
              *
              -->
             <id>wildfly-managed</id>
             <properties>
+                <!-- Actual default Weld version used with this profile -->
+                <weld.version>2.3.5.Final</weld.version>
                 <cdicontainer.version>wildfly-${wildfly.version}</cdicontainer.version>
             </properties>
 
             <dependencies>
+                <!--This brings in the cdi-api in correct version corresponding to Weld version specified with ${weld.version}-->
+                <!--Only for build purposes, for tests, Wildfly provides that-->
                 <dependency>
-                    <groupId>javax.enterprise</groupId>
-                    <artifactId>cdi-api</artifactId>
-                    <version>1.1</version>
+                    <groupId>org.jboss.weld</groupId>
+                    <artifactId>weld-core-impl</artifactId>
+                    <version>${weld.version}</version>
                     <scope>provided</scope>
                 </dependency>
                 <dependency>
@@ -1129,20 +1133,24 @@
              * JBOSS_HOME need not be set for this.
              *
              * Start the build with:
-             * $> mvn clean install -Pwildfly-build-managed
+             * $> mvn clean install -Pwildfly-build-managed -Dwildfly.version=10.0.0.Final -Dweld.version=xxx
              *
              -->
             <id>wildfly-build-managed</id>
 
             <properties>
+                <!-- Actual default Weld version used with this profile -->
+                <weld.version>2.3.5.Final</weld.version>
                 <cdicontainer.version>wildfly-${wildfly.version}</cdicontainer.version>
             </properties>
 
             <dependencies>
+                <!--This brings in the cdi-api in correct version corresponding to Weld version specified with ${weld.version}-->
+                <!--Only for build purposes, for tests, Wildfly provides that-->
                 <dependency>
-                    <groupId>javax.enterprise</groupId>
-                    <artifactId>cdi-api</artifactId>
-                    <version>1.1</version>
+                    <groupId>org.jboss.weld</groupId>
+                    <artifactId>weld-core-impl</artifactId>
+                    <version>${weld.version}</version>
                     <scope>provided</scope>
                 </dependency>
                 <dependency>
