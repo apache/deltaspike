@@ -21,4 +21,5 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/beans_1_0.xsd">
     <!-- DON'T add content to this file - it's >only< needed as marker file for the test-scan -->
+    <trim/>
 </beans>
