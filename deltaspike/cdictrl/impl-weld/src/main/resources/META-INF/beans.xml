@@ -21,7 +21,6 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:weld="http://jboss.org/schema/weld/beans"
        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/beans_1_0.xsd">
-    <trim/>
     <weld:scan>
         <weld:exclude name="org.apache.deltaspike.cdise.weld.WeldContainerControl"/>
     </weld:scan>
