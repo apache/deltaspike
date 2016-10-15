@@ -29,7 +29,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 
-// @TODO why ApplicatonScoped?
 @ApplicationScoped
 public class Resources
 {

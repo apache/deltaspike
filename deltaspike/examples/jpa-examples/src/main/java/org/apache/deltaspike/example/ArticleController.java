@@ -30,10 +30,6 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
-/**
- *
- * @author Su Baochen <subaochen@126.com>
- */
 @Named
 @ViewScoped
 @Transactional

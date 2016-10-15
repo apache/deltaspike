@@ -23,10 +23,6 @@ import javax.enterprise.inject.spi.InjectionPoint;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletRequest;
 
-/**
- *
- * @author subaochen<subaochen@126.com>
- */
 public class HttpParams
 {
 
