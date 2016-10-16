@@ -59,7 +59,6 @@ import org.apache.deltaspike.core.api.jmx.MBean;
 import org.apache.deltaspike.core.api.jmx.NotificationInfo;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
-import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.core.util.ParameterUtil;
 
 /**
@@ -396,17 +395,29 @@ public class DynamicMBeanWrapper extends NotificationBroadcasterSupport implemen
             {
                 return operations.get(actionName).invoke(instance(), params);
             }
-            catch (Exception e)
+            catch (InvocationTargetException e)
             {
-                LOGGER.log(Level.SEVERE, actionName + " can't be invoked", e);
-                throw ExceptionUtils.throwAsRuntimeException(e);
+            	final Throwable cause = e.getCause();
+            	if (cause instanceof Error)
+            	{
+            		throw (Error) cause;
+            	} 
+            	throw new MBeanException((Exception) e, actionName + " failed with exception");
             }
+            catch (IllegalAccessException e)
+            {
+            	throw new ReflectionException(e, actionName + " could not be invoked");
+			}
+            catch (IllegalArgumentException e)
+            {
+				throw new ReflectionException(e, actionName + " could not be invoked");
+			}
             finally
             {
                 Thread.currentThread().setContextClassLoader(oldCl);
             }
         }
-        throw new MBeanException(new IllegalArgumentException(), actionName + " doesn't exist");
+        throw new ReflectionException(new NoSuchMethodException(actionName + " doesn't exist"));
     }
 
     private synchronized Object instance()
