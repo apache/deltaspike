@@ -402,7 +402,7 @@ public class DynamicMBeanWrapper extends NotificationBroadcasterSupport implemen
                 {
                     throw (Error) cause;
                 }
-                throw new MBeanException((Exception) e, actionName + " failed with exception");
+                throw new MBeanException(e, actionName + " failed with exception");
             }
             catch (IllegalAccessException e)
             {
