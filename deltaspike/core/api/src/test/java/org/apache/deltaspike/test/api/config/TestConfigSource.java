@@ -93,6 +93,11 @@ public class TestConfigSource implements ConfigSource
         props.put("deltaspike.test.projectstagefallback", "Value without ProjectStage");
         
         // ProjectStage aware property value with resolved reference
+        props.put("foo.url", "${bar.url}/services");
+        props.put("bar.url", "undefined");
+        props.put("bar.url.UnitTest", "http://bar-dev");
+        props.put("bar.url.Production", "http://bar-prod");
+
         props.put("deltaspike.test.exampleEntry-1", "tomato");
         props.put("deltaspike.test.exampleEntry-1.UnitTest", "tomato-UnitTest");
         props.put("deltaspike.test.exampleEntry-2", "default-exampleEntry-1-is-${deltaspike.test.exampleEntry-1}");
