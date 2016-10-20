@@ -197,15 +197,27 @@ public class ConfigResolverTest
     }
     
     @Test
-    public void testProjectStageAwarePropertyValueReference() {
-        final String expected = 
+    public void testProjectStageAwarePropertyValueReference_1() {
+        final String expectedFooUrl =
+                "http://bar-dev/services";
+
+        final String actualFooUrl =
+                ConfigResolver.getProjectStageAwarePropertyValue(
+                "foo.url");
+
+        Assert.assertEquals(expectedFooUrl, actualFooUrl);
+    }
+
+    @Test
+    public void testProjectStageAwarePropertyValueReference_2() {
+        final String expected =
                 "projectStageAware-exampleEntry-1-is-tomato-UnitTest";
-        
-        final String projectStageAwareExampleEntry1 = 
+
+        final String projectStageAwareExampleEntry1 =
                 ConfigResolver.getProjectStageAwarePropertyValue(
                 "deltaspike.test.exampleEntry-2", 
                 "");
-        
+
         Assert.assertEquals(expected, projectStageAwareExampleEntry1);
     }
 

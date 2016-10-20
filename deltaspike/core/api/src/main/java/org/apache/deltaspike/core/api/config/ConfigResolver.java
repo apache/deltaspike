@@ -245,7 +245,6 @@ public final class ConfigResolver
         String value = getPropertyValue(key + '.' + ps, configResolverContext);
         if (value == null)
         {
-            configResolverContext.setProjectStageAware(false);            
             value = getPropertyValue(key, configResolverContext);
         }
 
