@@ -5,7 +5,7 @@
 :Notice: Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
 == Overview
-The Data module provides capabilities for implementing repository patterns and thereby simplifying the repository layer. Repository patterns are ideal for simple queries that require boilerplate code, enabling cenertalization of query logic and consequently reducing code duplication and improving testability.
+The Data module provides capabilities for implementing repository patterns and thereby simplifying the repository layer. Repository patterns are ideal for simple queries that require boilerplate code, enabling centralization of query logic and consequently reducing code duplication and improving testability.
 
 The code sample below gives you a quick overview on the common usage
 scenarios of the data module:
@@ -39,7 +39,7 @@ parameters.
 
 The implementation of the method is done automatically by the CDI
 extension. A client can declare a dependency to the interface only. The
-details on how to use those features are outlines in the following
+details on how to use those features are outlined in the following
 chapters.
 
 == Project Setup
@@ -628,7 +628,7 @@ more control on the generated query.
 
 === Using Query Annotations
 
-The simples way to define a specific query is by annotating a method and
+The simplest way to define a specific query is by annotating a method and
 providing the JPQL query string which has to be executed. In code, this
 looks like the following sample:
 
@@ -789,7 +789,7 @@ supported for Hibernate, EclipseLink and OpenJPA.
 Note that the `QueryResult` return type can also be used with method
 expressions.
 
-IMPORTANT: `QueryResult` is based on our internal understanding of your query
+IMPORTANT: `QueryResult` is based on our internal understanding of your query.
 DeltaSpike expects the alias used in your queries to refer to the entity as `e`
 You can disable this behavior by passing in false with your attribute, `.orderDesc("p.age", false)`
 which would add descending ordering to your existing query `select p from Person p`
@@ -948,7 +948,7 @@ currently recommend creating an extension (see next chapter) which uses
 
 [source,java]
 ---------------------------------------------------------------------------------------
-public class TxExtension<E> implements TxRepository // this is your extension interface
+public class TxExtension<E> implements DelegateQueryHandler, TxRepository // this is your extension interface
 {
     @Inject
     private EntityManager em;
@@ -970,7 +970,7 @@ implementation can be, for example, in an anonymous class).
 
 === Query Delegates
 
-While repositories defines several base interfaces, there might still be
+While several base interfaces are defined for repositories, there might still be
 the odd convenience method that is missing. This is actually intentional
 - things should not get overloaded for each and every use case. That's
 why in DeltaSpike you can define your own reusable methods.
@@ -1079,7 +1079,7 @@ public class PersonDtoMapper implements QueryInOutMapper<Person>
     ...
 
     @Override
-    public Object mapResultList(List<Simple> result)
+    public Object mapResultList(List<Person> result)
     {
         ... // result lists can also be mapped into something different
             // than a collection.
@@ -1131,7 +1131,7 @@ correctly (in this example, a conversion from a `PersonDto` parameter to
 
 In many cases it is just required to map a DTO object back and forth. For
 this case, the `SimpleQueryInOutMapperBase` class can be subclassed,
-which only requires to override two methods:
+which only requires to override three methods:
 
 [source,java]
 -------------------------------------------------------------------------------
@@ -1169,7 +1169,7 @@ entity).
 
 == JPA Criteria API Support
 
-Beside automatic query generation, the DeltaSpike Data module also
+Besides automatic query generation, the DeltaSpike Data module also
 provides a DSL-like API to create JPA 2 Criteria queries. It takes
 advantage of the JPA 2 meta model, which helps creating type safe
 queries.
