@@ -60,6 +60,7 @@
         <module>security-requested-page-after-login-picketlink</module>
         <module>scheduler-playground</module>
         <module>jpa-examples</module>
+        <module>data-examples</module>
     </modules>
 
     <properties>
