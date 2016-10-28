@@ -927,6 +927,21 @@ result of the list, or else `empty()`.
 
 Queries returning `Stream<T>` act as a simple wrapper for `query.getResultList().stream()` to give back the results.
 
+=== Entity Graphs
+
+EntityGraphs are a feature added in JPA 2.1.  The Data module supports entity graphs for query operations, where the results
+will be limited based on a defined graph.  This feature is only available if you are using a JPA 2.1 implementation.
+
+`@EntityGraph` can be used for either `fetch` or `load` operations, depending on the `EntityGraphType` used in the annotation.  Most queries should use the `FETCH` option.
+
+==== Named Graphs
+
+Entity graphs can be selected by name.  A `@NamedEntityGraph` should be defined already within your persistence context to leverage this.  When this graph is referenced on a repository method, it will be applied to the query.
+
+==== Dyanmically built graphs
+
+If you want to dynamically build a graph, you can do that via the `paths` attribute of the annotation.  The paths specified will be added as graph nodes.  Each graph node will be used in the select.  The format is the full path to the property, based on the property names.
+
 == Transactions
 
 If you call any method expression, `@Query`-annotated method or a method
