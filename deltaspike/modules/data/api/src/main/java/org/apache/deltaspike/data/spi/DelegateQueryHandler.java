@@ -37,12 +37,12 @@ package org.apache.deltaspike.data.spi;
  * </pre>
  *
  * The extension is now usable with:
- *
- * @Repository
+ * <pre>
+ * &#064;Repository
  * public interface MySimpleRepository
  *         extends RepositoryExtension<Simple>, EntityRepository<Simple, Long> {
  * }
- *
+ * </pre>
  */
 public interface DelegateQueryHandler
 {
