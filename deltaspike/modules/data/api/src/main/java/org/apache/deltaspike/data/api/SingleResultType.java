@@ -32,7 +32,7 @@ public enum SingleResultType
     JPA,
 
     /**
-     * Expects a single result. Other than {@link SingleResultStyle#SINGLE} it returns {@code null}
+     * Expects a single result. Other than {@link SingleResultType#JPA} it returns {@code null}
      * if no result is found.
      */
     OPTIONAL,
