@@ -58,7 +58,7 @@ public class LockedTest {
         return ShrinkWrap.create(WebArchive.class, "LockedTest.war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
                 .addAsLibraries(testJar)
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsWebInfResource(new StringAsset(beans.exportAsString()), "beans.xml");
     }
 
     @Inject
