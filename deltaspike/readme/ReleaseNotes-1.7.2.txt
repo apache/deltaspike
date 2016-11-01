@@ -1,0 +1,33 @@
+Release Notes - DeltaSpike - Version 1.7.2
+
+Bug
+    [DELTASPIKE-1191] - Update Test-Control gradle docs
+    [DELTASPIKE-1194] - Distribution not including binary artifacts
+    [DELTASPIKE-1196] - Syntax error in DOAP file
+    [DELTASPIKE-1199] - Problems with ContextControl and Weld ContainerInitialized, ContainerShutdown event.
+    [DELTASPIKE-1204] - Wildfly managed profiles blow up
+    [DELTASPIKE-1207] - Incorrect exception handling in DynamicMBeanWrapper.invoke()
+    [DELTASPIKE-1208] - deltaspike configuration: Variable Replacement in Configured Values is NOT fully stage aware
+    [DELTASPIKE-1209] - Textual fixes for documentation of Data Module
+    [DELTASPIKE-1210] - DelegateQueryHandler has missing Javadoc
+    [DELTASPIKE-1211] - SingleResultType.OPTIONAL refers to nonexistent constant SINGLE
+    [DELTASPIKE-1213] - LockedTest fails on OWB 1.1.x
+
+Improvement
+    [DELTASPIKE-1201] - add logout link to security example
+    [DELTASPIKE-1203] - create jpa examples
+    [DELTASPIKE-1205] - create deltaspike data module examples
+
+New Feature
+    [DELTASPIKE-1176] - Support void methods in Futureable
+
+Task
+    [DELTASPIKE-1181] - Implement tests for Payara
+    [DELTASPIKE-1186] - 1.7.1 Release execution and website clean up
+    [DELTASPIKE-1187] - Document entity graph support
+    [DELTASPIKE-1188] - Improve contributor guide
+    [DELTASPIKE-1189] - Migrate index.html into git
+    [DELTASPIKE-1192] - Fix increase in warning messages with DeltaSpike Data and Weld
+
+Wish
+    [DELTASPIKE-1185] - Allow customization (name, description) of JMX managed methods' parameters
