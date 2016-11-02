@@ -22,7 +22,7 @@
     <parent>
         <artifactId>data-module-project</artifactId>
         <groupId>org.apache.deltaspike.modules</groupId>
-        <version>1.7.2</version>
+        <version>1.7.3-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
