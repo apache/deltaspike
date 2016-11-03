@@ -20,8 +20,6 @@ package org.apache.deltaspike.data.api;
 
 import java.io.Serializable;
 
-import org.apache.deltaspike.data.api.criteria.CriteriaSupport;
-
 /**
  * Full repository base class to be extended by concrete implementations. A convenience class
  * combining {@code AbstractEntityRepository}, {@code EntityManagerDelegate} and
@@ -33,6 +31,6 @@ import org.apache.deltaspike.data.api.criteria.CriteriaSupport;
  *            Primary key type.
  */
 public abstract class AbstractFullEntityRepository<E, PK extends Serializable> extends
-    AbstractEntityRepository<E, PK> implements EntityManagerDelegate<E>, CriteriaSupport<E>
+    AbstractEntityRepository<E, PK> implements FullEntityRepository<E, PK>
 {
 }
