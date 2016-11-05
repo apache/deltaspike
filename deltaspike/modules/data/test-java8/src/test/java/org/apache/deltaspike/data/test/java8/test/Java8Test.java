@@ -156,6 +156,7 @@ public class Java8Test
     {
         entityManager.persist(new Simple("a"));
         entityManager.persist(new Simple("b"));
+        entityManager.flush();
 
         Stream<String> names = simpleRepository2.findSimpleNames();
         final List<String> actualSorted = names.collect(toList());

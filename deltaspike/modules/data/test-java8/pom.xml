@@ -196,6 +196,34 @@
             </build>
         </profile>
         <profile>
+            <id>jbossas-managed-7</id>
+            <build>
+                <testResources>
+                    <testResource>
+                        <directory>src/test/resources</directory>
+                    </testResource>
+                    <testResource>
+                        <!--Can reuse Wildfly persistence xml file-->
+                        <directory>src/test/resources-wildfly</directory>
+                    </testResource>
+                </testResources>
+            </build>
+        </profile>
+        <profile>
+            <id>jbossas-remote-7</id>
+            <build>
+                <testResources>
+                    <testResource>
+                        <directory>src/test/resources</directory>
+                    </testResource>
+                    <testResource>
+                        <!--Can reuse Wildfly persistence xml file-->
+                        <directory>src/test/resources-wildfly</directory>
+                    </testResource>
+                </testResources>
+            </build>
+        </profile>
+        <profile>
             <id>tomee-build-managed</id>
             <build>
                 <testResources>
