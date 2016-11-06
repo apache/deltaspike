@@ -166,6 +166,7 @@ mkdir [version]
 //  http://repo1.maven.org/maven2/org/apache/deltaspike/distribution/distribution-full/[version]/
 svn rm {old-version}
 svn add {version}
+svn commit -m "Removing {old-version}, adding {version}"
 -----------------------------------------------------------------------------------------------------------------------
 
 === Check Downloads
