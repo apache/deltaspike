@@ -105,6 +105,10 @@ public class SettingsBean
     @ConfigProperty(name = "urlListFromProperties", converter = UrlList.class)
     private List<URL> urlListFromProperties;
 
+    @Inject
+    @ConfigProperty(name = "custom-source.test")
+    private String customSourceValue;
+
     protected SettingsBean()
     {
     }
@@ -213,6 +217,10 @@ public class SettingsBean
 
     public List<URL> getUrlListFromProperties() {
         return urlListFromProperties;
+    }
+
+    public String getCustomSourceValue() {
+        return customSourceValue;
     }
 
     public static class UrlList implements ConfigResolver.Converter<List<URL>>

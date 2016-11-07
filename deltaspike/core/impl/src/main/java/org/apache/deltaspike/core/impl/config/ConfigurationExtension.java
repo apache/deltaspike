@@ -47,8 +47,10 @@ import org.apache.deltaspike.core.api.config.ConfigProperty;
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.config.PropertyFileConfig;
 import org.apache.deltaspike.core.api.exclude.Exclude;
+import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.spi.config.BaseConfigPropertyProducer;
+import org.apache.deltaspike.core.spi.config.ConfigFilter;
 import org.apache.deltaspike.core.spi.config.ConfigSource;
 import org.apache.deltaspike.core.spi.config.ConfigValidator;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
@@ -85,6 +87,9 @@ public class ConfigurationExtension implements Extension, Deactivatable
     private final Set<Type> dynamicConfigTypes = new HashSet<Type>();
     private Bean<DynamicBeanProducer> dynamicProducer;
 
+    private final List<Bean<? extends ConfigSource>> cdiSources = new ArrayList<Bean<? extends ConfigSource>>();
+    private final List<Bean<? extends ConfigFilter>> cdiFilters = new ArrayList<Bean<? extends ConfigFilter>>();
+
     @SuppressWarnings("UnusedDeclaration")
     protected void init(@Observes BeforeBeanDiscovery beforeBeanDiscovery)
     {
@@ -118,6 +123,21 @@ public class ConfigurationExtension implements Extension, Deactivatable
         }
 
         propertyFileConfigClasses.add(pcsClass);
+    }
+
+    public void findSources(@Observes ProcessBean<? extends ConfigSource> source)
+    {
+        final Class<?> beanClass = source.getBean().getBeanClass();
+        if (beanClass != null && beanClass.getName().startsWith("org.apache.deltaspike.core.impl.config.")) // built-in
+        {
+            return;
+        }
+        cdiSources.add(source.getBean());
+    }
+
+    public void findFilters(@Observes ProcessBean<? extends ConfigFilter> filter)
+    {
+        cdiFilters.add(filter.getBean());
     }
 
     public void findDynamicProducer(@Observes ProcessBean<DynamicBeanProducer> processBean)
@@ -178,9 +198,18 @@ public class ConfigurationExtension implements Extension, Deactivatable
             configSources.addAll(createPropertyConfigSource(propertyFileConfigClass));
         }
 
+        for (final Bean bean : cdiSources)
+        {
+            configSources.add(BeanProvider.getContextualReference(ConfigSource.class, bean));
+        }
 
         // finally add all
         ConfigResolver.addConfigSources(configSources);
+
+        for (final Bean bean : cdiFilters)
+        {
+            ConfigResolver.addConfigFilter(BeanProvider.getContextualReference(ConfigFilter.class, bean));
+        }
 
         processConfigurationValidation(adv);
     }

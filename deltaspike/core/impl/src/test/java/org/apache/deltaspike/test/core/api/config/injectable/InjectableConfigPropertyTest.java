@@ -111,9 +111,17 @@ public class InjectableConfigPropertyTest
     }
 
     @Test
-    public void checkDynamicConvertedInjections() throws MalformedURLException {
+    public void checkDynamicConvertedInjections() throws MalformedURLException
+    {
         SettingsBean settingsBean = BeanProvider.getContextualReference(SettingsBean.class, false);
         assertEquals(asList(new URL("http://localhost"), new URL("http://127.0.0.1")), settingsBean.getUrlList());
         assertEquals(singletonList(new URL("http://127.0.0.2")), settingsBean.getUrlListFromProperties());
+    }
+
+    @Test
+    public void checkCdiSourceFilter() throws MalformedURLException
+    {
+        SettingsBean settingsBean = BeanProvider.getContextualReference(SettingsBean.class, false);
+        assertEquals("value", settingsBean.getCustomSourceValue());
     }
 }
