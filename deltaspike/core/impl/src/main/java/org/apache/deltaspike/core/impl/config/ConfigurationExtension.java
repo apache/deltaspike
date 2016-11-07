@@ -45,10 +45,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.deltaspike.core.api.config.ConfigProperty;
 import org.apache.deltaspike.core.api.config.ConfigResolver;
+import org.apache.deltaspike.core.api.config.Configuration;
 import org.apache.deltaspike.core.api.config.Filter;
 import org.apache.deltaspike.core.api.config.PropertyFileConfig;
 import org.apache.deltaspike.core.api.config.Source;
 import org.apache.deltaspike.core.api.exclude.Exclude;
+import org.apache.deltaspike.core.api.literal.AnyLiteral;
+import org.apache.deltaspike.core.api.literal.DefaultLiteral;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.spi.config.BaseConfigPropertyProducer;
@@ -58,6 +61,7 @@ import org.apache.deltaspike.core.spi.config.ConfigValidator;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.ServiceUtils;
+import org.apache.deltaspike.core.util.bean.BeanBuilder;
 
 /**
  * This extension handles {@link org.apache.deltaspike.core.api.config.PropertyFileConfig}s
@@ -91,6 +95,7 @@ public class ConfigurationExtension implements Extension, Deactivatable
 
     private final List<Bean<? extends ConfigSource>> cdiSources = new ArrayList<Bean<? extends ConfigSource>>();
     private final List<Bean<? extends ConfigFilter>> cdiFilters = new ArrayList<Bean<? extends ConfigFilter>>();
+    private final List<Class<?>> dynamicConfigurationBeanClasses = new ArrayList<Class<?>>();
 
     @SuppressWarnings("UnusedDeclaration")
     protected void init(@Observes BeforeBeanDiscovery beforeBeanDiscovery)
@@ -127,9 +132,24 @@ public class ConfigurationExtension implements Extension, Deactivatable
         propertyFileConfigClasses.add(pcsClass);
     }
 
+    public void findDynamicConfigurationBeans(@Observes ProcessAnnotatedType<?> pat)
+    {
+        if (!pat.getAnnotatedType().isAnnotationPresent(Configuration.class))
+        {
+            return;
+        }
+        final Class<?> javaClass = pat.getAnnotatedType().getJavaClass();
+        if (!javaClass.isInterface())
+        {
+            return;
+        }
+        dynamicConfigurationBeanClasses.add(javaClass);
+    }
+
     public void findSources(@Observes ProcessBean<? extends ConfigSource> source)
     {
-        if (!source.getAnnotated().isAnnotationPresent(Source.class)) {
+        if (!source.getAnnotated().isAnnotationPresent(Source.class))
+        {
             return;
         }
         cdiSources.add(source.getBean());
@@ -137,7 +157,8 @@ public class ConfigurationExtension implements Extension, Deactivatable
 
     public void findFilters(@Observes ProcessBean<? extends ConfigFilter> filter)
     {
-        if (!filter.getAnnotated().isAnnotationPresent(Filter.class)) {
+        if (!filter.getAnnotated().isAnnotationPresent(Filter.class))
+        {
             return;
         }
         cdiFilters.add(filter.getBean());
@@ -162,11 +183,22 @@ public class ConfigurationExtension implements Extension, Deactivatable
         }
     }
 
-    public void addDynamicBean(@Observes AfterBeanDiscovery afterBeanDiscovery, BeanManager bm)
+    public void addDynamicBeans(@Observes AfterBeanDiscovery afterBeanDiscovery, BeanManager bm)
     {
         if (dynamicProducer != null && !dynamicConfigTypes.isEmpty())
         {
             afterBeanDiscovery.addBean(new DynamicBean(dynamicProducer, dynamicConfigTypes));
+        }
+        for (final Class<?> proxyType : dynamicConfigurationBeanClasses)
+        {
+            afterBeanDiscovery.addBean(new BeanBuilder(null)
+                    .types(proxyType, Object.class)
+                    .qualifiers(new DefaultLiteral(), new AnyLiteral())
+                    .beanLifecycle(new ProxyConfigurationLifecycle(proxyType))
+                    .scope(ApplicationScoped.class)
+                    .passivationCapable(true)
+                    .beanClass(proxyType)
+                    .create());
         }
     }
 

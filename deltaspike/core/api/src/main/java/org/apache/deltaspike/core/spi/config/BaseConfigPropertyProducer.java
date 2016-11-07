@@ -165,6 +165,17 @@ public abstract class BaseConfigPropertyProducer
                            final Class<? extends ConfigResolver.Converter> converterType,
                            final String parameterizedBy, final boolean projectStageAware, final boolean evaluate)
     {
+        final ConfigResolver.TypedResolver<T> resolver = asResolver(
+                key, stringDefault, ipCls, converterType, parameterizedBy, projectStageAware, evaluate);
+        return resolver.getValue();
+    }
+
+    public <T> ConfigResolver.TypedResolver<T> asResolver(final String key, final String stringDefault,
+                                                          final Type ipCls,
+                                                          final Class<? extends ConfigResolver.Converter> converterType,
+                                                          final String parameterizedBy,
+                                                          final boolean projectStageAware, final boolean evaluate)
+    {
         final ConfigResolver.UntypedResolver<String> untypedResolver = ConfigResolver.resolve(key);
         final ConfigResolver.TypedResolver<T> resolver =
                 (ConfigResolver.Converter.class == converterType ?
@@ -179,6 +190,6 @@ public abstract class BaseConfigPropertyProducer
         {
             resolver.parameterizedBy(parameterizedBy);
         }
-        return resolver.evaluateVariables(evaluate).getValue();
+        return resolver.evaluateVariables(evaluate);
     }
 }

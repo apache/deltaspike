@@ -31,7 +31,6 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -41,6 +40,7 @@ import org.apache.deltaspike.test.core.api.config.injectable.numberconfig.Number
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 
 @RunWith(Arquillian.class)
@@ -73,41 +73,41 @@ public class InjectableConfigPropertyTest
     {
         SettingsBean settingsBean = BeanProvider.getContextualReference(SettingsBean.class, false);
 
-        Assert.assertEquals(14, settingsBean.getProperty1());
-        Assert.assertEquals(7L, settingsBean.getProperty2());
-        Assert.assertEquals(-7L, settingsBean.getInverseProperty2());
+        assertEquals(14, settingsBean.getProperty1());
+        assertEquals(7L, settingsBean.getProperty2());
+        assertEquals(-7L, settingsBean.getInverseProperty2());
 
         // also check the ones with defaultValue
-        Assert.assertEquals("14", settingsBean.getProperty3Filled());
-        Assert.assertEquals("myDefaultValue", settingsBean.getProperty3Defaulted());
-        Assert.assertEquals(42, settingsBean.getProperty4Defaulted());
+        assertEquals("14", settingsBean.getProperty3Filled());
+        assertEquals("myDefaultValue", settingsBean.getProperty3Defaulted());
+        assertEquals(42, settingsBean.getProperty4Defaulted());
 
-        Assert.assertEquals("some setting for prodDB", settingsBean.getDbConfig());
+        assertEquals("some setting for prodDB", settingsBean.getDbConfig());
     }
 
     @Test
     public void testBooleanPropertyInjection()
     {
         SettingsBean settingsBean = BeanProvider.getContextualReference(SettingsBean.class, false);
-        Assert.assertEquals(Boolean.FALSE, settingsBean.getBooleanPropertyFalse());
+        assertEquals(Boolean.FALSE, settingsBean.getBooleanPropertyFalse());
 
-        Assert.assertEquals(Boolean.TRUE, settingsBean.getBooleanPropertyTrue1());
-        Assert.assertEquals(Boolean.TRUE, settingsBean.getBooleanPropertyTrue2());
-        Assert.assertEquals(Boolean.TRUE, settingsBean.getBooleanPropertyTrue3());
-        Assert.assertEquals(Boolean.TRUE, settingsBean.getBooleanPropertyTrue4());
-        Assert.assertEquals(Boolean.TRUE, settingsBean.getBooleanPropertyTrue5());
-        Assert.assertEquals(Boolean.TRUE, settingsBean.getBooleanPropertyTrue6());
-        Assert.assertEquals(Boolean.TRUE, settingsBean.getBooleanPropertyTrue7());
-        Assert.assertEquals(Boolean.TRUE, settingsBean.getBooleanPropertyTrue8());
+        assertEquals(Boolean.TRUE, settingsBean.getBooleanPropertyTrue1());
+        assertEquals(Boolean.TRUE, settingsBean.getBooleanPropertyTrue2());
+        assertEquals(Boolean.TRUE, settingsBean.getBooleanPropertyTrue3());
+        assertEquals(Boolean.TRUE, settingsBean.getBooleanPropertyTrue4());
+        assertEquals(Boolean.TRUE, settingsBean.getBooleanPropertyTrue5());
+        assertEquals(Boolean.TRUE, settingsBean.getBooleanPropertyTrue6());
+        assertEquals(Boolean.TRUE, settingsBean.getBooleanPropertyTrue7());
+        assertEquals(Boolean.TRUE, settingsBean.getBooleanPropertyTrue8());
     }
 
     @Test
     public void testNmberConfigInjection()
     {
         NumberConfiguredBean numberBean = BeanProvider.getContextualReference(NumberConfiguredBean.class, false);
-        Assert.assertNull(numberBean.getPropertyNonexisting());
-        Assert.assertEquals(Float.valueOf(123.45f), numberBean.getPropertyFromConfig());
-        Assert.assertEquals(Float.valueOf(42.42f), numberBean.getPropertyNonexistingDefaulted());
+        assertNull(numberBean.getPropertyNonexisting());
+        assertEquals(Float.valueOf(123.45f), numberBean.getPropertyFromConfig());
+        assertEquals(Float.valueOf(42.42f), numberBean.getPropertyNonexistingDefaulted());
     }
 
     @Test
@@ -123,5 +123,30 @@ public class InjectableConfigPropertyTest
     {
         SettingsBean settingsBean = BeanProvider.getContextualReference(SettingsBean.class, false);
         assertEquals("value", settingsBean.getCustomSourceValue());
+    }
+
+    @Test
+    public void proxy() throws MalformedURLException
+    {
+        ConfigBean settingsBean = BeanProvider.getContextualReference(ConfigBean.class);
+
+        assertEquals(14, settingsBean.intProperty1());
+        assertEquals("14", settingsBean.stringProperty3Filled());
+        assertEquals("myDefaultValue", settingsBean.stringProperty3Defaulted());
+        assertEquals(42, settingsBean.intProperty4Defaulted().intValue());
+
+        assertEquals("some setting for prodDB", settingsBean.dbConfig());
+        assertEquals(Boolean.FALSE, settingsBean.booleanPropertyFalse());
+        assertEquals(Boolean.TRUE, settingsBean.booleanPropertyTrue1());
+        assertEquals(Boolean.TRUE, settingsBean.booleanPropertyTrue2());
+        assertEquals(Boolean.TRUE, settingsBean.booleanPropertyTrue3());
+        assertEquals(Boolean.TRUE, settingsBean.booleanPropertyTrue4());
+        assertEquals(Boolean.TRUE, settingsBean.booleanPropertyTrue5());
+        assertEquals(Boolean.TRUE, settingsBean.booleanPropertyTrue6());
+        assertEquals(Boolean.TRUE, settingsBean.booleanPropertyTrue7());
+        assertEquals(Boolean.TRUE, settingsBean.booleanPropertyTrue8());
+        assertEquals(asList(new URL("http://localhost"), new URL("http://127.0.0.1")), settingsBean.urlList());
+        assertEquals(singletonList(new URL("http://127.0.0.2")), settingsBean.urlListFromProperties());
+        assertEquals("value", settingsBean.customSourceValue());
     }
 }
