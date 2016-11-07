@@ -56,7 +56,8 @@ class ProxyConfigurationLifecycle implements ContextualLifecycle
         final long cacheFor = configuration.cacheFor();
         return Proxy.newProxyInstance(
                 Thread.currentThread().getContextClassLoader(), api,
-                new ConfigurationHandler(cacheFor <= 0 ? -1 : configuration.cacheUnit().toMillis(cacheFor)));
+                new ConfigurationHandler(
+                        cacheFor <= 0 ? -1 : configuration.cacheUnit().toMillis(cacheFor), configuration.prefix()));
     }
 
     @Override
@@ -74,10 +75,12 @@ class ProxyConfigurationLifecycle implements ContextualLifecycle
         private final ConcurrentMap<Method, ConfigResolver.TypedResolver<?>> resolvers =
                 new ConcurrentHashMap<Method, ConfigResolver.TypedResolver<?>>();
         private final long cacheMs;
+        private final String prefix;
 
-        private ConfigurationHandler(final long cacheMs)
+        private ConfigurationHandler(final long cacheMs, final String prefix)
         {
             this.cacheMs = cacheMs;
+            this.prefix = prefix;
         }
 
         @Override
@@ -137,7 +140,7 @@ class ProxyConfigurationLifecycle implements ContextualLifecycle
                 }
 
                 typedResolver = delegate.asResolver(
-                        annotation.name(), annotation.defaultValue(), returnType,
+                        prefix + annotation.name(), annotation.defaultValue(), returnType,
                         annotation.converter(), annotation.parameterizedBy(),
                         annotation.projectStageAware(), annotation.evaluateVariables());
                 if (cacheMs > 0)

@@ -47,4 +47,9 @@ public @interface Configuration
      * @return the duration unit for {@see cacheFor()}.
      */
     TimeUnit cacheUnit() default SECONDS;
+
+    /**
+     * @return the key prefix to apply to all methods.
+     */
+    String prefix() default "";
 }

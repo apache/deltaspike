@@ -149,4 +149,11 @@ public class InjectableConfigPropertyTest
         assertEquals(singletonList(new URL("http://127.0.0.2")), settingsBean.urlListFromProperties());
         assertEquals("value", settingsBean.customSourceValue());
     }
+
+    @Test
+    public void proxyPrefix() throws MalformedURLException
+    {
+        PrefixedConfigBean settingsBean = BeanProvider.getContextualReference(PrefixedConfigBean.class);
+        assertEquals("done", settingsBean.value());
+    }
 }
