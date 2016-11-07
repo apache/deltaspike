@@ -7,7 +7,7 @@
 == 28th Release (1.7.2) (06.11.2016)
 
 The Apache DeltaSpike team is pleased to announce the 28th release
-(v1.7.2).  Release notes can be found https://s.apache.org/DeltaSpike-1.7.1[here]
+(v1.7.2).  Release notes can be found https://s.apache.org/DeltaSpike-1.7.2[here]
 
 == 27th Release (1.7.1) (20.07.2016)
 
