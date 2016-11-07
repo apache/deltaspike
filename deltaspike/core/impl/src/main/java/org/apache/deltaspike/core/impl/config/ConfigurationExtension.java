@@ -45,7 +45,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.deltaspike.core.api.config.ConfigProperty;
 import org.apache.deltaspike.core.api.config.ConfigResolver;
+import org.apache.deltaspike.core.api.config.Filter;
 import org.apache.deltaspike.core.api.config.PropertyFileConfig;
+import org.apache.deltaspike.core.api.config.Source;
 import org.apache.deltaspike.core.api.exclude.Exclude;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
@@ -127,9 +129,7 @@ public class ConfigurationExtension implements Extension, Deactivatable
 
     public void findSources(@Observes ProcessBean<? extends ConfigSource> source)
     {
-        final Class<?> beanClass = source.getBean().getBeanClass();
-        if (beanClass != null && beanClass.getName().startsWith("org.apache.deltaspike.core.impl.config.")) // built-in
-        {
+        if (!source.getAnnotated().isAnnotationPresent(Source.class)) {
             return;
         }
         cdiSources.add(source.getBean());
@@ -137,6 +137,9 @@ public class ConfigurationExtension implements Extension, Deactivatable
 
     public void findFilters(@Observes ProcessBean<? extends ConfigFilter> filter)
     {
+        if (!filter.getAnnotated().isAnnotationPresent(Filter.class)) {
+            return;
+        }
         cdiFilters.add(filter.getBean());
     }
 

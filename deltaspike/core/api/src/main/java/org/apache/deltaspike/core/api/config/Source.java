@@ -16,26 +16,25 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.core.api.config.injectable;
+package org.apache.deltaspike.core.api.config;
 
-import org.apache.deltaspike.core.api.config.Filter;
-import org.apache.deltaspike.core.spi.config.ConfigFilter;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-import javax.enterprise.context.ApplicationScoped;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-@Filter
-@ApplicationScoped
-public class CdiFilter implements ConfigFilter
+/**
+ * Marker to let DeltaSpike pick automatically the decorated instance
+ * as a ConfigSource of current CDI module.
+ *
+ * The underlying Bean should be normal-scoped.
+ */
+@Target({ METHOD, TYPE })
+@Retention(RUNTIME)
+@Documented
+public @interface Source
 {
-    @Override
-    public String filterValue(final String key, final String value)
-    {
-        return "custom-source.test".equals(key) ? new StringBuilder(value).reverse().toString() : value;
-    }
-
-    @Override
-    public String filterValueForLog(final String key, final String value)
-    {
-        return value;
-    }
 }
