@@ -144,4 +144,11 @@ public @interface ConfigProperty
      */
     @Nonbinding
     boolean evaluateVariables() default true;
+
+    /**
+     * Converter for this property.
+     * @return the converter to use to read this property in the expected type.
+     */
+    @Nonbinding
+    Class<? extends ConfigResolver.Converter> converter() default ConfigResolver.Converter.class;
 }

@@ -18,13 +18,24 @@
  */
 package org.apache.deltaspike.core.impl.config;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.event.Observes;
+import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.Typed;
+import javax.enterprise.inject.spi.AfterBeanDiscovery;
 import javax.enterprise.inject.spi.AfterDeploymentValidation;
+import javax.enterprise.inject.spi.Bean;
+import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.BeforeBeanDiscovery;
 import javax.enterprise.inject.spi.BeforeShutdown;
 import javax.enterprise.inject.spi.Extension;
+import javax.enterprise.inject.spi.InjectionPoint;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
+import javax.enterprise.inject.spi.ProcessBean;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -32,10 +43,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.deltaspike.core.api.config.ConfigProperty;
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.config.PropertyFileConfig;
 import org.apache.deltaspike.core.api.exclude.Exclude;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
+import org.apache.deltaspike.core.spi.config.BaseConfigPropertyProducer;
 import org.apache.deltaspike.core.spi.config.ConfigSource;
 import org.apache.deltaspike.core.spi.config.ConfigValidator;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
@@ -68,6 +81,9 @@ public class ConfigurationExtension implements Extension, Deactivatable
 
     private List<Class<? extends PropertyFileConfig>> propertyFileConfigClasses
         = new ArrayList<Class<?  extends PropertyFileConfig>>();
+
+    private final Set<Type> dynamicConfigTypes = new HashSet<Type>();
+    private Bean<DynamicBeanProducer> dynamicProducer;
 
     @SuppressWarnings("UnusedDeclaration")
     protected void init(@Observes BeforeBeanDiscovery beforeBeanDiscovery)
@@ -102,6 +118,33 @@ public class ConfigurationExtension implements Extension, Deactivatable
         }
 
         propertyFileConfigClasses.add(pcsClass);
+    }
+
+    public void findDynamicProducer(@Observes ProcessBean<DynamicBeanProducer> processBean)
+    {
+        dynamicProducer = processBean.getBean();
+    }
+
+    public void collectDynamicTypes(@Observes ProcessBean<?> processBean)
+    {
+        for (final InjectionPoint ip : processBean.getBean().getInjectionPoints())
+        {
+            final ConfigProperty annotation = ip.getAnnotated().getAnnotation(ConfigProperty.class);
+            if (annotation == null || annotation.converter() == ConfigResolver.Converter.class)
+            {
+                continue;
+            }
+
+            dynamicConfigTypes.add(ip.getType());
+        }
+    }
+
+    public void addDynamicBean(@Observes AfterBeanDiscovery afterBeanDiscovery, BeanManager bm)
+    {
+        if (dynamicProducer != null && !dynamicConfigTypes.isEmpty())
+        {
+            afterBeanDiscovery.addBean(new DynamicBean(dynamicProducer, dynamicConfigTypes));
+        }
     }
 
     @SuppressWarnings("UnusedDeclaration")
@@ -227,6 +270,97 @@ public class ConfigurationExtension implements Extension, Deactivatable
             {
                 adv.addDeploymentProblem(new IllegalStateException(violation));
             }
+        }
+    }
+
+    @ApplicationScoped
+    @Typed(DynamicBeanProducer.class) // used as an internal bean
+    static class DynamicBeanProducer extends BaseConfigPropertyProducer
+    {
+        @Produces
+        @ConfigProperty(name = "ignored")
+        public Object create(final InjectionPoint ip)
+        {
+            return super.getUntypedPropertyValue(ip, ip.getType());
+        }
+    }
+
+    @Typed
+    private static final class DynamicBean<T> implements Bean<T>
+    {
+        private final Bean<T> producer;
+        private final Set<Type> types;
+
+        private DynamicBean(final Bean<T> producer, final Set<Type> types)
+        {
+            this.producer = producer;
+            this.types = types;
+        }
+
+        @Override
+        public Set<Type> getTypes()
+        {
+            return types;
+        }
+
+        @Override
+        public Set<Annotation> getQualifiers()
+        {
+            return producer.getQualifiers();
+        }
+
+        @Override
+        public Class<? extends Annotation> getScope()
+        {
+            return producer.getScope();
+        }
+
+        @Override
+        public String getName()
+        {
+            return producer.getName();
+        }
+
+        @Override
+        public boolean isNullable()
+        {
+            return producer.isNullable();
+        }
+
+        @Override
+        public Set<InjectionPoint> getInjectionPoints()
+        {
+            return producer.getInjectionPoints();
+        }
+
+        @Override
+        public Class<?> getBeanClass()
+        {
+            return producer.getBeanClass();
+        }
+
+        @Override
+        public Set<Class<? extends Annotation>> getStereotypes()
+        {
+            return producer.getStereotypes();
+        }
+
+        @Override
+        public boolean isAlternative()
+        {
+            return producer.isAlternative();
+        }
+
+        @Override
+        public T create(final CreationalContext<T> creationalContext)
+        {
+            return producer.create(creationalContext);
+        }
+
+        @Override
+        public void destroy(final T t, final CreationalContext<T> creationalContext)
+        {
+            producer.destroy(t, creationalContext);
         }
     }
 }

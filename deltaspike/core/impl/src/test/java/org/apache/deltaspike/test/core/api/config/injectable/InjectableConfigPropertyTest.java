@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.test.core.api.config.injectable;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
@@ -36,6 +37,10 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
 import org.apache.deltaspike.test.core.api.config.injectable.numberconfig.NumberConfiguredBean;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+import static org.junit.Assert.assertEquals;
 
 
 @RunWith(Arquillian.class)
@@ -103,5 +108,12 @@ public class InjectableConfigPropertyTest
         Assert.assertNull(numberBean.getPropertyNonexisting());
         Assert.assertEquals(Float.valueOf(123.45f), numberBean.getPropertyFromConfig());
         Assert.assertEquals(Float.valueOf(42.42f), numberBean.getPropertyNonexistingDefaulted());
+    }
+
+    @Test
+    public void checkDynamicConvertedInjections() throws MalformedURLException {
+        SettingsBean settingsBean = BeanProvider.getContextualReference(SettingsBean.class, false);
+        assertEquals(asList(new URL("http://localhost"), new URL("http://127.0.0.1")), settingsBean.getUrlList());
+        assertEquals(singletonList(new URL("http://127.0.0.2")), settingsBean.getUrlListFromProperties());
     }
 }

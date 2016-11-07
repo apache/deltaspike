@@ -21,9 +21,11 @@ package org.apache.deltaspike.core.spi.config;
 import javax.enterprise.inject.spi.InjectionPoint;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.config.ConfigProperty;
+import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.BeanUtils;
 
 /**
@@ -110,6 +112,11 @@ public abstract class BaseConfigPropertyProducer
 
     protected <T> T getPropertyValue(InjectionPoint injectionPoint, Class<T> ipCls)
     {
+        return getUntypedPropertyValue(injectionPoint, ipCls);
+    }
+
+    protected <T> T getUntypedPropertyValue(InjectionPoint injectionPoint, Type ipCls)
+    {
         ConfigProperty configProperty = getAnnotation(injectionPoint, ConfigProperty.class);
 
         if (configProperty == null)
@@ -117,25 +124,9 @@ public abstract class BaseConfigPropertyProducer
             throw new IllegalStateException("producer method called without @ConfigProperty being present!");
         }
 
-        ConfigResolver.TypedResolver<T> resolver = ConfigResolver.resolve(configProperty.name())
-                .as(ipCls)
-                .withCurrentProjectStage(configProperty.projectStageAware());
-
-        String stringDefault = configProperty.defaultValue();
-        if (!ConfigProperty.NULL.equals(stringDefault))
-        {
-            resolver.withStringDefault(stringDefault);
-        }
-
-        String parameterizedBy = configProperty.parameterizedBy();
-        if (!ConfigProperty.NULL.equals(parameterizedBy))
-        {
-            resolver.parameterizedBy(parameterizedBy);
-        }
-
-        resolver.evaluateVariables(configProperty.evaluateVariables());
-
-        return resolver.getValue();
+        return readEntry(configProperty.name(), configProperty.defaultValue(), ipCls,
+                configProperty.converter(), configProperty.parameterizedBy(),
+                configProperty.projectStageAware(), configProperty.evaluateVariables());
     }
 
     /**
@@ -168,5 +159,26 @@ public abstract class BaseConfigPropertyProducer
     protected <T extends Annotation> T getAnnotation(InjectionPoint injectionPoint, Class<T> targetType)
     {
         return BeanUtils.extractAnnotation(injectionPoint.getAnnotated(), targetType);
+    }
+
+    public <T> T readEntry(final String key, final String stringDefault, final Type ipCls,
+                           final Class<? extends ConfigResolver.Converter> converterType,
+                           final String parameterizedBy, final boolean projectStageAware, final boolean evaluate)
+    {
+        final ConfigResolver.UntypedResolver<String> untypedResolver = ConfigResolver.resolve(key);
+        final ConfigResolver.TypedResolver<T> resolver =
+                (ConfigResolver.Converter.class == converterType ?
+                        untypedResolver.as(Class.class.cast(ipCls)) :
+                        untypedResolver.as(ipCls, BeanProvider.getContextualReference(converterType)))
+                        .withCurrentProjectStage(projectStageAware);
+        if (!ConfigProperty.NULL.equals(stringDefault))
+        {
+            resolver.withStringDefault(stringDefault);
+        }
+        if (!ConfigProperty.NULL.equals(parameterizedBy))
+        {
+            resolver.parameterizedBy(parameterizedBy);
+        }
+        return resolver.evaluateVariables(evaluate).getValue();
     }
 }

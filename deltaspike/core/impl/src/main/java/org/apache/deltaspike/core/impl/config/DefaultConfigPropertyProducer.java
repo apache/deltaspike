@@ -26,6 +26,8 @@ import javax.enterprise.inject.spi.InjectionPoint;
 import org.apache.deltaspike.core.spi.config.BaseConfigPropertyProducer;
 import org.apache.deltaspike.core.api.config.ConfigProperty;
 
+import java.lang.reflect.Type;
+
 /**
  * This class contains producer methods for injecting
  * configuration provided with the {@link ConfigProperty}
@@ -93,11 +95,11 @@ public class DefaultConfigPropertyProducer extends BaseConfigPropertyProducer
 
     }
 
-    private <T> T getPropertyWithException(InjectionPoint ip, Class<T> ipCls)
+    private <T> T getPropertyWithException(InjectionPoint ip, Type ipCls)
     {
         try
         {
-            return getPropertyValue(ip, ipCls);
+            return getUntypedPropertyValue(ip, ipCls);
         }
         catch (RuntimeException rte)
         {

@@ -19,9 +19,14 @@
 package org.apache.deltaspike.test.core.api.config.injectable;
 
 import org.apache.deltaspike.core.api.config.ConfigProperty;
+import org.apache.deltaspike.core.api.config.ConfigResolver;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 @ApplicationScoped
 public class SettingsBean
@@ -91,6 +96,14 @@ public class SettingsBean
     @Inject
     @ConfigProperty(name = "testDbConfig")
     private String dbConfig;
+
+    @Inject
+    @ConfigProperty(name = "urlList", converter = UrlList.class, defaultValue = "http://localhost,http://127.0.0.1")
+    private List<URL> urlList;
+
+    @Inject
+    @ConfigProperty(name = "urlListFromProperties", converter = UrlList.class)
+    private List<URL> urlListFromProperties;
 
     protected SettingsBean()
     {
@@ -192,5 +205,37 @@ public class SettingsBean
     public String getDbConfig()
     {
         return dbConfig;
+    }
+
+    public List<URL> getUrlList() {
+        return urlList;
+    }
+
+    public List<URL> getUrlListFromProperties() {
+        return urlListFromProperties;
+    }
+
+    public static class UrlList implements ConfigResolver.Converter<List<URL>>
+    {
+        @Override
+        public List<URL> convert(final String value)
+        {
+            final List<URL> urls = new ArrayList<URL>();
+            if (value != null)
+            {
+                for (final String segment : value.split(","))
+                {
+                    try
+                    {
+                        urls.add(new URL(segment));
+                    }
+                    catch (final MalformedURLException e)
+                    {
+                        throw new IllegalArgumentException(e);
+                    }
+                }
+            }
+            return urls;
+        }
     }
 }

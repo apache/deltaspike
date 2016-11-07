@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.core.api.config;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -760,6 +761,14 @@ public final class ConfigResolver
         <N> TypedResolver<N> as(Class<N> clazz);
 
         /**
+         * @param type target type, includes List and Map using a Converter
+         * @param converter The converter for the target type
+         * @param <N> target type
+         * @return this builder typed.
+         */
+        <N> TypedResolver<N> as(Type type, Converter<N> converter);
+
+        /**
          * Sets the type of the configuration entry to the given class, sets the converter to the one given and
          * returns this builder as a TypedResolver. If a converter is provided for one of the types supported by
          * default (see {@link #as(Class)} then the provided converter is used instead of the built-in one.
@@ -794,7 +803,7 @@ public final class ConfigResolver
 
         private String keyResolved;
 
-        private Class<?> configEntryType = String.class;
+        private Type configEntryType = String.class;
 
         private boolean withDefault = false;
         private T defaultValue;
@@ -837,6 +846,16 @@ public final class ConfigResolver
         @Override
         @SuppressWarnings("unchecked")
         public <N> TypedResolver<N> as(Class<N> clazz, Converter<N> converter)
+        {
+            configEntryType = clazz;
+            this.converter = converter;
+
+            return (TypedResolver<N>) this;
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public <N> TypedResolver<N> as(Type clazz, Converter<N> converter)
         {
             configEntryType = clazz;
             this.converter = converter;
