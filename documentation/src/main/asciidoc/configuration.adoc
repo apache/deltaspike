@@ -61,8 +61,9 @@ The `ConfigResolver` is the central point to access configuration in DeltaSpike.
  * `ConfigResolver` methods for easy programmatic access to values
  * `TypedResolver` API for typed configuration values and precise control over resolution
  * `@ConfigProperty` for injection of configured values into beans
+ * interface based configuration
 
-All three mechanisms are described in the following sections.
+All four mechanisms are described in the following sections.
 
 === ConfigResolver methods
 
@@ -354,6 +355,69 @@ public @interface NumberConfig
 }
 -------------------------------------------------------------------
 
+== Interface based configuration
+
+The interfaces decorated with `@Configuration` are converted during CDI startup
+to Beans matching the interface type. Concretely this interface:
+
+[source]
+----
+@Configuration
+public interface MyConfig {
+}
+----
+
+Will use accessible using:
+
+[source]
+----
+@Inject
+private MyConfig config;
+----
+
+To define a configuration entry in this mode you define an interface method
+and decorate it with `@ConfigProperty` exactly as a normal injection:
+
+[source]
+----
+@Configuration
+public interface MyConfig {
+    @ConfigProperty(name = "my.config")
+    String url();
+}
+----
+
+TIP: this mode also supports primitives like `int`, `boolean`, ... as returned types.
+
+The methods are no parameter and not returning void methods.
+
+If all your keys use the same prefix you can configure it on `@Configuration`:
+
+[source]
+----
+@Configuration(prefix = "client.")
+public interface MyConfig {
+    @ConfigProperty(name = "url")
+    String url();
+
+    @ConfigProperty(name = "timeout", defaultValue = "30000")
+    long timeout();
+}
+----
+
+Finally, you can also access the caching feature of the `TypedResolver` through `@Configuration`:
+
+[source]
+----
+@Configuration(cacheFor = 30, cacheUnit = TimeUnit.SECONDS)
+public interface MyConfig {
+    @ConfigProperty(name = "url")
+    String url();
+
+    @ConfigProperty(name = "timeout", defaultValue = "30000")
+    long timeout();
+}
+----
 
 == Providing configuration using ConfigSources
 
@@ -436,6 +500,10 @@ DeltaSpike is using internally, if a custom implementation should load
 the ordinal value from the config-source like the default
 implementations provided by DeltaSpike do.
 
+Since 1.8.0 you can also decorate a CDI `ConfigSource` with `@Source` and it will
+be added to DeltaSpike configuration *once the CDI container is started* (it means
+you can't use this source in an `Extension`).
+
 ==== PropertyFileConfig
 
 For registering all your own property files of a certain name in your
@@ -515,3 +583,8 @@ public class DecryptingConfigFilter implements ConfigFilter
         return "<value encrypted>";
     }
 }
+-------------------------------------------------------------
+
+Since 1.8.0 you can also decorate a CDI `ConfigFilter` with `@Filter` and it will
+be added to DeltaSpike configuration *once the CDI container is started* (it means
+you can't use this source in an `Extension`).
