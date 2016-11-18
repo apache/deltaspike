@@ -197,6 +197,7 @@ public class ConfigurationExtension implements Extension, Deactivatable
                     .beanLifecycle(new ProxyConfigurationLifecycle(proxyType))
                     .scope(ApplicationScoped.class)
                     .passivationCapable(true)
+                    .id("DeltaSpikeConfiguration#" + proxyType.getName())
                     .beanClass(proxyType)
                     .create());
         }
