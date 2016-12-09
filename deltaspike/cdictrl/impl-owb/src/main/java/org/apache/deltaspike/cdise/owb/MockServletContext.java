@@ -26,6 +26,7 @@ import java.util.Hashtable;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import javax.enterprise.inject.Typed;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
@@ -36,6 +37,7 @@ import javax.servlet.ServletException;
  * Mock ServletContext needed to startup the container.
  *
  */
+@Typed // ignore this as CDI bean
 public class MockServletContext implements ServletContext
 {
     private static MockServletContext instance = new MockServletContext();
