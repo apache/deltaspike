@@ -830,7 +830,9 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
     {
         CdiTestRunner cdiTestRunner = currentTestRunner.get();
 
-        if (cdiTestRunner == null)
+        if (cdiTestRunner == null ||
+            cdiTestRunner.testContext == null ||
+            cdiTestRunner.testContext.externalContainers == null)
         {
             return Collections.emptyList();
         }
