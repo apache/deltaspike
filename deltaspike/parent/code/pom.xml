@@ -523,8 +523,9 @@
 
             <properties>
                 <!-- Actual Weld version used with this profile -->
-                <weld.version>3.0.0.Alpha16</weld.version>
+                <weld.version>3.0.0.Beta1</weld.version>
                 <cdicontainer.version>weld-${weld.version}</cdicontainer.version>
+                <java.version>1.8</java.version>
             </properties>
             
             <dependencyManagement>
