@@ -45,6 +45,12 @@
             <version>${weld.version}</version>
             <scope>provided</scope>
         </dependency>
+        
+        <!-- Version will de derived from BOM in parent-code -->
+        <dependency>
+            <groupId>org.jboss.weld</groupId>
+            <artifactId>weld-api</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>javax.el</groupId>

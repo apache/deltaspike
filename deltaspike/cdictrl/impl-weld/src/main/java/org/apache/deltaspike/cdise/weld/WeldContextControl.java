@@ -25,12 +25,12 @@ import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
+
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.deltaspike.cdise.api.ContextControl;
-import org.jboss.weld.context.AbstractSharedContext;
 import org.jboss.weld.context.ApplicationContext;
 import org.jboss.weld.context.bound.BoundConversationContext;
 import org.jboss.weld.context.bound.BoundRequestContext;
@@ -152,12 +152,6 @@ public class WeldContextControl implements ContextControl
         {
             // destroys the bean instances, but the context stays active
             applicationContext.invalidate();
-
-            //needed for weld < v1.1.9
-            if (applicationContext instanceof AbstractSharedContext)
-            {
-                ((AbstractSharedContext) applicationContext).getBeanStore().clear();
-            }
         }
     }
 
