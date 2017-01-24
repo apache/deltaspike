@@ -32,6 +32,19 @@
 
     <name>Apache DeltaSpike CDI Weld-ContainerControl</name>
 
+    <dependencyManagement>
+        <dependencies>
+            <!-- This will ensure that there will always be correct Weld API version for any build -->
+            <dependency>
+                <groupId>org.jboss.weld</groupId>
+                <artifactId>weld-core-bom</artifactId>
+                <version>${weld.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
         <dependency>
             <groupId>org.apache.deltaspike.cdictrl</groupId>
@@ -42,7 +55,6 @@
         <dependency>
             <groupId>org.jboss.weld.se</groupId>
             <artifactId>weld-se-core</artifactId>
-            <version>${weld.version}</version>
             <scope>provided</scope>
         </dependency>
         
