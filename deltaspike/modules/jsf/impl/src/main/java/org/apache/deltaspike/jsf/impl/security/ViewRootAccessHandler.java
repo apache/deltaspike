@@ -18,90 +18,150 @@
  */
 package org.apache.deltaspike.jsf.impl.security;
 
+import org.apache.deltaspike.core.api.config.view.ViewConfig;
 import org.apache.deltaspike.core.api.config.view.metadata.ConfigDescriptor;
+import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigDescriptor;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.jsf.api.security.ViewAccessHandler;
 import org.apache.deltaspike.jsf.impl.util.SecurityUtils;
+import org.apache.deltaspike.security.api.authorization.ErrorViewAwareAccessDeniedException;
 import org.apache.deltaspike.security.spi.authorization.EditableAccessDecisionVoterContext;
 
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.faces.component.UIViewRoot;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
-@RequestScoped
-public class ViewRootAccessHandler
+@ApplicationScoped
+public class ViewRootAccessHandler implements ViewAccessHandler
 {
     @Inject
     private ViewConfigResolver viewConfigResolver;
+    
+    private ConcurrentMap<String, List<ConfigDescriptor<?>>> descriptorStacks =
+            new ConcurrentHashMap<String, List<ConfigDescriptor<?>>>();
 
-    private List<String> checkedViewIds = new ArrayList<String>();
-
-    public void checkAccessTo(UIViewRoot uiViewRoot)
+    @Override
+    public boolean canAccessView(String viewId)
     {
-        if (uiViewRoot == null)
+        try
+        {
+            checkAccessToView(viewId);
+            return true;
+        }
+        catch (ErrorViewAwareAccessDeniedException e)
+        {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean canAccessView(UIViewRoot viewRoot)
+    {
+        try
+        {
+            checkAccessToView(viewRoot);
+            return true;
+        }
+        catch (ErrorViewAwareAccessDeniedException e)
+        {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean canAccessView(ViewConfigDescriptor viewDescriptor)
+    {
+        try
+        {
+            checkAccessToView(viewDescriptor);
+            return true;
+        }
+        catch (ErrorViewAwareAccessDeniedException e)
+        {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean canAccessView(Class<? extends ViewConfig> viewConfig)
+    {
+        try
+        {
+            checkAccessToView(viewConfig);
+            return true;
+        }
+        catch (ErrorViewAwareAccessDeniedException e)
+        {
+            return false;
+        }
+    }
+    
+    @Override
+    public void checkAccessToView(String viewId)
+    {
+        if (viewId == null)
         {
             return;
         }
-
-        String viewId = uiViewRoot.getViewId();
-
-        if (!checkView(viewId))
+        
+        // check if we already know which descriptors to invoke
+        List<ConfigDescriptor<?>> descriptorStack = descriptorStacks.get(viewId);
+        if (descriptorStack == null)
         {
-            return;
-        }
-
-        this.checkedViewIds.add(viewId);
-
-        ConfigDescriptor configDescriptor = this.viewConfigResolver.getViewConfigDescriptor(viewId);
-
-        //topmost nodes get checked first
-        Stack<ConfigDescriptor> configDescriptorStack = new Stack<ConfigDescriptor>();
-
-        if (configDescriptor != null)
-        {
-            configDescriptorStack.push(configDescriptor);
-        }
-
-        List<String> parentPathList = new ArrayList<String>();
-        createPathList(viewId, parentPathList);
-
-        ConfigDescriptor pathDescriptor;
-        for (String path : parentPathList)
-        {
-            pathDescriptor = this.viewConfigResolver.getConfigDescriptor(path);
-
-            if (pathDescriptor != null)
+            // we don't know which descriptors to invoke
+            // build the stack such that parent nodes (i.e. folders) get checked first
+            descriptorStack = new ArrayList<ConfigDescriptor<?>>();
+            int separatorIndex = 0;
+            ConfigDescriptor<?> descriptor;
+            while ((separatorIndex = viewId.indexOf('/', separatorIndex)) != -1)
             {
-                configDescriptorStack.push(pathDescriptor);
+                descriptor = viewConfigResolver.getConfigDescriptor(viewId.substring(0, ++separatorIndex));
+                if (descriptor != null)
+                {
+                    descriptorStack.add(descriptor);
+                }
             }
+            
+            // add the view itself
+            descriptor = viewConfigResolver.getConfigDescriptor(viewId);
+            if (descriptor != null)
+            {
+                descriptorStack.add(descriptor);
+            }
+            
+            // add the stack to the cache
+            descriptorStacks.putIfAbsent(viewId, descriptorStack);
         }
-
+        
+        // invoke the descriptors
         EditableAccessDecisionVoterContext accessDecisionVoterContext =
                 BeanProvider.getContextualReference(EditableAccessDecisionVoterContext.class, false);
-
-        for (ConfigDescriptor currentConfigDescriptor : configDescriptorStack)
+        for (ConfigDescriptor<?> descriptor : descriptorStack)
         {
-            SecurityUtils.invokeVoters(accessDecisionVoterContext, currentConfigDescriptor);
+            SecurityUtils.invokeVoters(accessDecisionVoterContext, descriptor);
         }
     }
 
-    private void createPathList(String currentPath, List<String> pathList)
+    @Override
+    public void checkAccessToView(UIViewRoot viewRoot)
     {
-        if (!currentPath.contains("/"))
-        {
-            return;
-        }
-
-        String parentFolder = currentPath.substring(0, currentPath.lastIndexOf("/"));
-        pathList.add(parentFolder + "/");
-        createPathList(parentFolder, pathList);
+        checkAccessToView(viewRoot == null ? null : viewRoot.getViewId());
     }
 
-    private boolean checkView(String viewId)
+    @Override
+    public void checkAccessToView(ViewConfigDescriptor viewDescriptor)
     {
-        return viewId != null && !this.checkedViewIds.contains(viewId);
+        checkAccessToView(viewDescriptor == null ? null : viewDescriptor.getViewId());
+    }
+
+    @Override
+    public void checkAccessToView(Class<? extends ViewConfig> viewConfig)
+    {
+        checkAccessToView(viewConfig == null ? null : viewConfigResolver.getViewConfigDescriptor(viewConfig));
     }
 }

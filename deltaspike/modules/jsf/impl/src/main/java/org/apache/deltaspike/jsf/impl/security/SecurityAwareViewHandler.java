@@ -110,7 +110,7 @@ public class SecurityAwareViewHandler extends ViewHandlerWrapper implements Deac
             ViewRootAccessHandler viewRootAccessHandler =
                     BeanProvider.getContextualReference(ViewRootAccessHandler.class);
 
-            viewRootAccessHandler.checkAccessTo(result);
+            viewRootAccessHandler.checkAccessToView(result);
         }
         catch (ErrorViewAwareAccessDeniedException accessDeniedException)
         {

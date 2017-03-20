@@ -143,7 +143,7 @@ public class DeltaSpikePhaseListener implements PhaseListener, Deactivatable
 
         try
         {
-            BeanProvider.getContextualReference(ViewRootAccessHandler.class).checkAccessTo(facesContext.getViewRoot());
+            BeanProvider.getContextualReference(ViewRootAccessHandler.class).checkAccessToView(facesContext.getViewRoot());
         }
         catch (ErrorViewAwareAccessDeniedException accessDeniedException)
         {
