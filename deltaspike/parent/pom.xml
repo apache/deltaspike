@@ -88,7 +88,7 @@
 
 
         <maven.jetty.plugin.version>7.1.5.v20100705</maven.jetty.plugin.version>
-        <maven.surefire.plugin.version>2.11</maven.surefire.plugin.version>
+        <maven.surefire.plugin.version>2.19.1</maven.surefire.plugin.version>
         <maven.bundle.plugin.version>2.3.7</maven.bundle.plugin.version>
         <maven.jar.plugin.version>2.4</maven.jar.plugin.version>
         <maven.dependency.plugin.version>2.4</maven.dependency.plugin.version>
