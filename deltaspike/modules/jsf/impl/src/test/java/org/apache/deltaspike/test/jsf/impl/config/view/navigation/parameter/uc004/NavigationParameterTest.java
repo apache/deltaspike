@@ -84,7 +84,7 @@ public class NavigationParameterTest
         Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("simplePageConfig"),
                 "You arrived at simplePageConfig page")
                 .apply(driver));
-        Assert.assertTrue(driver.getCurrentUrl().contains("&cv="));
+        Assert.assertTrue(driver.getCurrentUrl().contains("cv="));
     }
 
 }
