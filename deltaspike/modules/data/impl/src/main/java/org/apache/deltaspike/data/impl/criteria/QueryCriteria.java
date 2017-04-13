@@ -143,7 +143,12 @@ public class QueryCriteria<C, R> implements Criteria<C, R>
             CriteriaBuilder builder = entityManager.getCriteriaBuilder();
             CriteriaQuery<R> query = createCriteriaQuery(builder);
             From<C, C> root = query.from(entityClass);
-            if (!selections.isEmpty())
+            if (selections.size() == 1)
+            {
+                Selection<?>[] selections = prepareSelections(query, builder, root);
+                query.select((Selection<? extends R>) selections[0]);
+            }
+            if (selections.size() > 1)
             {
                 query.multiselect(prepareSelections(query, builder, root));
             }

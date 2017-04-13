@@ -354,7 +354,7 @@ public class CriteriaTest extends TransactionalTestCase
         assertNull(result2);
     }
 
-    @Test
+    @Test // SELECT COUNT(DISTINCT(s.name)) FROM Simple s WHERE s.name = 'should_create_count_criteria'
     public void should_create_count_criteria()
     {
         // given
