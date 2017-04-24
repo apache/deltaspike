@@ -45,4 +45,9 @@ public @interface JmxManaged
      * @return the description either of the operation or the attribute exported through JMX.
      */
     String description() default "";
+
+    /**
+     * @return if true a Map will be converted to a TabularData with a CompositeData entry, if false the map will be returned directly.
+     */
+    boolean convertMapToTabularData() default true;
 }

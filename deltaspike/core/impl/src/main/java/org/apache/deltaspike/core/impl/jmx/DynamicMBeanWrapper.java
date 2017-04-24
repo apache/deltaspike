@@ -18,19 +18,15 @@
  */
 package org.apache.deltaspike.core.impl.jmx;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.deltaspike.core.api.config.ConfigResolver;
+import org.apache.deltaspike.core.api.jmx.JmxBroadcaster;
+import org.apache.deltaspike.core.api.jmx.JmxManaged;
+import org.apache.deltaspike.core.api.jmx.JmxParameter;
+import org.apache.deltaspike.core.api.jmx.MBean;
+import org.apache.deltaspike.core.api.jmx.NotificationInfo;
+import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
+import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.core.util.ParameterUtil;
 
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
@@ -50,16 +46,27 @@ import javax.management.MBeanParameterInfo;
 import javax.management.Notification;
 import javax.management.NotificationBroadcasterSupport;
 import javax.management.ReflectionException;
-
-import org.apache.deltaspike.core.api.config.ConfigResolver;
-import org.apache.deltaspike.core.api.jmx.JmxBroadcaster;
-import org.apache.deltaspike.core.api.jmx.JmxManaged;
-import org.apache.deltaspike.core.api.jmx.JmxParameter;
-import org.apache.deltaspike.core.api.jmx.MBean;
-import org.apache.deltaspike.core.api.jmx.NotificationInfo;
-import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
-import org.apache.deltaspike.core.api.provider.BeanProvider;
-import org.apache.deltaspike.core.util.ParameterUtil;
+import javax.management.openmbean.CompositeDataSupport;
+import javax.management.openmbean.CompositeType;
+import javax.management.openmbean.OpenDataException;
+import javax.management.openmbean.OpenType;
+import javax.management.openmbean.SimpleType;
+import javax.management.openmbean.TabularData;
+import javax.management.openmbean.TabularDataSupport;
+import javax.management.openmbean.TabularType;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class is the MBean implementation of a CDI bean.
@@ -230,7 +237,8 @@ public class DynamicMBeanWrapper extends NotificationBroadcasterSupport implemen
                     }
 
                     attributeInfos.add(new MBeanAttributeInfo(
-                        fieldName, type.getName(), fieldDescription, getter != null, setter != null, false));
+                        fieldName, toMBeanType(type).getName(), fieldDescription,
+                            getter != null, setter != null, false));
 
                     fields.put(fieldName, new AttributeAccessor(getter, setter));
                 }
@@ -244,6 +252,15 @@ public class DynamicMBeanWrapper extends NotificationBroadcasterSupport implemen
                 null, // default constructor is mandatory
                 operationInfos.toArray(new MBeanOperationInfo[operationInfos.size()]),
                 notificationInfos.toArray(new MBeanNotificationInfo[notificationInfos.size()]));
+    }
+
+    private Class<?> toMBeanType(final Class<?> type)
+    {
+        if (Map.class == type)
+        {
+            return TabularData.class;
+        }
+        return type;
     }
 
     private MBeanNotificationInfo getNotificationInfo(final NotificationInfo notificationInfo, String sourceInfo)
@@ -288,7 +305,12 @@ public class DynamicMBeanWrapper extends NotificationBroadcasterSupport implemen
             Thread.currentThread().setContextClassLoader(classloader);
             try
             {
-                return fields.get(attribute).get(instance());
+                final Object o = fields.get(attribute).get(instance());
+                if (Map.class.isInstance(o))
+                {
+                    return toTabularData(attribute, attribute, Map.class.cast(o));
+                }
+                return o;
             }
             catch (IllegalArgumentException e)
             {
@@ -308,6 +330,30 @@ public class DynamicMBeanWrapper extends NotificationBroadcasterSupport implemen
             }
         }
         throw new AttributeNotFoundException();
+    }
+
+    private TabularData toTabularData(final String typeName, final String description, final Map map)
+    {
+        final OpenType<?>[] types = new OpenType<?>[map.size()];
+        for (int i = 0; i < types.length; i++)
+        {
+            types[i] = SimpleType.STRING;
+        }
+
+        try
+        {
+            final String[] keys = String[].class.cast(map.keySet().toArray(new String[map.size()]));
+            final CompositeType ct = new CompositeType(
+                    typeName, description, keys, keys, types);
+            final TabularType type = new TabularType(typeName, description, ct, keys);
+            final TabularDataSupport data = new TabularDataSupport(type);
+            data.put(new CompositeDataSupport(ct, map));
+            return data;
+        }
+        catch (final OpenDataException e)
+        {
+            throw new IllegalArgumentException(e);
+        }
     }
 
     @Override

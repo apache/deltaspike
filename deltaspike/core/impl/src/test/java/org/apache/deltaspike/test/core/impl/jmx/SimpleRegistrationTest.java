@@ -21,7 +21,14 @@ package org.apache.deltaspike.test.core.impl.jmx;
 import org.junit.Test;
 
 import javax.inject.Inject;
-import javax.management.*;
+import javax.management.Attribute;
+import javax.management.MBeanParameterInfo;
+import javax.management.MBeanServer;
+import javax.management.Notification;
+import javax.management.NotificationListener;
+import javax.management.ObjectName;
+import javax.management.openmbean.CompositeData;
+import javax.management.openmbean.TabularData;
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -67,5 +74,15 @@ public abstract class SimpleRegistrationTest {
         MBeanParameterInfo parameterInfo = server.getMBeanInfo(on).getOperations()[0].getSignature()[0];
         assertEquals("multiplier", parameterInfo.getName());
         assertEquals("the multiplier", parameterInfo.getDescription());
+
+        // table support
+        Object table = server.getAttribute(on, "table");
+        assertTrue(TabularData.class.isInstance(table));
+        final TabularData data = TabularData.class.cast(table);
+        assertEquals(1, data.size());
+        final CompositeData compositeData = CompositeData.class.cast(data.values().iterator().next());
+        assertEquals(2, compositeData.values().size());
+        assertEquals("value1", compositeData.get("key1"));
+        assertEquals("value2", compositeData.get("key2"));
     }
 }

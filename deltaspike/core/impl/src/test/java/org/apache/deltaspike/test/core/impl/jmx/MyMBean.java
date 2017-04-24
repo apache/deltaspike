@@ -26,6 +26,8 @@ import org.apache.deltaspike.core.api.jmx.MBean;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.management.Notification;
+import java.util.HashMap;
+import java.util.Map;
 
 @ApplicationScoped
 @MBean(description = "my mbean")
@@ -36,6 +38,16 @@ public class MyMBean
 
     @Inject
     private JmxBroadcaster broadcaster;
+
+    @JmxManaged
+    private Map<String, String> table;
+
+    public Map<String, String> getTable() {
+        return table != null ? table : (table = new HashMap<String, String>() {{
+            put("key1", "value1");
+            put("key2", "value2");
+        }});
+    }
 
     public int getCounter()
     {
