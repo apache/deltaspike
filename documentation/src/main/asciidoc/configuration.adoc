@@ -250,6 +250,25 @@ Only after that time the configured value will get evaluate again.
 TIP: Note that the 'cache' is only held within the very TypedResolver instance.
 If you use different `TypedResolver` instances (e.g. in different classes) then you might get different cache timeouts.
 
+==== List Values handling
+
+As of DeltaSpike-1.8.0, the `Typed Resolver` is also able to handle list values.
+Resolve a list of e.g. retry interval values via:
+
+[source,java]
+----
+List<Integer> retryIntervals
+    = ConfigResolver.resolve("myapp.retry.intervalls")
+        .as(Integer.class)
+        .asList()
+        .getValue();
+----
+
+The values get configured as comma (`','`) separated value String.
+A Comma inside a value can be escaped with a backslash (`\,`), backslashes should be escaped with double-backslash (`\\`).
+Trailing and leading whitespaces get trimmed for each value.
+
+
 === Injection of configured values into beans using @ConfigProperty
 
 DeltaSpike provides a way to inject configured values into your code via the qualifier `@ConfigProperty`.

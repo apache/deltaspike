@@ -637,6 +637,19 @@ public final class ConfigResolver
     {
 
         /**
+         * Declare the Resolver to return a List of the given Type.
+         * When getting value it will be split on each comma (',') character.
+         * If a comma is contained in the values it must get escaped with a preceding backslash (&quot;\,&quot;).
+         * Any backslash needs to get escaped via double-backslash (&quot;\\&quot;).
+         * Note that in property files this leads to &quot;\\\\&quot; as properties escape themselves.
+         *
+         * @return a TypedResolver for a list of configured comma separated values
+         *
+         * @since 1.8.0
+         */
+        TypedResolver<List<T>> asList();
+
+        /**
          * Appends the resolved value of the given property to the key of this builder. This is described in more detail
          * in {@link ConfigResolver#getPropertyAwarePropertyValue(String, String)}.
          * @param propertyName The name of the parameter property
@@ -816,6 +829,8 @@ public final class ConfigResolver
 
         private boolean strictly = false;
 
+        private boolean isList = false;
+
         private Converter<?> converter;
 
         private boolean evaluateVariables = false;
@@ -841,6 +856,15 @@ public final class ConfigResolver
         {
             configEntryType = clazz;
             return (TypedResolver<N>) this;
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public TypedResolver<List<T>> asList()
+        {
+            isList = true;
+
+            return (TypedResolver<List<T>>) this;
         }
 
         @Override
@@ -955,7 +979,15 @@ public final class ConfigResolver
             }
 
             String valueStr = resolveStringValue();
-            T value = convert(valueStr);
+            T value;
+            if (isList)
+            {
+                value = splitAndConvertListValue(valueStr);
+            }
+            else
+            {
+                value = convert(valueStr);
+            }
 
             if (withDefault)
             {
@@ -976,6 +1008,48 @@ public final class ConfigResolver
             }
 
             return value;
+        }
+
+        private T splitAndConvertListValue(String valueStr)
+        {
+            List list = new ArrayList();
+            StringBuilder currentValue = new StringBuilder();
+            int length = valueStr.length();
+            for (int i = 0; i < length; i++)
+            {
+                char c = valueStr.charAt(i);
+                if (c == '\\')
+                {
+                    if (i < length - 1)
+                    {
+                        char nextC = valueStr.charAt(i + 1);
+                        currentValue.append(nextC);
+                        i++;
+                    }
+                }
+                else if (c == ',')
+                {
+                    String trimedVal = currentValue.toString().trim();
+                    if (trimedVal.length() > 0)
+                    {
+                        list.add(convert(trimedVal));
+                    }
+
+                    currentValue.setLength(0);
+                }
+                else
+                {
+                    currentValue.append(c);
+                }
+            }
+
+            String trimedVal = currentValue.toString().trim();
+            if (trimedVal.length() > 0)
+            {
+                list.add(convert(trimedVal));
+            }
+
+            return (T) list;
         }
 
         @Override
@@ -1082,7 +1156,6 @@ public final class ConfigResolver
          */
         private T convert(String value)
         {
-
             if (value == null)
             {
                 return null;

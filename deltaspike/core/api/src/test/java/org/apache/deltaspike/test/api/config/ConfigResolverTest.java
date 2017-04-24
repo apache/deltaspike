@@ -29,6 +29,7 @@ import org.junit.Test;
 
 import java.util.List;
 
+@SuppressWarnings("Duplicates")
 public class ConfigResolverTest
 {
     private static final String DEFAULT_VALUE = "defaultValue";
@@ -219,6 +220,37 @@ public class ConfigResolverTest
                 "");
 
         Assert.assertEquals(expected, projectStageAwareExampleEntry1);
+    }
+
+    @Test
+    public void testConfiguredListValues_WithWhitespace() {
+        List<String> emails = ConfigResolver.resolve("test.list.value.emails").asList().getValue();
+        Assert.assertNotNull(emails);
+        Assert.assertEquals(3, emails.size());
+        Assert.assertTrue(emails.contains("test1@apache.org"));
+        Assert.assertTrue(emails.contains("test2@apache.org"));
+        Assert.assertTrue(emails.contains("test3@apache.org"));
+    }
+
+    @Test
+    public void testConfiguredListValues_WithEscaping() {
+        List<String> escapedValues = ConfigResolver.resolve("test.list.value.escaped.list").asList().getValue();
+        Assert.assertNotNull(escapedValues);
+        Assert.assertEquals(3, escapedValues.size());
+        Assert.assertTrue(escapedValues.contains("val,ue1"));
+        Assert.assertTrue(escapedValues.contains("value2"));
+        Assert.assertTrue(escapedValues.contains("val\\ue3"));
+    }
+
+    @Test
+    public void testConfiguredListValues_OtherType() {
+        List<Integer> intValues = ConfigResolver.resolve("test.list.intvalues").as(Integer.class).asList().getValue();
+        Assert.assertNotNull(intValues);
+        Assert.assertEquals(4, intValues.size());
+        Assert.assertTrue(intValues.contains(3));
+        Assert.assertTrue(intValues.contains(7));
+        Assert.assertTrue(intValues.contains(11));
+        Assert.assertTrue(intValues.contains(17));
     }
 
     private void setTestConfigSourceValue(String key, String value)

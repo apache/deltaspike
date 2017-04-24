@@ -190,7 +190,6 @@
         <module name="MissingOverride"/>
         <module name="HideUtilityClassConstructor"/>
         <module name="EqualsAvoidNull"/>
-        <module name="ModifiedControlVariable"/>
         <module name="DeclarationOrder"/>
         <!--module name="MultipleStringLiterals"/-->
         <module name="OneStatementPerLine"/>

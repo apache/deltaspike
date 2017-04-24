@@ -102,6 +102,11 @@ public class TestConfigSource implements ConfigSource
         props.put("deltaspike.test.exampleEntry-1.UnitTest", "tomato-UnitTest");
         props.put("deltaspike.test.exampleEntry-2", "default-exampleEntry-1-is-${deltaspike.test.exampleEntry-1}");
         props.put("deltaspike.test.exampleEntry-2.UnitTest", "projectStageAware-exampleEntry-1-is-${deltaspike.test.exampleEntry-1}");
+
+        // values for testing the list handling
+        props.put("test.list.value.emails", "test1@apache.org, test2@apache.org, \n  test3@apache.org");
+        props.put("test.list.value.escaped.list","val\\,ue1,value2, val\\\\ue3");
+        props.put("test.list.intvalues","3,7, 11 ,\t 17\n");
     }
 
     @Override
