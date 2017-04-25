@@ -32,6 +32,7 @@ import javax.management.openmbean.TabularData;
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -75,14 +76,37 @@ public abstract class SimpleRegistrationTest {
         assertEquals("multiplier", parameterInfo.getName());
         assertEquals("the multiplier", parameterInfo.getDescription());
 
-        // table support
-        Object table = server.getAttribute(on, "table");
-        assertTrue(TabularData.class.isInstance(table));
-        final TabularData data = TabularData.class.cast(table);
-        assertEquals(1, data.size());
-        final CompositeData compositeData = CompositeData.class.cast(data.values().iterator().next());
-        assertEquals(2, compositeData.values().size());
-        assertEquals("value1", compositeData.get("key1"));
-        assertEquals("value2", compositeData.get("key2"));
+        { // table support - through map
+            Object table = server.getAttribute(on, "table");
+            assertTrue(TabularData.class.isInstance(table));
+            final TabularData data = TabularData.class.cast(table);
+            assertEquals(1, data.size());
+            final CompositeData compositeData = CompositeData.class.cast(data.values().iterator().next());
+            assertEquals(2, compositeData.values().size());
+            assertEquals("value1", compositeData.get("key1"));
+            assertEquals("value2", compositeData.get("key2"));
+        }
+
+        { // table support - through Table
+            Object table = server.getAttribute(on, "table2");
+            assertTrue(TabularData.class.isInstance(table));
+            final TabularData data = TabularData.class.cast(table);
+            assertEquals(2, data.size());
+            final Iterator<?> iterator = data.values().iterator();
+            {
+                final CompositeData compositeData = CompositeData.class.cast(iterator.next());
+                assertEquals(3, compositeData.values().size());
+                assertEquals("1", compositeData.get("a"));
+                assertEquals("2", compositeData.get("b"));
+                assertEquals("3", compositeData.get("c"));
+            }
+            {
+                final CompositeData compositeData = CompositeData.class.cast(iterator.next());
+                assertEquals(3, compositeData.values().size());
+                assertEquals("alpha", compositeData.get("a"));
+                assertEquals("beta", compositeData.get("b"));
+                assertEquals("gamma", compositeData.get("c"));
+            }
+        }
     }
 }

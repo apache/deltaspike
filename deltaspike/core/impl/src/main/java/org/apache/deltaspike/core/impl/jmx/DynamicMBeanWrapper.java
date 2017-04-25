@@ -24,6 +24,7 @@ import org.apache.deltaspike.core.api.jmx.JmxManaged;
 import org.apache.deltaspike.core.api.jmx.JmxParameter;
 import org.apache.deltaspike.core.api.jmx.MBean;
 import org.apache.deltaspike.core.api.jmx.NotificationInfo;
+import org.apache.deltaspike.core.api.jmx.Table;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.ParameterUtil;
@@ -61,6 +62,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,7 +80,7 @@ public class DynamicMBeanWrapper extends NotificationBroadcasterSupport implemen
 
     private final MBeanInfo info;
     private final Map<String, AttributeAccessor> fields = new HashMap<String, AttributeAccessor>();
-    private final Map<String, Method> operations = new HashMap<String, Method>();
+    private final Map<String, Operation> operations = new HashMap<String, Operation>();
     private final ClassLoader classloader;
     private final Class<?> clazz;
     private final boolean normalScope;
@@ -141,7 +143,7 @@ public class DynamicMBeanWrapper extends NotificationBroadcasterSupport implemen
                 continue;
             }
 
-            operations.put(method.getName(), method);
+            operations.put(method.getName(), new Operation(method, annotation.convertToTabularData()));
 
             String operationDescr = getDescription(annotation.description(), method.getName());
             
@@ -240,7 +242,7 @@ public class DynamicMBeanWrapper extends NotificationBroadcasterSupport implemen
                         fieldName, toMBeanType(type).getName(), fieldDescription,
                             getter != null, setter != null, false));
 
-                    fields.put(fieldName, new AttributeAccessor(getter, setter));
+                    fields.put(fieldName, new AttributeAccessor(getter, setter, annotation.convertToTabularData()));
                 }
             }
             clazz = clazz.getSuperclass();
@@ -256,7 +258,7 @@ public class DynamicMBeanWrapper extends NotificationBroadcasterSupport implemen
 
     private Class<?> toMBeanType(final Class<?> type)
     {
-        if (Map.class == type)
+        if (Map.class.isAssignableFrom(type) || Table.class.isAssignableFrom(type))
         {
             return TabularData.class;
         }
@@ -305,12 +307,9 @@ public class DynamicMBeanWrapper extends NotificationBroadcasterSupport implemen
             Thread.currentThread().setContextClassLoader(classloader);
             try
             {
-                final Object o = fields.get(attribute).get(instance());
-                if (Map.class.isInstance(o))
-                {
-                    return toTabularData(attribute, attribute, Map.class.cast(o));
-                }
-                return o;
+                final AttributeAccessor attributeAccessor = fields.get(attribute);
+                final Object value = attributeAccessor.get(instance());
+                return attributeAccessor.isPresentAsTabularIfPossible() ? toResult(attribute, value) : value;
             }
             catch (IllegalArgumentException e)
             {
@@ -332,9 +331,24 @@ public class DynamicMBeanWrapper extends NotificationBroadcasterSupport implemen
         throw new AttributeNotFoundException();
     }
 
-    private TabularData toTabularData(final String typeName, final String description, final Map map)
+    private Object toResult(final String attribute, final Object value)
+        throws InvocationTargetException, IllegalAccessException
     {
-        final OpenType<?>[] types = new OpenType<?>[map.size()];
+        if (Map.class.isInstance(value))
+        {
+            Map map = Map.class.cast(value);
+            return toTabularData(attribute, attribute, new Table().withColumns(map.keySet()).withLine(map.values()));
+        }
+        if (Table.class.isInstance(value))
+        {
+            return toTabularData(attribute, attribute, Table.class.cast(value));
+        }
+        return value;
+    }
+
+    private TabularData toTabularData(final String typeName, final String description, final Table table)
+    {
+        final OpenType<?>[] types = new OpenType<?>[table.getColumnNames().size()];
         for (int i = 0; i < types.length; i++)
         {
             types[i] = SimpleType.STRING;
@@ -342,12 +356,15 @@ public class DynamicMBeanWrapper extends NotificationBroadcasterSupport implemen
 
         try
         {
-            final String[] keys = String[].class.cast(map.keySet().toArray(new String[map.size()]));
+            final String[] keys = table.getColumnNames().toArray(new String[table.getColumnNames().size()]);
             final CompositeType ct = new CompositeType(
                     typeName, description, keys, keys, types);
             final TabularType type = new TabularType(typeName, description, ct, keys);
             final TabularDataSupport data = new TabularDataSupport(type);
-            data.put(new CompositeDataSupport(ct, map));
+            for (final Collection<String> line : table.getLines())
+            {
+                data.put(new CompositeDataSupport(ct, keys, line.toArray(new Object[line.size()])));
+            }
             return data;
         }
         catch (final OpenDataException e)
@@ -439,7 +456,9 @@ public class DynamicMBeanWrapper extends NotificationBroadcasterSupport implemen
             Thread.currentThread().setContextClassLoader(classloader);
             try
             {
-                return operations.get(actionName).invoke(instance(), params);
+                final Operation operation = operations.get(actionName);
+                final Object result = operation.getOperation().invoke(instance(), params);
+                return operation.isPresentAsTabularIfPossible() ? toResult(actionName, result) : result;
             }
             catch (InvocationTargetException e)
             {
