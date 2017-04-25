@@ -33,6 +33,7 @@ import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import javax.enterprise.inject.spi.ProcessBean;
+import javax.management.InstanceNotFoundException;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
@@ -121,7 +122,7 @@ public class ConfigurationExtension implements Extension, Deactivatable
                 MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
 
                 ClassLoader tccl = ClassUtils.getClassLoader(ConfigurationExtension.class);
-                DeltaSpikeConfigMBean cfgMBean = new DeltaSpikeConfigMBean(tccl);
+                DeltaSpikeConfigInfo cfgMBean = new DeltaSpikeConfigInfo(tccl);
 
                 ObjectName name = new ObjectName("deltaspike.config." + appName + ":type=DeltaSpikeConfig");
                 mBeanServer.registerMBean(cfgMBean, name);
@@ -144,6 +145,10 @@ public class ConfigurationExtension implements Extension, Deactivatable
                 ObjectName name = new ObjectName("deltaspike.config." + appName + ":type=DeltaSpikeConfig");
 
                 mBeanServer.unregisterMBean(name);
+            }
+            catch (InstanceNotFoundException infe)
+            {
+                // all ok, nothing to de-register it seems
             }
             catch (Exception e)
             {

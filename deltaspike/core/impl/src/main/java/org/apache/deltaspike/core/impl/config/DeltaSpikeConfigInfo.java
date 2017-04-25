@@ -27,15 +27,16 @@ import java.util.List;
 /**
  * JMX MBean for DeltaSpike
  */
-public class DeltaSpikeConfigMBean
+public class DeltaSpikeConfigInfo implements DeltaSpikeConfigInfoMBean
 {
     private final ClassLoader appConfigClassLoader;
 
-    public DeltaSpikeConfigMBean(ClassLoader appConfigClassLoader)
+    public DeltaSpikeConfigInfo(ClassLoader appConfigClassLoader)
     {
         this.appConfigClassLoader = appConfigClassLoader;
     }
 
+    @Override
     public List<String> getConfigSources()
     {
         ClassLoader originalCl = Thread.currentThread().getContextClassLoader();
