@@ -62,6 +62,12 @@ import org.apache.deltaspike.core.util.ServiceUtils;
 @Typed()
 public final class ConfigResolver
 {
+    /**
+     * Can be used to tweak the application name.
+     * This will e.g. used in the JMX MBean to differentiate between applications.
+     */
+    public static final String DELTASPIKE_APP_NAME_CONFIG = "deltaspike.application.name";
+
 
     private static final Logger LOG = Logger.getLogger(ConfigResolver.class.getName());
 

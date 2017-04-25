@@ -207,7 +207,14 @@ public class ShrinkWrapArchiveUtil
                 String className
                     = pathToClassName(entryName.substring(0, entryName.length() - (".class".length())));
 
-                javaArchive.addClass(className);
+                try
+                {
+                    javaArchive.addClass(className);
+                }
+                catch (Throwable t)
+                {
+                    LOG.info("Ignoring class " + className + " due to " + t.getMessage());
+                }
             }
             else
             {

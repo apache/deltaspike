@@ -33,8 +33,11 @@ import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import javax.enterprise.inject.spi.ProcessBean;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
 
 import java.lang.annotation.Annotation;
+import java.lang.management.ManagementFactory;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -101,6 +104,52 @@ public class ConfigurationExtension implements Extension, Deactivatable
     protected void init(@Observes BeforeBeanDiscovery beforeBeanDiscovery)
     {
         isActivated = ClassDeactivationUtils.isActivated(getClass());
+
+        if (isActivated)
+        {
+            registerConfigMBean();
+        }
+    }
+
+    public static void registerConfigMBean()
+    {
+        String appName = ConfigResolver.getPropertyValue(ConfigResolver.DELTASPIKE_APP_NAME_CONFIG);
+        if (appName != null && appName.length() > 0)
+        {
+            try
+            {
+                MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
+
+                ClassLoader tccl = ClassUtils.getClassLoader(ConfigurationExtension.class);
+                DeltaSpikeConfigMBean cfgMBean = new DeltaSpikeConfigMBean(tccl);
+
+                ObjectName name = new ObjectName("deltaspike.config." + appName + ":type=DeltaSpikeConfig");
+                mBeanServer.registerMBean(cfgMBean, name);
+            }
+            catch (Exception e)
+            {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public static void unRegisterConfigMBean(String appName)
+    {
+        if (appName != null && appName.length() > 0)
+        {
+            try
+            {
+                MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
+
+                ObjectName name = new ObjectName("deltaspike.config." + appName + ":type=DeltaSpikeConfig");
+
+                mBeanServer.unregisterMBean(name);
+            }
+            catch (Exception e)
+            {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     @SuppressWarnings("UnusedDeclaration")
@@ -284,6 +333,9 @@ public class ConfigurationExtension implements Extension, Deactivatable
     @SuppressWarnings("UnusedDeclaration")
     public void freeConfigSources(@Observes BeforeShutdown bs)
     {
+        String appName = ConfigResolver.getPropertyValue(ConfigResolver.DELTASPIKE_APP_NAME_CONFIG);
+        unRegisterConfigMBean(appName);
+
         ConfigResolver.freeConfigSources();
         detectedParentPropertyFileConfigs.remove(ClassUtils.getClassLoader(null));
     }
