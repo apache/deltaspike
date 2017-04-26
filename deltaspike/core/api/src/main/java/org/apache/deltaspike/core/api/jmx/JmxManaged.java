@@ -47,8 +47,8 @@ public @interface JmxManaged
     String description() default "";
 
     /**
-     * @return if {@code true} a Map will be converted to a TabularData with a CompositeData entry,
-     *         if {@code false} the map will be returned directly.
+     * @return if {@code true} a Map or Table will be converted to a TabularData with a CompositeData entry,
+     *         if {@code false} the Map or Table will be returned directly.
      */
-    boolean convertMapToTabularData() default true;
+    boolean convertToTabularData() default true;
 }

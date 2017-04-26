@@ -22,6 +22,7 @@ import org.apache.deltaspike.core.api.jmx.JmxBroadcaster;
 import org.apache.deltaspike.core.api.jmx.JmxManaged;
 import org.apache.deltaspike.core.api.jmx.JmxParameter;
 import org.apache.deltaspike.core.api.jmx.MBean;
+import org.apache.deltaspike.core.api.jmx.Table;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -42,11 +43,19 @@ public class MyMBean
     @JmxManaged
     private Map<String, String> table;
 
+    @JmxManaged // just a marker to expose it as an attribute, will call the getter
+    private Table table2;
+
     public Map<String, String> getTable() {
         return table != null ? table : (table = new HashMap<String, String>() {{
             put("key1", "value1");
             put("key2", "value2");
         }});
+    }
+
+    @JmxManaged
+    public Table getTable2() {
+        return new Table().withColumns("a", "b", "c").withLine("1", "2", "3").withLine("alpha", "beta", "gamma");
     }
 
     public int getCounter()
