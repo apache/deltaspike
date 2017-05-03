@@ -18,9 +18,16 @@
  */
 package org.apache.deltaspike.core.impl.config;
 
-import java.util.List;
+import javax.management.openmbean.TabularData;
 
 public interface DeltaSpikeConfigInfoMBean
 {
-    List<String> getConfigSources();
+    String[] getConfigSourcesAsString();
+
+    TabularData getConfigSources();
+
+    String[] getConfigEntriesAsString();
+
+    TabularData getConfigEntries();
+
 }

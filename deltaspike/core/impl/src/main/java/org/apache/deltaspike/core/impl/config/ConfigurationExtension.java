@@ -33,6 +33,7 @@ import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import javax.enterprise.inject.spi.ProcessBean;
+import javax.management.InstanceAlreadyExistsException;
 import javax.management.InstanceNotFoundException;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
@@ -126,6 +127,11 @@ public class ConfigurationExtension implements Extension, Deactivatable
 
                 ObjectName name = new ObjectName("deltaspike.config." + appName + ":type=DeltaSpikeConfig");
                 mBeanServer.registerMBean(cfgMBean, name);
+            }
+            catch (InstanceAlreadyExistsException iae)
+            {
+                // all fine, the CfgBean got already registered.
+                // Most probably by the ServletConfigListener
             }
             catch (Exception e)
             {

@@ -42,6 +42,6 @@ public class SecretTestConfigFilter implements ConfigFilter
         {
             return "**********";
         }
-        return null;
+        return value;
     }
 }

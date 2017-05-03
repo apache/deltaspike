@@ -67,15 +67,15 @@ public class FutureableTest {
     @Test
     public void voidTest()
     {
-    	CountDownLatch latch = new CountDownLatch(1);
-    	service.thatSLong(1000, latch);
-    	try
-    	{
-    		if (!latch.await(2000, TimeUnit.MILLISECONDS)) {
-    			fail("Asynchronous call should have terminated");
-    		}
-    	}
-    	catch (final InterruptedException e)
+        CountDownLatch latch = new CountDownLatch(1);
+        service.thatSLong(1000, latch);
+        try
+        {
+            if (!latch.await(2000, TimeUnit.MILLISECONDS)) {
+                fail("Asynchronous call should have terminated");
+            }
+        }
+        catch (final InterruptedException e)
         {
             Thread.interrupted();
             fail();

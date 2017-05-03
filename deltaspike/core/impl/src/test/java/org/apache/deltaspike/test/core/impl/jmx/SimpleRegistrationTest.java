@@ -22,6 +22,7 @@ import org.junit.Test;
 
 import javax.inject.Inject;
 import javax.management.Attribute;
+import javax.management.MBeanOperationInfo;
 import javax.management.MBeanParameterInfo;
 import javax.management.MBeanServer;
 import javax.management.Notification;
@@ -71,8 +72,9 @@ public abstract class SimpleRegistrationTest {
         myMBean.broadcast();
         assertEquals(1, notifications.size());
         assertEquals(10L, notifications.iterator().next().getSequenceNumber());
-        
-        MBeanParameterInfo parameterInfo = server.getMBeanInfo(on).getOperations()[0].getSignature()[0];
+
+        MBeanOperationInfo[] operations = server.getMBeanInfo(on).getOperations();
+        MBeanParameterInfo parameterInfo = operations[0].getSignature()[0];
         assertEquals("multiplier", parameterInfo.getName());
         assertEquals("the multiplier", parameterInfo.getDescription());
 
