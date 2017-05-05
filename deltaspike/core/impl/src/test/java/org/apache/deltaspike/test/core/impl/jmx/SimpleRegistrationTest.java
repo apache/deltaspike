@@ -18,10 +18,12 @@
  */
 package org.apache.deltaspike.test.core.impl.jmx;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import javax.inject.Inject;
 import javax.management.Attribute;
+import javax.management.MBeanInfo;
 import javax.management.MBeanOperationInfo;
 import javax.management.MBeanParameterInfo;
 import javax.management.MBeanServer;
@@ -73,7 +75,11 @@ public abstract class SimpleRegistrationTest {
         assertEquals(1, notifications.size());
         assertEquals(10L, notifications.iterator().next().getSequenceNumber());
 
-        MBeanOperationInfo[] operations = server.getMBeanInfo(on).getOperations();
+        MBeanInfo mBeanInfo = server.getMBeanInfo(on);
+        Assert.assertNotNull(mBeanInfo);
+        MBeanOperationInfo[] operations = mBeanInfo.getOperations();
+        Assert.assertNotNull(operations);
+        Assert.assertTrue(operations.length > 0);
         MBeanParameterInfo parameterInfo = operations[0].getSignature()[0];
         assertEquals("multiplier", parameterInfo.getName());
         assertEquals("the multiplier", parameterInfo.getDescription());
