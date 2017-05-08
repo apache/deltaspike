@@ -21,7 +21,6 @@ package org.apache.deltaspike.test.jpa.api.entitymanager;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.spi.PersistenceProviderResolverHolder;
-
 import java.util.Properties;
 
 import org.apache.deltaspike.jpa.spi.entitymanager.PersistenceConfigurationProvider;
@@ -35,7 +34,6 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -43,7 +41,7 @@ import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
 @Category(SeCategory.class)
-public class EntityManagerFactoryProducerTest
+public class PersistenceConfigurationProviderTest
 {
 
     @Deployment
@@ -54,10 +52,8 @@ public class EntityManagerFactoryProducerTest
 
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "unitDefinitionTest.jar")
                 .addPackage(ArchiveUtils.SHARED_PACKAGE)
-                .addPackage(EntityManagerFactoryProducerTest.class.getPackage().getName())
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
-                .addAsResource(new StringAsset(TestPersistenceProviderResolver.class.getName()),
-                        "META-INF/services/javax.persistence.spi.PersistenceProviderResolver");
+                .addClass(PersistenceConfigurationProviderTest.class)
+                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
         return ShrinkWrap.create(WebArchive.class)
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndJpaArchive())
@@ -66,20 +62,16 @@ public class EntityManagerFactoryProducerTest
     }
 
 
-    @Inject
-    @SampleDb
-    private EntityManager entityManager;
-
     private @Inject PersistenceConfigurationProvider persistenceConfigurationProvider;
 
-    @Test
-    public void testUnitDefinitionQualifier() throws Exception
-    {
-        Assert.assertNotNull(entityManager);
-        Assert.assertNotNull(entityManager.getDelegate());
 
-        Assert.assertTrue(entityManager.getDelegate() instanceof TestEntityManager);
-        TestEntityManager tem = (TestEntityManager) entityManager.getDelegate();
-        Assert.assertEquals("testPersistenceUnit", tem.getUnitName());
+    @Test
+    public void testPersistenceConfigurationProvider()
+    {
+        Properties myUnitConfig = persistenceConfigurationProvider.getEntityManagerFactoryConfiguration("MyUnit");
+        Assert.assertEquals(3, myUnitConfig.size());
+        Assert.assertEquals("blub", myUnitConfig.get("javax.persistence.jdbc.password"));
+        Assert.assertEquals("sa", myUnitConfig.get("javax.persistence.jdbc.user"));
+        Assert.assertEquals("some.jdbc.Driver", myUnitConfig.get("javax.persistence.jdbc.driver"));
     }
 }

@@ -22,7 +22,9 @@ import javax.enterprise.context.ApplicationScoped;
 
 
 import java.util.Properties;
+import java.util.Set;
 
+import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.config.PropertyLoader;
 import org.apache.deltaspike.jpa.spi.entitymanager.PersistenceConfigurationProvider;
 
@@ -33,6 +35,14 @@ import org.apache.deltaspike.jpa.spi.entitymanager.PersistenceConfigurationProvi
 @ApplicationScoped
 public class PersistenceConfigurationProviderImpl implements PersistenceConfigurationProvider
 {
+    /**
+     * A prefix which will be used for looking up more specific
+     * information for a persistenceUnit.
+     *
+     * @see #addConfigProperties(Properties, String)
+     */
+    private static final String CONFIG_PREFIX = "deltaspike.persistence.config.";
+
     @Override
     public Properties getEntityManagerFactoryConfiguration(String persistenceUnitName)
     {
@@ -43,6 +53,38 @@ public class PersistenceConfigurationProviderImpl implements PersistenceConfigur
             unitProperties = new Properties();
         }
 
+        unitProperties = addConfigProperties(unitProperties, persistenceUnitName);
+
         return unitProperties;
+    }
+
+
+    /**
+     * Load additional configuration from the Configuration system
+     * and overload the basic settings with that info.
+     *
+     * The key is deltaspike.persistence.config.${persistenceUnitName}.${originalKey}
+     *
+     * @see #CONFIG_PREFIX
+     * @since 1.8.0
+     */
+    protected Properties addConfigProperties(Properties unitProperties, String persistenceUnitName)
+    {
+        // we start with a copy of the original properties
+        Properties mergedConfig = new Properties();
+        mergedConfig.putAll(unitProperties);
+
+        Set<String> allConfigKeys = ConfigResolver.getAllProperties().keySet();
+        String unitPrefix = CONFIG_PREFIX + persistenceUnitName + ".";
+        for (String configKey : allConfigKeys)
+        {
+            if (configKey.startsWith(unitPrefix))
+            {
+                mergedConfig.put(configKey.substring(unitPrefix.length()),
+                        ConfigResolver.getProjectStageAwarePropertyValue(configKey));
+            }
+        }
+
+        return mergedConfig;
     }
 }
