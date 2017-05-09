@@ -465,7 +465,7 @@ module can translate method names following a given format and directly
 generate the query implementation out of it (in EBNF-like form):
 
 ----------------------------------------------------------------------------------
-(Entity|List<Entity>) (prefix)(Property[Comparator]){Operator Property [Comparator]}
+(Entity|Optional<Entity>|List<Entity>|Stream<Entity>) (prefix)(Property[Comparator]){Operator Property [Comparator]}
 ----------------------------------------------------------------------------------
 
 Or in more concrete words:
