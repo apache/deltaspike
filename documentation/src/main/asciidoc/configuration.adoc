@@ -529,6 +529,9 @@ For registering all your own property files of a certain name in your
 classpath to get picked up as ConfigSources you can also provide a
 class which implements the `PropertyFileConfig` interface.
 
+If `getPropertyFileName()` returns an URL, e.g. `file:///var/opt/myapp/my.properties"` then this will be used to pick up the configured values.
+In other words: with using `file://` you can specify a file on the file system.
+
 The method `isOptional` indicates whether your custom property file is mandatory.
 If a mandatory property file is not found during deployment, DeltaSpike throws
 an `IllegalStateException` and stops the deployment.
