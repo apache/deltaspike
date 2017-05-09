@@ -26,6 +26,7 @@ import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
+import java.util.Vector;
 
 @Typed()
 public abstract class PropertyFileUtils
@@ -40,6 +41,14 @@ public abstract class PropertyFileUtils
 
     public static Enumeration<URL> resolvePropertyFiles(String propertyFileName) throws IOException
     {
+        if (propertyFileName != null && propertyFileName.contains("://"))
+        {
+            // the given string is actually already an URL
+            Vector<URL> propertyFileUrls = new Vector<URL>();
+            propertyFileUrls.add(new URL(propertyFileName));
+            return propertyFileUrls.elements();
+        }
+
         ClassLoader cl = ClassUtils.getClassLoader(null);
 
         Enumeration<URL> propertyFileUrls = cl.getResources(propertyFileName);
