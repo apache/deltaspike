@@ -80,8 +80,8 @@ public abstract class SimpleRegistrationTest {
         MBeanOperationInfo[] operations = mBeanInfo.getOperations();
         Assert.assertNotNull(operations);
         Assert.assertTrue(operations.length > 0);
-        Assert.assertTrue("Empty Signature on operation: " + operations[0], operations[0].getSignature().length > 0);
-        MBeanParameterInfo parameterInfo = operations[0].getSignature()[0];
+        Assert.assertTrue("Empty Signature on operation: " + operations[1], operations[1].getSignature().length > 0);
+        MBeanParameterInfo parameterInfo = operations[1].getSignature()[0];
         assertEquals("multiplier", parameterInfo.getName());
         assertEquals("the multiplier", parameterInfo.getDescription());
 

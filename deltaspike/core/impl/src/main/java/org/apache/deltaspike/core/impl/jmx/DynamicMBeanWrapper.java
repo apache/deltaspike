@@ -40,6 +40,7 @@ import javax.management.ImmutableDescriptor;
 import javax.management.InvalidAttributeValueException;
 import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanException;
+import javax.management.MBeanFeatureInfo;
 import javax.management.MBeanInfo;
 import javax.management.MBeanNotificationInfo;
 import javax.management.MBeanOperationInfo;
@@ -63,6 +64,8 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -247,6 +250,10 @@ public class DynamicMBeanWrapper extends NotificationBroadcasterSupport implemen
             }
             clazz = clazz.getSuperclass();
         }
+
+        Collections.sort(attributeInfos, MBeanFeatureInfoSorter.INSTANCE);
+        Collections.sort(operationInfos, MBeanFeatureInfoSorter.INSTANCE);
+        Collections.sort(notificationInfos, MBeanFeatureInfoSorter.INSTANCE);
 
         info = new MBeanInfo(annotatedMBean.getName(),
                 description,
@@ -531,5 +538,14 @@ public class DynamicMBeanWrapper extends NotificationBroadcasterSupport implemen
     public void send(final Notification notification)
     {
         sendNotification(notification);
+    }
+
+    private static class MBeanFeatureInfoSorter<T extends MBeanFeatureInfo> implements Comparator<T> {
+        private static final Comparator<? super MBeanFeatureInfo> INSTANCE = new MBeanFeatureInfoSorter<MBeanFeatureInfo>();
+
+        @Override
+        public int compare(final T o1, final T o2) {
+            return o1.getName().compareTo(o2.getName());
+        }
     }
 }
