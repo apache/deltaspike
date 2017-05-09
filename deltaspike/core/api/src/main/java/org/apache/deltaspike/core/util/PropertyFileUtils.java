@@ -19,9 +19,11 @@
 package org.apache.deltaspike.core.util;
 
 import javax.enterprise.inject.Typed;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Properties;
@@ -41,12 +43,21 @@ public abstract class PropertyFileUtils
 
     public static Enumeration<URL> resolvePropertyFiles(String propertyFileName) throws IOException
     {
-        if (propertyFileName != null && propertyFileName.contains("://"))
+        if (propertyFileName != null && (propertyFileName.contains("://") || propertyFileName.startsWith("file:")))
         {
             // the given string is actually already an URL
             Vector<URL> propertyFileUrls = new Vector<URL>();
             propertyFileUrls.add(new URL(propertyFileName));
             return propertyFileUrls.elements();
+        }
+
+        if (propertyFileName != null)
+        {
+            File file = new File(propertyFileName);
+            if (file.exists())
+            {
+                return Collections.enumeration(Collections.singleton(file.toURI().toURL()));
+            }
         }
 
         ClassLoader cl = ClassUtils.getClassLoader(null);
