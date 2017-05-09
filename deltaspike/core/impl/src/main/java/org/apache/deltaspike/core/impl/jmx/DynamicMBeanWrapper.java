@@ -540,11 +540,13 @@ public class DynamicMBeanWrapper extends NotificationBroadcasterSupport implemen
         sendNotification(notification);
     }
 
-    private static class MBeanFeatureInfoSorter<T extends MBeanFeatureInfo> implements Comparator<T> {
+    private static class MBeanFeatureInfoSorter<T extends MBeanFeatureInfo> implements Comparator<T>
+    {
         private static final Comparator<? super MBeanFeatureInfo> INSTANCE = new MBeanFeatureInfoSorter<MBeanFeatureInfo>();
 
         @Override
-        public int compare(final T o1, final T o2) {
+        public int compare(final T o1, final T o2)
+        {
             return o1.getName().compareTo(o2.getName());
         }
     }
