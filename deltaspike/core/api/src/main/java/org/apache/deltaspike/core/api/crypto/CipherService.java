@@ -36,9 +36,9 @@ public interface CipherService
      *
      * @return {@code true} if the master hash got successfully written
      * @throws IOException if the master hash file could not be written
-     * @throws CipherException if a masterhash already exists
+     * @throws IllegalStateException if a masterhash already exists
      */
-    void setMasterHash(String masterPassword, String masterSalt, boolean overwrite) throws IOException, CipherException;
+    void setMasterHash(String masterPassword, String masterSalt, boolean overwrite) throws IOException;
 
     /**
      * Encrypt the given cleartext.
@@ -48,8 +48,8 @@ public interface CipherService
      * @param masterSalt the same as used for {@link #setMasterHash(String, String, boolean)}
      * @return the encrypted String to store somewhere
      */
-    String encrypt(String cleartext, String masterSalt) throws CipherException;
+    String encrypt(String cleartext, String masterSalt);
 
-    String decrypt(String encryptedValue, String masterSalt) throws CipherException;
+    String decrypt(String encryptedValue, String masterSalt);
 
 }

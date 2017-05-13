@@ -20,39 +20,35 @@ package org.apache.deltaspike.core.impl.crypto;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
-import javax.enterprise.context.ApplicationScoped;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Properties;
 
-import org.apache.deltaspike.core.api.crypto.CipherException;
-import org.apache.deltaspike.core.api.crypto.CipherService;
-import org.apache.deltaspike.core.util.ExceptionUtils;
-import org.apache.deltaspike.core.util.PropertyFileUtils;
-
 
 /**
  * handle Encryption
  */
-@ApplicationScoped
-public class DefaultCipherService implements CipherService
+public class DefaultCipherService
 {
-    public static final Charset UTF_8 = Charset.forName("UTF-8");
+    private static final Charset UTF_8 = Charset.forName("UTF-8");
+    private static final String HASH_ALGORITHM = "SHA-256";
+    private static final String CIPHER_ALGORITHM = "AES";
 
-    @Override
-    public void setMasterHash(String masterPassword, String masterSalt, boolean overwrite)
-        throws IOException, CipherException
+    public String setMasterHash(String masterPassword, String masterSalt, boolean overwrite)
+        throws IOException
     {
         File masterFile = getMasterFile();
         if (!masterFile.getParentFile().exists())
         {
-            if (!masterFile.mkdirs())
+            if (!masterFile.getParentFile().mkdirs())
             {
                 throw new IOException("Can not create directory " + masterFile.getParent());
             }
@@ -66,26 +62,28 @@ public class DefaultCipherService implements CipherService
         Properties keys = new Properties();
         if (masterFile.exists())
         {
-            keys = PropertyFileUtils.loadProperties(masterFile.toURI().toURL());
+            keys = loadProperties(masterFile.toURI().toURL());
         }
 
         if (keys.get(saltKey) != null && !overwrite)
         {
-            throw new CipherException("MasterKey for hash " + saltHash +
+            throw new IllegalStateException("MasterKey for hash " + saltHash +
                 " already exists. Forced overwrite option needed");
         }
 
         keys.put(saltKey, encrypted);
 
         keys.store(new FileOutputStream(masterFile), null);
+
+        return saltHash;
     }
 
-    protected String getMasterKey(String masterSalt) throws CipherException
+    protected String getMasterKey(String masterSalt)
     {
         File masterFile = getMasterFile();
         if (!masterFile.exists())
         {
-            throw new CipherException("Could not find master.hash file. Create a master password first!");
+            throw new IllegalStateException("Could not find master.hash file. Create a master password first!");
         }
 
         try
@@ -93,12 +91,12 @@ public class DefaultCipherService implements CipherService
             String saltHash = byteToHex(secureHash(masterSalt));
             String saltKey = byteToHex(secureHash(saltHash));
 
-            Properties keys = PropertyFileUtils.loadProperties(masterFile.toURI().toURL());
+            Properties keys = loadProperties(masterFile.toURI().toURL());
 
             String encryptedMasterKey = (String) keys.get(saltKey);
             if (encryptedMasterKey == null)
             {
-                throw new CipherException("Could not find master key for hash " + saltKey +
+                throw new IllegalStateException("Could not find master key for hash " + saltKey +
                     ". Create a master password first!");
             }
 
@@ -106,18 +104,16 @@ public class DefaultCipherService implements CipherService
         }
         catch (MalformedURLException e)
         {
-            throw ExceptionUtils.throwAsRuntimeException(e);
+            throw new RuntimeException(e);
         }
     }
 
-    @Override
-    public String encrypt(String cleartext, String masterSalt) throws CipherException
+    public String encrypt(String cleartext, String masterSalt)
     {
         return byteToHex(aesEncrypt(cleartext, getMasterKey(masterSalt)));
     }
 
-    @Override
-    public String decrypt(String encryptedValue, String masterSalt) throws CipherException
+    public String decrypt(String encryptedValue, String masterSalt)
     {
         return aesDecrypt(hexToByte(encryptedValue), getMasterKey(masterSalt));
     }
@@ -137,12 +133,12 @@ public class DefaultCipherService implements CipherService
     {
         try
         {
-            MessageDigest md = MessageDigest.getInstance("SHA-1");
+            MessageDigest md = MessageDigest.getInstance(HASH_ALGORITHM);
             return md.digest(value.getBytes(UTF_8));
         }
         catch (NoSuchAlgorithmException e)
         {
-            throw ExceptionUtils.throwAsRuntimeException(e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -155,13 +151,13 @@ public class DefaultCipherService implements CipherService
         {
             SecretKeySpec secretKeySpec = getSecretKeySpec(key);
 
-            Cipher cipher = Cipher.getInstance("AES");
+            Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
             cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
             return cipher.doFinal(valueToEncrypt.getBytes(UTF_8));
         }
         catch (Exception e)
         {
-            throw ExceptionUtils.throwAsRuntimeException(e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -174,13 +170,13 @@ public class DefaultCipherService implements CipherService
         {
             SecretKeySpec secretKeySpec = getSecretKeySpec(key);
 
-            Cipher cipher = Cipher.getInstance("AES");
+            Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
             cipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
             return new String(cipher.doFinal(encryptedValue), UTF_8);
         }
         catch (Exception e)
         {
-            throw ExceptionUtils.throwAsRuntimeException(e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -189,6 +185,7 @@ public class DefaultCipherService implements CipherService
         byte[] pwdHash = secureHash(password);
         byte[] key = Arrays.copyOf(pwdHash, 16); // use only first 128 bit
 
+        // Note: using 128 bit AES avoids requirement for "Unlimited Crypto" patch
         return new SecretKeySpec(key, "AES");
     }
 
@@ -229,5 +226,47 @@ public class DefaultCipherService implements CipherService
 
         return bytes;
     }
+
+
+    /**
+     * Copied over from PropertyFileUtils to avoid the need for having the api
+     * on the classpath when using the password encode CLI
+     */
+    private Properties loadProperties(URL url)
+    {
+        Properties props = new Properties();
+
+        InputStream inputStream = null;
+        try
+        {
+            inputStream = url.openStream();
+
+            if (inputStream != null)
+            {
+                props.load(inputStream);
+            }
+        }
+        catch (IOException e)
+        {
+            throw new IllegalStateException(e);
+        }
+        finally
+        {
+            try
+            {
+                if (inputStream != null)
+                {
+                    inputStream.close();
+                }
+            }
+            catch (IOException e)
+            {
+                // no worries, means that the file is already closed
+            }
+        }
+
+        return props;
+    }
+
 
 }

@@ -24,7 +24,7 @@ import org.junit.Test;
 
 /**
  * Internal test for the DefaultCipherService.
- * Not intended to be a TCK for other CiperServices nor integration.
+ * Not intended to be a TCK for other CipherServices nor integration.
  */
 public class DefaultCipherServiceTest
 {
@@ -42,6 +42,21 @@ public class DefaultCipherServiceTest
 
         String decrypted = cipherService.decrypt(encrypted, masterSalt);
         Assert.assertEquals(cleartext, decrypted);
+    }
+
+    @Test
+    public void testMasterKeyOverwrite() throws Exception {
+        DefaultCipherService cipherService = new DefaultCipherService();
+        String masterSalt = "deltaspike-test-salt";
+        cipherService.setMasterHash("newMasterPwd", masterSalt, true);
+        try {
+            cipherService.setMasterHash("newMasterPwd", masterSalt, false);
+            Assert.fail();
+        }
+        catch (Exception e) {
+            // todo: how to log exception properly
+            // System.out.println("expected: " + e);
+        }
     }
 
 }
