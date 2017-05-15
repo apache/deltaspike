@@ -68,6 +68,12 @@ public final class ConfigResolver
      */
     public static final String DELTASPIKE_APP_NAME_CONFIG = "deltaspike.application.name";
 
+    /**
+     * Set this to true if your application should log the whole ConfigSources and Configuration
+     * at startup.
+     */
+    public static final String DELTASPIKE_LOG_CONFIG = "deltaspike.config.log";
+
 
     private static final Logger LOG = Logger.getLogger(ConfigResolver.class.getName());
 

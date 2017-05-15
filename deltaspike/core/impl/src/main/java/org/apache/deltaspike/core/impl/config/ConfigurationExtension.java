@@ -47,6 +47,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.deltaspike.core.api.config.ConfigProperty;
 import org.apache.deltaspike.core.api.config.ConfigResolver;
@@ -67,6 +69,7 @@ import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.ServiceUtils;
 import org.apache.deltaspike.core.util.bean.BeanBuilder;
+import org.jboss.arquillian.config.impl.extension.ConfigExtension;
 
 /**
  * This extension handles {@link org.apache.deltaspike.core.api.config.PropertyFileConfig}s
@@ -74,6 +77,8 @@ import org.apache.deltaspike.core.util.bean.BeanBuilder;
  */
 public class ConfigurationExtension implements Extension, Deactivatable
 {
+    private static final Logger LOG = Logger.getLogger(ConfigExtension.class.getName());
+
     private static final String CANNOT_CREATE_CONFIG_SOURCE_FOR_CUSTOM_PROPERTY_FILE_CONFIG =
         "Cannot create ConfigSource for custom property-file config ";
 
@@ -106,11 +111,6 @@ public class ConfigurationExtension implements Extension, Deactivatable
     protected void init(@Observes BeforeBeanDiscovery beforeBeanDiscovery)
     {
         isActivated = ClassDeactivationUtils.isActivated(getClass());
-
-        if (isActivated)
-        {
-            registerConfigMBean();
-        }
     }
 
     public static void registerConfigMBean()
@@ -308,6 +308,37 @@ public class ConfigurationExtension implements Extension, Deactivatable
         }
 
         processConfigurationValidation(adv);
+
+        registerConfigMBean();
+
+        logConfiguration();
+    }
+
+    private void logConfiguration()
+    {
+        Boolean logConfig = ConfigResolver.resolve(ConfigResolver.DELTASPIKE_LOG_CONFIG).as(Boolean.class).getValue();
+        if (logConfig != null && logConfig && LOG.isLoggable(Level.INFO))
+        {
+            StringBuilder sb = new StringBuilder(1 << 16);
+
+            // first log out the config sources in descendent ordinal order
+            sb.append("ConfigSources: ");
+            ConfigSource[] configSources = ConfigResolver.getConfigSources();
+            for (ConfigSource configSource : configSources)
+            {
+                sb.append("\n\t").append(configSource.getOrdinal()).append(" - ").append(configSource.getConfigName());
+            }
+
+            // and all the entries in no guaranteed order
+            Map<String, String> allProperties = ConfigResolver.getAllProperties();
+            sb.append("\n\nConfigured Values:");
+            for (Map.Entry<String, String> entry : allProperties.entrySet())
+            {
+                sb.append("\n\t").append(entry.getKey()).append(" = ").append(entry.getValue());
+            }
+
+            LOG.info(sb.toString());
+        }
     }
 
     /**
