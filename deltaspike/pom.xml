@@ -92,6 +92,7 @@
                             <exclude>target/**</exclude>
                             <exclude>test-ee7/target/**</exclude>
                             <exclude>**/*.iml</exclude>
+                            <exclude>**/MANIFEST.MF</exclude>
                         </excludes>
                     </configuration>
                 </plugin>

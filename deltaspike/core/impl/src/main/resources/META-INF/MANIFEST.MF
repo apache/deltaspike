@@ -1,1 +1,2 @@
 Main-Class: org.apache.deltaspike.core.impl.crypto.CipherCli
+Bundle-License: https://www.apache.org/licenses/LICENSE-2.0.txt
