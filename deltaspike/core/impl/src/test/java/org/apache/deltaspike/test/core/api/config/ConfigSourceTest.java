@@ -18,15 +18,23 @@
  */
 package org.apache.deltaspike.test.core.api.config;
 
+import java.io.File;
+import java.io.FileWriter;
+
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 /**
  * Unit tests for {@link org.apache.deltaspike.core.spi.config.ConfigSource}
  */
 public class ConfigSourceTest
 {
+    @Rule
+    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+
     @Test
     public void testConfigViaSystemProperty()
     {
@@ -107,6 +115,36 @@ public class ConfigSourceTest
         String value = ConfigResolver.getPropertyValue("JAVA.HOME");
         Assert.assertNotNull(value);
         Assert.assertEquals(javaHome, value);
+    }
+
+
+    @Test
+    public void testUserHomeConfigProperties() throws Exception {
+        String userHomeKey = "user.home";
+        String oldUserHome = System.getProperty(userHomeKey);
+        try
+        {
+            File newUserHomeFolder = temporaryFolder.newFolder();
+            System.setProperty(userHomeKey, newUserHomeFolder.getAbsolutePath());
+
+            File dsHomeConfig = new File(newUserHomeFolder, ".deltaspike/apache-deltaspike.properties");
+            dsHomeConfig.getParentFile().mkdirs();
+
+            FileWriter fw = new FileWriter(dsHomeConfig);
+            fw.write("ds.test.fromHome=withLove\ndeltaspike_ordinal=123");
+
+            fw.close();
+
+            // force freshly picking up all ConfigSources for this test
+            ConfigResolver.freeConfigSources();
+
+            Assert.assertEquals("withLove", ConfigResolver.getPropertyValue("ds.test.fromHome"));
+        }
+        finally
+        {
+            System.setProperty(userHomeKey, oldUserHome);
+            ConfigResolver.freeConfigSources();
+        }
     }
 
 

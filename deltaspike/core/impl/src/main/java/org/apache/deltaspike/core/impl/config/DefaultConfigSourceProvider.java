@@ -23,8 +23,12 @@ import org.apache.deltaspike.core.spi.config.ConfigSource;
 import org.apache.deltaspike.core.spi.config.ConfigSourceProvider;
 import org.apache.deltaspike.core.util.ServiceUtils;
 
+import java.io.File;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Default implementation which uses:
@@ -37,7 +41,11 @@ import java.util.List;
  */
 public class DefaultConfigSourceProvider implements ConfigSourceProvider
 {
-    private static final String PROPERTY_FILE_NAME = "META-INF/apache-deltaspike.properties";
+    private static final Logger LOG = Logger.getLogger(DefaultConfigSourceProvider.class.getName());
+
+    private static final String PROPERTY_FILE_NAME = "apache-deltaspike.properties";
+    private static final String PROPERTY_FILE_RESOURCE = "META-INF/" + PROPERTY_FILE_NAME;
+    private static final String PROPERTY_FILE_HOME_NAME = "/.deltaspike/" + PROPERTY_FILE_NAME;
 
     private List<ConfigSource> configSources = new ArrayList<ConfigSource>();
 
@@ -50,11 +58,41 @@ public class DefaultConfigSourceProvider implements ConfigSourceProvider
         configSources.add(new EnvironmentPropertyConfigSource());
         configSources.add(new LocalJndiConfigSource());
 
+        addUserHomeConfigSource();
+
         EnvironmentPropertyConfigSourceProvider epcsp =
-            new EnvironmentPropertyConfigSourceProvider(PROPERTY_FILE_NAME, true);
+            new EnvironmentPropertyConfigSourceProvider(PROPERTY_FILE_RESOURCE, true);
         configSources.addAll(epcsp.getConfigSources());
 
         registerPropertyFileConfigs();
+    }
+
+
+    /**
+     * Add a ConfigSource for files in the user home folder IF it exists!
+     * The location is ~/.deltaspike/apache-deltaspike.properties
+     */
+    private void addUserHomeConfigSource()
+    {
+        String userHome = System.getProperty("user.home");
+        if (userHome != null && !userHome.isEmpty())
+        {
+            File dsHome = new File(userHome, PROPERTY_FILE_HOME_NAME);
+            if (dsHome.exists())
+            {
+                try
+                {
+                    ConfigSource dsHomeConfigSource = new PropertyFileConfigSource(dsHome.toURI().toURL());
+                    configSources.add(dsHomeConfigSource);
+                    LOG.log(Level.INFO, "Reading configuration from {}", dsHome.getAbsolutePath());
+                }
+                catch (MalformedURLException e)
+                {
+                    LOG.log(Level.WARNING, "Could not read configuration from " + dsHome.getAbsolutePath(), e);
+                }
+
+            }
+        }
     }
 
 
