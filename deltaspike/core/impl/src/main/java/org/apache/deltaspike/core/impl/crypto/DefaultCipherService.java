@@ -67,7 +67,7 @@ public class DefaultCipherService
 
         if (keys.get(saltKey) != null && !overwrite)
         {
-            throw new IllegalStateException("MasterKey for hash " + saltHash +
+            throw new IllegalStateException("MasterKey for hash " + saltKey +
                 " already exists. Forced overwrite option needed");
         }
 
@@ -75,7 +75,7 @@ public class DefaultCipherService
 
         keys.store(new FileOutputStream(masterFile), null);
 
-        return saltHash;
+        return saltKey;
     }
 
     protected String getMasterKey(String masterSalt)
