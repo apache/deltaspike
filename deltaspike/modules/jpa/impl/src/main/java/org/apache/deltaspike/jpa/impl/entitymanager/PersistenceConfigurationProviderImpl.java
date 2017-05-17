@@ -21,6 +21,7 @@ package org.apache.deltaspike.jpa.impl.entitymanager;
 import javax.enterprise.context.ApplicationScoped;
 
 
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -51,6 +52,15 @@ public class PersistenceConfigurationProviderImpl implements PersistenceConfigur
         if (unitProperties == null)
         {
             unitProperties = new Properties();
+        }
+
+        // apply ConfigFilters to the configured values.
+        for (Map.Entry entry : unitProperties.entrySet())
+        {
+            String key = (String) entry.getKey();
+            String value = (String) entry.getValue();
+
+            entry.setValue(ConfigResolver.filterConfigValue(key, value));
         }
 
         unitProperties = addConfigProperties(unitProperties, persistenceUnitName);
