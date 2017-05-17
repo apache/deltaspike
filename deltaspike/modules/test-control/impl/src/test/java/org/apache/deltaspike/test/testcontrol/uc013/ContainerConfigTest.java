@@ -41,21 +41,6 @@ import java.lang.reflect.Field;
 @RunWith(CdiTestRunner.class)
 public class ContainerConfigTest
 {
-    @Before
-    public void resetConfig()
-    {
-        //TODO discuss an api to reset the ConfigResolver
-        try
-        {
-            Field projectStageField = ConfigResolver.class.getDeclaredField("projectStage");
-            projectStageField.setAccessible(true);
-            projectStageField.set(null, null);
-        }
-        catch (Exception e)
-        {
-            throw ExceptionUtils.throwAsRuntimeException(e);
-        }
-    }
 
     @Test
     @TestControl(projectStage = ProjectStage.UnitTest.class) //just for internal tests

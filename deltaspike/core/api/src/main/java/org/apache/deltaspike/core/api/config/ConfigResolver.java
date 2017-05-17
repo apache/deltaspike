@@ -92,7 +92,6 @@ public final class ConfigResolver
     private static Map<ClassLoader, List<ConfigFilter>> configFilters
         = new ConcurrentHashMap<ClassLoader, List<ConfigFilter>>();
 
-    private static volatile ProjectStage projectStage = null;
 
     private ConfigResolver()
     {
@@ -565,15 +564,7 @@ public final class ConfigResolver
 
     private static ProjectStage getProjectStage()
     {
-        if (projectStage == null)
-        {
-            synchronized (ConfigResolver.class)
-            {
-                projectStage = ProjectStageProducer.getInstance().getProjectStage();
-            }
-        }
-
-        return projectStage;
+        return ProjectStageProducer.getInstance().getProjectStage();
     }
 
     private static <T> T fallbackToDefaultIfEmpty(String key, T value, T defaultValue)
