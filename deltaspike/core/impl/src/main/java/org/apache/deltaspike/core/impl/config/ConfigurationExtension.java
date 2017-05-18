@@ -69,7 +69,6 @@ import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.ServiceUtils;
 import org.apache.deltaspike.core.util.bean.BeanBuilder;
-import org.jboss.arquillian.config.impl.extension.ConfigExtension;
 
 /**
  * This extension handles {@link org.apache.deltaspike.core.api.config.PropertyFileConfig}s
@@ -77,7 +76,7 @@ import org.jboss.arquillian.config.impl.extension.ConfigExtension;
  */
 public class ConfigurationExtension implements Extension, Deactivatable
 {
-    private static final Logger LOG = Logger.getLogger(ConfigExtension.class.getName());
+    private static final Logger LOG = Logger.getLogger(ConfigurationExtension.class.getName());
 
     private static final String CANNOT_CREATE_CONFIG_SOURCE_FOR_CUSTOM_PROPERTY_FILE_CONFIG =
         "Cannot create ConfigSource for custom property-file config ";
