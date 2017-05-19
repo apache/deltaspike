@@ -333,7 +333,10 @@ public class ConfigurationExtension implements Extension, Deactivatable
             sb.append("\n\nConfigured Values:");
             for (Map.Entry<String, String> entry : allProperties.entrySet())
             {
-                sb.append("\n\t").append(entry.getKey()).append(" = ").append(entry.getValue());
+                sb.append("\n\t")
+                    .append(entry.getKey())
+                    .append(" = ")
+                    .append(ConfigResolver.filterConfigValueForLog(entry.getKey(), entry.getValue()));
             }
 
             LOG.info(sb.toString());
