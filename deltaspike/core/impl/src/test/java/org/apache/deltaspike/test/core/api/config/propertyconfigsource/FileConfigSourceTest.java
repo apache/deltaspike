@@ -82,7 +82,7 @@ public class FileConfigSourceTest
                 FileWriter fw = new FileWriter(tempFile);
                 fw.write("deltaspike.test.config.from.file=it works");
                 fw.close();
-                configFileLocation = "file://" + tempFile.getCanonicalPath();
+                configFileLocation = tempFile.toURI().toURL().toExternalForm();
             }
             catch (IOException e)
             {
