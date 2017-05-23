@@ -1,0 +1,97 @@
+= DeltaSpike Crypto Mechanism
+
+:Notice: Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+
+== Introduction
+
+Many applications still use plaintext to store sensitive information.
+This should be avoided to not loose sensible user information in case of a security breach.
+
+Apache DeltaSpike provides a mechanism to encrypt and decrypt secured information to better guard such information.
+
+
+
+== The Algorithm
+
+DeltaSpike provides encryption based on a split secret approach.
+Many systems (like Maven, Jenkins) store the hash of a 'master password' in the users home folder.
+This master hash is then used to encrypt/decrypt the actual passwords.
+If an attacker manages to get his hands on the content of the database then he still cannot do much with the encrypted content stored therein.
+He would also need the content of the file containing the master password.
+
+DeltaSpike improves this mechanism by adding an additional secret (`masterSalt`) which needs to be provided by the application.
+With this approach we add an additional obstacle for any attacker.
+The attacker would now not only need the file from the users home folder but also need to debug and reconstruct the application.
+This approach additionally has the benefit to be able to store and use multiple different master passwords at the same time.
+
+That means that DeltaSpike needs 3 different pieces
+
+- the encryted content. E.g. a password stored in some property file or in the database
+- The `~/.deltaspike/master.hash` file containing the previously set master password.
+- the `masterSalt` provided by the application and while setting the master password.
+
+All that still does *not* create absolute security, mostly because there is no such thing like _absolute_ security!
+
+Each system which claims absolute security is to be taken with caution.
+
+But this handling will drastically improve the security of your application.
+See the section about the `masterSalt` for more tips to strengthten security.
+
+== Using the Command Line Interface
+
+Apache DeltaSpike also contains CLI commands to store the `masterPassword` and encrypt user values.
+
+The first step is to create a master hash.
+It is by default stored in the users home folder at `~/.deltaspike/master.hash`.
+For creating a master hash you need to use a `masterPassword` and a `masterSalt`
+
+[source,bash]
+----
+$> java -jar deltaspike-core-impl.jar encode -masterPassword myMasterPassword -masterSalt myMasterSalt
+A new master password got set. Hash key is cbd90f294dc4ed3d1113a98107fabbc370b303c4a5e3208c2df3e0326c31499c
+----
+
+You can now go on and encrypt your plaintext information:
+
+
+[source,bash]
+----
+$> java -jar deltaspike-core-impl.jar encode -plaintext textOneWantsToEncrypt -masterSalt myMasterSalt
+Encrypted value: 9d4196aa28d83a08b32752966aa5f4aa41c359fec847fdad3565241bb5e2df12
+----
+
+
+The encrypted value can then be stored in the databas, config files, etc.
+
+
+== The masterPassword
+
+The masterPassword is used to protect the secret.
+Note that it's not possible to reconstruct the masterPassword from the master.hash file.
+
+== Providing a masterSalt
+
+The `masterSalt` is not used to encrypt the secrets but it only protects the `masterPassword` in the `master.hash` file.
+This means that the masterSalt could be either static or even change over time.
+
+The `masterSalt` could also be a combined local information.
+As an example we take the local IP address and the user name running the application.
+
+[source,java]
+----
+String localInformation = InetAddress.getLocalHost().getHostAddress() + System.getProperty("user.name");
+String masterSalt = sha1(localInformation);
+----
+
+Note the usage of the hash.
+Otherwise it would be too obvious how the masterSalt gets constructed
+If this code is well hidden within the application code it is really hard for an attacker to find out how it is determined.
+Otoh this hash can easily be constructed on the command line with classic unix tools like `sha1sum`
+
+
+== Programmatic usage
+
+A program could either inject a CipherService or create a new DefaultCipherService to programmatically decrypt values.
+A usr could also provide a `ConfigFilter` to apply decryption on encrypted configuration values on the fly
+

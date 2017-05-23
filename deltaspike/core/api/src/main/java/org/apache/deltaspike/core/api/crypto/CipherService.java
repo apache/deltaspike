@@ -44,12 +44,20 @@ public interface CipherService
      * Encrypt the given cleartext.
      * We use the masterSalt to access the MasterHash to use as key for encryption
      *
-     * @param cleartext
+     * @param cleartext to get encrypted
      * @param masterSalt the same as used for {@link #setMasterHash(String, String, boolean)}
      * @return the encrypted String to store somewhere
      */
     String encrypt(String cleartext, String masterSalt);
 
+    /**
+     * Decrypt the given encrypted value.
+     * We use the masterSalt to access the MasterHash to use as key for encryption
+     *
+     * @param encryptedValue to get decrypted
+     * @param masterSalt the same as used for {@link #setMasterHash(String, String, boolean)}
+     * @return the decrypted plaintext
+     */
     String decrypt(String encryptedValue, String masterSalt);
 
 }
