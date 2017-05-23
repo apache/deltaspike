@@ -22,6 +22,10 @@ mechanisms. Configuration can be overridden just by dropping a JAR into the clas
 
 Detailed documentation is available on a separate page: <<configuration.adoc#,Configuration>>.
 
+== DeltaSpike CipherService
+
+Apache DeltaSpike also provides an <<encryption#, Encryption>> mechanism for handling secret values within your application.
+
 === Internal configuration
 
 The functionality of DeltaSpike itself and its modules is adjustable using the same mechanism. There are two main

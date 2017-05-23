@@ -589,12 +589,22 @@ Once some filters are provided, all operations of ConfigResolver return filtered
 -------------------------------------------------------------
 public class DecryptingConfigFilter implements ConfigFilter
 {
+    private DefaultCipherService ciperSvc = new DefaultCipherService();
+    private String masterSalt = "someApplicationMasterSalt";
+
     @Override
     public String filterValue(String key, String value)
     {
-        if (key.contains("encrypted"))
+        if (key.contains("password"))
         {
-            return decrypt(value);
+            try
+            {
+                return cipherSvc.decrypt(value, masterSalt);
+            }
+            catch (Exception e)
+            {
+                return value;
+            }
         }
         return value;
     }
@@ -602,11 +612,18 @@ public class DecryptingConfigFilter implements ConfigFilter
     @Override
     public String filterValueForLog(String key, String value)
     {
-        return "<value encrypted>";
+        if (key.contains("password"))
+        {
+            return "***************";
+        }
+
+        return value;
     }
 }
 -------------------------------------------------------------
 
+For more information about the `CipherService` please see the <<encryption#, Encryption>> section.
+
 Since 1.8.0 you can also decorate a CDI `ConfigFilter` with `@Filter` and it will
-be added to DeltaSpike configuration *once the CDI container is started* (it means
-you can't use this source in an `Extension`).
+be added to DeltaSpike configuration *once the CDI container is started* (Note that this means
+you can't use this ConfigFilter in a CDI `Extension`).
