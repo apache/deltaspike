@@ -130,7 +130,6 @@
                     <localCheckout>true</localCheckout>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
 
-                    <releaseProfiles>distribution</releaseProfiles>
                     <preparationGoals>clean install</preparationGoals>
                 </configuration>
             </plugin>

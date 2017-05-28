@@ -28,8 +28,12 @@
 
     <artifactId>distribution-full</artifactId>
     <packaging>pom</packaging>
-
     <name>Apache DeltaSpike Full Distribution</name>
+
+    <properties>
+        <noAssembly>true</noAssembly>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.apache.deltaspike.core</groupId>
@@ -226,28 +230,73 @@
             <scope>runtime</scope>
         </dependency>
     </dependencies>
+
+
     <build>
         <plugins>
-      <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <executions>
-        <execution>
-            <id>assemble</id>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-        <configuration>
-          <descriptors>
-            <descriptor>src/main/distribution/assembly.xml</descriptor>
-          </descriptors>
-          <appendAssemblyId>false</appendAssemblyId>
-          <finalName>deltaspike-full-${project.version}</finalName>
-        </configuration>
-        </execution>
-        </executions>
-      </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>assemble</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <skipAssembly>${noAssembly}</skipAssembly>
+                            <descriptors>
+                                <descriptor>src/main/distribution/assembly.xml</descriptor>
+                            </descriptors>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <finalName>deltaspike-full-${project.version}</finalName>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <!-- for quickly building a local distrbution package -->
+            <id>distribution</id>
+            <properties>
+                <noAssembly>false</noAssembly>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>apache-release</id>
+            <properties>
+                <noAssembly>false</noAssembly>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-install-plugin</artifactId>
+                        <configuration>
+                            <createChecksum>true</createChecksum>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
 
 </project>

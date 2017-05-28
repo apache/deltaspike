@@ -75,6 +75,7 @@
         <module>cdictrl</module>
         <module>modules</module>
         <module>examples</module>
+        <module>dist</module>
     </modules>
 
     <build>
@@ -215,18 +216,5 @@
             </build>
         </profile>
 
-        <profile>
-            <id>distribution</id>
-            <modules>
-                <module>checkstyle-rules</module>
-                <module>parent</module>
-                <module>test-utils</module>
-                <module>core</module>
-                <module>cdictrl</module>
-                <module>modules</module>
-                <module>examples</module>
-                <module>dist</module>
-            </modules>
-        </profile>
     </profiles>
 </project>
