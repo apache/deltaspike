@@ -34,7 +34,7 @@ import java.util.Map;
 @Typed()
 public class TestEntityManager implements EntityManager
 {
-    private EntityTransaction entityTransaction = new TestEntityTransaction();
+    private EntityTransaction entityTransaction = new TestEntityTransaction(this);
 
     private boolean open = true;
     private boolean flushed = false;
@@ -301,5 +301,9 @@ public class TestEntityManager implements EntityManager
     public boolean isFlushed()
     {
         return flushed;
+    }
+
+    public void setFlushed(boolean flushed) {
+        this.flushed = flushed;
     }
 }

@@ -26,9 +26,11 @@ public class TestEntityTransaction implements EntityTransaction
     private boolean committed = false;
     private boolean rolledBack = false;
     private boolean markRolledBack = false;
+    private TestEntityManager testEntityManager;
 
-    public TestEntityTransaction()
+    public TestEntityTransaction(TestEntityManager testEntityManager)
     {
+        this.testEntityManager = testEntityManager;
     }
 
     @Override
@@ -46,6 +48,7 @@ public class TestEntityTransaction implements EntityTransaction
     public void commit()
     {
         committed = true;
+        testEntityManager.setFlushed(true);
     }
 
     @Override

@@ -31,6 +31,9 @@ public class FailedFlushTransactionalBean
     @Failed
     private EntityManager entityManager;
 
+    @Inject
+    private EntityManager validEntityManager; //just needed, because we only flush in case of multiple entity-managers
+
     @Transactional
     public void executeInTransaction()
     {

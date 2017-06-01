@@ -193,7 +193,7 @@ public class ResourceLocalTransactionStrategy implements TransactionStrategy
 
                         boolean rollbackOnly = isRollbackOnly(transactionalAnnotation);
 
-                        if (!rollbackOnly)
+                        if (!rollbackOnly && entityManagerEntryList.size() > 1)
                         {
                             // but first try to flush all the transactions and write the updates to the database
                             for (EntityManagerEntry currentEntityManagerEntry : entityManagerEntryList)
