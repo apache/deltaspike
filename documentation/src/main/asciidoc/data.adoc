@@ -470,7 +470,7 @@ generate the query implementation out of it (in EBNF-like form):
 
 Or in more concrete words:
 
-* The query method must either return an entity or a list of entities.
+* The query method must return an entity, an `Optional` of an entity, a list of entities or a stream of entities.
 * It must start with the `findBy` prefix (or related `findOptionalBy`, `findAnyBy`, `findAll`, `findFirst` or `findTop`).
 * Followed by a property of the Repository entity and an optional comparator (we'll define this later). The property will be used in the query together with the comparator. Note that the number of arguments passed to the method depend on the comparator.
 * You can add more blocks of property-comparator which have to be concatenated by a boolean operator. This is either an `And` or `Or`.
