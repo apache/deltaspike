@@ -22,10 +22,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import java.lang.reflect.Method;
+import org.apache.deltaspike.data.api.Repository;
+import org.apache.deltaspike.data.impl.meta.RepositoryMethodPrefix;
+import org.apache.deltaspike.data.impl.meta.EntityMetadata;
+import org.apache.deltaspike.data.impl.meta.RepositoryMetadata;
 
-import org.apache.deltaspike.data.impl.meta.RepositoryComponent;
-import org.apache.deltaspike.data.impl.meta.RepositoryEntity;
-import org.apache.deltaspike.data.impl.meta.RepositoryMethod;
+import org.apache.deltaspike.data.impl.meta.RepositoryMethodMetadata;
 import org.apache.deltaspike.data.test.domain.Simple;
 import org.apache.deltaspike.data.test.service.SimpleRepository;
 import org.junit.Test;
@@ -76,7 +78,7 @@ public class CdiQueryContextHolderTest
 
     private CdiQueryInvocationContext dummyInvocationContext()
     {
-        return new CdiQueryInvocationContext(null, dummyMethod(), null, dummyRepoMethod(), null);
+        return new CdiQueryInvocationContext(null, dummyMethod(), null, dummyRepo(), dummyRepoMethod(dummyRepo()), null);
     }
 
     private Method dummyMethod()
@@ -91,13 +93,18 @@ public class CdiQueryContextHolderTest
         }
     }
 
-    private RepositoryMethod dummyRepoMethod()
+    private RepositoryMethodMetadata dummyRepoMethod(RepositoryMetadata metadata)
     {
-        return new RepositoryMethod(dummyMethod(), dummyRepo());
+        RepositoryMethodMetadata methodMetadata = new RepositoryMethodMetadata(dummyMethod());
+        methodMetadata.setMethodPrefix(new RepositoryMethodPrefix(
+                    metadata.getRepositoryClass().getAnnotation(Repository.class).methodPrefix(),
+                    dummyMethod().getName()));
+        
+        return methodMetadata;
     }
 
-    private RepositoryComponent dummyRepo()
+    private RepositoryMetadata dummyRepo()
     {
-        return new RepositoryComponent(SimpleRepository.class, new RepositoryEntity(Simple.class));
+        return new RepositoryMetadata(SimpleRepository.class, new EntityMetadata(Simple.class));
     }
 }

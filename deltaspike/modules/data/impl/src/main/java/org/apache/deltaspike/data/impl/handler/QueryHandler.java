@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.data.impl.handler;
 
-import org.apache.deltaspike.core.api.lifecycle.Initialized;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.AnnotationUtils;
 import org.apache.deltaspike.core.util.ExceptionUtils;
@@ -29,9 +28,7 @@ import org.apache.deltaspike.data.api.QueryInvocationException;
 import org.apache.deltaspike.data.api.Repository;
 import org.apache.deltaspike.data.impl.builder.QueryBuilder;
 import org.apache.deltaspike.data.impl.builder.QueryBuilderFactory;
-import org.apache.deltaspike.data.impl.meta.RepositoryComponent;
-import org.apache.deltaspike.data.impl.meta.RepositoryComponents;
-import org.apache.deltaspike.data.impl.meta.RepositoryMethod;
+import org.apache.deltaspike.data.impl.meta.RepositoryMetadataHandler;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
 import org.apache.deltaspike.jpa.spi.entitymanager.ActiveEntityManagerHolder;
 import org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy;
@@ -49,6 +46,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
+import org.apache.deltaspike.data.impl.meta.RepositoryMetadata;
+import org.apache.deltaspike.data.impl.meta.RepositoryMethodMetadata;
 
 /**
  * Entry point for query processing.
@@ -63,8 +62,7 @@ public class QueryHandler implements Serializable, InvocationHandler
     private QueryBuilderFactory queryBuilderFactory;
 
     @Inject
-    @Initialized
-    private RepositoryComponents components;
+    private RepositoryMetadataHandler metadataHandler;
 
     @Inject
     private CdiQueryContextHolder context;
@@ -137,13 +135,15 @@ public class QueryHandler implements Serializable, InvocationHandler
         try
         {
             List<Class<?>> candidates = ProxyUtils.getProxyAndBaseTypes(proxy.getClass());
-            RepositoryComponent repo = components.lookupComponent(candidates);
-            RepositoryMethod repoMethod = components.lookupMethod(repo, method);
+            RepositoryMetadata repositoryMetadata = metadataHandler.lookupComponent(candidates);
+            RepositoryMethodMetadata repositoryMethodMetadata =
+                    metadataHandler.lookupMethod(repositoryMetadata, method);
 
-            entityManagerRef = entityManagerRefLookup.lookupReference(repo);
-            queryContext = createContext(proxy, method, args, entityManagerRef.getEntityManager(), repoMethod);
+            entityManagerRef = entityManagerRefLookup.lookupReference(repositoryMetadata);
+            queryContext = createContext(proxy, method, args, entityManagerRef.getEntityManager(),
+                    repositoryMetadata, repositoryMethodMetadata);
             
-            QueryBuilder builder = queryBuilderFactory.build(repoMethod, queryContext);
+            QueryBuilder builder = queryBuilderFactory.build(repositoryMethodMetadata, queryContext);
             Object result = runner.executeQuery(builder, queryContext);
             return result;
         }
@@ -171,10 +171,11 @@ public class QueryHandler implements Serializable, InvocationHandler
     }
 
     private CdiQueryInvocationContext createContext(Object proxy, Method method,
-            Object[] args, EntityManager entityManager, RepositoryMethod repoMethod)
+            Object[] args, EntityManager entityManager, RepositoryMetadata repositoryMetadata,
+            RepositoryMethodMetadata repositoryMethodMetadata)
     {
-        CdiQueryInvocationContext queryContext = new CdiQueryInvocationContext(proxy, method, args, repoMethod,
-                entityManager);
+        CdiQueryInvocationContext queryContext = new CdiQueryInvocationContext(proxy, method, args,
+                repositoryMetadata, repositoryMethodMetadata, entityManager);
         context.set(queryContext);
         queryContext.initMapper();
         return queryContext;

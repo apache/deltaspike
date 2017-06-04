@@ -30,21 +30,21 @@ import org.apache.deltaspike.data.api.Modifying;
 import org.apache.deltaspike.data.api.QueryResult;
 import org.apache.deltaspike.data.api.SingleResultType;
 import org.apache.deltaspike.data.impl.handler.CdiQueryInvocationContext;
-import org.apache.deltaspike.data.impl.meta.MethodPrefix;
+import org.apache.deltaspike.data.impl.meta.RepositoryMethodPrefix;
 
 public final class QueryProcessorFactory
 {
 
     private final Method method;
-    private final MethodPrefix methodPrefix;
+    private final RepositoryMethodPrefix methodPrefix;
 
     private QueryProcessorFactory(Method method)
     {
         this.method = method;
-        this.methodPrefix = new MethodPrefix("", method.getName());
+        this.methodPrefix = new RepositoryMethodPrefix("", method.getName());
     }
 
-    private QueryProcessorFactory(Method method, MethodPrefix methodPrefix)
+    private QueryProcessorFactory(Method method, RepositoryMethodPrefix methodPrefix)
     {
         this.method = method;
         this.methodPrefix = methodPrefix;
@@ -55,7 +55,7 @@ public final class QueryProcessorFactory
         return new QueryProcessorFactory(method);
     }
 
-    public static QueryProcessorFactory newInstance(Method method, MethodPrefix methodPrefix)
+    public static QueryProcessorFactory newInstance(Method method, RepositoryMethodPrefix methodPrefix)
     {
         return new QueryProcessorFactory(method, methodPrefix);
     }
@@ -151,7 +151,8 @@ public final class QueryProcessorFactory
                     List<Object> queryResult = query.getResultList();
                     result = !queryResult.isEmpty() ? queryResult.get(0) : null;
             }
-            if (context.isOptional())
+            
+            if (context.isOptionalAsReturnType())
             {
                 return OptionalUtil.wrap(result);
             }

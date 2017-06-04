@@ -27,15 +27,20 @@ import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import javax.persistence.Query;
 import javax.persistence.QueryHint;
+import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.core.api.provider.DependentProvider;
 
 import org.apache.deltaspike.data.api.EntityGraph;
 import org.apache.deltaspike.data.api.SingleResultType;
 import org.apache.deltaspike.data.api.mapping.QueryInOutMapper;
 import org.apache.deltaspike.data.impl.graph.EntityGraphHelper;
-import org.apache.deltaspike.data.impl.meta.RepositoryMethod;
+import org.apache.deltaspike.data.impl.meta.EntityMetadata;
+import org.apache.deltaspike.data.impl.meta.RepositoryMetadata;
+import org.apache.deltaspike.data.impl.meta.RepositoryMethodMetadata;
 import org.apache.deltaspike.data.impl.param.Parameters;
 import org.apache.deltaspike.data.impl.property.Property;
 import org.apache.deltaspike.data.impl.util.EntityUtils;
+import org.apache.deltaspike.data.impl.util.bean.DependentProviderDestroyable;
 import org.apache.deltaspike.data.impl.util.bean.Destroyable;
 import org.apache.deltaspike.data.spi.QueryInvocationContext;
 
@@ -44,27 +49,31 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
 
     private final EntityManager entityManager;
     private final Parameters params;
-    private final Class<?> entityClass;
     private final Object proxy;
     private final Method method;
     private final Object[] args;
-    private final RepositoryMethod repoMethod;
+    
+    private final RepositoryMetadata repositoryMetadata;
+    private final RepositoryMethodMetadata repositoryMethodMetadata;
+    
     private final List<QueryStringPostProcessor> queryPostProcessors;
     private final List<JpaQueryPostProcessor> jpaPostProcessors;
     private final List<Destroyable> cleanup;
 
     private String queryString;
 
-    public CdiQueryInvocationContext(Object proxy, Method method, Object[] args, RepositoryMethod repoMethod,
-                                     EntityManager entityManager)
+    public CdiQueryInvocationContext(Object proxy, Method method, Object[] args,
+            RepositoryMetadata repositoryMetadata,
+            RepositoryMethodMetadata repositoryMethodMetadata, EntityManager entityManager)
     {
-        this.entityManager = entityManager;
-        this.args = args == null ? new Object[]{} : args;
-        this.params = Parameters.create(method, this.args, repoMethod);
         this.proxy = proxy;
         this.method = method;
-        this.repoMethod = repoMethod;
-        this.entityClass = repoMethod.getRepository().getEntityClass();
+        this.args = args == null ? new Object[]{} : args;
+        this.repositoryMetadata = repositoryMetadata;
+        this.repositoryMethodMetadata = repositoryMethodMetadata;
+        this.entityManager = entityManager;
+        
+        this.params = Parameters.create(method, this.args, repositoryMethodMetadata);
         this.queryPostProcessors = new LinkedList<QueryStringPostProcessor>();
         this.jpaPostProcessors = new LinkedList<JpaQueryPostProcessor>();
         this.cleanup = new LinkedList<Destroyable>();
@@ -97,15 +106,13 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
     {
         try
         {
-            Property<Serializable> versionProperty =
-                    repoMethod.getRepository().getRepositoryEntity().getVersionProperty();
+            Property<Serializable> versionProperty = repositoryMetadata.getEntityMetadata().getVersionProperty();
             if (versionProperty != null)
             {
                 return versionProperty.getValue(entity) == null;
             }
 
-            Property<Serializable> primaryKeyProperty =
-                    repoMethod.getRepository().getRepositoryEntity().getPrimaryKeyProperty();
+            Property<Serializable> primaryKeyProperty = repositoryMetadata.getEntityMetadata().getPrimaryKeyProperty();
             if (EntityUtils.primaryKeyValue(entity, primaryKeyProperty) == null)
             {
                 return true;
@@ -128,13 +135,13 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
     @Override
     public Class<?> getEntityClass()
     {
-        return entityClass;
+        return repositoryMetadata.getEntityMetadata().getEntityClass();
     }
 
     @Override
     public Class<?> getRepositoryClass()
     {
-        return repoMethod.getRepository().getRepositoryClass();
+        return repositoryMetadata.getRepositoryClass();
     }
 
     public Object proceed() throws Exception
@@ -238,17 +245,12 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
 
     public Object executeQuery(Query jpaQuery)
     {
-        return repoMethod.getQueryProcessor().executeQuery(jpaQuery, this);
+        return repositoryMethodMetadata.getQueryProcessor().executeQuery(jpaQuery, this);
     }
 
     public Parameters getParams()
     {
         return params;
-    }
-
-    public RepositoryMethod getRepositoryMethod()
-    {
-        return repoMethod;
     }
 
     public String getQueryString()
@@ -268,18 +270,41 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
 
     public boolean hasQueryInOutMapper()
     {
-        return repoMethod.hasQueryInOutMapper();
+        return repositoryMethodMetadata.getQueryInOutMapperClass() != null;
     }
 
     public QueryInOutMapper<?> getQueryInOutMapper()
     {
-        return repoMethod.getQueryInOutMapperInstance(this);
+        if (repositoryMethodMetadata.getQueryInOutMapperClass() == null)
+        {
+            return null;
+        }
+
+        QueryInOutMapper<?> result = null;
+        if (repositoryMethodMetadata.isQueryInOutMapperIsNormalScope())
+        {
+            result = BeanProvider.getContextualReference(repositoryMethodMetadata.getQueryInOutMapperClass());
+        }
+        else
+        {
+            DependentProvider<? extends QueryInOutMapper<?>> mappedProvider =
+                    BeanProvider.getDependent(repositoryMethodMetadata.getQueryInOutMapperClass());
+            
+            result = mappedProvider.get();
+            
+            this.addDestroyable(new DependentProviderDestroyable(mappedProvider));
+        }
+        
+        return result;
     }
 
     public SingleResultType getSingleResultStyle()
     {
-        SingleResultType baseSingleResultType = repoMethod.getSingleResultStyle();
-        if (repoMethod.isOptional() && baseSingleResultType == SingleResultType.JPA)
+        SingleResultType baseSingleResultType = repositoryMethodMetadata.getQuery() != null
+                ? repositoryMethodMetadata.getQuery().singleResult()
+                : repositoryMethodMetadata.getMethodPrefix().getSingleResultStyle();
+        
+        if (repositoryMethodMetadata.isOptionalAsReturnType() && baseSingleResultType == SingleResultType.JPA)
         {
             return SingleResultType.OPTIONAL;
         }
@@ -334,7 +359,9 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
             return;
         }
         
-        Object graph = EntityGraphHelper.getEntityGraph(getEntityManager(), entityClass, entityGraphAnn);
+        Object graph = EntityGraphHelper.getEntityGraph(getEntityManager(),
+                repositoryMetadata.getEntityMetadata().getEntityClass(),
+                entityGraphAnn);
         query.setHint(entityGraphAnn.type().getHintName(), graph);
     }
 
@@ -356,8 +383,23 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
         return false;
     }
 
-    public boolean isOptional()
+    public boolean isOptionalAsReturnType()
     {
-        return this.repoMethod.isOptional();
+        return this.repositoryMethodMetadata.isOptionalAsReturnType();
     }
+
+    public RepositoryMetadata getRepositoryMetadata()
+    {
+        return repositoryMetadata;
+    }
+
+    public EntityMetadata getEntityMetadata()
+    {
+        return repositoryMetadata.getEntityMetadata();
+    }
+    
+    public RepositoryMethodMetadata getRepositoryMethodMetadata()
+    {
+        return repositoryMethodMetadata;
+    } 
 }

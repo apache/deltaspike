@@ -27,7 +27,7 @@ public class MethodPrefixTest
     @Test
     public void shouldParseArbitraryMethodFindPrefix()
     {
-        MethodPrefix methodPrefix = new MethodPrefix("","findTop20ByName");
+        RepositoryMethodPrefix methodPrefix = new RepositoryMethodPrefix("","findTop20ByName");
 
         String resultingQuery = methodPrefix.removePrefix("findTop20ByName");
 
@@ -37,7 +37,7 @@ public class MethodPrefixTest
     @Test
     public void shouldParseFirst20MethodFindPrefix()
     {
-        MethodPrefix methodPrefix = new MethodPrefix("","findFirst20ByName");
+        RepositoryMethodPrefix methodPrefix = new RepositoryMethodPrefix("","findFirst20ByName");
 
         String resultingQuery = methodPrefix.removePrefix("findFirst20ByName");
 
@@ -47,7 +47,7 @@ public class MethodPrefixTest
     @Test
     public void shouldParseDefinedMaxResults()
     {
-        MethodPrefix methodPrefix = new MethodPrefix("","findFirst20ByName");
+        RepositoryMethodPrefix methodPrefix = new RepositoryMethodPrefix("","findFirst20ByName");
 
         int maxResults = methodPrefix.getDefinedMaxResults();
 
@@ -57,7 +57,7 @@ public class MethodPrefixTest
     @Test
     public void shouldNotParseNonMatchingMethodName()
     {
-        MethodPrefix methodPrefix = new MethodPrefix("","findAnyByName");
+        RepositoryMethodPrefix methodPrefix = new RepositoryMethodPrefix("","findAnyByName");
 
         int maxResults = methodPrefix.getDefinedMaxResults();
 
@@ -67,7 +67,7 @@ public class MethodPrefixTest
     @Test
     public void shouldParseOrderByEmailDesc()
     {
-        MethodPrefix methodPrefix = new MethodPrefix("","findFirst3OrderByEmailDesc");
+        RepositoryMethodPrefix methodPrefix = new RepositoryMethodPrefix("","findFirst3OrderByEmailDesc");
 
         String resultingQuery = methodPrefix.removePrefix("findFirst3OrderByEmailDesc");
 
@@ -77,7 +77,7 @@ public class MethodPrefixTest
     @Test
     public void shouldParseOrderByEmail()
     {
-        MethodPrefix methodPrefix = new MethodPrefix("","findFirst3OrderByEmail");
+        RepositoryMethodPrefix methodPrefix = new RepositoryMethodPrefix("","findFirst3OrderByEmail");
 
         String resultingQuery = methodPrefix.removePrefix("findFirst3OrderByEmail");
 
@@ -87,7 +87,7 @@ public class MethodPrefixTest
     @Test
     public void shouldParseFindAllOrderByName()
     {
-        MethodPrefix methodPrefix = new MethodPrefix("","findAllOrderByName");
+        RepositoryMethodPrefix methodPrefix = new RepositoryMethodPrefix("","findAllOrderByName");
 
         String resultingQuery = methodPrefix.removePrefix("findAllOrderByName");
 

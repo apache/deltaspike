@@ -25,7 +25,7 @@ import java.text.MessageFormat;
 import org.apache.deltaspike.data.impl.builder.QueryBuilder;
 import org.apache.deltaspike.data.impl.builder.QueryBuilderContext;
 import org.apache.deltaspike.data.impl.builder.QueryOperator;
-import org.apache.deltaspike.data.impl.meta.RepositoryComponent;
+import org.apache.deltaspike.data.impl.meta.RepositoryMetadata;
 import org.apache.deltaspike.data.impl.param.ToUpperStringParameterUpdate;
 
 class PropertyQueryPart extends BasePropertyQueryPart
@@ -35,7 +35,7 @@ class PropertyQueryPart extends BasePropertyQueryPart
     private QueryOperator comparator;
 
     @Override
-    protected QueryPart build(String queryPart, String method, RepositoryComponent repo)
+    protected QueryPart build(String queryPart, String method, RepositoryMetadata repo)
     {
         comparator = QueryOperator.Equal;
         name = uncapitalize(queryPart);

@@ -30,15 +30,15 @@ public class QueryInvocationLiteral extends AnnotationLiteral<QueryInvocation>
 
     private static final long serialVersionUID = 1L;
 
-    private final MethodType methodType;
+    private final RepositoryMethodType methodType;
 
-    public QueryInvocationLiteral(MethodType methodType)
+    public QueryInvocationLiteral(RepositoryMethodType methodType)
     {
         this.methodType = methodType;
     }
 
     @Override
-    public MethodType value()
+    public RepositoryMethodType value()
     {
         return methodType;
     }

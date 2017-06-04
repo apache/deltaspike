@@ -23,14 +23,14 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.deltaspike.data.impl.builder.QueryBuilderContext;
-import org.apache.deltaspike.data.impl.meta.RepositoryComponent;
+import org.apache.deltaspike.data.impl.meta.RepositoryMetadata;
 
 public abstract class QueryPart
 {
 
     protected List<QueryPart> children = new LinkedList<QueryPart>();
 
-    protected abstract QueryPart build(String queryPart, String method, RepositoryComponent repo);
+    protected abstract QueryPart build(String queryPart, String method, RepositoryMetadata repo);
 
     protected abstract QueryPart buildQuery(QueryBuilderContext ctx);
 

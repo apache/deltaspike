@@ -268,7 +268,7 @@ public class EntityRepositoryHandler<E, PK extends Serializable>
 
     public String entityName()
     {
-        return context.getRepositoryMethod().getRepository().getRepositoryEntity().getEntityName();
+        return context.getEntityMetadata().getEntityName();
     }
 
     // ----------------------------------------------------------------------------

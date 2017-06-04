@@ -27,7 +27,7 @@ import javax.persistence.EntityManager;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
-import org.apache.deltaspike.data.impl.meta.RepositoryComponent;
+import org.apache.deltaspike.data.impl.meta.RepositoryMetadata;
 import org.apache.deltaspike.jpa.spi.entitymanager.ActiveEntityManagerHolder;
 
 @ApplicationScoped
@@ -74,16 +74,15 @@ public class EntityManagerRefLookup
         }
     }
     
-    public EntityManagerRef lookupReference(final RepositoryComponent repository)
+    public EntityManagerRef lookupReference(final RepositoryMetadata repositoryMetadata)
     {
         EntityManagerRef ref = new EntityManagerRef();
 
-        if (repository.hasEntityManagerResolver())
+        if (repositoryMetadata.getEntityManagerResolverClass() != null)
         {
-            ref.setEntityManagerResolverClass(
-                    repository.getEntityManagerResolverClass());
+            ref.setEntityManagerResolverClass(repositoryMetadata.getEntityManagerResolverClass());
             
-            if (repository.isEntityManagerResolverIsNormalScope())
+            if (repositoryMetadata.isEntityManagerResolverIsNormalScope())
             {
                 ref.setEntityManagerResolver(
                         BeanProvider.getContextualReference(ref.getEntityManagerResolverClass()));
@@ -127,9 +126,9 @@ public class EntityManagerRefLookup
             }
         }
 
-        if (repository.hasEntityManagerFlushMode())
+        if (repositoryMetadata.getEntityManagerFlushMode() != null)
         {
-            ref.getEntityManager().setFlushMode(repository.getEntityManagerFlushMode());
+            ref.getEntityManager().setFlushMode(repositoryMetadata.getEntityManagerFlushMode());
         }
 
         return ref;

@@ -19,15 +19,12 @@
 package org.apache.deltaspike.data.impl;
 
 import java.lang.reflect.InvocationHandler;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.enterprise.event.Observes;
-import javax.enterprise.inject.spi.AfterBeanDiscovery;
 import javax.enterprise.inject.spi.AnnotatedType;
-import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.BeforeBeanDiscovery;
 import javax.enterprise.inject.spi.BeforeShutdown;
 import javax.enterprise.inject.spi.Extension;
@@ -38,7 +35,6 @@ import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.data.api.AbstractEntityRepository;
 import org.apache.deltaspike.data.api.AbstractFullEntityRepository;
 import org.apache.deltaspike.data.api.Repository;
-import org.apache.deltaspike.data.impl.meta.RepositoryComponents;
 
 /**
  * The main extension class for Repositories, based on PartialBeans. Handles following events:<br/>
@@ -56,17 +52,14 @@ import org.apache.deltaspike.data.impl.meta.RepositoryComponents;
  */
 public class RepositoryExtension implements Extension, Deactivatable
 {
+    private static final Logger LOG = Logger.getLogger(RepositoryExtension.class.getName());
 
-    private static final Logger log = Logger.getLogger(RepositoryExtension.class.getName());
+    // TODO: Hack still required?
+    private static final ArrayList<Class<?>> REPOSITORY_CLASSES = new ArrayList<Class<?>>();
 
-    private static RepositoryComponents staticComponents = new RepositoryComponents();
-
-    private final List<RepositoryDefinitionException> definitionExceptions =
-            new LinkedList<RepositoryDefinitionException>();
-
+    private final ArrayList<Class<?>> repositoryClasses = new ArrayList<Class<?>>();
+    
     private Boolean isActivated = true;
-
-    private RepositoryComponents components = new RepositoryComponents();
 
     void beforeBeanDiscovery(@Observes BeforeBeanDiscovery before)
     {
@@ -85,44 +78,21 @@ public class RepositoryExtension implements Extension, Deactivatable
         {
             event.veto();
         }
-
         else if (isRepository(event.getAnnotatedType()))
         {
-            Class<X> repoClass = event.getAnnotatedType().getJavaClass();
-            try
-            {
-                log.log(Level.FINER, "getHandlerClass: Repository annotation detected on {0}",
-                        event.getAnnotatedType());
-                if (Deactivatable.class.isAssignableFrom(repoClass)
-                        && !ClassDeactivationUtils.isActivated((Class<? extends Deactivatable>) repoClass))
-                {
-                    log.log(Level.FINER, "Class {0} is Deactivated", repoClass);
-                    return;
-                }
-                components.add(repoClass);
-                staticComponents.add(repoClass);
-            }
-            catch (RepositoryDefinitionException e)
-            {
-                definitionExceptions.add(e);
-            }
-            catch (Exception e)
-            {
-                definitionExceptions.add(new RepositoryDefinitionException(repoClass, e));
-            }
-        }
-    }
+            Class<X> repositoryClass = event.getAnnotatedType().getJavaClass();
 
-    <X> void addDefinitionErrors(@Observes AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager)
-    {
-        if (!isActivated)
-        {
-            return;
-        }
+            LOG.log(Level.FINER, "getHandlerClass: Repository annotation detected on {0}",
+                    event.getAnnotatedType());
+            if (Deactivatable.class.isAssignableFrom(repositoryClass)
+                    && !ClassDeactivationUtils.isActivated((Class<? extends Deactivatable>) repositoryClass))
+            {
+                LOG.log(Level.FINER, "Class {0} is Deactivated", repositoryClass);
+                return;
+            }
 
-        for (RepositoryDefinitionException ex : definitionExceptions)
-        {
-            afterBeanDiscovery.addDefinitionError(ex);
+            repositoryClasses.add(repositoryClass);
+            REPOSITORY_CLASSES.add(repositoryClass);
         }
     }
 
@@ -139,27 +109,28 @@ public class RepositoryExtension implements Extension, Deactivatable
         return javaClass.equals(AbstractEntityRepository.class) ||
                javaClass.equals(AbstractFullEntityRepository.class);
     }
-
-    public RepositoryComponents getComponents()
+    
+    public ArrayList<Class<?>> getRepositoryClasses()
     {
-        RepositoryComponents result = new RepositoryComponents();
-        if (components.getRepositories().isEmpty() && !staticComponents.getRepositories().isEmpty())
+        ArrayList<Class<?>> result = new ArrayList<Class<?>>();
+
+        if (repositoryClasses.isEmpty() && !REPOSITORY_CLASSES.isEmpty())
         {
-            result.addAll(staticComponents.getRepositories());
+            result.addAll(REPOSITORY_CLASSES);
         }
 
-        if (!components.getRepositories().isEmpty())
+        if (!repositoryClasses.isEmpty())
         {
-            result.addAll(components.getRepositories());
+            result.addAll(repositoryClasses);
         }
 
         return result;
     }
-
+    
     protected void cleanup(@Observes BeforeShutdown beforeShutdown)
     {
         //we can reset it in any case,
         //because every application produced a copy as application-scoped bean (see RepositoryComponentsFactory)
-        staticComponents.getRepositories().clear();
+        REPOSITORY_CLASSES.clear();
     }
 }

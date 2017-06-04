@@ -23,7 +23,7 @@ import org.apache.deltaspike.data.api.SingleResultType;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class MethodPrefix
+public class RepositoryMethodPrefix
 {
     public static final String DEFAULT_PREFIX = "findBy";
     public static final String DEFAULT_OPT_PREFIX = "findOptionalBy";
@@ -40,7 +40,7 @@ public class MethodPrefix
     private final String methodName;
     private int definedMaxResults = 0;
 
-    public MethodPrefix(String customPrefix, String methodName)
+    public RepositoryMethodPrefix(String customPrefix, String methodName)
     {
         this.customPrefix = customPrefix;
         this.methodName = methodName;
@@ -104,7 +104,7 @@ public class MethodPrefix
                 this.getPrefix().equalsIgnoreCase(DEFAULT_REMOVE_PREFIX);
     }
 
-    int getDefinedMaxResults()
+    public int getDefinedMaxResults()
     {
         return definedMaxResults;
     }

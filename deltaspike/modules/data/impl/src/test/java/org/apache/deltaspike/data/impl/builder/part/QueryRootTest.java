@@ -21,9 +21,9 @@ package org.apache.deltaspike.data.impl.builder.part;
 import static org.junit.Assert.assertEquals;
 
 import org.apache.deltaspike.data.impl.builder.MethodExpressionException;
-import org.apache.deltaspike.data.impl.meta.MethodPrefix;
-import org.apache.deltaspike.data.impl.meta.RepositoryComponent;
-import org.apache.deltaspike.data.impl.meta.RepositoryEntity;
+import org.apache.deltaspike.data.impl.meta.RepositoryMethodPrefix;
+import org.apache.deltaspike.data.impl.meta.EntityMetadata;
+import org.apache.deltaspike.data.impl.meta.RepositoryMetadata;
 import org.apache.deltaspike.data.test.domain.Simple;
 import org.apache.deltaspike.data.test.service.SimpleFetchRepository;
 import org.apache.deltaspike.data.test.service.SimpleRepository;
@@ -31,8 +31,8 @@ import org.junit.Test;
 
 public class QueryRootTest
 {
-    private final RepositoryComponent repo = new RepositoryComponent(SimpleRepository.class, new RepositoryEntity(Simple.class, Long.class));
-    private final RepositoryComponent repoFetchBy = new RepositoryComponent(SimpleFetchRepository.class, new RepositoryEntity(Simple.class, Long.class));
+    private final RepositoryMetadata repo = new RepositoryMetadata(SimpleRepository.class, new EntityMetadata(Simple.class, "Simple", Long.class));
+    private final RepositoryMetadata repoFetchBy = new RepositoryMetadata(SimpleFetchRepository.class, new EntityMetadata(Simple.class, "Simple", Long.class));
 
     @Test
     public void should_create_simple_query()
@@ -129,7 +129,7 @@ public class QueryRootTest
                         "where e.name = ?1";
 
         // when
-        String result = QueryRoot.create(name, repoFetchBy, new MethodPrefix("fetchBy", name)).getJpqlQuery().trim();
+        String result = QueryRoot.create(name, repoFetchBy, new RepositoryMethodPrefix("fetchBy", name)).getJpqlQuery().trim();
 
         // then
         assertEquals(expected, result);
@@ -167,9 +167,9 @@ public class QueryRootTest
         assertEquals(expected, result);
     }
 
-    private MethodPrefix prefix(final String name)
+    private RepositoryMethodPrefix prefix(final String name)
     {
-        return new MethodPrefix("", name);
+        return new RepositoryMethodPrefix("", name);
     }
 
 }

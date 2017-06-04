@@ -19,7 +19,7 @@
 package org.apache.deltaspike.data.impl.builder.part;
 
 import org.apache.deltaspike.data.impl.builder.MethodExpressionException;
-import org.apache.deltaspike.data.impl.meta.RepositoryComponent;
+import org.apache.deltaspike.data.impl.meta.RepositoryMetadata;
 import org.apache.deltaspike.data.impl.property.Property;
 import org.apache.deltaspike.data.impl.property.query.NamedPropertyCriteria;
 import org.apache.deltaspike.data.impl.property.query.PropertyQueries;
@@ -27,12 +27,11 @@ import org.apache.deltaspike.data.impl.property.query.PropertyQuery;
 
 abstract class BasePropertyQueryPart extends QueryPart
 {
-
     static final String SEPARATOR = "_";
 
-    void validate(String name, String method, RepositoryComponent repo)
+    void validate(String name, String method, RepositoryMetadata repo)
     {
-        Class<?> current = repo.getEntityClass();
+        Class<?> current = repo.getEntityMetadata().getEntityClass();
         if (name == null)
         {
             throw new MethodExpressionException(null, repo.getRepositoryClass(), method);

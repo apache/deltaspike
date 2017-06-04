@@ -21,7 +21,7 @@ package org.apache.deltaspike.data.impl.builder.part;
 import static org.apache.deltaspike.data.impl.util.QueryUtils.splitByKeyword;
 
 import org.apache.deltaspike.data.impl.builder.QueryBuilderContext;
-import org.apache.deltaspike.data.impl.meta.RepositoryComponent;
+import org.apache.deltaspike.data.impl.meta.RepositoryMetadata;
 
 
 class OrQueryPart extends ConnectingQueryPart
@@ -33,7 +33,7 @@ class OrQueryPart extends ConnectingQueryPart
     }
 
     @Override
-    protected QueryPart build(String queryPart, String method, RepositoryComponent repo)
+    protected QueryPart build(String queryPart, String method, RepositoryMetadata repo)
     {
         String[] andParts = splitByKeyword(queryPart, "And");
         boolean first = true;

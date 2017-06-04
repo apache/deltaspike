@@ -26,7 +26,6 @@ import java.lang.reflect.Method;
  */
 public interface QueryInvocationContext
 {
-
     /**
      * Entity Manager used for the query.
      */

@@ -22,7 +22,10 @@ import java.lang.reflect.Method;
 import javax.enterprise.context.ApplicationScoped;
 
 import javax.inject.Inject;
+import javax.persistence.LockModeType;
 import org.apache.deltaspike.core.util.ClassUtils;
+import org.apache.deltaspike.data.api.Modifying;
+import org.apache.deltaspike.data.api.Query;
 
 import org.apache.deltaspike.data.impl.builder.QueryBuilder;
 import org.apache.deltaspike.data.impl.handler.CdiQueryInvocationContext;
@@ -81,14 +84,24 @@ public class TransactionalQueryRunner implements QueryRunner
 
     private boolean needsTransaction(CdiQueryInvocationContext context)
     {
-        boolean requiresTx = false;
-        Method method = context.getMethod();
-        if (ClassUtils.containsMethod(EntityRepositoryHandler.class, method))
+        if (ClassUtils.containsMethod(EntityRepositoryHandler.class, context.getMethod()))
         {
-            Method executed = ClassUtils.extractMethod(EntityRepositoryHandler.class, method);
-            requiresTx = executed.isAnnotationPresent(RequiresTransaction.class);
+            Method executed = ClassUtils.extractMethod(EntityRepositoryHandler.class, context.getMethod());
+            if (executed.isAnnotationPresent(RequiresTransaction.class))
+            {
+                return true;
+            }
         }
-        return requiresTx || context.getRepositoryMethod().requiresTransaction();
+
+        Query query = context.getRepositoryMethodMetadata().getQuery();
+        Modifying modifying = context.getRepositoryMethodMetadata().getModifying();
+        
+        if ((query != null && !query.lock().equals(LockModeType.NONE)) || modifying != null)
+        {
+            return true;
+        }
+        
+        return false;
     }
 
 }

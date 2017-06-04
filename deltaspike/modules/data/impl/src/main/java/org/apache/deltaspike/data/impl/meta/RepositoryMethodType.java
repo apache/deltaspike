@@ -18,27 +18,19 @@
  */
 package org.apache.deltaspike.data.impl.meta;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
-
-import org.apache.deltaspike.core.api.lifecycle.Initialized;
-import org.apache.deltaspike.data.impl.RepositoryExtension;
 
 /**
- * Repository components producer.
+ * Repository method type. Stands for
+ * <ul>
+ * <li>Delegated methods - the Repository has a concrete implementation for this or the method is implemented in the
+ * {@link org.apache.deltaspike.data.impl.handler.EntityRepositoryHandler}.</li>
+ * <li>Annotated method - the query is defined via a Query annotation.</li>
+ * <li>The method defines a query expression by its name.</li>
+ * </ul>
  */
-public class RepositoryComponentsFactory
+public enum RepositoryMethodType
 {
 
-    @Inject
-    private RepositoryExtension extension;
-    
-    @Produces
-    @ApplicationScoped
-    @Initialized
-    public RepositoryComponents producer()
-    {
-        return extension.getComponents();
-    }
+    DELEGATE, ANNOTATED, PARSE
+
 }

@@ -18,12 +18,12 @@
  */
 package org.apache.deltaspike.data.impl.meta.unit;
 
+import org.apache.deltaspike.data.impl.meta.EntityMetadata;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import org.apache.deltaspike.data.impl.meta.RepositoryEntity;
 import org.apache.deltaspike.data.impl.util.EntityUtils;
 import org.apache.deltaspike.data.test.domain.Parent;
 import org.apache.deltaspike.data.test.domain.TeeId;
@@ -126,9 +126,9 @@ public class PersistenceUnitsTest
         // given
 
         // when
-        RepositoryEntity entity1 = lookupMetadata(MappedOne.class);
-        RepositoryEntity entity2 = lookupMetadata(MappedTwo.class);
-        RepositoryEntity entity3 = lookupMetadata(MappedThree.class);
+        EntityMetadata entity1 = lookupMetadata(MappedOne.class);
+        EntityMetadata entity2 = lookupMetadata(MappedTwo.class);
+        EntityMetadata entity3 = lookupMetadata(MappedThree.class);
 
         // then
         assertNotNull(entity1);
@@ -138,12 +138,12 @@ public class PersistenceUnitsTest
         assertEquals(Long.class, entity3.getPrimaryKeyClass());
     }
 
-    protected RepositoryEntity lookupMetadata(Class<?> entityClass)
+    protected EntityMetadata lookupMetadata(Class<?> entityClass)
     {
         EntityDescriptor entity = PersistenceUnitDescriptorProvider.getInstance().find(entityClass);
         if (entity != null)
         {
-            return new RepositoryEntity(entityClass, EntityUtils.primaryKeyClass(entityClass));
+            return new EntityMetadata(entityClass, EntityUtils.primaryKeyClass(entityClass));
         }
         return null;
     }

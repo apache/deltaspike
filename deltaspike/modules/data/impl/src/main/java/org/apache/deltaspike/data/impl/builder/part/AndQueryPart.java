@@ -19,7 +19,7 @@
 package org.apache.deltaspike.data.impl.builder.part;
 
 import org.apache.deltaspike.data.impl.builder.QueryBuilderContext;
-import org.apache.deltaspike.data.impl.meta.RepositoryComponent;
+import org.apache.deltaspike.data.impl.meta.RepositoryMetadata;
 
 class AndQueryPart extends ConnectingQueryPart
 {
@@ -30,7 +30,7 @@ class AndQueryPart extends ConnectingQueryPart
     }
 
     @Override
-    protected QueryPart build(String queryPart, String method, RepositoryComponent repo)
+    protected QueryPart build(String queryPart, String method, RepositoryMetadata repo)
     {
         children.add(new PropertyQueryPart().build(queryPart, method, repo));
         return this;

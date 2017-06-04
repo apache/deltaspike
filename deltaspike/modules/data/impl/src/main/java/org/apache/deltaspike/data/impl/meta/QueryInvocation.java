@@ -41,6 +41,6 @@ import javax.inject.Qualifier;
 public @interface QueryInvocation
 {
 
-    MethodType value();
+    RepositoryMethodType value();
 
 }

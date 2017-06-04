@@ -31,19 +31,17 @@ import java.util.TreeSet;
 
 import org.apache.deltaspike.data.impl.builder.QueryBuilder;
 import org.apache.deltaspike.data.impl.builder.QueryBuilderContext;
-import org.apache.deltaspike.data.impl.meta.RepositoryComponent;
-
+import org.apache.deltaspike.data.impl.meta.RepositoryMetadata;
 
 public class OrderByQueryPart extends BasePropertyQueryPart
 {
-
     private static final String KEYWORD_ASC = "Asc";
     private static final String KEYWORD_DESC = "Desc";
 
     private final List<OrderByQueryAttribute> attributes = new LinkedList<OrderByQueryAttribute>();
 
     @Override
-    protected QueryPart build(String queryPart, String method, RepositoryComponent repo)
+    protected QueryPart build(String queryPart, String method, RepositoryMetadata repo)
     {
         Set<String> collect = new TreeSet<String>();
         List<String> ascSplit = new LinkedList<String>();

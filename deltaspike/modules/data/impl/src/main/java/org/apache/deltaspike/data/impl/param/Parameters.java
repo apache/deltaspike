@@ -32,7 +32,7 @@ import org.apache.deltaspike.data.api.FirstResult;
 import org.apache.deltaspike.data.api.MaxResults;
 import org.apache.deltaspike.data.api.QueryParam;
 import org.apache.deltaspike.data.api.mapping.QueryInOutMapper;
-import org.apache.deltaspike.data.impl.meta.RepositoryMethod;
+import org.apache.deltaspike.data.impl.meta.RepositoryMethodMetadata;
 
 /**
  * Convenience class to manage method and query parameters.
@@ -62,7 +62,7 @@ public final class Parameters
         return new Parameters(empty, DEFAULT_MAX, DEFAULT_FIRST);
     }
 
-    public static Parameters create(Method method, Object[] parameters, RepositoryMethod repositoryMethod)
+    public static Parameters create(Method method, Object[] parameters, RepositoryMethodMetadata repositoryMethod)
     {
         int max = extractSizeRestriction(method, repositoryMethod);
         int first = DEFAULT_FIRST;
@@ -143,13 +143,13 @@ public final class Parameters
         return firstResult;
     }
 
-    private static int extractSizeRestriction(Method method, RepositoryMethod repositoryMethod)
+    private static int extractSizeRestriction(Method method, RepositoryMethodMetadata repositoryMethod)
     {
-        if (method.isAnnotationPresent(org.apache.deltaspike.data.api.Query.class))
+        if (repositoryMethod.getQuery() != null)
         {
-            return method.getAnnotation(org.apache.deltaspike.data.api.Query.class).max();
+            return repositoryMethod.getQuery().max();
         }
-        return repositoryMethod.getDefinedMaxResults();
+        return repositoryMethod.getMethodPrefix().getDefinedMaxResults();
     }
 
     @SuppressWarnings("unchecked")

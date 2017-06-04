@@ -29,8 +29,8 @@ import java.util.logging.Logger;
 import org.apache.deltaspike.data.impl.builder.MethodExpressionException;
 import org.apache.deltaspike.data.impl.builder.QueryBuilder;
 import org.apache.deltaspike.data.impl.builder.QueryBuilderContext;
-import org.apache.deltaspike.data.impl.meta.MethodPrefix;
-import org.apache.deltaspike.data.impl.meta.RepositoryComponent;
+import org.apache.deltaspike.data.impl.meta.RepositoryMethodPrefix;
+import org.apache.deltaspike.data.impl.meta.RepositoryMetadata;
 import org.apache.deltaspike.data.impl.param.ParameterUpdate;
 
 /**
@@ -39,25 +39,25 @@ import org.apache.deltaspike.data.impl.param.ParameterUpdate;
 public class QueryRoot extends QueryPart
 {
 
-    public static final QueryRoot UNKNOWN_ROOT = new QueryRoot("null-object", new MethodPrefix("", null));
+    public static final QueryRoot UNKNOWN_ROOT = new QueryRoot("null-object", new RepositoryMethodPrefix("", null));
 
     private static final Logger log = Logger.getLogger(QueryRoot.class.getName());
 
     private final String entityName;
-    private final MethodPrefix methodPrefix;
+    private final RepositoryMethodPrefix methodPrefix;
 
     private String jpqlQuery;
     private List<ParameterUpdate> paramUpdates;
 
-    protected QueryRoot(String entityName, MethodPrefix methodPrefix)
+    protected QueryRoot(String entityName, RepositoryMethodPrefix methodPrefix)
     {
         this.entityName = entityName;
         this.methodPrefix = methodPrefix;
     }
 
-    public static QueryRoot create(String method, RepositoryComponent repo, MethodPrefix prefix)
+    public static QueryRoot create(String method, RepositoryMetadata repo, RepositoryMethodPrefix prefix)
     {
-        QueryRoot root = new QueryRoot(repo.getEntityName(), prefix);
+        QueryRoot root = new QueryRoot(repo.getEntityMetadata().getEntityName(), prefix);
         root.build(method, method, repo);
         root.createJpql();
         return root;
@@ -74,7 +74,7 @@ public class QueryRoot extends QueryPart
     }
 
     @Override
-    protected QueryPart build(String queryPart, String method, RepositoryComponent repo)
+    protected QueryPart build(String queryPart, String method, RepositoryMetadata repo)
     {
         String[] orderByParts = splitByKeyword(queryPart, "OrderBy");
         if (hasQueryConditions(orderByParts))

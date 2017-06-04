@@ -39,12 +39,12 @@ import org.apache.deltaspike.core.util.OptionalUtil;
 import org.apache.deltaspike.core.util.StreamUtil;
 import org.apache.deltaspike.data.api.QueryInvocationException;
 import org.apache.deltaspike.data.impl.handler.CdiQueryInvocationContext;
-import org.apache.deltaspike.data.impl.meta.MethodType;
+import org.apache.deltaspike.data.impl.meta.RepositoryMethodType;
 import org.apache.deltaspike.data.impl.meta.QueryInvocation;
 import org.apache.deltaspike.data.impl.util.bean.BeanDestroyable;
 import org.apache.deltaspike.data.spi.DelegateQueryHandler;
 
-@QueryInvocation(MethodType.DELEGATE)
+@QueryInvocation(RepositoryMethodType.DELEGATE)
 @ApplicationScoped
 public class DelegateQueryBuilder extends QueryBuilder
 {

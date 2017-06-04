@@ -18,9 +18,9 @@
  */
 package org.apache.deltaspike.data.impl.builder;
 
-import static org.apache.deltaspike.data.impl.meta.MethodType.ANNOTATED;
-import static org.apache.deltaspike.data.impl.meta.MethodType.DELEGATE;
-import static org.apache.deltaspike.data.impl.meta.MethodType.PARSE;
+import static org.apache.deltaspike.data.impl.meta.RepositoryMethodType.ANNOTATED;
+import static org.apache.deltaspike.data.impl.meta.RepositoryMethodType.DELEGATE;
+import static org.apache.deltaspike.data.impl.meta.RepositoryMethodType.PARSE;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,15 +29,15 @@ import javax.enterprise.context.ApplicationScoped;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.data.api.QueryResult;
 import org.apache.deltaspike.data.impl.handler.CdiQueryInvocationContext;
-import org.apache.deltaspike.data.impl.meta.MethodType;
+import org.apache.deltaspike.data.impl.meta.RepositoryMethodType;
 import org.apache.deltaspike.data.impl.meta.QueryInvocationLiteral;
-import org.apache.deltaspike.data.impl.meta.RepositoryMethod;
+import org.apache.deltaspike.data.impl.meta.RepositoryMethodMetadata;
 
 @ApplicationScoped
 public class QueryBuilderFactory
 {
-    private static final Map<MethodType, QueryInvocationLiteral> LITERALS =
-            new HashMap<MethodType, QueryInvocationLiteral>()
+    private static final Map<RepositoryMethodType, QueryInvocationLiteral> LITERALS =
+            new HashMap<RepositoryMethodType, QueryInvocationLiteral>()
             {
                 private static final long serialVersionUID = 1L;
 
@@ -48,14 +48,16 @@ public class QueryBuilderFactory
                 }
             };
 
-    public QueryBuilder build(RepositoryMethod method, CdiQueryInvocationContext context)
+    public QueryBuilder build(RepositoryMethodMetadata methodMetadata, CdiQueryInvocationContext context)
     {
         QueryBuilder builder = BeanProvider.getContextualReference(
-                QueryBuilder.class, LITERALS.get(method.getMethodType()));
-        if (method.returns(QueryResult.class))
+                QueryBuilder.class, LITERALS.get(methodMetadata.getMethodType()));
+
+        if (QueryResult.class.equals(methodMetadata.getMethod().getReturnType()))
         {
             return new WrappedQueryBuilder(builder);
         }
+
         return builder;
     }
 
