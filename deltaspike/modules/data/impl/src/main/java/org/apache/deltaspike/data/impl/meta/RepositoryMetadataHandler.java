@@ -53,12 +53,12 @@ public class RepositoryMetadataHandler
     }
 
     /**
-     * Repository access - lookup the Repository component meta data from a list of candidate classes.
+     * Lookup the Repository component meta data from a list of candidate classes.
      * Depending on the implementation, proxy objects might have been modified so the actual class
      * does not match the original Repository class.
      *
-     * @param candidateClasses  List of candidates to check.
-     * @return A {@link RepositoryMetadataInitializer} corresponding to the repoClass parameter.
+     * @param candidateClasses List of candidates to check.
+     * @return A {@link RepositoryMetadataInitializer}.
      */
     public RepositoryMetadata lookupComponent(List<Class<?>> candidateClasses)
     {
@@ -73,35 +73,30 @@ public class RepositoryMetadataHandler
     }
 
     /**
-     * Repository access - lookup the Repository component meta data for a specific Repository class.
+     * Lookup the {@link RepositoryMetadata} for a specific Repository class.
      *
-     * @param repoClass  The Repository class to lookup the method for
-     * @return A {@link RepositoryMetadataInitializer} corresponding to the repoClass parameter.
+     * @param repositoryClass The repository class to lookup the method for
+     * @return A {@link RepositoryMetadata}.
      */
-    public RepositoryMetadata lookupComponent(Class<?> repoClass)
+    public RepositoryMetadata lookupComponent(Class<?> repositoryClass)
     {
-        if (repositoriesMetadata.containsKey(repoClass))
+        if (repositoriesMetadata.containsKey(repositoryClass))
         {
-            return repositoriesMetadata.get(repoClass);
+            return repositoriesMetadata.get(repositoryClass);
         }
-        throw new RuntimeException("Unknown Repository class " + repoClass.getName());
-    }
-
-    /**
-     * Repository access - lookup method information for a specific Repository class.
-     *
-     * @param repoClass The Repository class to lookup the method for
-     * @param method    The Method object to get Repository meta data for.
-     * @return A {@link RepositoryMethodMetadataInitializer} corresponding to the method parameter.
-     */
-    public RepositoryMethodMetadata lookupMethod(Class<?> repoClass, Method method)
-    {
-        return lookupComponent(repoClass).getMethodsMetadata().get(method);
+        throw new RuntimeException("Unknown Repository class " + repositoryClass.getName());
     }
     
-    public RepositoryMethodMetadata lookupMethod(RepositoryMetadata metadata, Method method)
+    /**
+     * lookup the {@link RepositoryMethodMetadata} for a specific repository and method.
+     *
+     * @param repositoryMetadata The Repository metadata to lookup the method for.
+     * @param method The method object to get Repository meta data for.
+     * @return A {@link RepositoryMethodMetadata}.
+     */
+    public RepositoryMethodMetadata lookupMethod(RepositoryMetadata repositoryMetadata, Method method)
     {
-        return metadata.getMethodsMetadata().get(method);
+        return repositoryMetadata.getMethodsMetadata().get(method);
     }
 
     public Map<Class<?>, RepositoryMetadata> getRepositories()

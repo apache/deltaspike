@@ -135,7 +135,8 @@ public class QueryHandler implements Serializable, InvocationHandler
         try
         {
             List<Class<?>> candidates = ProxyUtils.getProxyAndBaseTypes(proxy.getClass());
-            RepositoryMetadata repositoryMetadata = metadataHandler.lookupComponent(candidates);
+            RepositoryMetadata repositoryMetadata =
+                    metadataHandler.lookupComponent(candidates);
             RepositoryMethodMetadata repositoryMethodMetadata =
                     metadataHandler.lookupMethod(repositoryMetadata, method);
 
