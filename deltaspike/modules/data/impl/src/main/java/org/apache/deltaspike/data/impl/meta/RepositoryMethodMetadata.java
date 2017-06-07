@@ -45,6 +45,8 @@ public class RepositoryMethodMetadata
     private boolean returnsStream;
     
     private SingleResultType singleResultType;
+    
+    private boolean requiresTransaction;
 
     public RepositoryMethodMetadata()
     {
@@ -174,5 +176,15 @@ public class RepositoryMethodMetadata
     public void setSingleResultType(SingleResultType singleResultType)
     {
         this.singleResultType = singleResultType;
+    }
+
+    public boolean isRequiresTransaction()
+    {
+        return requiresTransaction;
+    }
+
+    public void setRequiresTransaction(boolean requiresTransaction)
+    {
+        this.requiresTransaction = requiresTransaction;
     }
 }

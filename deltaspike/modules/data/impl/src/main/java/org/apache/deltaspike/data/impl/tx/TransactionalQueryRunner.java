@@ -18,20 +18,13 @@
  */
 package org.apache.deltaspike.data.impl.tx;
 
-import java.lang.reflect.Method;
 import javax.enterprise.context.ApplicationScoped;
 
 import javax.inject.Inject;
-import javax.persistence.LockModeType;
-import org.apache.deltaspike.core.util.ClassUtils;
-import org.apache.deltaspike.data.api.Modifying;
-import org.apache.deltaspike.data.api.Query;
 
 import org.apache.deltaspike.data.impl.builder.QueryBuilder;
 import org.apache.deltaspike.data.impl.handler.CdiQueryInvocationContext;
-import org.apache.deltaspike.data.impl.handler.EntityRepositoryHandler;
 import org.apache.deltaspike.data.impl.handler.QueryRunner;
-import org.apache.deltaspike.data.impl.meta.RequiresTransaction;
 import org.apache.deltaspike.jpa.spi.entitymanager.ActiveEntityManagerHolder;
 import org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy;
 
@@ -49,7 +42,7 @@ public class TransactionalQueryRunner implements QueryRunner
     public Object executeQuery(final QueryBuilder builder, final CdiQueryInvocationContext context)
         throws Throwable
     {
-        if (needsTransaction(context))
+        if (context.getRepositoryMethodMetadata().isRequiresTransaction())
         {
             try
             {
@@ -80,28 +73,6 @@ public class TransactionalQueryRunner implements QueryRunner
                 return builder.executeQuery(context);
             }
         });
-    }
-
-    private boolean needsTransaction(CdiQueryInvocationContext context)
-    {
-        if (ClassUtils.containsMethod(EntityRepositoryHandler.class, context.getMethod()))
-        {
-            Method executed = ClassUtils.extractMethod(EntityRepositoryHandler.class, context.getMethod());
-            if (executed.isAnnotationPresent(RequiresTransaction.class))
-            {
-                return true;
-            }
-        }
-
-        Query query = context.getRepositoryMethodMetadata().getQuery();
-        Modifying modifying = context.getRepositoryMethodMetadata().getModifying();
-        
-        if ((query != null && !query.lock().equals(LockModeType.NONE)) || modifying != null)
-        {
-            return true;
-        }
-        
-        return false;
     }
 
 }

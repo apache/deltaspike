@@ -29,6 +29,8 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
+import javax.persistence.LockModeType;
+import org.apache.deltaspike.core.util.ClassUtils;
 
 import org.apache.deltaspike.core.util.OptionalUtil;
 import org.apache.deltaspike.core.util.StreamUtil;
@@ -41,6 +43,7 @@ import org.apache.deltaspike.data.api.mapping.QueryInOutMapper;
 import org.apache.deltaspike.data.impl.builder.MethodExpressionException;
 import org.apache.deltaspike.data.impl.builder.part.QueryRoot;
 import org.apache.deltaspike.data.impl.builder.result.QueryProcessorFactory;
+import org.apache.deltaspike.data.impl.handler.EntityRepositoryHandler;
 
 @ApplicationScoped
 public class RepositoryMethodMetadataInitializer
@@ -79,6 +82,7 @@ public class RepositoryMethodMetadataInitializer
         initQueryInOutMapperIsNormalScope(repositoryMetadata, repositoryMethodMetadata, beanManager);
 
         initSingleResultType(repositoryMethodMetadata);
+        initRequiresTransaction(repositoryMethodMetadata);
 
         
         return repositoryMethodMetadata;
@@ -193,4 +197,27 @@ public class RepositoryMethodMetadataInitializer
         }
     }
     
+    private void initRequiresTransaction(RepositoryMethodMetadata repositoryMethodMetadata)
+    {
+        boolean requiresTransaction = false;
+        
+        if (ClassUtils.containsMethod(EntityRepositoryHandler.class, repositoryMethodMetadata.getMethod()))
+        {
+            Method executed = ClassUtils.extractMethod(EntityRepositoryHandler.class, repositoryMethodMetadata.getMethod());
+            if (executed.isAnnotationPresent(RequiresTransaction.class))
+            {
+                requiresTransaction = true;
+            }
+        }
+
+        Query query = repositoryMethodMetadata.getQuery();
+        Modifying modifying = repositoryMethodMetadata.getModifying();
+        
+        if ((query != null && !query.lock().equals(LockModeType.NONE)) || modifying != null)
+        {
+            requiresTransaction = true;
+        }
+        
+        repositoryMethodMetadata.setRequiresTransaction(requiresTransaction);
+    }
 }
