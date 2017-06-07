@@ -36,7 +36,7 @@ public class MethodQueryBuilder extends QueryBuilder
         return context.executeQuery(jpaQuery);
     }
 
-     private Query createJpaQuery(CdiQueryInvocationContext context)
+    private Query createJpaQuery(CdiQueryInvocationContext context)
     {
         Parameters params = context.getParams();
         QueryRoot root = context.getRepositoryMethodMetadata().getQueryRoot();
