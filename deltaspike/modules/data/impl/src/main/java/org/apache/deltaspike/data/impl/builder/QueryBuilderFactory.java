@@ -50,9 +50,10 @@ public class QueryBuilderFactory
                 return methodQueryBuilder;
             case DELEGATE:
                 return delegateQueryBuilder;
+            default:
+                throw new RuntimeException(
+                        "No " + QueryBuilder.class.getName() + " avialable for type: " + repositoryMethodType);
         }
-        
-        throw new RuntimeException("No " + QueryBuilder.class.getName() + " avialable for type: " + repositoryMethodType);
     }
 
     public QueryBuilder build(RepositoryMethodMetadata methodMetadata, CdiQueryInvocationContext context)
