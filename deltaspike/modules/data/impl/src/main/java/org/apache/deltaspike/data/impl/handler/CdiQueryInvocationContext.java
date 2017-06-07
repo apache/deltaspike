@@ -31,7 +31,6 @@ import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.api.provider.DependentProvider;
 
 import org.apache.deltaspike.data.api.EntityGraph;
-import org.apache.deltaspike.data.api.SingleResultType;
 import org.apache.deltaspike.data.api.mapping.QueryInOutMapper;
 import org.apache.deltaspike.data.impl.graph.EntityGraphHelper;
 import org.apache.deltaspike.data.impl.meta.EntityMetadata;
@@ -159,26 +158,32 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
     {
         Parameters params = getParams();
         Method method = getMethod();
+        
         if (params.hasSizeRestriction())
         {
             query.setMaxResults(params.getSizeRestriciton());
         }
+        
         if (params.hasFirstResult())
         {
             query.setFirstResult(params.getFirstResult());
         }
-        if (hasLockMode(method))
+        
+        LockModeType lockMode = extractLockMode();
+        if (lockMode != null)
         {
-            query.setLockMode(extractLockMode(method));
+            query.setLockMode(lockMode);
         }
-        if (hasQueryHints(method))
+        
+        QueryHint[] hints = extractQueryHints();
+        if (hints != null)
         {
-            QueryHint[] hints = extractQueryHints(method);
             for (QueryHint hint : hints)
             {
                 query.setHint(hint.name(), hint.value());
             }
         }
+
         applyEntityGraph(query, method);
         query = applyJpaQueryPostProcessors(query);
         return query;
@@ -298,59 +303,33 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
         return result;
     }
 
-    public SingleResultType getSingleResultStyle()
-    {
-        SingleResultType baseSingleResultType = repositoryMethodMetadata.getQuery() != null
-                ? repositoryMethodMetadata.getQuery().singleResult()
-                : repositoryMethodMetadata.getMethodPrefix().getSingleResultStyle();
-        
-        if (repositoryMethodMetadata.isReturnsOptional() && baseSingleResultType == SingleResultType.JPA)
-        {
-            return SingleResultType.OPTIONAL;
-        }
-        else
-        {
-            return baseSingleResultType;
-        }
-    }
-
     public Object getProxy()
     {
         return proxy;
     }
 
-    private boolean hasLockMode(Method method)
+    private LockModeType extractLockMode()
     {
-        return extractLockMode(method) != null;
-    }
-
-    private LockModeType extractLockMode(Method method)
-    {
-        Class<org.apache.deltaspike.data.api.Query> query = org.apache.deltaspike.data.api.Query.class;
-        if (method.isAnnotationPresent(query) &&
-                method.getAnnotation(query).lock() != LockModeType.NONE)
+        org.apache.deltaspike.data.api.Query query = getRepositoryMethodMetadata().getQuery();
+        if (query != null && query.lock() != LockModeType.NONE)
         {
-            return method.getAnnotation(query).lock();
+            return query.lock();
         }
+
         return null;
     }
 
-    private QueryHint[] extractQueryHints(Method method)
+    private QueryHint[] extractQueryHints()
     {
-        Class<org.apache.deltaspike.data.api.Query> query = org.apache.deltaspike.data.api.Query.class;
-        if (method.isAnnotationPresent(query) &&
-                method.getAnnotation(query).hints().length > 0)
+        org.apache.deltaspike.data.api.Query query = getRepositoryMethodMetadata().getQuery();        
+        if (query != null && query.hints().length > 0)
         {
-            return method.getAnnotation(query).hints();
+            return query.hints();
         }
+
         return null;
     }
 
-    private boolean hasQueryHints(Method method)
-    {
-        return extractQueryHints(method) != null;
-    }
-    
     private void applyEntityGraph(Query query, Method method)
     {
         EntityGraph entityGraphAnn = method.getAnnotation(EntityGraph.class);

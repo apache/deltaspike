@@ -35,6 +35,7 @@ import org.apache.deltaspike.core.util.StreamUtil;
 import org.apache.deltaspike.data.api.Modifying;
 import org.apache.deltaspike.data.api.Query;
 import org.apache.deltaspike.data.api.Repository;
+import org.apache.deltaspike.data.api.SingleResultType;
 import org.apache.deltaspike.data.api.mapping.MappingConfig;
 import org.apache.deltaspike.data.api.mapping.QueryInOutMapper;
 import org.apache.deltaspike.data.impl.builder.MethodExpressionException;
@@ -77,6 +78,9 @@ public class RepositoryMethodMetadataInitializer
         initQueryRoot(repositoryMetadata, repositoryMethodMetadata);
         initQueryInOutMapperIsNormalScope(repositoryMetadata, repositoryMethodMetadata, beanManager);
 
+        initSingleResultType(repositoryMethodMetadata);
+
+        
         return repositoryMethodMetadata;
     }
 
@@ -172,4 +176,21 @@ public class RepositoryMethodMetadataInitializer
         
         return null;
     }
+    
+    private void initSingleResultType(RepositoryMethodMetadata repositoryMethodMetadata)
+    {
+        SingleResultType singleResultType = repositoryMethodMetadata.getQuery() != null
+                ? repositoryMethodMetadata.getQuery().singleResult()
+                : repositoryMethodMetadata.getMethodPrefix().getSingleResultStyle();
+        
+        if (repositoryMethodMetadata.isReturnsOptional() && singleResultType == SingleResultType.JPA)
+        {
+            repositoryMethodMetadata.setSingleResultType(SingleResultType.OPTIONAL);
+        }
+        else
+        {
+            repositoryMethodMetadata.setSingleResultType(singleResultType);
+        }
+    }
+    
 }

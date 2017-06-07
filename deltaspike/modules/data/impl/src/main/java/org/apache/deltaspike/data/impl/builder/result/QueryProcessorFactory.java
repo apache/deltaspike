@@ -102,7 +102,7 @@ public class QueryProcessorFactory
         @Override
         public Object executeQuery(Query query, CdiQueryInvocationContext context)
         {
-            SingleResultType style = context.getSingleResultStyle();
+            SingleResultType style = context.getRepositoryMethodMetadata().getSingleResultType();
             Object result = null;
             switch (style)
             {

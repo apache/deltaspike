@@ -21,6 +21,7 @@ package org.apache.deltaspike.data.impl.meta;
 import java.lang.reflect.Method;
 import org.apache.deltaspike.data.api.Modifying;
 import org.apache.deltaspike.data.api.Query;
+import org.apache.deltaspike.data.api.SingleResultType;
 import org.apache.deltaspike.data.api.mapping.QueryInOutMapper;
 import org.apache.deltaspike.data.impl.builder.part.QueryRoot;
 import org.apache.deltaspike.data.impl.builder.result.QueryProcessor;
@@ -42,6 +43,8 @@ public class RepositoryMethodMetadata
     
     private boolean returnsOptional;
     private boolean returnsStream;
+    
+    private SingleResultType singleResultType;
 
     public RepositoryMethodMetadata()
     {
@@ -161,5 +164,15 @@ public class RepositoryMethodMetadata
     public void setReturnsStream(boolean returnsStream)
     {
         this.returnsStream = returnsStream;
+    }
+
+    public SingleResultType getSingleResultType()
+    {
+        return singleResultType;
+    }
+
+    public void setSingleResultType(SingleResultType singleResultType)
+    {
+        this.singleResultType = singleResultType;
     }
 }
