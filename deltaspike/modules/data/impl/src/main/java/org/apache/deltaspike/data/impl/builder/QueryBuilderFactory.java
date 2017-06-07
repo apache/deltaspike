@@ -22,36 +22,42 @@ import static org.apache.deltaspike.data.impl.meta.RepositoryMethodType.ANNOTATE
 import static org.apache.deltaspike.data.impl.meta.RepositoryMethodType.DELEGATE;
 import static org.apache.deltaspike.data.impl.meta.RepositoryMethodType.PARSE;
 
-import java.util.HashMap;
-import java.util.Map;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 
-import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.data.api.QueryResult;
 import org.apache.deltaspike.data.impl.handler.CdiQueryInvocationContext;
 import org.apache.deltaspike.data.impl.meta.RepositoryMethodType;
-import org.apache.deltaspike.data.impl.meta.QueryInvocationLiteral;
 import org.apache.deltaspike.data.impl.meta.RepositoryMethodMetadata;
 
 @ApplicationScoped
 public class QueryBuilderFactory
 {
-    private static final Map<RepositoryMethodType, QueryInvocationLiteral> LITERALS =
-            new HashMap<RepositoryMethodType, QueryInvocationLiteral>()
-            {
-                private static final long serialVersionUID = 1L;
-
-                {
-                    put(ANNOTATED, new QueryInvocationLiteral(ANNOTATED));
-                    put(DELEGATE, new QueryInvocationLiteral(DELEGATE));
-                    put(PARSE, new QueryInvocationLiteral(PARSE));
-                }
-            };
+    @Inject
+    private MethodQueryBuilder methodQueryBuilder;
+    @Inject
+    private DelegateQueryBuilder delegateQueryBuilder;
+    @Inject
+    private AnnotatedQueryBuilder annotatedQueryBuilder;
+            
+    protected QueryBuilder getQueryBuilder(RepositoryMethodType repositoryMethodType)
+    {
+        switch (repositoryMethodType)
+        {
+            case ANNOTATED:
+                return annotatedQueryBuilder;
+            case PARSE:
+                return methodQueryBuilder;
+            case DELEGATE:
+                return delegateQueryBuilder;
+        }
+        
+        throw new RuntimeException("No " + QueryBuilder.class.getName() + " avialable for type: " + repositoryMethodType);
+    }
 
     public QueryBuilder build(RepositoryMethodMetadata methodMetadata, CdiQueryInvocationContext context)
     {
-        QueryBuilder builder = BeanProvider.getContextualReference(
-                QueryBuilder.class, LITERALS.get(methodMetadata.getMethodType()));
+        QueryBuilder builder = getQueryBuilder(context.getRepositoryMethodMetadata().getMethodType());
 
         if (QueryResult.class.equals(methodMetadata.getMethod().getReturnType()))
         {

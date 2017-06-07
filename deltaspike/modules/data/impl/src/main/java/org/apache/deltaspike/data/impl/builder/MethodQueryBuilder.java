@@ -23,11 +23,8 @@ import javax.persistence.Query;
 
 import org.apache.deltaspike.data.impl.builder.part.QueryRoot;
 import org.apache.deltaspike.data.impl.handler.CdiQueryInvocationContext;
-import org.apache.deltaspike.data.impl.meta.RepositoryMethodType;
-import org.apache.deltaspike.data.impl.meta.QueryInvocation;
 import org.apache.deltaspike.data.impl.param.Parameters;
 
-@QueryInvocation(RepositoryMethodType.PARSE)
 @ApplicationScoped
 public class MethodQueryBuilder extends QueryBuilder
 {
@@ -39,7 +36,7 @@ public class MethodQueryBuilder extends QueryBuilder
         return context.executeQuery(jpaQuery);
     }
 
-    private Query createJpaQuery(CdiQueryInvocationContext context)
+     private Query createJpaQuery(CdiQueryInvocationContext context)
     {
         Parameters params = context.getParams();
         QueryRoot root = context.getRepositoryMethodMetadata().getQueryRoot();

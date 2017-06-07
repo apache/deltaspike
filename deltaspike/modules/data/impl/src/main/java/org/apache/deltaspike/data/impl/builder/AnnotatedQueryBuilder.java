@@ -20,8 +20,6 @@ package org.apache.deltaspike.data.impl.builder;
 
 import org.apache.deltaspike.data.api.Query;
 import org.apache.deltaspike.data.impl.handler.CdiQueryInvocationContext;
-import org.apache.deltaspike.data.impl.meta.RepositoryMethodType;
-import org.apache.deltaspike.data.impl.meta.QueryInvocation;
 import org.apache.deltaspike.data.impl.param.Parameters;
 import org.apache.deltaspike.data.impl.util.jpa.QueryStringExtractorFactory;
 
@@ -37,7 +35,6 @@ import static org.apache.deltaspike.core.util.StringUtils.isNotEmpty;
 /**
  * Create the query based on method annotations.
  */
-@QueryInvocation(RepositoryMethodType.ANNOTATED)
 @ApplicationScoped
 public class AnnotatedQueryBuilder extends QueryBuilder
 {
