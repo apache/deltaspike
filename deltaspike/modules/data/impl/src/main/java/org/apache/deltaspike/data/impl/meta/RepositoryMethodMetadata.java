@@ -41,6 +41,7 @@ public class RepositoryMethodMetadata
     private boolean queryInOutMapperIsNormalScope;
     
     private boolean optionalAsReturnType;
+    private boolean streamAsReturnType;
 
     public RepositoryMethodMetadata()
     {
@@ -151,5 +152,14 @@ public class RepositoryMethodMetadata
     {
         this.modifying = modifying;
     } 
-    
+
+    public boolean isStreamAsReturnType()
+    {
+        return streamAsReturnType;
+    }
+
+    public void setStreamAsReturnType(boolean streamAsReturnType)
+    {
+        this.streamAsReturnType = streamAsReturnType;
+    }
 }

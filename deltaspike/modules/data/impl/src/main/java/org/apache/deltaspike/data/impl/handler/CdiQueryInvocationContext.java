@@ -383,11 +383,6 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
         return false;
     }
 
-    public boolean isOptionalAsReturnType()
-    {
-        return this.repositoryMethodMetadata.isOptionalAsReturnType();
-    }
-
     public RepositoryMetadata getRepositoryMetadata()
     {
         return repositoryMetadata;

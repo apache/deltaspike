@@ -30,6 +30,7 @@ import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 
 import org.apache.deltaspike.core.util.OptionalUtil;
+import org.apache.deltaspike.core.util.StreamUtil;
 import org.apache.deltaspike.data.api.Modifying;
 import org.apache.deltaspike.data.api.Query;
 import org.apache.deltaspike.data.api.Repository;
@@ -68,6 +69,8 @@ public class RepositoryMethodMetadataInitializer
         
         repositoryMethodMetadata.setOptionalAsReturnType(
                 OptionalUtil.isOptionalReturned(method));
+        repositoryMethodMetadata.setStreamAsReturnType(
+                StreamUtil.isStreamReturned(method));
 
         initQueryRoot(repositoryMetadata, repositoryMethodMetadata);
         initQueryInOutMapperIsNormalScope(repositoryMetadata, repositoryMethodMetadata, beanManager);

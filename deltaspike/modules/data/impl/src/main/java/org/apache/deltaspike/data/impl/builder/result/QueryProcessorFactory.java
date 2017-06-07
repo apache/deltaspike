@@ -152,7 +152,7 @@ public final class QueryProcessorFactory
                     result = !queryResult.isEmpty() ? queryResult.get(0) : null;
             }
             
-            if (context.isOptionalAsReturnType())
+            if (context.getRepositoryMethodMetadata().isOptionalAsReturnType())
             {
                 return OptionalUtil.wrap(result);
             }
