@@ -40,8 +40,8 @@ public class RepositoryMethodMetadata
     private Class<? extends QueryInOutMapper<?>> queryInOutMapperClass;
     private boolean queryInOutMapperIsNormalScope;
     
-    private boolean optionalAsReturnType;
-    private boolean streamAsReturnType;
+    private boolean returnsOptional;
+    private boolean returnsStream;
 
     public RepositoryMethodMetadata()
     {
@@ -123,16 +123,6 @@ public class RepositoryMethodMetadata
         this.queryInOutMapperIsNormalScope = queryInOutMapperIsNormalScope;
     }
 
-    public boolean isOptionalAsReturnType()
-    {
-        return optionalAsReturnType;
-    }
-
-    public void setOptionalAsReturnType(boolean optionalAsReturnType)
-    {
-        this.optionalAsReturnType = optionalAsReturnType;
-    }
-
     public Query getQuery()
     {
         return query;
@@ -153,13 +143,23 @@ public class RepositoryMethodMetadata
         this.modifying = modifying;
     } 
 
-    public boolean isStreamAsReturnType()
+    public boolean isReturnsOptional()
     {
-        return streamAsReturnType;
+        return returnsOptional;
     }
 
-    public void setStreamAsReturnType(boolean streamAsReturnType)
+    public void setReturnsOptional(boolean returnsOptional)
     {
-        this.streamAsReturnType = streamAsReturnType;
+        this.returnsOptional = returnsOptional;
+    }
+
+    public boolean isReturnsStream()
+    {
+        return returnsStream;
+    }
+
+    public void setReturnsStream(boolean returnsStream)
+    {
+        this.returnsStream = returnsStream;
     }
 }

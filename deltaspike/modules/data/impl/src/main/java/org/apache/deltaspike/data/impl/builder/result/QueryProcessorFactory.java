@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.data.impl.builder.result;
 
-import java.lang.reflect.Method;
 import java.util.List;
+import javax.enterprise.context.ApplicationScoped;
 
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
@@ -30,73 +30,44 @@ import org.apache.deltaspike.data.api.Modifying;
 import org.apache.deltaspike.data.api.QueryResult;
 import org.apache.deltaspike.data.api.SingleResultType;
 import org.apache.deltaspike.data.impl.handler.CdiQueryInvocationContext;
-import org.apache.deltaspike.data.impl.meta.RepositoryMethodPrefix;
+import org.apache.deltaspike.data.impl.meta.RepositoryMethodMetadata;
 
-public final class QueryProcessorFactory
+@ApplicationScoped
+public class QueryProcessorFactory
 {
-
-    private final Method method;
-    private final RepositoryMethodPrefix methodPrefix;
-
-    private QueryProcessorFactory(Method method)
+    public QueryProcessor build(RepositoryMethodMetadata methodMetadata)
     {
-        this.method = method;
-        this.methodPrefix = new RepositoryMethodPrefix("", method.getName());
-    }
-
-    private QueryProcessorFactory(Method method, RepositoryMethodPrefix methodPrefix)
-    {
-        this.method = method;
-        this.methodPrefix = methodPrefix;
-    }
-
-    public static QueryProcessorFactory newInstance(Method method)
-    {
-        return new QueryProcessorFactory(method);
-    }
-
-    public static QueryProcessorFactory newInstance(Method method, RepositoryMethodPrefix methodPrefix)
-    {
-        return new QueryProcessorFactory(method, methodPrefix);
-    }
-
-    public QueryProcessor build()
-    {
-        if (returns(QueryResult.class))
+        if (returns(methodMetadata, QueryResult.class))
         {
             return new NoOpQueryProcessor();
         }
-        if (returns(List.class))
+        if (returns(methodMetadata, List.class))
         {
             return new ListQueryProcessor();
         }
-        if (streams())
+        if (methodMetadata.isReturnsStream())
         {
             return new StreamQueryProcessor();
         }
-        if (isModifying())
+        if (isModifying(methodMetadata))
         {
-            return new ExecuteUpdateQueryProcessor(returns(Void.TYPE));
+            return new ExecuteUpdateQueryProcessor(returns(methodMetadata, Void.TYPE));
         }
         return new SingleResultQueryProcessor();
     }
 
-    private boolean isModifying()
+    private boolean isModifying(RepositoryMethodMetadata methodMetadata)
     {
-        boolean matchesType = Void.TYPE.equals(method.getReturnType()) ||
-                int.class.equals(method.getReturnType()) ||
-                Integer.class.equals(method.getReturnType());
-        return (method.isAnnotationPresent(Modifying.class) && matchesType) || methodPrefix.isDelete();
+        boolean matchesType = Void.TYPE.equals(methodMetadata.getMethod().getReturnType()) ||
+                int.class.equals(methodMetadata.getMethod().getReturnType()) ||
+                Integer.class.equals(methodMetadata.getMethod().getReturnType());
+        return (methodMetadata.getMethod().isAnnotationPresent(Modifying.class) && matchesType)
+                || methodMetadata.getMethodPrefix().isDelete();
     }
 
-    private boolean returns(Class<?> clazz)
+    private boolean returns(RepositoryMethodMetadata methodMetadata, Class<?> clazz)
     {
-        return method.getReturnType().isAssignableFrom(clazz);
-    }
-
-    private boolean streams()
-    {
-        return StreamUtil.isStreamReturned(method);
+        return methodMetadata.getMethod().getReturnType().isAssignableFrom(clazz);
     }
 
     private static final class ListQueryProcessor implements QueryProcessor
@@ -152,7 +123,7 @@ public final class QueryProcessorFactory
                     result = !queryResult.isEmpty() ? queryResult.get(0) : null;
             }
             
-            if (context.getRepositoryMethodMetadata().isOptionalAsReturnType())
+            if (context.getRepositoryMethodMetadata().isReturnsOptional())
             {
                 return OptionalUtil.wrap(result);
             }

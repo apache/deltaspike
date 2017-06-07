@@ -304,7 +304,7 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
                 ? repositoryMethodMetadata.getQuery().singleResult()
                 : repositoryMethodMetadata.getMethodPrefix().getSingleResultStyle();
         
-        if (repositoryMethodMetadata.isOptionalAsReturnType() && baseSingleResultType == SingleResultType.JPA)
+        if (repositoryMethodMetadata.isReturnsOptional() && baseSingleResultType == SingleResultType.JPA)
         {
             return SingleResultType.OPTIONAL;
         }

@@ -60,11 +60,11 @@ public class DelegateQueryBuilder extends QueryBuilder
             if (delegate != null)
             {
                 Object result = invoke(delegate, context);
-                if (result instanceof Collection && context.getRepositoryMethodMetadata().isStreamAsReturnType())
+                if (result instanceof Collection && context.getRepositoryMethodMetadata().isReturnsStream())
                 {
                     return StreamUtil.wrap(result);
                 }
-                else if (context.getRepositoryMethodMetadata().isOptionalAsReturnType())
+                else if (context.getRepositoryMethodMetadata().isReturnsOptional())
                 {
                     return OptionalUtil.wrap(result);
                 }

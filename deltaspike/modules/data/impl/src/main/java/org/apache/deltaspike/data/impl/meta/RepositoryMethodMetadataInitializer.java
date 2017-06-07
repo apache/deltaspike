@@ -28,6 +28,7 @@ import javax.enterprise.context.ApplicationScoped;
 
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
+import javax.inject.Inject;
 
 import org.apache.deltaspike.core.util.OptionalUtil;
 import org.apache.deltaspike.core.util.StreamUtil;
@@ -43,34 +44,35 @@ import org.apache.deltaspike.data.impl.builder.result.QueryProcessorFactory;
 @ApplicationScoped
 public class RepositoryMethodMetadataInitializer
 {
+    @Inject
+    private QueryProcessorFactory queryProcessorFactory;
+    
     public RepositoryMethodMetadata init(RepositoryMetadata repositoryMetadata, Method method, BeanManager beanManager)
     {
         RepositoryMethodMetadata repositoryMethodMetadata = new RepositoryMethodMetadata();
         
         repositoryMethodMetadata.setMethod(method);
 
+        repositoryMethodMetadata.setReturnsOptional(
+                OptionalUtil.isOptionalReturned(method));
+        repositoryMethodMetadata.setReturnsStream(
+                StreamUtil.isStreamReturned(method));
+        
         repositoryMethodMetadata.setQuery(method.isAnnotationPresent(Query.class)
                 ? method.getAnnotation(Query.class) : null);
         repositoryMethodMetadata.setModifying(method.isAnnotationPresent(Modifying.class)
                 ? method.getAnnotation(Modifying.class) : null);
-        
-        
+
         repositoryMethodMetadata.setMethodPrefix(new RepositoryMethodPrefix(
                     repositoryMetadata.getRepositoryClass().getAnnotation(Repository.class).methodPrefix(),
                     method.getName()));
         repositoryMethodMetadata.setMethodType(
                 extractMethodType(repositoryMetadata, repositoryMethodMetadata));
         
-        repositoryMethodMetadata.setQueryProcessor(
-                QueryProcessorFactory.newInstance(method, repositoryMethodMetadata.getMethodPrefix()).build());
+        repositoryMethodMetadata.setQueryProcessor(queryProcessorFactory.build(repositoryMethodMetadata));
         
         repositoryMethodMetadata.setQueryInOutMapperClass(
                 extractMapper(method, repositoryMetadata));
-        
-        repositoryMethodMetadata.setOptionalAsReturnType(
-                OptionalUtil.isOptionalReturned(method));
-        repositoryMethodMetadata.setStreamAsReturnType(
-                StreamUtil.isStreamReturned(method));
 
         initQueryRoot(repositoryMetadata, repositoryMethodMetadata);
         initQueryInOutMapperIsNormalScope(repositoryMetadata, repositoryMethodMetadata, beanManager);
