@@ -23,6 +23,7 @@ import javax.enterprise.context.ApplicationScoped;
 
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
+import org.apache.deltaspike.core.util.ClassUtils;
 
 import org.apache.deltaspike.core.util.OptionalUtil;
 import org.apache.deltaspike.core.util.StreamUtil;
@@ -37,11 +38,11 @@ public class QueryProcessorFactory
 {
     public QueryProcessor build(RepositoryMethodMetadata methodMetadata)
     {
-        if (returns(methodMetadata, QueryResult.class))
+        if (ClassUtils.returns(methodMetadata.getMethod(), QueryResult.class))
         {
             return new NoOpQueryProcessor();
         }
-        if (returns(methodMetadata, List.class))
+        if (ClassUtils.returns(methodMetadata.getMethod(), List.class))
         {
             return new ListQueryProcessor();
         }
@@ -51,7 +52,7 @@ public class QueryProcessorFactory
         }
         if (isModifying(methodMetadata))
         {
-            return new ExecuteUpdateQueryProcessor(returns(methodMetadata, Void.TYPE));
+            return new ExecuteUpdateQueryProcessor(ClassUtils.returns(methodMetadata.getMethod(), Void.TYPE));
         }
         return new SingleResultQueryProcessor();
     }
@@ -63,11 +64,6 @@ public class QueryProcessorFactory
                 Integer.class.equals(methodMetadata.getMethod().getReturnType());
         return (methodMetadata.getMethod().isAnnotationPresent(Modifying.class) && matchesType)
                 || methodMetadata.getMethodPrefix().isDelete();
-    }
-
-    private boolean returns(RepositoryMethodMetadata methodMetadata, Class<?> clazz)
-    {
-        return methodMetadata.getMethod().getReturnType().isAssignableFrom(clazz);
     }
 
     private static final class ListQueryProcessor implements QueryProcessor

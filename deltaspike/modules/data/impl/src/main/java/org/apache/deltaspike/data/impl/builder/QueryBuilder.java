@@ -23,7 +23,6 @@ import org.apache.deltaspike.data.api.mapping.QueryInOutMapper;
 import org.apache.deltaspike.data.impl.handler.CdiQueryInvocationContext;
 
 import javax.persistence.Query;
-import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.List;
 
@@ -32,7 +31,6 @@ import java.util.List;
  */
 public abstract class QueryBuilder
 {
-
     public static final String QUERY_SELECT = "select e from {0} e";
     public static final String QUERY_COUNT = "select count(e) from {0} e";
     public static final String QUERY_DELETE = "delete from {0} e";
@@ -71,11 +69,6 @@ public abstract class QueryBuilder
     }
 
     protected abstract Object execute(CdiQueryInvocationContext ctx);
-
-    protected boolean returnsList(Method method)
-    {
-        return method.getReturnType().isAssignableFrom(List.class);
-    }
 
     private boolean isUnmappableResult(Object result)
     {

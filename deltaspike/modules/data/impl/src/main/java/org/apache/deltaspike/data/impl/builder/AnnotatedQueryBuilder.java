@@ -29,6 +29,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
+import org.apache.deltaspike.core.util.ClassUtils;
 
 import static org.apache.deltaspike.core.util.StringUtils.isNotEmpty;
 
@@ -96,14 +97,14 @@ public class AnnotatedQueryBuilder extends QueryBuilder
         return cls.getAnnotation(Entity.class) != null;
     }
 
-    private Class<?> getQueryResultType(Method m)
+    private Class<?> getQueryResultType(Method method)
     {
-        Class<?> rt = m.getReturnType();
-        if (rt.isAssignableFrom(List.class) && rt != Object.class)
+        if (ClassUtils.returns(method, List.class) && !ClassUtils.returns(method, Object.class))
         {
-            ParameterizedType pt = (ParameterizedType) m.getGenericReturnType();
+            ParameterizedType pt = (ParameterizedType) method.getGenericReturnType();
             return (Class<?>) pt.getActualTypeArguments()[0];
         }
-        return rt;
+
+        return method.getReturnType();
     }
 }
