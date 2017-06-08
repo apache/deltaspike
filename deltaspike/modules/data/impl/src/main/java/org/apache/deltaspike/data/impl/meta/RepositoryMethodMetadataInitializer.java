@@ -203,8 +203,9 @@ public class RepositoryMethodMetadataInitializer
         
         if (ClassUtils.containsMethod(EntityRepositoryHandler.class, repositoryMethodMetadata.getMethod()))
         {
-            Method executed = ClassUtils.extractMethod(EntityRepositoryHandler.class, repositoryMethodMetadata.getMethod());
-            if (executed.isAnnotationPresent(RequiresTransaction.class))
+            Method originalMethod = ClassUtils.extractMethod(EntityRepositoryHandler.class,
+                    repositoryMethodMetadata.getMethod());
+            if (originalMethod.isAnnotationPresent(RequiresTransaction.class))
             {
                 requiresTransaction = true;
             }
