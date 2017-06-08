@@ -419,4 +419,9 @@ public abstract class ClassUtils
         }
         return true;
     }
+    
+    public static boolean returns(Method method, Class<?> clazz)
+    {
+        return method.getReturnType().isAssignableFrom(clazz);
+    }
 }
