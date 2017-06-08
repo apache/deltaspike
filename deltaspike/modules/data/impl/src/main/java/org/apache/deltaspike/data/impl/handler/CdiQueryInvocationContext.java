@@ -78,7 +78,7 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
         this.cleanup = new LinkedList<Destroyable>();
     }
 
-    public void initMapper()
+    public void init()
     {
         if (hasQueryInOutMapper())
         {

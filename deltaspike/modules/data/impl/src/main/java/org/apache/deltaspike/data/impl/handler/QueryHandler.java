@@ -85,19 +85,21 @@ public class QueryHandler implements Serializable, InvocationHandler
     @Override
     public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable
     {
-        Transactional transactionalAnnotation =
-            AnnotationUtils.extractAnnotationFromMethodOrClass(
-                this.beanManager, method, proxy.getClass(), Transactional.class);
+        List<Class<?>> candidates = ProxyUtils.getProxyAndBaseTypes(proxy.getClass());
+        final RepositoryMetadata repositoryMetadata =
+                metadataHandler.lookupMetadata(candidates);
+        final RepositoryMethodMetadata repositoryMethodMetadata =
+                metadataHandler.lookupMethodMetadata(repositoryMetadata, method);
 
-        if (transactionalAnnotation != null)
+        if (repositoryMethodMetadata.getTransactional() != null)
         {
-            if (transactionalAnnotation.qualifier().length > 1)
+            if (repositoryMethodMetadata.getTransactional().qualifier().length > 1)
             {
                 throw new IllegalStateException(proxy.getClass().getName() + " uses @" + Transactional.class.getName() +
                     " with multiple qualifiers. That isn't supported with @" + Repository.class.getName());
             }
 
-            Class<? extends Annotation> qualifier = transactionalAnnotation.qualifier()[0];
+            Class<? extends Annotation> qualifier = repositoryMethodMetadata.getTransactional().qualifier()[0];
             if (!Any.class.equals(qualifier))
             {
                 EntityManager entityManager = BeanProvider.getContextualReference(
@@ -113,7 +115,7 @@ public class QueryHandler implements Serializable, InvocationHandler
                     {
                         try
                         {
-                            return process(proxy, method, args);
+                            return process(proxy, method, args, repositoryMetadata, repositoryMethodMetadata);
                         }
                         catch (Throwable t)
                         {
@@ -124,22 +126,17 @@ public class QueryHandler implements Serializable, InvocationHandler
         }
         else
         {
-            return process(proxy, method, args);
+            return process(proxy, method, args, repositoryMetadata, repositoryMethodMetadata);
         }
     }
 
-    public Object process(Object proxy, Method method, Object[] args) throws Throwable
+    protected Object process(Object proxy, Method method, Object[] args,
+            RepositoryMetadata repositoryMetadata, RepositoryMethodMetadata repositoryMethodMetadata) throws Throwable
     {
         CdiQueryInvocationContext queryContext = null;
         EntityManagerRef entityManagerRef = null;
         try
         {
-            List<Class<?>> candidates = ProxyUtils.getProxyAndBaseTypes(proxy.getClass());
-            RepositoryMetadata repositoryMetadata =
-                    metadataHandler.lookupComponent(candidates);
-            RepositoryMethodMetadata repositoryMethodMetadata =
-                    metadataHandler.lookupMethod(repositoryMetadata, method);
-
             entityManagerRef = entityManagerRefLookup.lookupReference(repositoryMetadata);
             queryContext = createContext(proxy, method, args, entityManagerRef.getEntityManager(),
                     repositoryMetadata, repositoryMethodMetadata);
@@ -178,7 +175,7 @@ public class QueryHandler implements Serializable, InvocationHandler
         CdiQueryInvocationContext queryContext = new CdiQueryInvocationContext(proxy, method, args,
                 repositoryMetadata, repositoryMethodMetadata, entityManager);
         context.set(queryContext);
-        queryContext.initMapper();
+        queryContext.init();
         return queryContext;
     }
 

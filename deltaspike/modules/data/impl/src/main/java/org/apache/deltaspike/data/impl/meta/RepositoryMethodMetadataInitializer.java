@@ -30,6 +30,7 @@ import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.persistence.LockModeType;
+import org.apache.deltaspike.core.util.AnnotationUtils;
 import org.apache.deltaspike.core.util.ClassUtils;
 
 import org.apache.deltaspike.core.util.OptionalUtil;
@@ -44,12 +45,16 @@ import org.apache.deltaspike.data.impl.builder.MethodExpressionException;
 import org.apache.deltaspike.data.impl.builder.part.QueryRoot;
 import org.apache.deltaspike.data.impl.builder.result.QueryProcessorFactory;
 import org.apache.deltaspike.data.impl.handler.EntityRepositoryHandler;
+import org.apache.deltaspike.jpa.api.transaction.Transactional;
 
 @ApplicationScoped
 public class RepositoryMethodMetadataInitializer
 {
     @Inject
     private QueryProcessorFactory queryProcessorFactory;
+    
+    @Inject
+    private BeanManager beanManager;
     
     public RepositoryMethodMetadata init(RepositoryMetadata repositoryMetadata, Method method, BeanManager beanManager)
     {
@@ -66,6 +71,9 @@ public class RepositoryMethodMetadataInitializer
                 ? method.getAnnotation(Query.class) : null);
         repositoryMethodMetadata.setModifying(method.isAnnotationPresent(Modifying.class)
                 ? method.getAnnotation(Modifying.class) : null);
+        
+        repositoryMethodMetadata.setTransactional(AnnotationUtils.extractAnnotationFromMethodOrClass(
+                beanManager, method, repositoryMetadata.getRepositoryClass(), Transactional.class));
 
         repositoryMethodMetadata.setMethodPrefix(new RepositoryMethodPrefix(
                     repositoryMetadata.getRepositoryClass().getAnnotation(Repository.class).methodPrefix(),

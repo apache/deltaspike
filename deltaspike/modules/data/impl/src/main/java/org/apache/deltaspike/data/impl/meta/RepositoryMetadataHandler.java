@@ -60,7 +60,7 @@ public class RepositoryMetadataHandler
      * @param candidateClasses List of candidates to check.
      * @return A {@link RepositoryMetadataInitializer}.
      */
-    public RepositoryMetadata lookupComponent(List<Class<?>> candidateClasses)
+    public RepositoryMetadata lookupMetadata(List<Class<?>> candidateClasses)
     {
         for (Class<?> repoClass : candidateClasses)
         {
@@ -78,7 +78,7 @@ public class RepositoryMetadataHandler
      * @param repositoryClass The repository class to lookup the method for
      * @return A {@link RepositoryMetadata}.
      */
-    public RepositoryMetadata lookupComponent(Class<?> repositoryClass)
+    public RepositoryMetadata lookupMetadata(Class<?> repositoryClass)
     {
         if (repositoriesMetadata.containsKey(repositoryClass))
         {
@@ -94,7 +94,7 @@ public class RepositoryMetadataHandler
      * @param method The method object to get Repository meta data for.
      * @return A {@link RepositoryMethodMetadata}.
      */
-    public RepositoryMethodMetadata lookupMethod(RepositoryMetadata repositoryMetadata, Method method)
+    public RepositoryMethodMetadata lookupMethodMetadata(RepositoryMetadata repositoryMetadata, Method method)
     {
         return repositoryMetadata.getMethodsMetadata().get(method);
     }

@@ -83,12 +83,12 @@ public class RepositoryMetadataInitializer
 
         for (Class<?> implemented : allImplemented)
         {
-            Method[] repoClassMethods = implemented.getDeclaredMethods();
-            for (Method repoClassMethod : repoClassMethods)
+            Method[] repositoryMethods = implemented.getDeclaredMethods();
+            for (Method repositoryMethod : repositoryMethods)
             {
                 RepositoryMethodMetadata methodMetadata =
-                        methodMetadataInitializer.init(repositoryMetadata, repoClassMethod, beanManager);
-                repositoryMetadata.getMethodsMetadata().put(repoClassMethod, methodMetadata);
+                        methodMetadataInitializer.init(repositoryMetadata, repositoryMethod, beanManager);
+                repositoryMetadata.getMethodsMetadata().put(repositoryMethod, methodMetadata);
             }
         }
     }
