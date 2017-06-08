@@ -19,7 +19,6 @@
 package org.apache.deltaspike.data.impl.handler;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
-import org.apache.deltaspike.core.util.AnnotationUtils;
 import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.core.util.ProxyUtils;
 import org.apache.deltaspike.core.util.interceptor.AbstractInvocationContext;
