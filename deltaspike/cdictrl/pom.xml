@@ -57,6 +57,17 @@
         </profile>
 
         <profile>
+            <id>OWB2</id>
+
+            <modules>
+                <module>api</module>
+                <module>impl-owb</module>
+                <module>servlet</module>
+                <module>tck</module>
+            </modules>
+        </profile>
+
+        <profile>
             <id>Weld1</id>
 
             <modules>
