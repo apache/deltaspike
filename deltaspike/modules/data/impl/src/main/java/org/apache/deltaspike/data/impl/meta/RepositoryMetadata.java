@@ -20,20 +20,15 @@ package org.apache.deltaspike.data.impl.meta;
 
 import java.lang.reflect.Method;
 import java.util.Map;
-import javax.persistence.FlushModeType;
-import org.apache.deltaspike.data.api.EntityManagerResolver;
+import org.apache.deltaspike.jpa.impl.entitymanager.EntityManagerMetadata;
 
-public class RepositoryMetadata
+public class RepositoryMetadata extends EntityManagerMetadata
 {
     private Class<?> repositoryClass;
 
     private EntityMetadata entityMetadata;
     private Map<Method, RepositoryMethodMetadata> methodsMetadata;
 
-    private Class<? extends EntityManagerResolver> entityManagerResolverClass;
-    private boolean entityManagerResolverIsNormalScope;
-    private FlushModeType entityManagerFlushMode;
-    
     public RepositoryMetadata(Class<?> repositoryClass)
     {
         this.repositoryClass = repositoryClass;
@@ -63,36 +58,6 @@ public class RepositoryMetadata
     public void setEntityMetadata(EntityMetadata entityMetadata)
     {
         this.entityMetadata = entityMetadata;
-    }
-
-    public Class<? extends EntityManagerResolver> getEntityManagerResolverClass()
-    {
-        return entityManagerResolverClass;
-    }
-
-    public void setEntityManagerResolverClass(Class<? extends EntityManagerResolver> entityManagerResolverClass)
-    {
-        this.entityManagerResolverClass = entityManagerResolverClass;
-    }
-
-    public FlushModeType getEntityManagerFlushMode()
-    {
-        return entityManagerFlushMode;
-    }
-
-    public void setEntityManagerFlushMode(FlushModeType entityManagerFlushMode)
-    {
-        this.entityManagerFlushMode = entityManagerFlushMode;
-    }
-
-    public boolean isEntityManagerResolverIsNormalScope()
-    {
-        return entityManagerResolverIsNormalScope;
-    }
-
-    public void setEntityManagerResolverIsNormalScope(boolean entityManagerResolverIsNormalScope)
-    {
-        this.entityManagerResolverIsNormalScope = entityManagerResolverIsNormalScope;
     }
 
     public Map<Method, RepositoryMethodMetadata> getMethodsMetadata()

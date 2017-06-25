@@ -49,24 +49,25 @@ public class RepositoryMetadataInitializer
     public RepositoryMetadata init(Class<?> repositoryClass, BeanManager beanManager)
     {
         RepositoryMetadata repositoryMetadata = new RepositoryMetadata(repositoryClass);
-        
-        repositoryMetadata.setEntityManagerResolverClass(extractEntityManagerResolver(repositoryClass));
-        repositoryMetadata.setEntityManagerFlushMode(extractEntityManagerFlushMode(repositoryClass));
-
-        if (repositoryMetadata.getEntityManagerResolverClass() != null)
+        // read from looks for JPA Transactional and EntityManagerConfig to determine attributes
+        // if those are set, don't process old annotations
+        if (!repositoryMetadata.readFrom(repositoryClass, beanManager))
         {
-            Set<Bean<?>> beans = beanManager.getBeans(repositoryMetadata.getEntityManagerResolverClass());
-            Class<? extends Annotation> scope = beanManager.resolve(beans).getScope();
+            repositoryMetadata.setEntityManagerResolverClass(extractEntityManagerResolver(repositoryClass));
+            repositoryMetadata.setEntityManagerFlushMode(extractEntityManagerFlushMode(repositoryClass));
 
-            repositoryMetadata.setEntityManagerResolverIsNormalScope(beanManager.isNormalScope(scope));
+            if (repositoryMetadata.getEntityManagerResolverClass() != null)
+            {
+                Set<Bean<?>> beans = beanManager.getBeans(repositoryMetadata.getEntityManagerResolverClass());
+                Class<? extends Annotation> scope = beanManager.resolve(beans).getScope();
+                repositoryMetadata.setEntityManagerResolverIsNormalScope(beanManager.isNormalScope(scope));
+            }
+            else
+            {
+                repositoryMetadata.setEntityManagerResolverIsNormalScope(false);
+            }
         }
-        else
-        {
-            repositoryMetadata.setEntityManagerResolverIsNormalScope(false);
-        }
-        
         repositoryMetadata.setEntityMetadata(entityMetadataInitializer.init(repositoryMetadata));
-
         initializeMethodsMetadata(repositoryMetadata, beanManager);
         
         return repositoryMetadata;

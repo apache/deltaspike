@@ -16,15 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.data.api;
 
-/**
- * Resolve the EntityManager used for a specific repository.
- * Only necessary if there is more than one persistence unit.
- *
- * This interface is deprecated and instead you should use the version from JPA module
- */
-@Deprecated
-public interface EntityManagerResolver extends org.apache.deltaspike.jpa.api.entitymanager.EntityManagerResolver
+package org.apache.deltaspike.data.test.service;
+
+import org.apache.deltaspike.data.api.EntityManagerResolver;
+
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+
+public class BasicEntityManagerResolver implements EntityManagerResolver
 {
+
+    @Inject
+    private EntityManager entityManager;
+
+    @Override
+    public EntityManager resolveEntityManager()
+    {
+        return entityManager;
+    }
 }

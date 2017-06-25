@@ -59,6 +59,11 @@
             <artifactId>deltaspike-partial-bean-module-api</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.deltaspike.modules</groupId>
+            <artifactId>deltaspike-jpa-module-api</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

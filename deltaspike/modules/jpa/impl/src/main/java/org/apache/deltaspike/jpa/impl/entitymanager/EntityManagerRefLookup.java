@@ -16,7 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.data.impl.handler;
+
+package org.apache.deltaspike.jpa.impl.entitymanager;
 
 import java.util.Set;
 import javax.enterprise.context.ApplicationScoped;
@@ -27,7 +28,6 @@ import javax.persistence.EntityManager;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
-import org.apache.deltaspike.data.impl.meta.RepositoryMetadata;
 import org.apache.deltaspike.jpa.spi.entitymanager.ActiveEntityManagerHolder;
 
 @ApplicationScoped
@@ -74,15 +74,15 @@ public class EntityManagerRefLookup
         }
     }
     
-    public EntityManagerRef lookupReference(final RepositoryMetadata repositoryMetadata)
+    public EntityManagerRef lookupReference(final EntityManagerMetadata entityManagerMetadata)
     {
         EntityManagerRef ref = new EntityManagerRef();
 
-        if (repositoryMetadata.getEntityManagerResolverClass() != null)
+        if (entityManagerMetadata.getEntityManagerResolverClass() != null)
         {
-            ref.setEntityManagerResolverClass(repositoryMetadata.getEntityManagerResolverClass());
+            ref.setEntityManagerResolverClass(entityManagerMetadata.getEntityManagerResolverClass());
             
-            if (repositoryMetadata.isEntityManagerResolverIsNormalScope())
+            if (entityManagerMetadata.isEntityManagerResolverIsNormalScope())
             {
                 ref.setEntityManagerResolver(
                         BeanProvider.getContextualReference(ref.getEntityManagerResolverClass()));
@@ -126,9 +126,9 @@ public class EntityManagerRefLookup
             }
         }
 
-        if (repositoryMetadata.getEntityManagerFlushMode() != null)
+        if (entityManagerMetadata.getEntityManagerFlushMode() != null)
         {
-            ref.getEntityManager().setFlushMode(repositoryMetadata.getEntityManagerFlushMode());
+            ref.getEntityManager().setFlushMode(entityManagerMetadata.getEntityManagerFlushMode());
         }
 
         return ref;

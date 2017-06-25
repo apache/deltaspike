@@ -16,11 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.data.impl.handler;
+
+package org.apache.deltaspike.jpa.impl.entitymanager;
 
 import javax.persistence.EntityManager;
 import org.apache.deltaspike.core.api.provider.DependentProvider;
-import org.apache.deltaspike.data.api.EntityManagerResolver;
+import org.apache.deltaspike.jpa.api.entitymanager.EntityManagerResolver;
 
 public class EntityManagerRef
 {

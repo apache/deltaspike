@@ -29,6 +29,8 @@ import org.apache.deltaspike.data.impl.builder.QueryBuilder;
 import org.apache.deltaspike.data.impl.builder.QueryBuilderFactory;
 import org.apache.deltaspike.data.impl.meta.RepositoryMetadataHandler;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
+import org.apache.deltaspike.jpa.impl.entitymanager.EntityManagerRef;
+import org.apache.deltaspike.jpa.impl.entitymanager.EntityManagerRefLookup;
 import org.apache.deltaspike.jpa.spi.entitymanager.ActiveEntityManagerHolder;
 import org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy;
 

@@ -16,9 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.data.api;
 
+package org.apache.deltaspike.jpa.api.entitymanager;
+
+import javax.enterprise.inject.Any;
 import javax.persistence.FlushModeType;
+import java.lang.annotation.Annotation;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
@@ -33,7 +36,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-@Deprecated
 public @interface EntityManagerConfig
 {
     /**
@@ -41,6 +43,12 @@ public @interface EntityManagerConfig
      * Must be resolvable over the BeanManager.
      */
     Class<? extends EntityManagerResolver> entityManagerResolver() default EntityManagerResolver.class;
+
+    /**
+     * If no entityManagerResolver is specified, then these qualifiers will be used to look up an entity manager
+     * @return
+     */
+    Class<? extends Annotation>[] qualifier() default Any.class;
 
     /**
      * Set the flush mode for the repository EntityManager.

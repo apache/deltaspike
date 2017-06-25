@@ -16,15 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.data.api;
+
+package org.apache.deltaspike.jpa.api.entitymanager;
+
+import javax.persistence.EntityManager;
 
 /**
  * Resolve the EntityManager used for a specific repository.
  * Only necessary if there is more than one persistence unit.
  *
- * This interface is deprecated and instead you should use the version from JPA module
+ * The container will look in the following order:
+ * - A configured {@link EntityManagerConfig}
+ * - A bean of type <code>EntityManagerResolver</code>
+ * - Otherwise we'll assume there's a single {@link EntityManager}.
  */
-@Deprecated
-public interface EntityManagerResolver extends org.apache.deltaspike.jpa.api.entitymanager.EntityManagerResolver
+public interface EntityManagerResolver
 {
+    EntityManager resolveEntityManager();
 }

@@ -29,10 +29,7 @@ import javax.inject.Inject;
 
 import org.apache.deltaspike.data.api.QueryInvocationException;
 import org.apache.deltaspike.data.test.domain.Simple;
-import org.apache.deltaspike.data.test.service.SimpleRepositoryWithEntityManager;
-import org.apache.deltaspike.data.test.service.SimpleRepositoryWithEntityManagerResolver;
-import org.apache.deltaspike.data.test.service.Simplistic;
-import org.apache.deltaspike.data.test.service.SimplisticEntityManagerResolver;
+import org.apache.deltaspike.data.test.service.*;
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -55,8 +52,13 @@ public class EntityManagerTest
                         SimpleRepositoryWithEntityManagerResolver.class,
                         QualifiedEntityManagerTestProducer.class,
                         NonQualifiedEntityManagerTestProducer.class,
+                        BasicEntityManagerResolver.class,
+                        LegacyRepositoryWithEntityManagerResolver.class,
                         Simplistic.class, SimplisticEntityManagerResolver.class);
     }
+
+    @Inject
+    private LegacyRepositoryWithEntityManagerResolver legacyRepository;
 
     @Inject
     private SimpleRepositoryWithEntityManager repoWithDefaultEm;
@@ -87,6 +89,17 @@ public class EntityManagerTest
 
         // then
         fail("Fake EM should have thrown Exception");
+    }
+
+    @Test
+    public void shouldWorkWithLegacyConfigAsWell()
+    {
+        // when
+        List<Simple> result = repoWithDefaultEm.findByName("testUseQualifiedEntityManager");
+
+        // then
+        assertNotNull(result);
+        assertEquals(0, result.size());
     }
 
 }
