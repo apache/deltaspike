@@ -19,13 +19,25 @@
 package org.apache.deltaspike.proxy.spi;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import org.apache.deltaspike.proxy.spi.invocation.DeltaSpikeProxyInvocationHandler;
 
 /**
  * Interface which will automatically be implemented by the proxy instance.
  */
 public interface DeltaSpikeProxy
 {
+    void setInvocationHandler(DeltaSpikeProxyInvocationHandler invocationHandler);
+
+    DeltaSpikeProxyInvocationHandler getInvocationHandler();
+    
+    
     void setDelegateInvocationHandler(InvocationHandler delegateInvocationHandler);
 
     InvocationHandler getDelegateInvocationHandler();
+    
+    
+    void setDelegateMethods(Method[] methods);
+
+    Method[] getDelegateMethods();
 }

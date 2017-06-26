@@ -19,12 +19,14 @@
 package org.apache.deltaspike.proxy.util;
 
 import java.io.Serializable;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import javax.enterprise.inject.spi.BeanManager;
+import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.proxy.api.DeltaSpikeProxyFactory;
+import org.apache.deltaspike.proxy.spi.DeltaSpikeProxy;
+import org.apache.deltaspike.proxy.spi.invocation.DeltaSpikeProxyInvocationHandler;
 
 public class EnableInterceptorsProxyFactory extends DeltaSpikeProxyFactory
 {
@@ -51,8 +53,17 @@ public class EnableInterceptorsProxyFactory extends DeltaSpikeProxyFactory
         try
         {
             // instantiate proxy
-            Constructor constructor = proxyClass.getConstructor(InvocationHandler.class);
-            return (T) constructor.newInstance(delegate);
+            T proxy = (T) proxyClass.newInstance();
+            
+            DeltaSpikeProxy deltaSpikeProxy = (DeltaSpikeProxy) proxy;
+            
+            // TODO this can be optimized by caching this in a appscoped bean
+            deltaSpikeProxy.setInvocationHandler(
+                    BeanProvider.getContextualReference(DeltaSpikeProxyInvocationHandler.class));
+            deltaSpikeProxy.setDelegateInvocationHandler(delegate);
+            deltaSpikeProxy.setDelegateMethods(INSTANCE.getDelegateMethods(obj.getClass()));
+            
+            return proxy;
         }
         catch (Exception e)
         {

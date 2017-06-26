@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.proxy.api;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
 import java.util.Set;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.context.spi.CreationalContext;
@@ -28,10 +28,11 @@ import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InjectionTarget;
 import javax.enterprise.inject.spi.PassivationCapable;
-import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.core.util.metadata.builder.ContextualLifecycle;
+import org.apache.deltaspike.proxy.spi.DeltaSpikeProxy;
+import org.apache.deltaspike.proxy.spi.invocation.DeltaSpikeProxyInvocationHandler;
 
 /**
  * {@link ContextualLifecycle} which handles a complete lifecycle of a proxy:
@@ -47,9 +48,14 @@ public class DeltaSpikeProxyContextualLifecycle<T, H extends InvocationHandler> 
 {
     private final Class<T> proxyClass;
     private final Class<H> delegateInvocationHandlerClass;
+    private final Method[] delegateMethods;
     private final Class<T> targetClass;
+    private final BeanManager beanManager;
+    
+    private DeltaSpikeProxyInvocationHandler deltaSpikeProxyInvocationHandler;
     
     private InjectionTarget<T> injectionTarget;
+    private Bean<H> handlerBean;
     private CreationalContext<?> creationalContextOfDependentHandler;
 
     public DeltaSpikeProxyContextualLifecycle(Class<T> targetClass,
@@ -60,7 +66,9 @@ public class DeltaSpikeProxyContextualLifecycle<T, H extends InvocationHandler> 
         this.targetClass = targetClass;
         this.delegateInvocationHandlerClass = delegateInvocationHandlerClass;
         this.proxyClass = proxyFactory.getProxyClass(beanManager, targetClass);
-
+        this.delegateMethods = proxyFactory.getDelegateMethods(targetClass);
+        this.beanManager = beanManager;
+        
         if (!targetClass.isInterface())
         {
             AnnotatedType<T> annotatedType = beanManager.createAnnotatedType(this.targetClass);
@@ -70,20 +78,22 @@ public class DeltaSpikeProxyContextualLifecycle<T, H extends InvocationHandler> 
 
     @Override
     public T create(Bean bean, CreationalContext creationalContext)
-    {
+    {        
         try
         {
-            T instance;
+            lazyInit();
+            
+            T instance = proxyClass.newInstance();
 
-            if (delegateInvocationHandlerClass == null)
-            {
-                instance = proxyClass.newInstance();
-            }
-            else
+            DeltaSpikeProxy deltaSpikeProxy = ((DeltaSpikeProxy) instance);
+            deltaSpikeProxy.setInvocationHandler(deltaSpikeProxyInvocationHandler);
+
+            // optional 
+            if (delegateInvocationHandlerClass != null)
             {
                 H delegateInvocationHandler = instantiateDelegateInvocationHandler();
-                Constructor<T> constructor = proxyClass.getConstructor(InvocationHandler.class);
-                instance = constructor.newInstance(delegateInvocationHandler);
+                deltaSpikeProxy.setDelegateInvocationHandler(delegateInvocationHandler);
+                deltaSpikeProxy.setDelegateMethods(delegateMethods);
             }
 
             if (this.injectionTarget != null)
@@ -119,34 +129,49 @@ public class DeltaSpikeProxyContextualLifecycle<T, H extends InvocationHandler> 
         creationalContext.release();
     }
     
+    private void lazyInit()
+    {
+        if (this.deltaSpikeProxyInvocationHandler == null)
+        {
+            init();
+        }
+    }
+
+    private synchronized void init()
+    {
+        if (this.deltaSpikeProxyInvocationHandler == null)
+        {
+            this.deltaSpikeProxyInvocationHandler = BeanProvider.getContextualReference(
+                    beanManager, DeltaSpikeProxyInvocationHandler.class, false);
+
+            Set<Bean<H>> handlerBeans = BeanProvider.getBeanDefinitions(
+                    delegateInvocationHandlerClass, false, true, beanManager);
+            if (handlerBeans.size() != 1)
+            {
+                StringBuilder beanInfo = new StringBuilder();
+                for (Bean<H> bean : handlerBeans)
+                {
+                    if (beanInfo.length() != 0)
+                    {
+                        beanInfo.append(", ");
+                    }
+                    beanInfo.append(bean);
+
+                    if (bean instanceof PassivationCapable)
+                    {
+                        beanInfo.append(" bean-id: ").append(((PassivationCapable) bean).getId());
+                    }
+                }
+
+                throw new IllegalStateException(handlerBeans.size() + " beans found for "
+                        + delegateInvocationHandlerClass + " found beans: " + beanInfo.toString());
+            }
+            this.handlerBean = handlerBeans.iterator().next();
+        }
+    }
+    
     protected H instantiateDelegateInvocationHandler()
     {
-        Set<Bean<H>> handlerBeans = BeanProvider.getBeanDefinitions(this.delegateInvocationHandlerClass, false, true);
-        
-        if (handlerBeans.size() != 1)
-        {
-            StringBuilder beanInfo = new StringBuilder();
-            for (Bean<H> bean : handlerBeans)
-            {
-                if (beanInfo.length() != 0)
-                {
-                    beanInfo.append(", ");
-                }
-                beanInfo.append(bean);
-
-                if (bean instanceof PassivationCapable)
-                {
-                    beanInfo.append(" bean-id: ").append(((PassivationCapable)bean).getId());
-                }
-            }
-
-            throw new IllegalStateException(handlerBeans.size() + " beans found for "
-                    + this.delegateInvocationHandlerClass + " found beans: " + beanInfo.toString());
-        }
-
-        Bean<H> handlerBean = handlerBeans.iterator().next();
-        
-        BeanManager beanManager = BeanManagerProvider.getInstance().getBeanManager();
         CreationalContext<?> creationalContext = beanManager.createCreationalContext(handlerBean);
         
         H handlerInstance = (H) beanManager.getReference(handlerBean,

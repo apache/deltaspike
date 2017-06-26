@@ -504,4 +504,12 @@ public abstract class ReflectionUtils
 
         return typeHash;
     }
+    
+    public static boolean hasSameSignature(Method a, Method b)
+    {
+        return a.getName().equals(b.getName())
+                && a.getReturnType().equals(b.getReturnType())
+                && Arrays.equals(a.getParameterTypes(), b.getParameterTypes());
+    }
+
 }

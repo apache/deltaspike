@@ -30,7 +30,7 @@ public class AsmProxyClassGeneratorTest
     @BeforeClass
     public static void init()
     {
-        AsmProxyClassGenerator asmProxyClassGenerator = new AsmProxyClassGenerator();
+        AsmDeltaSpikeProxyClassGenerator asmProxyClassGenerator = new AsmDeltaSpikeProxyClassGenerator();
         proxyClass = asmProxyClassGenerator.generateProxyClass(TestClass.class.getClassLoader(),
                 TestClass.class,
                 "$Test",

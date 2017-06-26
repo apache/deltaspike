@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.proxy.impl.invocation;
+package org.apache.deltaspike.proxy.spi.invocation;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -31,8 +31,11 @@ import javax.enterprise.inject.spi.Interceptor;
 import javax.interceptor.InterceptorBinding;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 
+/**
+ * Utility which stores the information about configured interceptors for each method.
+ */
 @ApplicationScoped
-public class InterceptorLookup
+class DeltaSpikeProxyInterceptorLookup
 {
     private final Map<Method, List<Interceptor<?>>> cache = new HashMap<Method, List<Interceptor<?>>>();
     
@@ -49,7 +52,7 @@ public class InterceptorLookup
         return interceptors;
     }
     
-    protected List<Interceptor<?>> resolveInterceptors(Object instance, Method method)
+    private List<Interceptor<?>> resolveInterceptors(Object instance, Method method)
     {
         BeanManager beanManager = BeanManagerProvider.getInstance().getBeanManager();
         
@@ -62,7 +65,7 @@ public class InterceptorLookup
         return new ArrayList<Interceptor<?>>();
     }
 
-    protected Annotation[] extractInterceptorBindings(BeanManager beanManager, Object instance, Method method)
+    private Annotation[] extractInterceptorBindings(BeanManager beanManager, Object instance, Method method)
     {
         ArrayList<Annotation> bindings = new ArrayList<Annotation>();
 
@@ -72,7 +75,7 @@ public class InterceptorLookup
         return bindings.toArray(new Annotation[bindings.size()]);
     }
     
-    protected void addInterceptorBindings(BeanManager beanManager, ArrayList<Annotation> bindings,
+    private void addInterceptorBindings(BeanManager beanManager, ArrayList<Annotation> bindings,
             Annotation[] declaredAnnotations)
     {
         for (Annotation annotation : declaredAnnotations)

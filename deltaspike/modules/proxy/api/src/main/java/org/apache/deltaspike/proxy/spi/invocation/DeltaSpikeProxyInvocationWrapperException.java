@@ -16,15 +16,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.proxy.impl.invocation;
+package org.apache.deltaspike.proxy.spi.invocation;
 
 /**
  * Wrapper exception to wrap and pass trough the original {@link Throwable} because
  * the {@link javax.interceptor.InvocationContext#proceed()} method only declares "throws Exception".
  */
-public class ManualInvocationThrowableWrapperException extends Exception
+public class DeltaSpikeProxyInvocationWrapperException extends Exception
 {
-    public ManualInvocationThrowableWrapperException(Throwable e)
+    public DeltaSpikeProxyInvocationWrapperException(Throwable e)
     {
         super(e);
     }

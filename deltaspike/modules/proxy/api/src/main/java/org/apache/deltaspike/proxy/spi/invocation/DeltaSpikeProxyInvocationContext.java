@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.proxy.impl.invocation;
+package org.apache.deltaspike.proxy.spi.invocation;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -26,33 +26,33 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InterceptionType;
 import javax.enterprise.inject.spi.Interceptor;
 
-import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.util.interceptor.AbstractInvocationContext;
 
 /**
- * {@link javax.interceptor.InvocationContext}
- * implementation to support manual interceptor invocation before invoking the
- * original logic via the given {@link AbstractManualInvocationHandler}.
+ * {@link javax.interceptor.InvocationContext} implementation to support interceptor invocation
+ * before proceed with the original method or delegation.
  */
 @Typed
-public class ManualInvocationContext<T, H> extends AbstractInvocationContext<T>
+public class DeltaSpikeProxyInvocationContext<T, H> extends AbstractInvocationContext<T>
 {
     protected List<Interceptor<H>> interceptors;
     protected int interceptorIndex;
-    protected AbstractManualInvocationHandler manualInvocationHandler;
+    protected DeltaSpikeProxyInvocationHandler invocationHandler;
 
     protected BeanManager beanManager;
 
     protected boolean proceedOriginal;
     protected Object proceedOriginalReturnValue;
 
-    public ManualInvocationContext(AbstractManualInvocationHandler manualInvocationHandler,
-            List<Interceptor<H>> interceptors, T target, Method method, Object[] parameters, Object timer)
+    public DeltaSpikeProxyInvocationContext(DeltaSpikeProxyInvocationHandler invocationHandler,
+            BeanManager beanManager, List<Interceptor<H>> interceptors, 
+            T target, Method method, Object[] parameters, Object timer)
     {
         super(target, method, parameters, timer);
 
-        this.manualInvocationHandler = manualInvocationHandler;
+        this.invocationHandler = invocationHandler;
         this.interceptors = interceptors;
+        this.beanManager = beanManager;
 
         this.interceptorIndex = 0;
     }
@@ -73,12 +73,6 @@ public class ManualInvocationContext<T, H> extends AbstractInvocationContext<T>
 
             try
             {
-                // lazy init beanManager
-                if (beanManager == null)
-                {
-                    beanManager = BeanManagerProvider.getInstance().getBeanManager();
-                }
-
                 interceptor = interceptors.get(interceptorIndex++);
                 creationalContext = beanManager.createCreationalContext(interceptor);
                 interceptorInstance = interceptor.create(creationalContext);
@@ -104,7 +98,7 @@ public class ManualInvocationContext<T, H> extends AbstractInvocationContext<T>
         try
         {
             proceedOriginal = true;
-            proceedOriginalReturnValue = manualInvocationHandler.proceedOriginal(target, method, parameters);
+            proceedOriginalReturnValue = invocationHandler.proceed(target, method, parameters);
         }
         catch (Exception e)
         {
@@ -113,7 +107,7 @@ public class ManualInvocationContext<T, H> extends AbstractInvocationContext<T>
         catch (Throwable e)
         {
             // wrap the Throwable here as interceptors declared only "throws Exception"
-            throw new ManualInvocationThrowableWrapperException(e);
+            throw new DeltaSpikeProxyInvocationWrapperException(e);
         }
 
         return null;
@@ -127,10 +121,5 @@ public class ManualInvocationContext<T, H> extends AbstractInvocationContext<T>
     public Object getProceedOriginalReturnValue()
     {
         return proceedOriginalReturnValue;
-    }
-
-    public void setProceedOriginalReturnValue(Object proceedOriginalReturnValue)
-    {
-        this.proceedOriginalReturnValue = proceedOriginalReturnValue;
     }
 }

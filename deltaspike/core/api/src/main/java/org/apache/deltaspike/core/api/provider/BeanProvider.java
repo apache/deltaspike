@@ -398,7 +398,19 @@ public final class BeanProvider
         return getBeanDefinitions(type, optional, includeDefaultScopedBeans, beanManager);
     }
     
-    private static <T> Set<Bean<T>> getBeanDefinitions(Class<T> type,
+    /**
+     * Get a set of {@link Bean} definitions by type, regardless of qualifiers.
+     *
+     * @param type                      the type of the bean in question
+     * @param optional                  if <code>true</code> it will return an empty set if no bean could be found.
+     *                                  Otherwise it will throw an {@code IllegalStateException}
+     * @param includeDefaultScopedBeans specifies whether dependent scoped beans should be included in the result
+     * @param <T>                       target type
+     * @param beanManager               the {@link BeanManager} to use
+     *
+     * @return the resolved set of {@link Bean} definitions or an empty set if optional is true
+     */
+    public static <T> Set<Bean<T>> getBeanDefinitions(Class<T> type,
                                                        boolean optional,
                                                        boolean includeDefaultScopedBeans,
                                                        BeanManager beanManager)

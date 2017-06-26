@@ -17,9 +17,9 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="AsmProxyClassGenerator">
-   <implementation class="org.apache.deltaspike.proxy.impl.AsmProxyClassGenerator"/>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="AsmDeltaSpikeProxyClassGenerator">
+   <implementation class="org.apache.deltaspike.proxy.impl.AsmDeltaSpikeProxyClassGenerator"/>
    <service>
-      <provide interface="org.apache.deltaspike.proxy.spi.ProxyClassGenerator"/>
+      <provide interface="org.apache.deltaspike.proxy.spi.DeltaSpikeProxyClassGenerator"/>
    </service>
 </scr:component>

@@ -93,4 +93,4 @@
 # under the License.
 #####################################################################################
 
-org.apache.deltaspike.proxy.impl.AsmProxyClassGenerator
+org.apache.deltaspike.proxy.impl.AsmDeltaSpikeProxyClassGenerator

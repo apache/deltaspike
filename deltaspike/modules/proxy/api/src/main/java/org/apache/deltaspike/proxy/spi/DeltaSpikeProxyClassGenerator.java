@@ -18,10 +18,10 @@
  */
 package org.apache.deltaspike.proxy.spi;
 
-public interface ProxyClassGenerator
+public interface DeltaSpikeProxyClassGenerator
 {
     /**
-     * Generates a proxy class from the given source class.
+     * Generates a proxy class from the given source class, which also implements {@link DeltaSpikeProxy}.
      * The proxy class will be generated in the same package as the original class
      * and the suffix will be appended to the name of the class.
      * 
@@ -33,7 +33,9 @@ public interface ProxyClassGenerator
      *                                  We generate them with the same name as the original method
      *                                  and append the suffix.
      * @param additionalInterfaces Additional interfaces which should be implemented.
-     * @param delegateMethods Methods which should be delegated to the {@code delegateInvocationHandlerClass}
+     *                             Please note that you must also pass new methods via <c>delegateMethods</c>.
+     * @param delegateMethods Methods which should be delegated to the
+     *                        {@link DeltaSpikeProxy#getDelegateInvocationHandler()}
      *                        instead of invoking the original method.
      * @param interceptMethods Methods which should be intercepted (to call interceptors or decorators)
      *                         before invoking the original method.
