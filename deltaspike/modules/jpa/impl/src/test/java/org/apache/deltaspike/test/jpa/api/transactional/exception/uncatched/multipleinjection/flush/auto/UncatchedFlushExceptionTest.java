@@ -44,7 +44,7 @@ import javax.inject.Inject;
 
 @RunWith(Arquillian.class)
 @Category(SeCategory.class)
-public class MultipleEntityManagerInjectionUncatchedFlushExceptionTest
+public class UncatchedFlushExceptionTest
 {
     @Inject
     private MultiTransactionBean multiTransactionBean;
@@ -57,7 +57,7 @@ public class MultipleEntityManagerInjectionUncatchedFlushExceptionTest
     {
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "autoInjectionUncatchedFlushExceptionTest.jar")
                 .addPackage(ArchiveUtils.SHARED_PACKAGE)
-                .addPackage(MultipleEntityManagerInjectionUncatchedFlushExceptionTest.class.getPackage().getName())
+                .addPackage(UncatchedFlushExceptionTest.class.getPackage().getName())
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
         return ShrinkWrap.create(WebArchive.class)

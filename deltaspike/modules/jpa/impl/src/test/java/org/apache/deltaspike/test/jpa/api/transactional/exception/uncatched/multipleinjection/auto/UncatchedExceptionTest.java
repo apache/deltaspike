@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.jpa.api.transactional.exception.uncatched.multipleinjection.nested;
+package org.apache.deltaspike.test.jpa.api.transactional.exception.uncatched.multipleinjection.auto;
 
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
@@ -44,10 +44,10 @@ import javax.inject.Inject;
 
 @RunWith(Arquillian.class)
 @Category(SeCategory.class)
-public class NestedMultiTransactionUncatchedExceptionTest
+public class UncatchedExceptionTest
 {
     @Inject
-    private FirstLevelTransactionBean firstLevelTransactionBean;
+    private MultiTransactionBean multiTransactionBean;
 
     @Inject
     private TestEntityManagerProducer entityManagerProducer;
@@ -55,9 +55,9 @@ public class NestedMultiTransactionUncatchedExceptionTest
     @Deployment
     public static WebArchive deploy()
     {
-        JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "nestedMultiTransactionUncatchedExceptionTest.jar")
+        JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "autoInjectionUncatchedExceptionTest.jar")
                 .addPackage(ArchiveUtils.SHARED_PACKAGE)
-                .addPackage(NestedMultiTransactionUncatchedExceptionTest.class.getPackage().getName())
+                .addPackage(UncatchedExceptionTest.class.getPackage().getName())
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
         return ShrinkWrap.create(WebArchive.class)
@@ -74,10 +74,20 @@ public class NestedMultiTransactionUncatchedExceptionTest
     }
 
     @Test
-    public void nestedMultiTransactionUncatchedExceptionTest()
+    public void autoInjectionUncatchedExceptionTest()
     {
+        TestEntityManager defaultEntityManager = entityManagerProducer.getDefaultEntityManager();
         TestEntityManager firstEntityManager = entityManagerProducer.getFirstEntityManager();
         TestEntityManager secondEntityManager = entityManagerProducer.getSecondEntityManager();
+
+        Assert.assertNotNull(defaultEntityManager);
+        TestEntityTransaction defaultTransaction = (TestEntityTransaction) (defaultEntityManager).getTransaction();
+
+        Assert.assertEquals(false, defaultEntityManager.isFlushed());
+        Assert.assertEquals(false, defaultTransaction.isActive());
+        Assert.assertEquals(false, defaultTransaction.isStarted());
+        Assert.assertEquals(false, defaultTransaction.isCommitted());
+        Assert.assertEquals(false, defaultTransaction.isRolledBack());
 
         Assert.assertNotNull(firstEntityManager);
         TestEntityTransaction firstTransaction = (TestEntityTransaction) (firstEntityManager).getTransaction();
@@ -99,13 +109,19 @@ public class NestedMultiTransactionUncatchedExceptionTest
 
         try
         {
-            firstLevelTransactionBean.executeInTransaction();
+            multiTransactionBean.executeInTransaction();
             Assert.fail(TestException.class.getName() + " expected!");
         }
         catch (TestException e)
         {
             //expected -> do nothing
         }
+
+        Assert.assertEquals(false, defaultEntityManager.isFlushed());
+        Assert.assertEquals(false, defaultTransaction.isActive());
+        Assert.assertEquals(true, defaultTransaction.isStarted());
+        Assert.assertEquals(false, defaultTransaction.isCommitted());
+        Assert.assertEquals(true, defaultTransaction.isRolledBack());
 
         Assert.assertEquals(false, firstEntityManager.isFlushed());
         Assert.assertEquals(false, firstTransaction.isActive());

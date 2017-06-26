@@ -44,7 +44,7 @@ import javax.inject.Inject;
 //different classes needed due to arquillian restriction
 @RunWith(Arquillian.class)
 @Category(SeCategory.class)
-public class MultipleEntityManagerInjectionRollbackOnly1Test
+public class RollbackOnly1Test
 {
     @Inject
     private MultiTransactionBean multiTransactionBean;
@@ -57,7 +57,7 @@ public class MultipleEntityManagerInjectionRollbackOnly1Test
     {
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "autoInjectionRollbackOnly1Test.jar")
                 .addPackage(ArchiveUtils.SHARED_PACKAGE)
-                .addPackage(MultipleEntityManagerInjectionRollbackOnly1Test.class.getPackage().getName())
+                .addPackage(RollbackOnly1Test.class.getPackage().getName())
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
         return ShrinkWrap.create(WebArchive.class)

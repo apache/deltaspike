@@ -44,7 +44,7 @@ import javax.inject.Inject;
 //different classes needed due to arquillian restriction
 @RunWith(Arquillian.class)
 @Category(SeCategory.class)
-public class MultipleEntityManagerInjectionRollbackOnly2Test
+public class RollbackOnlyTest
 {
     @Inject
     private MultiTransactionBean multiTransactionBean;
@@ -55,9 +55,9 @@ public class MultipleEntityManagerInjectionRollbackOnly2Test
     @Deployment
     public static WebArchive deploy()
     {
-        JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "autoInjectionRollbackOnly2Test.jar")
+        JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "autoInjectionRollbackOnlyTest.jar")
                 .addPackage(ArchiveUtils.SHARED_PACKAGE)
-                .addPackage(MultipleEntityManagerInjectionRollbackOnly2Test.class.getPackage().getName())
+                .addPackage(RollbackOnlyTest.class.getPackage().getName())
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
         return ShrinkWrap.create(WebArchive.class)
@@ -74,7 +74,7 @@ public class MultipleEntityManagerInjectionRollbackOnly2Test
     }
 
     @Test
-    public void autoInjectionRollbackOnly2Test()
+    public void autoInjectionRollbackOnlyDefaultTest()
     {
         TestEntityManager defaultEntityManager = entityManagerProducer.getDefaultEntityManager();
         TestEntityManager firstEntityManager = entityManagerProducer.getFirstEntityManager();
@@ -107,7 +107,7 @@ public class MultipleEntityManagerInjectionRollbackOnly2Test
         Assert.assertEquals(false, secondTransaction.isCommitted());
         Assert.assertEquals(false, secondTransaction.isRolledBack());
 
-        multiTransactionBean.executeInTransactionRollback2();
+        multiTransactionBean.executeInTransactionRollbackDefault();
 
         Assert.assertEquals(true, defaultEntityManager.isFlushed());
         Assert.assertEquals(false, defaultTransaction.isActive());

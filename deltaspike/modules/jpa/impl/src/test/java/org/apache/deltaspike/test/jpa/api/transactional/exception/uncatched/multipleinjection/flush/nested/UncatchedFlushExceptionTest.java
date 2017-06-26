@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.jpa.api.transactional.getRollbackOnly.multipleinjection.auto;
+package org.apache.deltaspike.test.jpa.api.transactional.exception.uncatched.multipleinjection.flush.nested;
 
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
@@ -25,6 +25,7 @@ import org.apache.deltaspike.jpa.impl.transaction.context.TransactionContextExte
 import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.test.jpa.api.shared.TestEntityManager;
 import org.apache.deltaspike.test.jpa.api.shared.TestEntityTransaction;
+import org.apache.deltaspike.test.jpa.api.shared.TestException;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -41,13 +42,12 @@ import org.junit.runner.RunWith;
 import javax.enterprise.inject.spi.Extension;
 import javax.inject.Inject;
 
-//different classes needed due to arquillian restriction
 @RunWith(Arquillian.class)
 @Category(SeCategory.class)
-public class MultipleEntityManagerInjectionRollbackOnlyTest
+public class UncatchedFlushExceptionTest
 {
     @Inject
-    private MultiTransactionBean multiTransactionBean;
+    private FirstLevelTransactionBean firstLevelTransactionBean;
 
     @Inject
     private TestEntityManagerProducer entityManagerProducer;
@@ -55,9 +55,9 @@ public class MultipleEntityManagerInjectionRollbackOnlyTest
     @Deployment
     public static WebArchive deploy()
     {
-        JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "autoInjectionRollbackOnlyTest.jar")
+        JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "nestedMultiTransactionUncatchedFlushExceptionTest.jar")
                 .addPackage(ArchiveUtils.SHARED_PACKAGE)
-                .addPackage(MultipleEntityManagerInjectionRollbackOnlyTest.class.getPackage().getName())
+                .addPackage(UncatchedFlushExceptionTest.class.getPackage().getName())
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
         return ShrinkWrap.create(WebArchive.class)
@@ -74,20 +74,10 @@ public class MultipleEntityManagerInjectionRollbackOnlyTest
     }
 
     @Test
-    public void autoInjectionRollbackOnlyDefaultTest()
+    public void nestedMultiTransactionUncatchedFlushExceptionTest()
     {
-        TestEntityManager defaultEntityManager = entityManagerProducer.getDefaultEntityManager();
         TestEntityManager firstEntityManager = entityManagerProducer.getFirstEntityManager();
         TestEntityManager secondEntityManager = entityManagerProducer.getSecondEntityManager();
-
-        Assert.assertNotNull(defaultEntityManager);
-        TestEntityTransaction defaultTransaction = (TestEntityTransaction) (defaultEntityManager).getTransaction();
-
-        Assert.assertEquals(false, defaultEntityManager.isFlushed());
-        Assert.assertEquals(false, defaultTransaction.isActive());
-        Assert.assertEquals(false, defaultTransaction.isStarted());
-        Assert.assertEquals(false, defaultTransaction.isCommitted());
-        Assert.assertEquals(false, defaultTransaction.isRolledBack());
 
         Assert.assertNotNull(firstEntityManager);
         TestEntityTransaction firstTransaction = (TestEntityTransaction) (firstEntityManager).getTransaction();
@@ -107,21 +97,23 @@ public class MultipleEntityManagerInjectionRollbackOnlyTest
         Assert.assertEquals(false, secondTransaction.isCommitted());
         Assert.assertEquals(false, secondTransaction.isRolledBack());
 
-        multiTransactionBean.executeInTransactionRollbackDefault();
+        try
+        {
+            firstLevelTransactionBean.executeInTransaction();
+            Assert.fail(TestException.class.getName() + " expected!");
+        }
+        catch (TestException e)
+        {
+            //expected -> do nothing
+        }
 
-        Assert.assertEquals(true, defaultEntityManager.isFlushed());
-        Assert.assertEquals(false, defaultTransaction.isActive());
-        Assert.assertEquals(true, defaultTransaction.isStarted());
-        Assert.assertEquals(false, defaultTransaction.isCommitted());
-        Assert.assertEquals(true, defaultTransaction.isRolledBack());
-
-        Assert.assertEquals(true, firstEntityManager.isFlushed());
+        Assert.assertEquals(false, firstEntityManager.isFlushed());
         Assert.assertEquals(false, firstTransaction.isActive());
         Assert.assertEquals(true, firstTransaction.isStarted());
         Assert.assertEquals(false, firstTransaction.isCommitted());
         Assert.assertEquals(true, firstTransaction.isRolledBack());
 
-        Assert.assertEquals(true, secondEntityManager.isFlushed());
+        Assert.assertEquals(false, secondEntityManager.isFlushed());
         Assert.assertEquals(false, secondTransaction.isActive());
         Assert.assertEquals(true, secondTransaction.isStarted());
         Assert.assertEquals(false, secondTransaction.isCommitted());

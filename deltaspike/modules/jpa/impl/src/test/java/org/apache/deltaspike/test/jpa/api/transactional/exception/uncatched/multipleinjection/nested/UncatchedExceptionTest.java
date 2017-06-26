@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.jpa.api.transactional.exception.uncatched.multipleinjection.flush.nested;
+package org.apache.deltaspike.test.jpa.api.transactional.exception.uncatched.multipleinjection.nested;
 
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
@@ -44,7 +44,7 @@ import javax.inject.Inject;
 
 @RunWith(Arquillian.class)
 @Category(SeCategory.class)
-public class NestedMultiTransactionUncatchedFlushExceptionTest
+public class UncatchedExceptionTest
 {
     @Inject
     private FirstLevelTransactionBean firstLevelTransactionBean;
@@ -55,9 +55,9 @@ public class NestedMultiTransactionUncatchedFlushExceptionTest
     @Deployment
     public static WebArchive deploy()
     {
-        JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "nestedMultiTransactionUncatchedFlushExceptionTest.jar")
+        JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "nestedMultiTransactionUncatchedExceptionTest.jar")
                 .addPackage(ArchiveUtils.SHARED_PACKAGE)
-                .addPackage(NestedMultiTransactionUncatchedFlushExceptionTest.class.getPackage().getName())
+                .addPackage(UncatchedExceptionTest.class.getPackage().getName())
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
         return ShrinkWrap.create(WebArchive.class)
@@ -74,7 +74,7 @@ public class NestedMultiTransactionUncatchedFlushExceptionTest
     }
 
     @Test
-    public void nestedMultiTransactionUncatchedFlushExceptionTest()
+    public void nestedMultiTransactionUncatchedExceptionTest()
     {
         TestEntityManager firstEntityManager = entityManagerProducer.getFirstEntityManager();
         TestEntityManager secondEntityManager = entityManagerProducer.getSecondEntityManager();
