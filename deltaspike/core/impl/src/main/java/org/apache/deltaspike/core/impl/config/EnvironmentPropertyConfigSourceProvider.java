@@ -19,6 +19,7 @@
 package org.apache.deltaspike.core.impl.config;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -54,6 +55,7 @@ class EnvironmentPropertyConfigSourceProvider implements ConfigSourceProvider
             while (propertyFileUrls.hasMoreElements())
             {
                 URL propertyFileUrl = propertyFileUrls.nextElement();
+
                 LOG.log(Level.INFO,
                         "Custom config found by DeltaSpike. Name: ''{0}'', URL: ''{1}''",
                         new Object[] {propertyFileName, propertyFileUrl});
@@ -63,6 +65,10 @@ class EnvironmentPropertyConfigSourceProvider implements ConfigSourceProvider
         catch (IOException ioe)
         {
             throw new IllegalStateException("problem while loading DeltaSpike property files", ioe);
+        }
+        catch (URISyntaxException ue)
+        {
+            throw new IllegalStateException("Property file URL is malformed", ue);
         }
 
     }
