@@ -25,6 +25,7 @@ import org.junit.runners.Parameterized;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -77,6 +78,17 @@ public class PropertyFileUtilsTest
                                         assertFalse(result.hasMoreElements());
                                     }
                                 }
+                        },
+                new Object[] // url not existent
+                        {
+                                new Case(new File("src/test/resources/test_not_existent.properties").toURI().toURL().toExternalForm())
+                                {
+                                    @Override
+                                    public void run()
+                                    {
+                                        assertFalse(result.hasMoreElements());
+                                    }
+                                }
                         });
     }
 
@@ -88,7 +100,7 @@ public class PropertyFileUtilsTest
     }
 
     @Test
-    public void run() throws IOException
+    public void run() throws IOException, URISyntaxException
     {
         test.result = PropertyFileUtils.resolvePropertyFiles(test.file);
         test.run();
