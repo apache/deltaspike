@@ -22,6 +22,7 @@ import javax.enterprise.inject.Typed;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -41,13 +42,27 @@ public abstract class PropertyFileUtils
         // prevent instantiation
     }
 
-    public static Enumeration<URL> resolvePropertyFiles(String propertyFileName) throws IOException
+    public static Enumeration<URL> resolvePropertyFiles(String propertyFileName) throws IOException, URISyntaxException
     {
         if (propertyFileName != null && (propertyFileName.contains("://") || propertyFileName.startsWith("file:")))
         {
             // the given string is actually already an URL
             Vector<URL> propertyFileUrls = new Vector<URL>();
-            propertyFileUrls.add(new URL(propertyFileName));
+            URL url = new URL(propertyFileName);
+
+            if (propertyFileName.startsWith("file:"))
+            {
+                File file = new File(url.toURI());
+                if (file.exists())
+                {
+                    propertyFileUrls.add(url);
+                }
+            }
+            else
+            {
+                propertyFileUrls.add(url);
+            }
+
             return propertyFileUrls.elements();
         }
 
