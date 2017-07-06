@@ -37,4 +37,27 @@ class SimpleSecurityViolation implements SecurityViolation
     {
         return reason;
     }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o)
+        {
+            return true;
+        }
+        if (!(o instanceof SimpleSecurityViolation))
+        {
+            return false;
+        }
+
+        SimpleSecurityViolation that = (SimpleSecurityViolation) o;
+
+        return reason != null ? reason.equals(that.reason) : that.reason == null;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return reason != null ? reason.hashCode() : 0;
+    }
 }
