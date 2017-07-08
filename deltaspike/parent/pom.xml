@@ -73,15 +73,15 @@
         <mojarra1.version>1.2_14</mojarra1.version>
 
         <!-- Geronimo specs -->
-        <geronimo-annotation_1.2_spec.version>1.0.MR2-SNAPSHOT</geronimo-annotation_1.2_spec.version>
-        <geronimo-annotation_1.3_spec.version>1.0-SNAPSHOT</geronimo-annotation_1.3_spec.version>
+        <geronimo-annotation_1.2_spec.version>1.0</geronimo-annotation_1.2_spec.version>
+        <geronimo-annotation_1.3_spec.version>1.0</geronimo-annotation_1.3_spec.version>
         <geronimo-atinject-1.0-spec.version>1.0</geronimo-atinject-1.0-spec.version>
         <geronimo-ejb-3.1-spec.version>1.0.2</geronimo-ejb-3.1-spec.version>
         <geronimo-jcdi-1.0-spec.version>1.0</geronimo-jcdi-1.0-spec.version>
-        <geronimo-jcdi-1.1-spec.version>1.0-alpha-1</geronimo-jcdi-1.1-spec.version>
-        <geronimo-jcdi-2.0-spec.version>1.0-SNAPSHOT</geronimo-jcdi-2.0-spec.version>
+        <geronimo-jcdi-1.1-spec.version>1.0</geronimo-jcdi-1.1-spec.version>
+        <geronimo-jcdi-2.0-spec.version>1.0</geronimo-jcdi-2.0-spec.version>
         <geronimo-interceptor-1.1-spec.version>1.0</geronimo-interceptor-1.1-spec.version>
-        <geronimo-interceptor-1.2-spec.version>1.0-alpha-1</geronimo-interceptor-1.2-spec.version>
+        <geronimo-interceptor-1.2-spec.version>1.0</geronimo-interceptor-1.2-spec.version>
         <geronimo-servlet-2.5-spec.version>1.2</geronimo-servlet-2.5-spec.version>
         <geronimo-servlet-3.0-spec.version>1.0</geronimo-servlet-3.0-spec.version>
         <geronimo-el-2.2-spec.version>1.0.3</geronimo-el-2.2-spec.version>
