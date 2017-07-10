@@ -193,7 +193,7 @@
         </profile>
 
         <profile>
-            <!-- use this profile to compile and test DeltaSpike with Apache OpenWebBeans 2.x -->
+            <!-- use this profile to compile and test DeltaSpike with Apache OpenWebBeans 1.5.x and 1.7.x -->
             <id>OWB15</id>
             <dependencies>
                 <dependency>
@@ -225,6 +225,61 @@
                     <groupId>org.apache.geronimo.specs</groupId>
                     <artifactId>geronimo-annotation_1.2_spec</artifactId>
                     <version>1.0.MR2-SNAPSHOT</version>
+                    <scope>provided</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.geronimo.specs</groupId>
+                    <artifactId>geronimo-el_2.2_spec</artifactId>
+                    <version>1.0.2</version>
+                    <scope>provided</scope>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.apache.openwebbeans</groupId>
+                    <artifactId>openwebbeans-impl</artifactId>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.openwebbeans</groupId>
+                    <artifactId>openwebbeans-spi</artifactId>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <profile>
+            <!-- use this profile to compile and test DeltaSpike with Apache OpenWebBeans 2.x -->
+            <id>OWB2</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.deltaspike.cdictrl</groupId>
+                    <artifactId>deltaspike-cdictrl-owb</artifactId>
+                    <scope>test</scope>
+                </dependency>
+
+                <!-- OWB specific dependencies-->
+                <dependency>
+                    <groupId>org.apache.geronimo.specs</groupId>
+                    <artifactId>geronimo-atinject_1.0_spec</artifactId>
+                    <scope>provided</scope>
+                </dependency>
+                <dependency>
+                    <!--X TODO move this to dependencyManagement once it is released -->
+                    <groupId>org.apache.geronimo.specs</groupId>
+                    <artifactId>geronimo-jcdi_2.0_spec</artifactId>
+                    <version>${geronimo-jcdi-2.0-spec.version}</version>
+                    <scope>provided</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.geronimo.specs</groupId>
+                    <artifactId>geronimo-interceptor_1.2_spec</artifactId>
+                    <version>${geronimo-interceptor-1.2-spec.version}</version>
+                    <scope>provided</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.geronimo.specs</groupId>
+                    <artifactId>geronimo-annotation_1.3_spec</artifactId>
+                    <version>1.0</version>
                     <scope>provided</scope>
                 </dependency>
                 <dependency>
