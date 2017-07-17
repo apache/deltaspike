@@ -62,7 +62,7 @@ public class DeltaSpikeFacesContextFactory extends FacesContextFactory implement
         FacesContext facesContext =
                 this.wrappedFacesContextFactory.getFacesContext(context, request, response, lifecycle);
 
-        if (facesContext == null || this.deactivated)
+        if (facesContext == null || this.deactivated || facesContext instanceof DeltaSpikeFacesContextWrapper)
         {
             return facesContext;
         }

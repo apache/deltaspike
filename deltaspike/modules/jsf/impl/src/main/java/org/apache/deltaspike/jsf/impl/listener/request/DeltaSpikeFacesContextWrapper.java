@@ -84,8 +84,6 @@ class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
         {
             this.wrappedExternalContext = wrappedFacesContext.getExternalContext();
         }
-
-        setCurrentInstance(this);
     }
 
     /**
@@ -95,12 +93,19 @@ class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
     @Override
     public void release()
     {
-        if (!this.wrappedFacesContext.getApplication().getResourceHandler().isResourceRequest(this.wrappedFacesContext))
+        // try/finally shouldn't be required...
+        try
         {
-            broadcastDestroyedJsfRequestEvent();
+            if (!this.wrappedFacesContext.getApplication().getResourceHandler()
+                    .isResourceRequest(this.wrappedFacesContext))
+            {
+                broadcastDestroyedJsfRequestEvent();
+            }
         }
-
-        wrappedFacesContext.release();
+        finally
+        {
+            super.release();
+        }
     }
     
     @Override
