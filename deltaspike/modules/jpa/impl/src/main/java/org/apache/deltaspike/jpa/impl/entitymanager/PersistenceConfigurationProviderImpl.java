@@ -27,6 +27,7 @@ import java.util.Set;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.config.PropertyLoader;
+import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.jpa.spi.entitymanager.PersistenceConfigurationProvider;
 
 /**
@@ -64,6 +65,9 @@ public class PersistenceConfigurationProviderImpl implements PersistenceConfigur
         }
 
         unitProperties = addConfigProperties(unitProperties, persistenceUnitName);
+
+        // add spec expected attributes
+        unitProperties.put("javax.persistence.bean.manager", BeanManagerProvider.getInstance().getBeanManager());
 
         return unitProperties;
     }
