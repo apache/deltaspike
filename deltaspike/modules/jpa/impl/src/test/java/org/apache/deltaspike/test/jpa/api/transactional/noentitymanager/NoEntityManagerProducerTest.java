@@ -83,8 +83,8 @@ public class NoEntityManagerProducerTest
              * way to test this behavior but it will be sufficient to ensure the user gets all the information required
              * to fix the problem.
              */
-            assertTrue(e.getMessage().contains("EntityManager"));
-            assertTrue(e.getMessage().contains(Second.class.getName()));
+            assertTrue("Expected "+e.getMessage()+" to contain EntityManager",e.getMessage().contains("EntityManager"));
+            assertTrue("Expected "+e.getMessage()+" to contain Second",e.getMessage().contains(Second.class.getName()));
         }
 
     }

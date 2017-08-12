@@ -33,7 +33,8 @@ import javax.inject.Inject;
 import javax.persistence.FlushModeType;
 
 import org.apache.deltaspike.data.api.EntityManagerConfig;
-import org.apache.deltaspike.data.api.EntityManagerResolver;
+import org.apache.deltaspike.jpa.api.entitymanager.EntityManagerResolver;
+import org.apache.deltaspike.jpa.spi.entitymanager.QualifierBackedEntityManagerResolver;
 
 @ApplicationScoped
 public class RepositoryMetadataInitializer
@@ -62,9 +63,16 @@ public class RepositoryMetadataInitializer
                 Class<? extends Annotation> scope = beanManager.resolve(beans).getScope();
                 repositoryMetadata.setEntityManagerResolverIsNormalScope(beanManager.isNormalScope(scope));
             }
+            else if (repositoryMetadata.getQualifiers() != null)
+            {
+                repositoryMetadata.setUnmanagedResolver(new QualifierBackedEntityManagerResolver(beanManager,
+                        repositoryMetadata.getQualifiers()));
+                repositoryMetadata.setEntityManagerResolverIsNormalScope(false);
+            }
             else
             {
-                repositoryMetadata.setEntityManagerResolverIsNormalScope(false);
+                throw new IllegalStateException("Unable to locate an EntityManagerResolver or Qualifiers for "
+                        + repositoryClass.getName());
             }
         }
         repositoryMetadata.setEntityMetadata(entityMetadataInitializer.init(repositoryMetadata));

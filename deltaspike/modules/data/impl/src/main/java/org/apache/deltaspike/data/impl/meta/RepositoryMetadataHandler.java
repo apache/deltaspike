@@ -71,21 +71,6 @@ public class RepositoryMetadataHandler
         }
         throw new RuntimeException("Unknown Repository classes " + candidateClasses);
     }
-
-    /**
-     * Lookup the {@link RepositoryMetadata} for a specific Repository class.
-     *
-     * @param repositoryClass The repository class to lookup the method for
-     * @return A {@link RepositoryMetadata}.
-     */
-    public RepositoryMetadata lookupMetadata(Class<?> repositoryClass)
-    {
-        if (repositoriesMetadata.containsKey(repositoryClass))
-        {
-            return repositoriesMetadata.get(repositoryClass);
-        }
-        throw new RuntimeException("Unknown Repository class " + repositoryClass.getName());
-    }
     
     /**
      * lookup the {@link RepositoryMethodMetadata} for a specific repository and method.
@@ -99,8 +84,4 @@ public class RepositoryMetadataHandler
         return repositoryMetadata.getMethodsMetadata().get(method);
     }
 
-    public Map<Class<?>, RepositoryMetadata> getRepositories()
-    {
-        return repositoriesMetadata;
-    }
 }

@@ -26,8 +26,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.apache.deltaspike.jpa.api.entitymanager.EntityManagerResolver;
+
 /**
  * Configure the EntityManager for a specific repository.
+ *
+ * This class is deprecated, instead use {@link org.apache.deltaspike.jpa.api.entitymanager.EntityManagerConfig}
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

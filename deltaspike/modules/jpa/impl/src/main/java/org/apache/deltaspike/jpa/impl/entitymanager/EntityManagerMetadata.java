@@ -33,6 +33,7 @@ import java.util.Set;
 public class EntityManagerMetadata
 {
     private Class<? extends EntityManagerResolver> entityManagerResolverClass;
+    private EntityManagerResolver unmanagedResolver;
     private Class<? extends Annotation>[] qualifiers;
     private boolean entityManagerResolverIsNormalScope;
     private FlushModeType entityManagerFlushMode;
@@ -76,6 +77,16 @@ public class EntityManagerMetadata
     public void setQualifiers(Class<? extends Annotation>[] qualifiers)
     {
         this.qualifiers = qualifiers;
+    }
+
+    public EntityManagerResolver getUnmanagedResolver()
+    {
+        return unmanagedResolver;
+    }
+
+    public void setUnmanagedResolver(EntityManagerResolver unmanagedResolver)
+    {
+        this.unmanagedResolver = unmanagedResolver;
     }
 
     public boolean readFrom(AnnotatedElement method, BeanManager beanManager)

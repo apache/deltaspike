@@ -78,10 +78,14 @@ public class EntityManagerRefLookup
     {
         EntityManagerRef ref = new EntityManagerRef();
 
-        if (entityManagerMetadata.getEntityManagerResolverClass() != null)
+        if (entityManagerMetadata.getUnmanagedResolver() != null)
+        {
+            ref.setEntityManagerResolver(entityManagerMetadata.getUnmanagedResolver());
+        }
+        else if (entityManagerMetadata.getEntityManagerResolverClass() != null)
         {
             ref.setEntityManagerResolverClass(entityManagerMetadata.getEntityManagerResolverClass());
-            
+
             if (entityManagerMetadata.isEntityManagerResolverIsNormalScope())
             {
                 ref.setEntityManagerResolver(

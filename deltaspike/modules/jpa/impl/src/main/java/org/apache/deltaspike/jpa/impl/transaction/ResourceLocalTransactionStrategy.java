@@ -28,20 +28,19 @@ import java.util.logging.Logger;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Default;
-import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.interceptor.InvocationContext;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
-import org.apache.deltaspike.core.api.literal.AnyLiteral;
 import org.apache.deltaspike.core.util.ProxyUtils;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
 import org.apache.deltaspike.jpa.impl.entitymanager.EntityManagerMetadata;
 import org.apache.deltaspike.jpa.impl.transaction.context.EntityManagerEntry;
 import org.apache.deltaspike.jpa.impl.transaction.context.TransactionBeanStorage;
 import org.apache.deltaspike.jpa.spi.entitymanager.ActiveEntityManagerHolder;
+import org.apache.deltaspike.jpa.spi.entitymanager.QualifierBackedEntityManagerResolver;
 import org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy;
 
 /**
@@ -379,16 +378,7 @@ public class ResourceLocalTransactionStrategy implements TransactionStrategy
         {
             return emHolder.get();
         }
-        Bean<EntityManager> entityManagerBean = resolveEntityManagerBean(emQualifier);
-
-        if (entityManagerBean == null)
-        {
-            throw new IllegalStateException("Cannot find an EntityManager qualified with [" + emQualifier.getName()
-                    + "]. Did you add a corresponding producer?");
-        }
-
-        return (EntityManager) beanManager.getReference(entityManagerBean, EntityManager.class,
-                beanManager.createCreationalContext(entityManagerBean));
+        return new QualifierBackedEntityManagerResolver(beanManager, emQualifier).resolveEntityManager();
     }
 
     /**
@@ -405,28 +395,5 @@ public class ResourceLocalTransactionStrategy implements TransactionStrategy
     protected void onCloseTransactionScope()
     {
         TransactionBeanStorage.close();
-    }
-
-    protected Bean<EntityManager> resolveEntityManagerBean(Class<? extends Annotation> qualifierClass)
-    {
-        Set<Bean<?>> entityManagerBeans = beanManager.getBeans(EntityManager.class, new AnyLiteral());
-        if (entityManagerBeans == null)
-        {
-            entityManagerBeans = new HashSet<Bean<?>>();
-        }
-
-        for (Bean<?> currentEntityManagerBean : entityManagerBeans)
-        {
-            Set<Annotation> foundQualifierAnnotations = currentEntityManagerBean.getQualifiers();
-
-            for (Annotation currentQualifierAnnotation : foundQualifierAnnotations)
-            {
-                if (currentQualifierAnnotation.annotationType().equals(qualifierClass))
-                {
-                    return (Bean<EntityManager>) currentEntityManagerBean;
-                }
-            }
-        }
-        return null;
     }
 }
