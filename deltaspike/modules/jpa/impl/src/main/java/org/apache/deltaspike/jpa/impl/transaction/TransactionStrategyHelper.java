@@ -20,6 +20,8 @@ package org.apache.deltaspike.jpa.impl.transaction;
 
 import org.apache.deltaspike.core.util.AnnotationUtils;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
+import org.apache.deltaspike.jpa.impl.entitymanager.EntityManagerMetadata;
+import org.apache.deltaspike.jpa.impl.entitymanager.EntityManagerRefLookup;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Any;
@@ -47,6 +49,9 @@ public class TransactionStrategyHelper implements Serializable
     @Inject
     private BeanManager beanManager;
 
+    @Inject
+    private EntityManagerRefLookup entityManagerRefLookup;
+
     /**
      * <p>This method uses the InvocationContext to scan the &#064;Transactional
      * interceptor for a manually specified Qualifier.</p>
@@ -57,19 +62,14 @@ public class TransactionStrategyHelper implements Serializable
      * <p>Please note that we will only pickup the first Qualifier on the
      * injected EntityManager. We also do <b>not</b> parse for binding or
      * &h#064;NonBinding values. A &#064;Qualifier should not have any parameter at all.</p>
-     * @param transactionalAnnotation the &#064;Transactional annotation found on the intercepted class
+     * @param entityManagerMetadata the metadata to locate the entity manager
      * @param interceptedTargetClass the Class of the intercepted target
      */
-    public Set<Class<? extends Annotation>> resolveEntityManagerQualifiers(Transactional transactionalAnnotation,
+    public Set<Class<? extends Annotation>> resolveEntityManagerQualifiers(EntityManagerMetadata entityManagerMetadata,
                                                                            Class interceptedTargetClass)
     {
         Set<Class<? extends Annotation>> emQualifiers = new HashSet<Class<? extends Annotation>>();
-        Class<? extends Annotation>[] qualifierClasses = null;
-
-        if (transactionalAnnotation != null)
-        {
-            qualifierClasses = transactionalAnnotation.qualifier();
-        }
+        Class<? extends Annotation>[] qualifierClasses = entityManagerMetadata.getQualifiers();
 
         if (qualifierClasses == null || qualifierClasses.length == 1 && Any.class.equals(qualifierClasses[0]) )
         {
@@ -146,6 +146,14 @@ public class TransactionStrategyHelper implements Serializable
         }
 
         return null;
+    }
+
+    EntityManagerMetadata createEntityManagerMetadata(InvocationContext context)
+    {
+        EntityManagerMetadata metadata = new EntityManagerMetadata();
+        metadata.readFrom(context.getMethod(), beanManager);
+        metadata.readFrom(context.getMethod().getDeclaringClass(), beanManager);
+        return metadata;
     }
 
     /**

@@ -38,6 +38,7 @@ import javax.persistence.EntityTransaction;
 import org.apache.deltaspike.core.api.literal.AnyLiteral;
 import org.apache.deltaspike.core.util.ProxyUtils;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
+import org.apache.deltaspike.jpa.impl.entitymanager.EntityManagerMetadata;
 import org.apache.deltaspike.jpa.impl.transaction.context.EntityManagerEntry;
 import org.apache.deltaspike.jpa.impl.transaction.context.TransactionBeanStorage;
 import org.apache.deltaspike.jpa.spi.entitymanager.ActiveEntityManagerHolder;
@@ -79,6 +80,7 @@ public class ResourceLocalTransactionStrategy implements TransactionStrategy
     @Override
     public Object execute(InvocationContext invocationContext) throws Exception
     {
+        EntityManagerMetadata metadata = transactionHelper.createEntityManagerMetadata(invocationContext);
         Transactional transactionalAnnotation = transactionHelper.extractTransactionalAnnotation(invocationContext);
 
         Class targetClass = ProxyUtils.getUnproxiedClass(invocationContext.getTarget().getClass()); //see DELTASPIKE-517
@@ -86,7 +88,7 @@ public class ResourceLocalTransactionStrategy implements TransactionStrategy
         // all the configured qualifier keys
         Set<Class<? extends Annotation>> emQualifiers = emHolder.isSet() ?
                 new HashSet<Class<? extends Annotation>>(Arrays.asList(Default.class)) :
-                transactionHelper.resolveEntityManagerQualifiers(transactionalAnnotation, targetClass);
+                transactionHelper.resolveEntityManagerQualifiers(metadata, targetClass);
 
         TransactionBeanStorage transactionBeanStorage = TransactionBeanStorage.getInstance();
 
@@ -191,7 +193,7 @@ public class ResourceLocalTransactionStrategy implements TransactionStrategy
                         Set<EntityManagerEntry> entityManagerEntryList =
                             transactionBeanStorage.getUsedEntityManagerEntries();
 
-                        boolean rollbackOnly = isRollbackOnly(transactionalAnnotation);
+                        boolean rollbackOnly = metadata.isReadOnly() || isRollbackOnly(transactionalAnnotation);
 
                         if (!rollbackOnly && entityManagerEntryList.size() > 1)
                         {
@@ -324,6 +326,7 @@ public class ResourceLocalTransactionStrategy implements TransactionStrategy
     }
 
     //allows to use a custom tx-controller in a custom strategy
+    @Deprecated // instead, configure read only on the method/class
     protected boolean isRollbackOnly(Transactional transactionalAnnotation)
     {
         return transactionalAnnotation != null && transactionalAnnotation.readOnly();

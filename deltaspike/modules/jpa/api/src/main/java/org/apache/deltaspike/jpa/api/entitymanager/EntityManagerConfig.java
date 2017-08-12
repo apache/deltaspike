@@ -32,7 +32,7 @@ import java.lang.annotation.Target;
 /**
  * Configure the EntityManager for a specific repository.
  */
-@Target(ElementType.TYPE)
+@Target( { ElementType.TYPE, ElementType.METHOD } )
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited

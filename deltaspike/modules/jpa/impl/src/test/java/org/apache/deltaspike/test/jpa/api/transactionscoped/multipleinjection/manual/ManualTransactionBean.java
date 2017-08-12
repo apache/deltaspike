@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.test.jpa.api.transactionscoped.multipleinjection.manual;
 
+import org.apache.deltaspike.jpa.api.entitymanager.EntityManagerConfig;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
 import org.apache.deltaspike.test.jpa.api.shared.First;
 import org.apache.deltaspike.test.jpa.api.shared.Second;
@@ -44,7 +45,8 @@ public class ManualTransactionBean
     {
     }
 
-    @Transactional(qualifier = First.class)
+    @Transactional
+    @EntityManagerConfig(qualifier = First.class)
     public void executeInFirstTransaction()
     {
     }

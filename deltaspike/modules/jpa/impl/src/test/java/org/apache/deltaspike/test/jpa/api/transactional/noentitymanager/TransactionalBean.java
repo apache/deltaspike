@@ -21,6 +21,7 @@ package org.apache.deltaspike.test.jpa.api.transactional.noentitymanager;
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 
+import org.apache.deltaspike.jpa.api.entitymanager.EntityManagerConfig;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
 import org.apache.deltaspike.test.jpa.api.shared.Second;
 
@@ -32,7 +33,8 @@ public class TransactionalBean
      * This methods requests a transaction for the EntityManager qualified with {@link Second} although there is no
      * producer for such an {@link EntityManager}.
      */
-    @Transactional(qualifier = Second.class)
+    @Transactional
+    @EntityManagerConfig(qualifier = Second.class)
     public void executeInTransaction()
     {
         // no need to do anything

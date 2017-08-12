@@ -27,6 +27,7 @@ import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.persistence.FlushModeType;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
 import java.util.Set;
 
 public class EntityManagerMetadata
@@ -35,6 +36,7 @@ public class EntityManagerMetadata
     private Class<? extends Annotation>[] qualifiers;
     private boolean entityManagerResolverIsNormalScope;
     private FlushModeType entityManagerFlushMode;
+    private boolean readOnly = false;
 
     public Class<? extends EntityManagerResolver> getEntityManagerResolverClass()
     {
@@ -76,9 +78,36 @@ public class EntityManagerMetadata
         this.qualifiers = qualifiers;
     }
 
-    public boolean readFrom(Class<?> componentClass, BeanManager beanManager)
+    public boolean readFrom(AnnotatedElement method, BeanManager beanManager)
     {
-        EntityManagerConfig entityManagerConfig = componentClass.getAnnotation(EntityManagerConfig.class);
+        EntityManagerConfig entityManagerConfig = method.getAnnotation(EntityManagerConfig.class);
+        boolean processed = false;
+        processed = processEntityManagerConfig(beanManager, entityManagerConfig);
+
+        Transactional transactional = method.getAnnotation(Transactional.class);
+
+        processed = processTransactional(processed, transactional);
+
+        return processed;
+    }
+
+    private boolean processTransactional(boolean processed, Transactional transactional)
+    {
+        if (transactional != null && this.qualifiers == null)
+        {
+            processed = true;
+            this.setQualifiers(transactional.qualifier());
+        }
+
+        if (transactional != null)
+        {
+            this.readOnly = transactional.readOnly();
+        }
+        return processed;
+    }
+
+    private boolean processEntityManagerConfig(BeanManager beanManager, EntityManagerConfig entityManagerConfig)
+    {
         boolean processed = false;
         if (entityManagerConfig != null)
         {
@@ -98,17 +127,12 @@ public class EntityManagerMetadata
                 this.setEntityManagerResolverIsNormalScope(false);
             }
         }
-
-        Transactional transactional = componentClass.getAnnotation(Transactional.class);
-
-        if (transactional != null && this.qualifiers == null)
-        {
-            processed = true;
-            this.setQualifiers(transactional.qualifier());
-        }
-
         return processed;
     }
 
+    public boolean isReadOnly()
+    {
+        return readOnly;
+    }
 }
 
