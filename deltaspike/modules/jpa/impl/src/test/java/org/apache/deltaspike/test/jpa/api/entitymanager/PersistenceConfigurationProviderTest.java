@@ -23,6 +23,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.spi.PersistenceProviderResolverHolder;
 import java.util.Properties;
 
+import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.jpa.spi.entitymanager.PersistenceConfigurationProvider;
 import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.test.jpa.api.shared.TestEntityManager;
@@ -69,7 +70,8 @@ public class PersistenceConfigurationProviderTest
     public void testPersistenceConfigurationProvider()
     {
         Properties myUnitConfig = persistenceConfigurationProvider.getEntityManagerFactoryConfiguration("MyUnit");
-        Assert.assertEquals(3, myUnitConfig.size());
+        Assert.assertEquals(4, myUnitConfig.size());
+        Assert.assertEquals(BeanManagerProvider.getInstance().getBeanManager(), myUnitConfig.get("javax.persistence.bean.manager"));
         Assert.assertEquals("blub", myUnitConfig.get("javax.persistence.jdbc.password"));
         Assert.assertEquals("sa", myUnitConfig.get("javax.persistence.jdbc.user"));
         Assert.assertEquals("some.jdbc.Driver", myUnitConfig.get("javax.persistence.jdbc.driver"));
