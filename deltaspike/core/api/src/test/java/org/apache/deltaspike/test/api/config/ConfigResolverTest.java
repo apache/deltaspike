@@ -253,6 +253,13 @@ public class ConfigResolverTest
         Assert.assertTrue(intValues.contains(17));
     }
 
+    @Test
+    public void testConfiguredListValues_NotExisting() {
+        List<Integer> intValues = ConfigResolver.resolve("test.list.not_existing").as(Integer.class).asList().getValue();
+        Assert.assertNotNull(intValues);
+        Assert.assertEquals(0, intValues.size());
+    }
+
     private void setTestConfigSourceValue(String key, String value)
     {
         ConfigSource[] configSources = ConfigResolver.getConfigSources();

@@ -1017,7 +1017,7 @@ public final class ConfigResolver
         {
             List list = new ArrayList();
             StringBuilder currentValue = new StringBuilder();
-            int length = valueStr.length();
+            int length = valueStr != null ? valueStr.length() : 0;
             for (int i = 0; i < length; i++)
             {
                 char c = valueStr.charAt(i);
