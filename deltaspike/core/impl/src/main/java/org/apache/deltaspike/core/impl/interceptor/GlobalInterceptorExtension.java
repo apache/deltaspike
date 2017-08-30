@@ -32,12 +32,13 @@ import javax.interceptor.Interceptor;
 import java.lang.annotation.Annotation;
 import java.util.logging.Logger;
 
-//promotes deltaspike interceptors to global interceptors in case of cdi 1.1+
+// promotes deltaspike interceptors to global interceptors in case of cdi 1.1+
 public class GlobalInterceptorExtension implements Deactivatable, Extension
 {
     private static final Logger LOG = Logger.getLogger(GlobalInterceptorExtension.class.getName());
     private static final String DS_PACKAGE_NAME = "org.apache.deltaspike.";
     private Annotation priorityAnnotationInstance;
+    private BeanManager beanManager;
 
     @SuppressWarnings("UnusedDeclaration")
     protected void init(@Observes BeforeBeanDiscovery beforeBeanDiscovery, BeanManager beanManager)
@@ -47,11 +48,12 @@ public class GlobalInterceptorExtension implements Deactivatable, Extension
             return;
         }
 
+        this.beanManager = beanManager;
         int priorityValue = CoreBaseConfig.InterceptorCustomization.PRIORITY;
         priorityAnnotationInstance = AnnotationInstanceUtils.getPriorityAnnotationInstance(priorityValue);
     }
 
-    protected void promoteInterceptors(@Observes ProcessAnnotatedType pat, BeanManager beanManager)
+    protected void promoteInterceptors(@Observes ProcessAnnotatedType pat)
     {
         if (priorityAnnotationInstance == null) //not CDI 1.1 or the extension is deactivated
         {
