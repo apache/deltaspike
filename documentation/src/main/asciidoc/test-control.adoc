@@ -586,6 +586,26 @@ jar {
 
 == SPI
 
+=== MockFilter
+
+Please make sure that you are aware of <<__MockFrameworks, Integration of Mock Frameworks>> before you continue with this section.
+
+If you would like to exclude some parts of your application- and/or test-code
+so that they aren’t eligible for the mocking mechanism,
+you can provide an own implementation of `org.apache.deltaspike.testcontrol.spi.mock.MockFilter` and
+register it in `/META-INF/services/org.apache.deltaspike.testcontrol.spi.mock.MockFilter`.
+
+That's quite special and you need to know the CDI-SPI a bit.
+To get an idea about the required steps, you can have a look at the default implementation used by DeltaSpike-Test itself.
+
+Such a filter is also needed in case you would like to customize DeltaSpike-Test.
+For example to provide an `@Alternative` implementation for DynamicMockManager,
+you need to implement `org.apache.deltaspike.testcontrol.api.mock.DynamicMockManager`, annotate it with `@Alternative`,
+ensure that you keep the type-information with `@Typed`,
+configure the alternative bean in `/META-INF/beans.xml` (in the test-classpath) and
+provide a custom `MockFilter` (as described above) which excludes the custom mock-manager.
+(Otherwise DeltaSpike-Test will try to mock the custom mock-manager.)
+
 === ExternalContainer
 
 org.apache.deltaspike.testcontrol.spi.ExternalContainer allows to
