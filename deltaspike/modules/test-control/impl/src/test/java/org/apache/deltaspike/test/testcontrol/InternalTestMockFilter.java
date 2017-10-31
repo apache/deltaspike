@@ -26,6 +26,8 @@ public class InternalTestMockFilter extends DefaultMockFilter
 
     protected boolean isInternalPackage(String packageName)
     {
-        return super.isInternalPackage(packageName) && !packageName.startsWith(DS_TEST_BASE_PACKAGE);
+        return super.isInternalPackage(packageName) &&
+                (!packageName.startsWith(DS_TEST_BASE_PACKAGE) ||
+                    packageName.equals(CustomMockManager.class.getPackage().getName()));
     }
 }

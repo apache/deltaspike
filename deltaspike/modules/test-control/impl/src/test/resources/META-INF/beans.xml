@@ -24,4 +24,8 @@
         <class>org.apache.deltaspike.test.testcontrol.uc011.TestInterceptorImplementation</class>
         <class>org.apache.deltaspike.test.testcontrol.mock.uc015.TestInterceptorImplementation</class>
     </interceptors>
+
+    <alternatives>
+        <class>org.apache.deltaspike.test.testcontrol.CustomMockManager</class>
+    </alternatives>
 </beans>
