@@ -167,6 +167,22 @@ public class QueryRootTest
         assertEquals(expected, result);
     }
 
+    @Test
+    public void should_apply_order_by_in_order()
+    {
+        // given
+        final String name = "findAllOrderByNameDescIdAsc";
+        final String expected =
+                "select e from Simple e " +
+                        "order by e.name desc, e.id asc";
+
+        // when
+        String result = QueryRoot.create(name, repo, prefix(name)).getJpqlQuery().trim();
+
+        // then
+        assertEquals(expected, result);
+    }
+
     private RepositoryMethodPrefix prefix(final String name)
     {
         return new RepositoryMethodPrefix("", name);
