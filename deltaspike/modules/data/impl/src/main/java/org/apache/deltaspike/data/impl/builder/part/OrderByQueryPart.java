@@ -27,7 +27,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
+import java.util.LinkedHashSet;
 
 import org.apache.deltaspike.data.impl.builder.QueryBuilder;
 import org.apache.deltaspike.data.impl.builder.QueryBuilderContext;
@@ -43,7 +43,7 @@ public class OrderByQueryPart extends BasePropertyQueryPart
     @Override
     protected QueryPart build(String queryPart, String method, RepositoryMetadata repo)
     {
-        Set<String> collect = new TreeSet<String>();
+        Set<String> collect = new LinkedHashSet<String>();
         List<String> ascSplit = new LinkedList<String>();
         split(queryPart, KEYWORD_ASC, ascSplit);
         for (String ascPart : ascSplit)
