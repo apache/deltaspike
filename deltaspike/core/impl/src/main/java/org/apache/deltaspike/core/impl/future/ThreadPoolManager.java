@@ -36,10 +36,8 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.SynchronousQueue;
@@ -48,7 +46,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import static java.util.Arrays.asList;
-import static java.util.Locale.ENGLISH;
 
 @ApplicationScoped
 public class ThreadPoolManager
@@ -115,28 +112,34 @@ public class ThreadPoolManager
                         final Bean<?> bean = beanManager.resolve(beans);
                         if (bean.getTypes().contains(ExecutorService.class))
                         {
-                            final CreationalContext<Object> creationalContext = beanManager.createCreationalContext(null);
+                            final CreationalContext<Object> creationalContext =
+                                    beanManager.createCreationalContext(null);
                             if (!beanManager.isNormalScope(bean.getScope()))
                             {
                                 contexts.add(creationalContext);
                             }
-                            pool = ExecutorService.class.cast(beanManager.getReference(bean, ExecutorService.class, creationalContext));
+                            pool = ExecutorService.class.cast(beanManager.getReference(
+                                    bean, ExecutorService.class, creationalContext));
                         }
                     }
 
                     if (pool == null) // 2.
                     {
                         for (final String prefix : asList(
-                                "", "java:app/", "java:global/", "java:global/threads/", "java:global/deltaspike/", "java:"))
+                                "", "java:app/", "java:global/", "java:global/threads/",
+                                "java:global/deltaspike/", "java:"))
                         {
-                            try {
+                            try
+                            {
                                 final Object instance = new InitialContext().lookup(prefix + name);
                                 if (ExecutorService.class.isInstance(instance))
                                 {
                                     pool = ExecutorService.class.cast(instance);
                                     break;
                                 }
-                            } catch (final NamingException e) {
+                            }
+                            catch (final NamingException e)
+                            {
                                 // no-op
                             }
                         }
@@ -187,7 +190,7 @@ public class ThreadPoolManager
                                     .getValue();
                             queue = new SynchronousQueue<Runnable>(fair);
                         }
-                        else/* (queueType.equalsIgnoreCase("LINKED")) */
+                        else
                         {
                             final int capacity = ConfigResolver.resolve(configPrefix + "queue.capacity")
                                     .as(Integer.class)
@@ -196,7 +199,8 @@ public class ThreadPoolManager
                             queue = new LinkedBlockingQueue<Runnable>(capacity);
                         }
 
-                        final String threadFactoryName = ConfigResolver.getPropertyValue(configPrefix + "threadFactory.name");
+                        final String threadFactoryName = ConfigResolver.getPropertyValue(
+                                configPrefix + "threadFactory.name");
                         final ThreadFactory threadFactory;
                         if (threadFactoryName != null)
                         {
@@ -207,7 +211,8 @@ public class ThreadPoolManager
                             threadFactory = Executors.defaultThreadFactory();
                         }
 
-                        final String rejectedHandlerName = ConfigResolver.getPropertyValue(configPrefix + "rejectedExecutionHandler.name");
+                        final String rejectedHandlerName = ConfigResolver.getPropertyValue(
+                                configPrefix + "rejectedExecutionHandler.name");
                         final RejectedExecutionHandler rejectedHandler;
                         if (rejectedHandlerName != null)
                         {
@@ -231,7 +236,8 @@ public class ThreadPoolManager
         return pool;
     }
 
-    private <T> T lookupByName(final String name, final Class<T> type) {
+    private <T> T lookupByName(final String name, final Class<T> type)
+    {
         final Set<Bean<?>> tfb = beanManager.getBeans(name);
         final Bean<?> bean = beanManager.resolve(tfb);
         final CreationalContext<?> ctx = beanManager.createCreationalContext(null);

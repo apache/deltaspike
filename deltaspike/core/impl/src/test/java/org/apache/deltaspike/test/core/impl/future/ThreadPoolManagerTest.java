@@ -16,10 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.impl.future;
+package org.apache.deltaspike.test.core.impl.future;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.impl.config.PropertiesConfigSource;
+import org.apache.deltaspike.core.impl.future.ThreadPoolManager;
 import org.apache.deltaspike.core.impl.scope.conversation.ConversationBeanHolder;
 import org.apache.deltaspike.core.impl.scope.viewaccess.ViewAccessBeanAccessHistory;
 import org.apache.deltaspike.core.impl.scope.viewaccess.ViewAccessBeanHolder;
