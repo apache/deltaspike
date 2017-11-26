@@ -1182,6 +1182,32 @@ DeltaSpike provides support for executing code in an asynchronous manner.  The b
 - `@Locked` - Ability to prevent concurrent access to a method based on its usage of reads/writes.
 - `@Throttled` - Ability to limit how frequently a method can be invoked.
 
+== @Futureable configuration
+
+The strategy to find the `ExecutorService` associated to the `@Futureable` name is the following one:
+
+1. Check if there is a CDI bean of type `ExecutorService` with the name of the pool, if not try 2
+2. Check if there is a JNDI entry matching the pool name directly or prefixed with `java:app/`, `java:global/`, `java:global/threads/`, `java:global/deltaspike/`, `java:`, if not try 3
+3. Read the configuration and create a `ThreadPoolExecutor`
+
+IMPORTANT: the instance is looked up only once so from the first time it was read you can't change any configuration anymore.
+
+If you rely on the last option (configured executor) here are the keys you can set in DeltaSpike configuration:
+
+|===
+| Key | Description | Default
+| futurable.pool.<pool name>.coreSize | The core size of the pool. | Number of available processors
+| futurable.pool.<pool name>.maxSize | The max size of the pool. | coreSize value
+| futurable.pool.<pool name>.keepAlive.value | Pool keep alive (when a thread is released). | 0
+| futurable.pool.<pool name>.keepAlive.unit | Unit of keepAlive.value. It must match a `TIMEUNIT` name. | MILLISECONDS
+| futurable.pool.<pool name>.queue.type | The task queue type of the executor. Can be `ARRAY` to use an `ArrayBlockingQueue`, `LINKED` for a `LinkedBlockingQueue` or `SYNCHRONOUS` for a `SynchronousQueue`. | LINKED
+| futurable.pool.<pool name>.queue.fair | For synchronous and array queue types, if the queue is fair. | false
+| futurable.pool.<pool name>.queue.size | For array queue type, the size of the queue. | 1024
+| futurable.pool.<pool name>.queue.capacity | For linked queue type, the capacity of the queue. | `Integer.MAX_VALUE`
+| futurable.pool.<pool name>.threadFactory.name | If set a CDI bean matching the value will be looked up and used as `ThreadFactory`. | none, `Executors.defaultThreadFactory()` is used
+| futurable.pool.<pool name>.rejectedExecutionHandler.name | If set a CDI bean matching the value will be looked up and used as `RejectedExecutionHandler`. | none, `ThreadPoolExecutor.AbortPolicy` is used
+|===
+
 == Utilities
 
 DeltaSpike provides many utility classes (no constructor / static
