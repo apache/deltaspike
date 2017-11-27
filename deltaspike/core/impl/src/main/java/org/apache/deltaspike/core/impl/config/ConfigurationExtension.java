@@ -263,7 +263,7 @@ public class ConfigurationExtension implements Extension, Deactivatable
     }
 
     @SuppressWarnings("UnusedDeclaration")
-    public void registerUserConfigSources(@Observes AfterDeploymentValidation adv)
+    public void registerUserConfigSources(@Observes AfterBeanDiscovery abd)
     {
         if (!isActivated)
         {
@@ -306,11 +306,14 @@ public class ConfigurationExtension implements Extension, Deactivatable
             ConfigResolver.addConfigFilter(BeanProvider.getContextualReference(ConfigFilter.class, bean));
         }
 
-        processConfigurationValidation(adv);
-
         registerConfigMBean();
 
         logConfiguration();
+    }
+
+    public void validateConfiguration(@Observes AfterDeploymentValidation adv)
+    {
+        processConfigurationValidation(adv);
     }
 
     private void logConfiguration()
