@@ -186,12 +186,11 @@ public final class ConfigResolver
 
     public static String getPropertyValue(String key, String defaultValue, boolean evaluateVariables)
     {
-        String value = getPropertyValue(
-                key, 
-                new ConfigResolverContext()
-                        .setEvaluateVariables(evaluateVariables));
+        ConfigResolverContext configResolverContext = evaluateVariables ?
+                ConfigResolverContext.EVAL_VARIABLES : ConfigResolverContext.NONE;
+        String value = getPropertyValue(key, configResolverContext);
 
-        return fallbackToDefaultIfEmpty(key, value, defaultValue);
+        return fallbackToDefaultIfEmpty(key, value, defaultValue, configResolverContext);
     }
 
     /**
@@ -222,8 +221,7 @@ public final class ConfigResolver
     {
         return getPropertyValue(
                 key, 
-                new ConfigResolverContext()
-                        .setEvaluateVariables(evaluateVariables));        
+                evaluateVariables ? ConfigResolverContext.EVAL_VARIABLES : ConfigResolverContext.NONE);
     }
 
     /**
@@ -247,10 +245,7 @@ public final class ConfigResolver
      */
     public static String getProjectStageAwarePropertyValue(String key)
     {
-        ConfigResolverContext configResolverContext = 
-                new ConfigResolverContext()
-                    .setProjectStageAware(true)
-                    .setEvaluateVariables(true);
+        ConfigResolverContext configResolverContext = ConfigResolverContext.PROJECTSTAGE_EVAL_VARIABLES;
         
         ProjectStage ps = getProjectStage();
 
@@ -276,7 +271,7 @@ public final class ConfigResolver
     {
         String value = getProjectStageAwarePropertyValue(key);
 
-        return fallbackToDefaultIfEmpty(key, value, defaultValue);
+        return fallbackToDefaultIfEmpty(key, value, defaultValue, ConfigResolverContext.PROJECTSTAGE_EVAL_VARIABLES);
     }
 
     /**
@@ -356,7 +351,7 @@ public final class ConfigResolver
     {
         String value = getPropertyAwarePropertyValue(key, property);
 
-        return fallbackToDefaultIfEmpty(key, value, defaultValue);
+        return fallbackToDefaultIfEmpty(key, value, defaultValue, ConfigResolverContext.PROJECTSTAGE_EVAL_VARIABLES);
     }
     
     private static String getPropertyValue(String key, ConfigResolverContext configResolverContext)
@@ -567,10 +562,16 @@ public final class ConfigResolver
         return ProjectStageProducer.getInstance().getProjectStage();
     }
 
-    private static <T> T fallbackToDefaultIfEmpty(String key, T value, T defaultValue)
+    private static <T> T fallbackToDefaultIfEmpty(String key, T value, T defaultValue,
+                                                  ConfigResolverContext configResolverContext)
     {
         if (value == null || (value instanceof String && ((String)value).isEmpty()))
         {
+            if (configResolverContext != null && defaultValue instanceof String
+                    && configResolverContext.isEvaluateVariables())
+            {
+                defaultValue = (T) resolveVariables((String) defaultValue, configResolverContext);
+            }
             LOG.log(Level.FINE, "no configured value found for key {0}, using default value {1}.",
                     new Object[]{key, defaultValue});
 
@@ -1001,7 +1002,10 @@ public final class ConfigResolver
 
             if (withDefault)
             {
-                value = fallbackToDefaultIfEmpty(keyResolved, value, defaultValue);
+                ConfigResolverContext configResolverContext = new ConfigResolverContext()
+                        .setEvaluateVariables(evaluateVariables)
+                        .setProjectStageAware(projectStageAware);
+                value = fallbackToDefaultIfEmpty(keyResolved, value, defaultValue, configResolverContext);
             }
 
             if (logChanges && (value != null && !value.equals(lastValue) || (value == null && lastValue != null)) )

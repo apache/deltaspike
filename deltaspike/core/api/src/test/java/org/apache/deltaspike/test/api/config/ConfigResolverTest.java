@@ -158,6 +158,21 @@ public class ConfigResolverTest
     }
 
     @Test
+    public void testConfigVariableReplacementInDefault()
+    {
+        {
+            String url = ConfigResolver.getPropertyValue("deltaspike.test.notexisting",
+                    "url: ${deltaspike.test.host.url}", true);
+            Assert.assertEquals("url: http://localhost:12345", url);
+        }
+
+        {
+            String url = ConfigResolver.getPropertyValue("deltaspike.test.someapp.soap.endpoint", true);
+            Assert.assertEquals("http://localhost:12345/someservice/myendpoint", url);
+        }
+    }
+
+    @Test
     public void testConfigVariableNotExisting()
     {
         {

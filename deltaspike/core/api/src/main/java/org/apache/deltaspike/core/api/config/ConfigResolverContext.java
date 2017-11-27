@@ -20,7 +20,16 @@ package org.apache.deltaspike.core.api.config;
 
 class ConfigResolverContext
 {
-    
+    static final ConfigResolverContext NONE = new ConfigResolverContext();
+
+    static final ConfigResolverContext EVAL_VARIABLES = new ConfigResolverContext().setEvaluateVariables(true);
+
+    static final ConfigResolverContext PROJECTSTAGE = new ConfigResolverContext().setProjectStageAware(true);
+
+    static final ConfigResolverContext PROJECTSTAGE_EVAL_VARIABLES = new ConfigResolverContext()
+                                                                            .setProjectStageAware(true)
+                                                                            .setEvaluateVariables(true);
+
     private boolean projectStageAware;
     private boolean evaluateVariables;
     private boolean propertyAware;
