@@ -42,7 +42,7 @@ public abstract class PropertyFileUtils
         // prevent instantiation
     }
 
-    public static Enumeration<URL> resolvePropertyFiles(String propertyFileName) throws IOException, URISyntaxException
+    public static Enumeration<URL> resolvePropertyFiles(String propertyFileName) throws IOException
     {
         if (propertyFileName != null && (propertyFileName.contains("://") || propertyFileName.startsWith("file:")))
         {
@@ -52,10 +52,17 @@ public abstract class PropertyFileUtils
 
             if (propertyFileName.startsWith("file:"))
             {
-                File file = new File(url.toURI());
-                if (file.exists())
+                try
                 {
-                    propertyFileUrls.add(url);
+                    File file = new File(url.toURI());
+                    if (file.exists())
+                    {
+                        propertyFileUrls.add(url);
+                    }
+                }
+                catch (URISyntaxException e)
+                {
+                    throw new IllegalStateException("Property file URL is malformed", e);
                 }
             }
             else
