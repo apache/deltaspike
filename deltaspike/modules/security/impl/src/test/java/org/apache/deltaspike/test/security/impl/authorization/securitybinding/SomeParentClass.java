@@ -18,19 +18,19 @@
  */
 package org.apache.deltaspike.test.security.impl.authorization.securitybinding;
 
-import javax.enterprise.context.ApplicationScoped;
-
-@CustomSecurityBinding
-@ApplicationScoped
-public class SecuredBean1 extends SomeParentClass
+/**
+ * To verify if the permission annotation also works on the methods
+ * of the parent class
+ */
+public class SomeParentClass
 {
-    public String getBlockedResult()
+    public String someFineMethodFromParent()
     {
-        return "blocked result";
+        return "allfine";
     }
 
-    public String getResult()
+    public String someBlockedMethodFromParent()
     {
-        return "result";
+        return "shouldgetblocked";
     }
 }

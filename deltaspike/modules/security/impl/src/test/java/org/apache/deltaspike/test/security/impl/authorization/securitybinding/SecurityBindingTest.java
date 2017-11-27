@@ -39,16 +39,6 @@ public class SecurityBindingTest
     @Deployment
     public static WebArchive deploy()
     {
-//        JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, SecurityBindingTest.class.getSimpleName() + ".jar")
-//                .addPackage(SecurityBindingTest.class.getPackage())
-//                .addAsManifestResource(ArchiveUtils.getBeansXml(), "beans.xml");
-//
-//        return ShrinkWrap.create(WebArchive.class, "security-binding-test.war")
-//                .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndSecurityArchive())
-//                .addAsLibraries(testJar)
-//                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
-
-
         return ShrinkWrap.create(WebArchive.class, "security-binding-test.war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndSecurityArchive())
                 .addPackage(SecurityBindingTest.class.getPackage())
@@ -56,46 +46,45 @@ public class SecurityBindingTest
     }
 
     @Test
-    public void simpleInterceptorTest()
+    public void simpleInterceptorTestOk()
     {
         SecuredBean1 testBean = BeanProvider.getContextualReference(SecuredBean1.class, false);
-
         Assert.assertEquals("result", testBean.getResult());
-
-        try
-        {
-            testBean.getBlockedResult();
-            Assert.fail("AccessDeniedException expect, but was not thrown");
-        }
-        catch (AccessDeniedException e)
-        {
-            //expected exception
-        }
-        catch (Exception e)
-        {
-            Assert.fail("Unexpected Exception: " + e);
-        }
     }
 
     @Test
-    public void simpleInterceptorTestOnMethods()
+    public void simpleInterceptorTestParentOk()
+    {
+        SecuredBean1 testBean = BeanProvider.getContextualReference(SecuredBean1.class, false);
+        Assert.assertEquals("allfine", testBean.someFineMethodFromParent());
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    public void simpleInterceptorTestDenied()
+    {
+        SecuredBean1 testBean = BeanProvider.getContextualReference(SecuredBean1.class, false);
+        testBean.getBlockedResult();
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    public void simpleInterceptorTestParentDenied()
+    {
+        SecuredBean1 testBean = BeanProvider.getContextualReference(SecuredBean1.class, false);
+        testBean.someBlockedMethodFromParent();
+    }
+
+
+    @Test
+    public void simpleInterceptorTestOnMethodsOk()
     {
         SecuredBean2 testBean = BeanProvider.getContextualReference(SecuredBean2.class, false);
-
         Assert.assertEquals("result", testBean.getResult());
+    }
 
-        try
-        {
-            testBean.getBlockedResult();
-            Assert.fail("AccessDeniedException expect, but was not thrown");
-        }
-        catch (AccessDeniedException e)
-        {
-            //expected exception
-        }
-        catch (Exception e)
-        {
-            Assert.fail("Unexpected Exception: " + e);
-        }
+    @Test(expected = AccessDeniedException.class)
+    public void simpleInterceptorTestOnMethodsDenied()
+    {
+        SecuredBean2 testBean = BeanProvider.getContextualReference(SecuredBean2.class, false);
+        testBean.getBlockedResult();
     }
 }

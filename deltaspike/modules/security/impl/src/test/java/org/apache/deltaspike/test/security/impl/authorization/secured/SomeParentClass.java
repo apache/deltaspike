@@ -16,21 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.security.impl.authorization.securitybinding;
+package org.apache.deltaspike.test.security.impl.authorization.secured;
 
-import javax.enterprise.context.ApplicationScoped;
-
-@CustomSecurityBinding
-@ApplicationScoped
-public class SecuredBean1 extends SomeParentClass
+/**
+ * To verify if the permission annotation also works on the methods
+ * of the parent class
+ */
+public class SomeParentClass
 {
-    public String getBlockedResult()
+    public String someFineMethodFromParent()
     {
-        return "blocked result";
+        return "allfine";
     }
 
-    public String getResult()
+    public String someBlockedMethodFromParent()
     {
-        return "result";
+        return "shouldgetblocked";
     }
+
 }

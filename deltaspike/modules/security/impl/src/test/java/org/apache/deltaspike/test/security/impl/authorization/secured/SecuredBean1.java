@@ -24,7 +24,7 @@ import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 @Secured(TestAccessDecisionVoter.class)
-public class SecuredBean1
+public class SecuredBean1 extends SomeParentClass
 {
     public String getBlockedResult()
     {

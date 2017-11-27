@@ -30,47 +30,59 @@ import org.junit.Test;
 public abstract class SecuredAnnotationTest
 {
     @Test
-    public void simpleInterceptorTest()
+    public void simpleInterceptorTestOk()
     {
         SecuredBean1 testBean = BeanProvider.getContextualReference(SecuredBean1.class, false);
-
         Assert.assertEquals("result", testBean.getResult());
-
-        try
-        {
-            testBean.getBlockedResult();
-            Assert.fail("AccessDeniedException expect, but was not thrown");
-        }
-        catch (AccessDeniedException e)
-        {
-            //expected exception
-        }
-        catch (Exception e)
-        {
-            Assert.fail("Unexpected Exception: " + e);
-        }
     }
 
     @Test
-    public void interceptorTestWithStereotype()
+    public void simpleInterceptorTestParentOk()
+    {
+        SecuredBean1 testBean = BeanProvider.getContextualReference(SecuredBean1.class, false);
+        Assert.assertEquals("allfine", testBean.someFineMethodFromParent());
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    public void simpleInterceptorTestDenied()
+    {
+        SecuredBean1 testBean = BeanProvider.getContextualReference(SecuredBean1.class, false);
+        testBean.getBlockedResult();
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    public void simpleInterceptorTestParentDenied()
+    {
+        SecuredBean1 testBean = BeanProvider.getContextualReference(SecuredBean1.class, false);
+        testBean.someBlockedMethodFromParent();
+    }
+
+    @Test
+    public void interceptorTestWithStereotypeOk()
     {
         SecuredBean2 testBean = BeanProvider.getContextualReference(SecuredBean2.class, false);
-
         Assert.assertEquals("result", testBean.getResult());
+    }
 
-        try
-        {
-            testBean.getBlockedResult();
-            Assert.fail("AccessDeniedException expect, but was not thrown");
-        }
-        catch (AccessDeniedException e)
-        {
-            //expected exception
-        }
-        catch (Exception e)
-        {
-            Assert.fail("Unexpected Exception: " + e);
-        }
+    @Test
+    public void interceptorTestWithStereotypeParentOk()
+    {
+        SecuredBean2 testBean = BeanProvider.getContextualReference(SecuredBean2.class, false);
+        Assert.assertEquals("allfine", testBean.someFineMethodFromParent());
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    public void interceptorTestWithStereotypeDenied()
+    {
+        SecuredBean2 testBean = BeanProvider.getContextualReference(SecuredBean2.class, false);
+        testBean.getBlockedResult();
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    public void interceptorTestWithStereotypeParentDenied()
+    {
+        SecuredBean2 testBean = BeanProvider.getContextualReference(SecuredBean2.class, false);
+        testBean.someBlockedMethodFromParent();
     }
 
     @Test

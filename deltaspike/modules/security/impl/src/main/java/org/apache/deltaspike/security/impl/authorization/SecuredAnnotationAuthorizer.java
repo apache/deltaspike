@@ -84,7 +84,15 @@ public class SecuredAnnotationAuthorizer
 
         Method method = invocationContext.getMethod();
 
-        result.addAll(SecurityUtils.getAllAnnotations(method.getDeclaringClass().getAnnotations(),
+        // some very old EE6 containers have a bug in resolving the target
+        // so we fall back on the declaringClass of the method.
+        Class<?> targetClass =
+                invocationContext.getTarget() != null
+                        ? invocationContext.getTarget().getClass()
+                        : method.getDeclaringClass();
+
+
+        result.addAll(SecurityUtils.getAllAnnotations(targetClass.getAnnotations(),
             new HashSet<Integer>()));
         //later on method-level annotations need to overrule class-level annotations -> don't change the order
         result.addAll(SecurityUtils.getAllAnnotations(method.getAnnotations(),

@@ -22,7 +22,7 @@ import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 @SecuredBeanWithStereotype
-public class SecuredBean2
+public class SecuredBean2 extends SomeParentClass
 {
     public String getBlockedResult()
     {
