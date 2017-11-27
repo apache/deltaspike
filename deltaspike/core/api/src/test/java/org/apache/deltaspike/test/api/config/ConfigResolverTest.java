@@ -27,6 +27,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 @SuppressWarnings("Duplicates")
@@ -258,6 +259,16 @@ public class ConfigResolverTest
         List<Integer> intValues = ConfigResolver.resolve("test.list.not_existing").as(Integer.class).asList().getValue();
         Assert.assertNotNull(intValues);
         Assert.assertEquals(0, intValues.size());
+    }
+
+    @Test
+    public void testConfiguredListValues_WithDefault() {
+        List<Integer> intValues = ConfigResolver.resolve("test.list.not_existing").as(Integer.class).asList().withDefault(Arrays.asList(99, 88, 77)).getValue();
+        Assert.assertNotNull(intValues);
+        Assert.assertEquals(3, intValues.size());
+        Assert.assertTrue(intValues.contains(99));
+        Assert.assertTrue(intValues.contains(88));
+        Assert.assertTrue(intValues.contains(77));
     }
 
     private void setTestConfigSourceValue(String key, String value)

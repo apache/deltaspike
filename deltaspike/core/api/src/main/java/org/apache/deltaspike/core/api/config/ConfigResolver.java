@@ -866,8 +866,15 @@ public final class ConfigResolver
         public TypedResolver<List<T>> asList()
         {
             isList = true;
+            TypedResolver<List<T>> listTypedResolver = (TypedResolver<List<T>>) this;
 
-            return (TypedResolver<List<T>>) this;
+            if (defaultValue == null)
+            {
+                // the default for lists is an empty list instead of null
+                return listTypedResolver.withDefault(Collections.<T>emptyList());
+            }
+
+            return listTypedResolver;
         }
 
         @Override
@@ -1015,9 +1022,14 @@ public final class ConfigResolver
 
         private T splitAndConvertListValue(String valueStr)
         {
+            if (valueStr == null)
+            {
+                return null;
+            }
+
             List list = new ArrayList();
             StringBuilder currentValue = new StringBuilder();
-            int length = valueStr != null ? valueStr.length() : 0;
+            int length = valueStr.length();
             for (int i = 0; i < length; i++)
             {
                 char c = valueStr.charAt(i);
