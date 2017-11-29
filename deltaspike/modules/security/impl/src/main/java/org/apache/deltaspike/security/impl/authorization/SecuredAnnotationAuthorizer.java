@@ -19,6 +19,7 @@
 package org.apache.deltaspike.security.impl.authorization;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.core.util.ProxyUtils;
 import org.apache.deltaspike.security.api.authorization.AccessDecisionState;
 import org.apache.deltaspike.security.api.authorization.AccessDecisionVoter;
 import org.apache.deltaspike.security.api.authorization.AccessDecisionVoterContext;
@@ -78,7 +79,7 @@ public class SecuredAnnotationAuthorizer
         return true;
     }
 
-    private List<Annotation> extractMetadata(InvocationContext invocationContext)
+    protected List<Annotation> extractMetadata(InvocationContext invocationContext)
     {
         List<Annotation> result = new ArrayList<Annotation>();
 
@@ -88,7 +89,7 @@ public class SecuredAnnotationAuthorizer
         // so we fall back on the declaringClass of the method.
         Class<?> targetClass =
                 invocationContext.getTarget() != null
-                        ? invocationContext.getTarget().getClass()
+                        ? ProxyUtils.getUnproxiedClass(invocationContext.getTarget().getClass())
                         : method.getDeclaringClass();
 
 
