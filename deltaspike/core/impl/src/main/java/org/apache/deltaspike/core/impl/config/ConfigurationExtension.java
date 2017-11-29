@@ -292,19 +292,7 @@ public class ConfigurationExtension implements Extension, Deactivatable
         {
             configSources.addAll(createPropertyConfigSource(propertyFileConfigClass));
         }
-
-        for (final Bean bean : cdiSources)
-        {
-            configSources.add(BeanProvider.getContextualReference(ConfigSource.class, bean));
-        }
-
-        // finally add all
         ConfigResolver.addConfigSources(configSources);
-
-        for (final Bean bean : cdiFilters)
-        {
-            ConfigResolver.addConfigFilter(BeanProvider.getContextualReference(ConfigFilter.class, bean));
-        }
 
         registerConfigMBean();
 
@@ -313,6 +301,18 @@ public class ConfigurationExtension implements Extension, Deactivatable
 
     public void validateConfiguration(@Observes AfterDeploymentValidation adv)
     {
+        List<ConfigSource> configSources = new ArrayList<ConfigSource>(cdiSources.size());
+        for (final Bean bean : cdiSources)
+        {
+            configSources.add(BeanProvider.getContextualReference(ConfigSource.class, bean));
+        }
+        ConfigResolver.addConfigSources(configSources);
+
+        for (final Bean bean : cdiFilters)
+        {
+            ConfigResolver.addConfigFilter(BeanProvider.getContextualReference(ConfigFilter.class, bean));
+        }
+
         processConfigurationValidation(adv);
     }
 
