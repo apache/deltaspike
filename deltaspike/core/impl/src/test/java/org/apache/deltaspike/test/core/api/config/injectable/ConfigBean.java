@@ -23,6 +23,7 @@ import org.apache.deltaspike.core.api.config.Configuration;
 
 import java.net.URL;
 import java.util.List;
+import java.util.Set;
 
 @Configuration
 public interface ConfigBean
@@ -71,6 +72,12 @@ public interface ConfigBean
 
     @ConfigProperty(name = "testDbConfig")
     String dbConfig();
+
+    @ConfigProperty(name = "defaultList", defaultValue = "http://localhost,http://127.0.0.1")
+    List<String> defaultListHandling();
+
+    @ConfigProperty(name = "defaultSet", defaultValue = "1,2")
+    Set<Integer> defaultSetHandling();
 
     @ConfigProperty(name = "urlList", converter = SettingsBean.UrlList.class, defaultValue = "http://localhost,http://127.0.0.1")
     List<URL> urlList();

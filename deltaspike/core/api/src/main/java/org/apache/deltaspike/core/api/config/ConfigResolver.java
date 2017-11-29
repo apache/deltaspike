@@ -915,7 +915,14 @@ public final class ConfigResolver
                         + keyOriginal);
             }
 
-            defaultValue = convert(value);
+            if (isList)
+            {
+                defaultValue = splitAndConvertListValue(value);
+            }
+            else
+            {
+                defaultValue = convert(value);
+            }
             withDefault = true;
             return this;
         }
@@ -1006,6 +1013,10 @@ public final class ConfigResolver
                         .setEvaluateVariables(evaluateVariables)
                         .setProjectStageAware(projectStageAware);
                 value = fallbackToDefaultIfEmpty(keyResolved, value, defaultValue, configResolverContext);
+                if (isList && String.class.isInstance(value))
+                {
+                    value = splitAndConvertListValue(String.class.cast(value));
+                }
             }
 
             if (logChanges && (value != null && !value.equals(lastValue) || (value == null && lastValue != null)) )

@@ -20,6 +20,7 @@ package org.apache.deltaspike.test.core.api.config.injectable;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashSet;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.test.category.SeCategory;
@@ -146,6 +147,8 @@ public class InjectableConfigPropertyTest
         assertEquals(Boolean.TRUE, settingsBean.booleanPropertyTrue7());
         assertEquals(Boolean.TRUE, settingsBean.booleanPropertyTrue8());
         assertEquals(asList(new URL("http://localhost"), new URL("http://127.0.0.1")), settingsBean.urlList());
+        assertEquals(asList("http://localhost", "http://127.0.0.1"), settingsBean.defaultListHandling());
+        assertEquals(new HashSet<Integer>(asList(1, 2)), settingsBean.defaultSetHandling());
         assertEquals(singletonList(new URL("http://127.0.0.2")), settingsBean.urlListFromProperties());
         assertEquals("value", settingsBean.customSourceValue());
     }

@@ -29,7 +29,12 @@ import javax.enterprise.inject.spi.Bean;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
+import java.lang.reflect.Type;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -72,8 +77,8 @@ class ProxyConfigurationLifecycle implements ContextualLifecycle
         {
         };
 
-        private final ConcurrentMap<Method, ConfigResolver.TypedResolver<?>> resolvers =
-                new ConcurrentHashMap<Method, ConfigResolver.TypedResolver<?>>();
+        private final ConcurrentMap<Method, Supplier<?>> resolvers =
+                new ConcurrentHashMap<Method, Supplier<?>>();
         private final long cacheMs;
         private final String prefix;
 
@@ -98,8 +103,8 @@ class ProxyConfigurationLifecycle implements ContextualLifecycle
                 }
             }
 
-            ConfigResolver.TypedResolver<?> typedResolver = resolvers.get(method);
-            if (typedResolver == null)
+            Supplier<?> supplier = resolvers.get(method);
+            if (supplier == null)
             {
                 final ConfigProperty annotation = method.getAnnotation(ConfigProperty.class);
                 if (annotation == null)
@@ -109,52 +114,150 @@ class ProxyConfigurationLifecycle implements ContextualLifecycle
                 }
 
                 // handle primitive bridge there (cdi doesnt support primitives but no reason our proxies don't)
+                final Class<? extends ConfigResolver.Converter> converter = annotation.converter();
+
+                final Type genericReturnType = method.getGenericReturnType();
                 Class<?> returnType = method.getReturnType();
-                if (int.class == returnType)
+                final boolean list;
+                final boolean set;
+                if (converter == ConfigResolver.Converter.class &&
+                        ParameterizedType.class.isInstance(genericReturnType))
                 {
-                    returnType = Integer.class;
+                    ParameterizedType pt = ParameterizedType.class.cast(genericReturnType);
+                    if (List.class == pt.getRawType() && pt.getActualTypeArguments().length == 1)
+                    {
+                        list = true;
+                        set = false;
+                        final Type arg = pt.getActualTypeArguments()[0];
+                        if (Class.class.isInstance(arg))
+                        {
+                            returnType = Class.class.cast(arg);
+                        }
+                    }
+                    else if (Set.class == pt.getRawType() && pt.getActualTypeArguments().length == 1)
+                    {
+                        list = false;
+                        set = true;
+                        final Type arg = pt.getActualTypeArguments()[0];
+                        if (Class.class.isInstance(arg))
+                        {
+                            returnType = Class.class.cast(arg);
+                        }
+                    }
+                    else
+                    {
+                        list = false;
+                        set = false;
+                    }
                 }
-                else if (long.class == returnType)
+                else
                 {
-                    returnType = Long.class;
-                }
-                else if (boolean.class == returnType)
-                {
-                    returnType = Boolean.class;
-                }
-                else if (short.class == returnType)
-                {
-                    returnType = Short.class;
-                }
-                else if (byte.class == returnType)
-                {
-                    returnType = Byte.class;
-                }
-                else if (float.class == returnType)
-                {
-                    returnType = Float.class;
-                }
-                else if (double.class == returnType)
-                {
-                    returnType = Double.class;
+                    list = false;
+                    set = false;
+
+                    if (int.class == returnType)
+                    {
+                        returnType = Integer.class;
+                    }
+                    else if (long.class == returnType)
+                    {
+                        returnType = Long.class;
+                    }
+                    else if (boolean.class == returnType)
+                    {
+                        returnType = Boolean.class;
+                    }
+                    else if (short.class == returnType)
+                    {
+                        returnType = Short.class;
+                    }
+                    else if (byte.class == returnType)
+                    {
+                        returnType = Byte.class;
+                    }
+                    else if (float.class == returnType)
+                    {
+                        returnType = Float.class;
+                    }
+                    else if (double.class == returnType)
+                    {
+                        returnType = Double.class;
+                    }
                 }
 
-                typedResolver = delegate.asResolver(
-                        prefix + annotation.name(), annotation.defaultValue(), returnType,
-                        annotation.converter(), annotation.parameterizedBy(),
+                final String defaultValue = annotation.defaultValue();
+                ConfigResolver.TypedResolver<?> typedResolver = delegate.asResolver(
+                        prefix + annotation.name(), list || set ? ConfigProperty.NULL : defaultValue,
+                        returnType, converter, annotation.parameterizedBy(),
                         annotation.projectStageAware(), annotation.evaluateVariables());
+
                 if (cacheMs > 0)
                 {
                     typedResolver.cacheFor(MILLISECONDS, cacheMs);
                 }
 
-                final ConfigResolver.TypedResolver<?> existing = resolvers.putIfAbsent(method, typedResolver);
+                if (list || set)
+                {
+                    ConfigResolver.TypedResolver<? extends List<?>> listTypedResolver = typedResolver.asList();
+                    final ConfigResolver.TypedResolver<? extends List<?>> resolver;
+                    if (!ConfigProperty.NULL.equals(defaultValue))
+                    {
+                        resolver = listTypedResolver.withStringDefault(defaultValue);
+                    }
+                    else
+                    {
+                        resolver = listTypedResolver;
+                    }
+
+                    if (list)
+                    {
+                        supplier = new DefaultSupplier(resolver);
+                    }
+                    else
+                    {
+                        supplier = new Supplier<Set<?>>()
+                        {
+                            @Override
+                            public Set<?> get()
+                            {
+                                return new HashSet(resolver.getValue());
+                            }
+                        };
+                    }
+                }
+                else
+                {
+                    supplier = new DefaultSupplier(typedResolver);
+                }
+
+                final Supplier<?> existing = resolvers.putIfAbsent(method, supplier);
                 if (existing != null)
                 {
-                    typedResolver = existing;
+                    supplier = existing;
                 }
             }
-            return typedResolver.getValue();
+            return supplier.get();
+        }
+    }
+
+    private interface Supplier<T>
+    {
+        T get();
+    }
+
+    private static class DefaultSupplier<T> implements Supplier<T>
+    {
+        private final ConfigResolver.TypedResolver<T> delegate;
+
+        private DefaultSupplier(final ConfigResolver.TypedResolver<T> delegate)
+        {
+            this.delegate = delegate;
+        }
+
+        @Override
+        public T get()
+        {
+            return delegate.getValue();
         }
     }
 }
