@@ -460,6 +460,13 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
             {
                 if (!CdiTestSuiteRunner.isContainerStarted())
                 {
+                    // We are setting this system property to make the deployment for Weld "flat"
+                    // This (amongst other things) means that alternatives enabled via beans.xml will be 
+                    // enabled globally
+                    // Beginning with Weld 2.x you could use Weld.property(), but here we depend on Weld 1.x API
+                    // Note that Weld 1 was "flat" anyway, so this property only affects newer versions of Weld
+                    System.setProperty("org.jboss.weld.se.archive.isolation", "false");
+
                     container.boot(CdiTestSuiteRunner.getTestContainerConfig());
                     setContainerStarted();
 
