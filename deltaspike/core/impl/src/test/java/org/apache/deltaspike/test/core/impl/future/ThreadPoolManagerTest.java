@@ -41,6 +41,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
+
 import java.util.Collections;
 import java.util.Properties;
 import java.util.concurrent.Callable;
@@ -51,6 +52,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
+import org.apache.deltaspike.test.util.ArchiveUtils;
+
 @RunWith(Arquillian.class)
 public class ThreadPoolManagerTest
 {
@@ -58,14 +61,7 @@ public class ThreadPoolManagerTest
     public static WebArchive deploy()
     {
         return ShrinkWrap.create(WebArchive.class, "ThreadPoolManagerTest.war")
-                .addAsLibraries(ShrinkWrap.create(JavaArchive.class, "deltaspike-core-fake.jar")
-                    .addClasses(
-                            ThreadPoolManager.class,
-                            WindowContextProducer.class, WindowBeanHolder.class, WindowIdHolder.class,
-                            DefaultWindowContextQuotaHandler.class, WindowContextQuotaHandlerCache.class,
-                            ConversationBeanHolder.class, ViewAccessBeanHolder.class,
-                            ViewAccessBeanAccessHistory.class, ViewAccessViewHistory.class)
-                    .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml"))
+                .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
