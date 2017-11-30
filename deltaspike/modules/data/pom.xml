@@ -74,9 +74,6 @@
         </profile>
         <profile>
             <id>java8.tests</id>
-            <activation>
-                <jdk>1.8</jdk>
-            </activation>
             <modules>
                 <module>test-java8</module>
             </modules>
