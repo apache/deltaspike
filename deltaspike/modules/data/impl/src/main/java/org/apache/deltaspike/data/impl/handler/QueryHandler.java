@@ -139,7 +139,12 @@ public class QueryHandler implements Serializable, InvocationHandler
         try
         {
             entityManagerRef = entityManagerRefLookup.lookupReference(repositoryMetadata);
-            queryContext = createContext(proxy, method, args, entityManagerRef.getEntityManager(),
+            EntityManager entityManager = entityManagerRef.getEntityManager();
+            if (entityManager == null)
+            {
+                throw new IllegalStateException("Unable to look up EntityManager");
+            }
+            queryContext = createContext(proxy, method, args, entityManager,
                     repositoryMetadata, repositoryMethodMetadata);
             
             QueryBuilder builder = queryBuilderFactory.build(repositoryMethodMetadata, queryContext);

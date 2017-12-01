@@ -27,6 +27,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 
+import javax.enterprise.inject.Default;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
@@ -63,16 +64,20 @@ public class RepositoryMetadataInitializer
                 Class<? extends Annotation> scope = beanManager.resolve(beans).getScope();
                 repositoryMetadata.setEntityManagerResolverIsNormalScope(beanManager.isNormalScope(scope));
             }
-            else if (repositoryMetadata.getQualifiers() != null)
-            {
-                repositoryMetadata.setUnmanagedResolver(new QualifierBackedEntityManagerResolver(beanManager,
-                        repositoryMetadata.getQualifiers()));
-                repositoryMetadata.setEntityManagerResolverIsNormalScope(false);
-            }
             else
             {
-                throw new IllegalStateException("Unable to locate an EntityManagerResolver or Qualifiers for "
-                        + repositoryClass.getName());
+                EntityManagerResolver resolver;
+                if (repositoryMetadata.getQualifiers() != null)
+                {
+                    resolver = new QualifierBackedEntityManagerResolver(beanManager,
+                            repositoryMetadata.getQualifiers());
+                }
+                else
+                {
+                    resolver = new QualifierBackedEntityManagerResolver(beanManager, Default.class);
+                }
+                repositoryMetadata.setUnmanagedResolver(resolver);
+                repositoryMetadata.setEntityManagerResolverIsNormalScope(false);
             }
         }
         repositoryMetadata.setEntityMetadata(entityMetadataInitializer.init(repositoryMetadata));

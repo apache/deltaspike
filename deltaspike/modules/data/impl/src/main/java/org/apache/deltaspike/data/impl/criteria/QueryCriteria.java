@@ -93,9 +93,9 @@ public class QueryCriteria<C, R> implements Criteria<C, R>
 
     public QueryCriteria(Class<C> entityClass, Class<R> resultClass, EntityManager entityManager, JoinType joinType)
     {
-        this.entityManager = entityManager;
         this.entityClass = entityClass;
         this.resultClass = resultClass;
+        this.entityManager = entityManager;
         this.joinType = joinType;
     }
 

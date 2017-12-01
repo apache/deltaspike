@@ -28,6 +28,7 @@ import javax.persistence.EntityManager;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.jpa.api.entitymanager.EntityManagerResolver;
 import org.apache.deltaspike.jpa.spi.entitymanager.ActiveEntityManagerHolder;
 
 @ApplicationScoped
@@ -77,10 +78,11 @@ public class EntityManagerRefLookup
     public EntityManagerRef lookupReference(final EntityManagerMetadata entityManagerMetadata)
     {
         EntityManagerRef ref = new EntityManagerRef();
-
-        if (entityManagerMetadata.getUnmanagedResolver() != null)
+        EntityManagerResolver unmanagedResolver = entityManagerMetadata.getUnmanagedResolver();
+        if (unmanagedResolver != null)
         {
-            ref.setEntityManagerResolver(entityManagerMetadata.getUnmanagedResolver());
+            ref.setEntityManagerResolver(unmanagedResolver);
+            ref.setEntityManager(unmanagedResolver.resolveEntityManager());
         }
         else if (entityManagerMetadata.getEntityManagerResolverClass() != null)
         {

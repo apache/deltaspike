@@ -58,9 +58,6 @@ public class EntityManagerTest
     }
 
     @Inject
-    private LegacyRepositoryWithEntityManagerResolver legacyRepository;
-
-    @Inject
     private SimpleRepositoryWithEntityManager repoWithDefaultEm;
 
     @Inject

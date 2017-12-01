@@ -92,8 +92,7 @@ public class EntityManagerMetadata
     public boolean readFrom(AnnotatedElement method, BeanManager beanManager)
     {
         EntityManagerConfig entityManagerConfig = method.getAnnotation(EntityManagerConfig.class);
-        boolean processed = false;
-        processed = processEntityManagerConfig(beanManager, entityManagerConfig);
+        boolean processed = processEntityManagerConfig(beanManager, entityManagerConfig);
 
         Transactional transactional = method.getAnnotation(Transactional.class);
 
