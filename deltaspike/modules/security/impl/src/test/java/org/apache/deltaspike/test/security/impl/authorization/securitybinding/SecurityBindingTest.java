@@ -59,18 +59,28 @@ public class SecurityBindingTest
         Assert.assertEquals("allfine", testBean.someFineMethodFromParent());
     }
 
-    @Test(expected = AccessDeniedException.class)
+    @Test
     public void simpleInterceptorTestDenied()
     {
         SecuredBean1 testBean = BeanProvider.getContextualReference(SecuredBean1.class, false);
-        testBean.getBlockedResult();
+        try {
+            testBean.getBlockedResult();
+            Assert.fail();
+        } catch (AccessDeniedException e) {
+            //expected
+        }
     }
 
-    @Test(expected = AccessDeniedException.class)
+    @Test
     public void simpleInterceptorTestParentDenied()
     {
         SecuredBean1 testBean = BeanProvider.getContextualReference(SecuredBean1.class, false);
-        testBean.someBlockedMethodFromParent();
+        try {
+            testBean.someBlockedMethodFromParent();
+            Assert.fail();
+        } catch (AccessDeniedException e) {
+            //expected
+        }
     }
 
 
@@ -81,10 +91,14 @@ public class SecurityBindingTest
         Assert.assertEquals("result", testBean.getResult());
     }
 
-    @Test(expected = AccessDeniedException.class)
+    @Test
     public void simpleInterceptorTestOnMethodsDenied()
     {
         SecuredBean2 testBean = BeanProvider.getContextualReference(SecuredBean2.class, false);
-        testBean.getBlockedResult();
+        try {
+            testBean.getBlockedResult();
+        } catch (AccessDeniedException e) {
+            //expected
+        }
     }
 }
