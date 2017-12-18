@@ -84,6 +84,8 @@ class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
         {
             this.wrappedExternalContext = wrappedFacesContext.getExternalContext();
         }
+        
+        setCurrentInstance(this);
     }
 
     /**
