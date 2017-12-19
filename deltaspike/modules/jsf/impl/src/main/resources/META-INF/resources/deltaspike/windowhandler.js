@@ -22,12 +22,20 @@ window.dswh = window.dswh || {
     TEMP_WINDOW_NAME : 'tempWindowId',
     MANAGED_WINDOW_NAME_PREFIX : 'ds-',
 
+    initialized: false,
     windowId : null,
     clientWindowRenderMode : null,
     maxWindowIdLength : 10,
     cfg : null,
 
     init : function(windowId, clientWindowRenderMode, maxWindowIdLength, cfg) {
+
+        if (dswh.initialized === true)
+        {
+            return;
+        }
+
+        dswh.initialized = true;
 
         dswh.utils.log('------- DeltaSpike windowhandler.js -------');
         dswh.utils.log('--- #init(\'' + windowId + '\', \'' + clientWindowRenderMode + '\',' + maxWindowIdLength + ',' + dswh.utils.stringify(cfg) + ')');
@@ -131,9 +139,9 @@ window.dswh = window.dswh || {
                                 link.onclick = function(evt) {
                                     // IE handling added
                                     evt = evt || window.event;
-                                    
+
                                     // skip open in new tab
-                                    if (!evt.ctrlKey) {                                    
+                                    if (!evt.ctrlKey) {
                                         if (storeWindowTreeEnabled) {
                                             dswh.strategy.CLIENTWINDOW.storeWindowTree();
                                         }
@@ -158,9 +166,9 @@ window.dswh = window.dswh || {
 
                                             var proceed = oldonclick.bind(this)(evt);
                                             if (typeof proceed === 'undefined' || proceed === true) {
-                                                
+
                                                 // skip open in new tab
-                                                if (!evt.ctrlKey) { 
+                                                if (!evt.ctrlKey) {
                                                     if (storeWindowTreeEnabled) {
                                                         dswh.strategy.CLIENTWINDOW.storeWindowTree();
                                                     }
@@ -438,8 +446,12 @@ window.dswh = window.dswh || {
         requestNewWindowId : function() {
             // set temp window name to remember the current state
             dswh.utils.setWindowIdAsWindowName(dswh.TEMP_WINDOW_NAME);
+
             // we remove the dswid if available and redirect to the same url again to create a new windowId
             window.location = dswh.utils.setUrlParam(window.location.href, 'dswid', null);
+
+            // set temp window name to remember the current state (again - sometimes required for IE!?)
+            dswh.utils.setWindowIdAsWindowName(dswh.TEMP_WINDOW_NAME);
         },
 
         isHtml5 : function() {
