@@ -77,7 +77,9 @@ public class WindowIdHtmlRenderer extends Renderer
         ResponseWriter writer = context.getResponseWriter();
         writer.write("<script type=\"text/javascript\">");
         writer.write("(function(){");
-        writer.write("dswh.init('" + windowId + "','"
+        writer.write("dswh.init('");
+        writer.writeText(windowId, null);
+        writer.write("','"
                 + clientWindowRenderMode.name() + "',"
                 + maxWindowIdLength + ",{");
 
