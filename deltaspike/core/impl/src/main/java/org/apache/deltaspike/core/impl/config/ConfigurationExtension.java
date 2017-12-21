@@ -33,6 +33,7 @@ import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import javax.enterprise.inject.spi.ProcessBean;
+import javax.enterprise.inject.spi.ProcessProducerMethod;
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.InstanceNotFoundException;
 import javax.management.MBeanServer;
@@ -225,7 +226,10 @@ public class ConfigurationExtension implements Extension, Deactivatable
 
     public void findDynamicProducer(@Observes ProcessBean<DynamicBeanProducer> processBean)
     {
-        dynamicProducer = processBean.getBean();
+        if (processBean instanceof ProcessProducerMethod)
+        {
+            dynamicProducer = processBean.getBean();
+        }
     }
 
     public void collectDynamicTypes(@Observes ProcessBean<?> processBean)
