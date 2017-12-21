@@ -224,12 +224,9 @@ public class ConfigurationExtension implements Extension, Deactivatable
         cdiFilters.add(filter.getBean());
     }
 
-    public void findDynamicProducer(@Observes ProcessBean<DynamicBeanProducer> processBean)
+    public void findDynamicProducer(@Observes ProcessProducerMethod<?, DynamicBeanProducer> processBean)
     {
-        if (processBean instanceof ProcessProducerMethod)
-        {
-            dynamicProducer = processBean.getBean();
-        }
+        dynamicProducer = processBean.getBean();
     }
 
     public void collectDynamicTypes(@Observes ProcessBean<?> processBean)

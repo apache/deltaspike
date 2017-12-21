@@ -28,6 +28,12 @@ public abstract class MapConfigSource extends BaseConfigSource
 
     private final Map<String, String> map;
 
+    // only needed for some old Weld versions
+    public MapConfigSource()
+    {
+        map = null;
+    }
+
     public MapConfigSource(Map<String, String> map)
     {
         this.map = map;
