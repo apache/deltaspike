@@ -25,7 +25,6 @@ import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import org.apache.deltaspike.core.spi.scope.window.WindowContext;
 import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;
 import org.apache.deltaspike.jsf.impl.util.ClientWindowHelper;
 import org.apache.deltaspike.jsf.spi.scope.window.ClientWindow;
@@ -52,9 +51,6 @@ public abstract class AbstractClientWindowStrategy implements ClientWindow
     @Inject
     protected JsfModuleConfig jsfModuleConfig;
 
-    @Inject
-    protected WindowContext windowContext;
-
     private int maxWindowIdCount = 10;
 
     @PostConstruct
@@ -77,8 +73,11 @@ public abstract class AbstractClientWindowStrategy implements ClientWindow
 
         windowId = getOrCreateWindowId(facesContext);
 
+
         if (windowId != null)
         {
+            windowId = sanitiseWindowId(windowId);
+
             // don't cut the windowId generated from JSF
             ClientWindowConfig.ClientWindowRenderMode clientWindowRenderMode =
                     clientWindowConfig.getClientWindowRenderMode(facesContext);
@@ -94,6 +93,17 @@ public abstract class AbstractClientWindowStrategy implements ClientWindow
         }
 
         return windowId;
+    }
+
+
+    /**
+     * We have to escape some characters to make sure we do not open
+     * any XSS vectors. E.g. replace () etc to
+     * prevent attackers from injecting JavaScript function calls.
+     */
+    protected String sanitiseWindowId(String windowId)
+    {
+        return windowId.replace('(', '_');
     }
 
     protected abstract String getOrCreateWindowId(FacesContext facesContext);
