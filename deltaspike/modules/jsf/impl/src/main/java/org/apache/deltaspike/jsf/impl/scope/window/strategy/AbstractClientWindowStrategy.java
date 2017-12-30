@@ -98,12 +98,12 @@ public abstract class AbstractClientWindowStrategy implements ClientWindow
 
     /**
      * We have to escape some characters to make sure we do not open
-     * any XSS vectors. E.g. replace () etc to
-     * prevent attackers from injecting JavaScript function calls.
+     * any XSS vectors. E.g. replace (,<, & etc to
+     * prevent attackers from injecting JavaScript function calls or html.
      */
     protected String sanitiseWindowId(String windowId)
     {
-        return windowId.replace('(', '_');
+        return windowId.replace('(', '_').replace('<', '_').replace('&', '_');
     }
 
     protected abstract String getOrCreateWindowId(FacesContext facesContext);
