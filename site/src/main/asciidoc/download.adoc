@@ -2,7 +2,7 @@
 
 = Download
 
-:Notice: Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+:Notice: Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. https://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
 == Latest Release
 
@@ -13,24 +13,24 @@ v{latestStable}
 == Binary Distribution
 
 
-* http://www.apache.org/dyn/closer.cgi/deltaspike/{latestStable}/distribution-full-{latestStable}.zip[distribution-full-{latestStable}.zip]
-* http://www.apache.org/dist/deltaspike/{latestStable}/distribution-full-{latestStable}.zip.asc[distribution-full-{latestStable}.zip.asc]
-* http://www.apache.org/dist/deltaspike/{latestStable}/distribution-full-{latestStable}.zip.md5[distribution-full-{latestStable}.zip.md5]
-* http://www.apache.org/dist/deltaspike/{latestStable}/distribution-full-{latestStable}.zip.sha1[distribution-full-{latestStable}.zip.sha1]
+* https://www.apache.org/dyn/closer.cgi/deltaspike/{latestStable}/distribution-full-{latestStable}.zip[distribution-full-{latestStable}.zip]
+* https://www.apache.org/dist/deltaspike/{latestStable}/distribution-full-{latestStable}.zip.asc[distribution-full-{latestStable}.zip.asc]
+* https://www.apache.org/dist/deltaspike/{latestStable}/distribution-full-{latestStable}.zip.md5[distribution-full-{latestStable}.zip.md5]
+* https://www.apache.org/dist/deltaspike/{latestStable}/distribution-full-{latestStable}.zip.sha1[distribution-full-{latestStable}.zip.sha1]
 
-* http://www.apache.org/dyn/closer.cgi/deltaspike/{latestStable}/distribution-full-{latestStable}.tar.gz[distribution-full-{latestStable}.tar.gz]
-* http://www.apache.org/dist/deltaspike/{latestStable}/distribution-full-{latestStable}.tar.gz.asc[distribution-full-{latestStable}.tar.gz.asc]
-* http://www.apache.org/dist/deltaspike/{latestStable}/distribution-full-{latestStable}.tar.gz.md5[distribution-full-{latestStable}.tar.gz.md5]
-* http://www.apache.org/dist/deltaspike/{latestStable}/distribution-full-{latestStable}.tar.gz.sha1[distribution-full-{latestStable}.tar.gz.sha1]
+* https://www.apache.org/dyn/closer.cgi/deltaspike/{latestStable}/distribution-full-{latestStable}.tar.gz[distribution-full-{latestStable}.tar.gz]
+* https://www.apache.org/dist/deltaspike/{latestStable}/distribution-full-{latestStable}.tar.gz.asc[distribution-full-{latestStable}.tar.gz.asc]
+* https://www.apache.org/dist/deltaspike/{latestStable}/distribution-full-{latestStable}.tar.gz.md5[distribution-full-{latestStable}.tar.gz.md5]
+* https://www.apache.org/dist/deltaspike/{latestStable}/distribution-full-{latestStable}.tar.gz.sha1[distribution-full-{latestStable}.tar.gz.sha1]
 
 
 == Source Distribution
 
 
-* http://www.apache.org/dyn/closer.cgi/deltaspike/{latestStable}/deltaspike-{latestStable}-source-release.zip[deltaspike-{latestStable}-source-release.zip]
-* http://www.apache.org/dist/deltaspike/{latestStable}/deltaspike-{latestStable}-source-release.zip.asc[deltaspike-{latestStable}-source-release.zip.asc]
-* http://www.apache.org/dist/deltaspike/{latestStable}/deltaspike-{latestStable}-source-release.zip.md5[deltaspike-{latestStable}-source-release.zip.md5]
-* http://www.apache.org/dist/deltaspike/{latestStable}/deltaspike-{latestStable}-source-release.zip.sha1[deltaspike-{latestStable}-source-release.zip.sha1]
+* https://www.apache.org/dyn/closer.cgi/deltaspike/{latestStable}/deltaspike-{latestStable}-source-release.zip[deltaspike-{latestStable}-source-release.zip]
+* https://www.apache.org/dist/deltaspike/{latestStable}/deltaspike-{latestStable}-source-release.zip.asc[deltaspike-{latestStable}-source-release.zip.asc]
+* https://www.apache.org/dist/deltaspike/{latestStable}/deltaspike-{latestStable}-source-release.zip.md5[deltaspike-{latestStable}-source-release.zip.md5]
+* https://www.apache.org/dist/deltaspike/{latestStable}/deltaspike-{latestStable}-source-release.zip.sha1[deltaspike-{latestStable}-source-release.zip.sha1]
 
 
 == Maven Dependencies
@@ -42,23 +42,23 @@ Details are available https://deltaspike.apache.org/documentation/configure.html
 == Previous Releases
 
 
-See http://archive.apache.org/dist/deltaspike/[Release-Archive]
+See https://archive.apache.org/dist/deltaspike/[Release-Archive]
 
 
 == Verifying Releases
 
 
-It is essential that you verify the integrity of any downloaded files
-using the PGP or MD5 signatures. For more information on signing
-artifacts and why we do it, check out the
-http://www.apache.org/dev/release-signing.html[Release Signing FAQ].
+It is essential that you verify the integrity of any downloaded files using the PGP or MD5 signatures.
+For more information on signing artifacts and why we do it, check out the
+https://www.apache.org/dev/release-signing.html[Release Signing FAQ].
 
 The PGP signatures can be verified using PGP or GPG. First download the
-http://www.apache.org/dist/deltaspike/KEYS[KEYS] as well as the asc
-signature file for the artifact. Make sure you get these files from the
-http://www.apache.org/dist/deltaspike/[main distribution directory],
+https://www.apache.org/dist/deltaspike/KEYS[KEYS]
+as well as the asc signature file for the artifact.
+Make sure you get these files from the
+https://www.apache.org/dist/deltaspike/[main distribution directory],
 rather than from a
-http://www.apache.org/dyn/closer.cgi/deltaspike/[mirror]. Then verify
+https://www.apache.org/dyn/closer.cgi/deltaspike/[mirror]. Then verify
 the signatures using e.g.:
 
 [subs="+attributes"]
@@ -80,5 +80,5 @@ or
 [subs="+attributes"]
 --------------------------------------------------------------
 $ gpg --import KEYS
-$ gpg --verify deltaspike-project-{latestStable}-source-release.zip.asc
+$ gpg --verify deltaspike-project-{latestStable}-source-release.zip.asc deltaspike-project-{latestStable}-source-release.zip
 --------------------------------------------------------------
