@@ -82,3 +82,5 @@ or
 $ gpg --import KEYS
 $ gpg --verify deltaspike-project-{latestStable}-source-release.zip.asc deltaspike-project-{latestStable}-source-release.zip
 --------------------------------------------------------------
+
+More information can be found at the https://www.apache.org/info/verification.html#CheckingSignatures[ASF Checking Signatures page]
