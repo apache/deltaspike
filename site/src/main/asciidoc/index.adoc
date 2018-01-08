@@ -36,9 +36,9 @@ link:/documentation/modules.html[View details »]
 [options="header,footer"]
 |===
 |*News* | *Examples*
-| Apache DeltaSpike 1.7.2 is now out!
+| Apache DeltaSpike 1.8.1 is now out!
 
-link:/news.html#_28th_release_1_7_2_06_11_2016[View details »]
+link:/news.html[View details »]
 
 | See the following examples which are part of the project to discover how
 to use DeltaSpike project.
