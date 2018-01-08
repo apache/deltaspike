@@ -9,7 +9,7 @@
 The Apache DeltaSpike team is pleased to announce the 30th release
 (v1.8.1).  Release notes can be found https://s.apache.org/DeltaSpike_1.8.1[here]
 
-== 29th Release (1.8.0) (2016-06-01)
+== 29th Release (1.8.0) (2017-06-01)
 
 The Apache DeltaSpike team is pleased to announce the 29th release
 (v1.8.0).  Release notes can be found https://s.apache.org/DeltaSpike-1.8.0[here]
