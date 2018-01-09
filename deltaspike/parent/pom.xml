@@ -611,7 +611,7 @@
 
             <dependency>
                 <groupId>org.apache.deltaspike.modules</groupId>
-                <artifactId>deltaspike-proxy-module-impl-asm5</artifactId>
+                <artifactId>deltaspike-proxy-module-impl-asm</artifactId>
                 <version>${project.version}</version>
                 <scope>runtime</scope>
             </dependency>

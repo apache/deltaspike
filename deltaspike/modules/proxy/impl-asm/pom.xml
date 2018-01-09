@@ -26,10 +26,10 @@
         <version>1.8.2-SNAPSHOT</version>
     </parent>
 
-    <artifactId>deltaspike-proxy-module-impl-asm5</artifactId>
+    <artifactId>deltaspike-proxy-module-impl-asm</artifactId>
     <packaging>bundle</packaging>
 
-    <name>Apache DeltaSpike Proxy-Module Impl ASM5</name>
+    <name>Apache DeltaSpike Proxy-Module Impl ASM</name>
 
     <properties>
         <deltaspike.osgi.export.pkg>
@@ -45,7 +45,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>2.3</version>
+                <version>3.1.0</version>
                 <configuration>
                     <shadedArtifactAttached>false</shadedArtifactAttached>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
@@ -53,7 +53,7 @@
                     <relocations>
                         <relocation>
                             <pattern>org.objectweb.asm</pattern>
-                            <shadedPattern>org.apache.deltaspike.proxy.asm5</shadedPattern>
+                            <shadedPattern>org.apache.deltaspike.proxy.asm</shadedPattern>
                         </relocation>
                     </relocations>
                     <artifactSet>
@@ -99,19 +99,19 @@
         <dependency>
             <groupId>org.ow2.asm</groupId>
             <artifactId>asm</artifactId>
-            <version>5.0.3</version>
+            <version>6.0</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.ow2.asm</groupId>
             <artifactId>asm-commons</artifactId>
-            <version>5.0.3</version>
+            <version>6.0</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.ow2.asm</groupId>
             <artifactId>asm-tree</artifactId>
-            <version>5.0.3</version>
+            <version>6.0</version>
             <optional>true</optional>
         </dependency>
 
