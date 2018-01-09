@@ -35,7 +35,7 @@ import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
  * Utility which stores the information about configured interceptors for each method.
  */
 @ApplicationScoped
-class DeltaSpikeProxyInterceptorLookup
+public class DeltaSpikeProxyInterceptorLookup
 {
     private final Map<Method, List<Interceptor<?>>> cache = new HashMap<Method, List<Interceptor<?>>>();
     
