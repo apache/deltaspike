@@ -24,5 +24,6 @@
     <class>org.apache.deltaspike.core.impl.throttling.ThrottledInterceptor</class>
     <class>org.apache.deltaspike.core.impl.lock.LockedInterceptor</class>
     <class>org.apache.deltaspike.core.impl.future.FutureableInterceptor</class>
+    <class>org.apache.deltaspike.core.impl.monitoring.InvocationMonitorInterceptor</class>
   </interceptors>
 </beans>
