@@ -44,7 +44,9 @@ import java.util.logging.Logger;
 
 /**
  * <p>InterDyn is a CDI (JSR-299) Extension for dynamically
- * attaching annotations (e.g. CDI interceptors) to a class.</p>
+ * applying annotations (e.g. CDI interceptors) to a class.</p>
+ *
+ * The main usage is to apply Interceptors per regExp, thus the name.
  *
  */
 public class InterDynExtension implements Deactivatable, Extension
