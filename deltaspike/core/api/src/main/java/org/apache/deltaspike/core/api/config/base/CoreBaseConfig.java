@@ -110,4 +110,35 @@ public interface CoreBaseConfig extends DeltaSpikeBaseConfig
                         .withDefault(Boolean.FALSE)
                         .getValue();
     }
+
+    interface InterDynCustomization
+    {
+        /**
+         * All interdyn rules start with this prefix and contains a 'match' and a 'annotation' part.
+         * The 'match' is a regular expression which depicts the classes which should get annotated.
+         * The 'annotation' is the annotation name which should get applied to all the classes which
+         * match the 'match' regexp.
+         *
+         * A sample config might look like:
+         * <pre>
+         * deltaspike.interdyn.rule.1.match=com\.mycorp\..*Service.*
+         * deltaspike.interdyn.rule.1.annotation=org.apache.deltaspike.core.api.monitor.InvocationMonitored
+         * </pre>
+         */
+        String INTERDYN_RULE_PREFIX = "deltaspike.interdyn.rule.";
+
+        /**
+         * Whether the InterDyn feature is enabled or not.
+         *
+         * If the feature is enabled at startup then we will apply the interceptors dynamically
+         * to all the matching classes.
+         * Otherwise we will skip the instrumentation.
+         */
+        ConfigResolver.TypedResolver<Boolean> INTERDYN_ENABLED =
+                ConfigResolver.resolve("deltaspike.interdyn.enabled")
+                        .as(Boolean.class)
+                        .withCurrentProjectStage(true)
+                        .withDefault(Boolean.FALSE);
+
+    }
 }
