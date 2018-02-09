@@ -94,7 +94,8 @@ public class InterDynExtension implements Deactivatable, Extension
             String match = ConfigResolver.getPropertyValue(ruleConfigKey + ".match");
             String annotationClassName = ConfigResolver.getPropertyValue(ruleConfigKey + ".annotation");
 
-            if (match != null && annotationClassName != null)
+            if (match != null && annotationClassName != null &&
+                match.length() > 0 && annotationClassName.length() > 0)
             {
                 Annotation anno = getAnnotationImplementation(annotationClassName);
                 interceptorRules.add(new AnnotationRule(match, anno));

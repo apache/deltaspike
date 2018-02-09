@@ -122,7 +122,7 @@ public interface CoreBaseConfig extends DeltaSpikeBaseConfig
          * A sample config might look like:
          * <pre>
          * deltaspike.interdyn.rule.1.match=com\.mycorp\..*Service.*
-         * deltaspike.interdyn.rule.1.annotation=org.apache.deltaspike.core.api.monitor.InvocationMonitored
+         * deltaspike.interdyn.rule.1.annotation=org.apache.deltaspike.core.api.monitoring.InvocationMonitored
          * </pre>
          */
         String INTERDYN_RULE_PREFIX = "deltaspike.interdyn.rule.";
