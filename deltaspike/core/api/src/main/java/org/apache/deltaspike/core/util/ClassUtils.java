@@ -18,8 +18,12 @@
  */
 package org.apache.deltaspike.core.util;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import javax.enterprise.inject.Typed;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.jar.Manifest;
@@ -102,6 +106,73 @@ public abstract class ClassUtils
         }
 
         return loader;
+    }
+
+
+    /**
+     * Checks whether the CDI rules for proxyable beans are met.
+     * See
+     * <a href="https://docs.jboss.org/cdi/spec/1.2/cdi-spec-with-assertions.html#unproxyable">
+     *     CDI spec unproxyable bean types</a>
+     *
+     * @param type
+     * @return {@code true} if all proxy conditions are met, {@code false} otherwise
+     */
+    public static boolean isProxyableClass(Type type)
+    {
+        Class clazz = null;
+        if (type instanceof Class)
+        {
+            clazz = (Class) type;
+        }
+        if (type instanceof ParameterizedType && ((ParameterizedType) type).getRawType() instanceof Class)
+        {
+            clazz = (Class) ((ParameterizedType) type).getRawType();
+        }
+        if (clazz == null)
+        {
+            return false;
+        }
+
+        // classes which don’t have a non-private constructor with no parameters
+        try
+        {
+            Constructor constructor = clazz.getConstructor();
+            if (Modifier.isPrivate(constructor.getModifiers()))
+            {
+                return false;
+            }
+        }
+        catch (NoSuchMethodException e)
+        {
+            return false;
+        }
+
+        // classes which are declared final
+        if (Modifier.isFinal(clazz.getModifiers()))
+        {
+            return false;
+        }
+
+        // classes which have non-static, final methods with public, protected or default visibility,
+        for (Method method : clazz.getMethods())
+        {
+            if (!method.isBridge() && !method.isSynthetic() && !Modifier.isStatic(method.getModifiers()) &&
+                !Modifier.isPrivate(method.getModifiers()) && Modifier.isFinal(method.getModifiers()))
+            {
+                return false;
+            }
+        }
+
+
+        // primitive types,
+        // and array types.
+        if (clazz.isPrimitive() || clazz.isArray())
+        {
+            return false;
+
+        }
+        return true;
     }
 
     /**

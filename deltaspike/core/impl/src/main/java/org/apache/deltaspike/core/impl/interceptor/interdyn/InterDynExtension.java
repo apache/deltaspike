@@ -115,13 +115,20 @@ public class InterDynExtension implements Deactivatable, Extension
     {
         if (enabled)
         {
-            String beanClassName = pat.getAnnotatedType().getJavaClass().getName();
             AnnotatedType at = pat.getAnnotatedType();
+            String beanClassName = at.getJavaClass().getName();
             AnnotatedTypeBuilder atb = null;
             for (AnnotationRule rule : interceptorRules)
             {
                 if (beanClassName.matches(rule.getRule()))
                 {
+                    if (!ClassUtils.isProxyableClass(at.getJavaClass()))
+                    {
+                        logger.info("Skipping unproxyable class " + beanClassName +
+                                " even if matches rule=" + rule.getRule());
+                        return;
+                    }
+
                     if (atb == null)
                     {
                         atb = new AnnotatedTypeBuilder();
