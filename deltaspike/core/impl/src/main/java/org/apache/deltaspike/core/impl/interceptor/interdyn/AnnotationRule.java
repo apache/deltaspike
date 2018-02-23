@@ -37,10 +37,13 @@ public class AnnotationRule
      */
     private Annotation additionalAnnotation;
 
-    public AnnotationRule(String rule, Annotation interceptorBinding)
+    private boolean requiresProxy;
+
+    public AnnotationRule(String rule, Annotation interceptorBinding, boolean requiresProxy)
     {
         this.rule = rule;
         this.additionalAnnotation = interceptorBinding;
+        this.requiresProxy = requiresProxy;
     }
 
     public String getRule()
@@ -51,5 +54,10 @@ public class AnnotationRule
     public Annotation getAdditionalAnnotation()
     {
         return additionalAnnotation;
+    }
+
+    public boolean requiresProxy()
+    {
+        return requiresProxy;
     }
 }

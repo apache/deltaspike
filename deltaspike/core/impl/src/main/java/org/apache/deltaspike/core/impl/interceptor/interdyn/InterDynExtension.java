@@ -33,6 +33,7 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.BeforeBeanDiscovery;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
+import javax.interceptor.InterceptorBinding;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -100,7 +101,8 @@ public class InterDynExtension implements Deactivatable, Extension
                 match.length() > 0 && annotationClassName.length() > 0)
             {
                 Annotation anno = getAnnotationImplementation(annotationClassName);
-                interceptorRules.add(new AnnotationRule(match, anno));
+                boolean requiresProxy = anno.annotationType().getAnnotation(InterceptorBinding.class) != null;
+                interceptorRules.add(new AnnotationRule(match, anno, requiresProxy));
             }
         }
 
@@ -122,7 +124,7 @@ public class InterDynExtension implements Deactivatable, Extension
             {
                 if (beanClassName.matches(rule.getRule()))
                 {
-                    if (!ClassUtils.isProxyableClass(at.getJavaClass()))
+                    if (rule.requiresProxy() && !ClassUtils.isProxyableClass(at.getJavaClass()))
                     {
                         logger.info("Skipping unproxyable class " + beanClassName +
                                 " even if matches rule=" + rule.getRule());
