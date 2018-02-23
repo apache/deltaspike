@@ -36,6 +36,7 @@ import javax.enterprise.inject.spi.AnnotatedConstructor;
 import javax.enterprise.inject.spi.AnnotatedMethod;
 import javax.enterprise.inject.spi.AnnotatedParameter;
 import javax.enterprise.inject.spi.AnnotatedType;
+import javax.enterprise.util.AnnotationLiteral;
 import javax.inject.Named;
 import java.util.List;
 import java.util.Set;
@@ -159,5 +160,46 @@ public class AnnotatedTypeBuilderTest
         assertThat(smallAnnotatedType.getMethods().size(), is(1));
         assertThat(smallAnnotatedType.getConstructors().size(), is(0));
         assertThat(smallAnnotatedType.getFields().size(), is(0));
+    }
+
+
+    @Test
+    public void testCtWithMultipleParams()
+    {
+        final AnnotatedTypeBuilder<TypeWithParamsInCt> builder = new AnnotatedTypeBuilder<TypeWithParamsInCt>();
+        builder.readFromType(TypeWithParamsInCt.class);
+        builder.addToClass(new AnnotationLiteral<Default>() {});
+
+        AnnotatedType<TypeWithParamsInCt> newAt = builder.create();
+        assertNotNull(newAt);
+    }
+
+    @Test
+    public void testEnumWithParam()
+    {
+        final AnnotatedTypeBuilder<EnumWithParams> builder = new AnnotatedTypeBuilder<EnumWithParams>();
+        builder.readFromType(EnumWithParams.class);
+        builder.addToClass(new AnnotationLiteral<Default>() {});
+
+        AnnotatedType<EnumWithParams> newAt = builder.create();
+        assertNotNull(newAt);
+    }
+
+
+    public static class TypeWithParamsInCt
+    {
+        public TypeWithParamsInCt(String a, int b, String c)
+        {
+            // all fine
+        }
+    }
+
+    public enum EnumWithParams
+    {
+        VALUE("A");
+
+        EnumWithParams(String val) {
+            // all fine
+        }
     }
 }
