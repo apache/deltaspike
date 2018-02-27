@@ -50,6 +50,7 @@ import javax.enterprise.context.SessionScoped;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
+import javax.inject.Named;
 import javax.inject.Singleton;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -452,7 +453,7 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
             return this.testControl.logHandler();
         }
 
-        void applyBeforeClassConfig(Class testClass)
+        void applyBeforeClassConfig(Class<?> testClass)
         {
             CdiContainer container = CdiContainerLoader.getCdiContainer();
 
@@ -466,6 +467,8 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
                     // Beginning with Weld 2.x you could use Weld.property(), but here we depend on Weld 1.x API
                     // Note that Weld 1 was "flat" anyway, so this property only affects newer versions of Weld
                     System.setProperty("org.jboss.weld.se.archive.isolation", "false");
+
+                    checkForLabeledAlternativeConfig(testClass);
 
                     container.boot(CdiTestSuiteRunner.getTestContainerConfig());
                     setContainerStarted();
@@ -488,6 +491,40 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
             }
 
             startScopes(container, testClass, null, restrictedScopes.toArray(new Class[restrictedScopes.size()]));
+        }
+
+        private void checkForLabeledAlternativeConfig(Class<?> testClass)
+        {
+            String activeAlternativeLabel = "";
+            TestControl testControl = testClass.getAnnotation(TestControl.class);
+
+            if (testControl != null)
+            {
+                Class<? extends TestControl.Label> activeTypedAlternativeLabel =
+                    testControl.activeAlternativeLabel();
+
+                if (!TestControl.Label.class.equals(activeTypedAlternativeLabel))
+                {
+                    Named labelName = activeTypedAlternativeLabel.getAnnotation(Named.class);
+
+                    if (labelName != null)
+                    {
+                        activeAlternativeLabel = labelName.value();
+                    }
+                    else
+                    {
+                        String labelClassName = activeTypedAlternativeLabel.getSimpleName();
+                        activeAlternativeLabel = labelClassName.substring(0, 1).toLowerCase();
+
+                        if (labelClassName.length() > 1)
+                        {
+                            activeAlternativeLabel += labelClassName.substring(1);
+                        }
+                    }
+                }
+            }
+            //always set it even if it is empty (it might overrule the value of the prev. test
+            System.setProperty("activeAlternativeLabel", activeAlternativeLabel); //will be picked up by ds-core
         }
 
         private void bootExternalContainers(Class testClass)

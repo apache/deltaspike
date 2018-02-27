@@ -60,4 +60,10 @@ public class TestControlLiteral extends AnnotationLiteral<TestControl> implement
     {
         return defaultInstance.startExternalContainers();
     }
+
+    @Override
+    public Class<? extends Label> activeAlternativeLabel()
+    {
+        return defaultInstance.activeAlternativeLabel();
+    }
 }

@@ -66,6 +66,8 @@ import java.util.logging.Logger;
 public class ExcludeExtension implements Extension, Deactivatable
 {
     private static final String GLOBAL_ALTERNATIVES = "globalAlternatives.";
+    private static final String LABELED_ALTERNATIVES = "labeledAlternatives";
+    private static final String ACTIVE_ALTERNATIVE_LABEL_KEY = "activeAlternativeLabel";
 
     private static final Logger LOG = Logger.getLogger(ExcludeExtension.class.getName());
 
@@ -95,10 +97,30 @@ public class ExcludeExtension implements Extension, Deactivatable
                 ClassDeactivationUtils.isActivated(GlobalAlternative.class);
         if (isGlobalAlternativeActivated)
         {
+            String alternativeLabel = ConfigResolver.getPropertyValue(ACTIVE_ALTERNATIVE_LABEL_KEY);
+
+            String activeQualifierLabel = null;
+            if (alternativeLabel != null)
+            {
+                activeQualifierLabel = LABELED_ALTERNATIVES + "[" + alternativeLabel + "].";
+            }
+
             Map<String, String> allProperties = ConfigResolver.getAllProperties();
             for (Map.Entry<String, String> property : allProperties.entrySet())
             {
-                if (property.getKey().startsWith(GLOBAL_ALTERNATIVES))
+                if (activeQualifierLabel != null && property.getKey().startsWith(activeQualifierLabel))
+                {
+                    String interfaceName = property.getKey().substring(activeQualifierLabel.length());
+                    String implementation = property.getValue();
+                    if (LOG.isLoggable(Level.FINE))
+                    {
+                        LOG.fine("Enabling labeled alternative for interface "
+                            + interfaceName + ": " + implementation);
+                    }
+
+                    globalAlternatives.put(interfaceName, implementation);
+                }
+                else if (property.getKey().startsWith(GLOBAL_ALTERNATIVES))
                 {
                     String interfaceName = property.getKey().substring(GLOBAL_ALTERNATIVES.length());
                     String implementation = property.getValue();

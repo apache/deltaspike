@@ -58,4 +58,13 @@ public @interface TestControl
      * Currently only supported on class-level
      */
     boolean startExternalContainers() default true;
+
+    /**
+     * allows to label alternative cdi-beans similar to global alternatives to bind them to 0-n tests
+     */
+    Class<? extends Label> activeAlternativeLabel() default Label.class;
+
+    interface Label
+    {
+    }
 }
