@@ -525,6 +525,9 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
             }
             //always set it even if it is empty (it might overrule the value of the prev. test
             System.setProperty("activeAlternativeLabel", activeAlternativeLabel); //will be picked up by ds-core
+
+            //TODO discuss a spi which allows to run such tests in parallel
+            System.setProperty("activeAlternativeLabelSource", testClass.getName()); //can be used for custom logic
         }
 
         private void bootExternalContainers(Class testClass)
