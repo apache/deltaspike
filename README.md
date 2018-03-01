@@ -1,30 +1,34 @@
 # Apache DeltaSpike
 
-* [Documentation](https://deltaspike.apache.org/documentation/)
+* [Documentation](https://deltaspike.apache.org)
 * [Mailing Lists](http://deltaspike.apache.org/community.html#Mailinglists)
-* CDI 1.0 Build Status [![CDI 1.0 Build Status](https://builds.apache.org/buildStatus/icon?job=DeltaSpike for CDI 1.0)](https://builds.apache.org/view/A-D/view/DeltaSpike/job/DeltaSpike%20for%20CDI%201.0/)
-* CDI 1.1/1.2 Build Status [![CDI 1.1/1.2 Build Status](https://builds.apache.org/buildStatus/icon?job=DeltaSpike for CDI 1.1 and 1.2)](https://builds.apache.org/view/A-D/view/DeltaSpike/job/DeltaSpike%20for%20CDI%201.1%20and%201.2/)
 * [Contribution Guide](http://deltaspike.apache.org/source.html)
 * [JIRA](https://issues.apache.org/jira/browse/DELTASPIKE)
-* [Apache 2.0](https://git-wip-us.apache.org/repos/asf?p=deltaspike.git;a=blob;f=LICENSE.txt;hb=HEAD)
+* [Apache License v2.0](https://www.apache.org/licenses/LICENSE-2.0)
 
 
-**Apache DeltaSpike** is a suite of portable CDI (Contexts & Dependency
-Injection) extensions intended to make application development easier when
-working with CDI and Java EE.  Some of its key features include:
+**Apache DeltaSpike** is a suite of portable CDI Extensions intended to make application development easier when working with CDI and Java EE.  
 
-- A core runtime that supports component configuration, type safe messaging
-and internationalization, and exception handling.
+Contexts and Dependency Injection is a specification, published as: 
+* JSR-299 (CDI-1.0) http://docs.jboss.org/cdi/spec/1.0/html/ 
+* JSR-346 (CDI-1.2) http://docs.jboss.org/cdi/spec/1.2/cdi-spec.html 
+* JSR-365 (CDI-2.0) http://docs.jboss.org/cdi/spec/2.0/cdi-spec.html 
+
+Apache DeltaSpike is compatible with all those specification versions. 
+Note that Apache DeltaSpike is **not** a CDI container itself, but a set of portable Extensions for it!
+
+
+Some of key features of Apache DeltaSpike include:
+
+- A core module that supports component configuration, type safe messaging and internationalization, and exception handling.
 - A suite of utilities to make programmatic bean lookup easier.
-- A plugin for Java SE to bootstrap both JBoss Weld and Apache OpenWebBeans
-outside of a container.
+- A plugin for Java SE to bootstrap both JBoss Weld, Apache OpenWebBeans and other CDI containers outside of a a JavaEE server.
 - JSF integration, including backporting of JSF 2.2 features for Java EE 6.
 - JPA integration and transaction support.
 - A Data module, to create an easy to use repository pattern on top of JPA.
-- Quartz integration
+- Scheduler integration
 
-Testing support is also provided, to allow you to do low level unit testing
-of your CDI enabled projects. 
+Testing support is also provided, to allow you to do low level unit testing of your CDI enabled projects. 
 
 ## Getting Started
 
