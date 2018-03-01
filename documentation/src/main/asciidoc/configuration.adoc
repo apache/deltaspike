@@ -49,7 +49,7 @@ Currently this is, for example, used to configure the value of the current <<pro
 used in the expressions for `@Exclude`, 'Deactivatable', etc. DeltaSpike
 needs such a low-level approach for several features internally, but
 users can utilize it for their own needs as well. This is done by using
-the `ConfigResolver` which resolves and caches `ConfigSource`s per
+the `ConfigResolver` which resolves and caches ConfigSources per
 application.
 
 
@@ -461,7 +461,9 @@ By default there are implementations for the following configuration sources
 * System properties (deltaspike_ordinal = 400)
 * Environment properties (deltaspike_ordinal = 300)
 * JNDI values (deltaspike_ordinal = 200, the base name is "java:comp/env/deltaspike/")
-* Properties file values (apache-deltaspike.properties) (deltaspike_ordinal = 100, default filename is "META-INF/apache-deltaspike.properties")
+* All apache-deltaspike.properties files on the classpath (deltaspike_ordinal = 100, default filename is "META-INF/apache-deltaspike.properties")
+* A property file in user.home `~/.deltaspike/apache-deltaspike.properties` (if exists, deltaspike_ordinal = 100)
+
 
 *It is possible to change this order and to add custom configuration sources.*
 
