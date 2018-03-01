@@ -313,7 +313,6 @@
             <properties>
                 <owb.version>2.0.0-SNAPSHOT</owb.version>
                 <cdicontainer.version>owb-${owb.version}</cdicontainer.version>
-                <java.version>1.8</java.version>
             </properties>
 
             <repositories>
@@ -628,7 +627,6 @@
                 <!-- Actual Weld version used with this profile -->
                 <weld.version>3.0.0.Final</weld.version>
                 <cdicontainer.version>weld-${weld.version}</cdicontainer.version>
-                <java.version>1.8</java.version>
             </properties>
             
             <dependencyManagement>
