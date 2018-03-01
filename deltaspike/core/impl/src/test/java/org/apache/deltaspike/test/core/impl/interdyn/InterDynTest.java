@@ -23,6 +23,7 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
@@ -32,13 +33,19 @@ import javax.inject.Inject;
 
 @RunWith(Arquillian.class)
 public class InterDynTest {
+    private final static String CONFIG =
+            "# InterDynTest\n" +
+            "deltaspike.interdyn.enabled=true\n" +
+            "deltaspike.interdyn.rule.1.match=org\\\\.apache\\\\.deltaspike\\\\.test\\\\.core\\\\.impl\\\\.interdyn\\\\.Some.*Service\n" +
+            "deltaspike.interdyn.rule.1.annotation=org.apache.deltaspike.core.api.monitoring.InvocationMonitored\n";
 
     @Deployment
     public static WebArchive deploy()
     {
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "InterDynTest.jar")
                 .addPackage(SomeTestService.class.getPackage().getName())
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
+                .addAsManifestResource(new StringAsset(CONFIG), "apache-deltaspike.properties");
 
         return ShrinkWrap.create(WebArchive.class, "InterDynTest.war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
