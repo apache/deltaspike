@@ -48,6 +48,23 @@ public class LabelAwareGlobalAlternativeBeanClassProvider implements Alternative
         }
 
         Map<String, String> allProperties = ConfigResolver.getAllProperties();
+        // first read all globalAlternatives
+        for (Map.Entry<String, String> property : allProperties.entrySet())
+        {
+            if (property.getKey().startsWith(GLOBAL_ALTERNATIVES))
+            {
+                String interfaceName = property.getKey().substring(GLOBAL_ALTERNATIVES.length());
+                String implementation = property.getValue();
+                if (LOG.isLoggable(Level.FINE))
+                {
+                    LOG.fine("Enabling global alternative for interface " + interfaceName + ": " + implementation);
+                }
+
+                result.put(interfaceName, implementation);
+            }
+        }
+
+        // and overwrite with any possible labled alternative, if exists
         for (Map.Entry<String, String> property : allProperties.entrySet())
         {
             if (activeQualifierLabel != null && property.getKey().startsWith(activeQualifierLabel))
@@ -61,19 +78,9 @@ public class LabelAwareGlobalAlternativeBeanClassProvider implements Alternative
 
                 result.put(interfaceName, implementation);
             }
-            else if (property.getKey().startsWith(GLOBAL_ALTERNATIVES))
-            {
-                String interfaceName = property.getKey().substring(GLOBAL_ALTERNATIVES.length());
-                String implementation = property.getValue();
-                if (LOG.isLoggable(Level.FINE))
-                {
-                    LOG.fine("Enabling global alternative for interface " + interfaceName + ": " + implementation);
-                }
-
-                result.put(interfaceName, implementation);
-            }
         }
 
         return result;
     }
+
 }
