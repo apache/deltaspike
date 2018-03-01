@@ -22,6 +22,10 @@ import org.apache.deltaspike.cdise.api.CdiContainer;
 import org.apache.deltaspike.cdise.api.CdiContainerLoader;
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.config.PropertyLoader;
+import org.apache.deltaspike.core.spi.activation.Deactivatable;
+import org.apache.deltaspike.core.spi.config.ConfigSource;
+import org.apache.deltaspike.core.util.ClassDeactivationUtils;
+import org.apache.deltaspike.testcontrol.api.TestControl;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.Failure;
@@ -31,8 +35,12 @@ import org.junit.runners.Suite;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.RunnerBuilder;
 
+import javax.inject.Named;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -103,6 +111,8 @@ public class CdiTestSuiteRunner extends Suite
 
         if (!containerStarted)
         {
+            applyAlternativeLabel(getTestClass().getJavaClass());
+
             container.boot(getTestContainerConfig());
             containerStarted = true;
         }
@@ -206,5 +216,117 @@ public class CdiTestSuiteRunner extends Suite
         String cdiTestRunnerConfig = ConfigResolver.getProjectStageAwarePropertyValue(
             CUSTOM_TEST_CONTAINER_CONFIG_FILE_KEY, DEFAULT_TEST_CONTAINER_CONFIG_FILE_NAME);
         return PropertyLoader.getProperties(cdiTestRunnerConfig);
+    }
+
+    //just here, because all shared methods are in this class
+    static void applyAlternativeLabel(Class<?> currentAnnotationSource)
+    {
+        String activeAlternativeLabel = checkForLabeledAlternativeConfig(currentAnnotationSource);
+        initTestEnvConfig(currentAnnotationSource, activeAlternativeLabel);
+    }
+
+    private static String checkForLabeledAlternativeConfig(Class<?> currentAnnotationSource)
+    {
+        String activeAlternativeLabel = "";
+        TestControl testControl = currentAnnotationSource.getAnnotation(TestControl.class);
+
+        if (testControl != null)
+        {
+            Class<? extends TestControl.Label> activeTypedAlternativeLabel =
+                    testControl.activeAlternativeLabel();
+
+            if (!TestControl.Label.class.equals(activeTypedAlternativeLabel))
+            {
+                Named labelName = activeTypedAlternativeLabel.getAnnotation(Named.class);
+
+                if (labelName != null)
+                {
+                    activeAlternativeLabel = labelName.value();
+                }
+                else
+                {
+                    String labelClassName = activeTypedAlternativeLabel.getSimpleName();
+                    activeAlternativeLabel = labelClassName.substring(0, 1).toLowerCase();
+
+                    if (labelClassName.length() > 1)
+                    {
+                        activeAlternativeLabel += labelClassName.substring(1);
+                    }
+                }
+            }
+        }
+        return activeAlternativeLabel;
+    }
+
+    private static void initTestEnvConfig(Class<?> testClass, String activeAlternativeLabel)
+    {
+        if (ClassDeactivationUtils.isActivated(TestConfigSource.class))
+        {
+            TestConfigSource testConfigSource = null;
+
+            for (ConfigSource configSource : ConfigResolver.getConfigSources())
+            {
+                if (configSource instanceof TestConfigSource)
+                {
+                    //if it happens: parallel test-execution can't be supported with labeled alternatives
+                    testConfigSource = (TestConfigSource) configSource;
+                }
+            }
+
+            if (testConfigSource == null)
+            {
+                testConfigSource = new TestConfigSource();
+                ConfigResolver.addConfigSources(Arrays.<ConfigSource>asList(testConfigSource));
+            }
+
+            //always set it even if it is empty (it might overrule the value of the prev. test
+            testConfigSource.getProperties().put("activeAlternativeLabel", activeAlternativeLabel);
+
+            testConfigSource.getProperties().put("activeAlternativeLabelSource", testClass.getName());
+        }
+        else
+        {
+            //always set it even if it is empty (it might overrule the value of the prev. test
+            System.setProperty("activeAlternativeLabel", activeAlternativeLabel); //will be picked up by ds-core
+
+            System.setProperty("activeAlternativeLabelSource", testClass.getName()); //can be used for custom logic
+        }
+    }
+
+    //config-sources are already stored per classloader
+    //keep it public to allow type-safe deactivation (if needed)
+    public static class TestConfigSource implements ConfigSource, Deactivatable
+    {
+        private Map<String, String> testConfig = new ConcurrentHashMap<String, String>();
+
+        @Override
+        public int getOrdinal()
+        {
+            return Integer.MIN_VALUE;
+        }
+
+        @Override
+        public Map<String, String> getProperties()
+        {
+            return testConfig;
+        }
+
+        @Override
+        public String getPropertyValue(String key)
+        {
+            return testConfig.get(key);
+        }
+
+        @Override
+        public String getConfigName()
+        {
+            return "ds-test-config";
+        }
+
+        @Override
+        public boolean isScannable()
+        {
+            return true;
+        }
     }
 }
