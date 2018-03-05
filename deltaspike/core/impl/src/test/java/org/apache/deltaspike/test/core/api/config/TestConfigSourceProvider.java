@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.api.config;
+package org.apache.deltaspike.test.core.api.config;
 
 import java.util.Arrays;
 import java.util.HashMap;

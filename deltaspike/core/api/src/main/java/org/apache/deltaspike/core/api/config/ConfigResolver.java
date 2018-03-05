@@ -24,8 +24,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
@@ -92,10 +94,22 @@ public final class ConfigResolver
     private static Map<ClassLoader, List<ConfigFilter>> configFilters
         = new ConcurrentHashMap<ClassLoader, List<ConfigFilter>>();
 
+    private static ConfigProvider configProvider;
 
     private ConfigResolver()
     {
         // this is a utility class which doesn't get instantiated.
+    }
+
+    public static Config getConfig()
+    {
+        ClassLoader cl = ClassUtils.getClassLoader(null);
+        return getConfig(cl);
+    }
+
+    public static Config getConfig(ClassLoader cl)
+    {
+        return getConfigProvider().getConfig(cl);
     }
 
     /**
@@ -356,9 +370,14 @@ public final class ConfigResolver
     
     private static String getPropertyValue(String key, ConfigResolverContext configResolverContext)
     {
-        ConfigSource[] appConfigSources = getConfigSources();
+        if (key == null)
+        {
+            return null;
+        }
 
+        ConfigSource[] appConfigSources = getConfigSources();
         String value;
+
         for (ConfigSource configSource : appConfigSources)
         {
             value = configSource.getPropertyValue(key);
@@ -1246,4 +1265,39 @@ public final class ConfigResolver
 
     }
 
+
+    private static ConfigProvider getConfigProvider()
+    {
+        if (configProvider == null)
+        {
+            synchronized (ConfigResolver.class)
+            {
+                if (configProvider == null)
+                {
+                    Iterator<ConfigProvider> configProviders = ServiceLoader.load(ConfigProvider.class).iterator();
+                    if (!configProviders.hasNext())
+                    {
+                        throw new RuntimeException("Could not load ConfigProvider");
+                    }
+                    configProvider = configProviders.next();
+
+                    if (configProviders.hasNext())
+                    {
+                        throw new RuntimeException("Found more than one ConfigProvider");
+                    }
+                }
+            }
+        }
+        return configProvider;
+    }
+
+
+    public interface ConfigProvider
+    {
+        Config getConfig();
+
+        Config getConfig(ClassLoader cl);
+
+        void releaseConfig(ClassLoader cl);
+    }
 }

@@ -49,9 +49,24 @@ public abstract class ServiceUtils
     public static <T> List<T> loadServiceImplementations(Class<T> serviceType,
                                                          boolean ignoreServicesWithMissingDependencies)
     {
+        return loadServiceImplementations(serviceType, ignoreServicesWithMissingDependencies, null);
+    }
+
+    public static <T> List<T> loadServiceImplementations(Class<T> serviceType,
+                                                         boolean ignoreServicesWithMissingDependencies,
+                                                         ClassLoader classLoader)
+    {
         List<T> result = new ArrayList<T>();
 
-        Iterator<T> servicesIterator = ServiceLoader.load(serviceType).iterator();
+        Iterator<T> servicesIterator;
+        if (classLoader != null)
+        {
+            servicesIterator = ServiceLoader.load(serviceType, classLoader).iterator();
+        }
+        else
+        {
+            servicesIterator = ServiceLoader.load(serviceType).iterator();
+        }
 
         if (!servicesIterator.hasNext())
         {

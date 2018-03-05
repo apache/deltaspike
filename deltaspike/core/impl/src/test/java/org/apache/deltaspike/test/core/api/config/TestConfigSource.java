@@ -16,12 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.test.api.config;
+package org.apache.deltaspike.test.core.api.config;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.deltaspike.core.spi.config.ConfigSource;
+import org.apache.deltaspike.test.util.activation.EditableTestDeactivator;
 
 /**
  * Test ConfigSource
@@ -74,10 +75,10 @@ public class TestConfigSource implements ConfigSource
         props.put("deltaspike.test.float-value", "-1.1");
         props.put("deltaspike.test.double-value", "4e40");
         props.put("deltaspike.test.boolean-value", Boolean.FALSE.toString());
-        props.put("deltaspike.test.class-value", "org.apache.deltaspike.test.api.config.TestConfigSource");
+        props.put("deltaspike.test.class-value", TestConfigSource.class.getName());
         props.put("deltaspike.test.date-value", "2014-12-24");
         props.put("deltaspike.test.invalid-value", "wrong");
-        props.put("org.apache.deltaspike.core.spi.activation.ClassDeactivator","org.apache.deltaspike.core.util.activation.EditableTestDeactivator");
+        props.put("org.apache.deltaspike.core.spi.activation.ClassDeactivator",EditableTestDeactivator.class.getName());
 
         // test for variable replacement
         props.put("deltaspike.test.host.url", "http://localhost:12345");

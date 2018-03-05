@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.deltaspike.core.util.activation;
+package org.apache.deltaspike.test.util.activation;
 
 import org.apache.deltaspike.core.spi.activation.ClassDeactivator;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
