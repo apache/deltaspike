@@ -30,6 +30,18 @@ public interface Config
 {
 
     /**
+     * The entry point to the builder-based optionally typed configuration resolution mechanism.
+     *
+     * String is the default type for configuration entries and is not considered a 'type' by this resolver. Therefore
+     * an UntypedResolver is returned by this method. To convert the configuration value to another type, call
+     * {@link ConfigResolver.UntypedResolver#as(Class)}.
+     *
+     * @param name The property key to resolve
+     * @return A builder for configuration resolution.
+     */
+    ConfigResolver.UntypedResolver<String> resolve(String name);
+
+    /**
      * @return all the current ConfigSources for this Config
      */
     ConfigSource[] getConfigSources();

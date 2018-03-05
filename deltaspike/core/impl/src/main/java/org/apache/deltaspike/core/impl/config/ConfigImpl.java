@@ -19,6 +19,7 @@
 package org.apache.deltaspike.core.impl.config;
 
 import org.apache.deltaspike.core.api.config.Config;
+import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.spi.config.ConfigFilter;
 import org.apache.deltaspike.core.spi.config.ConfigSource;
 import org.apache.deltaspike.core.spi.config.ConfigSourceProvider;
@@ -129,6 +130,13 @@ public class ConfigImpl implements Config
                     filter.filterValue(key, filteredValue);
         }
         return filteredValue;
+    }
+
+
+    @Override
+    public ConfigResolver.UntypedResolver<String> resolve(String name)
+    {
+        return new TypedResolverImpl(this, name);
     }
 
     private ConfigSource[] sortDescending(List<ConfigSource> configSources)
