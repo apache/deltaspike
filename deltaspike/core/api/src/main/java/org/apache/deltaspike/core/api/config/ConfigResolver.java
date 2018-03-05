@@ -28,8 +28,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,11 +37,9 @@ import javax.enterprise.inject.Typed;
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.spi.config.ConfigFilter;
 import org.apache.deltaspike.core.spi.config.ConfigSource;
-import org.apache.deltaspike.core.spi.config.ConfigSourceProvider;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
-import org.apache.deltaspike.core.util.ServiceUtils;
 
 /**
  * The main entry point to the DeltaSpike configuration mechanism.
@@ -54,7 +50,7 @@ import org.apache.deltaspike.core.util.ServiceUtils;
  *
  * <p>
  * You can provide your own lookup paths by implementing and registering additional {@link PropertyFileConfig} or
- * {@link ConfigSource} or {@link ConfigSourceProvider} implementations.</p>
+ * {@link ConfigSource} or {@link org.apache.deltaspike.core.spi.config.ConfigSourceProvider} implementations.</p>
  *
  * <p>
  * The resolved configuration is also accessible by simple injection using the {@link ConfigProperty} qualifier.</p>
@@ -78,21 +74,6 @@ public final class ConfigResolver
 
 
     private static final Logger LOG = Logger.getLogger(ConfigResolver.class.getName());
-
-    /**
-     * The content of this map will get lazily initiated and will hold the
-     * sorted List of ConfigSources for each WebApp/EAR, etc (thus the
-     * ClassLoader).
-     */
-    private static Map<ClassLoader, ConfigSource[]> configSources
-        = new ConcurrentHashMap<ClassLoader, ConfigSource[]>();
-
-    /**
-     * The content of this map will hold the List of ConfigFilters
-     * for each WebApp/EAR, etc (thus the ClassLoader).
-     */
-    private static Map<ClassLoader, List<ConfigFilter>> configFilters
-        = new ConcurrentHashMap<ClassLoader, List<ConfigFilter>>();
 
     private static ConfigProvider configProvider;
 
@@ -120,19 +101,7 @@ public final class ConfigResolver
      */
     public static synchronized void addConfigSources(List<ConfigSource> configSourcesToAdd)
     {
-        // we first pickup all pre-configured ConfigSources...
-        getConfigSources();
-
-        // and now we can easily add our own
-        ClassLoader currentClassLoader = ClassUtils.getClassLoader(null);
-        ConfigSource[] configuredConfigSources = configSources.get(currentClassLoader);
-
-        List<ConfigSource> allConfigSources = new ArrayList<ConfigSource>();
-        allConfigSources.addAll(Arrays.asList(configuredConfigSources));
-        allConfigSources.addAll(configSourcesToAdd);
-
-        // finally put all the configSources back into the map
-        configSources.put(currentClassLoader, sortDescending(allConfigSources));
+        getConfigProvider().getConfig().addConfigSources(configSourcesToAdd);
     }
 
     /**
@@ -141,9 +110,11 @@ public final class ConfigResolver
      */
     public static synchronized void freeConfigSources()
     {
-        ClassLoader classLoader = ClassUtils.getClassLoader(null);
-        configSources.remove(classLoader);
-        configFilters.remove(classLoader);
+        if (configProvider != null)
+        {
+            ClassLoader cl = ClassUtils.getClassLoader(null);
+            configProvider.releaseConfig(cl);
+        }
     }
 
     /**
@@ -154,8 +125,7 @@ public final class ConfigResolver
      */
     public static void addConfigFilter(ConfigFilter configFilter)
     {
-        List<ConfigFilter> currentConfigFilters = getInternalConfigFilters();
-        currentConfigFilters.add(configFilter);
+        getConfigProvider().getConfig().addConfigFilter(configFilter);
     }
 
     /**
@@ -163,24 +133,9 @@ public final class ConfigResolver
      */
     public static List<ConfigFilter> getConfigFilters()
     {
-        return Collections.unmodifiableList(getInternalConfigFilters());
+        return getConfigProvider().getConfig().getConfigFilters();
     }
 
-    /**
-     * @return the {@link ConfigFilter}s for the current application.
-     */
-    private static List<ConfigFilter> getInternalConfigFilters()
-    {
-        ClassLoader cl = ClassUtils.getClassLoader(null);
-        List<ConfigFilter> currentConfigFilters = configFilters.get(cl);
-        if (currentConfigFilters == null)
-        {
-            currentConfigFilters = new CopyOnWriteArrayList<ConfigFilter>();
-            configFilters.put(cl, currentConfigFilters);
-        }
-
-        return currentConfigFilters;
-    }
 
     /**
      * {@link #getPropertyValue(java.lang.String)} which returns the provided default value if no configured value can
@@ -500,64 +455,7 @@ public final class ConfigResolver
 
     public static synchronized ConfigSource[] getConfigSources()
     {
-        ClassLoader currentClassLoader = ClassUtils.getClassLoader(null);
-
-        ConfigSource[] appConfigSources = configSources.get(currentClassLoader);
-
-        if (appConfigSources == null)
-        {
-            appConfigSources = sortDescending(resolveConfigSources());
-
-            if (LOG.isLoggable(Level.FINE))
-            {
-                for (ConfigSource cs : appConfigSources)
-                {
-                    LOG.log(Level.FINE, "Adding ordinal {0} ConfigSource {1}",
-                            new Object[]{cs.getOrdinal(), cs.getConfigName()});
-                }
-            }
-
-            configSources.put(currentClassLoader, appConfigSources);
-        }
-
-        return appConfigSources;
-    }
-
-    private static List<ConfigSource> resolveConfigSources()
-    {
-        List<ConfigSource> appConfigSources = ServiceUtils.loadServiceImplementations(ConfigSource.class);
-
-        List<ConfigSourceProvider> configSourceProviderServiceLoader =
-            ServiceUtils.loadServiceImplementations(ConfigSourceProvider.class);
-
-        for (ConfigSourceProvider configSourceProvider : configSourceProviderServiceLoader)
-        {
-            appConfigSources.addAll(configSourceProvider.getConfigSources());
-        }
-
-        List<? extends ConfigFilter> configFilters = ServiceUtils.loadServiceImplementations(ConfigFilter.class);
-        for (ConfigFilter configFilter : configFilters)
-        {
-            addConfigFilter(configFilter);
-        }
-
-        return appConfigSources;
-    }
-
-    private static ConfigSource[] sortDescending(List<ConfigSource> configSources)
-    {
-        Collections.sort(configSources, new Comparator<ConfigSource>()
-        {
-            /**
-             * {@inheritDoc}
-             */
-            @Override
-            public int compare(ConfigSource configSource1, ConfigSource configSource2)
-            {
-                return (configSource1.getOrdinal() > configSource2.getOrdinal()) ? -1 : 1;
-            }
-        });
-        return configSources.toArray(new ConfigSource[configSources.size()]);
+        return getConfigProvider().getConfig().getConfigSources();
     }
 
     private static List<ConfigSource> sortAscending(List<ConfigSource> configSources)
@@ -607,15 +505,7 @@ public final class ConfigResolver
      */
     public static String filterConfigValue(String key, String value)
     {
-        List<ConfigFilter> currentConfigFilters = getInternalConfigFilters();
-
-        String filteredValue = value;
-
-        for (ConfigFilter filter : currentConfigFilters)
-        {
-            filteredValue = filter.filterValue(key, filteredValue);
-        }
-        return filteredValue;
+        return getConfigProvider().getConfig().filterConfigValue(key, value, false);
     }
 
     /**
@@ -625,15 +515,7 @@ public final class ConfigResolver
      */
     public static String filterConfigValueForLog(String key, String value)
     {
-        List<ConfigFilter> currentConfigFilters = getInternalConfigFilters();
-
-        String logValue = value;
-
-        for (ConfigFilter filter : currentConfigFilters)
-        {
-            logValue = filter.filterValueForLog(key, logValue);
-        }
-        return logValue;
+        return getConfigProvider().getConfig().filterConfigValue(key, value, true);
     }
 
     /**
