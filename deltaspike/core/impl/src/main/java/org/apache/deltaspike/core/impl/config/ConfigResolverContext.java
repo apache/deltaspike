@@ -34,39 +34,39 @@ class ConfigResolverContext
     private boolean evaluateVariables;
     private boolean propertyAware;
 
-    public ConfigResolverContext()
+    ConfigResolverContext()
     {
     }
     
-    public ConfigResolverContext setEvaluateVariables(final boolean evaluateVariables)
+    ConfigResolverContext setEvaluateVariables(final boolean evaluateVariables)
     {
         this.evaluateVariables = evaluateVariables;
         return this;
     }   
     
-    public boolean isEvaluateVariables()
+    boolean isEvaluateVariables()
     {
         return evaluateVariables;
     }
 
-    public ConfigResolverContext setProjectStageAware(final boolean projectStageAware)
+    ConfigResolverContext setProjectStageAware(final boolean projectStageAware)
     {
         this.projectStageAware = projectStageAware;
         return this;
     }
     
-    public boolean isProjectStageAware()
+    boolean isProjectStageAware()
     {
         return projectStageAware;
     }
 
-    public ConfigResolverContext setPropertyAware(final boolean propertyAware)
+    ConfigResolverContext setPropertyAware(final boolean propertyAware)
     {
         this.propertyAware = propertyAware;
         return this;
     }
     
-    public boolean isPropertyAware()
+    boolean isPropertyAware()
     {
         return propertyAware;
     }

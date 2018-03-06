@@ -28,18 +28,18 @@ class Operation
     private final Method operation;
     private final boolean presentAsTabularIfPossible;
 
-    public Operation(final Method operation, final boolean presentAsTabularIfPossible)
+    Operation(final Method operation, final boolean presentAsTabularIfPossible)
     {
         this.operation = operation;
         this.presentAsTabularIfPossible = presentAsTabularIfPossible;
     }
 
-    public boolean isPresentAsTabularIfPossible()
+    boolean isPresentAsTabularIfPossible()
     {
         return presentAsTabularIfPossible;
     }
 
-    public Method getOperation()
+    Method getOperation()
     {
         return operation;
     }

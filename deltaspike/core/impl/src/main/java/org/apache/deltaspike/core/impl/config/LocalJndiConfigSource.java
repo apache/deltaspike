@@ -34,7 +34,7 @@ class LocalJndiConfigSource extends BaseConfigSource
 {
     private static final String BASE_NAME = "java:comp/env/deltaspike/";
 
-    public LocalJndiConfigSource()
+    LocalJndiConfigSource()
     {
         initOrdinal(200);
     }

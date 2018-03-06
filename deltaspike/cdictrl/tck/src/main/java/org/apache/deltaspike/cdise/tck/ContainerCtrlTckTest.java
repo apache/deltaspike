@@ -225,11 +225,11 @@ public class ContainerCtrlTckTest
         cdiContainer.shutdown();
     }
 
-    @Test
     @LockedCDIImplementation(versions = {
             @LockedVersionRange(implementation = CdiImplementation.WELD11, versionRange = "[1.1.14,1.2)"),
             @LockedVersionRange(implementation = CdiImplementation.WELD20, versionRange = "[2.0.1.Final,2.1)")
-            })
+        })
+    @Test
     public void testShutdownWithInactiveContexts()
     {
         CdiContainer cdiContainer = CdiContainerLoader.getCdiContainer();

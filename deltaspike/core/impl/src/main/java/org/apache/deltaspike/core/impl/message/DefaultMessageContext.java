@@ -50,11 +50,11 @@ class DefaultMessageContext implements MessageContext
 
     private List<String> messageSources = new ArrayList<String>();
 
-    public DefaultMessageContext()
+    DefaultMessageContext()
     {
     }
 
-    public DefaultMessageContext(MessageContext otherMessageContext)
+    DefaultMessageContext(MessageContext otherMessageContext)
     {
         messageInterpolator(otherMessageContext.getMessageInterpolator());
         localeResolver(otherMessageContext.getLocaleResolver());

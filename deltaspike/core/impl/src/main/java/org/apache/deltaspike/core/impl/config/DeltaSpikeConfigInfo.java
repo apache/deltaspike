@@ -226,24 +226,24 @@ public class DeltaSpikeConfigInfo implements DeltaSpikeConfigInfoMBean
         private final String value;
         private final String fromConfigSource;
 
-        public ConfigEntry(String key, String value, String fromConfigSource)
+        ConfigEntry(String key, String value, String fromConfigSource)
         {
             this.key = key;
             this.value = value;
             this.fromConfigSource = fromConfigSource;
         }
 
-        public String getKey()
+        String getKey()
         {
             return key;
         }
 
-        public String getValue()
+        String getValue()
         {
             return value;
         }
 
-        public String getFromConfigSource()
+        String getFromConfigSource()
         {
             return fromConfigSource;
         }

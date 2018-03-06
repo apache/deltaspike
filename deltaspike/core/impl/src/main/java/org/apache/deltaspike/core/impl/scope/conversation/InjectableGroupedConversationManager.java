@@ -32,7 +32,7 @@ class InjectableGroupedConversationManager implements GroupedConversationManager
 {
     private transient volatile GroupedConversationManager conversationManager;
 
-    public InjectableGroupedConversationManager(GroupedConversationManager conversationManager)
+    InjectableGroupedConversationManager(GroupedConversationManager conversationManager)
     {
         this.conversationManager = conversationManager;
     }

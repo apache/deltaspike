@@ -30,7 +30,7 @@ package org.apache.deltaspike.core.impl.config;
 class EnvironmentPropertyConfigSource extends MapConfigSource
 {
 
-    public EnvironmentPropertyConfigSource()
+    EnvironmentPropertyConfigSource()
     {
         super(System.getenv());
         initOrdinal(300);

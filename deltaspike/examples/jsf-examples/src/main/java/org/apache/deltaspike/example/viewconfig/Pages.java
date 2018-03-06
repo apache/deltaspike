@@ -53,7 +53,7 @@ public interface Pages extends ViewConfig
         @NavigationParameter.List({
                 @NavigationParameter(key = "param1", value = "Hey, I come from a navigation parameter"),
                 @NavigationParameter(key = "param2", value = "Hey, It's an interpolated value: #{myBean.aValue}")
-        })
+            })
         class NavigationParameterPage implements RedirectedPages
         {
         }

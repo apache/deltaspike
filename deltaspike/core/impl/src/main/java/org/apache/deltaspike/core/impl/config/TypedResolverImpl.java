@@ -70,7 +70,7 @@ public class TypedResolverImpl<T> implements ConfigResolver.UntypedResolver<T>
     private T lastValue = null;
 
 
-    public TypedResolverImpl(ConfigImpl config, String propertyName)
+    TypedResolverImpl(ConfigImpl config, String propertyName)
     {
         this.config = config;
         this.keyOriginal = propertyName;
