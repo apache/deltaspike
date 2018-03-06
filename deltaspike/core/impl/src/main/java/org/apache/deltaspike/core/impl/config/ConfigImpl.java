@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,6 +45,9 @@ public class ConfigImpl implements Config
 
     private ConfigSource[] configSources;
     private List<ConfigFilter> configFilters;
+
+    // volatile to a.) make the read/write behave atomic and b.) guarantee multi-thread safety
+    private volatile long lastChanged = 0;
 
     public ConfigImpl(ClassLoader classLoader)
     {
@@ -97,6 +101,7 @@ public class ConfigImpl implements Config
         {
             for (ConfigSource configSource : this.configSources)
             {
+                configSource.setOnAttributeChange(this::onAttributeChange);
                 allConfigSources.add(configSource);
             }
         }
@@ -159,6 +164,19 @@ public class ConfigImpl implements Config
             }
         });
         return configSources.toArray(new ConfigSource[configSources.size()]);
+    }
+
+    public void onAttributeChange(Set<String> attributesChanged)
+    {
+        lastChanged = System.nanoTime();
+    }
+
+    /**
+     * @return the nanoTime when the last change got reported by a ConfigSource
+     */
+    public long getLastChanged()
+    {
+        return lastChanged;
     }
 
 }
