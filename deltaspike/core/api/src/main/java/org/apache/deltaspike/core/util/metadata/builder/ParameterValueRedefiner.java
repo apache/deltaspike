@@ -48,7 +48,7 @@ public interface ParameterValueRedefiner
      * @see ParameterValueRedefiner
      * @see InjectableMethod
      */
-    public static class ParameterValue
+    class ParameterValue
     {
 
         private final int position;

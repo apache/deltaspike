@@ -35,7 +35,7 @@ class AnnotatedParameterImpl<X> extends AnnotatedImpl implements AnnotatedParame
     /**
      * Constructor
      */
-    public AnnotatedParameterImpl(AnnotatedCallable<X> declaringCallable, Class<?> type, int position,
+    AnnotatedParameterImpl(AnnotatedCallable<X> declaringCallable, Class<?> type, int position,
                                   AnnotationStore annotations, Type genericType, Type typeOverride)
     {
         super(type, annotations, genericType, typeOverride);

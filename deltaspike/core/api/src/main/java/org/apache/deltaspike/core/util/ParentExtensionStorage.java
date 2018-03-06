@@ -135,7 +135,7 @@ public final class ParentExtensionStorage
         private final WeakReference<ClassLoader> classLoader;
         private final WeakReference<Extension> extension;
 
-        public ExtensionStorageInfo(ClassLoader classLoader, Extension extension)
+        ExtensionStorageInfo(ClassLoader classLoader, Extension extension)
         {
             this.classLoader = new WeakReference<ClassLoader>(classLoader);
             this.extension = new WeakReference<Extension>(extension);

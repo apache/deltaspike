@@ -41,7 +41,7 @@ class AnnotationBuilder
     /**
      * Default constructor.
      */
-    public AnnotationBuilder()
+    AnnotationBuilder()
     {
         annotationMap = new HashMap<Class<? extends Annotation>, Annotation>();
         annotationSet = new HashSet<Annotation>();

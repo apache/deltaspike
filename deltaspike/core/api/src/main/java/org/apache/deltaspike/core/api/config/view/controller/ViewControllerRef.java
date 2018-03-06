@@ -77,7 +77,7 @@ public @interface ViewControllerRef
     }
 
     //not needed outside
-    static class Descriptor extends SimpleCallbackDescriptor<Void>
+    class Descriptor extends SimpleCallbackDescriptor<Void>
     {
         protected Descriptor(Class<?> beanClass, Class<? extends Annotation> callbackType)
         {

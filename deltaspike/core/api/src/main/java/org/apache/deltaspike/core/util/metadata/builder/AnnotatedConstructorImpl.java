@@ -35,7 +35,7 @@ class AnnotatedConstructorImpl<X> extends AnnotatedCallableImpl<X, Constructor<X
     /**
      * Constructor
      */
-    public AnnotatedConstructorImpl(AnnotatedTypeImpl<X> type, Constructor<?> constructor, AnnotationStore annotations,
+    AnnotatedConstructorImpl(AnnotatedTypeImpl<X> type, Constructor<?> constructor, AnnotationStore annotations,
                                     Map<Integer, AnnotationStore> parameterAnnotations,
                                     Map<Integer, Type> typeOverrides)
     {

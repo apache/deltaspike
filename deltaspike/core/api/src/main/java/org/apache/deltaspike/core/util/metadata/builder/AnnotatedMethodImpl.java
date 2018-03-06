@@ -34,7 +34,7 @@ class AnnotatedMethodImpl<X> extends AnnotatedCallableImpl<X, Method> implements
     /**
      * Constructor.
      */
-    public AnnotatedMethodImpl(AnnotatedType<X> type,
+    AnnotatedMethodImpl(AnnotatedType<X> type,
                                Method method,
                                AnnotationStore annotations,
                                Map<Integer, AnnotationStore> parameterAnnotations,
