@@ -66,7 +66,10 @@ public class TypedResolverImpl<T> implements ConfigResolver.UntypedResolver<T>
     private boolean logChanges = false;
 
     private long cacheTimeMs = -1;
+
     private volatile long reloadAfter = -1;
+    private long lastReloadedAt = -1;
+
     private T lastValue = null;
 
 
@@ -211,10 +214,15 @@ public class TypedResolverImpl<T> implements ConfigResolver.UntypedResolver<T>
         long now = -1;
         if (cacheTimeMs > 0)
         {
-            now = System.currentTimeMillis();
+            now = System.nanoTime();
             if (now <= reloadAfter)
             {
-                return lastValue;
+                // now check if anything in the underlying Config got changed
+                long lastCfgChange = config.getLastChanged();
+                if (lastCfgChange < lastReloadedAt)
+                {
+                    return lastValue;
+                }
             }
         }
 
@@ -251,7 +259,8 @@ public class TypedResolverImpl<T> implements ConfigResolver.UntypedResolver<T>
 
         if (cacheTimeMs > 0)
         {
-            reloadAfter = now + cacheTimeMs;
+            reloadAfter = now + TimeUnit.MILLISECONDS.toNanos(cacheTimeMs);
+            lastReloadedAt = now;
         }
 
         return value;
