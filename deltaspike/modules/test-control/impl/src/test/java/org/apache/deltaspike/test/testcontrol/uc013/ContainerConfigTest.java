@@ -18,20 +18,16 @@
  */
 package org.apache.deltaspike.test.testcontrol.uc013;
 
-import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
-import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.testcontrol.api.TestControl;
 import org.apache.deltaspike.testcontrol.api.junit.CdiTestRunner;
 import org.apache.deltaspike.testcontrol.api.junit.CdiTestSuiteRunner;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
-import java.lang.reflect.Field;
 
 //Usually NOT needed! Currently only needed due to our arquillian-setup
 @Category(SeCategory.class)

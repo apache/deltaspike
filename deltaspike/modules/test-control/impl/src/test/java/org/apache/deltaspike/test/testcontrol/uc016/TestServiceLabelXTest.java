@@ -19,7 +19,6 @@
 package org.apache.deltaspike.test.testcontrol.uc016;
 
 import org.apache.deltaspike.test.category.SeCategory;
-import org.apache.deltaspike.testcontrol.api.TestControl;
 import org.apache.deltaspike.testcontrol.api.junit.CdiTestRunner;
 import org.junit.Assert;
 import org.junit.Test;
