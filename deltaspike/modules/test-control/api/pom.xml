@@ -28,7 +28,7 @@
 
     <groupId>org.apache.deltaspike.modules</groupId>
     <artifactId>deltaspike-test-control-module-api</artifactId>
-    <packaging>bundle</packaging>
+    <packaging>jar</packaging>
 
     <name>Apache DeltaSpike Test-Control-Module API</name>
 

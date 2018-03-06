@@ -28,7 +28,7 @@
 
     <groupId>org.apache.deltaspike.modules</groupId>
     <artifactId>deltaspike-partial-bean-module-api</artifactId>
-    <packaging>bundle</packaging>
+    <packaging>jar</packaging>
 
     <name>Apache DeltaSpike Partial-Bean-Module API</name>
 

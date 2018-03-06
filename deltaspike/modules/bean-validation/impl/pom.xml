@@ -27,7 +27,7 @@
 	</parent>
 
 	<artifactId>deltaspike-bean-validation-module-impl</artifactId>
-        <packaging>bundle</packaging>
+        <packaging>jar</packaging>
 	<name>Apache DeltaSpike BeanValidation-Module Impl</name>
         <properties>
             <deltaspike.osgi.export.pkg>org.apache.deltaspike.beanvalidation.impl.*</deltaspike.osgi.export.pkg>

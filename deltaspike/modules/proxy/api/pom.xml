@@ -27,7 +27,7 @@
 	</parent>
 
 	<artifactId>deltaspike-proxy-module-api</artifactId>
-	<packaging>bundle</packaging>
+	<packaging>jar</packaging>
 
 	<name>Apache DeltaSpike Proxy-Module API</name>
     

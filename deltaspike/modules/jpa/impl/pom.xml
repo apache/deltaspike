@@ -28,7 +28,7 @@
 
     <groupId>org.apache.deltaspike.modules</groupId>
     <artifactId>deltaspike-jpa-module-impl</artifactId>
-    <packaging>bundle</packaging>
+    <packaging>jar</packaging>
 
     <name>Apache DeltaSpike JPA-Module Impl</name>
 

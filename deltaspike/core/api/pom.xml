@@ -48,7 +48,7 @@
 
     <groupId>org.apache.deltaspike.core</groupId>
     <artifactId>deltaspike-core-api</artifactId>
-    <packaging>bundle</packaging>
+    <packaging>jar</packaging>
 
     <name>Apache DeltaSpike Core-API</name>
 

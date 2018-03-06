@@ -27,7 +27,7 @@
     </parent>
 
     <artifactId>deltaspike-data-module-impl</artifactId>
-    <packaging>bundle</packaging>
+    <packaging>jar</packaging>
 
     <name>Apache DeltaSpike Data-Module Impl</name>
 
