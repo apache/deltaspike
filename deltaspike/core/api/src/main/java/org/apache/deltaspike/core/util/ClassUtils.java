@@ -157,6 +157,11 @@ public abstract class ClassUtils
         // classes which have non-static, final methods with public, protected or default visibility,
         for (Method method : clazz.getMethods())
         {
+            if (method.getDeclaringClass() == Object.class)
+            {
+                continue;
+            }
+
             if (!method.isBridge() && !method.isSynthetic() && !Modifier.isStatic(method.getModifiers()) &&
                 !Modifier.isPrivate(method.getModifiers()) && Modifier.isFinal(method.getModifiers()))
             {
