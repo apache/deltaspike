@@ -86,6 +86,39 @@ public class ConfigImpl implements Config
         this.configFilters = new CopyOnWriteArrayList<>(configFilters);
     }
 
+    /**
+     * Shuts down the Config.
+     * This will also close all ConfigSources and ConfigFilters which
+     * implment the {@link java.lang.AutoCloseable} interface.
+     */
+    void release()
+    {
+        for (ConfigSource configSource : configSources)
+        {
+            close(configSource);
+        }
+
+        for (ConfigFilter configFilter : configFilters)
+        {
+            close(configFilter);
+        }
+    }
+
+    private void close(Object o)
+    {
+        if (o instanceof AutoCloseable)
+        {
+            try
+            {
+                ((AutoCloseable) o).close();
+            }
+            catch (Exception e)
+            {
+                LOG.log(Level.INFO, "Exception while closing " + o.toString(), e);
+            }
+        }
+    }
+
 
     @Override
     public ConfigSource[] getConfigSources()

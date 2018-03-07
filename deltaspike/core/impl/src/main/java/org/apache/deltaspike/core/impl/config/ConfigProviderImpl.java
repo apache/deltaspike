@@ -63,7 +63,11 @@ public class ConfigProviderImpl implements ConfigResolver.ConfigProvider
     @Override
     public void releaseConfig(ClassLoader cl)
     {
-        configs.remove(cl);
+        ConfigImpl oldConfig = configs.remove(cl);
+        if (oldConfig != null)
+        {
+            oldConfig.release();
+        }
 
         // And remove all the children as well.
         // This will e.g happen in EAR scenarios
@@ -73,6 +77,7 @@ public class ConfigProviderImpl implements ConfigResolver.ConfigProvider
             Map.Entry<ClassLoader, ConfigImpl> cfgEntry = it.next();
             if (isChildClassLoader(cl, cfgEntry.getKey()))
             {
+                cfgEntry.getValue().release();
                 it.remove();
             }
         }
