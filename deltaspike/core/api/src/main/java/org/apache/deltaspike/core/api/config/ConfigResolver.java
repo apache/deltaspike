@@ -20,7 +20,6 @@ package org.apache.deltaspike.core.api.config;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -320,14 +319,11 @@ public final class ConfigResolver
      */
     public static List<String> getAllPropertyValues(String key)
     {
-        // must use a new list because Arrays.asList() is resistant to sorting on some JVMs:
-        List<ConfigSource> appConfigSources = sortAscending(new ArrayList<ConfigSource>(
-                Arrays.<ConfigSource> asList(getConfigSources())));
+        ConfigSource[] configSources = getConfigProvider().getConfig().getConfigSources();
         List<String> result = new ArrayList<String>();
-
-        for (ConfigSource configSource : appConfigSources)
+        for (int i = configSources.length; i > 0; i--)
         {
-            String value = configSource.getPropertyValue(key);
+            String value = configSources[i - 1].getPropertyValue(key);
 
             if (value != null)
             {
@@ -340,6 +336,7 @@ public final class ConfigResolver
         }
 
         return result;
+
     }
 
     /**
@@ -351,13 +348,13 @@ public final class ConfigResolver
      */
     public static Map<String, String> getAllProperties()
     {
-        // must use a new list because Arrays.asList() is resistant to sorting on some JVMs:
-        List<ConfigSource> appConfigSources = sortAscending(new ArrayList<>(
-                Arrays.asList(getConfigSources())));
+        ConfigSource[] configSources = getConfigProvider().getConfig().getConfigSources();
         Map<String, String> result = new HashMap<String, String>();
 
-        for (ConfigSource configSource : appConfigSources)
+        for (int i = configSources.length; i > 0; i--)
         {
+            ConfigSource configSource = configSources[i - 1];
+
             if (configSource.isScannable())
             {
                 result.putAll(configSource.getProperties());
