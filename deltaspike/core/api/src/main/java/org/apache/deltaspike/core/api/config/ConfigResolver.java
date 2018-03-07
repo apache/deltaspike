@@ -154,6 +154,7 @@ public final class ConfigResolver
         return getConfigProvider().getConfig().resolve(key)
                 .withDefault(defaultValue)
                 .evaluateVariables(evaluateVariables)
+                .withCurrentProjectStage(false)
                 .getValue();
     }
 
