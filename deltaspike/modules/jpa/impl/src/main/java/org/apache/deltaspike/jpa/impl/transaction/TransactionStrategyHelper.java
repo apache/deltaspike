@@ -21,7 +21,6 @@ package org.apache.deltaspike.jpa.impl.transaction;
 import org.apache.deltaspike.core.util.AnnotationUtils;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
 import org.apache.deltaspike.jpa.impl.entitymanager.EntityManagerMetadata;
-import org.apache.deltaspike.jpa.impl.entitymanager.EntityManagerRefLookup;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Any;
@@ -49,9 +48,6 @@ public class TransactionStrategyHelper implements Serializable
     @Inject
     private BeanManager beanManager;
 
-    @Inject
-    private EntityManagerRefLookup entityManagerRefLookup;
-
     /**
      * <p>This method uses the InvocationContext to scan the &#064;Transactional
      * interceptor for a manually specified Qualifier.</p>
@@ -68,7 +64,7 @@ public class TransactionStrategyHelper implements Serializable
     public Set<Class<? extends Annotation>> resolveEntityManagerQualifiers(EntityManagerMetadata entityManagerMetadata,
                                                                            Class interceptedTargetClass)
     {
-        Set<Class<? extends Annotation>> emQualifiers = new HashSet<Class<? extends Annotation>>();
+        Set<Class<? extends Annotation>> emQualifiers = new HashSet<>();
         Class<? extends Annotation>[] qualifierClasses = entityManagerMetadata.getQualifiers();
 
         if (qualifierClasses == null || qualifierClasses.length == 1 && Any.class.equals(qualifierClasses[0]) )
@@ -151,8 +147,8 @@ public class TransactionStrategyHelper implements Serializable
     EntityManagerMetadata createEntityManagerMetadata(InvocationContext context)
     {
         EntityManagerMetadata metadata = new EntityManagerMetadata();
-        metadata.readFrom(context.getMethod(), beanManager);
         metadata.readFrom(context.getMethod().getDeclaringClass(), beanManager);
+        metadata.readFrom(context.getMethod(), beanManager);
         return metadata;
     }
 

@@ -25,6 +25,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 @ApplicationScoped
+@Transactional(readOnly = true)
 public class TransactionalBean
 {
     @Inject
