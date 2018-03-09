@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.data.impl.handler;
 
-import org.apache.deltaspike.core.util.OptionalUtil;
 import org.apache.deltaspike.data.api.EntityRepository;
 import org.apache.deltaspike.data.api.Query;
 import org.apache.deltaspike.data.impl.builder.QueryBuilder;
@@ -44,6 +43,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -131,7 +131,7 @@ public class EntityRepositoryHandler<E, PK extends Serializable>
         catch (Exception e)
         {
         }
-        return OptionalUtil.wrap(found);
+        return Optional.ofNullable(found);
     }
 
     @Override

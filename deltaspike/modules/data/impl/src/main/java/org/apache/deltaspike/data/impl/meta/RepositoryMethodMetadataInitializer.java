@@ -23,7 +23,9 @@ import static org.apache.deltaspike.core.util.StringUtils.isNotEmpty;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 import javax.enterprise.context.ApplicationScoped;
 
 import javax.enterprise.inject.spi.Bean;
@@ -33,8 +35,6 @@ import javax.persistence.LockModeType;
 import org.apache.deltaspike.core.util.AnnotationUtils;
 import org.apache.deltaspike.core.util.ClassUtils;
 
-import org.apache.deltaspike.core.util.OptionalUtil;
-import org.apache.deltaspike.core.util.StreamUtil;
 import org.apache.deltaspike.data.api.Modifying;
 import org.apache.deltaspike.data.api.Query;
 import org.apache.deltaspike.data.api.Repository;
@@ -53,19 +53,14 @@ public class RepositoryMethodMetadataInitializer
     @Inject
     private QueryProcessorFactory queryProcessorFactory;
     
-    @Inject
-    private BeanManager beanManager;
-    
     public RepositoryMethodMetadata init(RepositoryMetadata repositoryMetadata, Method method, BeanManager beanManager)
     {
         RepositoryMethodMetadata repositoryMethodMetadata = new RepositoryMethodMetadata();
         
         repositoryMethodMetadata.setMethod(method);
 
-        repositoryMethodMetadata.setReturnsOptional(
-                OptionalUtil.isOptionalReturned(method));
-        repositoryMethodMetadata.setReturnsStream(
-                StreamUtil.isStreamReturned(method));
+        repositoryMethodMetadata.setReturnsOptional(Optional.class.isAssignableFrom(method.getReturnType()));
+        repositoryMethodMetadata.setReturnsStream(Stream.class.isAssignableFrom(method.getReturnType()));
         
         repositoryMethodMetadata.setQuery(method.isAnnotationPresent(Query.class)
                 ? method.getAnnotation(Query.class) : null);
@@ -87,7 +82,7 @@ public class RepositoryMethodMetadataInitializer
                 extractMapper(method, repositoryMetadata));
 
         initQueryRoot(repositoryMetadata, repositoryMethodMetadata);
-        initQueryInOutMapperIsNormalScope(repositoryMetadata, repositoryMethodMetadata, beanManager);
+        initQueryInOutMapperIsNormalScope(repositoryMethodMetadata, beanManager);
 
         initSingleResultType(repositoryMethodMetadata);
         initRequiresTransaction(repositoryMethodMetadata);
@@ -127,8 +122,8 @@ public class RepositoryMethodMetadataInitializer
         }
     }
     
-    private void initQueryInOutMapperIsNormalScope(RepositoryMetadata repositoryMetadata,
-            RepositoryMethodMetadata repositoryMethodMetadata, BeanManager beanManager)
+    private void initQueryInOutMapperIsNormalScope(RepositoryMethodMetadata repositoryMethodMetadata,
+                                                   BeanManager beanManager)
     {
         if (repositoryMethodMetadata.getQueryInOutMapperClass() != null)
         {

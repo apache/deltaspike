@@ -65,17 +65,11 @@
             <activation>
                 <property>
                     <name>wildfly.version</name>
-                    <value>10.0.0.Final</value>
+                    <value>10.1.0.Final</value>
                 </property>
             </activation>
             <modules>
                 <module>test-ee7</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>java8.tests</id>
-            <modules>
-                <module>test-java8</module>
             </modules>
         </profile>
     </profiles>

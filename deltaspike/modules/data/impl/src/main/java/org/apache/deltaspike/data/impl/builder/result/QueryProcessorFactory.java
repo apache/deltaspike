@@ -19,14 +19,13 @@
 package org.apache.deltaspike.data.impl.builder.result;
 
 import java.util.List;
+import java.util.Optional;
 import javax.enterprise.context.ApplicationScoped;
 
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import org.apache.deltaspike.core.util.ClassUtils;
 
-import org.apache.deltaspike.core.util.OptionalUtil;
-import org.apache.deltaspike.core.util.StreamUtil;
 import org.apache.deltaspike.data.api.Modifying;
 import org.apache.deltaspike.data.api.QueryResult;
 import org.apache.deltaspike.data.api.SingleResultType;
@@ -89,7 +88,7 @@ public class QueryProcessorFactory
         @Override
         public Object executeQuery(Query query, CdiQueryInvocationContext context)
         {
-            return StreamUtil.wrap(query.getResultList());
+            return query.getResultList().stream();
         }
     }
 
@@ -121,7 +120,7 @@ public class QueryProcessorFactory
             
             if (context.getRepositoryMethodMetadata().isReturnsOptional())
             {
-                return OptionalUtil.wrap(result);
+                return Optional.ofNullable(result);
             }
             else
             {

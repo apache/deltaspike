@@ -23,6 +23,7 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import javax.enterprise.context.ApplicationScoped;
 
@@ -35,8 +36,6 @@ import javax.persistence.PersistenceException;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.ClassUtils;
-import org.apache.deltaspike.core.util.OptionalUtil;
-import org.apache.deltaspike.core.util.StreamUtil;
 import org.apache.deltaspike.data.api.QueryInvocationException;
 import org.apache.deltaspike.data.impl.handler.CdiQueryInvocationContext;
 import org.apache.deltaspike.data.impl.util.bean.BeanDestroyable;
@@ -48,8 +47,7 @@ public class DelegateQueryBuilder extends QueryBuilder
     @Inject
     private BeanManager beanManager;
 
-    private final Map<Method, Bean<DelegateQueryHandler>> lookupCache
-        = new HashMap<Method, Bean<DelegateQueryHandler>>();
+    private final Map<Method, Bean<DelegateQueryHandler>> lookupCache = new HashMap<>();
     
     @Override
     public Object execute(CdiQueryInvocationContext context)
@@ -62,11 +60,11 @@ public class DelegateQueryBuilder extends QueryBuilder
                 Object result = invoke(delegate, context);
                 if (result instanceof Collection && context.getRepositoryMethodMetadata().isReturnsStream())
                 {
-                    return StreamUtil.wrap(result);
+                    return ((Collection) result).stream();
                 }
                 else if (context.getRepositoryMethodMetadata().isReturnsOptional())
                 {
-                    return OptionalUtil.wrap(result);
+                    return Optional.ofNullable(result);
                 }
                 else
                 {
