@@ -214,6 +214,15 @@ public class ProjectStageProducer implements Serializable
      */
     public static void setProjectStage(ProjectStage ps)
     {
+        if (projectStage != null)
+        {
+            LOG.info("change project-stage from " + projectStage + " to " + ps);
+        }
+        else
+        {
+            LOG.info("change project-stage to " + ps);
+        }
+
         projectStage = ps;
     }
 }
