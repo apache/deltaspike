@@ -29,9 +29,9 @@ import java.util.Set;
 public class FolderConfigNode extends AbstractConfigNode
 {
     //not all interfaces have to implement the ViewConfig interface
-    private final Class nodeId;
+    private final Class<?> nodeId;
 
-    public FolderConfigNode(Class nodeId, ViewConfigNode parent, Set<Annotation> nodeMetaData)
+    public FolderConfigNode(Class<?> nodeId, ViewConfigNode parent, Set<Annotation> nodeMetaData)
     {
         super(parent, nodeMetaData);
         this.nodeId = nodeId;
@@ -55,7 +55,7 @@ public class FolderConfigNode extends AbstractConfigNode
     }
 
     @Override
-    public Class getSource()
+    public Class<?> getSource()
     {
         return this.nodeId;
     }
