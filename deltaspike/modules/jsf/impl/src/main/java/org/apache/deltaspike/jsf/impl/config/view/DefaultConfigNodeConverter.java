@@ -67,7 +67,7 @@ public class DefaultConfigNodeConverter implements ConfigNodeConverter
         {
             View viewAnnotation = findMetaDataByType(mergedMetaData, View.class);
             String viewId = viewAnnotation.basePath() + viewAnnotation.name() + "." + viewAnnotation.extension();
-            return new DefaultViewPathConfigDescriptor(viewId, node.getSource(),
+            return new DefaultViewPathConfigDescriptor(viewId, (Class<? extends ViewConfig>) node.getSource(),
                     filterInheritedFolderMetaData(mergedMetaData), node.getCallbackDescriptors());
         }
         else

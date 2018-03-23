@@ -34,7 +34,7 @@ public interface ViewConfigNode
 
     List<ViewConfigNode> getChildren();
 
-    Class getSource();
+    Class<?> getSource();
 
     Set<Annotation> getMetaData();
 
