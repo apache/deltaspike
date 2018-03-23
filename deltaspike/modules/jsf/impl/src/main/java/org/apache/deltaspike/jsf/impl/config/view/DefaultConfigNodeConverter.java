@@ -192,7 +192,17 @@ public class DefaultConfigNodeConverter implements ConfigNodeConverter
             Annotation defaultAnnotation = AnnotationInstanceProvider.of(existingMetaData.annotationType());
             try
             {
-                Object defaultValue = annotationMethod.invoke(defaultAnnotation);
+                Object defaultValue = null;
+
+                try
+                {
+                    defaultValue = annotationMethod.invoke(defaultAnnotation);
+                }
+                catch (NullPointerException e) //happens with primitive data-types without default values
+                {
+                    defaultValue = null;
+                }
+
                 Object existingValue = annotationMethod.invoke(existingMetaData);
 
                 if (existingValue == null /*possible with literal instances*/ ||
