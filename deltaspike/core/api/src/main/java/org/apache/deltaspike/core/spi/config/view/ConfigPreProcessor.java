@@ -30,5 +30,17 @@ import java.lang.annotation.Annotation;
  */
 public interface ConfigPreProcessor<T extends Annotation>
 {
+    /**
+     * @param metaData The annotation-instance which was found or the inherited instance.
+     *                 Since it's possible to override annotation-attributes alongside the inheritance-path,
+     *                 it can be a merged representation.
+     *                 To get rid of meta-data which is only inherited,
+     *                 it's required to check the presence of the physical annotation e.g. via
+     *                 ViewConfigNode#getSource#isAnnotationPresent
+     *                 and return a synthetic literal-instance (as a marker/placeholder),
+     *                 because 'null' isn't supported as return-value.
+     * @param viewConfigNode Instance which represents the current node
+     * @return The annotation-instance which should be used for the final meta-data
+     */
     T beforeAddToConfig(T metaData, ViewConfigNode viewConfigNode);
 }
