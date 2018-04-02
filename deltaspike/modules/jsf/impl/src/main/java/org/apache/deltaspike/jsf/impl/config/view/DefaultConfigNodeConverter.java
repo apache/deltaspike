@@ -198,7 +198,7 @@ public class DefaultConfigNodeConverter implements ConfigNodeConverter
                 {
                     defaultValue = annotationMethod.invoke(defaultAnnotation);
                 }
-                catch (NullPointerException e) //happens with primitive data-types without default values
+                catch (Exception e) //happens with primitive data-types without default values
                 {
                     defaultValue = null;
                 }
