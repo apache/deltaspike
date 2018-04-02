@@ -54,7 +54,7 @@ public class ViewConfigTest
     @Test
     public void testMetaDataTree()
     {
-        List<Class<? extends ViewConfig>> menuViewConfigClasses = new ArrayList<>();
+        List<Class<? extends ViewConfig>> menuViewConfigClasses = new ArrayList<Class<? extends ViewConfig>>();
         menuViewConfigClasses.add(Pages.Section1.Content1.class);
         menuViewConfigClasses.add(Pages.Section1.Content2.class);
         menuViewConfigClasses.add(Pages.Section2.Content1.class);
@@ -85,7 +85,7 @@ public class ViewConfigTest
     @Test
     public void testViewConfig()
     {
-        List<Class<? extends ViewConfig>> menuViewConfigClasses = new ArrayList<>();
+        List<Class<? extends ViewConfig>> menuViewConfigClasses = new ArrayList<Class<? extends ViewConfig>>();
         menuViewConfigClasses.add(Pages.Section1.Content1.class);
         menuViewConfigClasses.add(Pages.Section1.Content2.class);
         menuViewConfigClasses.add(Pages.Section2.Content1.class);
