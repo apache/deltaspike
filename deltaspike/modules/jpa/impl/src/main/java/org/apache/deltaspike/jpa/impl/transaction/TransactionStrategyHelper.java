@@ -151,8 +151,9 @@ public class TransactionStrategyHelper implements Serializable
     EntityManagerMetadata createEntityManagerMetadata(InvocationContext context)
     {
         EntityManagerMetadata metadata = new EntityManagerMetadata();
-        metadata.readFrom(context.getMethod(), beanManager);
         metadata.readFrom(context.getMethod().getDeclaringClass(), beanManager);
+        metadata.readFrom(context.getMethod(), beanManager);
+
         return metadata;
     }
 
