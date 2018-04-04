@@ -34,6 +34,9 @@ import java.util.function.Consumer;
  * <i>META-INF/services/org.apache.deltaspike.core.spi.config.ConfigSource</i>
  * file and adding the fully qualified class name of your ConfigSource
  * implementation into it. </p>
+ *
+ * <p>If a ConfigSource implements the {@link java.lang.AutoCloseable} interface it will automatically
+ * be released when the Config is shut down.</p>
  */
 public interface ConfigSource
 {

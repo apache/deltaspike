@@ -408,6 +408,9 @@ public final class ConfigResolver
 
     /**
      * A very simple interface for conversion of configuration values from String to any Java type.
+     *
+     * <p>If a Converter implements the {@link java.lang.AutoCloseable} interface it will automatically
+     * be released when the Config is shut down.</p>
      * @param <T> The target type of the configuration entry
      */
     public interface Converter<T>
@@ -419,7 +422,6 @@ public final class ConfigResolver
          * @return Converted value
          */
         T convert(String value);
-
     }
 
     /**
