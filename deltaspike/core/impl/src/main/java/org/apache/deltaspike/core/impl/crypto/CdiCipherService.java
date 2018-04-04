@@ -25,9 +25,6 @@ import java.io.IOException;
 
 import org.apache.deltaspike.core.api.crypto.CipherService;
 
-/**
- * @author <a href="mailto:struberg@yahoo.de">Mark Struberg</a>
- */
 @ApplicationScoped
 public class CdiCipherService implements CipherService
 {

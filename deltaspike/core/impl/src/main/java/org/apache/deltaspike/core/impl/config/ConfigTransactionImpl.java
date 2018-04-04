@@ -23,9 +23,6 @@ import org.apache.deltaspike.core.api.config.ConfigTransaction;
 
 import java.util.Map;
 
-/**
- * @author Mark Struberg
- */
 public class ConfigTransactionImpl implements ConfigTransaction
 {
     private final ConfigImpl config;
