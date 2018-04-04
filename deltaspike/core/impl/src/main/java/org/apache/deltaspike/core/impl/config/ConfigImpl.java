@@ -138,15 +138,15 @@ public class ConfigImpl implements Config
         for (int tries = 1; tries < 5; tries++)
         {
             Map<ConfigResolver.TypedResolver<?>, Object> configValues = new HashMap<>();
-            long startReadCfgTst = lastChanged;
+            long startReadLastChanged = lastChanged;
             for (ConfigResolver.TypedResolver<?> typedResolver : typedResolvers)
             {
                 configValues.put(typedResolver, typedResolver.getValue());
             }
 
-            if (startReadCfgTst == lastChanged)
+            if (startReadLastChanged == lastChanged)
             {
-                return new ConfigTransactionImpl(this, configValues);
+                return new ConfigTransactionImpl(configValues);
             }
         }
 
@@ -229,7 +229,9 @@ public class ConfigImpl implements Config
 
     public void onAttributeChange(Set<String> attributesChanged)
     {
-        lastChanged = System.nanoTime();
+        // this is to force an incremented lastChanged even on time glitches and fast updates
+        long newLastChanged = System.nanoTime();
+        lastChanged = lastChanged >= newLastChanged ? lastChanged++ : newLastChanged;
     }
 
     /**

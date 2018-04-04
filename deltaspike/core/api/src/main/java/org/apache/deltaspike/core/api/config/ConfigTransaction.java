@@ -19,9 +19,15 @@
 package org.apache.deltaspike.core.api.config;
 
 /**
- * A value holder for
+ * A value holder for TypedResolver values which all got resolved in a guaranteed atomic way.
+ *
+ * @see Config#startTransaction(ConfigResolver.TypedResolver[])
  */
 public interface ConfigTransaction
 {
+    /**
+     * Access the value as it was at the time when {@link Config#startTransaction(ConfigResolver.TypedResolver[])}
+     * got called.
+     */
     <T> T getValue(ConfigResolver.TypedResolver<T> typedResolver);
 }

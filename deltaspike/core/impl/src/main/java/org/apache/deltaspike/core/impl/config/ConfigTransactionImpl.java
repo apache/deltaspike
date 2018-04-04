@@ -25,12 +25,10 @@ import java.util.Map;
 
 public class ConfigTransactionImpl implements ConfigTransaction
 {
-    private final ConfigImpl config;
     private final Map<ConfigResolver.TypedResolver<?>, Object> configValues;
 
-    public ConfigTransactionImpl(ConfigImpl config, Map<ConfigResolver.TypedResolver<?>, Object> configValues)
+    public ConfigTransactionImpl(Map<ConfigResolver.TypedResolver<?>, Object> configValues)
     {
-        this.config = config;
         this.configValues = configValues;
     }
 
