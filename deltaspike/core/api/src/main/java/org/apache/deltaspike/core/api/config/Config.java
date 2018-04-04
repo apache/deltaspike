@@ -42,6 +42,47 @@ public interface Config
     ConfigResolver.UntypedResolver<String> resolve(String name);
 
     /**
+     * <p>This method can be used to access multiple
+     * {@link ConfigResolver.TypedResolver} which must be consistent.
+     *
+     * <p>An example would be to access some {@code 'myapp.host'} and {@code 'myapp.port'}:
+     * The underlying values are {@code 'oldserver'} and {@code '8080'}.
+     *
+     * <pre>
+     *     // get the current host value
+     *     TypedResolver&lt;String&gt; hostCfg config.resolve("myapp.host")
+     *              .cacheFor(TimeUnit.MINUTES, 60);
+     *
+     *     // and right inbetween the underlying values get changed to 'newserver' and port 8082
+     *
+     *     // get the current port for the host
+     *     TypedResolver&lt;Integer&gt; portCfg config.resolve("myapp.port")
+     *              .cacheFor(TimeUnit.MINUTES, 60);
+     * </pre>
+     *
+     * In ths above code we would get the combination of {@code 'oldserver'} but with the new port {@code 8081}.
+     * And this will obviously blow up because that host+port combination doesn't exist.
+     *
+     * To consistently access n different config values we can start a {@link ConfigTransaction} for those values.
+     *
+     * <pre>
+     *     ConfigTransaction cfgTx = config.startTx(hostCfg, portCfg);
+     *
+     *     String host = cfgTx.getValue(hostCfg);
+     *     Integer port = cfgTx.getValue(portCfg);
+     * </pre>
+     *
+     * Note that there is no <em>close</em> on the transaction.
+     * They should be used as local variables inside a method.
+     * Values will not be reloaded for an open {@link ConfigTransaction}.
+     *
+     * @param typedResolvers the list of {@link ConfigResolver.TypedResolver} to be accessed in an atomic way
+     *
+     * @return a new {@link ConfigTransaction} which holds the resolved values of all the {@param typedResolvers}.
+     */
+    ConfigTransaction startTx(ConfigResolver.TypedResolver<?>... typedResolvers);
+
+    /**
      * @return all the current ConfigSources for this Config
      */
     ConfigSource[] getConfigSources();
