@@ -18,3 +18,4 @@
 #####################################################################################
 
 org.apache.deltaspike.test.core.api.config.TestConfigSource
+org.apache.deltaspike.test.core.api.config.ConfigurableTestConfigSource

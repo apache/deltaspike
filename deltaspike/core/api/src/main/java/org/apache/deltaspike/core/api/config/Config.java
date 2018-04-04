@@ -66,7 +66,7 @@ public interface Config
      * To consistently access n different config values we can start a {@link ConfigTransaction} for those values.
      *
      * <pre>
-     *     ConfigTransaction cfgTx = config.startTx(hostCfg, portCfg);
+     *     ConfigTransaction cfgTx = config.startTransaction(hostCfg, portCfg);
      *
      *     String host = cfgTx.getValue(hostCfg);
      *     Integer port = cfgTx.getValue(portCfg);
@@ -80,7 +80,7 @@ public interface Config
      *
      * @return a new {@link ConfigTransaction} which holds the resolved values of all the {@param typedResolvers}.
      */
-    ConfigTransaction startTx(ConfigResolver.TypedResolver<?>... typedResolvers);
+    ConfigTransaction startTransaction(ConfigResolver.TypedResolver<?>... typedResolvers);
 
     /**
      * @return all the current ConfigSources for this Config

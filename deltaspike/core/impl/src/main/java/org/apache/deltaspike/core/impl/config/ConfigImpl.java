@@ -20,6 +20,7 @@ package org.apache.deltaspike.core.impl.config;
 
 import org.apache.deltaspike.core.api.config.Config;
 import org.apache.deltaspike.core.api.config.ConfigResolver;
+import org.apache.deltaspike.core.api.config.ConfigTransaction;
 import org.apache.deltaspike.core.spi.config.ConfigFilter;
 import org.apache.deltaspike.core.spi.config.ConfigSource;
 import org.apache.deltaspike.core.spi.config.ConfigSourceProvider;
@@ -28,7 +29,9 @@ import org.apache.deltaspike.core.util.ServiceUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
@@ -124,6 +127,31 @@ public class ConfigImpl implements Config
     public ConfigSource[] getConfigSources()
     {
         return configSources;
+    }
+
+    @Override
+    public ConfigTransaction startTransaction(ConfigResolver.TypedResolver<?>[] typedResolvers)
+    {
+        // we implement kind of optimistic Locking
+        // Means we try multiple time to resolve all the given values
+        // until the config didn't change inbetween.
+        for (int tries = 1; tries < 5; tries++)
+        {
+            Map<ConfigResolver.TypedResolver<?>, Object> configValues = new HashMap<>();
+            long startReadCfgTst = lastChanged;
+            for (ConfigResolver.TypedResolver<?> typedResolver : typedResolvers)
+            {
+                configValues.put(typedResolver, typedResolver.getValue());
+            }
+
+            if (startReadCfgTst == lastChanged)
+            {
+                return new ConfigTransactionImpl(this, configValues);
+            }
+        }
+
+        throw new IllegalStateException(
+                "Could not resolve ConfigTransaction as underlying values are permanently changing!");
     }
 
     @Override
