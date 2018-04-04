@@ -61,6 +61,6 @@ class EnvironmentPropertyConfigSource extends MapConfigSource
     @Override
     public boolean isScannable()
     {
-        return false;
+        return true;
     }
 }
