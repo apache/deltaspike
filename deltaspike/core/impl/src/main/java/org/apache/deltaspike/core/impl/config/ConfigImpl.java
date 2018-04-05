@@ -157,17 +157,26 @@ public class ConfigImpl implements Config
     @Override
     public void addConfigSources(List<ConfigSource> configSourcesToAdd)
     {
+        if (configSourcesToAdd == null || configSourcesToAdd.isEmpty())
+        {
+            return;
+        }
+
         List<ConfigSource> allConfigSources = new ArrayList<>();
+        // start with all existing ConfigSources
         if (this.configSources != null)
         {
             for (ConfigSource configSource : this.configSources)
             {
-                configSource.setOnAttributeChange(this::onAttributeChange);
                 allConfigSources.add(configSource);
             }
         }
 
-        allConfigSources.addAll(configSourcesToAdd);
+        for (ConfigSource configSourceToAdd : configSourcesToAdd)
+        {
+            configSourceToAdd.setOnAttributeChange(this::onAttributeChange);
+            allConfigSources.add(configSourceToAdd);
+        }
 
         this.configSources = sortDescending(allConfigSources);
     }

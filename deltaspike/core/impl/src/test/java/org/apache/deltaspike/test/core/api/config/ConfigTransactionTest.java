@@ -18,6 +18,9 @@
  */
 package org.apache.deltaspike.test.core.api.config;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.deltaspike.core.api.config.Config;
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.config.ConfigTransaction;
@@ -41,14 +44,16 @@ public class ConfigTransactionTest
     @Test
     public void testConfigTx()
     {
+        Config cfg = ConfigResolver.getConfig();
         ConfigurableTestConfigSource configSource = ConfigurableTestConfigSource.instance();
         try
         {
-            configSource.set(HOST_KEY, "host1");
-            configSource.set(PORT1_KEY, "1");
-            configSource.set(PORT2_KEY, "1");
+            Map<String, String> newVals = new HashMap<>();
+            newVals.put(HOST_KEY, "host1");
+            newVals.put(PORT1_KEY, "1");
+            newVals.put(PORT2_KEY, "1");
+            configSource.setValues(newVals);
 
-            Config cfg = ConfigResolver.getConfig();
             hostCfg = cfg.resolve(HOST_KEY);
             port1Cfg = cfg.resolve(PORT1_KEY).as(Integer.class);
             port2Cfg = cfg.resolve(PORT2_KEY).as(Integer.class);
@@ -65,9 +70,11 @@ public class ConfigTransactionTest
             assertEquals(Integer.valueOf(1), configTransaction.getValue(port2Cfg));
 
             // and those values don't change, even if we modify the underlying ConfigSource!
-            configSource.set(HOST_KEY, "host2");
-            configSource.set(PORT1_KEY, "2");
-            configSource.set(PORT2_KEY, "2");
+            newVals.clear();
+            newVals.put(HOST_KEY, "host2");
+            newVals.put(PORT1_KEY, "2");
+            newVals.put(PORT2_KEY, "2");
+            configSource.setValues(newVals);
 
             assertEquals("host1", configTransaction.getValue(hostCfg));
             assertEquals(Integer.valueOf(1), configTransaction.getValue(port1Cfg));

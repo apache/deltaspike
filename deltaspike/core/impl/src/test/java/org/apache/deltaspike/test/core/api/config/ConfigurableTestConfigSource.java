@@ -23,7 +23,9 @@ import org.apache.deltaspike.core.spi.config.ConfigSource;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 /**
  * A ConfigSource which is backed by a ThreadLocal.
@@ -34,6 +36,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ConfigurableTestConfigSource implements ConfigSource
 {
     private static ThreadLocal<Map<String, String>> props = new ThreadLocal<>();
+
+    private Consumer<Set<String>> reportAttributeChange;
 
     @Override
     public int getOrdinal()
@@ -84,8 +88,17 @@ public class ConfigurableTestConfigSource implements ConfigSource
         props.remove();
     }
 
-    public void set(String key, String value)
+    public void setValues(Map<String, String> values)
     {
-        getProperties().put(key, value);
+        getProperties().putAll(values);
+
+        // now notify our Config that some values got changed
+        reportAttributeChange.accept(values.keySet());
+    }
+
+    @Override
+    public void setOnAttributeChange(Consumer<Set<String>> reportAttributeChange)
+    {
+        this.reportAttributeChange = reportAttributeChange;
     }
 }
