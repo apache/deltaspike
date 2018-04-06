@@ -41,6 +41,7 @@ mvn clean install -Ptomee7-build-managed,OpenEJB-TomEE -Dtomee.version=7.0.4 -Do
 
 # CDI-2.0, EE8
 
+mvn clean install -POWB2 | tee mvn-owb2_0_4.log
 
 
 # and now for the result check
