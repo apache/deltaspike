@@ -40,6 +40,7 @@ import javax.enterprise.util.AnnotationLiteral;
 import javax.inject.Named;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
@@ -202,4 +203,23 @@ public class AnnotatedTypeBuilderTest
             // all fine
         }
     }
+
+    @Test
+    public void testExceptionPerformance() {
+        long start = System.nanoTime();
+        long val = -230349823423L;
+        Exception e = new Exception("static");
+        for (int i=0; i < 10_000_000; i++) {
+            try {
+                val += 19;
+                throw e;
+            }
+            catch (Exception e2) {
+                // do nothing
+            }
+        }
+        long end = System.nanoTime();
+        System.out.println("Exeptions took ms " + TimeUnit.NANOSECONDS.toMillis(end - start));
+    }
+
 }

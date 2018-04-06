@@ -44,6 +44,8 @@ public interface Config
     /**
      * <p>This method can be used to access multiple
      * {@link ConfigResolver.TypedResolver} which must be consistent.
+     * The returned {@link ConfigSnapshot} is an immutable object which contains all the
+     * resolved values at the time of calling this method.
      *
      * <p>An example would be to access some {@code 'myapp.host'} and {@code 'myapp.port'}:
      * The underlying values are {@code 'oldserver'} and {@code '8080'}.
@@ -63,24 +65,24 @@ public interface Config
      * In ths above code we would get the combination of {@code 'oldserver'} but with the new port {@code 8081}.
      * And this will obviously blow up because that host+port combination doesn't exist.
      *
-     * To consistently access n different config values we can start a {@link ConfigTransaction} for those values.
+     * To consistently access n different config values we can start a {@link ConfigSnapshot} for those values.
      *
      * <pre>
-     *     ConfigTransaction cfgTx = config.startTransaction(hostCfg, portCfg);
+     *     ConfigSnapshot cfgSnap = config.createSnapshot(hostCfg, portCfg);
      *
-     *     String host = cfgTx.getValue(hostCfg);
-     *     Integer port = cfgTx.getValue(portCfg);
+     *     String host = cfgSnap.getValue(hostCfg);
+     *     Integer port = cfgSnap.getValue(portCfg);
      * </pre>
      *
-     * Note that there is no <em>close</em> on the transaction.
+     * Note that there is no <em>close</em> on the snapshot.
      * They should be used as local variables inside a method.
-     * Values will not be reloaded for an open {@link ConfigTransaction}.
+     * Values will not be reloaded for an open {@link ConfigSnapshot}.
      *
      * @param typedResolvers the list of {@link ConfigResolver.TypedResolver} to be accessed in an atomic way
      *
-     * @return a new {@link ConfigTransaction} which holds the resolved values of all the {@param typedResolvers}.
+     * @return a new {@link ConfigSnapshot} which holds the resolved values of all the {@param typedResolvers}.
      */
-    ConfigTransaction startTransaction(ConfigResolver.TypedResolver<?>... typedResolvers);
+    ConfigSnapshot snapshotFor(ConfigResolver.TypedResolver<?>... typedResolvers);
 
     /**
      * @return all the current ConfigSources for this Config

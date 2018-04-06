@@ -19,15 +19,15 @@
 package org.apache.deltaspike.core.impl.config;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
-import org.apache.deltaspike.core.api.config.ConfigTransaction;
+import org.apache.deltaspike.core.api.config.ConfigSnapshot;
 
 import java.util.Map;
 
-public class ConfigTransactionImpl implements ConfigTransaction
+public class ConfigSnapshotImpl implements ConfigSnapshot
 {
     private final Map<ConfigResolver.TypedResolver<?>, Object> configValues;
 
-    public ConfigTransactionImpl(Map<ConfigResolver.TypedResolver<?>, Object> configValues)
+    public ConfigSnapshotImpl(Map<ConfigResolver.TypedResolver<?>, Object> configValues)
     {
         this.configValues = configValues;
     }

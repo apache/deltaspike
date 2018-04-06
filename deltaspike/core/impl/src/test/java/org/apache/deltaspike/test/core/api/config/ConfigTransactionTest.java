@@ -23,7 +23,7 @@ import java.util.Map;
 
 import org.apache.deltaspike.core.api.config.Config;
 import org.apache.deltaspike.core.api.config.ConfigResolver;
-import org.apache.deltaspike.core.api.config.ConfigTransaction;
+import org.apache.deltaspike.core.api.config.ConfigSnapshot;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -62,12 +62,12 @@ public class ConfigTransactionTest
             assertEquals(Integer.valueOf(1), port1Cfg.getValue());
             assertEquals(Integer.valueOf(1), port2Cfg.getValue());
 
-            ConfigTransaction configTransaction = cfg.startTransaction(hostCfg, port1Cfg, port2Cfg);
-            assertNotNull(configTransaction);
+            ConfigSnapshot configSnapshot = cfg.snapshotFor(hostCfg, port1Cfg, port2Cfg);
+            assertNotNull(configSnapshot);
 
-            assertEquals("host1", configTransaction.getValue(hostCfg));
-            assertEquals(Integer.valueOf(1), configTransaction.getValue(port1Cfg));
-            assertEquals(Integer.valueOf(1), configTransaction.getValue(port2Cfg));
+            assertEquals("host1", configSnapshot.getValue(hostCfg));
+            assertEquals(Integer.valueOf(1), configSnapshot.getValue(port1Cfg));
+            assertEquals(Integer.valueOf(1), configSnapshot.getValue(port2Cfg));
 
             // and those values don't change, even if we modify the underlying ConfigSource!
             newVals.clear();
@@ -76,9 +76,9 @@ public class ConfigTransactionTest
             newVals.put(PORT2_KEY, "2");
             configSource.setValues(newVals);
 
-            assertEquals("host1", configTransaction.getValue(hostCfg));
-            assertEquals(Integer.valueOf(1), configTransaction.getValue(port1Cfg));
-            assertEquals(Integer.valueOf(1), configTransaction.getValue(port2Cfg));
+            assertEquals("host1", configSnapshot.getValue(hostCfg));
+            assertEquals(Integer.valueOf(1), configSnapshot.getValue(port1Cfg));
+            assertEquals(Integer.valueOf(1), configSnapshot.getValue(port2Cfg));
 
             // but the actual config did really change!
             assertEquals("host2", hostCfg.getValue());

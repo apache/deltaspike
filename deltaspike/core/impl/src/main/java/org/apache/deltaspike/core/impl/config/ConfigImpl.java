@@ -20,7 +20,7 @@ package org.apache.deltaspike.core.impl.config;
 
 import org.apache.deltaspike.core.api.config.Config;
 import org.apache.deltaspike.core.api.config.ConfigResolver;
-import org.apache.deltaspike.core.api.config.ConfigTransaction;
+import org.apache.deltaspike.core.api.config.ConfigSnapshot;
 import org.apache.deltaspike.core.spi.config.ConfigFilter;
 import org.apache.deltaspike.core.spi.config.ConfigSource;
 import org.apache.deltaspike.core.spi.config.ConfigSourceProvider;
@@ -130,7 +130,7 @@ public class ConfigImpl implements Config
     }
 
     @Override
-    public ConfigTransaction startTransaction(ConfigResolver.TypedResolver<?>[] typedResolvers)
+    public ConfigSnapshot snapshotFor(ConfigResolver.TypedResolver<?>[] typedResolvers)
     {
         // we implement kind of optimistic Locking
         // Means we try multiple time to resolve all the given values
@@ -146,7 +146,7 @@ public class ConfigImpl implements Config
 
             if (startReadLastChanged == lastChanged)
             {
-                return new ConfigTransactionImpl(configValues);
+                return new ConfigSnapshotImpl(configValues);
             }
         }
 
