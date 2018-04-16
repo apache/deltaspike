@@ -23,6 +23,7 @@
     <interceptors>
         <class>org.apache.deltaspike.test.testcontrol.uc011.TestInterceptorImplementation</class>
         <class>org.apache.deltaspike.test.testcontrol.mock.uc015.TestInterceptorImplementation</class>
+        <class>org.apache.deltaspike.test.testcontrol.uc018.TestUpperCaseInterceptorImplementation</class>
     </interceptors>
 
     <alternatives>
