@@ -22,6 +22,7 @@ import org.apache.deltaspike.cdise.api.CdiContainer;
 import org.apache.deltaspike.cdise.api.CdiContainerLoader;
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.config.PropertyLoader;
+import org.apache.deltaspike.core.spi.filter.ClassFilter;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.spi.config.ConfigSource;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
@@ -111,7 +112,7 @@ public class CdiTestSuiteRunner extends Suite
 
         if (!containerStarted)
         {
-            applyAlternativeLabel(getTestClass().getJavaClass());
+            applyTestSpecificMetaData(getTestClass().getJavaClass());
 
             container.boot(getTestContainerConfig());
             containerStarted = true;
@@ -219,16 +220,17 @@ public class CdiTestSuiteRunner extends Suite
     }
 
     //just here, because all shared methods are in this class
-    static void applyAlternativeLabel(Class<?> currentAnnotationSource)
+    static void applyTestSpecificMetaData(Class<?> currentAnnotationSource)
     {
-        String activeAlternativeLabel = checkForLabeledAlternativeConfig(currentAnnotationSource);
-        initTestEnvConfig(currentAnnotationSource, activeAlternativeLabel);
+        TestControl testControl = currentAnnotationSource.getAnnotation(TestControl.class);
+        String activeAlternativeLabel = checkForLabeledAlternativeConfig(testControl);
+
+        initTestEnvConfig(currentAnnotationSource, activeAlternativeLabel, testControl);
     }
 
-    private static String checkForLabeledAlternativeConfig(Class<?> currentAnnotationSource)
+    private static String checkForLabeledAlternativeConfig(TestControl testControl)
     {
         String activeAlternativeLabel = "";
-        TestControl testControl = currentAnnotationSource.getAnnotation(TestControl.class);
 
         if (testControl != null)
         {
@@ -258,7 +260,7 @@ public class CdiTestSuiteRunner extends Suite
         return activeAlternativeLabel;
     }
 
-    private static void initTestEnvConfig(Class<?> testClass, String activeAlternativeLabel)
+    private static void initTestEnvConfig(Class<?> testClass, String activeAlternativeLabel, TestControl testControl)
     {
         if (ClassDeactivationUtils.isActivated(TestConfigSource.class))
         {
@@ -283,6 +285,18 @@ public class CdiTestSuiteRunner extends Suite
             testConfigSource.getProperties().put("activeAlternativeLabel", activeAlternativeLabel);
 
             testConfigSource.getProperties().put("activeAlternativeLabelSource", testClass.getName());
+
+            if (testControl != null)
+            {
+                testConfigSource.getProperties().put(TestControl.class.getName(), testClass.getName());
+                testConfigSource.getProperties().put(ClassFilter.class.getName(), testControl.classFilter().getName());
+            }
+            else
+            {
+                //reset it to avoid leaks between tests
+                testConfigSource.getProperties().put(TestControl.class.getName(), TestControl.class.getName());
+                testConfigSource.getProperties().put(ClassFilter.class.getName(), ClassFilter.class.getName());
+            }
         }
         else
         {
@@ -290,6 +304,18 @@ public class CdiTestSuiteRunner extends Suite
             System.setProperty("activeAlternativeLabel", activeAlternativeLabel); //will be picked up by ds-core
 
             System.setProperty("activeAlternativeLabelSource", testClass.getName()); //can be used for custom logic
+
+            if (testControl != null) //can be used for custom logic
+            {
+                System.setProperty(TestControl.class.getName(), testClass.getName());
+                System.setProperty(ClassFilter.class.getName(), testControl.classFilter().getName());
+            }
+            else
+            {
+                //reset it to avoid leaks between tests
+                System.setProperty(TestControl.class.getName(), TestControl.class.getName());
+                System.setProperty(ClassFilter.class.getName(), ClassFilter.class.getName());
+            }
         }
     }
 
