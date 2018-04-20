@@ -18,21 +18,23 @@
  */
 package org.apache.deltaspike.core.impl.exclude.extension;
 
+import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.config.base.CoreBaseConfig;
 import org.apache.deltaspike.core.api.exclude.Exclude;
-import org.apache.deltaspike.core.impl.util.AnnotationInstanceUtils;
-import org.apache.deltaspike.core.spi.alternative.AlternativeBeanClassProvider;
-import org.apache.deltaspike.core.util.ServiceUtils;
-import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
-import org.apache.deltaspike.core.impl.exclude.CustomProjectStageBeanFilter;
-import org.apache.deltaspike.core.impl.exclude.GlobalAlternative;
-import org.apache.deltaspike.core.spi.activation.Deactivatable;
+import org.apache.deltaspike.core.spi.filter.ClassFilter;
 import org.apache.deltaspike.core.api.interpreter.ExpressionInterpreter;
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
+import org.apache.deltaspike.core.impl.exclude.CustomProjectStageBeanFilter;
+import org.apache.deltaspike.core.impl.exclude.GlobalAlternative;
 import org.apache.deltaspike.core.impl.interpreter.PropertyExpressionInterpreter;
+import org.apache.deltaspike.core.impl.util.AnnotationInstanceUtils;
+import org.apache.deltaspike.core.spi.activation.Deactivatable;
+import org.apache.deltaspike.core.spi.alternative.AlternativeBeanClassProvider;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
+import org.apache.deltaspike.core.util.ServiceUtils;
+import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
 
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Alternative;
@@ -80,6 +82,10 @@ public class ExcludeExtension implements Extension, Deactivatable
     private Map<String, String> globalAlternatives = new HashMap<String, String>();
     private Annotation priorityAnnotationInstance;
 
+    //overruling the filter is supported via config-ordinal - for now only one is supported to keep it simple
+    //a custom filter can always delegate to multiple filters
+    //(e.g. in combination with ServiceUtils or querying all config-sources explicitly)
+    private ClassFilter classFilter;
 
     @SuppressWarnings("UnusedDeclaration")
     protected void init(@Observes BeforeBeanDiscovery beforeBeanDiscovery, BeanManager beanManager)
@@ -105,6 +111,20 @@ public class ExcludeExtension implements Extension, Deactivatable
             {
                 int priorityValue = CoreBaseConfig.InterceptorCustomization.PRIORITY;
                 priorityAnnotationInstance = AnnotationInstanceUtils.getPriorityAnnotationInstance(priorityValue);
+            }
+        }
+
+        boolean isClassFilterActivated = ClassDeactivationUtils.isActivated(ClassFilter.class);
+
+        if (isClassFilterActivated)
+        {
+            String classFilterClassName = ClassFilter.class.getName();
+            String activeClassFilterName =
+                ConfigResolver.getProjectStageAwarePropertyValue(classFilterClassName, classFilterClassName);
+
+            if (!classFilterClassName.equals(activeClassFilterName))
+            {
+                classFilter = ClassUtils.tryToInstantiateClassForName(activeClassFilterName, ClassFilter.class);
             }
         }
     }
@@ -162,6 +182,17 @@ public class ExcludeExtension implements Extension, Deactivatable
         if (!isActivated)
         {
             return;
+        }
+
+        if (classFilter != null)
+        {
+            Class<?> beanClass = processAnnotatedType.getAnnotatedType().getJavaClass();
+
+            if (classFilter.isFiltered(beanClass))
+            {
+                veto(processAnnotatedType, classFilter.getClass().getName());
+                return;
+            }
         }
 
         //TODO needs further discussions for a different feature CodiStartupBroadcaster.broadcastStartup();
