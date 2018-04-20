@@ -28,5 +28,9 @@
 
     <alternatives>
         <class>org.apache.deltaspike.test.testcontrol.CustomMockManager</class>
+
+        <!-- with cdi 1.1+ the following can be replaced with @Priority(...)-->
+        <class>org.apache.deltaspike.test.testcontrol.uc019.TestServiceLabelX</class>
+        <class>org.apache.deltaspike.test.testcontrol.uc019.TestServiceLabelY</class>
     </alternatives>
 </beans>
