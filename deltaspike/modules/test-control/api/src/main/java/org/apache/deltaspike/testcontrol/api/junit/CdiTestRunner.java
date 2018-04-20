@@ -467,7 +467,7 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
                     // Note that Weld 1 was "flat" anyway, so this property only affects newer versions of Weld
                     System.setProperty("org.jboss.weld.se.archive.isolation", "false");
 
-                    CdiTestSuiteRunner.applyAlternativeLabel(testClass);
+                    CdiTestSuiteRunner.applyTestSpecificMetaData(testClass);
 
                     container.boot(CdiTestSuiteRunner.getTestContainerConfig());
                     setContainerStarted();

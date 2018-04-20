@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.testcontrol.api;
 
+import org.apache.deltaspike.core.spi.filter.ClassFilter;
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 
 import java.lang.annotation.Annotation;
@@ -63,6 +64,14 @@ public @interface TestControl
      * allows to label alternative cdi-beans similar to global alternatives to bind them to 0-n tests
      */
     Class<? extends Label> activeAlternativeLabel() default Label.class;
+
+    //with cdi 1.1+ it can be used to implement labeled-alternatives without text based config
+    //(details see DELTASPIKE-1338)
+    /**
+     * low-level filter (mainly needed for special cases if labeled-alternatives aren't enough)
+     * @return the class-filter class which should be used for the current test-class
+     */
+    Class<? extends ClassFilter> classFilter() default ClassFilter.class;
 
     interface Label
     {

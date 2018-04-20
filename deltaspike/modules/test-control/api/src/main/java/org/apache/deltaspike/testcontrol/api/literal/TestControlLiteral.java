@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.testcontrol.api.literal;
 
+import org.apache.deltaspike.core.spi.filter.ClassFilter;
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.util.metadata.AnnotationInstanceProvider;
 import org.apache.deltaspike.testcontrol.api.TestControl;
@@ -65,5 +66,11 @@ public class TestControlLiteral extends AnnotationLiteral<TestControl> implement
     public Class<? extends Label> activeAlternativeLabel()
     {
         return defaultInstance.activeAlternativeLabel();
+    }
+
+    @Override
+    public Class<? extends ClassFilter> classFilter()
+    {
+        return defaultInstance.classFilter();
     }
 }
