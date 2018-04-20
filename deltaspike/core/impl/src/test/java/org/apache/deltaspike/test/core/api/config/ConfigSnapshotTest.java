@@ -30,7 +30,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 
-public class ConfigTransactionTest
+public class ConfigSnapshotTest
 {
     private static final String HOST_KEY = "ds.test.myapp.host";
     private static final String PORT1_KEY = "ds.test.myapp.port1";
@@ -65,9 +65,9 @@ public class ConfigTransactionTest
             ConfigSnapshot configSnapshot = cfg.snapshotFor(hostCfg, port1Cfg, port2Cfg);
             assertNotNull(configSnapshot);
 
-            assertEquals("host1", configSnapshot.getValue(hostCfg));
-            assertEquals(Integer.valueOf(1), configSnapshot.getValue(port1Cfg));
-            assertEquals(Integer.valueOf(1), configSnapshot.getValue(port2Cfg));
+            assertEquals("host1", hostCfg.getValue(configSnapshot));
+            assertEquals(Integer.valueOf(1), port1Cfg.getValue(configSnapshot));
+            assertEquals(Integer.valueOf(1), port2Cfg.getValue(configSnapshot));
 
             // and those values don't change, even if we modify the underlying ConfigSource!
             newVals.clear();
@@ -76,9 +76,9 @@ public class ConfigTransactionTest
             newVals.put(PORT2_KEY, "2");
             configSource.setValues(newVals);
 
-            assertEquals("host1", configSnapshot.getValue(hostCfg));
-            assertEquals(Integer.valueOf(1), configSnapshot.getValue(port1Cfg));
-            assertEquals(Integer.valueOf(1), configSnapshot.getValue(port2Cfg));
+            assertEquals("host1", hostCfg.getValue(configSnapshot));
+            assertEquals(Integer.valueOf(1), port1Cfg.getValue(configSnapshot));
+            assertEquals(Integer.valueOf(1), port2Cfg.getValue(configSnapshot));
 
             // but the actual config did really change!
             assertEquals("host2", hostCfg.getValue());

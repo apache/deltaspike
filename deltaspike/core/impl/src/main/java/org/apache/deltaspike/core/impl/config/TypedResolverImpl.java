@@ -19,6 +19,7 @@
 package org.apache.deltaspike.core.impl.config;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
+import org.apache.deltaspike.core.api.config.ConfigSnapshot;
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.spi.config.ConfigSource;
 import org.apache.deltaspike.core.util.ClassUtils;
@@ -206,6 +207,20 @@ public class TypedResolverImpl<T> implements ConfigResolver.UntypedResolver<T>
     {
         this.logChanges = logChanges;
         return this;
+    }
+
+    @Override
+    public T getValue(ConfigSnapshot snapshot)
+    {
+        ConfigSnapshotImpl snapshotImpl = (ConfigSnapshotImpl) snapshot;
+
+        if (!snapshotImpl.getConfigValues().containsKey(this))
+        {
+            throw new IllegalArgumentException("The TypedResolver for key " + getKey() +
+                " does not belong the given ConfigSnapshot!");
+        }
+
+        return (T) snapshotImpl.getConfigValues().get(this);
     }
 
     @Override

@@ -32,15 +32,8 @@ public class ConfigSnapshotImpl implements ConfigSnapshot
         this.configValues = configValues;
     }
 
-    @Override
-    public <T> T getValue(ConfigResolver.TypedResolver<T> typedResolver)
+    public Map<ConfigResolver.TypedResolver<?>, Object> getConfigValues()
     {
-        if (!configValues.containsKey(typedResolver))
-        {
-            throw new IllegalArgumentException("The TypedResolver for key " + typedResolver.getKey() +
-                    " does not belong to this ConfigTransaction!");
-        }
-
-        return (T) configValues.get(typedResolver);
+        return configValues;
     }
 }

@@ -525,6 +525,14 @@ public final class ConfigResolver
         T getValue();
 
         /**
+         * Returns the value from a previously taken {@link ConfigSnapshot}.
+         *
+         * @return the resolved Value
+         * @see Config#snapshotFor(TypedResolver[])
+         */
+        T getValue(ConfigSnapshot configSnapshot);
+
+        /**
          * Returns the key given in {@link #resolve(String)}.
          * @return the original key
          */
