@@ -21,14 +21,12 @@ package org.apache.deltaspike.core.api.config;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 import javax.enterprise.inject.Typed;
 
@@ -66,9 +64,6 @@ public final class ConfigResolver
      * at startup.
      */
     public static final String DELTASPIKE_LOG_CONFIG = "deltaspike.config.log";
-
-
-    private static final Logger LOG = Logger.getLogger(ConfigResolver.class.getName());
 
     private static ConfigProvider configProvider;
 
@@ -368,23 +363,6 @@ public final class ConfigResolver
     {
         return getConfigProvider().getConfig().getConfigSources();
     }
-
-    private static List<ConfigSource> sortAscending(List<ConfigSource> configSources)
-    {
-        Collections.sort(configSources, new Comparator<ConfigSource>()
-        {
-            /**
-             * {@inheritDoc}
-             */
-            @Override
-            public int compare(ConfigSource configSource1, ConfigSource configSource2)
-            {
-                return (configSource1.getOrdinal() > configSource2.getOrdinal()) ? 1 : -1;
-            }
-        });
-        return configSources;
-    }
-
 
     /**
      * Filter the configured value.
