@@ -107,15 +107,22 @@ public class QueryRoot extends QueryPart
         {
             ctx.append(QueryBuilder.deleteQuery(entityName));
         }
+        else if (methodPrefix.isCount())
+        {
+            ctx.append(QueryBuilder.countQuery(entityName));
+        }
         else
         {
             ctx.append(QueryBuilder.selectQuery(entityName));
         }
+        
         if (hasChildren(excludedForWhereCheck()))
         {
             ctx.append(" where ");
         }
+        
         buildQueryForChildren(ctx);
+
         return this;
     }
 

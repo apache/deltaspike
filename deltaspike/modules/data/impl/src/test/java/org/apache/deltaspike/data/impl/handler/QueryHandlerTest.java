@@ -515,6 +515,23 @@ public class QueryHandlerTest extends TransactionalTestCase
         assertEquals("willow", result.get(2).getName());
         assertEquals("zebra", result.get(3).getName());
     }
+    
+    @Test
+    public void should_count_by_name()
+    {
+        builder.createSimple("zebra");
+        builder.createSimple("zebra");
+        builder.createSimple("willow");
+        builder.createSimple("kangaroo");
+        builder.createSimple("kangaroo");
+        builder.createSimple("kangaroo");
+        builder.createSimple("bologna");
+
+        assertEquals(repo.countByName("bologna"), 1);
+        assertEquals(repo.countByName("kangaroo"), 3);
+        assertEquals(repo.countByName("willow"), 1);
+        assertEquals(repo.countByName("zebra"), 2);
+    }
 
     @Before
     public void setup()

@@ -29,9 +29,10 @@ public class RepositoryMethodPrefix
     public static final String DEFAULT_OPT_PREFIX = "findOptionalBy";
     public static final String DEFAULT_ANY_PREFIX = "findAnyBy";
     public static final String DEFAULT_DELETE_PREFIX = "deleteBy";
+    public static final String DEFAULT_COUNT_PREFIX = "countBy";
     public static final String DEFAULT_REMOVE_PREFIX = "removeBy";
     private static final String FIND_ALL_PREFIX = "findAll";
-
+    
     private static final String FIND_FIRST_PREFIX = "find(First|Top)(\\d+)(By)*";
     private static final String FIND_FIRST_PREFIX_PATTERN = FIND_FIRST_PREFIX + "(.*)";
     private static final Pattern DIGIT_PATTERN = Pattern.compile("\\d+");
@@ -104,6 +105,11 @@ public class RepositoryMethodPrefix
                 this.getPrefix().equalsIgnoreCase(DEFAULT_REMOVE_PREFIX);
     }
 
+    public boolean isCount()
+    {
+        return this.getPrefix().equalsIgnoreCase(DEFAULT_COUNT_PREFIX);
+    }
+    
     public int getDefinedMaxResults()
     {
         return definedMaxResults;
@@ -141,7 +147,8 @@ public class RepositoryMethodPrefix
         OPTIONAL(DEFAULT_OPT_PREFIX,SingleResultType.OPTIONAL),
         ANY(DEFAULT_ANY_PREFIX, SingleResultType.ANY),
         DELETE_DEFAULT(DEFAULT_DELETE_PREFIX, SingleResultType.ANY),
-        REMOVE_DEFAULT(DEFAULT_REMOVE_PREFIX, SingleResultType.ANY);
+        REMOVE_DEFAULT(DEFAULT_REMOVE_PREFIX, SingleResultType.ANY),
+        COUNT_DEFAULT(DEFAULT_COUNT_PREFIX, SingleResultType.ANY);
 
         private final String prefix;
         private final SingleResultType singleResultType;
