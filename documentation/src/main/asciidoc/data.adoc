@@ -156,7 +156,7 @@ public abstract class PersonRepository {
 @Repository(forEntity = Person.class)
 public interface PersonRepository {
     ...
-}    
+}
 ----------------------------------------
 
 The `@Repository` annotation tells the extension that this is a
@@ -206,7 +206,7 @@ public interface EntityRepository<E, PK extends Serializable>
 
     Long countLike(E example, SingularAttribute<E, ?>... attributes);
 
-} 
+}
 -------------------------------------------------------------------------
 
 The concrete repository can then extend this basic interface. For our
@@ -220,7 +220,7 @@ public interface PersonRepository extends EntityRepository<Person, Long>
 
     Person findBySsn(String ssn);
 
-} 
+}
 ------------------------------------------------------------------------
 
 TIP: Annotations on interfaces do not inherit. If the `EntityRepository`
@@ -268,7 +268,7 @@ public abstract class PersonRepository implements Deactivatable {
 @Repository(forEntity = Person.class)
 public interface PersonRepository extends Deactivatable {
     ...
-}    
+}
 ----------------------------------------
 
 === Support of @TransactionScoped EntityManagers
@@ -452,9 +452,12 @@ public class Person
 public interface PersonRepository extends EntityRepository<Person, Long>
 {
 
-    List<Person> findByNameLikeAndAgeBetweenAndGender(String name, 
+    List<Person> findByNameLikeAndAgeBetweenAndGender(String name,
                               int minAge, int maxAge, Gender gender);
 
+    long countByName(String name);
+
+    void removeByName(String name);
 }
 ------------------------------------------------------------------------
 
@@ -475,8 +478,12 @@ Or in more concrete words:
 * Followed by a property of the Repository entity and an optional comparator (we'll define this later). The property will be used in the query together with the comparator. Note that the number of arguments passed to the method depend on the comparator.
 * You can add more blocks of property-comparator which have to be concatenated by a boolean operator. This is either an `And` or `Or`.
 
-You can use the same way for delete an entity:
+You can also use the same way for delete an entity:
 * It must start with the `removeBy` keyword (or related `deleteBy`).
+
+or for counting:
+* It must start with the `countBy` keyword.
+* It must return a int or long.
 
 Other assumptions taken by the expression evaluator:
 
@@ -521,7 +528,7 @@ public interface PersonRepository extends EntityRepository<Person, Long>
 
     List<Person> findByLastNameLikeOrderByAgeAscLastNameDesc(String lastName);
 
-} 
+}
 ------------------------------------------------------------------------------
 
 === Query Limits
@@ -687,7 +694,7 @@ annotation is needed.
 ---------------------------------------------------------------------------------------------
 @NamedQuery(name = Person.BY_MIN_AGE,
             query = "select count(p) from Person p where p.age > :minAge order by p.age asc")
-        
+
 ...
 
 @Repository
@@ -743,7 +750,7 @@ public interface PersonRepository extends EntityRepository<Person, Long>
 [options="header, autowidth"]
 |===
 | Name | Description
-| max  | Limits the number of results. 
+| max  | Limits the number of results.
 | lock | Use a specific LockModeType to execute the query.
 |===
 
@@ -779,7 +786,7 @@ List<Person> result = personRepository.findAllByAge(18, 65)
     .orderDesc("p.age", false)
     .lockMode(LockModeType.WRITE)
     .hint("org.hibernate.timeout", Integer.valueOf(10))
-    .getResultList(); 
+    .getResultList();
 -----------------------------------------------------------
 
 IMPORTANT: Note that sorting is only applicable to method expressions or non-named
@@ -1006,7 +1013,7 @@ public interface QueryDslSupport
 public interface PersonRepository extends QueryDslSupport
 {
    ...
-}   
+}
 ---------------------------------------------------------
 
 === Implementing the Query Delegate
@@ -1253,7 +1260,7 @@ The query result can be modified with the following settings:
 | .orderAsc(...)           | Sorts the result ascending by the given property. Note that this can be applied to several properties
 | .orderDesc(...)          | Sorts the result descending by the given property. Note that this can be applied to several properties
 | .distinct()              | Sets distinct to true on the query.
-|=== 
+|===
 
 Once all comparators and query options are applied, the `createQuery()`
 method is called. This creates a JPA TypedQuery object for the
@@ -1408,7 +1415,7 @@ Activation per persistence unit in `orm.xml`:
 [source,xml]
 -----------------------------------------------------------------------------------------------------------------------------------------
 <entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_2_0.xsd" version="2.0">
     <persistence-unit-metadata>
         <persistence-unit-defaults>
@@ -1431,7 +1438,7 @@ public class AuditedEntity
 
     ...
 
-} 
+}
 -------------------------------------------
 
 Note that for this variant, you need a compile dependency on the impl
@@ -1493,7 +1500,7 @@ public class AuditedEntity
     @ModifiedBy
     private String auditUser;
 
-    ... 
+    ...
 
 }
 -----------------------------
@@ -1516,9 +1523,9 @@ public class UserProvider
         return user.getUsername();
     }
 
-    ... 
+    ...
 
-}        
+}
 ----------------------------------
 
 TIP: The JPA Spec does not recommend to modify entity relations from within a
