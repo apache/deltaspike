@@ -28,7 +28,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InterceptionType;
 import javax.enterprise.inject.spi.Interceptor;
-import javax.interceptor.InterceptorBinding;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 
 /**
@@ -37,7 +36,7 @@ import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 @ApplicationScoped
 public class DeltaSpikeProxyInterceptorLookup
 {
-    private final Map<Method, List<Interceptor<?>>> cache = new HashMap<Method, List<Interceptor<?>>>();
+    private final Map<Method, List<Interceptor<?>>> cache = new HashMap<>();
     
     public List<Interceptor<?>> lookup(Object instance, Method method)
     {
@@ -62,12 +61,12 @@ public class DeltaSpikeProxyInterceptorLookup
             return beanManager.resolveInterceptors(InterceptionType.AROUND_INVOKE, interceptorBindings);
         }
 
-        return new ArrayList<Interceptor<?>>();
+        return new ArrayList<>();
     }
 
     private Annotation[] extractInterceptorBindings(BeanManager beanManager, Object instance, Method method)
     {
-        ArrayList<Annotation> bindings = new ArrayList<Annotation>();
+        ArrayList<Annotation> bindings = new ArrayList<>();
 
         addInterceptorBindings(beanManager, bindings, instance.getClass().getDeclaredAnnotations());
         addInterceptorBindings(beanManager, bindings, method.getDeclaredAnnotations());
@@ -87,7 +86,7 @@ public class DeltaSpikeProxyInterceptorLookup
             
             Class<? extends Annotation> annotationType = annotation.annotationType();
             
-            if (annotationType.isAnnotationPresent(InterceptorBinding.class))
+            if (beanManager.isInterceptorBinding(annotationType))
             {
                 bindings.add(annotation);
             }
@@ -101,7 +100,7 @@ public class DeltaSpikeProxyInterceptorLookup
                         continue;
                     }
 
-                    if (subAnnotation.annotationType().isAnnotationPresent(InterceptorBinding.class))
+                    if (beanManager.isInterceptorBinding(subAnnotation.annotationType()))
                     {
                         bindings.add(subAnnotation);
                     }  

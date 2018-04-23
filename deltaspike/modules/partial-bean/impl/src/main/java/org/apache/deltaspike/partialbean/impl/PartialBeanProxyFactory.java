@@ -50,7 +50,7 @@ public class PartialBeanProxyFactory extends DeltaSpikeProxyFactory
     @Override
     protected ArrayList<Method> getDelegateMethods(Class<?> targetClass, ArrayList<Method> allMethods)
     {
-        ArrayList<Method> methods = new ArrayList<Method>();
+        ArrayList<Method> methods = new ArrayList<>();
         
         Iterator<Method> it = allMethods.iterator();
         while (it.hasNext())

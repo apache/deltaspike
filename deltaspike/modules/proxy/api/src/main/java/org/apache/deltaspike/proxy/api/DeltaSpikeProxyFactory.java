@@ -26,8 +26,6 @@ import java.util.Iterator;
 import java.util.List;
 import javax.enterprise.inject.spi.BeanManager;
 
-import javax.interceptor.InterceptorBinding;
-
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.ReflectionUtils;
 import org.apache.deltaspike.proxy.spi.DeltaSpikeProxyClassGenerator;
@@ -107,7 +105,7 @@ public abstract class DeltaSpikeProxyFactory
         {            
             Class<? extends Annotation> annotationType = annotation.annotationType();
             
-            if (annotationType.isAnnotationPresent(InterceptorBinding.class))
+            if (beanManager.isInterceptorBinding(annotationType))
             {
                 return true;
             }
