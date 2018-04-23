@@ -121,9 +121,10 @@ public class EntityRepositoryHandler<E, PK extends Serializable>
         }
     }
 
-    public Object findOptional(PK primaryKey)
+    @Override
+    public Optional<E> findOptionalBy(PK primaryKey)
     {
-        Object found = null;
+        E found = null;
         try
         {
             found = findBy(primaryKey);

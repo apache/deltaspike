@@ -62,7 +62,7 @@ public class DelegateQueryBuilder extends QueryBuilder
                 {
                     return ((Collection) result).stream();
                 }
-                else if (context.getRepositoryMethodMetadata().isReturnsOptional())
+                else if (context.getRepositoryMethodMetadata().isReturnsOptional() && !(result instanceof Optional))
                 {
                     return Optional.ofNullable(result);
                 }

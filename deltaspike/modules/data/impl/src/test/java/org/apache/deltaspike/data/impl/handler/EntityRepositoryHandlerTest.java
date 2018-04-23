@@ -38,6 +38,7 @@ import org.junit.experimental.categories.Category;
 import javax.inject.Inject;
 import javax.persistence.metamodel.SingularAttribute;
 import java.util.List;
+import java.util.Optional;
 
 import static org.apache.deltaspike.data.test.util.TestDeployments.initDeployment;
 import static org.junit.Assert.assertEquals;
@@ -166,6 +167,19 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
 
         // then
         assertEquals(simple.getName(), find.getName());
+    }
+    
+    @Test
+    public void should_find__by_pk() throws Exception
+    {
+        // given
+        Simple simple = testData.createSimple("testFindByPk");
+
+        // when
+        Optional<Simple> find = repo.findOptionalBy(simple.getId());
+
+        // then
+        assertEquals(simple.getName(), find.get().getName());
     }
 
     @Test

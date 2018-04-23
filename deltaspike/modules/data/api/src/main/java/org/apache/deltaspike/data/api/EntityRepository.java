@@ -20,6 +20,7 @@ package org.apache.deltaspike.data.api;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.metamodel.SingularAttribute;
 
@@ -40,6 +41,14 @@ public interface EntityRepository<E, PK extends Serializable> extends EntityPers
      * @return                  Entity identified by primary or null if it does not exist.
      */
     E findBy(PK primaryKey);
+    
+    /**
+     * Entity lookup by primary key. Convenicence method around
+     * {@link javax.persistence.EntityManager#find(Class, Object)}.
+     * @param primaryKey        DB primary key.
+     * @return                  Entity identified by primary or null if it does not exist, wrapped by Optional.
+     */
+    Optional<E> findOptionalBy(PK primaryKey);
 
     /**
      * Lookup all existing entities of entity class {@code <E>}.
