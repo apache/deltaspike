@@ -90,7 +90,7 @@ public class Java8Test
         Simple s = new Simple("something");
         entityManager.persist(s);
 
-        Optional<Simple> found = simpleRepository.findOptional(s.getId());
+        Optional<Simple> found = simpleRepository.findOptionalBy(s.getId());
 
         Assert.assertTrue(found.isPresent());
     }

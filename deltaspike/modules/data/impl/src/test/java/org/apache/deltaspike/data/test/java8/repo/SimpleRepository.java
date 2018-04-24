@@ -30,7 +30,7 @@ public interface SimpleRepository
 {
     Stream<Simple> findByName(String name);
 
-    Optional<Simple> findOptional(Long id);
+    Optional<Simple> findOptionalBy(Long id);
 
     Stream<Simple> findAll();
 
