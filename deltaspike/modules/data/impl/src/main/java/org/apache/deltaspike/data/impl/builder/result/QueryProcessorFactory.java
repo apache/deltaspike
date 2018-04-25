@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.data.impl.builder.result;
 
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
 import javax.enterprise.context.ApplicationScoped;
@@ -27,6 +28,7 @@ import javax.persistence.Query;
 import org.apache.deltaspike.core.util.ClassUtils;
 
 import org.apache.deltaspike.data.api.Modifying;
+import org.apache.deltaspike.data.api.QueryInvocationException;
 import org.apache.deltaspike.data.api.QueryResult;
 import org.apache.deltaspike.data.api.SingleResultType;
 import org.apache.deltaspike.data.impl.handler.CdiQueryInvocationContext;
@@ -85,9 +87,36 @@ public class QueryProcessorFactory
 
     private static final class StreamQueryProcessor implements QueryProcessor
     {
+        private Method getResultStreamMethod;
+        
+        public StreamQueryProcessor()
+        {
+            try
+            {
+                getResultStreamMethod = Query.class.getMethod("getResultStream");
+            }
+            catch (Exception e)
+            {
+                // ignore
+            }
+        }
+        
         @Override
         public Object executeQuery(Query query, CdiQueryInvocationContext context)
         {
+            if (getResultStreamMethod != null)
+            {
+                try
+                {
+                    // delegate to JPA 2.2, which is probably optimized and fetches the data lazy
+                    return getResultStreamMethod.invoke(query);
+                }
+                catch (Exception e)
+                {
+                    throw new QueryInvocationException(e, context);
+                }
+            }
+            
             return query.getResultList().stream();
         }
     }
