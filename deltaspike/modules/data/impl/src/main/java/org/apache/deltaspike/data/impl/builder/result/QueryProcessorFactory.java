@@ -21,6 +21,7 @@ package org.apache.deltaspike.data.impl.builder.result;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 
 import javax.persistence.NoResultException;
@@ -37,25 +38,45 @@ import org.apache.deltaspike.data.impl.meta.RepositoryMethodMetadata;
 @ApplicationScoped
 public class QueryProcessorFactory
 {
+    private NoOpQueryProcessor noOp;
+    private ListResultQueryProcessor listResult;
+    private StreamResultQueryProcessor streamResult;
+    private ExecuteUpdateQueryProcessor executeUpdate;
+    private SingleResultQueryProcessor singleResult;
+    
+    @PostConstruct
+    public void init()
+    {
+        noOp = new NoOpQueryProcessor();
+        listResult = new ListResultQueryProcessor();
+        streamResult = new StreamResultQueryProcessor();
+        executeUpdate = new ExecuteUpdateQueryProcessor();
+        singleResult = new SingleResultQueryProcessor();
+    }
+    
     public QueryProcessor build(RepositoryMethodMetadata methodMetadata)
     {
         if (ClassUtils.returns(methodMetadata.getMethod(), QueryResult.class))
         {
-            return new NoOpQueryProcessor();
+            return noOp;
         }
+        
         if (ClassUtils.returns(methodMetadata.getMethod(), List.class))
         {
-            return new ListQueryProcessor();
+            return listResult;
         }
+        
         if (methodMetadata.isReturnsStream())
         {
-            return new StreamQueryProcessor();
+            return streamResult;
         }
+        
         if (isModifying(methodMetadata))
         {
-            return new ExecuteUpdateQueryProcessor(ClassUtils.returns(methodMetadata.getMethod(), Void.TYPE));
+            return executeUpdate;
         }
-        return new SingleResultQueryProcessor();
+
+        return singleResult;
     }
 
     private boolean isModifying(RepositoryMethodMetadata methodMetadata)
@@ -67,7 +88,7 @@ public class QueryProcessorFactory
                 || methodMetadata.getMethodPrefix().isDelete();
     }
 
-    private static final class ListQueryProcessor implements QueryProcessor
+    private static final class ListResultQueryProcessor implements QueryProcessor
     {
         @Override
         public Object executeQuery(Query query, CdiQueryInvocationContext context)
@@ -85,25 +106,30 @@ public class QueryProcessorFactory
         }
     }
 
-    private static final class StreamQueryProcessor implements QueryProcessor
+    private static final class StreamResultQueryProcessor implements QueryProcessor
     {
+        // will be cached per @ApplicationScoped
+        private boolean initialized;
         private Method getResultStreamMethod;
-        
-        public StreamQueryProcessor()
-        {
-            try
-            {
-                getResultStreamMethod = Query.class.getMethod("getResultStream");
-            }
-            catch (Exception e)
-            {
-                // ignore
-            }
-        }
         
         @Override
         public Object executeQuery(Query query, CdiQueryInvocationContext context)
         {
+            if (initialized == false)
+            {
+                initialized = true;
+                try
+                {
+                    // take the query.getClass() instead of Query.class
+                    // as the users might use JPA 2.2 API but still a JPA 2.0 impl (could happen in TomEE soon)
+                    getResultStreamMethod = query.getClass().getMethod("getResultStream");
+                }
+                catch (Exception e)
+                {
+                    // ignore
+                }
+            }
+
             if (getResultStreamMethod != null)
             {
                 try
@@ -160,23 +186,10 @@ public class QueryProcessorFactory
 
     private static final class ExecuteUpdateQueryProcessor implements QueryProcessor
     {
-
-        private final boolean returnsVoid;
-
-        private ExecuteUpdateQueryProcessor(boolean returnsVoid)
-        {
-            this.returnsVoid = returnsVoid;
-        }
-
         @Override
         public Object executeQuery(Query query, CdiQueryInvocationContext context)
         {
-            int result = query.executeUpdate();
-            if (!returnsVoid)
-            {
-                return result;
-            }
-            return null;
+            return query.executeUpdate();
         }
     }
 }
