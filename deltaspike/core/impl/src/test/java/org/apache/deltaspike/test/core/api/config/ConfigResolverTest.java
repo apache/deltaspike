@@ -29,6 +29,7 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @SuppressWarnings("Duplicates")
 public class ConfigResolverTest
@@ -213,6 +214,41 @@ public class ConfigResolverTest
         Assert.assertNull(resolver.getValue());
     }
     
+    @Test
+    public void testTypedResolver_OnChange()
+    {
+        final String key = "non.existing.key";
+
+        final AtomicInteger valueChanged = new AtomicInteger(0);
+
+        ConfigResolver.TypedResolver<String> resolver = ConfigResolver.resolve(key)
+            .logChanges(true)
+            .onChange((k, oldValue, newValue) ->
+            {
+                Assert.assertEquals(key, k);
+                valueChanged.incrementAndGet();
+            });
+
+        Assert.assertNull(resolver.getValue());
+
+        setTestConfigSourceValue(key, "somevalue");
+        Assert.assertEquals("somevalue", resolver.getValue());
+        Assert.assertEquals(1, valueChanged.get());
+
+        setTestConfigSourceValue(key, "newvalue");
+        Assert.assertEquals("newvalue", resolver.getValue());
+        Assert.assertEquals(2, valueChanged.get());
+
+        // this time we do not change anything
+        Assert.assertEquals("newvalue", resolver.getValue());
+        Assert.assertEquals(2, valueChanged.get());
+
+        // last change
+        setTestConfigSourceValue(key, null);
+        Assert.assertNull(resolver.getValue());
+        Assert.assertEquals(3, valueChanged.get());
+    }
+
     @Test
     public void testProjectStageAwarePropertyValueReference_1() {
         final String expectedFooUrl =

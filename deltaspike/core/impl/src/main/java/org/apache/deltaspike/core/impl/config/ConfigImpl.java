@@ -130,7 +130,7 @@ public class ConfigImpl implements Config
     }
 
     @Override
-    public ConfigSnapshot snapshotFor(ConfigResolver.TypedResolver<?>[] typedResolvers)
+    public ConfigSnapshot snapshotFor(ConfigResolver.TypedResolver<?>... typedResolvers)
     {
         // we implement kind of optimistic Locking
         // Means we try multiple time to resolve all the given values

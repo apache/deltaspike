@@ -64,7 +64,9 @@ public class TypedResolverImpl<T> implements ConfigResolver.UntypedResolver<T>
     private ConfigResolver.Converter<?> converter;
 
     private boolean evaluateVariables = false;
+
     private boolean logChanges = false;
+    private ConfigResolver.ConfigChanged<T> valueChangedCallback = null;
 
     private long cacheTimeMs = -1;
 
@@ -210,6 +212,13 @@ public class TypedResolverImpl<T> implements ConfigResolver.UntypedResolver<T>
     }
 
     @Override
+    public ConfigResolver.TypedResolver<T> onChange(ConfigResolver.ConfigChanged<T> valueChangedCallback)
+    {
+        this.valueChangedCallback = valueChangedCallback;
+        return this;
+    }
+
+    @Override
     public T getValue(ConfigSnapshot snapshot)
     {
         ConfigSnapshotImpl snapshotImpl = (ConfigSnapshotImpl) snapshot;
@@ -264,10 +273,19 @@ public class TypedResolverImpl<T> implements ConfigResolver.UntypedResolver<T>
             }
         }
 
-        if (logChanges && (value != null && !value.equals(lastValue) || (value == null && lastValue != null)))
+        if ((logChanges || valueChangedCallback != null)
+            && (value != null && !value.equals(lastValue) || (value == null && lastValue != null)))
         {
-            LOG.log(Level.INFO, "New value {0} for key {1}.",
+            if (logChanges)
+            {
+                LOG.log(Level.INFO, "New value {0} for key {1}.",
                     new Object[]{ConfigResolver.filterConfigValueForLog(keyOriginal, valueStr), keyOriginal});
+            }
+
+            if (valueChangedCallback != null)
+            {
+                valueChangedCallback.onValueChange(keyOriginal, lastValue, value);
+            }
         }
 
         lastValue = value;
