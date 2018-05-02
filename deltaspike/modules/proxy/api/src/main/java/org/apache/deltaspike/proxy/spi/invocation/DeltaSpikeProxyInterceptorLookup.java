@@ -28,7 +28,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InterceptionType;
 import javax.enterprise.inject.spi.Interceptor;
-import javax.interceptor.InterceptorBinding;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 
 /**
@@ -87,7 +86,7 @@ public class DeltaSpikeProxyInterceptorLookup
             
             Class<? extends Annotation> annotationType = annotation.annotationType();
             
-            if (annotationType.isAnnotationPresent(InterceptorBinding.class))
+            if (beanManager.isInterceptorBinding(annotationType))
             {
                 bindings.add(annotation);
             }
@@ -101,7 +100,7 @@ public class DeltaSpikeProxyInterceptorLookup
                         continue;
                     }
 
-                    if (subAnnotation.annotationType().isAnnotationPresent(InterceptorBinding.class))
+                    if (beanManager.isInterceptorBinding(subAnnotation.annotationType()))
                     {
                         bindings.add(subAnnotation);
                     }  

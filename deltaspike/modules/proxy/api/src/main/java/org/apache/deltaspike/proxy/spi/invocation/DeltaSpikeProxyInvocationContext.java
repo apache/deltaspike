@@ -110,7 +110,7 @@ public class DeltaSpikeProxyInvocationContext<T, H> extends AbstractInvocationCo
             throw new DeltaSpikeProxyInvocationWrapperException(e);
         }
 
-        return null;
+        return proceedOriginalReturnValue;
     }
 
     public boolean isProceedOriginal()
