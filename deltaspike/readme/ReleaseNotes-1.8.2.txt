@@ -1,0 +1,33 @@
+Release Notes - DeltaSpike - Version 1.8.2
+
+Bug
+
+    [DELTASPIKE-1276] - Multiple license headers
+    [DELTASPIKE-1299] - Order by items are applied in alphabetic order
+    [DELTASPIKE-1310] - Please use https (SSL) for links to KEYS, hashes, sigs
+    [DELTASPIKE-1313] - DeltaSpikeProxyInterceptorLookup fails on WAS
+    [DELTASPIKE-1316] - add dynamic annotations feature, configurable via config
+    [DELTASPIKE-1317] - AnnotatedCallableImpl blows up with ArrayOutofBounds when parsing enums
+    [DELTASPIKE-1344] - deltaspike-cdictrl-owb has a transient runtime dependency on Shrinkwrap and Arquillian
+
+New Feature
+
+    [DELTASPIKE-1319] - labeled alternatives
+    [DELTASPIKE-1320] - global alternative spi to support custom (type-safe) mechanisms
+    [DELTASPIKE-1337] - optional ClassFilter spi
+    [DELTASPIKE-1338] - support class-filter per test
+
+Improvement
+
+    [DELTASPIKE-1309] - Upgrade ASM
+    [DELTASPIKE-1311] - Allow Excluded Repositories
+    [DELTASPIKE-1329] - ProjectStageProducer should log changed values
+    [DELTASPIKE-1331] - minor type improvement of the ViewConfigNode spi
+    [DELTASPIKE-1332] - support further cases for custom view-meta-data
+    [DELTASPIKE-1334] - javadoc for ConfigPreProcessor#beforeAddToConfig
+    [DELTASPIKE-1339] - Add support for dynamic interceptor binding, added via Extension
+
+Task
+
+    [DELTASPIKE-1257] - Research why BOM isn't working right in a release
+    [DELTASPIKE-1312] - Upgrade to quartz-2.3.0
