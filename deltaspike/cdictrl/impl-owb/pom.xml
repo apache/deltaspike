@@ -42,6 +42,7 @@
             <groupId>org.apache.deltaspike.test</groupId>
             <artifactId>test-utils</artifactId>
             <version>${project.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.deltaspike.test</groupId>
