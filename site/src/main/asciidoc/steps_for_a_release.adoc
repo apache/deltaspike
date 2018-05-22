@@ -157,6 +157,8 @@ git push origin master
 
 === Upload Artifacts
 
+Apache releases get published via Subversion.
+
 -----------------------------------------------------------------------------------------------------------------------
 svn co https://dist.apache.org/repos/dist/release/deltaspike
 mkdir [version]
@@ -168,6 +170,41 @@ svn rm {old-version}
 svn add {version}
 svn commit -m "Removing {old-version}, adding {version}"
 -----------------------------------------------------------------------------------------------------------------------
+
+The following `getrelease.sh` bash script can be used to download the release artifacts from maven.central:
+
+[script, getrelease.sh]
+-----------------------------------------------------------------------------------------------------------------------
+#!/bin/sh
+mkdir $1
+cd $1
+
+curl -O https://repository.apache.org/content/groups/public/org/apache/deltaspike/deltaspike/${1}/deltaspike-${1}-source-release.zip
+curl -O https://repository.apache.org/content/groups/public/org/apache/deltaspike/deltaspike/${1}/deltaspike-${1}-source-release.zip.asc
+curl -O https://repository.apache.org/content/groups/public/org/apache/deltaspike/deltaspike/${1}/deltaspike-${1}-source-release.zip.md5
+curl -O https://repository.apache.org/content/groups/public/org/apache/deltaspike/deltaspike/${1}/deltaspike-${1}-source-release.zip.sha1
+
+curl -O https://repository.apache.org/content/groups/public/org/apache/deltaspike/distribution/distribution-full/${1}/distribution-full-${1}.tar.gz
+curl -O https://repository.apache.org/content/groups/public/org/apache/deltaspike/distribution/distribution-full/${1}/distribution-full-${1}.tar.gz.asc
+curl -O https://repository.apache.org/content/groups/public/org/apache/deltaspike/distribution/distribution-full/${1}/distribution-full-${1}.tar.gz.md5
+curl -O https://repository.apache.org/content/groups/public/org/apache/deltaspike/distribution/distribution-full/${1}/distribution-full-${1}.tar.gz.sha1
+
+curl -O https://repository.apache.org/content/groups/public/org/apache/deltaspike/distribution/distribution-full/${1}/distribution-full-${1}.zip
+curl -O https://repository.apache.org/content/groups/public/org/apache/deltaspike/distribution/distribution-full/${1}/distribution-full-${1}.zip.asc
+curl -O https://repository.apache.org/content/groups/public/org/apache/deltaspike/distribution/distribution-full/${1}/distribution-full-${1}.zip.md5
+curl -O https://repository.apache.org/content/groups/public/org/apache/deltaspike/distribution/distribution-full/${1}/distribution-full-${1}.zip.sha1
+
+curl -O https://repository.apache.org/content/groups/public/org/apache/deltaspike/distribution/distribution-full/${1}/distribution-full-${1}-tests.jar
+curl -O https://repository.apache.org/content/groups/public/org/apache/deltaspike/distribution/distribution-full/${1}/distribution-full-${1}-tests.jar.asc
+curl -O https://repository.apache.org/content/groups/public/org/apache/deltaspike/distribution/distribution-full/${1}/distribution-full-${1}-tests.jar.md5
+curl -O https://repository.apache.org/content/groups/public/org/apache/deltaspike/distribution/distribution-full/${1}/distribution-full-${1}-tests.jar.sha1
+
+
+for f in *.zip; do (sha1sum ${f}; cat ${f}.sha1;echo;echo;); done
+for f in *.tar.gz; do (sha1sum ${f}; cat ${f}.sha1;echo;echo;); done
+cd ..
+-----------------------------------------------------------------------------------------------------------------------
+
 
 === Check Downloads
 
