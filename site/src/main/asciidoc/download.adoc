@@ -9,6 +9,13 @@
 
 v{latestStable}
 
+== Prerequisits
+
+The minimum JavaEE version is JavaEE 6.
+
+The minmium Java version until DeltaSpike-1.8.x is Java 6.
+The minimum Java version from DeltaSpike-1.9.0 upwards is Java8.
+
 
 == Binary Distribution
 
