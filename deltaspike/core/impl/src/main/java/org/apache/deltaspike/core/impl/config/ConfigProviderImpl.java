@@ -83,6 +83,12 @@ public class ConfigProviderImpl implements ConfigResolver.ConfigProvider
         }
     }
 
+    @Override
+    public ConfigResolver.ConfigHelper getHelper()
+    {
+        return new ConfigHelperImpl();
+    }
+
     private boolean isChildClassLoader(ClassLoader configClassLoader, ClassLoader suspect)
     {
         ClassLoader suspectParentCl = suspect.getParent();

@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import javax.enterprise.inject.Typed;
@@ -613,7 +614,7 @@ public final class ConfigResolver
     }
 
 
-    private static ConfigProvider getConfigProvider()
+    public static ConfigProvider getConfigProvider()
     {
         if (configProvider == null)
         {
@@ -670,6 +671,23 @@ public final class ConfigResolver
          *   It will automatically get invoked in BeforeShutdown via our ConfigExtension internally.
          */
         void releaseConfig(ClassLoader cl);
+
+        /**
+         * Provide access to the ConfigHelper
+         */
+        ConfigHelper getHelper();
+    }
+
+    /**
+     * Some utility functions which are useful for implementing own ConfigSources, etc.
+     */
+    public interface ConfigHelper
+    {
+        /**
+         * @return A Set of all the attributes which differ between the old and new config Map
+         *         or an empty Set if there is no difference.
+         */
+        Set<String> diffConfig(Map<String, String> oldValues, Map<String, String> newValues);
     }
 
     /**
