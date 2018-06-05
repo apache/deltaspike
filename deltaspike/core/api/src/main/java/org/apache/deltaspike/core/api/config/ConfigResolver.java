@@ -639,12 +639,36 @@ public final class ConfigResolver
     }
 
 
+    /**
+     * Provide access to the underlying {@link Config} instance.
+     *
+     */
     public interface ConfigProvider
     {
+        /**
+         * Return either an existing Config associated with the current TCCL or a
+         * new Config and associate it with the TCCL.
+         *
+         * @return the Config associated with the current ThreadContextClassLoader
+         */
         Config getConfig();
 
+        /**
+         * Return either an existing Config associated with the given ClassLoader or a
+         * new Config and associate it with the given ClassLoader.
+         *
+         * @return the Config associated with the given ClassLoader
+         */
         Config getConfig(ClassLoader cl);
 
+        /**
+         * Release the Config associated with the given ClassLoader.
+         * This will also properly close all the ConfigSources, Converters, etc
+         * managed by this Config.
+         *
+         * ATTENTION: Usually this method doesn't need to be invoked manually!
+         *   It will automatically get invoked in BeforeShutdown via our ConfigExtension internally.
+         */
         void releaseConfig(ClassLoader cl);
     }
 
