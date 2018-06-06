@@ -120,13 +120,7 @@
             <optional>true</optional>
         </dependency>
 
-        <dependency>
-            <groupId>org.apache.deltaspike.core</groupId>
-            <artifactId>deltaspike-core-impl</artifactId>
-            <scope>test</scope>
-        </dependency>
-        
-        <!-- Allows to easily create beans.xml files with certain content -->        
+        <!-- Allows to easily create beans.xml files with certain content -->
         <dependency>
             <groupId>org.jboss.shrinkwrap.descriptors</groupId>
             <artifactId>shrinkwrap-descriptors-impl-javaee</artifactId>
