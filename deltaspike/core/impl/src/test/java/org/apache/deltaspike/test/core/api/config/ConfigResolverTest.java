@@ -22,6 +22,7 @@ import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.spi.config.ConfigFilter;
 import org.apache.deltaspike.core.spi.config.ConfigSource;
+import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
 import org.junit.Assert;
 import org.junit.Before;
@@ -142,6 +143,18 @@ public class ConfigResolverTest
         Assert.assertEquals(1, allPropertyValues.size());
         Assert.assertEquals("shouldGetDecrypted: value", allPropertyValues.get(0));
 
+    }
+
+    @Test
+    public void testGetConfigFilter()
+    {
+        // make sure no ConfigFilter is left over from previous tests
+        ConfigResolver.getConfigProvider().releaseConfig(ClassUtils.getClassLoader(null));
+
+        List<ConfigFilter> configFilters = ConfigResolver.getConfigFilters();
+        Assert.assertNotNull(configFilters);
+        Assert.assertEquals(1, configFilters.size());
+        Assert.assertEquals(SecretTestConfigFilter.class, configFilters.get(0).getClass());
     }
 
     @Test
