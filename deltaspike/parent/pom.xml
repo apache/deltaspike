@@ -48,7 +48,7 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <owb.version>1.2.7</owb.version>
+        <owb.version>1.2.8</owb.version>
         <!-- Weld profiles (in parent/code/pom.xml) override this version -->
         <weld.version>1.1.34.Final</weld.version>
 
