@@ -20,16 +20,21 @@ package org.apache.deltaspike.core.impl.monitoring;
 
 import org.apache.deltaspike.core.api.monitoring.InvocationMonitored;
 
+import javax.enterprise.context.ContextNotActiveException;
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 import java.io.Serializable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Interceptor
 @InvocationMonitored
 public class InvocationMonitorInterceptor implements Serializable
 {
+    private static final Logger logger = Logger.getLogger(InvocationMonitorInterceptor.class.getName());
+
     @Inject
     private RequestInvocationCounter requestInvocationCounter;
 
@@ -39,7 +44,15 @@ public class InvocationMonitorInterceptor implements Serializable
         long start = System.nanoTime();
         Object retVal = ic.proceed();
         long end = System.nanoTime();
-        requestInvocationCounter.count(ic.getTarget().getClass().getName(), ic.getMethod().getName(), end - start);
+        try
+        {
+            requestInvocationCounter.count(ic.getTarget().getClass().getName(), ic.getMethod().getName(), end - start);
+        }
+        catch (ContextNotActiveException cnae)
+        {
+            logger.log(Level.FINE, "could not monitor invocatino to {} due to RequestContext not being active",
+                ic.getMethod().toString());
+        }
 
         return retVal;
     }
