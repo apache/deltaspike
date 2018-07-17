@@ -174,18 +174,14 @@ public class MessageBundleInvocationHandler implements InvocationHandler, Serial
                     continue;
                 }
 
-                if (arg == null)
-                {
-                    arguments.add("'null'");
-                }
-                else if (arg instanceof Serializable)
+                if (arg instanceof Serializable)
                 {
                     arguments.add((Serializable) arg);
                 }
                 else
                 {
                     // for non-serializable objects we perform an immediate toString() instead
-                    arguments.add(arg.toString());
+                    arguments.add(arg == null ? null : arg.toString());
                 }
             }
         }

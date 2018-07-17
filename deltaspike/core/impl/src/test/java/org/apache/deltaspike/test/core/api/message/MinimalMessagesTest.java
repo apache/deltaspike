@@ -93,7 +93,7 @@ public class MinimalMessagesTest
                 (ElPickedUpMessages) BeanProvider.getContextualReference("elPickedUpMessages");
         Assert.assertNotNull(elMessage);
         Assert.assertEquals("Hello DeltaSpike", elMessage.sayHello("DeltaSpike"));
-        Assert.assertEquals("Hello 'null'", elMessage.sayHello(null));
+        Assert.assertEquals("Hello null", elMessage.sayHello(null));
         Assert.assertEquals("Text", elMessage.text());
     }
 
@@ -104,7 +104,7 @@ public class MinimalMessagesTest
                 (TypedMessageWithCustomName) BeanProvider.getContextualReference("namedTypedMessages");
         Assert.assertNotNull(elMessage);
         Assert.assertEquals("Hello DeltaSpike", elMessage.sayHello("DeltaSpike"));
-        Assert.assertEquals("Hello 'null'", elMessage.sayHello(null));
+        Assert.assertEquals("Hello null", elMessage.sayHello(null));
         Assert.assertEquals("Text", elMessage.text());
     }
 
@@ -115,7 +115,7 @@ public class MinimalMessagesTest
         ElPickedUpMessages injectedElMessage = this.injectedElPickedUpMessages;
         Assert.assertNotNull(injectedElMessage);
         Assert.assertEquals("Hello DeltaSpike", injectedElMessage.sayHello("DeltaSpike"));
-        Assert.assertEquals("Hello 'null'", injectedElMessage.sayHello(null));
+        Assert.assertEquals("Hello null", injectedElMessage.sayHello(null));
         Assert.assertEquals("Text", injectedElMessage.text());
     }
 }
