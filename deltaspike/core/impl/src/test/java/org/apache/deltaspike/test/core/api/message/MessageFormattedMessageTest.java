@@ -87,7 +87,7 @@ public class MessageFormattedMessageTest
     @Test
     public void testNullMessage()
     {
-        assertEquals("Welcome to 'null'", message.welcomeTo(null));
+        assertEquals("Welcome to null", message.welcomeTo(null));
     }
 
     @Test

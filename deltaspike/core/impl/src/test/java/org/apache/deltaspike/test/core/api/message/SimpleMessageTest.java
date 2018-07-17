@@ -101,7 +101,7 @@ public class SimpleMessageTest
     @Test
     public void testNullMessage()
     {
-        String expectedResult = "Welcome to 'null'";
+        String expectedResult = "Welcome to null";
         String result = simpleMessage.welcomeWithStringVariable(null);
         assertEquals(expectedResult, result);
     }
