@@ -18,6 +18,8 @@
  */
 package org.apache.deltaspike.test.core.api.message;
 
+import java.util.Date;
+
 import org.apache.deltaspike.core.api.message.MessageBundle;
 
 /**
@@ -32,4 +34,6 @@ public interface MessageFormattedMessage
     String welcomeTo(String name);
 
     String incomeSinceDays(int days, float income);
+
+    String commitsInProject(Date date, String projectName, int commits);
 }

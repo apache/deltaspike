@@ -89,4 +89,10 @@ public class MessageFormattedMessageTest
     {
         assertEquals("Welcome to 'null'", message.welcomeTo(null));
     }
+
+    @Test
+    public void testComplexMessageWithNull()
+    {
+        assertEquals("At null on null, project deltaspike had 10 commits.", message.commitsInProject(null, "deltaspike", 10));
+    }
 }

@@ -37,4 +37,7 @@ public interface SimpleMessage
 
     @MessageTemplate("Welcome to %f")
     String welcomeWithFloatVariable(Float value);
+
+    @MessageTemplate("Counter: %04d")
+    String counter(Integer value);
 }
