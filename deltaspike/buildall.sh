@@ -34,14 +34,15 @@ mvn clean install -Ptomee-build-managed -Dtomee.version=1.7.5 -Dopenejb.version=
 # mvn clean install -Pjbossas-build-managed-7 | tee mvn-jbossas_7.log
 
 # CDI-1.2, EE7
-mvn clean install -POWB15,OpenEJB-TomEE -Dowb.version=1.7.4 -Dopenejb.owb.version=1.7.4 -Dopenejb.version=7.0.4 | tee mvn-owb1.7.4.log
+mvn clean install -POWB15,OpenEJB-TomEE -Dowb.version=1.7.5 -Dopenejb.owb.version=1.7.5 -Dopenejb.version=7.0.5 | tee mvn-owb1.7.5.log
 mvn clean install -PWeld2 -Dweld.version=2.4.6.Final | tee mvn-weld2_4_6.log
 mvn clean install -Pwildfly-build-managed | tee mvn-wildfly9.log
 mvn clean install -Ptomee7-build-managed,OpenEJB-TomEE -Dtomee.version=7.0.4 -Dopenejb.version=7.0.4 -Dopenejb.owb.version=1.7.4 | tee mvn-tomee_7_0_4.log
 
 # CDI-2.0, EE8
 
-mvn clean install -POWB2 | tee mvn-owb2_0_4.log
+mvn clean install -POWB2 | tee mvn-owb2_0_5.log
+mvn clean install -POWB2 | tee mvn-owb2_0_5.log
 
 
 # and now for the result check
