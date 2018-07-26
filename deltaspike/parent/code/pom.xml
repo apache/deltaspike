@@ -631,7 +631,7 @@
 
             <properties>
                 <!-- Actual Weld version used with this profile -->
-                <weld.version>3.0.0.Final</weld.version>
+                <weld.version>3.0.4.Final</weld.version>
                 <cdicontainer.version>weld-${weld.version}</cdicontainer.version>
             </properties>
             
