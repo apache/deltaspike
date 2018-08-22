@@ -92,7 +92,7 @@ public class ResourceLocalTransactionStrategy implements TransactionStrategy
         TransactionBeanStorage transactionBeanStorage = TransactionBeanStorage.getInstance();
 
         boolean isOutermostInterceptor = transactionBeanStorage.isEmpty();
-        boolean outermostTransactionAlreadyExisted = false;
+        boolean startedTransaction = false;
 
         if (isOutermostInterceptor)
         {
@@ -111,7 +111,6 @@ public class ResourceLocalTransactionStrategy implements TransactionStrategy
             for (Class<? extends Annotation> emQualifier : emQualifiers)
             {
                 EntityManager entityManager = resolveEntityManagerForQualifier(emQualifier);
-
                 EntityManagerEntry entityManagerEntry = createEntityManagerEntry(entityManager, emQualifier);
                 transactionBeanStorage.storeUsedEntityManager(entityManagerEntry);
 
@@ -121,10 +120,7 @@ public class ResourceLocalTransactionStrategy implements TransactionStrategy
                 {
                     beforeBegin(invocationContext, entityManagerEntry, transaction);
                     transaction.begin();
-                }
-                else if (isOutermostInterceptor)
-                {
-                    outermostTransactionAlreadyExisted = true;
+                    startedTransaction = true;
                 }
 
                 //don't move it before EntityTransaction#begin() and invoke it in any case
@@ -144,7 +140,7 @@ public class ResourceLocalTransactionStrategy implements TransactionStrategy
                 Set<EntityManagerEntry> entityManagerEntryList =
                     transactionBeanStorage.getUsedEntityManagerEntries();
 
-                if (!outermostTransactionAlreadyExisted)
+                if (startedTransaction)
                 {
                     // We only commit transactions we opened ourselfs.
                     // If the transaction got opened outside of our interceptor chain
@@ -177,7 +173,7 @@ public class ResourceLocalTransactionStrategy implements TransactionStrategy
             // In case of JTA we will just commit the UserTransaction.
             if (isOutermostInterceptor)
             {
-                if (!outermostTransactionAlreadyExisted)
+                if (startedTransaction)
                 {
                     // We only commit transactions we opened ourselfs.
                     // If the transaction got opened outside of our interceptor chain
