@@ -191,7 +191,11 @@ First, the EntityManagers or EntityManagerFactories must be obtained from the JP
 
 In EE managed environments the EntityManager can be obtained directly or through an EntityManagerFactory using standard JPA annotations `@PersistenceContext` for an EntityManager or `@PersistenceUnit` for an EntityManagerFactory.
 
-.JPA Managed EntityManager
+When using `@PersistenceContext` the Container has the full control over the EntityManager.
+In this case transactions have to be conducted via a `TransactionManager` or `UserTransaction`.
+If the Database connection is set up to be JTA aware then please also see our <<JTA Support>> section.
+
+.Container Managed EntityManager
 [source,java]
 ----
 public class EntityManagerProducer {
