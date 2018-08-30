@@ -141,7 +141,7 @@ public class DefaultFutureableStrategy implements FutureableStrategy
                 !void.class.isAssignableFrom(returnType) &&
                 (COMPLETION_STAGE == null || !COMPLETION_STAGE.isAssignableFrom(returnType)))
         {
-            throw new IllegalArgumentException("Return type should be a CompletableStage, Future or Void");
+            throw new IllegalArgumentException("Return type should be a CompletableStage, Future or void");
         }
 
         if (configByMethod == null)

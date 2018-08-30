@@ -29,7 +29,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * Mark the method as execute in a thread pool and not synchronously.
- * Note: it should return a CompletionStage or Future.
+ * Note: it should return a CompletionStage, Future or void.
  */
 @InterceptorBinding
 @Retention(RUNTIME)
