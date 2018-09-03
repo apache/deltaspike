@@ -22,11 +22,12 @@ import org.apache.deltaspike.test.jpa.api.shared.First;
 import org.apache.deltaspike.test.jpa.api.shared.Second;
 import org.apache.deltaspike.test.jpa.api.shared.TestEntityManager;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
 
-@RequestScoped
+@ApplicationScoped
 public class TestEntityManagerProducer
 {
     private TestEntityManager defaultEntityManager = new TestEntityManager();
@@ -36,12 +37,14 @@ public class TestEntityManagerProducer
     private TestEntityManager secondEntityManager = new TestEntityManager();
 
     @Produces
+    @RequestScoped
     protected EntityManager defaultEntityManager()
     {
         return defaultEntityManager;
     }
 
     @Produces
+    @RequestScoped
     @First
     protected EntityManager firstEntityManager()
     {
@@ -49,6 +52,7 @@ public class TestEntityManagerProducer
     }
 
     @Produces
+    @RequestScoped
     @Second
     protected EntityManager secondEntityManager()
     {
