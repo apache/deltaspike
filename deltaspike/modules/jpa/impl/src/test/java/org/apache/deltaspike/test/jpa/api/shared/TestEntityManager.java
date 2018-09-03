@@ -243,7 +243,7 @@ public class TestEntityManager implements EntityManager
     @Override
     public void joinTransaction()
     {
-        throw new IllegalStateException("not implemented");
+        // all fine, nothing to do
     }
 
     @Override

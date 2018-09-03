@@ -53,4 +53,9 @@ public class ManualTransactionBean
     public void executeInSecondTransaction()
     {
     }
+
+    @Transactional
+    public void executeInTransaction()
+    {
+    }
 }
