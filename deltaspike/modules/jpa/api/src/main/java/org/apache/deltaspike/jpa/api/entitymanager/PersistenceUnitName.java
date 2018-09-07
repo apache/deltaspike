@@ -33,6 +33,10 @@ import static java.lang.annotation.ElementType.TYPE;
 /**
  * The name of the PersistenceUnit to get picked up by the
  * EntityManagerFactoryProducer.
+ *
+ * The EntityManagerFactoryProducer will in turn use the
+ * {@link org.apache.deltaspike.jpa.spi.entitymanager.PersistenceConfigurationProvider}
+ * to pick up the properties to be used for creating the {@code }EntityManagerFactory}.
  */
 @Target( { TYPE, METHOD, PARAMETER, FIELD })
 @Retention(value = RetentionPolicy.RUNTIME)
