@@ -135,7 +135,7 @@ public class BeanManagerProvider implements Extension
      */
     public static boolean isActive()
     {
-        return bmpSingleton != null;
+        return bmpSingleton != null && bmpSingleton.bmInfos.containsKey(ClassUtils.getClassLoader(null));
     }
 
     /**
