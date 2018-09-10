@@ -23,13 +23,13 @@
     <parent>
         <groupId>org.apache.deltaspike</groupId>
         <artifactId>parent-code</artifactId>
-        <version>1.9.1-SNAPSHOT</version>
+        <version>1.9.0-SNAPSHOT</version>
         <relativePath>../parent/code/pom.xml</relativePath>
     </parent>
 
     <groupId>org.apache.deltaspike.distribution</groupId>
     <artifactId>distributions-project</artifactId>
-    <version>1.9.1-SNAPSHOT</version>
+    <version>1.9.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Apache DeltaSpike Distribution</name>
