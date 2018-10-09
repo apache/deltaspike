@@ -24,6 +24,7 @@
         <groupId>org.apache.deltaspike.modules</groupId>
         <artifactId>proxy-module-project</artifactId>
         <version>1.9.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>deltaspike-proxy-module-impl-asm</artifactId>
@@ -104,19 +105,19 @@
         <dependency>
             <groupId>org.ow2.asm</groupId>
             <artifactId>asm</artifactId>
-            <version>6.2</version>
+            <version>${asm.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.ow2.asm</groupId>
             <artifactId>asm-commons</artifactId>
-            <version>6.2</version>
+            <version>${asm.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.ow2.asm</groupId>
             <artifactId>asm-tree</artifactId>
-            <version>6.2</version>
+            <version>${asm.version}</version>
             <optional>true</optional>
         </dependency>
 
