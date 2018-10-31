@@ -45,6 +45,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static java.lang.Boolean.TRUE;
+
 @SuppressWarnings("UnusedDeclaration")
 public class CdiTestSuiteRunner extends Suite
 {
@@ -65,6 +67,8 @@ public class CdiTestSuiteRunner extends Suite
         "META-INF/apache-deltaspike_test-container";
 
     private static final boolean STOP_CONTAINER;
+
+    private static final ThreadLocal<Boolean> IS_CDI_TEST_RUNNER_EXECUTION = new ThreadLocal<Boolean>();
 
     private static volatile boolean containerStarted; //TODO
 
@@ -145,6 +149,11 @@ public class CdiTestSuiteRunner extends Suite
         return STOP_CONTAINER;
     }
 
+    static ThreadLocal<Boolean> getCdiTestRunnerExecutionRef()
+    {
+        return IS_CDI_TEST_RUNNER_EXECUTION;
+    }
+
     static void setContainerStarted(boolean containerStarted)
     {
         CdiTestSuiteRunner.containerStarted = containerStarted;
@@ -164,7 +173,11 @@ public class CdiTestSuiteRunner extends Suite
             Level level = this.logger.getLevel();
 
             this.logger.setLevel(Level.INFO);
-            this.logger.info("[run] " + description.getClassName() + "#" + description.getMethodName());
+            if (TRUE.equals(IS_CDI_TEST_RUNNER_EXECUTION.get()))
+            {
+                this.logger.info("[run] " + description.getClassName() + "#" + description.getMethodName());
+            }
+
             try
             {
                 super.testRunStarted(description);
@@ -181,7 +194,12 @@ public class CdiTestSuiteRunner extends Suite
             Level level = this.logger.getLevel();
 
             this.logger.setLevel(Level.INFO);
-            this.logger.info("[finished] " + description.getClassName() + "#" + description.getMethodName());
+
+            if (TRUE.equals(IS_CDI_TEST_RUNNER_EXECUTION.get()))
+            {
+                this.logger.info("[finished] " + description.getClassName() + "#" + description.getMethodName());
+            }
+
             try
             {
                 super.testFinished(description);
@@ -198,9 +216,14 @@ public class CdiTestSuiteRunner extends Suite
             Level level = this.logger.getLevel();
 
             this.logger.setLevel(Level.INFO);
-            Description description = failure.getDescription();
-            this.logger.info("[failed] " + description.getClassName() + "#" + description.getMethodName() +
+
+            if (TRUE.equals(IS_CDI_TEST_RUNNER_EXECUTION.get()))
+            {
+                Description description = failure.getDescription();
+                this.logger.info("[failed] " + description.getClassName() + "#" + description.getMethodName() +
                     " message: " + failure.getMessage());
+            }
+
             try
             {
                 super.testFailure(failure);

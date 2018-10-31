@@ -64,6 +64,8 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static java.lang.Boolean.TRUE;
+
 /**
  * A JUnit test runner to start up with a CDI or embedded JavaEE container.
  *
@@ -132,16 +134,27 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
     @Override
     public void run(RunNotifier runNotifier)
     {
-        if (!CdiTestSuiteRunner.isContainerStarted()) //not called as a part of a test-suite
+        try
         {
-            int identityHashCode = System.identityHashCode(runNotifier);
-            if (!notifierIdentities.contains(identityHashCode))
-            {
-                addLogRunListener(runNotifier, identityHashCode);
-            }
-        }
+            CdiTestSuiteRunner.getCdiTestRunnerExecutionRef().set(TRUE);
 
-        super.run(runNotifier);
+            if (!CdiTestSuiteRunner.isContainerStarted()) //not called as a part of a test-suite
+            {
+                int identityHashCode = System.identityHashCode(runNotifier);
+                if (!notifierIdentities.contains(identityHashCode))
+                {
+                    addLogRunListener(runNotifier, identityHashCode);
+                }
+            }
+
+            super.run(runNotifier);
+
+        }
+        finally
+        {
+            CdiTestSuiteRunner.getCdiTestRunnerExecutionRef().set(null);
+            CdiTestSuiteRunner.getCdiTestRunnerExecutionRef().remove();
+        }
     }
 
     private static synchronized void addLogRunListener(RunNotifier notifier, int identityHashCode)
@@ -608,8 +621,8 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
                 setCurrentTestMethod(null);
                 ProjectStageProducer.setProjectStage(previousProjectStage);
                 previousProjectStage = null;
-                currentTestRunner.remove();
                 currentTestRunner.set(null);
+                currentTestRunner.remove();
             }
         }
 
@@ -626,7 +639,7 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
         {
             try
             {
-                automaticScopeHandlingActive.set(Boolean.TRUE);
+                automaticScopeHandlingActive.set(TRUE);
 
                 ContextControl contextControl = container.getContextControl();
 
@@ -700,8 +713,8 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
             }
             finally
             {
-                automaticScopeHandlingActive.remove();
                 automaticScopeHandlingActive.set(null);
+                automaticScopeHandlingActive.remove();
             }
         }
 
@@ -745,7 +758,7 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
         {
             try
             {
-                automaticScopeHandlingActive.set(Boolean.TRUE);
+                automaticScopeHandlingActive.set(TRUE);
 
                 while (!this.startedScopes.empty())
                 {
