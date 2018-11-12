@@ -66,6 +66,13 @@ CDI e DeltaSpike presentation in TDC - The Developers Conference 2015
 
 **Video and Slides:** http://www.infoq.com/br/presentations/deixando-de-refazer-a-roda-com-apache-deltaspike
 
+=== Apache Deltaspike the CDI Toolbox (Java One 2015)
+
+**Slides:** https://pt.slideshare.net/antoinesd/apache-deltaspike-the-cdi-toolbox-java-one-2015
+
+=== JavaOne 2015 - Rafael Benevides - Apache DeltaSpike, the CDI Toolbox
+
+**Video:** https://www.youtube.com/watch?v=3McmEi3cs_s
 
 == Examples
 
@@ -122,6 +129,26 @@ Application that shows a microblog using DeltaSpike
 Blog post demonstrating 5 features of Apache DeltaSpike
 
 **Blog post:** http://www.thedevpiece.com/why-you-should-consider-using-apache-deltaspike/
+
+=== [pt-BR] Rest Application with DeltaSpike Data
+Simple example based on MicroProfile(OpenApi,Payara-Micro) and DeltaSpike-data
+
+**Source code:** https://github.com/Daniel-Dos/DanielDiasjava-Blog/tree/master/ProjetoDeltaSpike
+
+=== [pt-BR] CRUD-Deltaspike-CDI-Angular
+Simple CRUD example based on SparkJava and DeltaSpike-data
+
+**Source code:** https://github.com/SouJava-Rio/soujava-rio-labs/tree/master/microframeworks/spark-samples/CRUD-Deltaspike-CDI-Angular
+
+=== [pt-BR] CRUD-Deltaspike-CDI-Angular
+Simple CRUD example based on JavaLin and DeltaSpike-data
+
+**Source code:** https://github.com/Daniel-Dos/DanielDiasjava-Blog/tree/master/Projeto-Cloud/javalin
+
+=== [pt-BR] jax-rs-sample-cdi-deltaspike-data
+Simple CRUD example based on jax-rs(resteasy) and DeltaSpike-data for Tomcat
+
+**Source code:** https://github.com/SouJava-Rio/soujava-rio-labs/tree/master/jax-rs-samples/Jax-rs-deltaspike-angular2-4/jax-rs-sample-cdi-deltaspike-data
 
 == Magazines
 

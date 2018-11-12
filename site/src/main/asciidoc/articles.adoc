@@ -23,7 +23,14 @@ If you know of useful DeltaSpike articles or blogs that are not listed, link:htt
 * https://blogs.oracle.com/theaquarium/entry/introducing_deltaspike_1_0[The Aquarium: Introducing DeltaSpike 1.0]
 * http://blog.arungupta.me/2014/06/deltaspike-1-0-extend-javaee-techtip32/[DeltaSpike 1.0 – Extend #JavaEE beyond #JavaEE]
 * http://www.tearsofaunicorn.com/articles/2014/06/10/configuring-deltaspike-through-environment-variables.html[Configuring Apache Deltaspike through environment variables]
-* http://blog.ctp.com/2013/11/27/bye-bye-cdi-query-hello-deltaspike-data/[Bye Bye CDI Query, Hello DeltaSpike Data]
+* https://blog.ch.atosconsulting.com/bye-bye-cdi-query-hello-deltaspike-data/[Bye Bye CDI Query, Hello DeltaSpike Data]
 * http://rmannibucau.wordpress.com/2013/11/20/deltaspike-data-repositories-with-dtos/[DeltaSpike Data: repositories with DTOs!]
 * http://jaxenter.com/introducing-apache-deltaspike-42925.html[Closing the Gaps: Introducing Apache Deltaspike]
 * http://jsfcorner.blogspot.com.au/2013/01/deltaspike-jsf-message-system.html[DeltaSpike JSF message system]
+* https://medium.com/danieldiasjava/simplificando-persistencia-de-dados-com-apache-deltaspike-data-6fd27bb2d821[Simplificando persistência de Dados com Apache DeltaSpike Data] - pt-BR
+* http://blog.caelum.com.br/integre-o-deltaspike-ao-seu-projeto-javaee/[Integre o DeltaSpike ao seu projeto JavaEE] - pt-BR
+* https://keyholesoftware.com/2016/01/18/a-working-deltaspike-tutorial/[A Working DeltaSpike Tutorial]
+* https://www.rubix.nl/blogs/deltaspike-cdi-and-camel[DeltaSpike with CDI and Camel]
+* https://jaxenter.de/was-ist-eigentlich-apache-deltaspike-712[Was ist eigentlich… Apache DeltaSpike?]
+* https://www.baeldung.com/deltaspike-data-module[A Guide to DeltaSpike Data Module]
+* http://thecookiezen.com/blog/2016/10/27/deltaspike-data-alternative-for-spring-data-jpa/[DeltaSpike Data - Alternative for Spring Data JPA]
