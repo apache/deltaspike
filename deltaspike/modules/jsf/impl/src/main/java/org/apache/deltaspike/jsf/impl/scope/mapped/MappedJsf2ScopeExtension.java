@@ -53,17 +53,21 @@ public class MappedJsf2ScopeExtension implements Extension, Deactivatable
      */
     public MappedJsf2ScopeExtension()
     {
-        this.mappedJsfScopes.put(javax.faces.bean.ApplicationScoped.class,
-                javax.enterprise.context.ApplicationScoped.class);
-        this.mappedJsfScopes.put(javax.faces.bean.SessionScoped.class,
-                javax.enterprise.context.SessionScoped.class);
-        this.mappedJsfScopes.put(javax.faces.bean.RequestScoped.class,
-                javax.enterprise.context.RequestScoped.class);
-
-        if (JsfUtils.isViewScopeDelegationEnabled())
+        // skip on JSF3.x
+        if (ClassUtils.tryToLoadClassForName("javax.faces.bean.ApplicationScoped") != null)
         {
-            this.mappedJsfScopes.put(javax.faces.bean.ViewScoped.class,
-                ClassUtils.tryToLoadClassForName("javax.faces.view.ViewScoped"));
+            this.mappedJsfScopes.put(javax.faces.bean.ApplicationScoped.class,
+                    javax.enterprise.context.ApplicationScoped.class);
+            this.mappedJsfScopes.put(javax.faces.bean.SessionScoped.class,
+                    javax.enterprise.context.SessionScoped.class);
+            this.mappedJsfScopes.put(javax.faces.bean.RequestScoped.class,
+                    javax.enterprise.context.RequestScoped.class);
+
+            if (JsfUtils.isViewScopeDelegationEnabled())
+            {
+                this.mappedJsfScopes.put(javax.faces.bean.ViewScoped.class,
+                    ClassUtils.tryToLoadClassForName("javax.faces.view.ViewScoped"));
+            }
         }
     }
 
