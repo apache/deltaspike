@@ -28,6 +28,7 @@ public enum QueryOperator
     LessThanEquals("LessThanEquals", "{0} <= {1}"),
     GreaterThan("GreaterThan", "{0} > {1}"),
     GreaterThanEquals("GreaterThanEquals", "{0} >= {1}"),
+    NotLike("NotLike", "{0} not like {1}"),
     Like("Like", "{0} like {1}"),
     LikeIgnoreCase("LikeIgnoreCase", "upper({0}) like {1}", true),
     NotEqual("NotEqual", "{0} <> {1}"),
@@ -37,7 +38,14 @@ public enum QueryOperator
     IgnoreCase("IgnoreCase", "upper({0}) = upper({1})"),
     Between("Between", "{0} between {1} and {2}", 2),
     IsNotNull("IsNotNull", "{0} IS NOT NULL", 0),
-    IsNull("IsNull", "{0} IS NULL", 0);
+    IsNull("IsNull", "{0} IS NULL", 0),
+    NotIn("NotIn", "{0} NOT IN {1}"),
+    In("In", "{0} IN {1}"),
+    True("True", "{0} IS TRUE", 0),
+    False("False", "{0} IS FALSE", 0),
+    Containing("Containing", "{0} like CONCAT(''%'', CONCAT({1}, ''%''))"),
+    StartingWith("StartingWith", "{0} like CONCAT({1}, ''%'')"),
+    EndingWith("EndingWith", "{0} like CONCAT(''%'', {1})");
 
     private final String expression;
     private final String jpql;
