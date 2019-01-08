@@ -494,18 +494,32 @@ expressions:
 
 [options="header, autowidth"]
 |===
-| Name              |# of Arguments     |Description
-| Equal             |1 | Property must be equal to argument value. If the operator is omitted in the expression, this is assumed as default.
-| NotEqual          |1 | Property must be not equal to argument value.
-| Like              |1 | Property must be like the argument value. Use the %-wildcard in the argument.
-| GreaterThan       |1 | Property must be greater than argument value.
-| GreaterThanEquals |1 | Property must be greater than or equal to argument value.
-| LessThan          |1 | Property must be less than argument value.
-| LessThanEquals    |1 | Property must be less than or equal to argument value.
-| Between           |2 | Property must be between the two argument values.
-| IsNull            |0 | Property must be null.
-| IsNotNull         |0 | Property must be non-null.
+| Name                |# of Arguments     |Description
+| Equal               |1 | Property must be equal to argument value. If the operator is omitted in the expression, this is assumed as default.
+| EqualIgnoreCase     |1 | Property must be equal to argument value (case insensitive).
+| IgnoreCase          |1 | Property must be equal to argument value (case insensitive).
+| NotEqual            |1 | Property must be not equal to argument value.
+| NotEqualIgnoreCase  |1 | Property must be not equal to argument value (case insensitive).
+| Like                |1 | Property must be like the argument value. Use the %-wildcard in the argument.
+| LikeIgnoreCase      |1 | Property must be like the argument value (case insensitive). Use the %-wildcard in the argument.
+| NotLike `*`         |1 | Property must be not like the argument value. Use the %-wildcard in the argument.
+| GreaterThan         |1 | Property must be greater than argument value.
+| GreaterThanEquals   |1 | Property must be greater than or equal to argument value.
+| LessThan            |1 | Property must be less than argument value.
+| LessThanEquals      |1 | Property must be less than or equal to argument value.
+| Between             |2 | Property must be between the two argument values.
+| IsNull              |0 | Property must be null.
+| IsNotNull           |0 | Property must be non-null.
+| In `*`              |1 | Property must be in the list of values given as a single argument. The argument should be of Collection type (e.g. List, Set, etc.).
+| NotIn `*`           |1 | Property must be not in the list of values given as a single argument. The argument should be of Collection type (e.g. List, Set, etc.).
+| True  `*`           |0 | Property must be true.
+| False `*`           |0 | Property must be false.
+| Containing `*`      |1 | Property must be like the argument value. Don't use the %-wildcard in the argument. The argument value would be automatically wrapped in a pair of %-wildcard.
+| StartingWith `*`    |1 | Property must begin with the argument value. Don't use the %-wildcard in the argument. A %-wildcard would be added automatically to the end of the argument value.
+| EndingWith `*`      |1 | Property must end with the argument value. Don't use the %-wildcard in the argument. A %-wildcard would be added automatically to the start of the argument value.
 |===
+
+`*` Comparator available since 1.9.1
 
 Note that DeltaSpike will validate those expressions during startup, so
 you will notice early in case you have a typo in those expressions.
