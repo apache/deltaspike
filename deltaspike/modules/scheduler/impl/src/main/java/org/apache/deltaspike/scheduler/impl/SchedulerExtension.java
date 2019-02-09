@@ -18,20 +18,17 @@
  */
 package org.apache.deltaspike.scheduler.impl;
 
+import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.ServiceUtils;
 import org.apache.deltaspike.scheduler.api.Scheduled;
+import org.apache.deltaspike.scheduler.api.SchedulerControl;
 import org.apache.deltaspike.scheduler.spi.Scheduler;
 
 import javax.enterprise.event.Observes;
-import javax.enterprise.inject.spi.AfterBeanDiscovery;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.BeforeBeanDiscovery;
-import javax.enterprise.inject.spi.BeforeShutdown;
-import javax.enterprise.inject.spi.Extension;
-import javax.enterprise.inject.spi.ProcessAnnotatedType;
+import javax.enterprise.inject.spi.*;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -111,7 +108,7 @@ public class SchedulerExtension implements Extension, Deactivatable
         return classNamesToVeto.contains(beanClass.getName());
     }
 
-    public <X> void scheduleJobs(@Observes AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager)
+    public <X> void validateJobs(@Observes AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager)
     {
         if (!this.isActivated)
         {
@@ -130,7 +127,19 @@ public class SchedulerExtension implements Extension, Deactivatable
             return;
         }
 
-        initScheduler(afterBeanDiscovery);
+    }
+
+    public <X> void scheduleJobs(@Observes AfterDeploymentValidation afterDeploymentValidation, BeanManager beanManager)
+    {
+        SchedulerControl schedulerControl = BeanProvider.getContextualReference(SchedulerControl.class);
+        this.isActivated &= schedulerControl.isSchedulerEnabled();
+
+        if (!this.isActivated)
+        {
+            return;
+        }
+
+        initScheduler(afterDeploymentValidation);
 
         if (this.scheduler == null)
         {
@@ -144,7 +153,7 @@ public class SchedulerExtension implements Extension, Deactivatable
         {
             if (foundJobNames.contains(jobClass.getSimpleName()))
             {
-                afterBeanDiscovery.addDefinitionError(
+                afterDeploymentValidation.addDeploymentProblem(
                     new IllegalStateException("Multiple Job-Classes found with name " + jobClass.getSimpleName()));
             }
 
@@ -204,7 +213,7 @@ public class SchedulerExtension implements Extension, Deactivatable
         }
     }
 
-    private void initScheduler(AfterBeanDiscovery afterBeanDiscovery)
+    private void initScheduler(AfterDeploymentValidation afterDeploymentValidation)
     {
         List<Scheduler> availableSchedulers = ServiceUtils.loadServiceImplementations(Scheduler.class, true);
 
@@ -218,7 +227,7 @@ public class SchedulerExtension implements Extension, Deactivatable
             }
             catch (Throwable t)
             {
-                afterBeanDiscovery.addDefinitionError(t);
+                afterDeploymentValidation.addDeploymentProblem(t);
             }
         }
         else if (!this.foundManagedJobClasses.isEmpty())
