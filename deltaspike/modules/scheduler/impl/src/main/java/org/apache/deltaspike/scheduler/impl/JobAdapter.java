@@ -19,19 +19,24 @@
 package org.apache.deltaspike.scheduler.impl;
 
 import org.quartz.Job;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
 
-//vetoed class (see SchedulerExtension)
-public class JobQuartzScheduler extends AbstractQuartzScheduler<Job>
+import javax.enterprise.inject.Typed;
+
+//configured via SchedulerBaseConfig
+@Typed()
+public class JobAdapter extends AbstractJobAdapter<Job>
 {
     @Override
-    protected String getJobName(Class<?> jobClass)
+    protected Class<Job> getJobBaseClass()
     {
-        return jobClass.getName();
+        return Job.class;
     }
 
     @Override
-    protected Class<? extends Job> createFinalJobClass(Class<? extends Job> jobClass)
+    public void execute(Job job, JobExecutionContext context) throws JobExecutionException
     {
-        return JobAdapter.class;
+        job.execute(context);
     }
 }

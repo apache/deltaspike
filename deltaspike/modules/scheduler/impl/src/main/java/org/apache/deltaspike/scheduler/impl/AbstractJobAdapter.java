@@ -21,6 +21,7 @@ package org.apache.deltaspike.scheduler.impl;
 import org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.ClassUtils;
+import org.apache.deltaspike.scheduler.api.SchedulerControl;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -32,12 +33,19 @@ public abstract class AbstractJobAdapter<T> implements Job
 {
     @Inject
     private BeanManager beanManager;
+    @Inject
+    private SchedulerControl schedulerControl;
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException
     {
         Class<? extends T> jobClass =
                 ClassUtils.tryToLoadClassForName(context.getJobDetail().getKey().getName(), getJobBaseClass());
+
+        if (!schedulerControl.shouldJobBeStarted(jobClass))
+        {
+            return;
+        }
 
         T job = BeanProvider.getContextualReference(jobClass);
 
