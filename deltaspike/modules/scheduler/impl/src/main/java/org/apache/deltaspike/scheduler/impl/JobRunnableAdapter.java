@@ -18,42 +18,24 @@
  */
 package org.apache.deltaspike.scheduler.impl;
 
-import org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent;
-import org.apache.deltaspike.core.api.provider.BeanProvider;
-import org.apache.deltaspike.core.util.ClassUtils;
-import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 import javax.enterprise.inject.Typed;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
 
 //configured via SchedulerBaseConfig
 @Typed()
-public class JobRunnableAdapter implements Job
+public class JobRunnableAdapter extends AbstractJobAdapter<Runnable>
 {
-    @Inject
-    private BeanManager beanManager;
+    @Override
+    protected Class<Runnable> getJobBaseClass()
+    {
+        return Runnable.class;
+    }
 
     @Override
-    public void execute(JobExecutionContext context) throws JobExecutionException
+    public void execute(Runnable job, JobExecutionContext context) throws JobExecutionException
     {
-        Class<? extends Runnable> jobClass =
-            ClassUtils.tryToLoadClassForName(context.getJobDetail().getKey().getName(), Runnable.class);
-
-        Runnable runnableBean = BeanProvider.getContextualReference(jobClass);
-
-        try
-        {
-            runnableBean.run();
-        }
-        catch (Throwable t)
-        {
-            //just in this case to reduce the implementation(s) of runnable (annotated with @Scheduled)
-            //to an absolute minimum.
-            //(custom implementations of org.quartz.Job need to do it on their own)
-            this.beanManager.fireEvent(new ExceptionToCatchEvent(t));
-        }
+        job.run();
     }
 }
