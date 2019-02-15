@@ -37,7 +37,7 @@ public abstract class AbstractJobAdapter<T> implements Job
     private SchedulerControl schedulerControl;
 
     @Override
-    public void execute(JobExecutionContext context) throws JobExecutionException
+    public void execute(JobExecutionContext context)
     {
         Class<? extends T> jobClass =
                 ClassUtils.tryToLoadClassForName(context.getJobDetail().getKey().getName(), getJobBaseClass());

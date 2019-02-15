@@ -19,7 +19,6 @@
 package org.apache.deltaspike.scheduler.impl;
 
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 
 import javax.enterprise.inject.Typed;
 
@@ -34,7 +33,7 @@ public class JobRunnableAdapter extends AbstractJobAdapter<Runnable>
     }
 
     @Override
-    public void execute(Runnable job, JobExecutionContext context) throws JobExecutionException
+    public void execute(Runnable job, JobExecutionContext context)
     {
         job.run();
     }
