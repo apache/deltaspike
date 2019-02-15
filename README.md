@@ -37,7 +37,7 @@ The easiest way to get started with DeltaSpike is to use Maven or Gradle as a bu
 ## Requirements to Build
 
 - Git
-- JDK 6
+- JDK 8
 - Maven
 
 Just run `mvn clean install` from the top level directory, `deltaspike` to build the source code.
