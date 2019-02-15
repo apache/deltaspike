@@ -24,7 +24,7 @@ import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.ServiceUtils;
 import org.apache.deltaspike.scheduler.api.Scheduled;
-import org.apache.deltaspike.scheduler.api.SchedulerControl;
+import org.apache.deltaspike.scheduler.spi.SchedulerControl;
 import org.apache.deltaspike.scheduler.spi.Scheduler;
 
 import javax.enterprise.event.Observes;

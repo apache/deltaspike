@@ -21,7 +21,7 @@ package org.apache.deltaspike.scheduler.impl;
 import org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.ClassUtils;
-import org.apache.deltaspike.scheduler.api.SchedulerControl;
+import org.apache.deltaspike.scheduler.spi.SchedulerControl;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;

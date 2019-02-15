@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.scheduler.api;
+package org.apache.deltaspike.scheduler.spi;
 
 /**
  * This interface provides high-level controls for the scheduler.

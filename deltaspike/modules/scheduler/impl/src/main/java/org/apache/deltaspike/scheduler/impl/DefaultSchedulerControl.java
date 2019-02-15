@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.scheduler.impl;
 
-import org.apache.deltaspike.scheduler.api.SchedulerControl;
+import org.apache.deltaspike.scheduler.spi.SchedulerControl;
 
 import javax.enterprise.context.ApplicationScoped;
 
