@@ -38,7 +38,7 @@ public interface SchedulerControl
     boolean isSchedulerEnabled();
 
     /**
-     * Invoked each time a job is triggered, this sontrols whether the given job shall be started or not.
+     * Invoked each time a job is triggered, this controls whether the given job shall be started or not.
      *
      * NOTE: This only applies if the scheduler is actually running (see {@link #isSchedulerEnabled()}).
      *
