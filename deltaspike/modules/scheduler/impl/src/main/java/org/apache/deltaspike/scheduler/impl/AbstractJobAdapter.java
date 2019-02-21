@@ -33,8 +33,6 @@ public abstract class AbstractJobAdapter<T> implements Job
 {
     @Inject
     private BeanManager beanManager;
-    @Inject
-    private SchedulerControl schedulerControl;
 
     @Override
     public void execute(JobExecutionContext context)
@@ -42,7 +40,8 @@ public abstract class AbstractJobAdapter<T> implements Job
         Class<? extends T> jobClass =
                 ClassUtils.tryToLoadClassForName(context.getJobDetail().getKey().getName(), getJobBaseClass());
 
-        if (!schedulerControl.shouldJobBeStarted(jobClass))
+        SchedulerControl schedulerControl = BeanProvider.getContextualReference(SchedulerControl.class, true);
+        if (schedulerControl != null && !schedulerControl.shouldJobBeStarted(jobClass))
         {
             return;
         }

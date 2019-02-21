@@ -24,9 +24,7 @@ package org.apache.deltaspike.scheduler.spi;
  * It allows to control the scheduler as a whole ({@link #isSchedulerEnabled()}()) and on a per-job basis
  * ({@link #shouldJobBeStarted(Class)}.
  *
- * The interface is meant to be implemented by injectable beans. The default implementation (DefaultSchedulerControl in
- * deltaspike-scheduler-impl) always returns {@code true} on both functions. It can be replaced by providing a bean,
- * which @{@link javax.enterprise.inject.Specializes} it, or by any other CID mechanism.
+ * The interface is meant to be implemented by a CDI bean.
  */
 public interface SchedulerControl
 {
