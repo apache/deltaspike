@@ -22,7 +22,7 @@ package org.apache.deltaspike.scheduler.spi;
  * This interface provides high-level controls for the scheduler.
  *
  * It allows to control the scheduler as a whole ({@link #isSchedulerEnabled()}()) and on a per-job basis
- * ({@link #shouldJobBeStarted(Class)}.
+ * ({@link #vetoJobExecution(Class)}.
  *
  * The interface is meant to be implemented by a CDI bean.
  */
@@ -41,7 +41,7 @@ public interface SchedulerControl
      * NOTE: This only applies if the scheduler is actually running (see {@link #isSchedulerEnabled()}).
      *
      *  @param jobClass the job which was triggered
-     * @return if {@code true} the job will be executed, else not.
+     * @return if {@code false} the job will be executed, else not.
      */
-    boolean shouldJobBeStarted(Class<?> jobClass);
+    boolean vetoJobExecution(Class<?> jobClass);
 }

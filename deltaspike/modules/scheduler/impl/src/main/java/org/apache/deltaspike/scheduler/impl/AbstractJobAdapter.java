@@ -41,7 +41,7 @@ public abstract class AbstractJobAdapter<T> implements Job
                 ClassUtils.tryToLoadClassForName(context.getJobDetail().getKey().getName(), getJobBaseClass());
 
         SchedulerControl schedulerControl = BeanProvider.getContextualReference(SchedulerControl.class, true);
-        if (schedulerControl != null && !schedulerControl.shouldJobBeStarted(jobClass))
+        if (schedulerControl != null && schedulerControl.vetoJobExecution(jobClass))
         {
             return;
         }
