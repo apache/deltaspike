@@ -21,6 +21,7 @@ package org.apache.deltaspike.scheduler.impl;
 import org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.ClassUtils;
+import org.apache.deltaspike.core.util.ProxyUtils;
 import org.apache.deltaspike.scheduler.spi.SchedulerControl;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -28,9 +29,12 @@ import org.quartz.JobExecutionException;
 
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
+import java.util.logging.Logger;
 
 public abstract class AbstractJobAdapter<T> implements Job
 {
+    private static final Logger LOG = Logger.getLogger(AbstractJobAdapter.class.getName());
+
     @Inject
     private BeanManager beanManager;
 
@@ -43,6 +47,8 @@ public abstract class AbstractJobAdapter<T> implements Job
         SchedulerControl schedulerControl = BeanProvider.getContextualReference(SchedulerControl.class, true);
         if (schedulerControl != null && schedulerControl.vetoJobExecution(jobClass))
         {
+            LOG.info("Execution of job " + jobClass + " has been vetoed by " +
+                    ProxyUtils.getUnproxiedClass(schedulerControl.getClass()));
             return;
         }
 
