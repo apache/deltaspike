@@ -33,7 +33,10 @@ public interface SchedulerControl
      *
      * @return if {@code true} the scheduler will be started, else not.
      */
-    boolean isSchedulerEnabled();
+    default boolean isSchedulerEnabled()
+    {
+        return true;
+    }
 
     /**
      * Invoked each time a job is triggered, this controls whether the given job shall be started or not.
@@ -43,5 +46,8 @@ public interface SchedulerControl
      *  @param jobClass the job which was triggered
      * @return if {@code false} the job will be executed, else not.
      */
-    boolean vetoJobExecution(Class<?> jobClass);
+    default boolean vetoJobExecution(Class<?> jobClass)
+    {
+        return false;
+    }
 }
