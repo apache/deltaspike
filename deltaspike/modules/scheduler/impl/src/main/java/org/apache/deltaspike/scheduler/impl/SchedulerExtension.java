@@ -131,10 +131,13 @@ public class SchedulerExtension implements Extension, Deactivatable
 
     public <X> void scheduleJobs(@Observes AfterDeploymentValidation afterDeploymentValidation, BeanManager beanManager)
     {
-        SchedulerControl schedulerControl = BeanProvider.getContextualReference(SchedulerControl.class, true);
-        this.isActivated &= schedulerControl == null || schedulerControl.isSchedulerEnabled();
-
         if (!this.isActivated)
+        {
+            return;
+        }
+
+        SchedulerControl schedulerControl = BeanProvider.getContextualReference(SchedulerControl.class, true);
+        if (schedulerControl != null && !schedulerControl.isSchedulerEnabled())
         {
             return;
         }
