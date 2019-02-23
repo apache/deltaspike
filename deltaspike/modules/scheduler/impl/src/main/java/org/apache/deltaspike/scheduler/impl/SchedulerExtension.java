@@ -22,6 +22,7 @@ import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.core.util.ClassUtils;
+import org.apache.deltaspike.core.util.ProxyUtils;
 import org.apache.deltaspike.core.util.ServiceUtils;
 import org.apache.deltaspike.scheduler.api.Scheduled;
 import org.apache.deltaspike.scheduler.spi.SchedulerControl;
@@ -139,6 +140,7 @@ public class SchedulerExtension implements Extension, Deactivatable
         SchedulerControl schedulerControl = BeanProvider.getContextualReference(SchedulerControl.class, true);
         if (schedulerControl != null && !schedulerControl.isSchedulerEnabled())
         {
+            LOG.info("Scheduler has been disabled by " + ProxyUtils.getUnproxiedClass(schedulerControl.getClass()));
             return;
         }
 
