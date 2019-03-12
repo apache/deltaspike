@@ -1290,7 +1290,7 @@ therefore supports joins as shown in the sample below:
 [source,java]
 -------------------------------------------------------------------------------------
 @Repository
-public abstract class PersonRepository extends AbstractEntityRepository<Person, Long>
+public abstract class PersonRepository extends AbstractFullEntityRepository<Person, Long>
 {
 
     public List<Person> findByCompanyName(String companyName)
@@ -1312,7 +1312,7 @@ are slighly simpler as seen in the next sample:
 
 [source,java]
 -------------------------------------------------------------------------------------
-public abstract class PersonRepository extends AbstractEntityRepository<Person, Long>
+public abstract class PersonRepository extends AbstractFullEntityRepository<Person, Long>
 {
 
     public Person findBySSN(String ssn)
@@ -1335,7 +1335,7 @@ disjunctions.
 
 [source,java]
 -------------------------------------------------------------------------------------
-public abstract class PersonRepository extends AbstractEntityRepository<Person, Long>
+public abstract class PersonRepository extends AbstractFullEntityRepository<Person, Long>
 {
 
     public List<Person> findAdults()
@@ -1363,7 +1363,7 @@ The Criteria interface allows this with the selection method:
 
 [source,java]
 ------------------------------------------------------------------------------------------------------
-public abstract class PersonRepository extends AbstractEntityRepository<Person, Long>
+public abstract class PersonRepository extends AbstractFullEntityRepository<Person, Long>
 {
 
     public Statistics ageStatsFor(Segment segment)
