@@ -18,23 +18,25 @@
  */
 package org.apache.deltaspike.scheduler.impl;
 
+import org.quartz.Job;
 import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
 
 import javax.enterprise.inject.Typed;
 
 //configured via SchedulerBaseConfig
 @Typed()
-public class JobRunnableAdapter extends AbstractJobAdapter<Runnable>
+public class JobAdapter extends AbstractJobAdapter<Job>
 {
     @Override
-    protected Class<Runnable> getJobBaseClass()
+    protected Class<Job> getJobBaseClass()
     {
-        return Runnable.class;
+        return Job.class;
     }
 
     @Override
-    public void execute(Runnable job, JobExecutionContext context)
+    public void execute(Job job, JobExecutionContext context) throws JobExecutionException
     {
-        job.run();
+        job.execute(context);
     }
 }

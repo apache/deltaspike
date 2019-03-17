@@ -24,8 +24,14 @@ import org.quartz.Job;
 public class JobQuartzScheduler extends AbstractQuartzScheduler<Job>
 {
     @Override
+    protected String getJobName(Class<?> jobClass)
+    {
+        return jobClass.getName();
+    }
+
+    @Override
     protected Class<? extends Job> createFinalJobClass(Class<? extends Job> jobClass)
     {
-        return jobClass;
+        return JobAdapter.class;
     }
 }
