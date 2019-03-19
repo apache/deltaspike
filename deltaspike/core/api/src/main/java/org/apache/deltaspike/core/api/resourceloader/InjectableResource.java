@@ -37,11 +37,11 @@ import static java.lang.annotation.ElementType.METHOD;
  * <b>Example:</b>
  * <pre>
  * &#064;Inject
- * &#064;InjectableResource("myfile.properties")
+ * &#064;InjectableResource(location="myfile.properties")
  * private Properties props;
  *
  * &#064;Inject
- * &#064;InjectableResource("config.xml")
+ * &#064;InjectableResource(location="config.xml")
  * private InputStream inputStream;
  * </pre>
  *

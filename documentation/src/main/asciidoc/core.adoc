@@ -639,7 +639,7 @@ property file reading.
 [source,java]
 ----------------------------------------
 @Inject
-@InjectableResource("myfile.properties")
+@InjectableResource(location="myfile.properties")
 private InputStream inputStream;
 ----------------------------------------
 
