@@ -1196,16 +1196,16 @@ If you rely on the last option (configured executor) here are the keys you can s
 
 |===
 | Key | Description | Default
-| futurable.pool.<pool name>.coreSize | The core size of the pool. | Number of available processors
-| futurable.pool.<pool name>.maxSize | The max size of the pool. | coreSize value
-| futurable.pool.<pool name>.keepAlive.value | Pool keep alive (when a thread is released). | 0
-| futurable.pool.<pool name>.keepAlive.unit | Unit of keepAlive.value. It must match a `TIMEUNIT` name. | MILLISECONDS
-| futurable.pool.<pool name>.queue.type | The task queue type of the executor. Can be `ARRAY` to use an `ArrayBlockingQueue`, `LINKED` for a `LinkedBlockingQueue` or `SYNCHRONOUS` for a `SynchronousQueue`. | LINKED
-| futurable.pool.<pool name>.queue.fair | For synchronous and array queue types, if the queue is fair. | false
-| futurable.pool.<pool name>.queue.size | For array queue type, the size of the queue. | 1024
-| futurable.pool.<pool name>.queue.capacity | For linked queue type, the capacity of the queue. | `Integer.MAX_VALUE`
-| futurable.pool.<pool name>.threadFactory.name | If set a CDI bean matching the value will be looked up and used as `ThreadFactory`. | none, `Executors.defaultThreadFactory()` is used
-| futurable.pool.<pool name>.rejectedExecutionHandler.name | If set a CDI bean matching the value will be looked up and used as `RejectedExecutionHandler`. | none, `ThreadPoolExecutor.AbortPolicy` is used
+| futureable.pool.<pool name>.coreSize | The core size of the pool. | Number of available processors
+| futureable.pool.<pool name>.maxSize | The max size of the pool. | coreSize value
+| futureable.pool.<pool name>.keepAlive.value | Pool keep alive (when a thread is released). | 0
+| futureable.pool.<pool name>.keepAlive.unit | Unit of keepAlive.value. It must match a `TIMEUNIT` name. | MILLISECONDS
+| futureable.pool.<pool name>.queue.type | The task queue type of the executor. Can be `ARRAY` to use an `ArrayBlockingQueue`, `LINKED` for a `LinkedBlockingQueue` or `SYNCHRONOUS` for a `SynchronousQueue`. | LINKED
+| futureable.pool.<pool name>.queue.fair | For synchronous and array queue types, if the queue is fair. | false
+| futureable.pool.<pool name>.queue.size | For array queue type, the size of the queue. | 1024
+| futureable.pool.<pool name>.queue.capacity | For linked queue type, the capacity of the queue. | `Integer.MAX_VALUE`
+| futureable.pool.<pool name>.threadFactory.name | If set a CDI bean matching the value will be looked up and used as `ThreadFactory`. | none, `Executors.defaultThreadFactory()` is used
+| futureable.pool.<pool name>.rejectedExecutionHandler.name | If set a CDI bean matching the value will be looked up and used as `RejectedExecutionHandler`. | none, `ThreadPoolExecutor.AbortPolicy` is used
 |===
 
 == Utilities

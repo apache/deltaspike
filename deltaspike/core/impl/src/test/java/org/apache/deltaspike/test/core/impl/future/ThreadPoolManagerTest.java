@@ -83,7 +83,7 @@ public class ThreadPoolManagerTest
     {
         ConfigResolver.addConfigSources(Collections.<ConfigSource>singletonList(new PropertiesConfigSource(new Properties()
         {{
-            setProperty("futurable.pool.custom.coreSize", "5");
+            setProperty("futureable.pool.custom.coreSize", "5");
         }})
         {
             @Override

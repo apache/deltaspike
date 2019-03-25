@@ -147,7 +147,7 @@ public class ThreadPoolManager
 
                     if (pool == null) // 3.
                     {
-                        final String configPrefix = "futurable.pool." + name + ".";
+                        final String configPrefix = "futureable.pool." + name + ".";
                         final int coreSize = ConfigResolver.resolve(configPrefix + "coreSize")
                                 .as(Integer.class)
                                 .withDefault(Math.max(2, Runtime.getRuntime().availableProcessors()))
