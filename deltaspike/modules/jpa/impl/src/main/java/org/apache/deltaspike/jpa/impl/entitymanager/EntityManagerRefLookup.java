@@ -41,7 +41,7 @@ public class EntityManagerRefLookup
     private boolean globalEntityManagerIsNormalScope;
     private EntityManager globalEntityManager;
     
-    private void lazyInitGlobalEntityManager()
+    private synchronized void lazyInitGlobalEntityManager()
     {
         if (this.globalEntityManagerInitialized == null)
         {
