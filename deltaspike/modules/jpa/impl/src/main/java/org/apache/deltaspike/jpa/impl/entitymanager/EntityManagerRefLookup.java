@@ -54,8 +54,6 @@ public class EntityManagerRefLookup
         // switch into paranoia mode
         if (this.globalEntityManagerInitialized == null)
         {
-            this.globalEntityManagerInitialized = true;
-            
             BeanManager beanManager = BeanManagerProvider.getInstance().getBeanManager();
             Set<Bean<?>> beans = beanManager.getBeans(EntityManager.class);
             Bean<?> bean = beanManager.resolve(beans);
@@ -72,6 +70,8 @@ public class EntityManagerRefLookup
                         EntityManager.class,
                         beanManager.createCreationalContext(bean));       
             }
+
+            this.globalEntityManagerInitialized = true;
         }
     }
     
