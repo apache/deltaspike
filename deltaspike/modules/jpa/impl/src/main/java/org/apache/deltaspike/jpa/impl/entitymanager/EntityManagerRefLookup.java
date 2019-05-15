@@ -40,8 +40,8 @@ public class EntityManagerRefLookup
     private volatile Boolean globalEntityManagerInitialized;
     private boolean globalEntityManagerIsNormalScope;
     private EntityManager globalEntityManager;
-    
-    private synchronized void lazyInitGlobalEntityManager()
+
+    private void lazyInitGlobalEntityManager()
     {
         if (this.globalEntityManagerInitialized == null)
         {
@@ -54,8 +54,6 @@ public class EntityManagerRefLookup
         // switch into paranoia mode
         if (this.globalEntityManagerInitialized == null)
         {
-            this.globalEntityManagerInitialized = true;
-            
             BeanManager beanManager = BeanManagerProvider.getInstance().getBeanManager();
             Set<Bean<?>> beans = beanManager.getBeans(EntityManager.class);
             Bean<?> bean = beanManager.resolve(beans);
@@ -64,17 +62,19 @@ public class EntityManagerRefLookup
             {
                 throw new IllegalStateException("Could not find EntityManager with default qualifier.");
             }
-            
+
             globalEntityManagerIsNormalScope = beanManager.isNormalScope(bean.getScope());
             if (globalEntityManagerIsNormalScope)
             {
                 globalEntityManager = (EntityManager) beanManager.getReference(bean,
                         EntityManager.class,
-                        beanManager.createCreationalContext(bean));       
+                        beanManager.createCreationalContext(bean));
             }
+
+            this.globalEntityManagerInitialized = true;
         }
     }
-    
+
     public EntityManagerRef lookupReference(final EntityManagerMetadata entityManagerMetadata)
     {
         EntityManagerRef ref = new EntityManagerRef();
@@ -101,7 +101,7 @@ public class EntityManagerRefLookup
                 ref.setEntityManagerResolver(
                         ref.getEntityManagerResolverDependentProvider().get());
             }
-            
+
             ref.setEntityManager(
                     ref.getEntityManagerResolver().resolveEntityManager());
         }
@@ -111,7 +111,7 @@ public class EntityManagerRefLookup
             {
                 ref.setEntityManager(
                         activeEntityManagerHolder.get());
-                
+
                 // TODO should we really not apply the FlushMode on the active EntityManager?
                 return ref;
             }
