@@ -99,6 +99,8 @@ public class DisableClientWindowHtmlRenderer extends Renderer
         {
             clientWindow = BeanProvider.getContextualReference(ClientWindow.class);
             jsfModuleConfig = BeanProvider.getContextualReference(JsfModuleConfig.class);
+            
+            this.initialized = true;
         }
     }
 }
