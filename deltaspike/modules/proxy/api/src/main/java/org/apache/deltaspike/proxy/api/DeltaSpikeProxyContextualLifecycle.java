@@ -52,11 +52,11 @@ public class DeltaSpikeProxyContextualLifecycle<T, H extends InvocationHandler> 
     private final Class<T> targetClass;
     private final BeanManager beanManager;
     
-    private DeltaSpikeProxyInvocationHandler deltaSpikeProxyInvocationHandler;
+    private volatile DeltaSpikeProxyInvocationHandler deltaSpikeProxyInvocationHandler;
     
-    private InjectionTarget<T> injectionTarget;
-    private Bean<H> handlerBean;
-    private CreationalContext<?> creationalContextOfDependentHandler;
+    private volatile InjectionTarget<T> injectionTarget;
+    private volatile Bean<H> handlerBean;
+    private volatile CreationalContext<?> creationalContextOfDependentHandler;
 
     public DeltaSpikeProxyContextualLifecycle(Class<T> targetClass,
                                               Class<H> delegateInvocationHandlerClass,
@@ -141,9 +141,6 @@ public class DeltaSpikeProxyContextualLifecycle<T, H extends InvocationHandler> 
     {
         if (this.deltaSpikeProxyInvocationHandler == null)
         {
-            this.deltaSpikeProxyInvocationHandler = BeanProvider.getContextualReference(
-                    beanManager, DeltaSpikeProxyInvocationHandler.class, false);
-
             Set<Bean<H>> handlerBeans = BeanProvider.getBeanDefinitions(
                     delegateInvocationHandlerClass, false, true, beanManager);
             if (handlerBeans.size() != 1)
@@ -167,6 +164,9 @@ public class DeltaSpikeProxyContextualLifecycle<T, H extends InvocationHandler> 
                         + delegateInvocationHandlerClass + " found beans: " + beanInfo.toString());
             }
             this.handlerBean = handlerBeans.iterator().next();
+
+            this.deltaSpikeProxyInvocationHandler = BeanProvider.getContextualReference(
+                    beanManager, DeltaSpikeProxyInvocationHandler.class, false);
         }
     }
     
