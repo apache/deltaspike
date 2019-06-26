@@ -217,7 +217,8 @@ class Authorizer
                         method.getName() + "]");
             }
 
-            boundAuthorizerMethodProxy = new InjectableMethod(boundAuthorizerMethod, foundBoundAuthorizerBean, beanManager);
+            boundAuthorizerMethodProxy = new InjectableMethod(
+                boundAuthorizerMethod, foundBoundAuthorizerBean, beanManager);
             boundAuthorizerBean = foundBoundAuthorizerBean;
         }
     }
