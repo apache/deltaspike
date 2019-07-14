@@ -26,12 +26,10 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 
 import org.apache.deltaspike.core.util.metadata.AnnotationInstanceProvider;
+import org.apache.deltaspike.data.api.audit.CreatedBy;
 import org.apache.deltaspike.data.api.audit.CurrentUser;
 import org.apache.deltaspike.data.api.audit.ModifiedBy;
 import org.apache.deltaspike.data.impl.property.Property;
-import org.apache.deltaspike.data.impl.property.query.AnnotatedPropertyCriteria;
-import org.apache.deltaspike.data.impl.property.query.PropertyQueries;
-import org.apache.deltaspike.data.impl.property.query.PropertyQuery;
 
 class PrincipalProvider extends AuditProvider
 {
@@ -42,29 +40,31 @@ class PrincipalProvider extends AuditProvider
     @Override
     public void prePersist(Object entity)
     {
-        updatePrincipal(entity);
+        updatePrincipal(entity, true);
     }
 
     @Override
     public void preUpdate(Object entity)
     {
-        updatePrincipal(entity);
+        updatePrincipal(entity, false);
     }
 
-    private void updatePrincipal(Object entity)
+    private void updatePrincipal(Object entity, boolean create)
     {
-        PropertyQuery<Object> query = PropertyQueries.<Object> createQuery(entity.getClass())
-                .addCriteria(new AnnotatedPropertyCriteria(ModifiedBy.class));
-        for (Property<Object> property : query.getWritableResultList())
+        for (Property<Object> property : getProperties(entity, CreatedBy.class, ModifiedBy.class, create))
         {
-            setProperty(entity, property);
+            setProperty(entity, property, create);
         }
     }
 
-    private void setProperty(Object entity, Property<Object> property)
+    private void setProperty(Object entity, Property<Object> property, boolean create)
     {
         try
         {
+            if (!isCorrectContext(property, create))
+            {
+                return;
+            }
             Object value = resolvePrincipal(entity, property);
             property.setValue(entity, value);
             log.log(Level.FINER, "Updated {0} with {1}", new Object[] { propertyName(entity, property), value });
@@ -74,6 +74,19 @@ class PrincipalProvider extends AuditProvider
             throw new AuditPropertyException("Failed to write principal to " +
                     propertyName(entity, property), e);
         }
+    }
+
+    private boolean isCorrectContext(Property<Object> property, boolean create)
+    {
+        if (create && property.getAnnotatedElement().isAnnotationPresent(ModifiedBy.class))
+        {
+            ModifiedBy annotation = property.getAnnotatedElement().getAnnotation(ModifiedBy.class);
+            if (!annotation.onCreate())
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     private Object resolvePrincipal(Object entity, Property<Object> property)
