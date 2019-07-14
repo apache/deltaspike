@@ -20,16 +20,11 @@ package org.apache.deltaspike.data.impl.audit;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.logging.Level;
 
 import org.apache.deltaspike.data.api.audit.CreatedOn;
 import org.apache.deltaspike.data.api.audit.ModifiedOn;
 import org.apache.deltaspike.data.impl.property.Property;
-import org.apache.deltaspike.data.impl.property.query.AnnotatedPropertyCriteria;
-import org.apache.deltaspike.data.impl.property.query.PropertyQueries;
-import org.apache.deltaspike.data.impl.property.query.PropertyQuery;
 
 /**
  * Set timestamps on marked properties.
@@ -52,17 +47,7 @@ class TimestampsProvider extends AuditProvider
     private void updateTimestamps(Object entity, boolean create)
     {
         long systime = System.currentTimeMillis();
-        List<Property<Object>> properties = new LinkedList<Property<Object>>();
-        PropertyQuery<Object> query = PropertyQueries.<Object> createQuery(entity.getClass())
-                .addCriteria(new AnnotatedPropertyCriteria(ModifiedOn.class));
-        properties.addAll(query.getWritableResultList());
-        if (create)
-        {
-            query = PropertyQueries.<Object> createQuery(entity.getClass())
-                    .addCriteria(new AnnotatedPropertyCriteria(CreatedOn.class));
-            properties.addAll(query.getWritableResultList());
-        }
-        for (Property<Object> property : properties)
+        for (Property<Object> property : getProperties(entity, CreatedOn.class, ModifiedOn.class, create))
         {
             setProperty(entity, property, systime, create);
         }
