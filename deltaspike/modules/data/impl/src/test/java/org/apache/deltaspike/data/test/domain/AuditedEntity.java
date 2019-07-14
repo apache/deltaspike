@@ -31,6 +31,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.apache.deltaspike.data.api.audit.CreatedBy;
 import org.apache.deltaspike.data.api.audit.CreatedOn;
 import org.apache.deltaspike.data.api.audit.ModifiedBy;
 import org.apache.deltaspike.data.api.audit.ModifiedOn;
@@ -49,6 +50,13 @@ public class AuditedEntity implements Serializable
     private Calendar created;
 
     private String name;
+
+    @CreatedBy
+    private String creator;
+
+    @CreatedBy
+    @ManyToOne(targetEntity = Principal.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Principal creatorPrincipal;
 
     @ModifiedBy
     private String changer;
@@ -132,6 +140,14 @@ public class AuditedEntity implements Serializable
     public Principal getPrincipal()
     {
         return principal;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public Principal getCreatorPrincipal() {
+        return creatorPrincipal;
     }
 
     public String getChangerOnly() {

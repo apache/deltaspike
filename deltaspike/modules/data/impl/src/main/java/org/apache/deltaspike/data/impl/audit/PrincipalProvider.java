@@ -89,7 +89,7 @@ class PrincipalProvider extends AuditProvider
         return true;
     }
 
-    private Object resolvePrincipal(Object entity, Property<Object> property)
+    protected Object resolvePrincipal(Object entity, Property<Object> property)
     {
         CurrentUser principal = AnnotationInstanceProvider.of(CurrentUser.class);
         Class<?> propertyClass = property.getJavaClass();

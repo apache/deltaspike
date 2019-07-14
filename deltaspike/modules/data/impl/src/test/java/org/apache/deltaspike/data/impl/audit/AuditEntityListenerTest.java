@@ -21,6 +21,7 @@ package org.apache.deltaspike.data.impl.audit;
 import static org.apache.deltaspike.data.test.util.TestDeployments.initDeployment;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import javax.enterprise.inject.Produces;
 
@@ -129,4 +130,26 @@ public class AuditEntityListenerTest extends TransactionalTestCase
         assertEquals(who, entity.getChangerOnlyPrincipal().getName());
     }
 
+    @Test
+    public void should_set_creating_principal()
+    {
+        // given
+        AuditedEntity entity = new AuditedEntity();
+
+        // when
+        getEntityManager().persist(entity);
+        getEntityManager().flush();
+
+        // then
+        assertNotNull(entity.getCreator());
+        assertEquals(who, entity.getCreator());
+        assertNotNull(entity.getCreatorPrincipal());
+        assertEquals(who, entity.getCreatorPrincipal().getName());
+        assertNotNull(entity.getChanger());
+        assertEquals(who, entity.getChanger());
+        assertNotNull(entity.getPrincipal());
+        assertEquals(who, entity.getPrincipal().getName());
+        assertNull(entity.getChangerOnly());
+        assertNull(entity.getChangerOnlyPrincipal());
+    }
 }
