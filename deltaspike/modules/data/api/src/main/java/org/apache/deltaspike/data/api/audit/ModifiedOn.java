@@ -32,5 +32,10 @@ import java.lang.annotation.Target;
 @Target({ ElementType.FIELD, ElementType.METHOD })
 public @interface ModifiedOn
 {
+    /**
+     * Tells whether or not the property shall be set when the entity is first persisted.
+     * @deprecated If the property shall be set when the entity is first persisted, use {@link CreatedOn}.
+     * @return set this to {@code true} if the property shall be set when the entity is first persisted.
+     */
     boolean onCreate() default false;
 }
