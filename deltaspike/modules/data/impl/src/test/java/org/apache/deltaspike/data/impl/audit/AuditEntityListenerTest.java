@@ -110,9 +110,12 @@ public class AuditEntityListenerTest extends TransactionalTestCase
     {
         // given
         AuditedEntity entity = new AuditedEntity();
+        getEntityManager().persist(entity);
+        getEntityManager().flush();
 
         // when
-        getEntityManager().persist(entity);
+        entity = getEntityManager().find(AuditedEntity.class, entity.getId());
+        entity.setName("test");
         getEntityManager().flush();
 
         // then
@@ -120,6 +123,10 @@ public class AuditEntityListenerTest extends TransactionalTestCase
         assertEquals(who, entity.getChanger());
         assertNotNull(entity.getPrincipal());
         assertEquals(who, entity.getPrincipal().getName());
+        assertNotNull(entity.getChangerOnly());
+        assertEquals(who, entity.getChangerOnly());
+        assertNotNull(entity.getChangerOnlyPrincipal());
+        assertEquals(who, entity.getChangerOnlyPrincipal().getName());
     }
 
 }

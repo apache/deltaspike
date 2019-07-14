@@ -57,6 +57,13 @@ public class AuditedEntity implements Serializable
     @ManyToOne(targetEntity = Principal.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Principal principal;
 
+    @ModifiedBy(onCreate = false)
+    private String changerOnly;
+
+    @ModifiedBy(onCreate = false)
+    @ManyToOne(targetEntity = Principal.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Principal changerOnlyPrincipal;
+
     @Temporal(TemporalType.TIME)
     @ModifiedOn(onCreate = true)
     private java.util.Date modified;
@@ -125,5 +132,13 @@ public class AuditedEntity implements Serializable
     public Principal getPrincipal()
     {
         return principal;
+    }
+
+    public String getChangerOnly() {
+        return changerOnly;
+    }
+
+    public Principal getChangerOnlyPrincipal() {
+        return changerOnlyPrincipal;
     }
 }
