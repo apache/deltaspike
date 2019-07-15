@@ -602,7 +602,26 @@ public final class Annotateds
                     Object value = method.invoke(a);
                     builder.append(method.getName());
                     builder.append('=');
-                    builder.append(value.toString());
+                    if (value.getClass().isArray())
+                    {
+                        Class<?> componentType = value.getClass().getComponentType();
+                        if (componentType.isAnnotation())
+                        {
+                            builder.append(Arrays.asList((Object[]) value));
+                        }
+                        else if (componentType instanceof Class<?>)
+                        {
+                            builder.append(createClassArrayId((Class<?>[]) value));
+                        }
+                        else
+                        {
+                            builder.append(value.toString());
+                        }
+                    }
+                    else
+                    {
+                        builder.append(value.toString());
+                    }
                 }
                 catch (NullPointerException e)
                 {
@@ -630,6 +649,25 @@ public final class Annotateds
                 }
             }
             builder.append(')');
+        }
+        builder.append(']');
+        return builder.toString();
+    }
+
+    /**
+     * Appends comma separated list of class names from classArray to builder
+     */
+    private static String createClassArrayId(Class<?>[] classArray)
+    {
+        StringBuilder builder = new StringBuilder();
+        builder.append('[');
+        for (int i = 0; i < classArray.length; i++)
+        {
+            builder.append(classArray[i].getName());
+            if (i + 1 != classArray.length)
+            {
+                builder.append(',');
+            }
         }
         builder.append(']');
         return builder.toString();
