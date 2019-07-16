@@ -611,7 +611,7 @@ public final class Annotateds
                         }
                         else if (componentType instanceof Class<?>)
                         {
-                            builder.append(createClassArrayId((Class<?>[]) value));
+                            builder.append(createArrayId(value));
                         }
                         else
                         {
@@ -657,20 +657,38 @@ public final class Annotateds
     /**
      * Appends comma separated list of class names from classArray to builder
      */
-    private static String createClassArrayId(Class<?>[] classArray)
+    private static String createArrayId(Object value)
     {
-        StringBuilder builder = new StringBuilder();
-        builder.append('[');
-        for (int i = 0; i < classArray.length; i++)
+        if (value instanceof int[])
         {
-            builder.append(classArray[i].getName());
-            if (i + 1 != classArray.length)
-            {
-                builder.append(',');
-            }
+            return Arrays.toString((int[]) value);
         }
-        builder.append(']');
-        return builder.toString();
+        if (value instanceof short[])
+        {
+            return Arrays.toString((short[]) value);
+        }
+        if (value instanceof byte[])
+        {
+            return Arrays.toString((byte[]) value);
+        }
+        if (value instanceof char[])
+        {
+            return Arrays.toString((char[]) value);
+        }
+        if (value instanceof long[])
+        {
+            return Arrays.toString((long[]) value);
+        }
+        if (value instanceof float[])
+        {
+            return Arrays.toString((float[]) value);
+        }
+        if (value instanceof double[])
+        {
+            return Arrays.toString((double[]) value);
+        }
+
+        return Arrays.toString((Object[]) value);
     }
 
     /**
