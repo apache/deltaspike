@@ -687,8 +687,31 @@ public final class Annotateds
         {
             return Arrays.toString((double[]) value);
         }
+        if (value instanceof String[])
+        {
+            return Arrays.toString((String[]) value);
+        }
 
-        return Arrays.toString((Object[]) value);
+        return createClassArrayId((Class<?>[]) value);
+    }
+
+    /**
+     * Appends comma separated list of class names from classArray to builder
+     */
+    private static String createClassArrayId(Class<?>[] classArray)
+    {
+        StringBuilder builder = new StringBuilder();
+        builder.append('[');
+        for (int i = 0; i < classArray.length; i++)
+        {
+            builder.append(classArray[i].getName());
+            if (i + 1 != classArray.length)
+            {
+                builder.append(',');
+            }
+        }
+        builder.append(']');
+        return builder.toString();
     }
 
     /**
