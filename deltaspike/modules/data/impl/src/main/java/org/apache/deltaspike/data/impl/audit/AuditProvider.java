@@ -18,9 +18,15 @@
  */
 package org.apache.deltaspike.data.impl.audit;
 
+import java.lang.annotation.Annotation;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.apache.deltaspike.data.impl.property.Property;
+import org.apache.deltaspike.data.impl.property.query.AnnotatedPropertyCriteria;
+import org.apache.deltaspike.data.impl.property.query.PropertyQueries;
+import org.apache.deltaspike.data.impl.property.query.PropertyQuery;
 
 abstract class AuditProvider implements PrePersistAuditListener, PreUpdateAuditListener
 {
@@ -32,4 +38,22 @@ abstract class AuditProvider implements PrePersistAuditListener, PreUpdateAuditL
         return entity.getClass().getSimpleName() + "." + property.getName();
     }
 
+    List<Property<Object>> getProperties(
+            Object entity,
+            Class<? extends Annotation> createdAnnotation,
+            Class<? extends Annotation> modifiedAnnotation,
+            boolean create)
+    {
+        List<Property<Object>> properties = new LinkedList<>();
+        PropertyQuery<Object> query = PropertyQueries.createQuery(entity.getClass())
+                .addCriteria(new AnnotatedPropertyCriteria(modifiedAnnotation));
+        properties.addAll(query.getWritableResultList());
+        if (create)
+        {
+            query = PropertyQueries.<Object> createQuery(entity.getClass())
+                    .addCriteria(new AnnotatedPropertyCriteria(createdAnnotation));
+            properties.addAll(query.getWritableResultList());
+        }
+        return properties;
+    }
 }

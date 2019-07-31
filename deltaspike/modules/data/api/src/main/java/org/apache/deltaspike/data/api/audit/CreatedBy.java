@@ -24,13 +24,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Marks a property which should keep track on the last changing user.
- * By setting {@link #onCreate()} to {@code false}, the property gets NOT set when
- * the entity is persisted.
+ * Marks a property which should be updated with the current when the entity gets persisted.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.FIELD, ElementType.METHOD })
-public @interface ModifiedBy
+public @interface CreatedBy
 {
-    boolean onCreate() default true;
 }

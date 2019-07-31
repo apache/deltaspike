@@ -25,12 +25,17 @@ import java.lang.annotation.Target;
 
 /**
  * Marks a property which should be updated with a timestamp when the entity gets updated.
- * By settings {@link #onCreate()} to {@code true}, the property gets also set when
+ * By setting {@link #onCreate()} to {@code true}, the property gets also set when
  * the entity is persisted.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.FIELD, ElementType.METHOD })
 public @interface ModifiedOn
 {
+    /**
+     * Tells whether or not the property shall be set when the entity is first persisted.
+     * @deprecated If the property shall be set when the entity is first persisted, use {@link CreatedOn}.
+     * @return set this to {@code true} if the property shall be set when the entity is first persisted.
+     */
     boolean onCreate() default false;
 }
