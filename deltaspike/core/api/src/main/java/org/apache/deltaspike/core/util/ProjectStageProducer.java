@@ -72,7 +72,7 @@ public class ProjectStageProducer implements Serializable
     /**
      * The detected ProjectStage
      */
-    private static ProjectStage projectStage;
+    private static volatile ProjectStage projectStage;
 
     /**
      * for the singleton factory
@@ -134,9 +134,10 @@ public class ProjectStageProducer implements Serializable
             return;
         }
 
-        projectStageProducer = new ProjectStageProducer();
+        ProjectStageProducer newProjectStageProducer = new ProjectStageProducer();
+        newProjectStageProducer.initProjectStage();
 
-        projectStageProducer.initProjectStage();
+        projectStageProducer = newProjectStageProducer;
     }
 
     /**
