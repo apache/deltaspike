@@ -37,7 +37,7 @@ public class CDIAwareConstraintValidatorFactory implements
         ConstraintValidatorFactory
 {
     private static final String RELEASE_INSTANCE_METHOD_NAME = "releaseInstance";
-    private static Boolean releaseInstanceMethodFound;
+    private static volatile Boolean releaseInstanceMethodFound;
     private static Method releaseInstanceMethod;
 
     private final Logger log = Logger
