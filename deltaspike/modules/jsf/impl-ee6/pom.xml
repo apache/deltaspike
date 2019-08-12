@@ -32,10 +32,10 @@
 
     <!-- TODO remove workaround and refactor it back to the shade-plugin (+ javadoc) -->
     <build>
-        <sourceDirectory>../impl/src/main/java</sourceDirectory>
+        <sourceDirectory>${project.basedir}/../impl/src/main/java</sourceDirectory>
         <resources>
             <resource>
-                <directory>../impl/src/main/resources</directory>
+                <directory>${project.basedir}/../impl/src/main/resources</directory>
             </resource>
         </resources>
         <plugins>
