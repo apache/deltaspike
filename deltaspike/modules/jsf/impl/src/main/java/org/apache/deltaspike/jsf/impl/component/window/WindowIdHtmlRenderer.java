@@ -127,8 +127,9 @@ public class WindowIdHtmlRenderer extends Renderer
                 if (clientWindow == null)
                 {
                     clientWindowConfig = BeanProvider.getContextualReference(ClientWindowConfig.class);
-                    clientWindow = BeanProvider.getContextualReference(ClientWindow.class);
                     maxWindowIdLength = ClientWindowHelper.getMaxWindowIdLength();
+
+                    clientWindow = BeanProvider.getContextualReference(ClientWindow.class);
                 }
             }
         }

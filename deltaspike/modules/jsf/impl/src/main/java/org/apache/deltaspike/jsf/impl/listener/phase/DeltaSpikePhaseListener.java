@@ -52,7 +52,7 @@ public class DeltaSpikePhaseListener implements PhaseListener, Deactivatable
 
     private final PhaseListener jsfRequestLifecyclePhaseListener = new JsfRequestLifecyclePhaseListener();
 
-    private ViewConfigResolver viewConfigResolver;
+    private volatile ViewConfigResolver viewConfigResolver;
 
     public DeltaSpikePhaseListener()
     {
@@ -154,6 +154,11 @@ public class DeltaSpikePhaseListener implements PhaseListener, Deactivatable
 
     private synchronized void lazyInit()
     {
+        if (this.viewConfigResolver != null)
+        {
+            return;
+        }
+
         this.securityModuleActivated =
             BeanProvider.getContextualReference(EditableAccessDecisionVoterContext.class, true) != null;
 

@@ -46,7 +46,7 @@ public class SecurityAwareViewHandler extends ViewHandlerWrapper implements Deac
     protected final ViewHandler wrapped;
 
     private final boolean activated;
-    private Boolean securityModuleActivated;
+    private volatile Boolean securityModuleActivated;
 
     /**
      * Constructor for wrapping the given {@link ViewHandler}
@@ -184,6 +184,11 @@ public class SecurityAwareViewHandler extends ViewHandlerWrapper implements Deac
 
     private synchronized void lazyInit()
     {
+        if (this.securityModuleActivated != null)
+        {
+            return;
+        }
+
         this.securityModuleActivated =
             BeanProvider.getContextualReference(EditableAccessDecisionVoterContext.class, true) != null;
 

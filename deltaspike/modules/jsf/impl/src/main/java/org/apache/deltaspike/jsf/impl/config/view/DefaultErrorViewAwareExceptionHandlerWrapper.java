@@ -43,7 +43,7 @@ public class DefaultErrorViewAwareExceptionHandlerWrapper extends ExceptionHandl
 {
     private ExceptionHandler wrapped;
 
-    private ViewNavigationHandler viewNavigationHandler;
+    private volatile ViewNavigationHandler viewNavigationHandler;
 
     /**
      * Constructor used by proxy libs

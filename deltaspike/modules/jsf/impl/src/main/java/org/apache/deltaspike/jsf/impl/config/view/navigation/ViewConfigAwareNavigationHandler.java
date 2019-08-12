@@ -48,7 +48,7 @@ public class ViewConfigAwareNavigationHandler extends NavigationHandler
 
     private final NavigationHandler navigationHandler;
 
-    private BeanManager beanManager;
+    private volatile BeanManager beanManager;
 
     private NavigationParameterContext navigationParameterContext;
 
@@ -259,11 +259,12 @@ public class ViewConfigAwareNavigationHandler extends NavigationHandler
     {
         if (this.beanManager == null)
         {
-            this.beanManager = BeanManagerProvider.getInstance().getBeanManager();
             this.navigationParameterContext =
                     BeanProvider.getContextualReference(NavigationParameterContext.class);
             this.viewConfigResolver =
                     BeanProvider.getContextualReference(ViewConfigResolver.class);
+
+            this.beanManager = BeanManagerProvider.getInstance().getBeanManager();
         }
     }
 }

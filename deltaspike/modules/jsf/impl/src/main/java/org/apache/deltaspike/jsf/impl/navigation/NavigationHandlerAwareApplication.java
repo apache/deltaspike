@@ -31,7 +31,7 @@ import java.lang.reflect.Constructor;
 
 public class NavigationHandlerAwareApplication extends ApplicationWrapper implements Deactivatable
 {
-    private static Boolean manualNavigationHandlerWrapperMode;
+    private static volatile Boolean manualNavigationHandlerWrapperMode;
     private static Class navigationHandlerWrapperClass;
     private final Application wrapped;
 
@@ -108,7 +108,7 @@ public class NavigationHandlerAwareApplication extends ApplicationWrapper implem
             try
             {
                 Constructor deltaSpikeNavigationHandlerWrapperConstructor =
-                    this.navigationHandlerWrapperClass.getConstructor(ConfigurableNavigationHandler.class);
+                    navigationHandlerWrapperClass.getConstructor(ConfigurableNavigationHandler.class);
 
                 NavigationHandler navigationHandlerWrapper =
                     (NavigationHandler)deltaSpikeNavigationHandlerWrapperConstructor.newInstance(handler);
