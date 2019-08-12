@@ -46,13 +46,13 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <!-- 
+    <!--
      * Please do not use this pom for other deltaspike modules.
      * Instead use the one from parent/pom.xml!
      *
-     * This very pom.xml contains only the basic build layout 
+     * This very pom.xml contains only the basic build layout
      * and no build-rules at all. See parent/pom.xml for all
-     * the dependencyManagement and plugin configuration stuff. 
+     * the dependencyManagement and plugin configuration stuff.
     -->
     <groupId>org.apache.deltaspike</groupId>
     <artifactId>deltaspike-project</artifactId>
@@ -62,7 +62,7 @@
     <name>Apache DeltaSpike Sources</name>
     <description>Apache DeltaSpike CDI Extensions.</description>
     <url>http://deltaspike.apache.org</url>
-    
+
     <properties>
         <svn.scmPubUrl>https://svn.apache.org/repos/asf/deltaspike/site/trunk/content/javadoc/${project.version}</svn.scmPubUrl>
     </properties>
@@ -84,13 +84,13 @@
                 <plugin>
                     <groupId>org.apache.rat</groupId>
                     <artifactId>apache-rat-plugin</artifactId>
-                    <version>0.12</version>
+                    <version>0.13</version>
                     <configuration>
                         <excludes>
                             <exclude>.idea/**/*</exclude>
                             <exclude>readme/**/*</exclude>
                             <exclude>**/*.log</exclude>
-                            <exclude>target/**</exclude>
+                            <exclude>**/target/**</exclude>
                             <exclude>test-ee7/target/**</exclude>
                             <exclude>**/*.iml</exclude>
                             <exclude>**/MANIFEST.MF</exclude>
