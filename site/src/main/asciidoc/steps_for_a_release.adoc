@@ -211,22 +211,35 @@ cd ..
  - http://www.eu.apache.org/dist/deltaspike
  - http://www.us.apache.org/dist/deltaspike
 
-=== Update site content
+=== Update CMS / site content
 
-via source:
- - Update the build (version.deltaspike.latest.stable and version.deltaspike.latest.snapshot)
- - Update news: http://deltaspike.apache.org/news.html
+==== Publish Javadoc of release
 
-via CMS:
- - Update version: http://deltaspike.apache.org/index.html
+ - git checkout deltaspike-{version}
+ - cd deltaspike && ./javadoc.sh
 
-deploy the site
-   * mvn site deploy
-   * mvn clean site-deploy -Pstaging
-   * mvn clean site-deploy
-   * mvn clean javadoc:aggregate scm-publish:publish-scm or javadoc.sh
-   * update cms workspace
-   * publish content via https://cms.apache.org/deltaspike/publish
+==== Update site
+
+ - git checkout master
+ - Update the pom.xml (version.deltaspike.latest.stable and version.deltaspike.latest.snapshot)
+ - Update site\src\main\asciidoc\index.adoc
+ - Update site\src\main\asciidoc\news.adoc
+ - git commit -m "site update"
+ - git push
+
+==== Publish Javadoc of SNAPSHOT
+
+ - git checkout master
+ - cd deltaspike && ./javadoc.sh
+ 
+==== Publish site
+ - git checkout master
+ - mvn site deploy
+ - mvn clean site-deploy -Pstaging
+ - mvn clean site-deploy
+ - Login to CMS
+ - update workspace
+ - publish content via https://cms.apache.org/deltaspike/publish
 
 === Update report
 
