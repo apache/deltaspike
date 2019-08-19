@@ -4,10 +4,16 @@
 
 :Notice: Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
+== 33th Release (1.9.1) (2019-08-19)
+
+The Apache DeltaSpike team is pleased to announce the 33th release
+(v1.9.1).  Release notes can be found https://s.apache.org/DeltaSpike1.9.1[here]
+
+
 == 32th Release (1.9.0) (2018-09-18)
 
 The Apache DeltaSpike team is pleased to announce the 32th release
-(v1.9.0).  Release notes can be found https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=12312820&version=12342846[here]
+(v1.9.0).  Release notes can be found https://s.apache.org/DeltaSpike1.9.0[here]
 
 == 31th Release (1.8.2) (2018-06-01)
 
