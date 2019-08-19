@@ -213,23 +213,20 @@ cd ..
 
 === Update site content
 
-Update Javadocs:
- - git checkout {version}
- - cd deltaspike && ./javadoc.sh
+via source:
+ - Update the build (version.deltaspike.latest.stable and version.deltaspike.latest.snapshot)
+ - Update news: http://deltaspike.apache.org/news.html
 
-Update Site:
- - Update the pom.xml (version.deltaspike.latest.stable and version.deltaspike.latest.snapshot)
- - Update site\src\main\asciidoc\index.adoc
- - Update site\src\main\asciidoc\news.adoc
+via CMS:
+ - Update version: http://deltaspike.apache.org/index.html
 
-Deploy the site:
- - cd deltaspike
- - mvn site deploy
- - mvn clean site-deploy -Pstaging
- - mvn clean site-deploy
- - mvn clean javadoc:aggregate scm-publish:publish-scm or javadoc.sh
- - update cms workspace
- - publish content via https://cms.apache.org/deltaspike/publish
+deploy the site
+   * mvn site deploy
+   * mvn clean site-deploy -Pstaging
+   * mvn clean site-deploy
+   * mvn clean javadoc:aggregate scm-publish:publish-scm or javadoc.sh
+   * update cms workspace
+   * publish content via https://cms.apache.org/deltaspike/publish
 
 === Update report
 
