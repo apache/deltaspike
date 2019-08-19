@@ -223,6 +223,7 @@ Update Site:
  - Update site\src\main\asciidoc\news.adoc
 
 Deploy the site:
+ - cd deltaspike
  - mvn site deploy
  - mvn clean site-deploy -Pstaging
  - mvn clean site-deploy
