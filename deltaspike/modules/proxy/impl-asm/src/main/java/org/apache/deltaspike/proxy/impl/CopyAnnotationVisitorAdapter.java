@@ -28,7 +28,7 @@ public class CopyAnnotationVisitorAdapter extends AnnotationVisitor
 
     public CopyAnnotationVisitorAdapter(AnnotationVisitor from, AnnotationVisitor copyTo)
     {
-        super(Opcodes.ASM5);
+        super(Opcodes.ASM7);
 
         this.from = from;
         this.to = copyTo;
