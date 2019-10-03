@@ -71,7 +71,7 @@ public class EntityMetadataInitializer
         }
         for (Type intf : repositoryClass.getGenericInterfaces())
         {
-            entityMetadata = extractFromType(intf);
+            entityMetadata = extract( (Class< ? >)intf );
             if (entityMetadata != null)
             {
                 return entityMetadata;
