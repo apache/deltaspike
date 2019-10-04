@@ -138,7 +138,7 @@ public class AsmDeltaSpikeProxyClassGenerator implements DeltaSpikeProxyClassGen
         try
         {
             // ClassVisitor to intercept all annotation visits on the class
-            ClassVisitor cv = new ClassVisitor(Opcodes.ASM5)
+            ClassVisitor cv = new ClassVisitor(Opcodes.ASM7)
             {
                 @Override
                 public AnnotationVisitor visitAnnotation(String desc, boolean visible)

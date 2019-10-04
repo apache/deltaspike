@@ -73,7 +73,7 @@
         <mojarra1.version>1.2_14</mojarra1.version>
 
         <!-- used for some bytecode proxy stuff. Shaded in -->
-        <asm.version>7.0</asm.version>
+        <asm.version>7.2</asm.version>
 
         <!-- Geronimo specs -->
         <geronimo-annotation_1.2_spec.version>1.0</geronimo-annotation_1.2_spec.version>
@@ -89,6 +89,7 @@
         <geronimo-servlet-3.0-spec.version>1.0</geronimo-servlet-3.0-spec.version>
         <geronimo-el-2.2-spec.version>1.0.3</geronimo-el-2.2-spec.version>
         <geronimo-validation-1.0-spec.version>1.1</geronimo-validation-1.0-spec.version>
+        <geronimo-validation-1.1-spec.version>1.0</geronimo-validation-1.1-spec.version>
         <geronimo-jpa-2.0-spec.version>1.1</geronimo-jpa-2.0-spec.version>
         <geronimo-jta-1.1-spec.version>1.1.1</geronimo-jta-1.1-spec.version>
 
@@ -141,6 +142,7 @@
         <!-- validator related -->
         <hibernate.validator.version>4.3.1.Final</hibernate.validator.version>
         <bval.version>0.5</bval.version>
+        <bval1.version>1.1.2</bval1.version>
 
         <!-- Versions of common dependencies within Weld profiles -->
         <weld.el.api>2.2</weld.el.api>
@@ -496,6 +498,13 @@
 
             <dependency>
                 <groupId>org.apache.geronimo.specs</groupId>
+                <artifactId>geronimo-validation_1.1_spec</artifactId>
+                <version>${geronimo-validation-1.1-spec.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.geronimo.specs</groupId>
                 <artifactId>geronimo-jpa_2.0_spec</artifactId>
                 <version>${geronimo-jpa-2.0-spec.version}</version>
                 <scope>provided</scope>
@@ -754,6 +763,13 @@
                 <groupId>org.apache.bval</groupId>
                 <artifactId>bval-jsr303</artifactId>
                 <version>${bval.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.bval</groupId>
+                <artifactId>bval-jsr</artifactId>
+                <version>${bval1.version}</version>
                 <scope>test</scope>
             </dependency>
 

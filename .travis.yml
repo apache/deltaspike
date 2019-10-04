@@ -1,0 +1,108 @@
+language: java
+sudo: false
+dist: trusty
+cache:
+  directories:
+    - '$HOME/.m2/repository'
+install:
+# Skip the first maven execution for downloading dependencies by using this command
+  - /bin/true
+script:
+  - ./build.sh
+env:
+  global:
+    - MAVEN_SKIP_RC=true
+matrix:
+  fast_finish: true
+  include:
+    - env: PROFILES=tomee-build-managed
+      jdk: oraclejdk8
+# Must run with newer OpenEJB for the OpenEJB conatiner control tests
+    - env: PROFILES=tomee8-build-managed,OpenEJB-TomEE
+      jdk: oraclejdk8
+# Must run with newer OpenEJB for the OpenEJB conatiner control tests
+    - env: PROFILES=tomee7-build-managed,OpenEJB-TomEE
+      jdk: oraclejdk8
+    - env: PROFILES=OWB
+      jdk: oraclejdk8
+    - env: PROFILES=Weld3
+      jdk: oraclejdk8
+    - env: PROFILES=OWB2
+      jdk: oraclejdk8
+    - env: PROFILES=Weld2
+      jdk: oraclejdk8
+    - env: PROFILES=OWB15
+      jdk: oraclejdk8
+    - env: PROFILES=Weld1
+      jdk: oraclejdk8
+################################################
+# The following are tests that compile Java8 bytecode and only check if Deltaspike is capable of running on a newer JVM
+################################################
+    - env: PROFILES=OWB2 JDK=9
+      before_install:
+        - wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh
+        - . ./install-jdk.sh -F 9 -L BCL
+# Add new certificates for JDK10
+# https://www.deps.co/guides/travis-ci-latest-java/
+    - env: PROFILES=OWB2 JDK=10
+      before_install:
+        - wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh
+        - . ./install-jdk.sh -F 10 -L GPL
+        - rm "${JAVA_HOME}/lib/security/cacerts"
+        - ln -s /etc/ssl/certs/java/cacerts "${JAVA_HOME}/lib/security/cacerts"
+    - env: PROFILES=OWB2 JDK=11
+      before_install:
+        - wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh
+        - . ./install-jdk.sh -F 11 -L BCL
+    - env: PROFILES=OWB2 JDK=12
+      before_install:
+      - wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh
+      - . ./install-jdk.sh -F 12 -L GPL
+    - env: PROFILES=OWB2 JDK=13
+      before_install:
+        - wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh
+        - . ./install-jdk.sh -F 13 -L GPL
+    - env: PROFILES=OWB2 JDK=14
+      before_install:
+        - wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh
+        - . ./install-jdk.sh -F 14 -L GPL
+################################################
+# The following are tests that compile to Java9+ bytecode and check if Deltaspike is buildable with newer JDKs as well as if it is capable of handling classes of newer bytecode versions
+################################################
+    - env: PROFILES=OWB2 JDK=9 BUILD_JDK=9
+      before_install:
+      - wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh
+      - . ./install-jdk.sh -F 9 -L GPL
+    - env: PROFILES=OWB2 JDK=10 BUILD_JDK=10
+      before_install:
+        - wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh
+        - . ./install-jdk.sh -F 10 -L GPL
+        - rm "${JAVA_HOME}/lib/security/cacerts"
+        - ln -s /etc/ssl/certs/java/cacerts "${JAVA_HOME}/lib/security/cacerts"
+    - env: PROFILES=OWB2 JDK=11 BUILD_JDK=11
+      before_install:
+        - wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh
+        - . ./install-jdk.sh -F 11 -L BCL
+    - env: PROFILES=OWB2 JDK=12 BUILD_JDK=12
+      before_install:
+      - wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh
+      - . ./install-jdk.sh -F 12 -L GPL
+    - env: PROFILES=OWB2 JDK=13 BUILD_JDK=13
+      before_install:
+        - wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh
+        - . ./install-jdk.sh -F 13 -L GPL
+    - env: PROFILES=OWB2 JDK=14 BUILD_JDK=14
+      before_install:
+        - wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh
+        - . ./install-jdk.sh -F 14 -L GPL
+  allow_failures:
+    - env: PROFILES=OWB2 JDK=14 BUILD_JDK=14
+    - env: PROFILES=OWB2 JDK=14
+# Not sure why, but these profiles fail in the JSF tests
+    - env: PROFILES=tomee8-build-managed,OpenEJB-TomEE
+      jdk: oraclejdk8
+    - env: PROFILES=tomee7-build-managed,OpenEJB-TomEE
+      jdk: oraclejdk8
+# Fails because it thinks an alternative is not a proper alternative?
+    - env: PROFILES=Weld2
+      jdk: oraclejdk8
