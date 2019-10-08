@@ -18,14 +18,11 @@
  */
 package org.apache.deltaspike.data.impl;
 
-import static org.apache.deltaspike.data.test.util.TestDeployments.initDeployment;
-import static org.junit.Assert.assertNotNull;
-
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
-
+import org.apache.deltaspike.data.test.TransactionalTestCase;
 import org.apache.deltaspike.data.test.domain.Simple;
+import org.apache.deltaspike.data.test.service.BaseRepositoryInterface;
 import org.apache.deltaspike.data.test.service.ExtendedRepositoryInterface;
+import org.apache.deltaspike.data.test.service.ExtendedRepositoryInterface2;
 import org.apache.deltaspike.data.test.service.RepositoryInterface;
 import org.apache.deltaspike.data.test.service.SimpleRepository;
 import org.apache.deltaspike.test.category.WebProfileCategory;
@@ -36,17 +33,28 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
+import javax.enterprise.inject.Instance;
+import javax.inject.Inject;
+
+import static org.apache.deltaspike.data.test.util.TestDeployments.initDeployment;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 @RunWith(Arquillian.class)
 @Category(WebProfileCategory.class)
-public class RepositoryExtensionTest
+public class RepositoryExtensionTest extends TransactionalTestCase
 {
+
+    private static final String NAME = "a_simple";
 
     @Deployment
     public static Archive<?> deployment()
     {
         return initDeployment()
                 .addClasses(RepositoryInterface.class,
+                            BaseRepositoryInterface.class,
                             ExtendedRepositoryInterface.class,
+                            ExtendedRepositoryInterface2.class,
                             SimpleRepository.class)
                 .addPackages(true, Simple.class.getPackage());
     }
@@ -60,12 +68,30 @@ public class RepositoryExtensionTest
     @Inject
     Instance<SimpleRepository> extendedClassRepo;
 
+    @Inject
+    private ExtendedRepositoryInterface2 repoOnInterface;
+
     @Test
     public void should_inject()
     {
         assertNotNull(repo.get());
         assertNotNull(extendedRepo.get());
         assertNotNull(extendedClassRepo.get());
+    }
+
+    @Test
+    public void should_work_based_on_interface()
+    {
+        testData.createSimple( NAME );
+        Simple find = repoOnInterface.findByName( NAME );
+        assertNotNull(find);
+        assertEquals( NAME, find.getName() );
+
+        repoOnInterface.deleteAll();
+
+        long count = repoOnInterface.count(  );
+        assertEquals(0, count );
+
     }
 
 }
