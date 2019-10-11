@@ -244,7 +244,7 @@ window.dswh = window.dswh || {
                     return false;
                 }
 
-                if (href === '#') {
+                if (href.indexOf('#') === 0) {
                     return false;
                 }
 
