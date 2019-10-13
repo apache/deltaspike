@@ -244,7 +244,7 @@ window.dswh = window.dswh || {
                     return false;
                 }
 
-                if (href === '#') {
+                if (href.indexOf('#') === 0) {
                     return false;
                 }
 
@@ -423,24 +423,39 @@ window.dswh = window.dswh || {
 
     utils : {
 
+        findRootWindow: function() {
+            var w = window;
+            while(w.frameElement) {
+                var parent = w.parent;
+                if (parent === undefined) {
+                    break;
+                }
+                w = parent;
+            };
+
+            return w;
+        },
+
         isWindowNameDefined : function() {
-            return window.name && window.name.length > 0;
+            var w = dswh.utils.findRootWindow();
+            return w.name && w.name.length > 0;
         },
 
         isManagedWindowName : function() {
-            if (!window.name) {
+            var w = dswh.utils.findRootWindow();
+            if (!w.name) {
                 return false;
             }
 
-            return window.name.indexOf(dswh.MANAGED_WINDOW_NAME_PREFIX) === 0;
+            return w.name.indexOf(dswh.MANAGED_WINDOW_NAME_PREFIX) === 0;
         },
 
         getWindowIdFromWindowName : function() {
-            return window.name.substring(dswh.MANAGED_WINDOW_NAME_PREFIX.length);
+            return dswh.utils.findRootWindow().name.substring(dswh.MANAGED_WINDOW_NAME_PREFIX.length);
         },
 
         setWindowIdAsWindowName : function(windowId) {
-            window.name = dswh.MANAGED_WINDOW_NAME_PREFIX + windowId;
+            dswh.utils.findRootWindow().name = dswh.MANAGED_WINDOW_NAME_PREFIX + windowId;
         },
 
         requestNewWindowId : function() {
