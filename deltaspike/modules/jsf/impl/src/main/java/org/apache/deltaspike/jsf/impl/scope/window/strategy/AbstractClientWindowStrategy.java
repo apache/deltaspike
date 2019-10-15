@@ -25,6 +25,8 @@ import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+
+import org.apache.deltaspike.core.util.StringUtils;
 import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;
 import org.apache.deltaspike.jsf.impl.util.ClientWindowHelper;
 import org.apache.deltaspike.jsf.spi.scope.window.ClientWindow;
@@ -103,7 +105,7 @@ public abstract class AbstractClientWindowStrategy implements ClientWindow
      */
     protected String sanitiseWindowId(String windowId)
     {
-        return windowId.replace('(', '_').replace('<', '_').replace('&', '_');
+        return StringUtils.removeSpecialChars(windowId);
     }
 
     protected abstract String getOrCreateWindowId(FacesContext facesContext);

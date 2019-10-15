@@ -32,4 +32,14 @@ public class StringUtilsTest
         Assert.assertTrue(StringUtils.isEmpty(" "));
         Assert.assertFalse(StringUtils.isEmpty(" a "));
     }
+
+    @Test
+    public void testRemoveSpecialChars() {
+        Assert.assertNull(StringUtils.removeSpecialChars(null));
+        Assert.assertEquals("abc_def", StringUtils.removeSpecialChars("abc def"));
+        Assert.assertEquals("a_c_def", StringUtils.removeSpecialChars("a_c def")); // not replace _
+        Assert.assertEquals("a-c_dex", StringUtils.removeSpecialChars("a-c dex")); // not replace -
+        Assert.assertEquals("a_c_def", StringUtils.removeSpecialChars("a\'c def"));
+        Assert.assertEquals("A_c_deX", StringUtils.removeSpecialChars("A#c deX"));
+    }
 }
