@@ -78,19 +78,26 @@ public class DefaultConfigSourceProvider implements ConfigSourceProvider
         if (userHome != null && !userHome.isEmpty())
         {
             File dsHome = new File(userHome, PROPERTY_FILE_HOME_NAME);
-            if (dsHome.exists())
+            try
             {
-                try
+                if (dsHome.exists())
                 {
-                    ConfigSource dsHomeConfigSource = new PropertyFileConfigSource(dsHome.toURI().toURL());
-                    configSources.add(dsHomeConfigSource);
-                    LOG.log(Level.INFO, "Reading configuration from {}", dsHome.getAbsolutePath());
-                }
-                catch (MalformedURLException e)
-                {
-                    LOG.log(Level.WARNING, "Could not read configuration from " + dsHome.getAbsolutePath(), e);
-                }
+                    try
+                    {
+                        ConfigSource dsHomeConfigSource = new PropertyFileConfigSource(dsHome.toURI().toURL());
+                        configSources.add(dsHomeConfigSource);
+                        LOG.log(Level.INFO, "Reading configuration from {}", dsHome.getAbsolutePath());
+                    }
+                    catch (MalformedURLException e)
+                    {
+                        LOG.log(Level.WARNING, "Could not read configuration from " + dsHome.getAbsolutePath(), e);
+                    }
 
+                }
+            }
+            catch (SecurityException se)
+            {
+                LOG.log(Level.INFO, "Not allowed to check if directory {} exists", dsHome.getPath());
             }
         }
     }
