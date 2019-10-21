@@ -395,6 +395,15 @@
             </roles>
             <timezone>+1</timezone>
         </developer>
+        <developer>
+            <id>cbeikov</id>
+            <name>Christian Beikov</name>
+            <email>cbeikov@apache.org</email>
+            <roles>
+                <role>Committer</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
     </developers>
 
     <dependencyManagement>
