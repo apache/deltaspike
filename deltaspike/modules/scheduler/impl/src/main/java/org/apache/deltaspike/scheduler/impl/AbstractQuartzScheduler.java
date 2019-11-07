@@ -158,7 +158,7 @@ public abstract class AbstractQuartzScheduler<T> implements Scheduler<T>
         {
             if (this.scheduler != null && this.scheduler.isStarted())
             {
-                this.scheduler.shutdown(SchedulerBaseConfig.LifecycleIntegration.FORCE_STOP);
+                this.scheduler.shutdown(!SchedulerBaseConfig.LifecycleIntegration.FORCE_STOP);
                 this.scheduler = null;
             }
         }
