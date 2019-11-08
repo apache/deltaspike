@@ -74,7 +74,7 @@ public interface SchedulerBaseConfig extends DeltaSpikeBaseConfig
         Boolean FORCE_STOP = ConfigResolver.resolve("deltaspike.scheduler.force_stop")
                 .as(Boolean.class)
                 .withCurrentProjectStage(true)
-                .withDefault(Boolean.TRUE)
+                .withDefault(Boolean.FALSE)
                 .getValue();
 
         Integer DELAYED_START_IN_SECONDS = ConfigResolver.resolve("deltaspike.scheduler.delayed_start_in_seconds")
