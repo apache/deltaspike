@@ -21,8 +21,6 @@ package org.apache.deltaspike.test.core.api.config.injectable;
 import org.apache.deltaspike.core.api.config.ConfigProperty;
 import org.apache.deltaspike.core.api.config.Configuration;
 
-import java.net.URL;
-import java.util.List;
 
 @Configuration(prefix = "prefix.")
 public interface PrefixedConfigBean

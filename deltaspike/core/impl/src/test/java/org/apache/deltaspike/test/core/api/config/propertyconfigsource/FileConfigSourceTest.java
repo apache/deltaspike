@@ -24,7 +24,6 @@ import java.io.IOException;
 
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.config.PropertyFileConfig;
-import org.apache.deltaspike.core.api.exclude.Exclude;
 import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;

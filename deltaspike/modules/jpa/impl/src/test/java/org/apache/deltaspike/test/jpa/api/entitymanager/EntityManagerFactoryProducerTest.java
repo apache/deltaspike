@@ -22,8 +22,6 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.spi.PersistenceProviderResolverHolder;
 
-import java.util.Properties;
-
 import org.apache.deltaspike.jpa.spi.entitymanager.PersistenceConfigurationProvider;
 import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.test.jpa.api.shared.TestEntityManager;

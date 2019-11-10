@@ -19,20 +19,17 @@
 package org.apache.deltaspike.test.jpa.api.entitymanager;
 
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
 import javax.persistence.spi.PersistenceProviderResolverHolder;
 import java.util.Properties;
 
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.jpa.spi.entitymanager.PersistenceConfigurationProvider;
 import org.apache.deltaspike.test.category.SeCategory;
-import org.apache.deltaspike.test.jpa.api.shared.TestEntityManager;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
