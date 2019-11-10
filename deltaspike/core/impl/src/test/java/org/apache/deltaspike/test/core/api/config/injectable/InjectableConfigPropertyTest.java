@@ -112,6 +112,13 @@ public class InjectableConfigPropertyTest
     }
 
     @Test
+    public void testProjectStageAwareReplacement()
+    {
+        SettingsBean settingsBean = BeanProvider.getContextualReference(SettingsBean.class, false);
+        assertEquals("https://myapp/login.xhtml", settingsBean.getProjectStageAwareVariableValue());
+    }
+
+    @Test
     public void checkDynamicConvertedInjections() throws MalformedURLException
     {
         SettingsBean settingsBean = BeanProvider.getContextualReference(SettingsBean.class, false);
@@ -125,6 +132,7 @@ public class InjectableConfigPropertyTest
         SettingsBean settingsBean = BeanProvider.getContextualReference(SettingsBean.class, false);
         assertEquals("value", settingsBean.getCustomSourceValue());
     }
+
 
     @Test
     public void proxy() throws MalformedURLException

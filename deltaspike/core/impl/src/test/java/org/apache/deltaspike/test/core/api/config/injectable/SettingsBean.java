@@ -109,6 +109,10 @@ public class SettingsBean
     @ConfigProperty(name = "custom-source.test")
     private String customSourceValue;
 
+    @Inject
+    @ConfigProperty(name = "myapp.login.url")
+    private String projectStageAwareVariableValue;
+
     protected SettingsBean()
     {
     }
@@ -221,6 +225,11 @@ public class SettingsBean
 
     public String getCustomSourceValue() {
         return customSourceValue;
+    }
+
+    public String getProjectStageAwareVariableValue()
+    {
+        return projectStageAwareVariableValue;
     }
 
     public static class UrlList implements ConfigResolver.Converter<List<URL>>
