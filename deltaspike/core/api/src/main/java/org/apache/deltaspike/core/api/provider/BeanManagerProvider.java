@@ -76,9 +76,8 @@ public class BeanManagerProvider implements Extension
         Method resolvedCdiBeanManagerMethod = null;
         //only init methods if a cdi 1.1+ container is available and the delegation-mode isn't deactivated.
         //deactivation is e.g. useful if owb is used in "parallel mode" in a weld-based server.
-        if (cdiClass != null && !CoreBaseConfig.BeanManagerIntegration.DELEGATE_LOOKUP)
+        if (cdiClass != null && CoreBaseConfig.BeanManagerIntegration.DELEGATE_LOOKUP)
         {
-
             try
             {
                 resolvedCdiCurrentMethod = cdiClass.getDeclaredMethod("current");
@@ -135,6 +134,12 @@ public class BeanManagerProvider implements Extension
      */
     public static boolean isActive()
     {
+        // CDI#current delegation enabled, skip everything
+        if (CDI_CURRENT_METHOD != null && CDI_CURRENT_BEAN_MANAGER_METHOD != null)
+        {
+            return bmpSingleton != null;
+        }
+
         return bmpSingleton != null && bmpSingleton.bmInfos.containsKey(ClassUtils.getClassLoader(null));
     }
 
@@ -180,6 +185,12 @@ public class BeanManagerProvider implements Extension
     {
         setBeanManagerProvider(this);
 
+        // CDI#current delegation enabled, skip everything
+        if (CDI_CURRENT_METHOD != null && CDI_CURRENT_BEAN_MANAGER_METHOD != null)
+        {
+            return;
+        }
+
         BeanManagerInfo bmi = getBeanManagerInfo(ClassUtils.getClassLoader(null));
         bmi.loadTimeBm = beanManager;
     }
@@ -194,6 +205,12 @@ public class BeanManagerProvider implements Extension
      */
     public BeanManager getBeanManager()
     {
+        // CDI#current delegation enabled, skip everything
+        if (CDI_CURRENT_METHOD != null && CDI_CURRENT_BEAN_MANAGER_METHOD != null)
+        {
+            return resolveBeanManagerViaStaticHelper();
+        }
+
         BeanManagerInfo bmi = getBeanManagerInfo(ClassUtils.getClassLoader(null));
 
         if (!bmi.booted)
@@ -222,14 +239,6 @@ public class BeanManagerProvider implements Extension
                 {
                     // first we look for a BeanManager from JNDI
                     result = resolveBeanManagerViaJndi();
-
-                    // needs to be here to get a better performance and
-                    // even in ee7 containers we can't rely on that lookup as a primary strategy
-                    // (esp. in case of EAR based applications)
-                    if (result == null)
-                    {
-                        result = resolveBeanManagerViaStaticHelper();
-                    }
 
                     if (result == null)
                     {
@@ -264,6 +273,12 @@ public class BeanManagerProvider implements Extension
      */
     public void cleanupFinalBeanManagers(@Observes AfterDeploymentValidation adv)
     {
+        // CDI#current delegation enabled, skip everything
+        if (CDI_CURRENT_METHOD != null && CDI_CURRENT_BEAN_MANAGER_METHOD != null)
+        {
+            return;
+        }
+
         for (BeanManagerInfo bmi : bmpSingleton.bmInfos.values())
         {
             bmi.finalBm = null;
@@ -283,6 +298,12 @@ public class BeanManagerProvider implements Extension
      */
     public void cleanupStoredBeanManagerOnShutdown(@Observes BeforeShutdown beforeShutdown)
     {
+        // CDI#current delegation enabled, skip everything
+        if (CDI_CURRENT_METHOD != null && CDI_CURRENT_BEAN_MANAGER_METHOD != null)
+        {
+            return;
+        }
+
         if (bmpSingleton == null)
         {
             // this happens if there has been a failure at startup
