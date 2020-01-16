@@ -138,6 +138,11 @@
         </dependency>
 
         <dependency>
+            <groupId>org.owasp.encoder</groupId>
+            <artifactId>encoder</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
             <artifactId>geronimo-el_2.2_spec</artifactId>
             <version>1.0</version>

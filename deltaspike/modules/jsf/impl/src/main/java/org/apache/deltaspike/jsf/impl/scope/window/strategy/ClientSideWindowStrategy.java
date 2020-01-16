@@ -118,15 +118,17 @@ public class ClientSideWindowStrategy extends AbstractClientWindowStrategy
 
             // set the windowId value in the javascript code
             windowHandlerHtml = windowHandlerHtml.replace(WINDOW_ID_REPLACE_PATTERN,
-                    windowId);
+                                                          org.owasp.encoder.Encode.forJavaScriptBlock(windowId));
             // set the current request url
             // on the client we can't use window.location as the location
             // could be a different when using forwards
             windowHandlerHtml = windowHandlerHtml.replace(REQUEST_URL_REPLACE_PATTERN,
-                    ClientWindowHelper.constructRequestUrl(externalContext));
+                                                          org.owasp.encoder.Encode.forJavaScriptBlock(
+                                                              ClientWindowHelper.constructRequestUrl(externalContext)));
             // set the noscript-URL for users with no JavaScript
             windowHandlerHtml =
-                    windowHandlerHtml.replace(NOSCRIPT_URL_REPLACE_PATTERN, getNoscriptUrl(externalContext));
+                windowHandlerHtml.replace(NOSCRIPT_URL_REPLACE_PATTERN,
+                                          org.owasp.encoder.Encode.forHtmlAttribute(getNoscriptUrl(externalContext)));
 
             OutputStream os = httpResponse.getOutputStream();
             try
