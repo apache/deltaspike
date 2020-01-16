@@ -736,6 +736,13 @@
                 <scope>provided</scope>
             </dependency>
 
+            <!-- dependency for DELTASPIKE-1401 -->
+            <dependency>
+                <groupId>org.owasp.encoder</groupId>
+                <artifactId>encoder</artifactId>
+                <version>1.2.2</version>
+            </dependency>
+
             <!-- TomEE dependencies -->
             <dependency>
                 <groupId>org.apache.openejb</groupId>
