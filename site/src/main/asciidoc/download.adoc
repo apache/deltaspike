@@ -20,23 +20,23 @@ The minimum Java version from DeltaSpike-1.9.0 upwards is Java8.
 == Binary Distribution
 
 
-* https://www.apache.org/dyn/closer.cgi/deltaspike/{latestStable}/distribution-full-{latestStable}.zip[distribution-full-{latestStable}.zip]
+* https://www.apache.org/dyn/closer.lua/deltaspike/{latestStable}/distribution-full-{latestStable}.zip[distribution-full-{latestStable}.zip]
 * https://www.apache.org/dist/deltaspike/{latestStable}/distribution-full-{latestStable}.zip.asc[distribution-full-{latestStable}.zip.asc]
-* https://www.apache.org/dist/deltaspike/{latestStable}/distribution-full-{latestStable}.zip.md5[distribution-full-{latestStable}.zip.md5]
+* https://www.apache.org/dist/deltaspike/{latestStable}/distribution-full-{latestStable}.zip.sha512[distribution-full-{latestStable}.zip.sha512]
 * https://www.apache.org/dist/deltaspike/{latestStable}/distribution-full-{latestStable}.zip.sha1[distribution-full-{latestStable}.zip.sha1]
 
-* https://www.apache.org/dyn/closer.cgi/deltaspike/{latestStable}/distribution-full-{latestStable}.tar.gz[distribution-full-{latestStable}.tar.gz]
+* https://www.apache.org/dyn/closer.lua/deltaspike/{latestStable}/distribution-full-{latestStable}.tar.gz[distribution-full-{latestStable}.tar.gz]
 * https://www.apache.org/dist/deltaspike/{latestStable}/distribution-full-{latestStable}.tar.gz.asc[distribution-full-{latestStable}.tar.gz.asc]
-* https://www.apache.org/dist/deltaspike/{latestStable}/distribution-full-{latestStable}.tar.gz.md5[distribution-full-{latestStable}.tar.gz.md5]
+* https://www.apache.org/dist/deltaspike/{latestStable}/distribution-full-{latestStable}.tar.gz.sha512[distribution-full-{latestStable}.tar.gz.sha512]
 * https://www.apache.org/dist/deltaspike/{latestStable}/distribution-full-{latestStable}.tar.gz.sha1[distribution-full-{latestStable}.tar.gz.sha1]
 
 
 == Source Distribution
 
 
-* https://www.apache.org/dyn/closer.cgi/deltaspike/{latestStable}/deltaspike-{latestStable}-source-release.zip[deltaspike-{latestStable}-source-release.zip]
+* https://www.apache.org/dyn/closer.lua/deltaspike/{latestStable}/deltaspike-{latestStable}-source-release.zip[deltaspike-{latestStable}-source-release.zip]
 * https://www.apache.org/dist/deltaspike/{latestStable}/deltaspike-{latestStable}-source-release.zip.asc[deltaspike-{latestStable}-source-release.zip.asc]
-* https://www.apache.org/dist/deltaspike/{latestStable}/deltaspike-{latestStable}-source-release.zip.md5[deltaspike-{latestStable}-source-release.zip.md5]
+* https://www.apache.org/dist/deltaspike/{latestStable}/deltaspike-{latestStable}-source-release.zip.sha512[deltaspike-{latestStable}-source-release.zip.sha512]
 * https://www.apache.org/dist/deltaspike/{latestStable}/deltaspike-{latestStable}-source-release.zip.sha1[deltaspike-{latestStable}-source-release.zip.sha1]
 
 
@@ -65,7 +65,7 @@ as well as the asc signature file for the artifact.
 Make sure you get these files from the
 https://www.apache.org/dist/deltaspike/[main distribution directory],
 rather than from a
-https://www.apache.org/dyn/closer.cgi/deltaspike/[mirror]. Then verify
+https://www.apache.org/dyn/closer.lua/deltaspike/[mirror]. Then verify
 the signatures using e.g.:
 
 [subs="+attributes"]
