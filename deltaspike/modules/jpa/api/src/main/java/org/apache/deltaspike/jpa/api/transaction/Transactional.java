@@ -58,13 +58,8 @@ public @interface Transactional
      * {@link javax.persistence.EntityManager}s with qualifiers in a called method (of a different bean)
      * which isn't {@link Transactional} itself.
      *
-     * This method is now deprecated, and if you have multiple {@link javax.persistence.EntityManager}s you should use
-     * {@link org.apache.deltaspike.jpa.api.entitymanager.EntityManagerResolver}.
-     * If you want to use qualifiers only, use {@link org.apache.deltaspike.jpa.api.entitymanager.EntityManagerConfig}.
-     *
      * @return target persistence-unit identifier
      */
-    @Deprecated
     @Nonbinding Class<? extends Annotation>[] qualifier() default Any.class;
 
     /**
