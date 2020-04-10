@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.test.core.api.exclude;
 
+import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.impl.exclude.extension.ExcludeExtension;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
 import org.apache.deltaspike.test.core.impl.activation.TestClassDeactivator;
@@ -27,8 +28,10 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.AfterClass;
 import org.junit.runner.RunWith;
 
 import javax.enterprise.inject.spi.Extension;
@@ -49,8 +52,8 @@ public class ExcludeWarFileTest extends ExcludeTest
         String simpleName = ExcludeWarFileTest.class.getSimpleName();
         String archiveName = simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1);
 
-        System.setProperty("org.apache.deltaspike.ProjectStage", "Production");
-        ProjectStageProducer.setProjectStage(null);
+        // in case the Arquillian adapter doesn't properly handle resources on the classpath
+        ProjectStageProducer.setProjectStage(ProjectStage.Production);
 
         URL fileUrl = ExcludeWarFileTest.class.getClassLoader()
                 .getResource("META-INF/apache-deltaspike.properties");
@@ -59,12 +62,19 @@ public class ExcludeWarFileTest extends ExcludeTest
                 .addPackage(ExcludeWarFileTest.class.getPackage())
                 .addPackage(TestClassDeactivator.class.getPackage())
                 .addAsManifestResource(FileUtils.getFileForURL(fileUrl.toString()))
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
+                .addAsResource(new StringAsset("org.apache.deltaspike.ProjectStage = Production"),
+                    "apache-deltaspike.properties"); // when deployed on some remote container;
 
         return ShrinkWrap.create(WebArchive.class, archiveName + ".war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
                 .addAsLibraries(testJar)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsServiceProvider(Extension.class, ExcludeExtension.class);
+    }
+
+    @AfterClass
+    public static void resetProjectStage() {
+        ProjectStageProducer.setProjectStage(null);
     }
 }

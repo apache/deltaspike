@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.test.core.api.exclude.uc001;
 
+import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
 import org.apache.deltaspike.test.util.ArchiveUtils;
@@ -25,8 +26,10 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,17 +43,24 @@ public class EntityExcludeTest
         String simpleName = EntityExcludeTest.class.getSimpleName();
         String archiveName = simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1);
 
-        System.setProperty("org.apache.deltaspike.ProjectStage", "Development");
-        ProjectStageProducer.setProjectStage(null);
+        // in case the Arquillian adapter doesn't properly handle resources on the classpath
+        ProjectStageProducer.setProjectStage(ProjectStage.Development);
 
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, archiveName + ".jar")
                 .addPackage(EntityExcludeTest.class.getPackage())
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
+                .addAsResource(new StringAsset("org.apache.deltaspike.ProjectStage = Development"),
+                    "apache-deltaspike.properties"); // when deployed on some remote container;
 
         return ShrinkWrap.create(WebArchive.class, archiveName + ".war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
                 .addAsLibraries(testJar)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+    }
+
+    @AfterClass
+    public static void resetProjectStage() {
+        ProjectStageProducer.setProjectStage(null);
     }
 
     @Test
