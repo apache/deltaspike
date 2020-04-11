@@ -27,3 +27,6 @@ If you know of useful DeltaSpike articles or blogs that are not listed, link:htt
 * http://rmannibucau.wordpress.com/2013/11/20/deltaspike-data-repositories-with-dtos/[DeltaSpike Data: repositories with DTOs!]
 * http://jaxenter.com/introducing-apache-deltaspike-42925.html[Closing the Gaps: Introducing Apache Deltaspike]
 * http://jsfcorner.blogspot.com.au/2013/01/deltaspike-jsf-message-system.html[DeltaSpike JSF message system]
+* https://medium.com/danieldiasjava/simplificando-persistencia-de-dados-com-apache-deltaspike-data-6fd27bb2d821[Simplificando persistência de Dados com Apache DeltaSpike Data - PT-BR]
+* https://medium.com/danieldiasjava/conhecendo-apache-deltaspike-configuration-a24516468a9b[Conhecendo Apache DeltaSpike: Configuration - PT-BR]
+* https://medium.com/danieldiasjava/conhecendo-apache-deltaspike-injecting-resources-fa4e5585c2ea[Conhecendo Apache DeltaSpike: Injecting Resources - PT-BR]

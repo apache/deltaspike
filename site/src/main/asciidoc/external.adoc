@@ -74,6 +74,14 @@ CDI e DeltaSpike presentation in TDC - The Developers Conference 2015
 
 **Video:** https://www.youtube.com/watch?v=3McmEi3cs_s
 
+=== Simplificando la persistencia de datos con Apache DeltaSpike Data (Java User Group de Nicaragua)
+
+**Slide:** https://speakerdeck.com/danieldiasjava/simplificando-la-persistencia-de-datos-con-apache-deltaspike-data
+
+**Video:** https://youtu.be/djM51tlJuLs
+
+**Example:** https://github.com/Daniel-Dos/danieldiasjava-palestras/tree/master/JUGNicaragua
+
 == Examples
 
 === IdeaFork (full)
@@ -149,6 +157,26 @@ Simple CRUD example based on JavaLin and DeltaSpike-data
 Simple CRUD example based on jax-rs(resteasy) and DeltaSpike-data for Tomcat
 
 **Source code:** https://github.com/SouJava-Rio/soujava-rio-labs/tree/master/jax-rs-samples/Jax-rs-deltaspike-angular2-4/jax-rs-sample-cdi-deltaspike-data
+
+=== [spanish] Oracle Helidon with DeltaSpike-Data
+Simple CRUD example based on Helidon and DeltaSpike-data
+
+**Source code:** https://github.com/Daniel-Dos/danieldiasjava-palestras/tree/master/JUGNicaragua
+
+=== [pt-BR] Eclipse vertx with DeltaSpike-Data
+Simple example based on vertx and DeltaSpike-data
+
+**Source code:** https://github.com/Daniel-Dos/DanielDiasjava-Blog/tree/master/Projeto-Cloud/vertx
+
+=== [pt-BR] Eclipse vertx with DeltaSpike-Data
+Simple example based on vertx and DeltaSpike-data
+
+**Source code:** https://github.com/Daniel-Dos/DanielDiasjava-Blog/tree/master/Projeto-Cloud/vertx
+
+=== [pt-BR] Javalin with DeltaSpike-Data
+Simple example based on Javalin and DeltaSpike-data
+
+**Source code:** https://github.com/Daniel-Dos/DanielDiasjava-Blog/tree/master/Projeto-Cloud/javalin
 
 == Magazines
 
