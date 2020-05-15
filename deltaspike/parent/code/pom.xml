@@ -41,7 +41,7 @@
         <version.activation>1.1.1</version.activation>
         <version.annotation>1.3.2</version.annotation>
         <bval.artifactId>bval-jsr303</bval.artifactId>
-		<validation.artifactId>geronimo-validation_1.0_spec</validation.artifactId>
+        <validation.artifactId>geronimo-validation_1.0_spec</validation.artifactId>
         <jboss.as.version>7.1.1.Final</jboss.as.version>
         <wildfly.version>10.1.0.Final</wildfly.version>
         <wildfly.arquillian.version>1.0.2.Final</wildfly.arquillian.version>
@@ -72,7 +72,7 @@
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
-		
+        
         <!-- Preparation for Java 9+, include a dependency on the JAXB APIs -->
         <dependency>
             <groupId>javax.xml.bind</groupId>
@@ -183,13 +183,13 @@
                 <jdk>[1.9,)</jdk>
             </activation>
             <properties>
-				<!-- Need newer implementations to be able to run on Java9+ -->
+                <!-- Need newer implementations to be able to run on Java9+ -->
                 <bval.artifactId>bval-jsr</bval.artifactId>
-				<validation.artifactId>geronimo-validation_1.1_spec</validation.artifactId>
-				<hibernate.validator.version>6.0.17.Final</hibernate.validator.version>
+                <validation.artifactId>geronimo-validation_1.1_spec</validation.artifactId>
+                <hibernate.validator.version>6.0.17.Final</hibernate.validator.version>
             </properties>
         </profile>
-		
+        
         <profile>
             <!-- use this profile to compile and test DeltaSpike with Apache OpenWebBeans -->
             <id>OWB</id>
@@ -260,10 +260,10 @@
                     <scope>test</scope>
                 </dependency>
 
-				<dependency>
-					<groupId>org.apache.geronimo.specs</groupId>
-					<artifactId>${validation.artifactId}</artifactId>
-				</dependency>
+                <dependency>
+                    <groupId>org.apache.geronimo.specs</groupId>
+                    <artifactId>${validation.artifactId}</artifactId>
+                </dependency>
                 <dependency>
                     <groupId>org.apache.bval</groupId>
                     <artifactId>${bval.artifactId}</artifactId>
@@ -360,10 +360,10 @@
                     <scope>test</scope>
                 </dependency>
 
-				<dependency>
-					<groupId>org.apache.geronimo.specs</groupId>
-					<artifactId>${validation.artifactId}</artifactId>
-				</dependency>
+                <dependency>
+                    <groupId>org.apache.geronimo.specs</groupId>
+                    <artifactId>${validation.artifactId}</artifactId>
+                </dependency>
                 <dependency>
                     <groupId>org.apache.bval</groupId>
                     <artifactId>${bval.artifactId}</artifactId>
@@ -466,10 +466,10 @@
                     <scope>test</scope>
                 </dependency>
 
-				<dependency>
-					<groupId>org.apache.geronimo.specs</groupId>
-					<artifactId>${validation.artifactId}</artifactId>
-				</dependency>
+                <dependency>
+                    <groupId>org.apache.geronimo.specs</groupId>
+                    <artifactId>${validation.artifactId}</artifactId>
+                </dependency>
                 <dependency>
                     <groupId>org.apache.bval</groupId>
                     <artifactId>${bval.artifactId}</artifactId>
