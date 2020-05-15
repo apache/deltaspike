@@ -695,7 +695,7 @@
 
             <properties>
                 <!-- Actual Weld version used with this profile -->
-                <weld.version>3.0.4.Final</weld.version>
+                <weld.version>3.1.3.Final</weld.version>
                 <cdicontainer.version>weld-${weld.version}</cdicontainer.version>
             </properties>
             
@@ -753,7 +753,11 @@
                     <groupId>org.jboss.weld</groupId>
                     <artifactId>weld-api</artifactId>
                 </dependency>
-                
+                <dependency>
+                    <groupId>org.jboss.weld</groupId>
+                    <artifactId>weld-spi</artifactId>
+                </dependency>
+
                 <!--Other than Weld dependencies-->
                 <dependency>
                     <groupId>javax.el</groupId>

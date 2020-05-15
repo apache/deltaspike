@@ -26,6 +26,11 @@ public interface CoreBaseConfig extends DeltaSpikeBaseConfig
 {
     interface BeanManagerIntegration
     {
+        /**
+         * Whether to use CDI.current() if available.
+         * This might fail in some CDI containers in some situations.
+         * Try switching to 'false' to enforce the 'old' DeltaSpike BeanManager lookup.
+         */
         Boolean DELEGATE_LOOKUP =
                 ConfigResolver.resolve("deltaspike.bean-manager.delegate_lookup")
                         .as(Boolean.class)

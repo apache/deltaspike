@@ -186,7 +186,8 @@ public class BeanManagerProvider implements Extension
         setBeanManagerProvider(this);
 
         // CDI#current delegation enabled, skip everything
-        if (CDI_CURRENT_METHOD != null && CDI_CURRENT_BEAN_MANAGER_METHOD != null)
+        if (CDI_CURRENT_METHOD != null && CDI_CURRENT_BEAN_MANAGER_METHOD != null &&
+            resolveBeanManagerViaStaticHelper() != null)
         {
             return;
         }
@@ -208,7 +209,11 @@ public class BeanManagerProvider implements Extension
         // CDI#current delegation enabled, skip everything
         if (CDI_CURRENT_METHOD != null && CDI_CURRENT_BEAN_MANAGER_METHOD != null)
         {
-            return resolveBeanManagerViaStaticHelper();
+            BeanManager bm = resolveBeanManagerViaStaticHelper();
+            if (bm != null)
+            {
+                return bm;
+            }
         }
 
         BeanManagerInfo bmi = getBeanManagerInfo(ClassUtils.getClassLoader(null));
@@ -274,7 +279,8 @@ public class BeanManagerProvider implements Extension
     public void cleanupFinalBeanManagers(@Observes AfterDeploymentValidation adv)
     {
         // CDI#current delegation enabled, skip everything
-        if (CDI_CURRENT_METHOD != null && CDI_CURRENT_BEAN_MANAGER_METHOD != null)
+        if (CDI_CURRENT_METHOD != null && CDI_CURRENT_BEAN_MANAGER_METHOD != null &&
+            resolveBeanManagerViaStaticHelper() != null)
         {
             return;
         }
