@@ -64,6 +64,17 @@ public abstract class ClassDeactivationUtils
     }
 
     /**
+     * Flush the caches to prevent ClassLoader leaks.
+     * This is called internally by DeltaSpike.
+     * Users do not have to explicitly call this method.
+     * Does not have side effects as the cache is idempotent anyway.
+     */
+    public static void clearCache()
+    {
+        classDeactivatorMap.clear();
+    }
+
+    /**
      * Evaluates if the given {@link Deactivatable} is active.
      *
      * @param targetClass {@link Deactivatable} under test.

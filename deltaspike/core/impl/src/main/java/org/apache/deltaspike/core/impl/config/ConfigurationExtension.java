@@ -386,6 +386,9 @@ public class ConfigurationExtension implements Extension, Deactivatable
 
         ConfigResolver.freeConfigSources();
         detectedParentPropertyFileConfigs.remove(ClassUtils.getClassLoader(null));
+
+        // we also free the ClassDeactivationUtils cache
+        ClassDeactivationUtils.clearCache();
     }
 
     /**
