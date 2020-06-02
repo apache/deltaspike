@@ -70,7 +70,8 @@ public class BaseTestConfigProperty
 
         Assert.assertEquals("1", ConfigResolver.getPropertyValue(CONFIG_VALUE));
 
-        Thread.sleep(1600L);
+        // we need to take care of file system granularity
+        Thread.sleep(2100L);
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(prop)))
         {
