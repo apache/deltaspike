@@ -61,6 +61,11 @@ public class PropertyFileConfigSource extends BaseConfigSource
      * deltaspike_reload=60
      * </pre>
      * Whether the file got changed is determined by the lastModifiedDate of the underlying file.
+     * <p>
+     * You can disable the whole reloading with a negative reload time, e.g.
+     * <pre>
+     * deltaspike_reload=-1
+     * </pre>
      */
     public static final String RELOAD_PERIOD = "deltaspike_reload";
     public static final int RELOAD_PERIOD_DEFAULT = 300;
@@ -94,11 +99,18 @@ public class PropertyFileConfigSource extends BaseConfigSource
 
         if (isFile(propertyFileUrl))
         {
-            fileLastModified = getLastModified();
-            configHelper = ConfigResolver.getConfigProvider().getHelper();
 
             calculateReloadTime();
-            reloadAfterSec = getNowSeconds() + reloadAllSeconds;
+            if (reloadAllSeconds < 0 )
+            {
+                configHelper = null;
+            }
+            else
+            {
+                fileLastModified = getLastModified();
+                configHelper = ConfigResolver.getConfigProvider().getHelper();
+                reloadAfterSec = getNowSeconds() + reloadAllSeconds;
+            }
         }
         else
         {
@@ -115,7 +127,16 @@ public class PropertyFileConfigSource extends BaseConfigSource
         {
             try
             {
-                reloadAllSeconds = Integer.parseInt(reloadPeriod);
+                int reload = Integer.parseInt(reloadPeriod);
+                if (reload < 0)
+                {
+                    fileLastModified = null;
+                    log.info("Disable dynamic reloading for ConfigSource " + filePath);
+                }
+                else
+                {
+                    reloadAllSeconds = reload;
+                }
             }
             catch (NumberFormatException nfe)
             {
