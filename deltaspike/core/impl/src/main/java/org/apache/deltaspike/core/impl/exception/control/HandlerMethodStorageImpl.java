@@ -44,7 +44,7 @@ class HandlerMethodStorageImpl implements HandlerMethodStorage
 {
     private final Map<Type, Collection<HandlerMethod<? extends Throwable>>> allHandlers;
 
-    private Logger log = Logger.getLogger(HandlerMethodStorageImpl.class.toString());
+    private Logger log = Logger.getLogger(HandlerMethodStorageImpl.class.getName());
 
     HandlerMethodStorageImpl(Map<Type, Collection<HandlerMethod<? extends Throwable>>> allHandlers)
     {

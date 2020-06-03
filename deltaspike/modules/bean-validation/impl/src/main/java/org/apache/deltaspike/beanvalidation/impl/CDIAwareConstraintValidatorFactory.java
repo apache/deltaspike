@@ -31,7 +31,7 @@ import org.apache.deltaspike.core.util.ReflectionUtils;
 
 /**
  * A factory for creating CDI Aware/Enabled ConstraintValidators.
- * 
+ *
  */
 public class CDIAwareConstraintValidatorFactory implements
         ConstraintValidatorFactory
@@ -40,9 +40,8 @@ public class CDIAwareConstraintValidatorFactory implements
     private static volatile Boolean releaseInstanceMethodFound;
     private static Method releaseInstanceMethod;
 
-    private final Logger log = Logger
-            .getLogger(CDIAwareConstraintValidatorFactory.class.toString());
-    
+    private final Logger log = Logger.getLogger(CDIAwareConstraintValidatorFactory.class.getName());
+
     private final ConstraintValidatorFactory delegate;
 
     public CDIAwareConstraintValidatorFactory()
@@ -50,7 +49,7 @@ public class CDIAwareConstraintValidatorFactory implements
         delegate = Validation.byDefaultProvider().configure().getDefaultConstraintValidatorFactory();
         if (log.isLoggable(Level.CONFIG))
         {
-            log.config("Setting up delegate ConstraintValidatorFactory as " + 
+            log.config("Setting up delegate ConstraintValidatorFactory as " +
                     delegate.getClass().getCanonicalName());
         }
     }

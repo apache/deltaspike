@@ -77,7 +77,7 @@ public class EntityManagerFactoryProducer
 
         if (unitNameAnnotation == null)
         {
-            LOG.warning("@PersisteneUnitName annotation could not be found at EntityManagerFactory injection point!");
+            LOG.warning("@PersistenceUnitName annotation could not be found at EntityManagerFactory injection point!");
 
             return null;
         }
