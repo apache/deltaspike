@@ -42,7 +42,7 @@
     <parent>
         <groupId>org.apache.deltaspike</groupId>
         <artifactId>deltaspike</artifactId>
-        <version>1.9.4</version>
+        <version>1.9.5-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -56,7 +56,7 @@
     -->
     <groupId>org.apache.deltaspike</groupId>
     <artifactId>deltaspike-project</artifactId>
-    <version>1.9.4</version>
+    <version>1.9.5-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Apache DeltaSpike Sources</name>
