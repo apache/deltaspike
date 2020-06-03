@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.apache.deltaspike.examples</groupId>
         <artifactId>examples-project</artifactId>
-        <version>1.9.4-SNAPSHOT</version>
+        <version>1.9.4</version>
     </parent>
 
     <artifactId>deltaspike-data-examples</artifactId>
