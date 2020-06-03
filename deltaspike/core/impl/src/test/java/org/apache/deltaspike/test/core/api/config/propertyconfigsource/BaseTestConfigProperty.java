@@ -20,12 +20,20 @@ package org.apache.deltaspike.test.core.api.config.propertyconfigsource;
 
 import javax.inject.Inject;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.util.Collections;
+
+import org.apache.deltaspike.core.api.config.ConfigResolver;
+import org.apache.deltaspike.core.impl.config.PropertyFileConfigSource;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class BaseTestConfigProperty
 {
     protected final static String CONFIG_FILE_NAME = "myconfig.properties";
+    protected static final String CONFIG_VALUE = "deltaspike.dynamic.reloadable.config.value";
 
     @Inject
     private MyBean myBean;
@@ -44,6 +52,33 @@ public class BaseTestConfigProperty
         Assert.assertEquals(8589934592l, myBean.getLongConfig());
         Assert.assertEquals(-1.1f, myBean.getFloatConfig(), 0);
         Assert.assertEquals(4e40, myBean.getDoubleConfig(), 0);
+    }
 
+    @Test
+    public void testDynamicReload() throws Exception
+    {
+        File prop = File.createTempFile("deltaspike-test", ".properties");
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(prop)))
+        {
+            bw.write(CONFIG_VALUE + "=1\ndeltaspike_reload=1\n");
+            bw.flush();
+        }
+        prop.deleteOnExit();
+
+        final PropertyFileConfigSource dynamicReloadConfigSource = new PropertyFileConfigSource(prop.toURI().toURL());
+        ConfigResolver.addConfigSources(Collections.singletonList(dynamicReloadConfigSource));
+
+        Assert.assertEquals("1", ConfigResolver.getPropertyValue(CONFIG_VALUE));
+
+        // we need to take care of file system granularity
+        Thread.sleep(2100L);
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(prop)))
+        {
+            bw.write(CONFIG_VALUE + "=2\ndeltaspike_reload=1\n");
+            bw.flush();
+        }
+
+        Assert.assertEquals("2", ConfigResolver.getPropertyValue(CONFIG_VALUE));
     }
 }

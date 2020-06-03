@@ -35,7 +35,7 @@ import java.net.URL;
 public class ClassDeactivationWarFileTest extends ClassDeactivationTest
 {
     /**
-     *X TODO creating a WebArchive is only a workaround because JavaArchive cannot contain other archives.
+     * NOTE: creating a WebArchive is only a workaround because JavaArchive cannot contain other archives.
      */
     @Deployment
     public static WebArchive deploy()

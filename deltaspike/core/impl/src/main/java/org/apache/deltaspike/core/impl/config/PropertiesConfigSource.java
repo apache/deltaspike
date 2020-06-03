@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * Base class for configuration sources based on {@link Properties} object.
+ * Base class for configuration sources based on a fixed {@link Properties} object.
  */
 public abstract class PropertiesConfigSource extends BaseConfigSource
 {
@@ -50,7 +50,7 @@ public abstract class PropertiesConfigSource extends BaseConfigSource
     @Override
     public Map<String, String> getProperties()
     {
-        Map<String,String> result = new HashMap<String, String>();
+        Map<String,String> result = new HashMap<String, String>(properties.size());
         for (String propertyName : properties.stringPropertyNames())
         {
             result.put(propertyName, properties.getProperty(propertyName));

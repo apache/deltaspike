@@ -550,14 +550,23 @@ public class TypedResolverImpl<T> implements ConfigResolver.UntypedResolver<T>
                 break;
             }
 
-            String variableValue = new TypedResolverImpl<String>(this.config, varName)
+            try
+            {
+                String variableValue = new TypedResolverImpl<String>(this.config, varName)
                     .withCurrentProjectStage(this.projectStageAware)
                     .evaluateVariables(true)
                     .getValue();
 
-            if (variableValue != null)
+                if (variableValue != null)
+                {
+                    value = value.replace("${" + varName + "}", variableValue);
+                }
+            }
+            catch (StackOverflowError soe)
             {
-                value = value.replace("${" + varName + "}", variableValue);
+                // just log out
+                LOG.severe("Recursive variable resolution detected for " + varName);
+                throw soe;
             }
             startVar++;
         }
