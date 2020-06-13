@@ -48,8 +48,8 @@
 
     <properties>
         <asciidoctor.version>1.5.2</asciidoctor.version>
-        <version.deltaspike.latest.stable>1.9.3</version.deltaspike.latest.stable>
-        <version.deltaspike.latest.snapshot>1.9.4-SNAPSHOT</version.deltaspike.latest.snapshot>
+        <version.deltaspike.latest.stable>1.9.4</version.deltaspike.latest.stable>
+        <version.deltaspike.latest.snapshot>1.9.5-SNAPSHOT</version.deltaspike.latest.snapshot>
         <svn.scmPubCheckoutDirectory>${project.build.directory}/co-site</svn.scmPubCheckoutDirectory>
     </properties>
 
