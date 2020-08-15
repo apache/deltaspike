@@ -21,7 +21,7 @@ The commit-history follows the steps in the book. In most cases every commit tra
 == Presentations
 
 === Apache DeltaSpike: The CDI toolbox
-CDI portable extensions are one of greatest features of Java EE allowing the platform to be extended in a clean and portable way. But allowing extension is just part of the story. CDI opens the door to a whole new eco-system for Java EE, but it’s not the role of the specification to create these extensions. 
+CDI portable extensions are one of greatest features of Java EE allowing the platform to be extended in a clean and portable way. But allowing extension is just part of the story. CDI opens the door to a whole new eco-system for Java EE, but it’s not the role of the specification to create these extensions.
 Apache DeltaSpike is the project that leads this brand new eco-system by providing useful extension modules for CDI applications as well as tools to ease the creation of new ones.
 In this session, we’ll start by presenting the DeltaSpike toolbox and show how it helps you to develop for CDI. Then we’ll describe the major extensions included in Deltaspike, including  'configuration', 'scheduling' and 'data'.
 
@@ -33,7 +33,7 @@ In this session, we’ll start by presenting the DeltaSpike toolbox and show how
 **Event:** http://www.meetup.com/JBoss-User-Group-Worldwide/events/218755922/
 
 === DeltaSpike: CDI extensions of the world, unite!
-Several popular CDI extension frameworks like Seam 3 and MyFaces CODI have faded out over the years. But not to worry - their functionality is taken over by projects like Picketlink, Agorava, and mainly DeltaSpike, a new Apache project that wants CDI extension authors to unite in an effort to make the life of web application developers easier. Even without a five year plan! 
+Several popular CDI extension frameworks like Seam 3 and MyFaces CODI have faded out over the years. But not to worry - their functionality is taken over by projects like Picketlink, Agorava, and mainly DeltaSpike, a new Apache project that wants CDI extension authors to unite in an effort to make the life of web application developers easier. Even without a five year plan!
 
 **Slides:** http://devconf.cz/filebrowser/download/414
 
@@ -50,7 +50,7 @@ These slides show how to use type-safe mechanisms provided by MyFaces CODI for d
 **Slides:** http://www.slideshare.net/os890/myfaces-codi-and-jboss-seam3-become-apache-deltaspike
 
 === Migrating a JSF-Based Web Application from Spring 3 to Java EE 7 and CDI
-This talk is a detailed case study about the migration of a JSF-based web application from Spring 3 to Java EE 7 and CDI. It is presented at the JavaOne 2014 conference. 
+This talk is a detailed case study about the migration of a JSF-based web application from Spring 3 to Java EE 7 and CDI. It is presented at the JavaOne 2014 conference.
 
 **Slides:** http://www.slideshare.net/MarioLeanderReimer/migrating-a-jsfbased-web-application-from-spring-3-to-java-ee-7-and-cdi
 
@@ -111,14 +111,14 @@ Simple example based on Java EE6+ and DeltaSpike (tested with EE6 and EE7).
 **Source code:** https://github.com/os890/ee6-ds-demo
 
 === Fullstack CODI to DeltaSpike
-This pair of examples show how to achieve the most important MyFaces CODI features with DeltaSpike and also how to migrate a CODI project to DeltaSpike. The examples are basic, compacting core CODI features into just a few JSF pages, and are intended for deployment with TomEE. 
+This pair of examples show how to achieve the most important MyFaces CODI features with DeltaSpike and also how to migrate a CODI project to DeltaSpike. The examples are basic, compacting core CODI features into just a few JSF pages, and are intended for deployment with TomEE.
 
 **Source code:** https://github.com/os890/tomee_mf_stack_001
 
 * CODI version in master branch
 * Migrated DeltaSpike version in codi2ds branch
 
-=== JBoss Quickstarts 
+=== JBoss Quickstarts
 The JBoss quickstarts are small working examples that demonstrate recommended practices for specific Java EE technology use cases. A subset of these quickstarts are dedicated to demonstrating DeltaSpike, including custom authorization restrictions using annotations, constructing and modifying beans, extending the influence of CDI using BeanManager, and deactivating DeltaSpike features.
 
 **Source code:** https://github.com/jboss-developer/jboss-wfk-quickstarts
@@ -203,7 +203,7 @@ O que é DeltaSpike?
 
 === JSF + CDI + DS (Servlet-Container)
 **Source code:** https://github.com/os890/javaweb-cdi-ds-project-template
- 
+
 === EJB + CDI + DS (Module)
 **Source code:** https://github.com/os890/javaee_cdi_ejb_ds_project_template
 
@@ -218,21 +218,3 @@ O que é DeltaSpike?
 
 === JSF + CDI + DS (Apache TomEE)
 **Source code:** https://github.com/os890/tomee-ds-project-template
-
-== Add-ons
-
-=== lbitonti@github
-This GitHub account contains e.g. a DBUnit Add-on for the Test-Control-Module of DeltaSpike.
-
-**Source code:** https://github.com/lbitonti/deltaspike-dbunit
-
-=== os890@github
-This GitHub account contains several DeltaSpike Add-ons e.g. to integrate CDI with other frameworks.
-
-**Source code:** https://github.com/os890/
-
-=== rmannibucau@github
-This GitHub account contains several DeltaSpike Add-ons e.g. an integration with the TomEE PasswordCipher API.
-
-**Source code:** https://github.com/rmannibucau/
-

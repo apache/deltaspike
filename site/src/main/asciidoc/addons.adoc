@@ -6,6 +6,21 @@
 
 Add-ons extend the functionality of DeltaSpike and several have been developed external to the DeltaSpike project. Brief information is given here about each of the add-ons, with details of where they can be obtained from.
 
+== lbitonti@github
+This GitHub account contains e.g. a DBUnit Add-on for the Test-Control-Module of DeltaSpike.
+
+**Source code:** https://github.com/lbitonti/deltaspike-dbunit
+
+== os890@github
+This GitHub account contains several DeltaSpike Add-ons e.g. to integrate CDI with other frameworks.
+
+**Source code:** https://github.com/os890/
+
+== rmannibucau@github
+This GitHub account contains several DeltaSpike Add-ons e.g. an integration with the TomEE PasswordCipher API.
+
+**Source code:** https://github.com/rmannibucau/
+
 == Monitoring
 `ds-monitoring-addon` provides simple monitoring for several common use-cases (exceptions, performance, audits), collecting information about the monitored method-invocations during a request and enabling you to process the entries based on your requirements. For more information about its use and implementation, see http://os890.blogspot.com.au/2014/04/add-on-monitoring-lite-with-deltaspike.html[os890: [add-on\] monitoring lite with deltaspike].
 
