@@ -45,7 +45,7 @@ public class BdaAlternativeWarFileTest extends BdaAlternativeTest
         String simpleName = BdaAlternativeWarFileTest.class.getSimpleName();
         String archiveName = simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1);
 
-        JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "securedAnnotationTest.jar")
+        JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, archiveName + ".jar")
                 .addPackage(BdaAlternativeWarFileTest.class.getPackage())
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 

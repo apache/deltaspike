@@ -21,10 +21,10 @@
     xsi:schemaLocation="http://jboss.org/schema/arquillian http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
 
     <!--Uncomment to have test archives exported to the file system for inspection -->
-    <!--
     <engine>
         <property name="deploymentExportPath">target/</property>
     </engine>
+    <!--
     -->
 
     <!-- We need to specify this because the default protocol for AS7 and Wildfly doesn't work very well -->
@@ -62,6 +62,9 @@
         <configuration>
             <property name="jbossHome">${arquillian.jboss_home}</property>
             <property name="javaVmArguments">-client -noverify -Xms64m -Xmx1024m -XX:MaxPermSize=512m -Djboss.socket.binding.port-offset=50000 -Dcdicontainer.version=${cdicontainer.version}</property>
+<!-- debug options
+            <property name="javaVmArguments">-client -noverify -Xms64m -Xmx1024m -XX:MaxPermSize=512m -Djboss.socket.binding.port-offset=50000 -Dcdicontainer.version=${cdicontainer.version} -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005</property>
+-->
             <property name="outputToConsole">false</property>
             <property name="managementPort">59990</property>
         </configuration>

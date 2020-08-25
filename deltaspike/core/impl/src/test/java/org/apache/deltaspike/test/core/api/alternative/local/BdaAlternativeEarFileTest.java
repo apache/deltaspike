@@ -19,10 +19,13 @@
 package org.apache.deltaspike.test.core.api.alternative.local;
 
 import org.apache.deltaspike.test.category.EnterpriseArchiveProfileCategory;
+import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
@@ -30,6 +33,10 @@ import org.junit.runner.RunWith;
 @Category(EnterpriseArchiveProfileCategory.class)
 public class BdaAlternativeEarFileTest extends BdaAlternativeTest
 {
+    public static final String CONFIG = "deltaspike.bean-manager.delegate_lookup=false\n" // Weld3 bug :(
+        + "globalAlternatives.org.apache.deltaspike.test.core.api.alternative.local.BaseBean2="
+        + "org.apache.deltaspike.test.core.api.alternative.local.SubBaseBean2";
+
     @Deployment
     public static EnterpriseArchive deployEar()
     {
@@ -37,7 +44,13 @@ public class BdaAlternativeEarFileTest extends BdaAlternativeTest
         String simpleName = BdaAlternativeWarFileTest.class.getSimpleName();
         String archiveName = simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1);
 
+        JavaArchive globalAlternativeConfigJar = ShrinkWrap.create(JavaArchive.class, "globalAlternativesCofig.jar")
+            .addAsManifestResource(new StringAsset(CONFIG),
+                "apache-deltaspike.properties");
+
+
         return ShrinkWrap.create(EnterpriseArchive.class, archiveName + ".ear")
-                .addAsModule(BdaAlternativeWarFileTest.deploy());
+            .addAsLibrary(globalAlternativeConfigJar)
+            .addAsModule(BdaAlternativeWarFileTest.deploy());
     }
 }
