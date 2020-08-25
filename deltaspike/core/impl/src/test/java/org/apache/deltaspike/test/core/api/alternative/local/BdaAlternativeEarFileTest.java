@@ -44,7 +44,7 @@ public class BdaAlternativeEarFileTest extends BdaAlternativeTest
         String simpleName = BdaAlternativeWarFileTest.class.getSimpleName();
         String archiveName = simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1);
 
-        JavaArchive globalAlternativeConfigJar = ShrinkWrap.create(JavaArchive.class, "globalAlternativesCofig.jar")
+        JavaArchive globalAlternativeConfigJar = ShrinkWrap.create(JavaArchive.class, "globalAlternativesConfig.jar")
             .addAsManifestResource(new StringAsset(CONFIG),
                 "apache-deltaspike.properties");
 
