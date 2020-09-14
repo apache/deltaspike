@@ -22,7 +22,9 @@ import org.apache.deltaspike.test.category.EnterpriseArchiveProfileCategory;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
@@ -30,6 +32,8 @@ import org.junit.runner.RunWith;
 @Category(EnterpriseArchiveProfileCategory.class)
 public class SimpleRegistrationEarFileTest extends SimpleRegistrationTest
 {
+    public static final String CONFIG = "deltaspike.bean-manager.delegate_lookup=false\n"; // Weld3 bug :(
+
     @Deployment
     public static EnterpriseArchive deployEar()
     {
@@ -37,7 +41,12 @@ public class SimpleRegistrationEarFileTest extends SimpleRegistrationTest
         String simpleName = SimpleRegistrationWarFileTest.class.getSimpleName();
         String archiveName = simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1);
 
+        JavaArchive configJar = ShrinkWrap.create(JavaArchive.class, "registrationConfig.jar")
+            .addAsManifestResource(new StringAsset(CONFIG),
+                "apache-deltaspike.properties");
+
         return ShrinkWrap.create(EnterpriseArchive.class, archiveName + ".ear")
+                .addAsLibrary(configJar)
                 .addAsModule(SimpleRegistrationWarFileTest.deploy());
     }
 }

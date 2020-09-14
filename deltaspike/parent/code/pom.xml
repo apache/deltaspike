@@ -47,7 +47,7 @@
         <wildfly.arquillian.version>1.0.2.Final</wildfly.arquillian.version>
         <glassfish3.version>3.1.2.2</glassfish3.version>
         <glassfish4.version>4.0</glassfish4.version>
-        <payara.version>4.1.1.162</payara.version>
+        <payara.version>4.1.2.181</payara.version>
         <wls.version>12.1</wls.version>
     </properties>
 
@@ -2092,9 +2092,9 @@
                 </dependency>
                 <!-- Also works fine with Payara -->
                 <dependency>
-                    <groupId>org.jboss.arquillian.container</groupId>
-                    <artifactId>arquillian-glassfish-managed-3.1</artifactId>
-                    <version>1.0.0.CR4</version>
+                    <groupId>fish.payara.arquillian</groupId>
+                    <artifactId>arquillian-payara-server-4-managed</artifactId>
+                    <version>1.1</version>
                     <scope>test</scope>
                 </dependency>
             </dependencies>

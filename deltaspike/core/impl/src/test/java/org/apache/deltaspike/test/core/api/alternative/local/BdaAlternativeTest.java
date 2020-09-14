@@ -42,10 +42,8 @@ public abstract class BdaAlternativeTest
     @Test
     public void alternativeImplementationWithClassAsBaseType()
     {
-        List<BaseBean2> testBeans = BeanProvider.getContextualReferences(BaseBean2.class, true);
-
-        Assert.assertEquals(1, testBeans.size());
-        Assert.assertEquals(BaseBean2.class.getName(), testBeans.get(0).getClass().getName());
+        BaseBean2 baseBean2 = BeanProvider.getContextualReference(BaseBean2.class);
+        Assert.assertNotNull(baseBean2);
     }
 
     /*

@@ -80,6 +80,9 @@ public class ProjectStageProducerTest
             {
                 System.setProperty(ProjectStageProducer.CONFIG_SETTING_KEYS[i], oldEnvVals[i]);
             }
+
+            // also reset the ProjectStageProducer again
+            ProjectStageProducer.setProjectStage(null);
         }
     }
 }

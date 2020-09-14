@@ -35,7 +35,9 @@ import org.junit.AfterClass;
 import org.junit.runner.RunWith;
 
 import javax.enterprise.inject.spi.Extension;
-import java.net.URL;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 /**
  * Tests for {@link org.apache.deltaspike.core.api.exclude.Exclude}
@@ -47,7 +49,7 @@ public class ExcludeWarFileTest extends ExcludeTest
      * X TODO creating a WebArchive is only a workaround because JavaArchive cannot contain other archives.
      */
     @Deployment
-    public static WebArchive deploy()
+    public static WebArchive deploy() throws IOException
     {
         String simpleName = ExcludeWarFileTest.class.getSimpleName();
         String archiveName = simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1);
@@ -55,22 +57,26 @@ public class ExcludeWarFileTest extends ExcludeTest
         // in case the Arquillian adapter doesn't properly handle resources on the classpath
         ProjectStageProducer.setProjectStage(ProjectStage.Production);
 
-        URL fileUrl = ExcludeWarFileTest.class.getClassLoader()
-                .getResource("META-INF/apache-deltaspike.properties");
-
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "excludeTest.jar")
                 .addPackage(ExcludeWarFileTest.class.getPackage())
                 .addPackage(TestClassDeactivator.class.getPackage())
-                .addAsManifestResource(FileUtils.getFileForURL(fileUrl.toString()))
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
-                .addAsResource(new StringAsset("org.apache.deltaspike.ProjectStage = Production"),
-                    "apache-deltaspike.properties"); // when deployed on some remote container;
+                .addAsManifestResource(new StringAsset(getConfigContent()),
+                    "apache-deltaspike.properties") // when deployed on some remote container;
+                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
         return ShrinkWrap.create(WebArchive.class, archiveName + ".war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
                 .addAsLibraries(testJar)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsServiceProvider(Extension.class, ExcludeExtension.class);
+    }
+
+    public static String getConfigContent() throws IOException
+    {
+        byte[] configContent = Files.readAllBytes(FileUtils.getFileForURL(ExcludeWarFileTest.class.getClassLoader()
+                .getResource("META-INF/apache-deltaspike.properties").toString()).toPath());
+        return new String(configContent, StandardCharsets.UTF_8) +
+            "\norg.apache.deltaspike.ProjectStage = Production";
     }
 
     @AfterClass
