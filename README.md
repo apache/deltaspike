@@ -18,11 +18,11 @@ Apache DeltaSpike is compatible with all those specification versions.
 Note that Apache DeltaSpike is **not** a CDI container itself, but a set of portable Extensions for it!
 
 
-Some of key features of Apache DeltaSpike include:
+Some of the key features of Apache DeltaSpike include:
 
 - A core module that supports component configuration, type safe messaging and internationalization, and exception handling.
 - A suite of utilities to make programmatic bean lookup easier.
-- A plugin for Java SE to bootstrap both JBoss Weld, Apache OpenWebBeans and other CDI containers outside of a a JavaEE server.
+- A plugin for Java SE to bootstrap both JBoss Weld, Apache OpenWebBeans and other CDI containers outside of a JavaEE server.
 - JSF integration, including backporting of JSF 2.2 features for Java EE 6.
 - JPA integration and transaction support.
 - A Data module, to create an easy to use repository pattern on top of JPA.
