@@ -73,7 +73,7 @@
         <mojarra1.version>1.2_14</mojarra1.version>
 
         <!-- used for some bytecode proxy stuff. Shaded in -->
-        <asm.version>8.0.1</asm.version>
+        <asm.version>9.0</asm.version>
 
         <!-- Geronimo specs -->
         <geronimo-annotation_1.2_spec.version>1.0</geronimo-annotation_1.2_spec.version>
