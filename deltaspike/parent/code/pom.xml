@@ -377,7 +377,7 @@
             <id>OWB2</id>
 
             <properties>
-                <owb.version>2.0.11</owb.version>
+                <owb.version>2.0.21</owb.version>
                 <cdicontainer.version>owb-${owb.version}</cdicontainer.version>
             </properties>
 
@@ -900,7 +900,6 @@
 
         <profile>
             <!--
-             * This profile is a WIP
              * arquillian-tomee-remote isn't a real remote connector for a running server-instance
              *
              * DEBUGGING:
@@ -911,17 +910,17 @@
             <id>tomee8-build-managed</id>
 
             <properties>
-                <tomee.version>8.0.0</tomee.version>
+                <tomee.version>8.0.6</tomee.version>
                 <openejb.version>${tomee.version}</openejb.version>
-                <owb.version>2.0.5</owb.version>
+                <owb.version>2.0.22-SNAPSHOT</owb.version>
                 <cdicontainer.version>tomee-${tomee.version}</cdicontainer.version>
             </properties>
 
             <dependencies>
                 <dependency>
-                    <groupId>org.apache.openejb</groupId>
+                    <groupId>org.apache.tomee</groupId>
                     <artifactId>javaee-api</artifactId>
-                    <version>6.0-5</version>
+                    <version>8.0-5</version>
                     <scope>provided</scope>
                 </dependency>
                 <dependency>
@@ -997,17 +996,17 @@
             <id>tomee7-build-managed</id>
 
             <properties>
-                <tomee.version>7.0.6</tomee.version>
+                <tomee.version>7.1.4</tomee.version>
                 <openejb.version>${tomee.version}</openejb.version>
-                <owb.version>2.0.5</owb.version>
+                <owb.version>1.7.6</owb.version>
                 <cdicontainer.version>tomee-${tomee.version}</cdicontainer.version>
             </properties>
 
             <dependencies>
                 <dependency>
-                    <groupId>org.apache.openejb</groupId>
+                    <groupId>org.apache.tomee</groupId>
                     <artifactId>javaee-api</artifactId>
-                    <version>6.0-5</version>
+                    <version>7.0-2</version>
                     <scope>provided</scope>
                 </dependency>
                 <dependency>

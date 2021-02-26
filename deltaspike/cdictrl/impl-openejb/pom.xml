@@ -106,15 +106,27 @@
 
         <profile>
             <!-- from TomEE-7.0.0 on openejb resides under the tomee group and not openejb anymore -->
-            <id>OpenEJB-TomEE</id>
-        <dependencies>
-            <dependency>
-                <groupId>org.apache.tomee</groupId>
-                <artifactId>openejb-core</artifactId>
-                <version>${openejb.version}</version>
-                <scope>provided</scope>
-            </dependency>
-        </dependencies>
+            <id>tomee7-build-managed</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.tomee</groupId>
+                    <artifactId>openejb-core</artifactId>
+                    <version>${openejb.version}</version>
+                    <scope>provided</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <!-- from TomEE-7.0.0 on openejb resides under the tomee group and not openejb anymore -->
+            <id>tomee8-build-managed</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.tomee</groupId>
+                    <artifactId>openejb-core</artifactId>
+                    <version>${openejb.version}</version>
+                    <scope>provided</scope>
+                </dependency>
+            </dependencies>
         </profile>
 
     </profiles>

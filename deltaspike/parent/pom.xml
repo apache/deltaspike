@@ -386,7 +386,7 @@
             </roles>
             <timezone>+1</timezone>
         </developer>
-	<developer>
+        <developer>
             <id>manovotn</id>
             <name>Matej Novotny</name>
             <email>manovotn@apache.org</email>
@@ -458,6 +458,24 @@
             <dependency>
                 <groupId>org.apache.openwebbeans</groupId>
                 <artifactId>openwebbeans-spi</artifactId>
+                <version>${owb.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.openwebbeans</groupId>
+                <artifactId>openwebbeans-ejb</artifactId>
+                <version>${owb.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.openwebbeans</groupId>
+                <artifactId>openwebbeans-ee</artifactId>
+                <version>${owb.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.openwebbeans</groupId>
+                <artifactId>openwebbeans-ee-common</artifactId>
                 <version>${owb.version}</version>
                 <scope>test</scope>
             </dependency>
