@@ -41,7 +41,7 @@ import static org.apache.deltaspike.core.api.message.MessageResolver.MISSING_RES
 public class DefaultMessage implements Message
 {
     private String messageTemplate;
-    private List<Serializable> arguments = new ArrayList<Serializable>();
+    private List<Serializable> arguments = new ArrayList<>();
 
     private MessageContext messageContext;
 
@@ -55,7 +55,7 @@ public class DefaultMessage implements Message
     protected void reset()
     {
         messageTemplate = null;
-        arguments = new ArrayList<Serializable>();
+        arguments = new ArrayList<>();
     }
 
     @Override

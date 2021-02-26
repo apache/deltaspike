@@ -83,7 +83,7 @@ public class InjectionDroneTest
         driver.get(new URL(contextPath, "testValidatorConverter.xhtml").toString());
         WebElement convertedValue = driver.findElement(By.id("converter:convertedValue"));
         convertedValue.sendKeys("String Value");
-        WebElement testConveterButton = driver.findElement(By.id("converter:testConveterButton"));
+        WebElement testConveterButton = driver.findElement(By.id("converter:testConverterButton"));
         testConveterButton.click();
         Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("converter:errorMessage"), "Value is not an Integer").apply(driver));
     }
