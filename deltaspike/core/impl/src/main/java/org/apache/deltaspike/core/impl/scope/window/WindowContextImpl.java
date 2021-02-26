@@ -82,7 +82,7 @@ public class WindowContextImpl extends AbstractContext implements WindowContext
     @Override
     public String getCurrentWindowId()
     {
-        if (windowHolder == null)
+        if (windowIdHolder == null)
         {
             return null;
         }
