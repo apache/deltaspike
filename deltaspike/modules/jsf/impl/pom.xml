@@ -169,5 +169,31 @@
         </dependency>
     </dependencies>
 
+    <profiles>
+        <profile>
+            <id>tomee8-build-managed</id>
+            <build>
+                <plugins>
+                    <!--
+                     * JSF-2.3 broke backward compatibility by trying to handle CDI beans themselves.
+                     * Some JSF annotations now have a 'managed' attribute, which must be set to true
+                     * to properly serve CDI Injection.
+                     * This cannot be done easily in unit tests which are backward compatible by design.
+                    -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${maven.surefire.plugin.version}</version>
+                        <configuration>
+                            <excludes>
+                                <exclude>org/apache/deltaspike/test/jsf/impl/injection/**/*</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+
+        </profile>
+    </profiles>
 
 </project>
