@@ -26,7 +26,7 @@ import javax.faces.convert.ConverterException;
 import javax.faces.convert.FacesConverter;
 import javax.inject.Inject;
 
-@FacesConverter("myValueConveter")
+@FacesConverter("myValueConverter")
 public class AnotherBeanConverter implements Converter
 {
 

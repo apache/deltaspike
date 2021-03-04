@@ -27,9 +27,9 @@
 		</validator>
 	</tag>
 	<tag>
-		<tag-name>myValueConveter</tag-name>
+		<tag-name>myValueConverter</tag-name>
 		<converter>
-		    <converter-id>myValueConveter</converter-id>
+		    <converter-id>myValueConverter</converter-id>
 		</converter>
 	</tag>
 </facelet-taglib>

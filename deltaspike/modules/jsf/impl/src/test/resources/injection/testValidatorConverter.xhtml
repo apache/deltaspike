@@ -30,12 +30,12 @@
 	<h:form id="converter">
 		Converterd Value :
 		<h:inputText id="convertedValue" value="#{myBean.convertedValue}">
-			<f:converter converterId="myValueConveter" />
+			<f:converter converterId="myValueConverter" />
 		</h:inputText>
 		<h:message id="errorMessage" for="convertedValue" />
 		<br />
 		<h:commandButton id="testConverterButton"
-			action="#{myBean.testAction()}" value="Test Conveter" />
+			action="#{myBean.testAction()}" value="Test Converter" />
 	</h:form>
 	<h:form id="validator">
 		Value String:

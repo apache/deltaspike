@@ -72,8 +72,8 @@ public class InjectionDroneTest
         driver.get(new URL(contextPath, "testValidatorConverter.xhtml").toString());
         WebElement convertedValue = driver.findElement(By.id("validator:stringValue"));
         convertedValue.sendKeys("DeltaSpike");
-        WebElement testConveterButton = driver.findElement(By.id("validator:testValidatorButton"));
-        testConveterButton.click();
+        WebElement testConverterButton = driver.findElement(By.id("validator:testValidatorButton"));
+        testConverterButton.click();
         Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("messages"), "Worked").apply(driver));
     }
 
@@ -84,8 +84,8 @@ public class InjectionDroneTest
         driver.get(new URL(contextPath, "testValidatorConverter.xhtml").toString());
         WebElement convertedValue = driver.findElement(By.id("validator:stringValue"));
         convertedValue.sendKeys("Wrong Value");
-        WebElement testConveterButton = driver.findElement(By.id("validator:testValidatorButton"));
-        testConveterButton.click();
+        WebElement testConverterButton = driver.findElement(By.id("validator:testValidatorButton"));
+        testConverterButton.click();
         Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("validator:errorMessage"),
                 "The valid value should be DeltaSpike").apply(driver));
     }

@@ -71,8 +71,8 @@ public class InjectionDroneTest
         driver.get(new URL(contextPath, "testValidatorConverter.xhtml").toString());
         WebElement convertedValue = driver.findElement(By.id("converter:convertedValue"));
         convertedValue.sendKeys("123");
-        WebElement testConveterButton = driver.findElement(By.id("converter:testConveterButton"));
-        testConveterButton.click();
+        WebElement testConverterButton = driver.findElement(By.id("converter:testConverterButton"));
+        testConverterButton.click();
         Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("messages"), "Worked").apply(driver));
     }
 
@@ -83,8 +83,8 @@ public class InjectionDroneTest
         driver.get(new URL(contextPath, "testValidatorConverter.xhtml").toString());
         WebElement convertedValue = driver.findElement(By.id("converter:convertedValue"));
         convertedValue.sendKeys("String Value");
-        WebElement testConveterButton = driver.findElement(By.id("converter:testConverterButton"));
-        testConveterButton.click();
+        WebElement testConverterButton = driver.findElement(By.id("converter:testConverterButton"));
+        testConverterButton.click();
         Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("converter:errorMessage"), "Value is not an Integer").apply(driver));
     }
 
@@ -95,8 +95,8 @@ public class InjectionDroneTest
         driver.get(new URL(contextPath, "testValidatorConverter.xhtml").toString());
         WebElement convertedValue = driver.findElement(By.id("validator:stringValue"));
         convertedValue.sendKeys("DeltaSpike");
-        WebElement testConveterButton = driver.findElement(By.id("validator:testValidatorButton"));
-        testConveterButton.click();
+        WebElement testConverterButton = driver.findElement(By.id("validator:testValidatorButton"));
+        testConverterButton.click();
         Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("messages"), "Worked").apply(driver));
     }
 
@@ -107,8 +107,8 @@ public class InjectionDroneTest
         driver.get(new URL(contextPath, "testValidatorConverter.xhtml").toString());
         WebElement convertedValue = driver.findElement(By.id("validator:stringValue"));
         convertedValue.sendKeys("Wrong Value");
-        WebElement testConveterButton = driver.findElement(By.id("validator:testValidatorButton"));
-        testConveterButton.click();
+        WebElement testConverterButton = driver.findElement(By.id("validator:testValidatorButton"));
+        testConverterButton.click();
         Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("validator:errorMessage"), "Not a valid value").apply(driver));
     }
 }

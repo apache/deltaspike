@@ -28,7 +28,7 @@ import javax.faces.convert.FacesConverter;
 import javax.inject.Inject;
 
 @RequestScoped
-@FacesConverter("myValueConveter")
+@FacesConverter("myValueConverter")
 public class AnotherBeanConverter implements Converter
 {
 
