@@ -19,7 +19,6 @@
 package org.apache.deltaspike.jsf.impl.util;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
@@ -153,12 +152,16 @@ public abstract class ClientWindowHelper
 
     public static void addRequestWindowIdCookie(FacesContext context, String requestToken, String windowId)
     {
-        Map<String, Object> properties = new HashMap();
-        properties.put("path", "/");
-        properties.put("maxAge", 30);
-
-        context.getExternalContext().addResponseCookie(
+        /* Sadly doesn't work due to SameSite is not allowed on Java cookies ^^
+            Map<String, Object> properties = new HashMap();
+            properties.put("path", "/");
+            properties.put("maxAge", 30);
+            context.getExternalContext().addResponseCookie(
                 Cookies.REQUEST_WINDOW_ID_PREFIX + requestToken, windowId, properties);
+        */
+        context.getExternalContext().addResponseHeader("Set-Cookie",
+            Cookies.REQUEST_WINDOW_ID_PREFIX + requestToken + "=" + windowId +
+                "; path=/; maxAge=30; SameSite=Strict");
     }
 
     public static Object getRequestWindowIdCookie(FacesContext context, String requestToken)
