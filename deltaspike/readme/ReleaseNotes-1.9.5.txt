@@ -1,0 +1,12 @@
+Release Notes - DeltaSpike - Version 1.9.5
+
+Bug
+
+    [DELTASPIKE-1314] - ContainerCtrlTckTest fails with tomee7-build-managed
+    [DELTASPIKE-1413] - dsrwid cookie should not be set to sameSite="None"
+    [DELTASPIKE-1416] - deltaspike-core-impl.jar does not contain the Main class to execute in your Manifest.MF to Crypto
+    [DELTASPIKE-1423] - JSF-2.3 managed() in FacesValidator and FacesConverter break CDI integration
+
+Improvement
+
+    [DELTASPIKE-1420] - Update ASM to 9.1
