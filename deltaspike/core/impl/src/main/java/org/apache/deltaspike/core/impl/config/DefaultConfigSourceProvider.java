@@ -86,7 +86,7 @@ public class DefaultConfigSourceProvider implements ConfigSourceProvider
                     {
                         ConfigSource dsHomeConfigSource = new PropertyFileConfigSource(dsHome.toURI().toURL());
                         configSources.add(dsHomeConfigSource);
-                        LOG.log(Level.INFO, "Reading configuration from {}", dsHome.getAbsolutePath());
+                        LOG.log(Level.INFO, "Reading configuration from {0}", dsHome.getAbsolutePath());
                     }
                     catch (MalformedURLException e)
                     {
@@ -97,7 +97,7 @@ public class DefaultConfigSourceProvider implements ConfigSourceProvider
             }
             catch (SecurityException se)
             {
-                LOG.log(Level.INFO, "Not allowed to check if directory {} exists", dsHome.getPath());
+                LOG.log(Level.INFO, "Not allowed to check if directory {0} exists", dsHome.getPath());
             }
         }
     }
