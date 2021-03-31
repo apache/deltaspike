@@ -22,8 +22,11 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+
 import javax.enterprise.inject.spi.BeanManager;
 
 import org.apache.deltaspike.core.util.ClassUtils;
@@ -189,14 +192,19 @@ public abstract class DeltaSpikeProxyFactory
     protected ArrayList<Method> collectAllMethods(Class<?> clazz)
     {
         ArrayList<Method> methods = new ArrayList<Method>();
-        for (Method method : clazz.getDeclaredMethods())
+        Set<Method> abstractMethodLeaves = new HashSet<>();
+        for (Method method : clazz.getMethods())
         {
             if (!ignoreMethod(method, methods))
             {
                 methods.add(method);
+                if (Modifier.isAbstract(method.getModifiers()))
+                {
+                    abstractMethodLeaves.add(method);
+                }
             }
         }
-        for (Method method : clazz.getMethods())
+        for (Method method : clazz.getDeclaredMethods())
         {
             if (!ignoreMethod(method, methods))
             {
@@ -236,7 +244,7 @@ public abstract class DeltaSpikeProxyFactory
             while (methodIterator.hasNext())
             {
                 Method method = methodIterator.next();
-                if (Modifier.isAbstract(method.getModifiers()))
+                if (Modifier.isAbstract(method.getModifiers()) && !abstractMethodLeaves.contains(method))
                 {
                     try
                     {
