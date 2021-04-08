@@ -21,20 +21,46 @@ package org.apache.deltaspike.core.impl.config;
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.config.ConfigSnapshot;
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
+import org.apache.deltaspike.core.impl.config.converter.CharacterConverter;
+import org.apache.deltaspike.core.impl.config.converter.ColorConverter;
+import org.apache.deltaspike.core.impl.config.converter.DimensionConverter;
+import org.apache.deltaspike.core.impl.config.converter.DurationConverter;
+import org.apache.deltaspike.core.impl.config.converter.EnumConverter;
+import org.apache.deltaspike.core.impl.config.converter.FileConverter;
+import org.apache.deltaspike.core.impl.config.converter.InetAddressConverter;
+import org.apache.deltaspike.core.impl.config.converter.InstantConverter;
+import org.apache.deltaspike.core.impl.config.converter.LocaleConverter;
+import org.apache.deltaspike.core.impl.config.converter.PatternConverter;
+import org.apache.deltaspike.core.impl.config.converter.PeriodConverter;
+import org.apache.deltaspike.core.impl.config.converter.PointConverter;
+import org.apache.deltaspike.core.impl.config.converter.UriConverter;
+import org.apache.deltaspike.core.impl.config.converter.UrlConverter;
+import org.apache.deltaspike.core.impl.config.converter.UuidConverter;
 import org.apache.deltaspike.core.spi.config.ConfigSource;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Point;
+import java.io.File;
 import java.lang.reflect.Type;
+import java.net.InetAddress;
+import java.net.URI;
+import java.net.URL;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-
+import java.util.regex.Pattern;
 
 public class TypedResolverImpl<T> implements ConfigResolver.UntypedResolver<T>
 {
@@ -503,6 +529,66 @@ public class TypedResolverImpl<T> implements ConfigResolver.UntypedResolver<T>
         else if (Double.class.equals(configEntryType))
         {
             result = Double.parseDouble(value);
+        }
+        else if (Character.class.equals(configEntryType))
+        {
+            result = new CharacterConverter().convert(value);
+        }
+        else if (Color.class.equals(configEntryType))
+        {
+            result = new ColorConverter().convert(value);
+        }
+        else if (Dimension.class.equals(configEntryType))
+        {
+            result = new DimensionConverter().convert(value);
+        }
+        else if (Duration.class.equals(configEntryType))
+        {
+            result = new DurationConverter().convert(value);
+        }
+        else if (Enum.class.equals(configEntryType))
+        {
+            result = new EnumConverter().convert(value);
+        }
+        else if (File.class.equals(configEntryType))
+        {
+            result = new FileConverter().convert(value);
+        }
+        else if (InetAddress.class.equals(configEntryType))
+        {
+            result = new InetAddressConverter().convert(value);
+        }
+        else if (Instant.class.equals(configEntryType))
+        {
+            result = new InstantConverter().convert(value);
+        }
+        else if (Locale.class.equals(configEntryType))
+        {
+            result = new LocaleConverter().convert(value);
+        }
+        else if (Pattern.class.equals(configEntryType))
+        {
+            result = new PatternConverter().convert(value);
+        }
+        else if (Period.class.equals(configEntryType))
+        {
+            result = new PeriodConverter().convert(value);
+        }
+        else if (Point.class.equals(configEntryType))
+        {
+            result = new PointConverter().convert(value);
+        }
+        else if (URI.class.equals(configEntryType))
+        {
+            result = new UriConverter().convert(value);
+        }
+        else if (URL.class.equals(configEntryType))
+        {
+            result = new UrlConverter().convert(value);
+        }
+        else if (UUID.class.equals(configEntryType))
+        {
+            result = new UuidConverter().convert(value);
         }
 
         return (T) result;

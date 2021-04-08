@@ -203,8 +203,11 @@ Integer dbPort = ConfigResolver
 
 ==== Supported types
 
-The types supported out of the box include: String, Integer, Long, Float, Double, Boolean, Class.
-Custom types can be supported by providing an implementation of the `ConfigResolver.Converter` interface.
+The types supported out of the box include: String, Integer, Long, Float, Double, Boolean, Class,
+Character, Color, Dimensions, Duration, Enum, File, InetAddress, Instant, Locale, Period, Point, URI,
+URL, and UUID.
+Custom types can be supported, and existing types can be overriden, by providing an implementation of
+the `ConfigResolver.Converter` interface.
 
 [source,java]
 ---------------------------------------------------------------------------------------------------------
