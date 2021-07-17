@@ -21,30 +21,37 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.apache.deltaspike</groupId>
-        <artifactId>parent-code</artifactId>
+        <groupId>org.apache.deltaspike.modules</groupId>
+        <artifactId>yaml-module-project</artifactId>
         <version>1.9.6-SNAPSHOT</version>
-        <relativePath>../parent/code/pom.xml</relativePath>
     </parent>
 
-    <groupId>org.apache.deltaspike.modules</groupId>
-    <artifactId>modules-project</artifactId>
-    <version>1.9.6-SNAPSHOT</version>
-    <packaging>pom</packaging>
+    <artifactId>deltaspike-yaml-module-impl</artifactId>
+    <packaging>jar</packaging>
+    <name>Apache DeltaSpike YAML-Module Impl</name>
+    <properties>
+        <deltaspike.osgi.export.pkg>org.apache.deltaspike.yaml.impl.*</deltaspike.osgi.export.pkg>
+        <deltaspike.osgi.import>!org.apache.deltaspike.yaml.impl.*,*</deltaspike.osgi.import>
+        <cdi.osgi.beans-managed>META-INF/beans.xml</cdi.osgi.beans-managed>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.deltaspike.core</groupId>
+            <artifactId>deltaspike-core-api</artifactId>
+        </dependency>
 
-    <name>Apache DeltaSpike Modules</name>
+        <dependency>
+            <groupId>org.apache.deltaspike.core</groupId>
+            <artifactId>deltaspike-core-impl</artifactId>
+            <scope>compile</scope>
+        </dependency>
 
-    <modules>
-        <module>proxy</module>
-        <module>security</module>
-        <module>jpa</module>
-        <module>servlet</module>
-        <module>jsf</module>
-        <module>partial-bean</module>
-        <module>bean-validation</module>
-        <module>data</module>
-        <module>scheduler</module>
-        <module>test-control</module>
-        <module>yaml</module>
-    </modules>
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.29</version>
+            <scope>compile</scope>
+        </dependency>
+
+    </dependencies>
 </project>
