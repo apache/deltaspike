@@ -600,7 +600,7 @@ window.dswh = window.dswh || {
             date.setTime(date.getTime()-(10*24*60*60*1000)); // - 10 day
             var expires = ";max-age=0;expires=" + date.toGMTString();
 
-            document.cookie = cookieName + "=" + expires + "; path=/";
+            document.cookie = cookieName + "=" + expires + "; path=/; SameSite=Strict";
         },
 
         generateNewRequestToken : function() {
@@ -616,7 +616,7 @@ window.dswh = window.dswh || {
             expiresDate.setTime(expiresDate.getTime() + (seconds * 1000));
             var expires = "; expires=" + expiresDate.toGMTString();
 
-            document.cookie = name + '=' + value + expires + "; path=/";
+            document.cookie = name + '=' + value + expires + "; path=/; SameSite=Strict";
         },
 
         log : function(message) {
