@@ -23,7 +23,6 @@ import org.apache.deltaspike.proxy.spi.DeltaSpikeProxy;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.UndeclaredThrowableException;
-import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -70,8 +69,8 @@ public class AsmDeltaSpikeProxyClassGenerator implements DeltaSpikeProxyClassGen
         byte[] proxyBytes = generateProxyClassBytes(targetClass,
                 classFileName, superAccessorMethodSuffix, additionalInterfaces, delegateMethods, interceptMethods);
 
-        Class<T> proxyClass = (Class<T>) loadClass(classLoader, proxyName, proxyBytes,
-                targetClass.getProtectionDomain());
+        Class<T> proxyClass = (Class<T>) ClassDefiner.defineClass(classLoader, proxyName, proxyBytes,
+                targetClass, targetClass.getProtectionDomain());
 
         return proxyClass;
     }
@@ -503,46 +502,5 @@ public class AsmDeltaSpikeProxyClassGenerator implements DeltaSpikeProxyClassGen
             result[i] = Type.getType(src[i]);
         }
         return result;
-    }
-
-    /**
-     * Adapted from http://asm.ow2.org/doc/faq.html#Q5
-     *
-     * @param b
-     *
-     * @return Class<?>
-     */
-    private static Class<?> loadClass(ClassLoader loader, String className, byte[] b,
-            ProtectionDomain protectionDomain)
-    {
-        // override classDefine (as it is protected) and define the class.
-        try
-        {
-            java.lang.reflect.Method method = ClassLoader.class.getDeclaredMethod(
-                    "defineClass", String.class, byte[].class, int.class, int.class, ProtectionDomain.class);
-
-            // protected method invocation
-            boolean accessible = method.isAccessible();
-            if (!accessible)
-            {
-                method.setAccessible(true);
-            }
-            try
-            {
-                return (Class<?>) method.invoke(loader, className, b, Integer.valueOf(0), Integer.valueOf(b.length),
-                        protectionDomain);
-            }
-            finally
-            {
-                if (!accessible)
-                {
-                    method.setAccessible(false);
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            throw e instanceof RuntimeException ? ((RuntimeException) e) : new RuntimeException(e);
-        }
     }
 }
