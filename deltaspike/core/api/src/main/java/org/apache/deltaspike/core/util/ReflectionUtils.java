@@ -19,8 +19,8 @@
 
 package org.apache.deltaspike.core.util;
 
-import javax.enterprise.inject.Typed;
-import javax.enterprise.util.Nonbinding;
+import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.util.Nonbinding;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;

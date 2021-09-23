@@ -20,7 +20,7 @@ package org.apache.deltaspike.jsf.impl.listener.phase;
 
 import org.apache.deltaspike.jsf.api.listener.phase.AfterPhase;
 
-import javax.enterprise.util.AnnotationLiteral;
+import jakarta.enterprise.util.AnnotationLiteral;
 
 /**
  * Helper which allows to create instances of {@link AfterPhase}

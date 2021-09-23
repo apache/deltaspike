@@ -19,7 +19,7 @@
 package org.apache.deltaspike.core.util;
 
 import java.util.Collection;
-import javax.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Typed;
 
 /**
  * A collection of utilities for working with Collections

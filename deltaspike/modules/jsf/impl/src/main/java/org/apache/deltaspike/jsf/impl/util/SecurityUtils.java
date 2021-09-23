@@ -33,9 +33,9 @@ import org.apache.deltaspike.security.api.authorization.SecurityViolation;
 import org.apache.deltaspike.security.spi.authorization.EditableAccessDecisionVoterContext;
 import org.apache.deltaspike.security.spi.authorization.SecurityViolationHandler;
 
-import javax.enterprise.inject.Typed;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
+import jakarta.enterprise.inject.Typed;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import java.lang.annotation.Annotation;
 import java.util.Collections;
 import java.util.HashSet;

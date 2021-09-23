@@ -20,7 +20,7 @@ package org.apache.deltaspike.test.core.api.scope.conversation.subgroup.shared;
 
 import org.apache.deltaspike.core.api.scope.GroupedConversation;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import java.io.Serializable;
 
 public abstract class TestBaseBean implements Serializable

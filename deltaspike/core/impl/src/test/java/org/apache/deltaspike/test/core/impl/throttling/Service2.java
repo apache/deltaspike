@@ -21,7 +21,7 @@ package org.apache.deltaspike.test.core.impl.throttling;
 import org.apache.deltaspike.core.api.throttling.Throttled;
 import org.apache.deltaspike.core.api.throttling.Throttling;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 import java.util.ArrayList;
 import java.util.Collection;
 

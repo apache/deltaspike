@@ -19,7 +19,7 @@
 
 package org.apache.deltaspike.jpa.impl.entitymanager;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import org.apache.deltaspike.core.api.provider.DependentProvider;
 import org.apache.deltaspike.jpa.api.entitymanager.EntityManagerResolver;
 

@@ -21,7 +21,7 @@ package org.apache.deltaspike.test.core.impl.util;
 import org.apache.deltaspike.core.impl.util.JndiUtils;
 import org.junit.Test;
 
-import javax.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.BeanManager;
 import java.util.Map;
 
 import static org.junit.Assert.assertNotNull;

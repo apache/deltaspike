@@ -18,9 +18,9 @@
  */
 package org.apache.deltaspike.data.impl.handler;
 
-import javax.enterprise.inject.Produces;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.enterprise.inject.Produces;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 public class NonQualifiedEntityManagerTestProducer
 {

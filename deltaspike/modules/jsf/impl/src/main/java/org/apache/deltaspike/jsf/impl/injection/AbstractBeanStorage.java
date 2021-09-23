@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.jsf.impl.injection;
 
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PreDestroy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;

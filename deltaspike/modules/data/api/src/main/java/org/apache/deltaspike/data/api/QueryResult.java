@@ -20,9 +20,9 @@ package org.apache.deltaspike.data.api;
 
 import java.util.List;
 
-import javax.persistence.FlushModeType;
-import javax.persistence.LockModeType;
-import javax.persistence.metamodel.SingularAttribute;
+import jakarta.persistence.FlushModeType;
+import jakarta.persistence.LockModeType;
+import jakarta.persistence.metamodel.SingularAttribute;
 
 /**
  * Can be used as query result type, which will not execute the query immediately.

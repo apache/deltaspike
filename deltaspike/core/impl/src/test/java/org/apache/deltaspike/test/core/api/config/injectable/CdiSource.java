@@ -21,7 +21,7 @@ package org.apache.deltaspike.test.core.api.config.injectable;
 import org.apache.deltaspike.core.api.config.Source;
 import org.apache.deltaspike.core.impl.config.MapConfigSource;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 import java.util.HashMap;
 import java.util.Map;
 

@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.data.test.domain;
 
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 
 @Entity
 public class OneToMany extends NamedEntity

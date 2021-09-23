@@ -21,7 +21,7 @@ package org.apache.deltaspike.core.impl.message;
 
 import org.apache.deltaspike.core.api.message.LocaleResolver;
 
-import javax.enterprise.context.Dependent;
+import jakarta.enterprise.context.Dependent;
 import java.io.Serializable;
 import java.util.Locale;
 

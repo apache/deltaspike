@@ -24,8 +24,8 @@ import org.apache.deltaspike.core.spi.config.view.InlineMetaDataTransformer;
 import org.apache.deltaspike.core.spi.config.view.TargetViewConfigProvider;
 import org.apache.deltaspike.core.api.config.view.controller.ViewControllerRef;
 
-import javax.enterprise.util.Nonbinding;
-import javax.inject.Named;
+import jakarta.enterprise.util.Nonbinding;
+import jakarta.inject.Named;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;

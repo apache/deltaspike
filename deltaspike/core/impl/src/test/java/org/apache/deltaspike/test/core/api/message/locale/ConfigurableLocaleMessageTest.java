@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.test.core.api.message.locale;
 
-import javax.enterprise.inject.spi.Extension;
-import javax.inject.Inject;
+import jakarta.enterprise.inject.spi.Extension;
+import jakarta.inject.Inject;
 import java.util.Date;
 import java.util.Locale;
 

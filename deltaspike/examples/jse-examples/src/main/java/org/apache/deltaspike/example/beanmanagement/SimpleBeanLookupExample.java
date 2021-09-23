@@ -26,7 +26,7 @@ import org.apache.deltaspike.example.echo.DefaultEchoService;
 import org.apache.deltaspike.example.echo.EchoService;
 import org.apache.deltaspike.example.optional.OptionalService;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 import java.util.List;
 import java.util.logging.Logger;
 

@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.core.api.alternative.global;
 
-import javax.enterprise.context.Dependent;
+import jakarta.enterprise.context.Dependent;
 
 /**
  * Default implementation which gets overruled by the alternative

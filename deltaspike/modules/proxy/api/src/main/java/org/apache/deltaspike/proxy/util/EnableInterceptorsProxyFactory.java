@@ -22,7 +22,7 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import javax.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.BeanManager;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.proxy.api.DeltaSpikeProxyFactory;
 import org.apache.deltaspike.proxy.spi.DeltaSpikeProxy;

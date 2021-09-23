@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.data.impl.util.jpa;
 
-import javax.persistence.Query;
+import jakarta.persistence.Query;
 
 public class QueryStringExtractorFactory
 {

@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.core.util.interceptor;
 
-import javax.enterprise.inject.Typed;
-import javax.interceptor.InvocationContext;
+import jakarta.enterprise.inject.Typed;
+import jakarta.interceptor.InvocationContext;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.HashMap;

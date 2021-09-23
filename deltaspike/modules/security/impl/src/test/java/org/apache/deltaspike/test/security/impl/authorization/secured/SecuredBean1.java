@@ -20,7 +20,7 @@ package org.apache.deltaspike.test.security.impl.authorization.secured;
 
 import org.apache.deltaspike.security.api.authorization.Secured;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 @Secured(TestAccessDecisionVoter.class)

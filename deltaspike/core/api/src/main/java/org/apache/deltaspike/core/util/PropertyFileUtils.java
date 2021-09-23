@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.core.util;
 
-import javax.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Typed;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;

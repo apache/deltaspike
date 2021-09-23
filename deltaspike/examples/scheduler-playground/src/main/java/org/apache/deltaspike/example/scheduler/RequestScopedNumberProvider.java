@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.example.scheduler;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 import java.math.BigDecimal;
 
 @RequestScoped

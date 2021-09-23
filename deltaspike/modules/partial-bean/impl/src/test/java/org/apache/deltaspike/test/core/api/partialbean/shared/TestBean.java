@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.core.api.partialbean.shared;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 
 @RequestScoped
 public class TestBean

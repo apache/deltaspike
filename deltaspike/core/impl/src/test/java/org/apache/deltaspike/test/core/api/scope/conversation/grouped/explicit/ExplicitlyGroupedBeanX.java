@@ -22,7 +22,7 @@ import org.apache.deltaspike.core.api.scope.ConversationGroup;
 import org.apache.deltaspike.core.api.scope.GroupedConversation;
 import org.apache.deltaspike.core.api.scope.GroupedConversationScoped;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import java.io.Serializable;
 
 @GroupedConversationScoped

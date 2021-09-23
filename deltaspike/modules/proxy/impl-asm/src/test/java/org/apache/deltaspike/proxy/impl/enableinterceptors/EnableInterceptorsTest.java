@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.proxy.impl.enableinterceptors;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.apache.deltaspike.proxy.util.EnableInterceptorsInterceptor;
 import org.apache.deltaspike.test.proxy.impl.util.ArchiveUtils;

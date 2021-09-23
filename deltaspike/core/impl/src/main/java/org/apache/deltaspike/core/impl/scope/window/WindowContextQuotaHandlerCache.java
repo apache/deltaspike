@@ -20,9 +20,9 @@ package org.apache.deltaspike.core.impl.scope.window;
 
 import org.apache.deltaspike.core.spi.scope.window.WindowContext;
 
-import javax.annotation.PreDestroy;
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
+import jakarta.annotation.PreDestroy;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 import java.io.Serializable;
 
 @RequestScoped

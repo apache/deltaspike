@@ -21,7 +21,7 @@ package org.apache.deltaspike.core.impl.scope.conversation;
 import org.apache.deltaspike.core.api.scope.GroupedConversation;
 import org.apache.deltaspike.core.spi.scope.conversation.GroupedConversationManager;
 
-import javax.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Typed;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 

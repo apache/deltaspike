@@ -21,7 +21,7 @@ package org.apache.deltaspike.data.test.ee7.service;
 
 import java.io.Serializable;
 
-import javax.enterprise.context.Dependent;
+import jakarta.enterprise.context.Dependent;
 
 import org.apache.deltaspike.data.test.ee7.domain.Simple;
 

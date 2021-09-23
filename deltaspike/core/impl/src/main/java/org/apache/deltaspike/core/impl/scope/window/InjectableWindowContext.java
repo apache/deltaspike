@@ -22,7 +22,7 @@ import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.impl.scope.DeltaSpikeContextExtension;
 import org.apache.deltaspike.core.spi.scope.window.WindowContext;
 
-import javax.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Typed;
 
 //keep it public for supporting #{dsWindowContext.getCurrentWindowId()} in addition to
 //#{dsWindowContext.currentWindowId}

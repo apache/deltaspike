@@ -21,8 +21,8 @@ package org.apache.deltaspike.jsf.impl.token;
 import org.apache.deltaspike.core.api.scope.WindowScoped;
 import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import java.io.Serializable;
 import java.util.UUID;
 

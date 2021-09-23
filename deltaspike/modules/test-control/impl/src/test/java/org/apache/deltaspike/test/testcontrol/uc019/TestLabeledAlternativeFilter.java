@@ -21,7 +21,7 @@ package org.apache.deltaspike.test.testcontrol.uc019;
 import org.apache.deltaspike.core.spi.filter.ClassFilter;
 import org.apache.deltaspike.testcontrol.api.TestControl;
 
-import javax.enterprise.inject.Alternative;
+import jakarta.enterprise.inject.Alternative;
 
 public abstract class TestLabeledAlternativeFilter implements ClassFilter
 {

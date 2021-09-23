@@ -20,11 +20,11 @@
 package org.apache.deltaspike.jpa.impl.entitymanager;
 
 import java.util.Set;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;

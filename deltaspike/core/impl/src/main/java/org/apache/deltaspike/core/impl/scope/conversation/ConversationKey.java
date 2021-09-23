@@ -20,9 +20,9 @@ package org.apache.deltaspike.core.impl.scope.conversation;
 
 import org.apache.deltaspike.core.api.scope.ConversationGroup;
 
-import javax.enterprise.inject.Any;
-import javax.enterprise.inject.Default;
-import javax.inject.Named;
+import jakarta.enterprise.inject.Any;
+import jakarta.enterprise.inject.Default;
+import jakarta.inject.Named;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.util.Collections;

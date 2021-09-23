@@ -20,11 +20,11 @@ package org.apache.deltaspike.jpa.impl.transaction;
 
 import org.apache.deltaspike.jpa.impl.transaction.context.EntityManagerEntry;
 
-import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.Alternative;
-import javax.interceptor.InvocationContext;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.inject.Alternative;
+import jakarta.interceptor.InvocationContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 import java.lang.annotation.Annotation;
 
 /**

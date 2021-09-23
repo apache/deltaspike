@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.core.api.message;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 import org.apache.deltaspike.core.api.message.MessageBundle;
 import org.apache.deltaspike.core.api.message.MessageContextConfig;

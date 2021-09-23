@@ -20,7 +20,7 @@
 
 package org.apache.deltaspike.security.impl.extension;
 
-import javax.enterprise.util.AnnotationLiteral;
+import jakarta.enterprise.util.AnnotationLiteral;
 
 
 /**

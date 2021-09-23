@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.testcontrol.mock.shared;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class ApplicationScopedBean

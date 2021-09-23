@@ -24,9 +24,9 @@ import org.apache.deltaspike.security.api.authorization.AbstractAccessDecisionVo
 import org.apache.deltaspike.security.api.authorization.AccessDecisionVoterContext;
 import org.apache.deltaspike.security.api.authorization.SecurityViolation;
 
-import javax.enterprise.context.SessionScoped;
-import javax.faces.context.FacesContext;
-import javax.inject.Inject;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.faces.context.FacesContext;
+import jakarta.inject.Inject;
 import java.util.Set;
 
 @SessionScoped //or @WindowScoped

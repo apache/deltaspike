@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.core.impl.message;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Alternative;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Alternative;
 import java.io.Serializable;
 import java.util.Locale;
 import java.text.MessageFormat;

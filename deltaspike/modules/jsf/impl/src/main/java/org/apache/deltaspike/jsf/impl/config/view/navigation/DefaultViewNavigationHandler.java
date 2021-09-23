@@ -21,8 +21,8 @@ package org.apache.deltaspike.jsf.impl.config.view.navigation;
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
 import org.apache.deltaspike.core.api.config.view.navigation.ViewNavigationHandler;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.faces.context.FacesContext;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.faces.context.FacesContext;
 
 /**
  * Navigation handler for view-configs

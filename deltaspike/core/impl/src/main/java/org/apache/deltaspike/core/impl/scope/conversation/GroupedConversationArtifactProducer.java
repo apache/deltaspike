@@ -23,12 +23,12 @@ import org.apache.deltaspike.core.impl.scope.DeltaSpikeContextExtension;
 import org.apache.deltaspike.core.impl.util.ConversationUtils;
 import org.apache.deltaspike.core.spi.scope.conversation.GroupedConversationManager;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.Produces;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.InjectionPoint;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.inject.Produces;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.InjectionPoint;
+import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class GroupedConversationArtifactProducer

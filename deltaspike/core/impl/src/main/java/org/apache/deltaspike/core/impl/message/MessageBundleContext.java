@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.core.impl.message;
 
-import javax.enterprise.inject.Typed;
-import javax.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.spi.Bean;
 
 @Typed()
 abstract class MessageBundleContext

@@ -32,10 +32,10 @@ import org.apache.deltaspike.core.api.config.view.navigation.event.PreViewConfig
 import org.apache.deltaspike.core.api.config.view.navigation.NavigationParameterContext;
 import org.apache.deltaspike.jsf.impl.util.JsfUtils;
 
-import javax.enterprise.inject.spi.BeanManager;
-import javax.faces.application.NavigationHandler;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.faces.application.NavigationHandler;
+import jakarta.faces.context.ExternalContext;
+import jakarta.faces.context.FacesContext;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;

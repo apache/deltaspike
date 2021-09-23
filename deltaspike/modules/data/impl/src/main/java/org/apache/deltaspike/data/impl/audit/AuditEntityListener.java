@@ -20,10 +20,10 @@ package org.apache.deltaspike.data.impl.audit;
 
 import java.util.Set;
 
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 

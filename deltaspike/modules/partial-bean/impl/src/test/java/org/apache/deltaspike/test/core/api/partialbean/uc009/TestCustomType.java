@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.core.api.partialbean.uc009;
 
-import javax.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Typed;
 import java.io.Serializable;
 
 @Typed()

@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.jsf.impl.scope.viewaccess;
 
-import javax.faces.application.NavigationHandler;
-import javax.faces.context.FacesContext;
+import jakarta.faces.application.NavigationHandler;
+import jakarta.faces.context.FacesContext;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.impl.scope.DeltaSpikeContextExtension;
 import org.apache.deltaspike.core.impl.scope.viewaccess.ViewAccessContext;

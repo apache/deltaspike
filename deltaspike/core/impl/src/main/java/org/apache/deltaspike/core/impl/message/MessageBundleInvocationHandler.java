@@ -18,16 +18,16 @@
  */
 package org.apache.deltaspike.core.impl.message;
 
-import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.Typed;
-import javax.inject.Inject;
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.inject.Any;
+import jakarta.enterprise.inject.Typed;
+import jakarta.inject.Inject;
 import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.deltaspike.core.api.literal.AnyLiteral;
 import org.apache.deltaspike.core.api.message.LocaleResolver;
 import org.apache.deltaspike.core.api.message.Message;
 import org.apache.deltaspike.core.api.message.MessageContext;
@@ -134,7 +134,7 @@ public class MessageBundleInvocationHandler implements InvocationHandler, Serial
                     ClassUtils.tryToLoadClassForName(messageContextConfig.messageResolver().getName());
 
             messageContext.messageResolver(
-                    BeanProvider.getContextualReference(messageResolverClass, new AnyLiteral()));
+                    BeanProvider.getContextualReference(messageResolverClass, Any.Literal.INSTANCE));
         }
 
         if (!MessageInterpolator.class.equals(messageContextConfig.messageInterpolator()))
@@ -143,7 +143,7 @@ public class MessageBundleInvocationHandler implements InvocationHandler, Serial
                     ClassUtils.tryToLoadClassForName(messageContextConfig.messageInterpolator().getName());
 
             messageContext.messageInterpolator(
-                    BeanProvider.getContextualReference(messageInterpolatorClass, new AnyLiteral()));
+                    BeanProvider.getContextualReference(messageInterpolatorClass, Any.Literal.INSTANCE));
         }
 
         if (!LocaleResolver.class.equals(messageContextConfig.localeResolver()))
@@ -152,7 +152,7 @@ public class MessageBundleInvocationHandler implements InvocationHandler, Serial
                     ClassUtils.tryToLoadClassForName(messageContextConfig.localeResolver().getName());
 
             messageContext.localeResolver(
-                    BeanProvider.getContextualReference(localeResolverClass, new AnyLiteral()));
+                    BeanProvider.getContextualReference(localeResolverClass, Any.Literal.INSTANCE));
         }
         
         String[] messageSources = messageContextConfig.messageSource();

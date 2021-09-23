@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.test.core.api.partialbean.uc009;
 
-import javax.enterprise.context.SessionScoped;
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.enterprise.inject.Produces;
 
 @TestTypeSafeConfig
 public interface TestConfig extends TestBaseConfig

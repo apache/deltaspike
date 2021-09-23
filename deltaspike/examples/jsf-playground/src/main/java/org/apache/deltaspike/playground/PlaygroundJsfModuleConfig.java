@@ -19,7 +19,7 @@
 package org.apache.deltaspike.playground;
 
 import java.lang.annotation.Annotation;
-import javax.enterprise.inject.Specializes;
+import jakarta.enterprise.inject.Specializes;
 import org.apache.deltaspike.playground.exception.Jsf;
 import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;
 

@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.cdise.owb;
 
-import javax.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextEvent;
 
 /**
  * A few utility methods for OWB

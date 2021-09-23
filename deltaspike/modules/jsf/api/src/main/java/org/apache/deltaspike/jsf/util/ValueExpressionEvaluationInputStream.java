@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.jsf.util;
 
-import javax.faces.context.FacesContext;
+import jakarta.faces.context.FacesContext;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PushbackInputStream;

@@ -23,7 +23,7 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import javax.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Typed;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

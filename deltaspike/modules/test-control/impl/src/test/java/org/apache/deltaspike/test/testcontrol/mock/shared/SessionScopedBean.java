@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.testcontrol.mock.shared;
 
-import javax.enterprise.context.SessionScoped;
+import jakarta.enterprise.context.SessionScoped;
 import java.io.Serializable;
 
 @SessionScoped

@@ -21,8 +21,8 @@ package org.apache.deltaspike.test.testcontrol.mock.uc011;
 import org.apache.deltaspike.test.testcontrol.mock.shared.RequestScopedBean;
 import org.apache.deltaspike.test.testcontrol.mock.shared.SessionScopedBean;
 
-import javax.enterprise.inject.Typed;
-import javax.inject.Inject;
+import jakarta.enterprise.inject.Typed;
+import jakarta.inject.Inject;
 
 @Typed() //exclude it for the cdi type-check
 public class MockedRequestScopedBeanWithInjection extends RequestScopedBean

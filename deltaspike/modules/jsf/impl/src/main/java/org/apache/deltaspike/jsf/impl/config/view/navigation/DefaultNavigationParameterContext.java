@@ -21,7 +21,7 @@ package org.apache.deltaspike.jsf.impl.config.view.navigation;
 import org.apache.deltaspike.core.api.config.view.navigation.NavigationParameterContext;
 import org.apache.deltaspike.jsf.impl.util.JsfUtils;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;

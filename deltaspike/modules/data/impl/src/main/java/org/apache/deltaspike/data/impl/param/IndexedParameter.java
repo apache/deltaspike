@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.data.impl.param;
 
-import javax.persistence.Query;
+import jakarta.persistence.Query;
 
 /**
  * Query parameters which have an index (?1).

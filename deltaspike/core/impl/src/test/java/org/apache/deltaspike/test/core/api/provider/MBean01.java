@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.core.api.provider;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 /**
  * Impl #1

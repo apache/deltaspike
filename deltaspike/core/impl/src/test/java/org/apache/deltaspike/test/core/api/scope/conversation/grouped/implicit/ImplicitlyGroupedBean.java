@@ -21,7 +21,7 @@ package org.apache.deltaspike.test.core.api.scope.conversation.grouped.implicit;
 import org.apache.deltaspike.core.api.scope.GroupedConversation;
 import org.apache.deltaspike.core.api.scope.GroupedConversationScoped;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import java.io.Serializable;
 
 @GroupedConversationScoped

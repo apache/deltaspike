@@ -19,7 +19,7 @@
 
 package org.apache.deltaspike.test.core.api.partialbean.uc012;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 @MyPartialBeanBinding
 @ApplicationScoped

@@ -19,8 +19,8 @@
 package org.apache.deltaspike.test.core.api.partialbean.uc010;
 
 import org.apache.deltaspike.test.core.api.partialbean.shared.TestPartialBeanBinding;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.RequestScoped;
 
 @ApplicationScoped
 public class PartialBeanWrapper

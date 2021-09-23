@@ -27,7 +27,7 @@ import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import javax.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Typed;
 
 import org.apache.deltaspike.proxy.spi.invocation.DeltaSpikeProxyInvocationHandler;
 import org.objectweb.asm.AnnotationVisitor;

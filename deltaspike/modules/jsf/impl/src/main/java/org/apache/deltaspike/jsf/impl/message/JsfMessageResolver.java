@@ -21,9 +21,9 @@ package org.apache.deltaspike.jsf.impl.message;
 import org.apache.deltaspike.core.api.message.MessageContext;
 import org.apache.deltaspike.core.impl.message.DefaultMessageResolver;
 
-import javax.enterprise.inject.Specializes;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
+import jakarta.enterprise.inject.Specializes;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import java.util.ArrayList;
 import java.util.List;
 

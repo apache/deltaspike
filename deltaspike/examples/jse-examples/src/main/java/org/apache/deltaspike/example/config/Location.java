@@ -20,7 +20,7 @@ package org.apache.deltaspike.example.config;
 
 import org.apache.deltaspike.core.api.config.ConfigProperty;
 
-import javax.inject.Qualifier;
+import jakarta.inject.Qualifier;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;

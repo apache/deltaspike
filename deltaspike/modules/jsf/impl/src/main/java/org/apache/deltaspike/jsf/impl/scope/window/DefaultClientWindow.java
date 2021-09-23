@@ -21,9 +21,9 @@ package org.apache.deltaspike.jsf.impl.scope.window;
 import org.apache.deltaspike.jsf.spi.scope.window.ClientWindow;
 import org.apache.deltaspike.jsf.spi.scope.window.ClientWindowConfig;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.faces.context.FacesContext;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.faces.context.FacesContext;
+import jakarta.inject.Inject;
 import java.util.Map;
 import org.apache.deltaspike.jsf.impl.scope.window.strategy.ClientSideWindowStrategy;
 import org.apache.deltaspike.jsf.impl.scope.window.strategy.DelegatedWindowStrategy;

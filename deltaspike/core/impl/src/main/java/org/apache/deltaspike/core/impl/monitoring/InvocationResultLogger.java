@@ -20,9 +20,9 @@ package org.apache.deltaspike.core.impl.monitoring;
 
 import org.apache.deltaspike.core.api.monitoring.MonitorResultEvent;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Observes;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Observes;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

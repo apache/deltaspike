@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Typed;
 import javax.naming.InitialContext;
 import javax.naming.Name;
 import javax.naming.NameClassPair;

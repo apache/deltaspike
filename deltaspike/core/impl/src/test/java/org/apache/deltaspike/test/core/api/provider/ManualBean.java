@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.test.core.api.provider;
 
-import javax.enterprise.inject.Typed;
-import javax.inject.Inject;
+import jakarta.enterprise.inject.Typed;
+import jakarta.inject.Inject;
 
 @Typed()
 class ManualBean

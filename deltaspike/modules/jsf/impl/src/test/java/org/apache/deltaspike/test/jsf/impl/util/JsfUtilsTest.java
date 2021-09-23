@@ -22,7 +22,7 @@ import org.apache.deltaspike.jsf.impl.util.JsfUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
-import javax.faces.application.FacesMessage;
+import jakarta.faces.application.FacesMessage;
 import java.util.ArrayList;
 import java.util.List;
 

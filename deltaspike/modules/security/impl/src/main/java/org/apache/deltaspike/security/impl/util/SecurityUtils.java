@@ -22,8 +22,8 @@ import org.apache.deltaspike.core.util.ReflectionUtils;
 import org.apache.deltaspike.security.api.authorization.SecurityBindingType;
 import org.apache.deltaspike.security.api.authorization.SecurityParameterBinding;
 
-import javax.enterprise.inject.Stereotype;
-import javax.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Stereotype;
+import jakarta.enterprise.inject.Typed;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;

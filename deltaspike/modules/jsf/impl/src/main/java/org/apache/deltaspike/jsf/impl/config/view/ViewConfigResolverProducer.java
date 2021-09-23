@@ -21,9 +21,9 @@ package org.apache.deltaspike.jsf.impl.config.view;
 import org.apache.deltaspike.core.spi.config.view.ConfigDescriptorValidator;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Inject;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.HashSet;

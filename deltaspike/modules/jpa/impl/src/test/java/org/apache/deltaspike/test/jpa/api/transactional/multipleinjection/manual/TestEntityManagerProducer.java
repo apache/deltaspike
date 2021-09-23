@@ -22,10 +22,10 @@ import org.apache.deltaspike.test.jpa.api.shared.First;
 import org.apache.deltaspike.test.jpa.api.shared.Second;
 import org.apache.deltaspike.test.jpa.api.shared.TestEntityManager;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.RequestScoped;
-import javax.enterprise.inject.Produces;
-import javax.persistence.EntityManager;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.inject.Produces;
+import jakarta.persistence.EntityManager;
 
 @ApplicationScoped
 public class TestEntityManagerProducer

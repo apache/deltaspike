@@ -18,9 +18,9 @@
  */
 package org.apache.deltaspike.jpa.impl.transaction.context;
 
-import javax.enterprise.context.spi.Contextual;
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.Typed;
+import jakarta.enterprise.context.spi.Contextual;
+import jakarta.enterprise.context.spi.CreationalContext;
+import jakarta.enterprise.inject.Typed;
 
 /**
  * Holds the information we need store to manage

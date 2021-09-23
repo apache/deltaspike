@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.core.api.alternative.global.qualifier;
 
-import javax.inject.Qualifier;
+import jakarta.inject.Qualifier;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 

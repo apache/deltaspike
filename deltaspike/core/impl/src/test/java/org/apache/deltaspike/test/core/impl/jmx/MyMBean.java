@@ -24,8 +24,8 @@ import org.apache.deltaspike.core.api.jmx.JmxParameter;
 import org.apache.deltaspike.core.api.jmx.MBean;
 import org.apache.deltaspike.core.api.jmx.Table;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import javax.management.Notification;
 import java.util.HashMap;
 import java.util.Map;

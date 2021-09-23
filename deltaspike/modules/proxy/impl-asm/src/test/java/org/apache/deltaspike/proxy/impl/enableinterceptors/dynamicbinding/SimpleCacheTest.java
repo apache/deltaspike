@@ -19,8 +19,8 @@
 package org.apache.deltaspike.proxy.impl.enableinterceptors.dynamicbinding;
 
 import java.util.List;
-import javax.enterprise.inject.spi.Extension;
-import javax.inject.Inject;
+import jakarta.enterprise.inject.spi.Extension;
+import jakarta.inject.Inject;
 
 import org.apache.deltaspike.proxy.util.EnableInterceptorsInterceptor;
 import org.apache.deltaspike.test.proxy.impl.util.ArchiveUtils;

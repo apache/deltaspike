@@ -32,8 +32,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import javax.enterprise.inject.spi.Extension;
-import javax.inject.Inject;
+import jakarta.enterprise.inject.spi.Extension;
+import jakarta.inject.Inject;
 
 /**
  * Tests for type-safe messages without {@link org.apache.deltaspike.core.api.message.MessageTemplate}

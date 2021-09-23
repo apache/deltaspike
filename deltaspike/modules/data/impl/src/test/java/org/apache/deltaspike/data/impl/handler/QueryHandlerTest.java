@@ -27,8 +27,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.persistence.NonUniqueResultException;
+import jakarta.inject.Inject;
+import jakarta.persistence.NonUniqueResultException;
 
 import org.apache.deltaspike.data.test.TransactionalTestCase;
 import org.apache.deltaspike.data.test.domain.Simple;

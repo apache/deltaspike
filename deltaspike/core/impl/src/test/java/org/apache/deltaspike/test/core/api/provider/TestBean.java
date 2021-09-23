@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.test.core.api.provider;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Named;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Named;
 
 @Named("extraNameBean")
 @ApplicationScoped

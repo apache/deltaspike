@@ -22,8 +22,8 @@ import org.apache.deltaspike.security.api.authorization.AccessDecisionVoter;
 import org.apache.deltaspike.security.api.authorization.AccessDecisionVoterContext;
 import org.apache.deltaspike.security.api.authorization.SecurityViolation;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.interceptor.InvocationContext;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.interceptor.InvocationContext;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashSet;

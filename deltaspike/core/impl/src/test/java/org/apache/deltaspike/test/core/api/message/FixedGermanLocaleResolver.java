@@ -20,7 +20,7 @@ package org.apache.deltaspike.test.core.api.message;
 
 import org.apache.deltaspike.core.api.message.LocaleResolver;
 
-import javax.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Typed;
 import java.util.Locale;
 
 @Typed()

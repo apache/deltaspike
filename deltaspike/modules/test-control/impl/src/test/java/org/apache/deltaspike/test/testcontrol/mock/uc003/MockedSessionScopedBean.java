@@ -20,7 +20,7 @@ package org.apache.deltaspike.test.testcontrol.mock.uc003;
 
 import org.apache.deltaspike.test.testcontrol.mock.shared.SessionScopedBean;
 
-import javax.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Typed;
 
 @Typed() //exclude it for the cdi type-check
 public class MockedSessionScopedBean extends SessionScopedBean

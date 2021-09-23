@@ -21,8 +21,8 @@ package org.apache.deltaspike.data.test.domain;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
 
 @Entity
 public class Parent extends NamedEntity

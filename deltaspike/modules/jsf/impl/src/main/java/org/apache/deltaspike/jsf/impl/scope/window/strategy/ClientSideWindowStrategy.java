@@ -20,13 +20,13 @@ package org.apache.deltaspike.jsf.impl.scope.window.strategy;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.Typed;
-import javax.faces.FacesException;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.inject.Typed;
+import jakarta.faces.FacesException;
+import jakarta.faces.context.ExternalContext;
+import jakarta.faces.context.FacesContext;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.deltaspike.jsf.impl.util.ClientWindowHelper;
 import org.apache.deltaspike.jsf.impl.util.JsfUtils;
 

@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.data.impl.builder.postprocessor;
 
-import javax.persistence.metamodel.SingularAttribute;
+import jakarta.persistence.metamodel.SingularAttribute;
 
 import org.apache.deltaspike.data.impl.builder.OrderDirection;
 import org.apache.deltaspike.data.impl.builder.QueryBuilder;

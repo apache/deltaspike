@@ -21,7 +21,7 @@ package org.apache.deltaspike.test.core.impl.jmx;
 import org.apache.deltaspike.core.api.jmx.JmxManaged;
 import org.apache.deltaspike.core.api.jmx.MBean;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 @MBean(category = "cat", type = "and", name = "", properties = "foo=bar,dummy=empty")

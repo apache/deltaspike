@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.jpa.impl.entitymanager;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 
 import java.util.Map;

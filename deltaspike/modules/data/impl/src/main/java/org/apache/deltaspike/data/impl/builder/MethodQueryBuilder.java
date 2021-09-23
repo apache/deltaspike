@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.data.impl.builder;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.persistence.Query;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.persistence.Query;
 
 import org.apache.deltaspike.data.impl.builder.part.QueryRoot;
 import org.apache.deltaspike.data.impl.handler.CdiQueryInvocationContext;

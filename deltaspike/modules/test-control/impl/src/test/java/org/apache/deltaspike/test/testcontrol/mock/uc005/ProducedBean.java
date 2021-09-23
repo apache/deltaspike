@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.testcontrol.mock.uc005;
 
-import javax.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Typed;
 
 @Typed() //exclude it for the cdi type-check
 public class ProducedBean

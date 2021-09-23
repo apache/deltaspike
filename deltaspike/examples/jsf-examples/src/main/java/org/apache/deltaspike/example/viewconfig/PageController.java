@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.example.viewconfig;
 
-import javax.enterprise.inject.Model;
-import javax.inject.Inject;
+import jakarta.enterprise.inject.Model;
+import jakarta.inject.Inject;
 
 import org.apache.deltaspike.core.api.config.view.navigation.NavigationParameter;
 import org.apache.deltaspike.core.api.config.view.navigation.NavigationParameterContext;

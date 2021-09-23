@@ -18,9 +18,9 @@
  */
 package org.apache.deltaspike.test.testcontrol.uc018;
 
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
-import javax.interceptor.InvocationContext;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.Interceptor;
+import jakarta.interceptor.InvocationContext;
 import java.io.Serializable;
 
 @TestUpperCaseInterceptor

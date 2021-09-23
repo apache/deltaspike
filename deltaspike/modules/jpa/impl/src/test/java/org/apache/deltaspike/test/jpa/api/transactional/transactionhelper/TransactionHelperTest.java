@@ -35,10 +35,10 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
-import javax.enterprise.context.ContextNotActiveException;
-import javax.enterprise.inject.spi.Extension;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
+import jakarta.enterprise.context.ContextNotActiveException;
+import jakarta.enterprise.inject.spi.Extension;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 import java.util.concurrent.Callable;
 
 

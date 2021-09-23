@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.core.util;
 
-import javax.enterprise.inject.spi.Extension;
+import jakarta.enterprise.inject.spi.Extension;
 
 import java.lang.ref.WeakReference;
 import java.util.HashSet;

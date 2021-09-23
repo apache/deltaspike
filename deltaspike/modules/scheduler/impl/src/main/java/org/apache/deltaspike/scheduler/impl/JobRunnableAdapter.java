@@ -20,7 +20,7 @@ package org.apache.deltaspike.scheduler.impl;
 
 import org.quartz.JobExecutionContext;
 
-import javax.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Typed;
 
 //configured via SchedulerBaseConfig
 @Typed()

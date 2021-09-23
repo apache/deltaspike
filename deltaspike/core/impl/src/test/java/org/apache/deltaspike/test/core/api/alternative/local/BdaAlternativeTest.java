@@ -22,7 +22,7 @@ import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.junit.Assert;
 import org.junit.Test;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import java.util.List;
 
 /**

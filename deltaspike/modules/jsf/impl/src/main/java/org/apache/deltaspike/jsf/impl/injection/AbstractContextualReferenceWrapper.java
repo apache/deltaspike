@@ -22,10 +22,10 @@ import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;
 
-import javax.faces.FacesWrapper;
-import javax.faces.component.PartialStateHolder;
-import javax.faces.component.StateHolder;
-import javax.faces.context.FacesContext;
+import jakarta.faces.FacesWrapper;
+import jakarta.faces.component.PartialStateHolder;
+import jakarta.faces.component.StateHolder;
+import jakarta.faces.context.FacesContext;
 
 //no backward compatibility for full state-saving
 abstract class AbstractContextualReferenceWrapper<T> implements PartialStateHolder, FacesWrapper<T>

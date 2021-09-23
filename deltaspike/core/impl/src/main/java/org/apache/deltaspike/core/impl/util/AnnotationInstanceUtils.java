@@ -22,7 +22,7 @@ package org.apache.deltaspike.core.impl.util;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.metadata.AnnotationInstanceProvider;
 
-import javax.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Typed;
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;

@@ -21,8 +21,8 @@ package org.apache.deltaspike.core.impl.scope;
 import org.apache.deltaspike.core.util.context.AbstractContext;
 import org.apache.deltaspike.core.util.context.ContextualStorage;
 
-import javax.annotation.PreDestroy;
-import javax.enterprise.inject.spi.BeanManager;
+import jakarta.annotation.PreDestroy;
+import jakarta.enterprise.inject.spi.BeanManager;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

@@ -21,8 +21,8 @@ package org.apache.deltaspike.test.jsf.impl.config;
 import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;
 import org.apache.deltaspike.jsf.spi.scope.window.ClientWindowConfig;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Specializes;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Specializes;
 
 @Specializes
 @ApplicationScoped

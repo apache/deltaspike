@@ -36,7 +36,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.RunnerBuilder;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;

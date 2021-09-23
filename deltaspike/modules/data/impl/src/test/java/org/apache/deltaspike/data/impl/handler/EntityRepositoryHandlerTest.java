@@ -35,8 +35,8 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import javax.inject.Inject;
-import javax.persistence.metamodel.SingularAttribute;
+import jakarta.inject.Inject;
+import jakarta.persistence.metamodel.SingularAttribute;
 import java.util.List;
 import java.util.Optional;
 

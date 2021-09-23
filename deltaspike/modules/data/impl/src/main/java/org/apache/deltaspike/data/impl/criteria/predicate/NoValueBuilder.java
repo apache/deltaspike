@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.data.impl.criteria.predicate;
 
-import javax.persistence.metamodel.SingularAttribute;
+import jakarta.persistence.metamodel.SingularAttribute;
 
 abstract class NoValueBuilder<E, V> implements PredicateBuilder<E>
 {

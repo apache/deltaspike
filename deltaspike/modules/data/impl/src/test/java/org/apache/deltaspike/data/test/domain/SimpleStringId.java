@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.data.test.domain;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @NamedQueries({

@@ -22,7 +22,7 @@ import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.junit.Assert;
 import org.junit.Test;
 
-import javax.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.BeanManager;
 
 public abstract class BeanManagerProviderTest
 {

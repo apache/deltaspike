@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.proxy.impl;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;

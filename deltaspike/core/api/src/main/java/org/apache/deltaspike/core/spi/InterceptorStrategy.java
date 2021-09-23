@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.core.spi;
 
-import javax.interceptor.InvocationContext;
+import jakarta.interceptor.InvocationContext;
 import java.io.Serializable;
 
 /**

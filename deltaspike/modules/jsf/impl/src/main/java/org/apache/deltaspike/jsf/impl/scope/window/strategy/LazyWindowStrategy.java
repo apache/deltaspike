@@ -20,11 +20,11 @@ package org.apache.deltaspike.jsf.impl.scope.window.strategy;
 
 import org.apache.deltaspike.jsf.impl.util.ClientWindowHelper;
 
-import javax.faces.context.FacesContext;
+import jakarta.faces.context.FacesContext;
 import java.util.HashMap;
 import java.util.Map;
-import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.Typed;
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.inject.Typed;
 import org.apache.deltaspike.core.util.StringUtils;
 
 @Dependent

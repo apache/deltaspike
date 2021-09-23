@@ -22,8 +22,8 @@ import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.jsf.impl.config.view.ViewControllerActionListener;
 
-import javax.faces.event.ActionEvent;
-import javax.faces.event.ActionListener;
+import jakarta.faces.event.ActionEvent;
+import jakarta.faces.event.ActionListener;
 
 /**
  * Aggregates {@link ActionListener} implementations provided by DeltaSpike to ensure a deterministic behaviour

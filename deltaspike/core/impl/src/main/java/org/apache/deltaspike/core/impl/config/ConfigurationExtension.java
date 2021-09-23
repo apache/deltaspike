@@ -18,22 +18,24 @@
  */
 package org.apache.deltaspike.core.impl.config;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.event.Observes;
-import javax.enterprise.inject.Produces;
-import javax.enterprise.inject.Typed;
-import javax.enterprise.inject.spi.AfterBeanDiscovery;
-import javax.enterprise.inject.spi.AfterDeploymentValidation;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.BeforeBeanDiscovery;
-import javax.enterprise.inject.spi.BeforeShutdown;
-import javax.enterprise.inject.spi.Extension;
-import javax.enterprise.inject.spi.InjectionPoint;
-import javax.enterprise.inject.spi.ProcessAnnotatedType;
-import javax.enterprise.inject.spi.ProcessBean;
-import javax.enterprise.inject.spi.ProcessProducerMethod;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.spi.CreationalContext;
+import jakarta.enterprise.event.Observes;
+import jakarta.enterprise.inject.Any;
+import jakarta.enterprise.inject.Default;
+import jakarta.enterprise.inject.Produces;
+import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
+import jakarta.enterprise.inject.spi.AfterDeploymentValidation;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.BeforeBeanDiscovery;
+import jakarta.enterprise.inject.spi.BeforeShutdown;
+import jakarta.enterprise.inject.spi.Extension;
+import jakarta.enterprise.inject.spi.InjectionPoint;
+import jakarta.enterprise.inject.spi.ProcessAnnotatedType;
+import jakarta.enterprise.inject.spi.ProcessBean;
+import jakarta.enterprise.inject.spi.ProcessProducerMethod;
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.InstanceNotFoundException;
 import javax.management.MBeanServer;
@@ -41,6 +43,7 @@ import javax.management.ObjectName;
 
 import java.lang.annotation.Annotation;
 import java.lang.management.ManagementFactory;
+import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -58,8 +61,6 @@ import org.apache.deltaspike.core.api.config.Filter;
 import org.apache.deltaspike.core.api.config.PropertyFileConfig;
 import org.apache.deltaspike.core.api.config.Source;
 import org.apache.deltaspike.core.api.exclude.Exclude;
-import org.apache.deltaspike.core.api.literal.AnyLiteral;
-import org.apache.deltaspike.core.api.literal.DefaultLiteral;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.spi.config.BaseConfigPropertyProducer;
@@ -69,7 +70,6 @@ import org.apache.deltaspike.core.spi.config.ConfigValidator;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.ServiceUtils;
-import org.apache.deltaspike.core.util.bean.BeanBuilder;
 
 /**
  * This extension handles {@link org.apache.deltaspike.core.api.config.PropertyFileConfig}s
@@ -251,15 +251,28 @@ public class ConfigurationExtension implements Extension, Deactivatable
         }
         for (final Class<?> proxyType : dynamicConfigurationBeanClasses)
         {
-            afterBeanDiscovery.addBean(new BeanBuilder(null)
-                    .types(proxyType, Object.class)
-                    .qualifiers(new DefaultLiteral(), new AnyLiteral())
-                    .beanLifecycle(new ProxyConfigurationLifecycle(proxyType))
-                    .scope(ApplicationScoped.class)
-                    .passivationCapable(true)
-                    .id("DeltaSpikeConfiguration#" + proxyType.getName())
-                    .beanClass(proxyType)
-                    .create());
+            afterBeanDiscovery.addBean()
+                .types(proxyType, Object.class)
+                .qualifiers(Default.Literal.INSTANCE, Any.Literal.INSTANCE)
+                .scope(ApplicationScoped.class)
+                .id("DeltaSpikeConfiguration#" + proxyType.getName())
+                .createWith(cc -> {
+                        // TODO: support partialbean binding? can make sense for virtual properties +
+                        //  would integrate with jcache
+                        // we'd need to add @PartialBeanBinding on a bean created from ConfigurationHandler
+                        // detection can just be a loadClass of this API
+                        // for now: waiting for user request for it
+                        final Class<?>[] api = new Class<?>[]{proxyType};
+                        final Configuration configuration = api[0].getAnnotation(Configuration.class);
+                        final long cacheFor = configuration.cacheFor();
+                        return Proxy.newProxyInstance(
+                            Thread.currentThread().getContextClassLoader(), api,
+                            new ProxyConfigurationLifecycle.ConfigurationHandler(
+                                cacheFor <= 0 ? -1 : configuration.cacheUnit().toMillis(cacheFor), configuration.prefix())
+                        );
+
+                    })
+                .beanClass(proxyType);
         }
     }
 

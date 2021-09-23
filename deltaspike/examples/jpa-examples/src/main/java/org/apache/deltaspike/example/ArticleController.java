@@ -22,13 +22,13 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.bean.ViewScoped;
+import jakarta.faces.context.FacesContext;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 
 @Named
 @ViewScoped

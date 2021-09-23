@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
 
 import org.apache.deltaspike.partialbean.api.PartialBeanBinding;
 
-import javax.enterprise.inject.Stereotype;
+import jakarta.enterprise.inject.Stereotype;
 
 /**
  * The Repository annotation needs to be present in order to have the

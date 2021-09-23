@@ -20,8 +20,8 @@ package org.apache.deltaspike.test.jsf.impl.config.view.controller.uc002;
 
 import org.apache.deltaspike.core.api.config.view.controller.PostRenderView;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Named;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Named;
 
 
 @Named("pageBean")

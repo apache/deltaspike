@@ -19,7 +19,7 @@
 package org.apache.deltaspike.test.core.api.partialbean.uc006;
 
 import org.apache.deltaspike.test.core.api.partialbean.shared.ThrowExceptionPartialBeanBinding;
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 @ThrowExceptionPartialBeanBinding
 @ApplicationScoped

@@ -18,9 +18,9 @@
  */
 package org.apache.deltaspike.jsf.impl.scope.window.strategy;
 
-import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.Typed;
-import javax.faces.context.FacesContext;
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.inject.Typed;
+import jakarta.faces.context.FacesContext;
 
 @Dependent
 @Typed(NoneWindowStrategy.class)

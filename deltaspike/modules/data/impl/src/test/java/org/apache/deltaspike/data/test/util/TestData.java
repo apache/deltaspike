@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.data.test.util;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import org.apache.deltaspike.data.test.domain.Simple;
 

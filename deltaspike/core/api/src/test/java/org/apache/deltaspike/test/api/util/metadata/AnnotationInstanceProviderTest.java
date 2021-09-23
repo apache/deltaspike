@@ -19,12 +19,12 @@
 
 package org.apache.deltaspike.test.api.util.metadata;
 
-import org.apache.deltaspike.core.api.literal.NamedLiteral;
+import jakarta.enterprise.inject.literal.NamedLiteral;
 import org.apache.deltaspike.core.util.metadata.AnnotationInstanceProvider;
 import org.junit.Test;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Named;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Named;
 import java.lang.annotation.Annotation;
 import java.util.Collections;
 import java.util.HashMap;
@@ -138,7 +138,7 @@ public class AnnotationInstanceProviderTest
     @Test
     public void assertBasicToString()
     {
-        assertThat(AnnotationInstanceProvider.of(RequestScoped.class).toString(), is("@javax.enterprise.context.RequestScoped()"));
+        assertThat(AnnotationInstanceProvider.of(RequestScoped.class).toString(), is("@jakarta.enterprise.context.RequestScoped()"));
     }
 
     @Test
@@ -273,7 +273,7 @@ public class AnnotationInstanceProviderTest
         memberValue.put("value", "test");
 
         Named named1 = AnnotationInstanceProvider.of(Named.class, memberValue);
-        Named named2 = new NamedLiteral("test");
+        Named named2 = NamedLiteral.of("test");
 
         assertTrue(named2.equals(named1));
         assertTrue(named1.equals(named2));
@@ -286,7 +286,7 @@ public class AnnotationInstanceProviderTest
         memberValue.put("value", "test1");
 
         Named named1 = AnnotationInstanceProvider.of(Named.class, memberValue);
-        Named named2 = new NamedLiteral("test");
+        Named named2 = NamedLiteral.of("test");
 
         assertFalse(named1.equals(named2));
     }
@@ -301,7 +301,7 @@ public class AnnotationInstanceProviderTest
     public void assertHashCodeSameAsLiteral()
     {
         Named a1 = AnnotationInstanceProvider.of(Named.class);
-        Named a2 = new NamedLiteral();
+        Named a2 = NamedLiteral.INSTANCE;
 
         assertThat(a2.hashCode(), is(a1.hashCode()));
     }

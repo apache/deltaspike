@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.cdise.servlet.test.content;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 
 /**
  * a simple request scoped object.

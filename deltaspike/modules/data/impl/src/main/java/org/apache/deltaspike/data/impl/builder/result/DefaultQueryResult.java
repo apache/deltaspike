@@ -21,11 +21,11 @@ package org.apache.deltaspike.data.impl.builder.result;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.persistence.FlushModeType;
-import javax.persistence.LockModeType;
-import javax.persistence.NoResultException;
-import javax.persistence.Query;
-import javax.persistence.metamodel.SingularAttribute;
+import jakarta.persistence.FlushModeType;
+import jakarta.persistence.LockModeType;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.Query;
+import jakarta.persistence.metamodel.SingularAttribute;
 
 import org.apache.deltaspike.data.api.QueryResult;
 import org.apache.deltaspike.data.impl.builder.OrderDirection;

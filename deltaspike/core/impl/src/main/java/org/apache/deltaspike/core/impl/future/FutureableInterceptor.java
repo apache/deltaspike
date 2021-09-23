@@ -21,10 +21,10 @@ package org.apache.deltaspike.core.impl.future;
 import org.apache.deltaspike.core.api.future.Futureable;
 import org.apache.deltaspike.core.spi.future.FutureableStrategy;
 
-import javax.inject.Inject;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
-import javax.interceptor.InvocationContext;
+import jakarta.inject.Inject;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.Interceptor;
+import jakarta.interceptor.InvocationContext;
 import java.io.Serializable;
 
 @Interceptor

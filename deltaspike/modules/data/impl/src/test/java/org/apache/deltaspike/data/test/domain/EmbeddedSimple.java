@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.data.test.domain;
 
-import javax.persistence.Embeddable;
+import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class EmbeddedSimple

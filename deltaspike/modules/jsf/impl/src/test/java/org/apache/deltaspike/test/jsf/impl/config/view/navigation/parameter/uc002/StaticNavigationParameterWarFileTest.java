@@ -20,7 +20,7 @@ package org.apache.deltaspike.test.jsf.impl.config.view.navigation.parameter.uc0
 
 import java.net.URL;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import junit.framework.Assert;
 

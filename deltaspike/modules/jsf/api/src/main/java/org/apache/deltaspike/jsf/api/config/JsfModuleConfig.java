@@ -23,9 +23,9 @@ import org.apache.deltaspike.core.api.config.DeltaSpikeConfig;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.jsf.spi.scope.window.ClientWindowConfig;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Default;
-import javax.faces.context.FacesContext;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Default;
+import jakarta.faces.context.FacesContext;
 
 /**
  * Config for all JSF specific configurations.

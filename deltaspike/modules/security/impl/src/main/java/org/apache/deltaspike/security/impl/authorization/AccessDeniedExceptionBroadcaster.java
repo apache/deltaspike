@@ -21,9 +21,9 @@ package org.apache.deltaspike.security.impl.authorization;
 import org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent;
 import org.apache.deltaspike.security.api.authorization.AccessDeniedException;
 
-import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.inject.Inject;
 
 //this broadcaster just allows to change the default behavior (if needed)
 //needed because it needs to be possible to 'consume' exceptions of type AccessDeniedException.

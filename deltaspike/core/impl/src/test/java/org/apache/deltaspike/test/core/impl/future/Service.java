@@ -20,7 +20,7 @@ package org.apache.deltaspike.test.core.impl.future;
 
 import org.apache.deltaspike.core.api.future.Futureable;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;

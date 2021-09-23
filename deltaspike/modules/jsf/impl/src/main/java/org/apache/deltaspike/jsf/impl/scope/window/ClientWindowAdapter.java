@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.jsf.impl.scope.window;
 
-import javax.faces.context.FacesContext;
-import javax.faces.lifecycle.ClientWindow;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.lifecycle.ClientWindow;
 import java.util.Collections;
 import java.util.Map;
 

@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.data.test.ee7.tx;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Specializes;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Specializes;
 
 import org.apache.deltaspike.data.impl.builder.QueryBuilder;
 import org.apache.deltaspike.data.impl.handler.CdiQueryInvocationContext;

@@ -20,7 +20,7 @@ package org.apache.deltaspike.test.jsf.impl.config.view.custom.uc004;
 
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
 
-import javax.enterprise.inject.Model;
+import jakarta.enterprise.inject.Model;
 
 @Model
 class PageBean004

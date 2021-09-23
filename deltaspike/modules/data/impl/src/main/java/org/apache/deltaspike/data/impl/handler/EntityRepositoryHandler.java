@@ -29,13 +29,13 @@ import org.apache.deltaspike.data.impl.util.EntityUtils;
 import org.apache.deltaspike.data.impl.util.jpa.PersistenceUnitUtilDelegateFactory;
 import org.apache.deltaspike.data.spi.DelegateQueryHandler;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceUnitUtil;
-import javax.persistence.QueryHint;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.metamodel.SingularAttribute;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceUnitUtil;
+import jakarta.persistence.QueryHint;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.metamodel.SingularAttribute;
 
 import java.io.Serializable;
 import java.util.ArrayList;

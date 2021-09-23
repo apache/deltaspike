@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.core.api.literal;
 
-import javax.enterprise.util.AnnotationLiteral;
+import jakarta.enterprise.util.AnnotationLiteral;
 
 import org.apache.deltaspike.core.api.message.MessageBundle;
 

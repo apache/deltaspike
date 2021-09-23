@@ -18,9 +18,9 @@
  */
 package org.apache.deltaspike.data.impl.util.jpa;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceUnitUtil;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.PersistenceUnitUtil;
 
 public class PersistenceUnitUtilDelegateFactory
 {

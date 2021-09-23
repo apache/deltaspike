@@ -18,9 +18,9 @@
  */
 package org.apache.deltaspike.data.impl.tx;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Specializes;
-import javax.persistence.EntityManager;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Specializes;
+import jakarta.persistence.EntityManager;
 
 import org.apache.deltaspike.jpa.impl.entitymanager.DefaultEntityManagerHolder;
 

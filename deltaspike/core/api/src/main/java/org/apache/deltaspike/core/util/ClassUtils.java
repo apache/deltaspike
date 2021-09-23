@@ -20,7 +20,7 @@ package org.apache.deltaspike.core.util;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import javax.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Typed;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

@@ -19,7 +19,7 @@
 
 package org.apache.deltaspike.core.util.context;
 
-import javax.enterprise.context.spi.CreationalContext;
+import jakarta.enterprise.context.spi.CreationalContext;
 import java.io.Serializable;
 
 /**

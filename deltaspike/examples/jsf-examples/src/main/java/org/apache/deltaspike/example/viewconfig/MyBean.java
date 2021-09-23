@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.example.viewconfig;
 
-import javax.enterprise.inject.Model;
+import jakarta.enterprise.inject.Model;
 
 @Model
 public class MyBean

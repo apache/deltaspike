@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.core.api.partialbean.uc010;
 
-import javax.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.BeanManager;
 import org.apache.deltaspike.test.core.api.partialbean.shared.TestPartialBeanBinding;
 import org.apache.deltaspike.test.core.api.partialbean.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -30,7 +30,7 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import org.apache.deltaspike.partialbean.impl.PartialBeanProxyFactory;
 import org.apache.deltaspike.test.core.api.partialbean.uc010.PartialBeanWrapper.PartialBean;
 

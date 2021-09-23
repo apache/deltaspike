@@ -20,8 +20,8 @@ package org.apache.deltaspike.data.impl.util.jpa;
 
 import org.apache.deltaspike.data.impl.util.EntityUtils;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceUnitUtil;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceUnitUtil;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 

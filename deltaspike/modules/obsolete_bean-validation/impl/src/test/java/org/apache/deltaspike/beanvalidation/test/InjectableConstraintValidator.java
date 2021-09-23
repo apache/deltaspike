@@ -18,9 +18,9 @@
  */
 package org.apache.deltaspike.beanvalidation.test;
 
-import javax.inject.Inject;
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.inject.Inject;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 public class InjectableConstraintValidator implements
         ConstraintValidator<ArraySize, String[]>

@@ -23,7 +23,7 @@ import org.apache.deltaspike.core.impl.scope.DeltaSpikeContextExtension;
 import org.apache.deltaspike.core.spi.scope.conversation.GroupedConversationManager;
 import org.apache.deltaspike.core.util.context.ContextualStorage;
 
-import javax.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Typed;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 

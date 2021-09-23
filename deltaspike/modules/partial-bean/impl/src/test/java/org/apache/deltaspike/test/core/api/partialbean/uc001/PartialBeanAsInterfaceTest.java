@@ -21,7 +21,7 @@ package org.apache.deltaspike.test.core.api.partialbean.uc001;
 import org.junit.Assert;
 import org.junit.Test;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 public abstract class PartialBeanAsInterfaceTest
 {

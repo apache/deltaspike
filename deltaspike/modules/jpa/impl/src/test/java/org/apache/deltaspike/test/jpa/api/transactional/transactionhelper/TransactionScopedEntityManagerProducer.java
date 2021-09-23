@@ -21,10 +21,10 @@ package org.apache.deltaspike.test.jpa.api.transactional.transactionhelper;
 import org.apache.deltaspike.jpa.api.transaction.TransactionScoped;
 import org.apache.deltaspike.test.jpa.api.shared.TestEntityManager;
 
-import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.Disposes;
-import javax.enterprise.inject.Produces;
-import javax.persistence.EntityManager;
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.inject.Disposes;
+import jakarta.enterprise.inject.Produces;
+import jakarta.persistence.EntityManager;
 
 /**
  * This class produces and closes the EntityManager

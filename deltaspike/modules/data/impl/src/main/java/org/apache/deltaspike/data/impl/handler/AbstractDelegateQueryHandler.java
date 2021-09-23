@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.data.impl.handler;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 import org.apache.deltaspike.data.spi.DelegateQueryHandler;
 

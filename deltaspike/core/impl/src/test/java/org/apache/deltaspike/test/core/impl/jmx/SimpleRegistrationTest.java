@@ -21,7 +21,7 @@ package org.apache.deltaspike.test.core.impl.jmx;
 import org.junit.Assert;
 import org.junit.Test;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.management.Attribute;
 import javax.management.MBeanInfo;
 import javax.management.MBeanOperationInfo;

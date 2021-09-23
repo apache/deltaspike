@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.jsf.impl.message;
 
-import javax.enterprise.inject.Typed;
-import javax.faces.application.FacesMessage;
+import jakarta.enterprise.inject.Typed;
+import jakarta.faces.application.FacesMessage;
 import java.io.Serializable;
 
 /**

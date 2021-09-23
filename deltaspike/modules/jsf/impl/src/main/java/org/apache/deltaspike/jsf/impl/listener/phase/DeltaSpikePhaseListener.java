@@ -33,13 +33,13 @@ import org.apache.deltaspike.jsf.impl.util.ViewControllerUtils;
 import org.apache.deltaspike.security.api.authorization.ErrorViewAwareAccessDeniedException;
 import org.apache.deltaspike.security.spi.authorization.EditableAccessDecisionVoterContext;
 
-import javax.enterprise.context.ContextNotActiveException;
-import javax.enterprise.inject.Typed;
-import javax.faces.component.UIViewRoot;
-import javax.faces.context.FacesContext;
-import javax.faces.event.PhaseEvent;
-import javax.faces.event.PhaseId;
-import javax.faces.event.PhaseListener;
+import jakarta.enterprise.context.ContextNotActiveException;
+import jakarta.enterprise.inject.Typed;
+import jakarta.faces.component.UIViewRoot;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.PhaseEvent;
+import jakarta.faces.event.PhaseId;
+import jakarta.faces.event.PhaseListener;
 import java.util.logging.Logger;
 
 @Typed() //don't use PhaseListener as type - JsfRequestLifecyclePhaseListener would fire to this listener as well

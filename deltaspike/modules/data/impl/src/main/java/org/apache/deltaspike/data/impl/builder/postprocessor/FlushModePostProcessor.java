@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.data.impl.builder.postprocessor;
 
-import javax.persistence.FlushModeType;
-import javax.persistence.Query;
+import jakarta.persistence.FlushModeType;
+import jakarta.persistence.Query;
 
 import org.apache.deltaspike.data.impl.handler.CdiQueryInvocationContext;
 import org.apache.deltaspike.data.impl.handler.JpaQueryPostProcessor;

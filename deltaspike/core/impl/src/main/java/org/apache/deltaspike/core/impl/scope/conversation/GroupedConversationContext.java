@@ -27,9 +27,9 @@ import org.apache.deltaspike.core.util.context.AbstractContext;
 import org.apache.deltaspike.core.util.context.ContextualInstanceInfo;
 import org.apache.deltaspike.core.util.context.ContextualStorage;
 
-import javax.enterprise.context.spi.Contextual;
-import javax.enterprise.inject.Typed;
-import javax.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.context.spi.Contextual;
+import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.spi.BeanManager;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Collections;

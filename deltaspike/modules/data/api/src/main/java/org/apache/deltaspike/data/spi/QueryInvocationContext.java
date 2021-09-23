@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.data.spi;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import java.lang.reflect.Method;
 
 /**

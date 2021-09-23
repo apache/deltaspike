@@ -19,7 +19,7 @@
 
 package org.apache.deltaspike.core.util.securitymanaged;
 
-import javax.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Typed;
 import java.lang.reflect.AccessibleObject;
 import java.security.PrivilegedAction;
 

@@ -19,8 +19,8 @@
 
 package org.apache.deltaspike.jpa.api.entitymanager;
 
-import javax.enterprise.inject.Any;
-import javax.persistence.FlushModeType;
+import jakarta.enterprise.inject.Any;
+import jakarta.persistence.FlushModeType;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

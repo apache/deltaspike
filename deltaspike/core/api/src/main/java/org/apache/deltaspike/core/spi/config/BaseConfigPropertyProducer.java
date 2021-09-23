@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.core.spi.config;
 
-import javax.enterprise.inject.spi.InjectionPoint;
+import jakarta.enterprise.inject.spi.InjectionPoint;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;

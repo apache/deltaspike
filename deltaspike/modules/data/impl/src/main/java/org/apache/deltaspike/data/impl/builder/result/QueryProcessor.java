@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.data.impl.builder.result;
 
-import javax.persistence.Query;
+import jakarta.persistence.Query;
 
 import org.apache.deltaspike.data.impl.handler.CdiQueryInvocationContext;
 

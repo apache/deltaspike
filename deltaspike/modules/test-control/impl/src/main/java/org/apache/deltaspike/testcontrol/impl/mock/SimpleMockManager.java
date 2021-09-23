@@ -21,9 +21,9 @@ package org.apache.deltaspike.testcontrol.impl.mock;
 import org.apache.deltaspike.testcontrol.api.mock.ApplicationMockManager;
 import org.apache.deltaspike.testcontrol.api.mock.DynamicMockManager;
 
-import javax.enterprise.context.RequestScoped;
-import javax.enterprise.inject.Typed;
-import javax.inject.Inject;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.inject.Typed;
+import jakarta.inject.Inject;
 import java.lang.annotation.Annotation;
 
 @RequestScoped

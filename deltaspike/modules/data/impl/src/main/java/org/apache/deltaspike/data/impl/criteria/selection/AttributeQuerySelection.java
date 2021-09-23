@@ -18,11 +18,11 @@
  */
 package org.apache.deltaspike.data.impl.criteria.selection;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Selection;
-import javax.persistence.metamodel.SingularAttribute;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Path;
+import jakarta.persistence.criteria.Selection;
+import jakarta.persistence.metamodel.SingularAttribute;
 
 public class AttributeQuerySelection<P, X> extends SingularAttributeSelection<P, X>
 {

@@ -18,9 +18,9 @@
  */
 package org.apache.deltaspike.jsf.impl.message;
 
-import javax.enterprise.inject.Typed;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
+import jakarta.enterprise.inject.Typed;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 

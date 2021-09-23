@@ -24,11 +24,11 @@ import org.apache.deltaspike.jsf.impl.scope.window.ClientWindowAdapter;
 import org.apache.deltaspike.jsf.spi.scope.window.ClientWindow;
 import org.apache.deltaspike.jsf.spi.scope.window.ClientWindowConfig;
 
-import javax.faces.context.FacesContext;
-import javax.faces.lifecycle.Lifecycle;
-import javax.faces.lifecycle.LifecycleWrapper;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.lifecycle.Lifecycle;
+import jakarta.faces.lifecycle.LifecycleWrapper;
 import java.lang.reflect.Field;
-import javax.faces.FacesException;
+import jakarta.faces.FacesException;
 
 //ATTENTION: don't rename/move this class as long as we need the workaround in impl-ee6
 //(further details are available at: DELTASPIKE-655 and DELTASPIKE-659)

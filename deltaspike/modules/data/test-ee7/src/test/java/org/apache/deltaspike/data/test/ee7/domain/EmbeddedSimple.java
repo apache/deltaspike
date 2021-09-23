@@ -20,7 +20,7 @@ package org.apache.deltaspike.data.test.ee7.domain;
 
 import java.io.Serializable;
 
-import javax.persistence.Embeddable;
+import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class EmbeddedSimple implements Serializable

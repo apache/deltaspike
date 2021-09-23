@@ -18,10 +18,10 @@
  */
 package org.apache.deltaspike.core.api.throttling;
 
-import javax.enterprise.util.Nonbinding;
+import jakarta.enterprise.util.Nonbinding;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-import javax.enterprise.inject.spi.AnnotatedMethod;
+import jakarta.enterprise.inject.spi.AnnotatedMethod;
 import java.util.concurrent.Semaphore;
 
 import static java.lang.annotation.ElementType.METHOD;

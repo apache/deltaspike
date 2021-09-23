@@ -22,7 +22,7 @@ import org.apache.deltaspike.data.api.QueryResult;
 import org.apache.deltaspike.data.api.mapping.QueryInOutMapper;
 import org.apache.deltaspike.data.impl.handler.CdiQueryInvocationContext;
 
-import javax.persistence.Query;
+import jakarta.persistence.Query;
 import java.text.MessageFormat;
 import java.util.List;
 

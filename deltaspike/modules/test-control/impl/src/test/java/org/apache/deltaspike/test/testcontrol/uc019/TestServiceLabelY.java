@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.test.testcontrol.uc019;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Alternative;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Alternative;
 
 @Alternative
 @TestLabeled(TestServiceLabelYTest.TestLabelY.class)

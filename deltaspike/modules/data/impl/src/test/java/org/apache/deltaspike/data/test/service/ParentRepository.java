@@ -20,7 +20,7 @@ package org.apache.deltaspike.data.test.service;
 
 import java.util.List;
 
-import javax.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.JoinType;
 
 import org.apache.deltaspike.data.api.AbstractEntityRepository;
 import org.apache.deltaspike.data.api.Repository;

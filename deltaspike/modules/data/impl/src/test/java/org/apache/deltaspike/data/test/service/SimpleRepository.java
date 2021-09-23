@@ -24,7 +24,7 @@ import static org.apache.deltaspike.data.api.SingleResultType.OPTIONAL;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import org.apache.deltaspike.data.api.AbstractEntityRepository;
 import org.apache.deltaspike.data.api.FirstResult;

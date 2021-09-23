@@ -27,12 +27,12 @@ import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;
 import org.apache.deltaspike.jsf.impl.listener.phase.WindowMetaData;
 import org.apache.deltaspike.jsf.impl.message.FacesMessageEntry;
 
-import javax.el.ELException;
-import javax.enterprise.context.ContextNotActiveException;
-import javax.faces.FacesException;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
+import jakarta.el.ELException;
+import jakarta.enterprise.context.ContextNotActiveException;
+import jakarta.faces.FacesException;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.ExternalContext;
+import jakarta.faces.context.FacesContext;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URLEncoder;

@@ -22,7 +22,7 @@ package org.apache.deltaspike.core.util;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import javax.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Typed;
 
 @Typed()
 public abstract class ParameterUtil

@@ -19,7 +19,7 @@
 package org.apache.deltaspike.cdise.api;
 
 
-import javax.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.BeanManager;
 import java.util.Map;
 
 

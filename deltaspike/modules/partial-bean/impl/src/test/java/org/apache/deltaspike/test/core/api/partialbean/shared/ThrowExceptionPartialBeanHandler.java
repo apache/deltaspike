@@ -20,7 +20,7 @@ package org.apache.deltaspike.test.core.api.partialbean.shared;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 @ThrowExceptionPartialBeanBinding
 @ApplicationScoped

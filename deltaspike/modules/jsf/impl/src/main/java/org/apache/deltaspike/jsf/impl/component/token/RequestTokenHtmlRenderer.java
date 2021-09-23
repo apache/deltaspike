@@ -21,11 +21,11 @@ package org.apache.deltaspike.jsf.impl.component.token;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.jsf.impl.token.PostRequestTokenManager;
 
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-import javax.faces.context.ResponseWriter;
-import javax.faces.render.FacesRenderer;
-import javax.faces.render.Renderer;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.context.ResponseWriter;
+import jakarta.faces.render.FacesRenderer;
+import jakarta.faces.render.Renderer;
 import java.io.IOException;
 
 @FacesRenderer(

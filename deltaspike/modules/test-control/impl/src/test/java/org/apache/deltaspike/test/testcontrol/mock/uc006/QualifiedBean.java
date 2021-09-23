@@ -20,7 +20,7 @@ package org.apache.deltaspike.test.testcontrol.mock.uc006;
 
 import org.apache.deltaspike.test.testcontrol.mock.shared.MyQualifier;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 
 @RequestScoped
 @MyQualifier

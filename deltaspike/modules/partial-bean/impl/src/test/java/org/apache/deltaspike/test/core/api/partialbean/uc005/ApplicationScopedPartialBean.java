@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.core.api.partialbean.uc005;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import org.apache.deltaspike.test.core.api.partialbean.shared.TestPartialBeanBinding;
 

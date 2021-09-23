@@ -20,7 +20,7 @@ package org.apache.deltaspike.data.test.ee7.domain;
 
 import java.io.Serializable;
 
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.MappedSuperclass;
 
 @MappedSuperclass
 public class SuperSimple implements Serializable

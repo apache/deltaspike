@@ -23,15 +23,15 @@ import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;
 import org.apache.deltaspike.jsf.impl.security.SecurityAwareViewHandler;
 import org.apache.deltaspike.proxy.spi.DeltaSpikeProxy;
 
-import javax.faces.FacesException;
-import javax.faces.application.Application;
-import javax.faces.application.ApplicationWrapper;
-import javax.faces.application.ProjectStage;
-import javax.faces.context.FacesContext;
-import javax.faces.convert.Converter;
-import javax.faces.event.PreDestroyViewMapEvent;
-import javax.faces.event.SystemEvent;
-import javax.faces.validator.Validator;
+import jakarta.faces.FacesException;
+import jakarta.faces.application.Application;
+import jakarta.faces.application.ApplicationWrapper;
+import jakarta.faces.application.ProjectStage;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.convert.Converter;
+import jakarta.faces.event.PreDestroyViewMapEvent;
+import jakarta.faces.event.SystemEvent;
+import jakarta.faces.validator.Validator;
 
 public class InjectionAwareApplicationWrapper extends ApplicationWrapper
 {

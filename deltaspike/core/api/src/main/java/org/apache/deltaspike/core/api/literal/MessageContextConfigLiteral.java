@@ -23,7 +23,7 @@ import org.apache.deltaspike.core.api.message.MessageContextConfig;
 import org.apache.deltaspike.core.api.message.MessageInterpolator;
 import org.apache.deltaspike.core.api.message.MessageResolver;
 
-import javax.enterprise.util.AnnotationLiteral;
+import jakarta.enterprise.util.AnnotationLiteral;
 
 /**
  * Literal for {@link org.apache.deltaspike.core.api.message.MessageContextConfig}

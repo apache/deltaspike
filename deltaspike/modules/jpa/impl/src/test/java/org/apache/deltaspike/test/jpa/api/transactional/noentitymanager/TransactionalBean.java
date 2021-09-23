@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.test.jpa.api.transactional.noentitymanager;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.persistence.EntityManager;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.persistence.EntityManager;
 
 import org.apache.deltaspike.jpa.api.entitymanager.EntityManagerConfig;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;

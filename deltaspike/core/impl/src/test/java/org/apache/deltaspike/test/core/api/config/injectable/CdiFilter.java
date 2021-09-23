@@ -21,7 +21,7 @@ package org.apache.deltaspike.test.core.api.config.injectable;
 import org.apache.deltaspike.core.api.config.Filter;
 import org.apache.deltaspike.core.spi.config.ConfigFilter;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 @Filter
 @ApplicationScoped

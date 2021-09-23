@@ -20,8 +20,8 @@ package org.apache.deltaspike.test.security.impl.authorization.nonbinding;
 
 import org.apache.deltaspike.security.api.authorization.Secures;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.interceptor.InvocationContext;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.interceptor.InvocationContext;
 
 @ApplicationScoped
 public class CustomAuthorizer

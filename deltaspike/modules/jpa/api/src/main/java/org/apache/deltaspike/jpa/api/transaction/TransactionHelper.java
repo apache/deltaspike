@@ -20,7 +20,7 @@ package org.apache.deltaspike.jpa.api.transaction;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 import java.util.concurrent.Callable;
 
 /**

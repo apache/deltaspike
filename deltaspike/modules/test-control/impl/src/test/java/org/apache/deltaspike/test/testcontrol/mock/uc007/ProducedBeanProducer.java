@@ -20,9 +20,9 @@ package org.apache.deltaspike.test.testcontrol.mock.uc007;
 
 import org.apache.deltaspike.test.testcontrol.mock.shared.MyQualifier;
 
-import javax.enterprise.context.RequestScoped;
-import javax.enterprise.inject.Produces;
-import javax.enterprise.inject.Typed;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.inject.Produces;
+import jakarta.enterprise.inject.Typed;
 
 @Typed() //exclude it for the cdi type-check
 public class ProducedBeanProducer

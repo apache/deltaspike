@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.test.core.api.alternative.global;
 
-import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.Alternative;
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.inject.Alternative;
 
 @Alternative
 @Dependent

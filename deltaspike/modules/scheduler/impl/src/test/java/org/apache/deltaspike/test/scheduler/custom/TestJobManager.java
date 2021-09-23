@@ -18,9 +18,9 @@
  */
 package org.apache.deltaspike.test.scheduler.custom;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
-import javax.enterprise.inject.Typed;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Produces;
+import jakarta.enterprise.inject.Typed;
 import java.util.ArrayList;
 import java.util.List;
 

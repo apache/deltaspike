@@ -30,10 +30,10 @@ import org.apache.deltaspike.jsf.impl.config.view.navigation.NavigationCaseMapWr
 import org.apache.deltaspike.jsf.impl.config.view.navigation.ViewConfigAwareNavigationHandler;
 import org.apache.deltaspike.jsf.impl.util.JsfUtils;
 
-import javax.faces.application.ConfigurableNavigationHandler;
-import javax.faces.application.NavigationCase;
-import javax.faces.application.NavigationHandler;
-import javax.faces.context.FacesContext;
+import jakarta.faces.application.ConfigurableNavigationHandler;
+import jakarta.faces.application.NavigationCase;
+import jakarta.faces.application.NavigationHandler;
+import jakarta.faces.context.FacesContext;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;

@@ -30,14 +30,14 @@ import org.apache.deltaspike.jsf.impl.config.view.DefaultErrorViewAwareException
 import org.apache.deltaspike.jsf.impl.injection.InjectionAwareApplicationWrapper;
 import org.apache.deltaspike.jsf.impl.message.FacesMessageEntry;
 
-import javax.enterprise.inject.spi.BeanManager;
-import javax.faces.application.Application;
-import javax.faces.application.FacesMessage;
-import javax.faces.application.ProjectStage;
-import javax.faces.context.ExceptionHandler;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.faces.context.FacesContextWrapper;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.faces.application.Application;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.application.ProjectStage;
+import jakarta.faces.context.ExceptionHandler;
+import jakarta.faces.context.ExternalContext;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.context.FacesContextWrapper;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;

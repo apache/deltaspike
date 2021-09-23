@@ -22,7 +22,7 @@ import org.apache.deltaspike.test.core.api.partialbean.shared.TestPartialBeanBin
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 @TestPartialBeanBinding
 @ApplicationScoped

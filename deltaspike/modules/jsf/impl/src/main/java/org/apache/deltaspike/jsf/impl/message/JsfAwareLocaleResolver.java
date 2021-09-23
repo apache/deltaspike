@@ -20,10 +20,10 @@ package org.apache.deltaspike.jsf.impl.message;
 
 import org.apache.deltaspike.core.impl.message.DefaultLocaleResolver;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Specializes;
-import javax.faces.component.UIViewRoot;
-import javax.faces.context.FacesContext;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Specializes;
+import jakarta.faces.component.UIViewRoot;
+import jakarta.faces.context.FacesContext;
 import java.util.Iterator;
 import java.util.Locale;
 

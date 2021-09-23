@@ -22,8 +22,8 @@ import static org.apache.deltaspike.data.impl.meta.RepositoryMethodType.ANNOTATE
 import static org.apache.deltaspike.data.impl.meta.RepositoryMethodType.DELEGATE;
 import static org.apache.deltaspike.data.impl.meta.RepositoryMethodType.PARSE;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 import org.apache.deltaspike.data.api.QueryResult;
 import org.apache.deltaspike.data.impl.handler.CdiQueryInvocationContext;

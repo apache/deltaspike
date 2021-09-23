@@ -21,11 +21,11 @@ package org.apache.deltaspike.data.impl.builder.result;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
 
-import javax.persistence.NoResultException;
-import javax.persistence.Query;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.Query;
 import org.apache.deltaspike.core.util.ClassUtils;
 
 import org.apache.deltaspike.data.api.Modifying;

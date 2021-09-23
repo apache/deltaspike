@@ -21,9 +21,9 @@ package org.apache.deltaspike.jsf.impl.listener.request;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 
-import javax.faces.context.FacesContext;
-import javax.faces.context.FacesContextFactory;
-import javax.faces.lifecycle.Lifecycle;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.context.FacesContextFactory;
+import jakarta.faces.lifecycle.Lifecycle;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.jsf.spi.scope.window.ClientWindow;
 

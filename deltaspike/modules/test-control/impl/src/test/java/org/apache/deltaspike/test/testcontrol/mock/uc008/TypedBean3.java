@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.test.testcontrol.mock.uc008;
 
-import javax.enterprise.context.RequestScoped;
-import javax.enterprise.inject.Typed;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.inject.Typed;
 
 @RequestScoped
 @Typed({T3.class})

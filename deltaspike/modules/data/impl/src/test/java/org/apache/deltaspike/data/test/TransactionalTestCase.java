@@ -18,10 +18,10 @@
  */
 package org.apache.deltaspike.data.test;
 
-import javax.annotation.Resource;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.transaction.UserTransaction;
+import jakarta.annotation.Resource;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.UserTransaction;
 
 import org.apache.deltaspike.data.test.util.TestData;
 import org.jboss.arquillian.junit.Arquillian;

@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.security.impl.authorization.securitybinding;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 @CustomSecurityBinding
 @ApplicationScoped

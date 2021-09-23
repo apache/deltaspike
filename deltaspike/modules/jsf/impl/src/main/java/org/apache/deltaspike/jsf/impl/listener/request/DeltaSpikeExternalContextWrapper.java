@@ -21,10 +21,10 @@ package org.apache.deltaspike.jsf.impl.listener.request;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.jsf.impl.util.JsfUtils;
 
-import javax.faces.context.ExternalContext;
-import javax.faces.context.ExternalContextWrapper;
+import jakarta.faces.context.ExternalContext;
+import jakarta.faces.context.ExternalContextWrapper;
 import java.io.IOException;
-import javax.faces.context.FacesContext;
+import jakarta.faces.context.FacesContext;
 import org.apache.deltaspike.jsf.impl.util.ClientWindowHelper;
 import org.apache.deltaspike.jsf.spi.scope.window.ClientWindow;
 

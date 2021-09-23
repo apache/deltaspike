@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.testcontrol.mock.uc009;
 
-import javax.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Typed;
 
 @Typed() //exclude it for the cdi type-check
 public class TypedBean3 implements T1, T2, T3

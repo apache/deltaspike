@@ -21,8 +21,8 @@ package org.apache.deltaspike.data.test.service;
 
 import org.apache.deltaspike.data.api.EntityManagerResolver;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 public class BasicEntityManagerResolver implements EntityManagerResolver
 {

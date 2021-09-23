@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.jsf.impl.injection;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 
 //TODO merge with AbstractBeanStorage if ViewDependentBeanStorage isn't needed (see MYFACES-3805)
 @RequestScoped

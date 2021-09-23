@@ -20,7 +20,7 @@ package org.apache.deltaspike.core.util;
 
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 
-import javax.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Typed;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;

@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.testcontrol.uc018;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import static org.apache.deltaspike.test.testcontrol.uc018.TestServiceQualifier.Mode.LABELED;
 

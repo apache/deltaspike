@@ -18,9 +18,9 @@
  */
 package org.apache.deltaspike.core.api.lock;
 
-import javax.enterprise.inject.spi.AnnotatedMethod;
-import javax.enterprise.util.Nonbinding;
-import javax.interceptor.InterceptorBinding;
+import jakarta.enterprise.inject.spi.AnnotatedMethod;
+import jakarta.enterprise.util.Nonbinding;
+import jakarta.interceptor.InterceptorBinding;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.util.concurrent.TimeUnit;

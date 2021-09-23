@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.testcontrol.mock.uc015;
 
-import javax.interceptor.InterceptorBinding;
+import jakarta.interceptor.InterceptorBinding;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 

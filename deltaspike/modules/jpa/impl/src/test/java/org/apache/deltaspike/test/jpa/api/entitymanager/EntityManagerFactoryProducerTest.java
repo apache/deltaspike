@@ -18,9 +18,9 @@
  */
 package org.apache.deltaspike.test.jpa.api.entitymanager;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.spi.PersistenceProviderResolverHolder;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.spi.PersistenceProviderResolverHolder;
 
 import org.apache.deltaspike.jpa.spi.entitymanager.PersistenceConfigurationProvider;
 import org.apache.deltaspike.test.category.SeCategory;

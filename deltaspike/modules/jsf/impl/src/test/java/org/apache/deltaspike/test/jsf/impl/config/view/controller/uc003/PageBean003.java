@@ -23,7 +23,7 @@ import org.apache.deltaspike.core.api.config.view.controller.InitView;
 import org.apache.deltaspike.core.api.config.view.controller.PreViewAction;
 import org.apache.deltaspike.core.api.config.view.controller.PreRenderView;
 
-import javax.enterprise.inject.Model;
+import jakarta.enterprise.inject.Model;
 
 @Model
 @ViewRef(config = SimplePageConfig.class)

@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.proxy.impl.enableinterceptors;
 
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.inject.Produces;
 import org.apache.deltaspike.proxy.api.EnableInterceptors;
 
 public class MyBeanProducer

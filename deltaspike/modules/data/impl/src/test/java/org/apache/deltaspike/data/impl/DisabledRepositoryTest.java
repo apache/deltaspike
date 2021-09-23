@@ -20,7 +20,7 @@ package org.apache.deltaspike.data.impl;
 
 import static org.apache.deltaspike.data.test.util.TestDeployments.initDeployment;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.apache.deltaspike.data.test.service.DisabledRepository;
 import org.apache.deltaspike.data.test.service.SimpleRepository;

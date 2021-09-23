@@ -19,7 +19,7 @@
 
 package org.apache.deltaspike.core.impl.crypto;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import java.io.IOException;
 

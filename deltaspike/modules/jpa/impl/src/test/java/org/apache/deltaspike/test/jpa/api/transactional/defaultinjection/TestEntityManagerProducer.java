@@ -21,9 +21,9 @@ package org.apache.deltaspike.test.jpa.api.transactional.defaultinjection;
 import org.apache.deltaspike.test.jpa.api.shared.TestEntityManager;
 import org.apache.deltaspike.test.jpa.api.shared.TestException;
 
-import javax.enterprise.context.RequestScoped;
-import javax.enterprise.inject.Produces;
-import javax.persistence.EntityManager;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.inject.Produces;
+import jakarta.persistence.EntityManager;
 
 @RequestScoped
 public class TestEntityManagerProducer

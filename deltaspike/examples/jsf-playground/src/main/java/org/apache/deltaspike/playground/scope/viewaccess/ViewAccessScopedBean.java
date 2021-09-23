@@ -19,9 +19,9 @@
 package org.apache.deltaspike.playground.scope.viewaccess;
 
 import java.io.Serializable;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.inject.Named;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+import jakarta.inject.Named;
 import org.apache.deltaspike.core.api.scope.ViewAccessScoped;
 
 @Named

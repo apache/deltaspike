@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.testcontrol.uc018;
 
-import javax.inject.Qualifier;
+import jakarta.inject.Qualifier;
 import java.lang.annotation.*;
 
 @Qualifier

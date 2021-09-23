@@ -26,8 +26,8 @@ import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;
 import org.apache.deltaspike.jsf.impl.util.JsfUtils;
 
-import javax.faces.lifecycle.Lifecycle;
-import javax.faces.lifecycle.LifecycleFactory;
+import jakarta.faces.lifecycle.Lifecycle;
+import jakarta.faces.lifecycle.LifecycleFactory;
 import java.util.Iterator;
 
 public class DeltaSpikeLifecycleFactoryWrapper extends LifecycleFactory implements Deactivatable

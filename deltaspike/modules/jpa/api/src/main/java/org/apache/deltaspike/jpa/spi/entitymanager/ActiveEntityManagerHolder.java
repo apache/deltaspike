@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.jpa.spi.entitymanager;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import java.io.Serializable;
 
 /**

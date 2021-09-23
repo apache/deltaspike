@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.test.testcontrol.uc015;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Alternative;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Alternative;
 
 @Alternative
 @ApplicationScoped

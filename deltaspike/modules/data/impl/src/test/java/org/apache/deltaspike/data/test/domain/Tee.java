@@ -20,8 +20,8 @@ package org.apache.deltaspike.data.test.domain;
 
 import java.io.Serializable;
 
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
 
 @Entity
 @SuppressWarnings("serial")

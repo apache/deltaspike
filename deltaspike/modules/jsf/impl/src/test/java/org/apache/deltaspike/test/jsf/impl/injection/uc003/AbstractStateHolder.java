@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.test.jsf.impl.injection.uc003;
 
-import javax.faces.component.StateHolder;
-import javax.faces.context.FacesContext;
+import jakarta.faces.component.StateHolder;
+import jakarta.faces.context.FacesContext;
 
 public abstract class AbstractStateHolder implements StateHolder
 {

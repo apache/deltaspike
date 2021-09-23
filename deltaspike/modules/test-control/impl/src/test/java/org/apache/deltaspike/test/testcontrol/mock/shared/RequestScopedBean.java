@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.testcontrol.mock.shared;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 
 @RequestScoped
 public class RequestScopedBean

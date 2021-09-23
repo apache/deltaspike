@@ -20,7 +20,7 @@ package org.apache.deltaspike.test.core.api.message;
 
 import org.apache.deltaspike.core.api.message.MessageInterpolator;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 import java.io.Serializable;
 import java.util.Locale;
 

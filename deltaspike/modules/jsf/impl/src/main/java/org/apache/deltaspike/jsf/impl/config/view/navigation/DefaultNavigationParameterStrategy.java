@@ -23,9 +23,9 @@ import org.apache.deltaspike.core.api.config.view.navigation.NavigationParameter
 import org.apache.deltaspike.jsf.impl.util.JsfUtils;
 import org.apache.deltaspike.jsf.spi.config.view.navigation.NavigationParameterStrategy;
 
-import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
-import javax.interceptor.InvocationContext;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
+import jakarta.interceptor.InvocationContext;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

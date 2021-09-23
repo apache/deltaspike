@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.data.api;
 
-import javax.persistence.FlushModeType;
+import jakarta.persistence.FlushModeType;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;

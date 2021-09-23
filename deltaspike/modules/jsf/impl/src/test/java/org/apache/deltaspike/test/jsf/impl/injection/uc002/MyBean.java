@@ -18,9 +18,9 @@
  */
 package org.apache.deltaspike.test.jsf.impl.injection.uc002;
 
-import javax.enterprise.inject.Model;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
+import jakarta.enterprise.inject.Model;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 @Model
 public class MyBean

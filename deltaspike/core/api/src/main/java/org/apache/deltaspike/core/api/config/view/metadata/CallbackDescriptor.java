@@ -20,7 +20,7 @@ package org.apache.deltaspike.core.api.config.view.metadata;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 import java.beans.Introspector;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;

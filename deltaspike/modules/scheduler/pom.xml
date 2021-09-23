@@ -23,12 +23,12 @@
     <parent>
         <groupId>org.apache.deltaspike.modules</groupId>
         <artifactId>modules-project</artifactId>
-        <version>1.9.6-SNAPSHOT</version>
+        <version>2.0.0-SNAPSHOT</version>
     </parent>
 
     <groupId>org.apache.deltaspike.modules</groupId>
     <artifactId>scheduler-module-project</artifactId>
-    <version>1.9.6-SNAPSHOT</version>
+    <version>2.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Apache DeltaSpike Scheduler-Module</name>

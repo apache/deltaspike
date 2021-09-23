@@ -20,7 +20,7 @@ package org.apache.deltaspike.core.impl.throttling;
 
 import org.apache.deltaspike.core.util.ExceptionUtils;
 
-import javax.interceptor.InvocationContext;
+import jakarta.interceptor.InvocationContext;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 

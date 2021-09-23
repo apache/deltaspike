@@ -21,9 +21,9 @@ package org.apache.deltaspike.jsf.impl.scope.window;
 import org.apache.deltaspike.core.impl.scope.window.DefaultWindowContextQuotaHandler;
 import org.apache.deltaspike.jsf.spi.scope.window.ClientWindowConfig;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.inject.Specializes;
-import javax.inject.Inject;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.inject.Specializes;
+import jakarta.inject.Inject;
 
 @Specializes
 public class JsfWindowContextQuotaHandler extends DefaultWindowContextQuotaHandler

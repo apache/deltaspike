@@ -20,7 +20,7 @@ package org.apache.deltaspike.data.test.ee7.service;
 
 import static javax.persistence.LockModeType.PESSIMISTIC_READ;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.apache.deltaspike.data.api.AbstractEntityRepository;
 import org.apache.deltaspike.data.api.Modifying;

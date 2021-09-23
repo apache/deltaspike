@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.test.core.api.config.injectable.numberconfig;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 
 @ApplicationScoped

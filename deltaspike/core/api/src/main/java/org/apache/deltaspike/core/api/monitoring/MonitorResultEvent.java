@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.core.api.monitoring;
 
-import javax.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Typed;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;

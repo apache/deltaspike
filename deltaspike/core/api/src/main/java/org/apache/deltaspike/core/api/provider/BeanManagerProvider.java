@@ -18,12 +18,12 @@
  */
 package org.apache.deltaspike.core.api.provider;
 
-import javax.enterprise.event.Observes;
-import javax.enterprise.inject.spi.AfterBeanDiscovery;
-import javax.enterprise.inject.spi.AfterDeploymentValidation;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.BeforeShutdown;
-import javax.enterprise.inject.spi.Extension;
+import jakarta.enterprise.event.Observes;
+import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
+import jakarta.enterprise.inject.spi.AfterDeploymentValidation;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.BeforeShutdown;
+import jakarta.enterprise.inject.spi.Extension;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.lang.reflect.Method;
@@ -153,17 +153,6 @@ public class BeanManagerProvider implements Extension
      */
     public static BeanManagerProvider getInstance()
     {
-        /*X TODO Java-EE5 support needs to be discussed
-        if (bmpSingleton == null)
-        {
-            // workaround for some Java-EE5 environments in combination with a special
-            // StartupBroadcaster for bootstrapping CDI
-
-            // CodiStartupBroadcaster.broadcastStartup();
-            // here bmp might not be null (depends on the broadcasters)
-        }
-        */
-
         if (bmpSingleton == null)
         {
             throw new IllegalStateException("No " + BeanManagerProvider.class.getName() + " in place! " +

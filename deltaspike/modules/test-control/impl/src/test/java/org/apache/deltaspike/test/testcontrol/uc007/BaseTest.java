@@ -22,7 +22,7 @@ import org.apache.deltaspike.test.testcontrol.shared.ApplicationScopedBean;
 import org.apache.deltaspike.test.testcontrol.shared.RequestScopedBean;
 import org.apache.deltaspike.test.testcontrol.shared.SessionScopedBean;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 public abstract class BaseTest
 {

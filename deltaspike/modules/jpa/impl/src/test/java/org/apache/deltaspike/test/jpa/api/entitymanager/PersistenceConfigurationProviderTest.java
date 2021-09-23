@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.test.jpa.api.entitymanager;
 
-import javax.inject.Inject;
-import javax.persistence.spi.PersistenceProviderResolverHolder;
+import jakarta.inject.Inject;
+import jakarta.persistence.spi.PersistenceProviderResolverHolder;
 import java.util.Properties;
 
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;

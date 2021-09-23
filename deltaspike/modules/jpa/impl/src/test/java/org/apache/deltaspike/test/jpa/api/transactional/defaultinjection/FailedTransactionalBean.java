@@ -21,7 +21,7 @@ package org.apache.deltaspike.test.jpa.api.transactional.defaultinjection;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
 import org.apache.deltaspike.test.jpa.api.shared.TestException;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 @Failed
 @ApplicationScoped

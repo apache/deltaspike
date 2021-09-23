@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.core.api.alternative.local;
 
-import javax.enterprise.context.Dependent;
+import jakarta.enterprise.context.Dependent;
 
 /**
  * Simple base bean which doesn't get overruled by an global alternative

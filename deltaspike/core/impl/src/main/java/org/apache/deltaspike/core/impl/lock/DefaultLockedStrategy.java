@@ -20,9 +20,9 @@ package org.apache.deltaspike.core.impl.lock;
 
 import org.apache.deltaspike.core.spi.lock.LockedStrategy;
 
-import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
-import javax.interceptor.InvocationContext;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
+import jakarta.interceptor.InvocationContext;
 import java.util.concurrent.locks.Lock;
 
 @Dependent

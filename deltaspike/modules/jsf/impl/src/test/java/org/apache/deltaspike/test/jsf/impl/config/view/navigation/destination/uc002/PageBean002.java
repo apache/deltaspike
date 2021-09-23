@@ -21,7 +21,7 @@ package org.apache.deltaspike.test.jsf.impl.config.view.navigation.destination.u
 import org.apache.deltaspike.core.api.config.view.DefaultErrorView;
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
 
-import javax.enterprise.inject.Model;
+import jakarta.enterprise.inject.Model;
 
 @Model
 public class PageBean002

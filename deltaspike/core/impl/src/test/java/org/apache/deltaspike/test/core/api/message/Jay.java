@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.core.api.message;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 public class Jay
 {

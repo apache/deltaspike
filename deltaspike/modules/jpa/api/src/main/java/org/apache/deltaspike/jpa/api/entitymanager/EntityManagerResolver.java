@@ -19,7 +19,7 @@
 
 package org.apache.deltaspike.jpa.api.entitymanager;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 /**
  * Resolve the EntityManager used for a specific repository.

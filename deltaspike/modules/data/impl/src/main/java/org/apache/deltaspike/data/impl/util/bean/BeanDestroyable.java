@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.data.impl.util.bean;
 
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.spi.Bean;
+import jakarta.enterprise.context.spi.CreationalContext;
+import jakarta.enterprise.inject.spi.Bean;
 
 public class BeanDestroyable<T> implements Destroyable
 {

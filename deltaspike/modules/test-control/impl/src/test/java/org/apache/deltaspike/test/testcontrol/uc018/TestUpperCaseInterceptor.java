@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.testcontrol.uc018;
 
-import javax.interceptor.InterceptorBinding;
+import jakarta.interceptor.InterceptorBinding;
 import java.lang.annotation.*;
 
 @InterceptorBinding

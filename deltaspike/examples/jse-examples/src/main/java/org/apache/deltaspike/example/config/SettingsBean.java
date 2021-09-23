@@ -20,8 +20,8 @@ package org.apache.deltaspike.example.config;
 
 import org.apache.deltaspike.core.api.config.ConfigProperty;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class SettingsBean

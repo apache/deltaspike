@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.data.test.domain;
 
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.MappedSuperclass;
 
 @MappedSuperclass
 public class SuperSimple

@@ -18,9 +18,9 @@
  */
 package org.apache.deltaspike.test.core.api.provider;
 
-import javax.annotation.PreDestroy;
-import javax.enterprise.context.Dependent;
-import javax.inject.Named;
+import jakarta.annotation.PreDestroy;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Named;
 import java.io.Serializable;
 
 @Dependent

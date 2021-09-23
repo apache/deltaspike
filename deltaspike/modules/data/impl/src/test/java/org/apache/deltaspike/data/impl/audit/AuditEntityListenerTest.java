@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.inject.Produces;
 
 import org.apache.deltaspike.data.api.audit.CurrentUser;
 import org.apache.deltaspike.data.test.TransactionalTestCase;

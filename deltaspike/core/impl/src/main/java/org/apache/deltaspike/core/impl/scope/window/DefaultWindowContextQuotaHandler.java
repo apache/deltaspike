@@ -21,9 +21,9 @@ package org.apache.deltaspike.core.impl.scope.window;
 import org.apache.deltaspike.core.api.config.base.CoreBaseConfig;
 import org.apache.deltaspike.core.spi.scope.window.WindowContextQuotaHandler;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.SessionScoped;
-import javax.inject.Inject;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.inject.Inject;
 import java.util.Stack;
 
 @SessionScoped

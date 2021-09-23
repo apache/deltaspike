@@ -21,8 +21,8 @@ package org.apache.deltaspike.test.core.impl.interdyn;
 import org.apache.deltaspike.core.api.monitoring.MonitorResultEvent;
 import org.junit.Assert;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Observes;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Observes;
 
 @ApplicationScoped
 public class SomeTestService

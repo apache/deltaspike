@@ -21,10 +21,10 @@ package org.apache.deltaspike.jsf.impl.config.view.navigation;
 import org.apache.deltaspike.core.api.config.view.navigation.NavigationParameter;
 import org.apache.deltaspike.jsf.spi.config.view.navigation.NavigationParameterStrategy;
 
-import javax.inject.Inject;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
-import javax.interceptor.InvocationContext;
+import jakarta.inject.Inject;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.Interceptor;
+import jakarta.interceptor.InvocationContext;
 import java.io.Serializable;
 
 @NavigationParameter.List( { } )

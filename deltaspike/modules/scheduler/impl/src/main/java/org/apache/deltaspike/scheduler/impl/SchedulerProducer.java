@@ -20,9 +20,9 @@ package org.apache.deltaspike.scheduler.impl;
 
 import org.apache.deltaspike.scheduler.spi.Scheduler;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class SchedulerProducer

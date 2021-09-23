@@ -19,11 +19,11 @@
 package org.apache.deltaspike.proxy.util;
 
 import java.io.Serializable;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
-import javax.interceptor.InvocationContext;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.inject.Inject;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.Interceptor;
+import jakarta.interceptor.InvocationContext;
 import org.apache.deltaspike.proxy.api.EnableInterceptors;
 
 @Interceptor

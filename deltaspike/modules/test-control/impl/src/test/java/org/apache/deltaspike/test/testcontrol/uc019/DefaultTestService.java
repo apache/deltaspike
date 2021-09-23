@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.testcontrol.uc019;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class DefaultTestService implements TestService

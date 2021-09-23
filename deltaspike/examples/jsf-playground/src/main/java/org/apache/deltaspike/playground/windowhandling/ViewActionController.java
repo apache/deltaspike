@@ -19,11 +19,11 @@
 package org.apache.deltaspike.playground.windowhandling;
 
 import java.util.Date;
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
-import javax.faces.context.FacesContext;
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.faces.context.FacesContext;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import org.apache.deltaspike.jsf.spi.scope.window.ClientWindow;
 
 @Named

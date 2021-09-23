@@ -18,9 +18,9 @@
  */
 package org.apache.deltaspike.test.core.api.message.locale;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Alternative;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Alternative;
 import java.util.Locale;
 
 import org.apache.deltaspike.core.api.message.LocaleResolver;

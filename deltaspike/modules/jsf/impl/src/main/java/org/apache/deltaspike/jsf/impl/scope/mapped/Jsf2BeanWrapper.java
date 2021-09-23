@@ -20,7 +20,7 @@ package org.apache.deltaspike.jsf.impl.scope.mapped;
 
 import org.apache.deltaspike.core.util.metadata.AnnotationInstanceProvider;
 
-import javax.enterprise.inject.spi.AnnotatedType;
+import jakarta.enterprise.inject.spi.AnnotatedType;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.HashMap;

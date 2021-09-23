@@ -18,9 +18,9 @@
  */
 package org.apache.deltaspike.jpa.impl.transaction;
 
-import javax.annotation.Resource;
-import javax.enterprise.context.Dependent;
-import javax.transaction.UserTransaction;
+import jakarta.annotation.Resource;
+import jakarta.enterprise.context.Dependent;
+import jakarta.transaction.UserTransaction;
 
 //we need to keep it separated,
 //because the injection of UserTransaction might fail with an exception (see DELTASPIKE-986)

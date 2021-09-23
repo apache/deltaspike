@@ -24,9 +24,9 @@ import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.jsf.impl.util.SecurityUtils;
 import org.apache.deltaspike.security.spi.authorization.EditableAccessDecisionVoterContext;
 
-import javax.enterprise.context.RequestScoped;
-import javax.faces.component.UIViewRoot;
-import javax.inject.Inject;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.faces.component.UIViewRoot;
+import jakarta.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;

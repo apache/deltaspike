@@ -20,7 +20,7 @@ package org.apache.deltaspike.test.jpa.api.transactionscoped.stereotype;
 
 import org.apache.deltaspike.test.jpa.api.shared.TestEntityTransaction;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 
 @RequestScoped
 public class TestEntityTransactionHolder

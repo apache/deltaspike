@@ -22,7 +22,7 @@ import org.apache.deltaspike.testcontrol.api.junit.TestBaseConfig;
 import org.apache.deltaspike.testcontrol.api.mock.DynamicMockManager;
 import org.apache.deltaspike.testcontrol.api.mock.TypedMock;
 
-import javax.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Typed;
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;

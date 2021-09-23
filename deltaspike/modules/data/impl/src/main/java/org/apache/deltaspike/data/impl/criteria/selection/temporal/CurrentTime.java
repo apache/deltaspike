@@ -20,10 +20,10 @@ package org.apache.deltaspike.data.impl.criteria.selection.temporal;
 
 import java.sql.Time;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Selection;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Path;
+import jakarta.persistence.criteria.Selection;
 
 import org.apache.deltaspike.data.api.criteria.QuerySelection;
 

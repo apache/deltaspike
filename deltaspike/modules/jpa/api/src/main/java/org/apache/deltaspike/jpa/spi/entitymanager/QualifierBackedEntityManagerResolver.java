@@ -22,9 +22,9 @@ package org.apache.deltaspike.jpa.spi.entitymanager;
 import org.apache.deltaspike.core.api.literal.AnyLiteral;
 import org.apache.deltaspike.jpa.api.entitymanager.EntityManagerResolver;
 
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.persistence.EntityManager;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.persistence.EntityManager;
 import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.Set;

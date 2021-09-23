@@ -20,8 +20,8 @@ package org.apache.deltaspike.example.security.requestedpage.cdi;
 
 import org.apache.deltaspike.core.api.config.view.navigation.ViewNavigationHandler;
 
-import javax.enterprise.event.Observes;
-import javax.inject.Inject;
+import jakarta.enterprise.event.Observes;
+import jakarta.inject.Inject;
 
 public class AuthenticationListener
 {

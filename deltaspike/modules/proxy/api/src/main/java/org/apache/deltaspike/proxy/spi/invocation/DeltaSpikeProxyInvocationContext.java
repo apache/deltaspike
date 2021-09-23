@@ -20,11 +20,11 @@ package org.apache.deltaspike.proxy.spi.invocation;
 
 import java.lang.reflect.Method;
 import java.util.List;
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.Typed;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.InterceptionType;
-import javax.enterprise.inject.spi.Interceptor;
+import jakarta.enterprise.context.spi.CreationalContext;
+import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.InterceptionType;
+import jakarta.enterprise.inject.spi.Interceptor;
 
 import org.apache.deltaspike.core.util.interceptor.AbstractInvocationContext;
 

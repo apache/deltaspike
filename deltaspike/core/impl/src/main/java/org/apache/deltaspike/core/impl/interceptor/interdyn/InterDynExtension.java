@@ -25,15 +25,14 @@ import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.metadata.AnnotationInstanceProvider;
-import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
 
-import javax.enterprise.event.Observes;
-import javax.enterprise.inject.spi.AnnotatedType;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.BeforeBeanDiscovery;
-import javax.enterprise.inject.spi.Extension;
-import javax.enterprise.inject.spi.ProcessAnnotatedType;
-import javax.interceptor.InterceptorBinding;
+import jakarta.enterprise.event.Observes;
+import jakarta.enterprise.inject.spi.AnnotatedType;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.BeforeBeanDiscovery;
+import jakarta.enterprise.inject.spi.Extension;
+import jakarta.enterprise.inject.spi.ProcessAnnotatedType;
+import jakarta.interceptor.InterceptorBinding;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -119,7 +118,6 @@ public class InterDynExtension implements Deactivatable, Extension
         {
             AnnotatedType at = pat.getAnnotatedType();
             String beanClassName = at.getJavaClass().getName();
-            AnnotatedTypeBuilder atb = null;
             for (AnnotationRule rule : interceptorRules)
             {
                 if (beanClassName.matches(rule.getRule()))
@@ -131,19 +129,11 @@ public class InterDynExtension implements Deactivatable, Extension
                         return;
                     }
 
-                    if (atb == null)
-                    {
-                        atb = new AnnotatedTypeBuilder();
-                        atb.readFromType(at);
-                    }
-                    atb.addToClass(rule.getAdditionalAnnotation());
+                    pat.configureAnnotatedType()
+                        .add(rule.getAdditionalAnnotation());
                     logger.info("Adding Dynamic Interceptor " + rule.getAdditionalAnnotation()
                             + " to class " + beanClassName );
                 }
-            }
-            if (atb != null)
-            {
-                pat.setAnnotatedType(atb.create());
             }
         }
     }

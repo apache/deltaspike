@@ -20,8 +20,8 @@ package org.apache.deltaspike.test.jpa.api.transactionscoped.stereotype;
 
 import org.apache.deltaspike.test.jpa.api.shared.TestEntityTransaction;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 @Repository
 public class TransactionalBean

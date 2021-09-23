@@ -21,8 +21,8 @@ package org.apache.deltaspike.test.jsf.impl.scope.window.beans;
 import org.apache.deltaspike.core.api.scope.WindowScoped;
 import org.apache.deltaspike.core.spi.scope.window.WindowContext;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import java.io.Serializable;
 
 @Named

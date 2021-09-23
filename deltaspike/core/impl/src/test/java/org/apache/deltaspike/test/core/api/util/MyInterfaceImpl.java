@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.core.api.util;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class MyInterfaceImpl implements MyInterface

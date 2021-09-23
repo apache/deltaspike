@@ -21,10 +21,10 @@ package org.apache.deltaspike.jsf.impl.scope.window.strategy;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Random;
-import javax.annotation.PostConstruct;
-import javax.faces.context.FacesContext;
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.context.FacesContext;
+import jakarta.inject.Inject;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.deltaspike.core.util.StringUtils;
 import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;

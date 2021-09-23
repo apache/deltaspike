@@ -20,7 +20,7 @@ package org.apache.deltaspike.test.core.api.partialbean.uc013;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 import org.apache.deltaspike.test.core.api.partialbean.shared.TestPartialBeanBinding;
 
 @TestPartialBeanBinding

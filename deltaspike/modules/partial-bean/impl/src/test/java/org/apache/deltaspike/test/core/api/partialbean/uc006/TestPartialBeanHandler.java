@@ -21,10 +21,10 @@ package org.apache.deltaspike.test.core.api.partialbean.uc006;
 import org.apache.deltaspike.test.core.api.partialbean.shared.TestBean;
 import org.apache.deltaspike.test.core.api.partialbean.shared.TestPartialBeanBinding;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import org.apache.deltaspike.test.core.api.partialbean.shared.TestInterceptorAware;

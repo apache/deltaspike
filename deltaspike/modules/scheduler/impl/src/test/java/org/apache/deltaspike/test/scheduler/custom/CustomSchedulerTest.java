@@ -22,7 +22,7 @@ import junit.framework.Assert;
 import org.apache.deltaspike.scheduler.spi.Scheduler;
 import org.junit.Test;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 public abstract class CustomSchedulerTest
 {

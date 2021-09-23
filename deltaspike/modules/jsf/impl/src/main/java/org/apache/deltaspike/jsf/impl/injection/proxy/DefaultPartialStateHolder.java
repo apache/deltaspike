@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.jsf.impl.injection.proxy;
 
-import javax.faces.component.PartialStateHolder;
-import javax.faces.context.FacesContext;
+import jakarta.faces.component.PartialStateHolder;
+import jakarta.faces.context.FacesContext;
 
 //the converter-/validator proxy needs to implement PartialStateHolder to force a special path of the jsf state handling
 //which forces a call to InjectionAwareApplicationWrapper on the postback.

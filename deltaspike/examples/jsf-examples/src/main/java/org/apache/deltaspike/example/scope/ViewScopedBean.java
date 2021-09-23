@@ -18,9 +18,9 @@
  */
 package org.apache.deltaspike.example.scope;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ViewScoped;
-import javax.inject.Named;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.bean.ViewScoped;
+import jakarta.inject.Named;
 import java.io.Serializable;
 
 /**

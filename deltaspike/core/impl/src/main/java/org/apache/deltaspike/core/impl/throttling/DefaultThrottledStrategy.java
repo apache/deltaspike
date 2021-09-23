@@ -20,9 +20,9 @@ package org.apache.deltaspike.core.impl.throttling;
 
 import org.apache.deltaspike.core.spi.throttling.ThrottledStrategy;
 
-import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
-import javax.interceptor.InvocationContext;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
+import jakarta.interceptor.InvocationContext;
 
 @Dependent
 public class DefaultThrottledStrategy implements ThrottledStrategy

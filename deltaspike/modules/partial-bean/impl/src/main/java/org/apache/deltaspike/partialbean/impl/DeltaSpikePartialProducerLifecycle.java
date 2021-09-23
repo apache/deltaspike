@@ -22,8 +22,8 @@ import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.ReflectionUtils;
 import org.apache.deltaspike.core.util.metadata.builder.ContextualLifecycle;
 
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.spi.Bean;
+import jakarta.enterprise.context.spi.CreationalContext;
+import jakarta.enterprise.inject.spi.Bean;
 import java.lang.reflect.Method;
 
 public class DeltaSpikePartialProducerLifecycle<T> implements ContextualLifecycle<T>

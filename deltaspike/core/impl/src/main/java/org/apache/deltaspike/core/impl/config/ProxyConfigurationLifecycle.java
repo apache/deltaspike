@@ -20,17 +20,12 @@ package org.apache.deltaspike.core.impl.config;
 
 import org.apache.deltaspike.core.api.config.ConfigProperty;
 import org.apache.deltaspike.core.api.config.ConfigResolver;
-import org.apache.deltaspike.core.api.config.Configuration;
 import org.apache.deltaspike.core.spi.config.BaseConfigPropertyProducer;
-import org.apache.deltaspike.core.util.metadata.builder.ContextualLifecycle;
 
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.spi.Bean;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.List;
@@ -40,38 +35,10 @@ import java.util.concurrent.ConcurrentMap;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
-class ProxyConfigurationLifecycle implements ContextualLifecycle
+class ProxyConfigurationLifecycle
 {
-    private Class<?>[] api;
 
-    ProxyConfigurationLifecycle(final Class<?> proxyType)
-    {
-        this.api = new Class<?>[]{proxyType};
-    }
-
-    @Override
-    public Object create(final Bean bean, final CreationalContext creationalContext)
-    {
-        // TODO: support partialbean binding? can make sense for virtual properties + would integrate with jcache
-        // we'd need to add @PartialBeanBinding on a bean created from ConfigurationHandler
-        // detection can just be a loadClass of this API
-        // for now: waiting for user request for it
-
-        final Configuration configuration = api[0].getAnnotation(Configuration.class);
-        final long cacheFor = configuration.cacheFor();
-        return Proxy.newProxyInstance(
-                Thread.currentThread().getContextClassLoader(), api,
-                new ConfigurationHandler(
-                        cacheFor <= 0 ? -1 : configuration.cacheUnit().toMillis(cacheFor), configuration.prefix()));
-    }
-
-    @Override
-    public void destroy(final Bean bean, final Object instance, final CreationalContext creationalContext)
-    {
-        // no-op
-    }
-
-    private static final class ConfigurationHandler implements InvocationHandler
+    static final class ConfigurationHandler implements InvocationHandler
     {
         private final BaseConfigPropertyProducer delegate = new BaseConfigPropertyProducer()
         {
@@ -82,7 +49,7 @@ class ProxyConfigurationLifecycle implements ContextualLifecycle
         private final long cacheMs;
         private final String prefix;
 
-        private ConfigurationHandler(final long cacheMs, final String prefix)
+        ConfigurationHandler(final long cacheMs, final String prefix)
         {
             this.cacheMs = cacheMs;
             this.prefix = prefix;

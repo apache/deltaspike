@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.core.util;
 
-import javax.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Typed;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;

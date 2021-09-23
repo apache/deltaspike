@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.jsf.api.listener.phase;
 
-import javax.enterprise.inject.Stereotype;
+import jakarta.enterprise.inject.Stereotype;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;

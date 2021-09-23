@@ -25,7 +25,7 @@ import static org.junit.Assert.fail;
 
 import java.util.List;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.apache.deltaspike.data.api.QueryInvocationException;
 import org.apache.deltaspike.data.test.domain.Simple;

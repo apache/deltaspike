@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.test.core.api.util.context;
 
-import javax.enterprise.context.spi.Contextual;
-import javax.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.context.spi.Contextual;
+import jakarta.enterprise.inject.spi.BeanManager;
 import java.lang.annotation.Annotation;
 
 import org.apache.deltaspike.core.util.context.AbstractContext;

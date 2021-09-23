@@ -23,10 +23,10 @@ import org.apache.deltaspike.core.api.provider.DependentProvider;
 import org.apache.deltaspike.core.impl.util.JndiUtils;
 import org.apache.deltaspike.jpa.api.config.base.JpaBaseConfig;
 
-import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
-import javax.transaction.UserTransaction;
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.inject.Inject;
+import jakarta.transaction.UserTransaction;
 import java.io.Serializable;
 
 //the separated logic allows a lazy lookup of this bean and

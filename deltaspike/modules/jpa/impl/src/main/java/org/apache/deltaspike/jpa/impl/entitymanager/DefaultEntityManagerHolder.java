@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.jpa.impl.entitymanager;
 
-import javax.enterprise.context.Dependent;
-import javax.persistence.EntityManager;
+import jakarta.enterprise.context.Dependent;
+import jakarta.persistence.EntityManager;
 
 import org.apache.deltaspike.jpa.spi.entitymanager.ActiveEntityManagerHolder;
 

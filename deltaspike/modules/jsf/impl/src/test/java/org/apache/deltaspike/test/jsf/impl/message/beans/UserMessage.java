@@ -22,7 +22,7 @@ import org.apache.deltaspike.core.api.message.Message;
 import org.apache.deltaspike.core.api.message.MessageBundle;
 import org.apache.deltaspike.core.api.message.MessageContextConfig;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 @MessageBundle
 @Named

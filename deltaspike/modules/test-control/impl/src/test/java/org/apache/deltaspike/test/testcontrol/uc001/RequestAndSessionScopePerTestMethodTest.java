@@ -32,7 +32,7 @@ import org.apache.deltaspike.test.testcontrol.shared.RequestScopedBean;
 import org.apache.deltaspike.test.testcontrol.shared.SessionScopedBean;
 import org.apache.deltaspike.test.testcontrol.shared.TestUtils;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 //Usually NOT needed! Currently only needed due to our arquillian-setup
 @Category(SeCategory.class)

@@ -18,17 +18,17 @@
  */
 package org.apache.deltaspike.core.api.provider;
 
-import org.apache.deltaspike.core.api.literal.AnyLiteral;
+import jakarta.enterprise.inject.Any;
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
 
-import javax.enterprise.context.Dependent;
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.Typed;
-import javax.enterprise.inject.spi.AnnotatedType;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.InjectionTarget;
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.context.spi.CreationalContext;
+import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.spi.AnnotatedType;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.InjectionTarget;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -415,7 +415,7 @@ public final class BeanProvider
                                                        boolean includeDefaultScopedBeans,
                                                        BeanManager beanManager)
     {
-        Set<Bean<?>> beans = beanManager.getBeans(type, new AnyLiteral());
+        Set<Bean<?>> beans = beanManager.getBeans(type, Any.Literal.INSTANCE);
 
         if (beans == null || beans.isEmpty())
         {

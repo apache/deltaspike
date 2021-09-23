@@ -20,7 +20,7 @@ package org.apache.deltaspike.testcontrol.impl.mock;
 
 import org.apache.deltaspike.core.util.ReflectionUtils;
 
-import javax.enterprise.util.Nonbinding;
+import jakarta.enterprise.util.Nonbinding;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;

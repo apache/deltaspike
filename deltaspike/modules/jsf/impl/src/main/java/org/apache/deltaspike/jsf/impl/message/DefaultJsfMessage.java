@@ -19,9 +19,9 @@
 package org.apache.deltaspike.jsf.impl.message;
 
 
-import javax.enterprise.inject.Typed;
-import javax.faces.application.FacesMessage;
-import javax.faces.component.UIComponent;
+import jakarta.enterprise.inject.Typed;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.component.UIComponent;
 
 import java.lang.reflect.Proxy;
 

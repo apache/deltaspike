@@ -37,10 +37,10 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
-import javax.enterprise.context.ContextNotActiveException;
-import javax.enterprise.inject.spi.Extension;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.enterprise.context.ContextNotActiveException;
+import jakarta.enterprise.inject.spi.Extension;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 @RunWith(Arquillian.class)
 @Category(SeCategory.class)

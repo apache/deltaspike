@@ -21,7 +21,7 @@ package org.apache.deltaspike.test.jsf.impl.config.view.navigation.parameter.uc0
 import org.apache.deltaspike.core.api.config.view.ViewConfig;
 import org.apache.deltaspike.core.api.config.view.navigation.NavigationParameter;
 
-import javax.enterprise.inject.Model;
+import jakarta.enterprise.inject.Model;
 
 @Model
 public class PageBean002

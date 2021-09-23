@@ -21,10 +21,10 @@ package org.apache.deltaspike.core.impl.throttling;
 import org.apache.deltaspike.core.api.throttling.Throttled;
 import org.apache.deltaspike.core.spi.throttling.ThrottledStrategy;
 
-import javax.inject.Inject;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
-import javax.interceptor.InvocationContext;
+import jakarta.inject.Inject;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.Interceptor;
+import jakarta.interceptor.InvocationContext;
 import java.io.Serializable;
 
 @Throttled

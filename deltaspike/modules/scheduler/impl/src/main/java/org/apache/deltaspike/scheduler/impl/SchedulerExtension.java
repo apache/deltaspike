@@ -28,8 +28,8 @@ import org.apache.deltaspike.scheduler.api.Scheduled;
 import org.apache.deltaspike.scheduler.spi.SchedulerControl;
 import org.apache.deltaspike.scheduler.spi.Scheduler;
 
-import javax.enterprise.event.Observes;
-import javax.enterprise.inject.spi.*;
+import jakarta.enterprise.event.Observes;
+import jakarta.enterprise.inject.spi.*;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

@@ -21,7 +21,7 @@ package org.apache.deltaspike.core.impl.config;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Typed;
 
 import org.apache.deltaspike.core.impl.util.JndiUtils;
 

@@ -21,7 +21,7 @@ package org.apache.deltaspike.core.api.projectstage;
 
 import org.apache.deltaspike.core.util.ServiceUtils;
 
-import javax.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Typed;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;

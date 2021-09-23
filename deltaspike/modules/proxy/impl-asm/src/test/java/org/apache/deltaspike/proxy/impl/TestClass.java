@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.proxy.impl;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 @Named("test")
 @TestAnnotation(value2 = TestClass.class, value1 = 15)

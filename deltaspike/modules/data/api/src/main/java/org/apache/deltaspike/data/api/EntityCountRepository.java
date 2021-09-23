@@ -19,7 +19,7 @@
 
 package org.apache.deltaspike.data.api;
 
-import javax.persistence.metamodel.SingularAttribute;
+import jakarta.persistence.metamodel.SingularAttribute;
 
 public interface EntityCountRepository<E>
 {

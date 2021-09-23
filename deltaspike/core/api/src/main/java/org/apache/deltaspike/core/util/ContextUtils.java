@@ -19,9 +19,9 @@
 package org.apache.deltaspike.core.util;
 
 import java.lang.annotation.Annotation;
-import javax.enterprise.context.ContextNotActiveException;
-import javax.enterprise.inject.Typed;
-import javax.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.context.ContextNotActiveException;
+import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.spi.BeanManager;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 
 /**

@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.core.impl.util;
 
-import javax.enterprise.inject.spi.AnnotatedMethod;
-import javax.enterprise.inject.spi.AnnotatedType;
+import jakarta.enterprise.inject.spi.AnnotatedMethod;
+import jakarta.enterprise.inject.spi.AnnotatedType;
 import java.lang.reflect.Method;
 
 public final class AnnotatedMethods

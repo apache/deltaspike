@@ -20,7 +20,7 @@ package org.apache.deltaspike.core.impl.scope.viewaccess;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 
 @RequestScoped
 public class ViewAccessBeanAccessHistory

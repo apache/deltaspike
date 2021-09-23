@@ -18,11 +18,11 @@
  */
 package org.apache.deltaspike.test.testcontrol.uc018;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.Alternative;
-import javax.enterprise.inject.Default;
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.inject.Alternative;
+import jakarta.enterprise.inject.Default;
+import jakarta.enterprise.inject.Produces;
 
 import static org.apache.deltaspike.test.testcontrol.uc018.TestServiceQualifier.Mode.LABELED;
 

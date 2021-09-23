@@ -21,8 +21,8 @@ package org.apache.deltaspike.example.message;
 import org.apache.deltaspike.core.api.message.MessageContext;
 import org.apache.deltaspike.jsf.impl.message.JsfMessageResolver;
 
-import javax.enterprise.inject.Specializes;
-import javax.faces.context.FacesContext;
+import jakarta.enterprise.inject.Specializes;
+import jakarta.faces.context.FacesContext;
 
 @Specializes
 public class CustomMessageResolver extends JsfMessageResolver

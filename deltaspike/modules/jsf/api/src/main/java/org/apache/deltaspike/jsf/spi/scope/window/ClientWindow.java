@@ -19,7 +19,7 @@
 package org.apache.deltaspike.jsf.spi.scope.window;
 
 import java.util.Map;
-import javax.faces.context.FacesContext;
+import jakarta.faces.context.FacesContext;
 
 /**
  * <p>API to interact with the window/browser tab handling.

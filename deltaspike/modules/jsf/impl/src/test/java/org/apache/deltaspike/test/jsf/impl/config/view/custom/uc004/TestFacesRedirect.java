@@ -20,7 +20,7 @@ package org.apache.deltaspike.test.jsf.impl.config.view.custom.uc004;
 
 import org.apache.deltaspike.jsf.api.config.view.View;
 
-import javax.enterprise.inject.Stereotype;
+import jakarta.enterprise.inject.Stereotype;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;

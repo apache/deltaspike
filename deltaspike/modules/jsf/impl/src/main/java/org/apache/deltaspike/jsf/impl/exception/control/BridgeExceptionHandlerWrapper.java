@@ -20,15 +20,15 @@ package org.apache.deltaspike.jsf.impl.exception.control;
 
 import java.lang.annotation.Annotation;
 import java.util.Iterator;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.faces.FacesException;
-import javax.faces.context.ExceptionHandler;
-import javax.faces.context.ExceptionHandlerWrapper;
-import javax.faces.context.FacesContext;
-import javax.faces.event.AbortProcessingException;
-import javax.faces.event.ExceptionQueuedEvent;
-import javax.faces.event.PhaseId;
-import javax.faces.event.SystemEvent;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.faces.FacesException;
+import jakarta.faces.context.ExceptionHandler;
+import jakarta.faces.context.ExceptionHandlerWrapper;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.AbortProcessingException;
+import jakarta.faces.event.ExceptionQueuedEvent;
+import jakarta.faces.event.PhaseId;
+import jakarta.faces.event.SystemEvent;
 
 import org.apache.deltaspike.core.api.config.view.DefaultErrorView;
 import org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent;

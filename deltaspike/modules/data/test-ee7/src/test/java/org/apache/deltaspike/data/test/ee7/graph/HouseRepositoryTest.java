@@ -27,12 +27,12 @@ import static org.junit.Assert.fail;
 
 import java.util.Arrays;
 
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceUnitUtil;
-import javax.transaction.UserTransaction;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.PersistenceUnitUtil;
+import jakarta.transaction.UserTransaction;
 
 import org.apache.deltaspike.data.api.QueryInvocationException;
 import org.apache.deltaspike.data.test.ee7.domain.Flat;

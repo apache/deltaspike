@@ -21,9 +21,9 @@ package org.apache.deltaspike.testcontrol.impl.jsf;
 import org.apache.deltaspike.testcontrol.spi.ExternalContainer;
 import org.apache.myfaces.test.mock.MockedJsfTestContainer;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.RequestScoped;
-import javax.enterprise.context.SessionScoped;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.SessionScoped;
 import java.lang.annotation.Annotation;
 
 /**

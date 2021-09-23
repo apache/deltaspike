@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.data.impl.handler;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Produces;
 import java.util.Stack;
 
 @ApplicationScoped

@@ -19,7 +19,7 @@
 package org.apache.deltaspike.test.jsf.impl.scope.viewaccess.beans;
 
 import java.io.Serializable;
-import javax.inject.Named;
+import jakarta.inject.Named;
 import org.apache.deltaspike.core.api.scope.ViewAccessScoped;
 
 @Named

@@ -21,11 +21,11 @@ package org.apache.deltaspike.jsf.impl.token;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.jsf.api.listener.phase.JsfPhaseListener;
 
-import javax.faces.context.FacesContext;
-import javax.faces.event.PhaseEvent;
-import javax.faces.event.PhaseId;
-import javax.faces.event.PhaseListener;
-import javax.inject.Inject;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.PhaseEvent;
+import jakarta.faces.event.PhaseId;
+import jakarta.faces.event.PhaseListener;
+import jakarta.inject.Inject;
 import java.util.Map;
 
 //ignore jsf-ajax requests since they have to be queued according to the spec.

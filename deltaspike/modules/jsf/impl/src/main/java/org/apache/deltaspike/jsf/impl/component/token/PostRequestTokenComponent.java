@@ -20,8 +20,8 @@ package org.apache.deltaspike.jsf.impl.component.token;
 
 import org.apache.deltaspike.jsf.impl.token.PostRequestTokenMarker;
 
-import javax.faces.component.FacesComponent;
-import javax.faces.component.UIInput;
+import jakarta.faces.component.FacesComponent;
+import jakarta.faces.component.UIInput;
 
 
 /**

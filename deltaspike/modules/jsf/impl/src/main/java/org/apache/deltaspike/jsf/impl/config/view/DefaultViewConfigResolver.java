@@ -33,7 +33,7 @@ import org.apache.deltaspike.jsf.api.literal.FolderLiteral;
 import org.apache.deltaspike.jsf.api.literal.ViewLiteral;
 import org.apache.deltaspike.jsf.impl.util.ViewConfigUtils;
 
-import javax.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Typed;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;

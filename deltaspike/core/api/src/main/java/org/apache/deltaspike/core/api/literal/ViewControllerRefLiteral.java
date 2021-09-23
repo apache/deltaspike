@@ -21,7 +21,7 @@ package org.apache.deltaspike.core.api.literal;
 
 import org.apache.deltaspike.core.api.config.view.controller.ViewControllerRef;
 
-import javax.enterprise.util.AnnotationLiteral;
+import jakarta.enterprise.util.AnnotationLiteral;
 
 /**
  * Literal for {@link org.apache.deltaspike.core.api.config.view.controller.ViewControllerRef}

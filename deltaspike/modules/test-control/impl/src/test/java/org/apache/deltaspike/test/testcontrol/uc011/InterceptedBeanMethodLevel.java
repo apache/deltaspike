@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.testcontrol.uc011;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 
 @RequestScoped
 public class InterceptedBeanMethodLevel

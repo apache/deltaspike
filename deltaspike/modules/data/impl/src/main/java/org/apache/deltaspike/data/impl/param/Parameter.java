@@ -21,7 +21,7 @@ package org.apache.deltaspike.data.impl.param;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.persistence.Query;
+import jakarta.persistence.Query;
 
 import org.apache.deltaspike.data.api.mapping.QueryInOutMapper;
 

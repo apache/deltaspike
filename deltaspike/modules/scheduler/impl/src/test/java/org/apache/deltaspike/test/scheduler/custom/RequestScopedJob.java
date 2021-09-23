@@ -20,7 +20,7 @@ package org.apache.deltaspike.test.scheduler.custom;
 
 import org.apache.deltaspike.scheduler.api.Scheduled;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 
 @RequestScoped
 @Scheduled(cronExpression = "*/1 * * * * ?", onStartup = false)

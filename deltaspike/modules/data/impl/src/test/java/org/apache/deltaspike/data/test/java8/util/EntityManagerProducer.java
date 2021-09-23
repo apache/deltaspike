@@ -19,9 +19,9 @@
 
 package org.apache.deltaspike.data.test.java8.util;
 
-import javax.enterprise.inject.Produces;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.enterprise.inject.Produces;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 public class EntityManagerProducer {
     @PersistenceContext

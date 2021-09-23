@@ -25,9 +25,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.enterprise.inject.Typed;
-import javax.faces.component.PartialStateHolder;
-import javax.faces.component.StateHolder;
+import jakarta.enterprise.inject.Typed;
+import jakarta.faces.component.PartialStateHolder;
+import jakarta.faces.component.StateHolder;
 
 @Typed
 public class ConverterAndValidatorProxyFactory extends DeltaSpikeProxyFactory

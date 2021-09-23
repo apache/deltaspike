@@ -20,7 +20,7 @@ package org.apache.deltaspike.test.core.api.partialbean.uc007;
 
 import org.apache.deltaspike.test.core.api.partialbean.shared.TestPartialBeanBinding;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 import org.apache.deltaspike.test.core.api.partialbean.shared.CustomInterceptor;
 
 @TestPartialBeanBinding

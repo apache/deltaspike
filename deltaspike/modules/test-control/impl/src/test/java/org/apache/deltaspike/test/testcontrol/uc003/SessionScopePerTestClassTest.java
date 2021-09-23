@@ -29,8 +29,8 @@ import org.apache.deltaspike.test.testcontrol.shared.ApplicationScopedBean;
 import org.apache.deltaspike.test.testcontrol.shared.RequestScopedBean;
 import org.apache.deltaspike.test.testcontrol.shared.SessionScopedBean;
 
-import javax.enterprise.context.SessionScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.inject.Inject;
 
 //Usually NOT needed! Currently only needed due to our arquillian-setup
 @Category(SeCategory.class)

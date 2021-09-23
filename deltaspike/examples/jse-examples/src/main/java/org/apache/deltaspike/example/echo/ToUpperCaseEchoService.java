@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.example.echo;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 /**
  * Implementation of {@link EchoService} which returns the given text in upper-case format

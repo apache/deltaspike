@@ -21,7 +21,7 @@ package org.apache.deltaspike.jpa.spi.descriptor.xml;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import javax.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Typed;
 import org.apache.deltaspike.core.util.StringUtils;
 
 @Typed

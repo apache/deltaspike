@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.data.impl.criteria.selection;
 
-import javax.persistence.metamodel.SingularAttribute;
+import jakarta.persistence.metamodel.SingularAttribute;
 
 import org.apache.deltaspike.data.api.criteria.QuerySelection;
 

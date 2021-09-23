@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.test.jsf.impl.config.view.navigation.event.uc001;
 
-import javax.enterprise.event.Observes;
-import javax.enterprise.inject.Model;
+import jakarta.enterprise.event.Observes;
+import jakarta.enterprise.inject.Model;
 
 import org.apache.deltaspike.core.api.config.view.DefaultErrorView;
 import org.apache.deltaspike.core.api.config.view.ViewConfig;

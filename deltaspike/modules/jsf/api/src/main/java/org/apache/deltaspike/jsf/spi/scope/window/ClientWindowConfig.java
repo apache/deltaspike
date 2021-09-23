@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.jsf.spi.scope.window;
 
-import javax.faces.context.FacesContext;
+import jakarta.faces.context.FacesContext;
 import java.io.Serializable;
 
 /**

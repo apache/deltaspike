@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.jsf.impl.resource;
 
-import javax.faces.application.Resource;
-import javax.faces.application.ResourceWrapper;
+import jakarta.faces.application.Resource;
+import jakarta.faces.application.ResourceWrapper;
 
 /**
  * {@link ResourceWrapper} which appends the version of DeltaSpike to the URL.

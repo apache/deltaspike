@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.core.impl.scope.window;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.apache.deltaspike.core.spi.scope.window.WindowContext;
 import org.apache.deltaspike.test.category.SeCategory;

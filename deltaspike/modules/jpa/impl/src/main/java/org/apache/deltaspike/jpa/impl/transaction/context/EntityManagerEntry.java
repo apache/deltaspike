@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.jpa.impl.transaction.context;
 
-import javax.enterprise.inject.Typed;
-import javax.persistence.EntityManager;
+import jakarta.enterprise.inject.Typed;
+import jakarta.persistence.EntityManager;
 import java.lang.annotation.Annotation;
 
 /**

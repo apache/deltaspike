@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.data.impl.handler;
 
-import javax.persistence.Query;
+import jakarta.persistence.Query;
 
 public interface JpaQueryPostProcessor
 {

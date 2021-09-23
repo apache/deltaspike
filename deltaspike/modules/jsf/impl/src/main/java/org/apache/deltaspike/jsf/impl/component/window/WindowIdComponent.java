@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.jsf.impl.component.window;
 
-import javax.faces.component.FacesComponent;
-import javax.faces.component.UIOutput;
+import jakarta.faces.component.FacesComponent;
+import jakarta.faces.component.UIOutput;
 
 
 /**

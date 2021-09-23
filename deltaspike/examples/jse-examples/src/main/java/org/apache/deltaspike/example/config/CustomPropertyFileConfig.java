@@ -20,7 +20,7 @@ package org.apache.deltaspike.example.config;
 
 import org.apache.deltaspike.core.api.config.PropertyFileConfig;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 /**
  * Allows to use a different file than apache-deltaspike.properties

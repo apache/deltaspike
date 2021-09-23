@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.core.api.partialbean.uc009;
 
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.inject.Produces;
 
 public interface TestBaseConfig
 {

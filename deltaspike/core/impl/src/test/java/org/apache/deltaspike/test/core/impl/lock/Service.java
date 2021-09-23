@@ -20,7 +20,7 @@ package org.apache.deltaspike.test.core.impl.lock;
 
 import org.apache.deltaspike.core.api.lock.Locked;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;

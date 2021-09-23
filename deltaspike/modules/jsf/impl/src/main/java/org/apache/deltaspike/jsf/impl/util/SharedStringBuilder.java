@@ -18,8 +18,8 @@
  */
 package org.apache.deltaspike.jsf.impl.util;
 
-import javax.enterprise.inject.Typed;
-import javax.faces.context.FacesContext;
+import jakarta.enterprise.inject.Typed;
+import jakarta.faces.context.FacesContext;
 
 @Typed()
 public abstract class SharedStringBuilder
