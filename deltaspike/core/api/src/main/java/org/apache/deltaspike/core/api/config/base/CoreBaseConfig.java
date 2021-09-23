@@ -39,38 +39,6 @@ public interface CoreBaseConfig extends DeltaSpikeBaseConfig
                         .getValue();
     }
 
-    interface InterceptorCustomization
-    {
-        Integer PRIORITY =
-                ConfigResolver.resolve("deltaspike.interceptor.priority")
-                        .as(Integer.class)
-                        .withCurrentProjectStage(true)
-                        .withDefault(999) //PLATFORM_BEFORE is 0, LIBRARY_BEFORE is 1000 and APPLICATION is 2000
-                        .getValue();
-    }
-
-    interface Validation
-    {
-        ViolationMode VIOLATION_MODE =
-                ConfigResolver.resolve("deltaspike.validation.violation-mode")
-                        .as(ViolationMode.class, new ConfigResolver.Converter<ViolationMode>()
-                        {
-                            @Override
-                            public ViolationMode convert(String value)
-                            {
-                                return ViolationMode.valueOf(value);
-                            }
-                        })
-                        .withCurrentProjectStage(true)
-                        .withDefault(ViolationMode.FAIL)
-                        .getValue();
-
-        enum ViolationMode
-        {
-            IGNORE, WARN, FAIL
-        }
-    }
-
     interface MBeanIntegration
     {
         Boolean AUTO_UNREGISTER =
