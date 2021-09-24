@@ -43,7 +43,6 @@ import org.apache.deltaspike.core.api.message.Message;
 import org.apache.deltaspike.core.api.message.MessageBundle;
 import org.apache.deltaspike.core.api.message.MessageTemplate;
 import org.apache.deltaspike.core.util.ClassUtils;
-import org.apache.deltaspike.core.util.ParentExtensionStorage;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 
@@ -65,7 +64,6 @@ public class MessageBundleExtension implements Extension, Deactivatable
     protected void init(@Observes BeforeBeanDiscovery beforeBeanDiscovery)
     {
         isActivated = ClassDeactivationUtils.isActivated(getClass());
-        ParentExtensionStorage.addExtension(this);
     }
 
     @SuppressWarnings("UnusedDeclaration")
@@ -136,12 +134,6 @@ public class MessageBundleExtension implements Extension, Deactivatable
             abd.addDefinitionError(new IllegalArgumentException("The following MessageBundle problems where found: " +
                     Arrays.toString(deploymentErrors.toArray())));
             return;
-        }
-
-        MessageBundleExtension parentExtension = ParentExtensionStorage.getParentExtension(this);
-        if (parentExtension != null)
-        {
-            messageBundleTypes.addAll(parentExtension.messageBundleTypes);
         }
 
         for (AnnotatedType<?> mbType : messageBundleTypes)

@@ -46,7 +46,7 @@ public abstract class ClassDeactivationUtils
      * The Map then contains a List of {@link ClassDeactivator}s in order of their configured ordinal.
      */
     private static Map<ClassLoader, List<ClassDeactivator>> classDeactivatorMap
-        = new ConcurrentHashMap<ClassLoader, List<ClassDeactivator>>();
+        = new ConcurrentHashMap<>();
 
     /**
      * Cache for the result. It won't contain many classes but it might be accessed frequently.

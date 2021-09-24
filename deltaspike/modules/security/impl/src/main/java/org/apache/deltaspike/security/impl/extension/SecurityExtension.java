@@ -21,7 +21,6 @@ package org.apache.deltaspike.security.impl.extension;
 
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
-import org.apache.deltaspike.core.util.ParentExtensionStorage;
 import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
 import org.apache.deltaspike.security.api.authorization.Secures;
 import org.apache.deltaspike.security.api.authorization.SecurityDefinitionException;
@@ -57,7 +56,6 @@ public class SecurityExtension implements Extension, Deactivatable
     {
         isActivated = ClassDeactivationUtils.isActivated(getClass());
         securityMetaDataStorage = new SecurityMetaDataStorage();
-        ParentExtensionStorage.addExtension(this);
     }
 
     //workaround for OWB
@@ -138,17 +136,6 @@ public class SecurityExtension implements Extension, Deactivatable
         }
 
         SecurityMetaDataStorage metaDataStorage = getMetaDataStorage();
-
-        SecurityExtension parentExtension = ParentExtensionStorage.getParentExtension(this);
-        if (parentExtension != null)
-        {
-            // also add the authorizers from the parent extension
-            Set<Authorizer> parentAuthorizers = parentExtension.getMetaDataStorage().getAuthorizers();
-            for (Authorizer parentAuthorizer : parentAuthorizers)
-            {
-                metaDataStorage.addAuthorizer(parentAuthorizer);
-            }
-        }
 
         metaDataStorage.registerSecuredMethods();
 
