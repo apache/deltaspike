@@ -203,7 +203,33 @@ Integer dbPort = ConfigResolver
 
 ==== Supported types
 
-The types supported out of the box include: String, Integer, Long, Float, Double, Boolean, Class.
+This table shows the types supported by Deltaspike already:
+
+|===
+| Type | Requires Producer
+| String | No
+| Integer | No
+| Long | No
+| Float | No
+| Double | No
+| Boolean | No
+| Class | No
+| Character | `CharacterConverter`
+| Color | `ColorConverter`
+| Dimensions | `DimensionsConverter`
+| Duration | `DurationConverter`
+| Enum | `EnumConverter`
+| File | `FileConverter`
+| InetAddress | `InetAddressConverter`
+| Instant | `InstantConverter`
+| Locale | `LocaleConverter`
+| Period | `PeriodConverter`
+| Point | `PointConverter`
+| URI | `URIConverter`
+| URL | `URLConverter`
+| UUID | `UUIDConverter`
+|===
+
 Custom types can be supported by providing an implementation of the `ConfigResolver.Converter` interface.
 
 [source,java]
