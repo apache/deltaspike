@@ -1,3 +1,21 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.apache.deltaspike.proxy.api;
 
 import static org.junit.Assert.assertTrue;
@@ -29,16 +47,16 @@ public class DeltaSpikeProxyFactoryTest
         {
            return collectAllMethods(clazz); 
         }
-	}
+    }
     
     private DeltaSpikeProxyFactoryForCollectTest proxyFactory;
-    
-	@Before
-	public void setUp() throws Exception
-	{
-	    proxyFactory = new DeltaSpikeProxyFactoryForCollectTest(); 
-	}
-	
+
+    @Before
+    public void setUp() throws Exception
+    {
+        proxyFactory = new DeltaSpikeProxyFactoryForCollectTest();
+    }
+
     public class Class_NonAbstract
     {
         public void test()
@@ -50,7 +68,7 @@ public class DeltaSpikeProxyFactoryTest
     {
         public abstract void test();
     }
-	
+
     public abstract static class Class_C1
     {
         protected abstract void protectedAbstract_C1_C2(); // will be overridden in Class_C2
@@ -157,12 +175,12 @@ public class DeltaSpikeProxyFactoryTest
         // printCollectedMethods(collectedMethods);
         assertTrue(containsMethod(collectedMethods, Class_C2.class, "protectedAbstract_C1_C2"));
         assertTrue(containsMethod(collectedMethods, Class_C1.class, "protectedAbstract_C1_C3"));
-        assertTrue(containsMethod(collectedMethods, Class_C2.class, "protectedAbstract_C1_C2_C3"));
+        assertTrue(containsMethod(collectedMethods, Class_C1.class, "protectedAbstract_C1_C2_C3"));
         assertTrue(containsMethod(collectedMethods, Class_C1.class, "protectedAbstract_C1"));
         
         assertTrue(containsMethod(collectedMethods, Class_C2.class, "publicAbstract_C1_C2"));
         assertTrue(containsMethod(collectedMethods, Class_C2.class, "publicAbstract_C1_C2"));
-        assertTrue(containsMethod(collectedMethods, Class_C2.class, "publicAbstract_C1_C2_C3"));
+        assertTrue(containsMethod(collectedMethods, Class_C1.class, "publicAbstract_C1_C2_C3"));
         assertTrue(containsMethod(collectedMethods, Class_C1.class, "publicAbstract_C1"));
     
         assertTrue(containsMethod(collectedMethods, Class_C2.class, "protectedAbstract_C2_C3"));
@@ -181,12 +199,12 @@ public class DeltaSpikeProxyFactoryTest
         // printCollectedMethods(collectedMethods);
         assertTrue(containsMethod(collectedMethods, Class_C2.class, "protectedAbstract_C1_C2"));
         assertTrue(containsMethod(collectedMethods, Class_C3.class, "protectedAbstract_C1_C3"));
-        assertTrue(containsMethod(collectedMethods, Class_C3.class, "protectedAbstract_C1_C2_C3"));
+        assertTrue(containsMethod(collectedMethods, Class_C1.class, "protectedAbstract_C1_C2_C3"));
         assertTrue(containsMethod(collectedMethods, Class_C1.class, "protectedAbstract_C1"));
         
         assertTrue(containsMethod(collectedMethods, Class_C2.class, "publicAbstract_C1_C2"));
         assertTrue(containsMethod(collectedMethods, Class_C3.class, "publicAbstract_C1_C3"));
-        assertTrue(containsMethod(collectedMethods, Class_C3.class, "publicAbstract_C1_C2_C3"));
+        assertTrue(containsMethod(collectedMethods, Class_C1.class, "publicAbstract_C1_C2_C3"));
         assertTrue(containsMethod(collectedMethods, Class_C1.class, "publicAbstract_C1"));
         
         assertTrue(containsMethod(collectedMethods, Class_C3.class, "protectedAbstract_C2_C3"));
