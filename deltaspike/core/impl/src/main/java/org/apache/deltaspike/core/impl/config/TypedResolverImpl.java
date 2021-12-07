@@ -18,9 +18,11 @@
  */
 package org.apache.deltaspike.core.impl.config;
 
+import org.apache.deltaspike.core.api.config.Config;
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.config.ConfigSnapshot;
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
+import org.apache.deltaspike.core.impl.config.converter.BeanConverter;
 import org.apache.deltaspike.core.spi.config.ConfigSource;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.ExceptionUtils;
@@ -31,9 +33,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BiFunction;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 
 
 public class TypedResolverImpl<T> implements ConfigResolver.UntypedResolver<T>
@@ -74,6 +76,7 @@ public class TypedResolverImpl<T> implements ConfigResolver.UntypedResolver<T>
     private long lastReloadedAt = -1;
 
     private T lastValue = null;
+    private BiFunction<Config, String, ?> beanConverter = null;
 
 
     TypedResolverImpl(ConfigImpl config, String propertyName)
@@ -123,6 +126,20 @@ public class TypedResolverImpl<T> implements ConfigResolver.UntypedResolver<T>
         configEntryType = clazz;
         this.converter = converter;
 
+        return (ConfigResolver.TypedResolver<N>) this;
+    }
+
+    @Override
+    public <N> ConfigResolver.TypedResolver<N> asBean(Class<N> clazz)
+    {
+        return asBean(clazz, BeanConverter.detectConverter(clazz));
+    }
+
+    @Override
+    public <N> ConfigResolver.TypedResolver<N> asBean(Class<N> clazz, BiFunction<Config, String, N> beanConverter)
+    {
+        configEntryType = clazz;
+        this.beanConverter = beanConverter;
         return (ConfigResolver.TypedResolver<N>) this;
     }
 
@@ -218,6 +235,7 @@ public class TypedResolverImpl<T> implements ConfigResolver.UntypedResolver<T>
         return this;
     }
 
+
     @Override
     public T getValue(ConfigSnapshot snapshot)
     {
@@ -250,41 +268,49 @@ public class TypedResolverImpl<T> implements ConfigResolver.UntypedResolver<T>
             }
         }
 
-        String valueStr = resolveStringValue();
         T value;
-        if (isList)
+        if (beanConverter != null)
         {
-            value = splitAndConvertListValue(valueStr);
+            value = getValueByBeanConverter(beanConverter);
         }
         else
         {
-            value = convert(valueStr);
-        }
+            String valueStr = resolveStringValue();
+            if (isList)
+            {
+                value = splitAndConvertListValue(valueStr);
+            }
+            else
+            {
+                value = convert(valueStr);
+            }
 
-        if (withDefault)
-        {
-            ConfigResolverContext configResolverContext = new ConfigResolverContext()
+            if (withDefault)
+            {
+                ConfigResolverContext configResolverContext = new ConfigResolverContext()
                     .setEvaluateVariables(evaluateVariables)
                     .setProjectStageAware(projectStageAware);
-            value = fallbackToDefaultIfEmpty(keyResolved, value, defaultValue, configResolverContext);
-            if (isList && String.class.isInstance(value))
-            {
-                value = splitAndConvertListValue(String.class.cast(value));
-            }
-        }
 
-        if ((logChanges || valueChangedCallback != null)
-            && (value != null && !value.equals(lastValue) || (value == null && lastValue != null)))
-        {
-            if (logChanges)
-            {
-                LOG.log(Level.INFO, "New value {0} for key {1}.",
-                    new Object[]{ConfigResolver.filterConfigValueForLog(keyOriginal, valueStr), keyOriginal});
+                value = fallbackToDefaultIfEmpty(keyResolved, value, defaultValue, configResolverContext);
+                if (isList && String.class.isInstance(value))
+                {
+                    value = splitAndConvertListValue(String.class.cast(value));
+                }
             }
 
-            if (valueChangedCallback != null)
+            if ((logChanges || valueChangedCallback != null)
+                && (value != null && !value.equals(lastValue) || (value == null && lastValue != null)))
             {
-                valueChangedCallback.onValueChange(keyOriginal, lastValue, value);
+                if (logChanges)
+                {
+                    LOG.log(Level.INFO, "New value {0} for key {1}.",
+                        new Object[]{ConfigResolver.filterConfigValueForLog(keyOriginal, valueStr), keyOriginal});
+                }
+
+                if (valueChangedCallback != null)
+                {
+                    valueChangedCallback.onValueChange(keyOriginal, lastValue, value);
+                }
             }
         }
 
@@ -297,6 +323,22 @@ public class TypedResolverImpl<T> implements ConfigResolver.UntypedResolver<T>
         }
 
         return value;
+    }
+
+    private T getValueByBeanConverter(BiFunction<Config, String, ?> beanConverter)
+    {
+        T value;
+        for (int tries = 1; tries < ConfigImpl.MAX_CONFIG_RETRIES; tries++)
+        {
+            long startReadLastChanged = config.getLastChanged();
+            value = (T) beanConverter.apply(config, keyOriginal + ".");
+            if (startReadLastChanged == config.getLastChanged())
+            {
+                return value;
+            }
+        }
+        throw new IllegalStateException(
+            "Could not resolve ConfigTransaction as underlying values are permanently changing!");
     }
 
     private T splitAndConvertListValue(String valueStr)

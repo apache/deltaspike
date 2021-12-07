@@ -42,7 +42,13 @@ import java.util.logging.Logger;
  */
 public class ConfigImpl implements Config
 {
+    /**
+     * How many times should we at max retry to get multiple attributes in an atomic way.
+     */
+    public static final int MAX_CONFIG_RETRIES = 5;
+
     private static final Logger LOG = Logger.getLogger(ConfigImpl.class.getName());
+
 
     private final ClassLoader classLoader;
 
@@ -135,7 +141,7 @@ public class ConfigImpl implements Config
         // we implement kind of optimistic Locking
         // Means we try multiple time to resolve all the given values
         // until the config didn't change inbetween.
-        for (int tries = 1; tries < 5; tries++)
+        for (int tries = 1; tries < MAX_CONFIG_RETRIES; tries++)
         {
             Map<ConfigResolver.TypedResolver<?>, Object> configValues = new HashMap<>();
             long startReadLastChanged = lastChanged;
