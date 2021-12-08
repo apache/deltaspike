@@ -33,7 +33,7 @@ import org.apache.deltaspike.core.api.config.Config;
  */
 public final class BeanConverterFactory
 {
-    private final ConcurrentMap<Class<?>, BiFunction<Config, String, ?>> BEAN_CONVERTER = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Class<?>, BiFunction<Config, String, ?>> beanConverters = new ConcurrentHashMap<>();
 
     /**
      * Determine the bean converter function to be used according to the rules defined in
@@ -41,7 +41,7 @@ public final class BeanConverterFactory
      */
     public <N> BiFunction<Config, String, N> detectConverter(Class<N> clazz)
     {
-        BiFunction<Config, String, N> beanConverter = (BiFunction<Config, String, N>) BEAN_CONVERTER.get(clazz);
+        BiFunction<Config, String, N> beanConverter = (BiFunction<Config, String, N>) beanConverters.get(clazz);
         if (beanConverter == null)
         {
             // class with public param ct
@@ -62,7 +62,7 @@ public final class BeanConverterFactory
                 beanConverter = new CtInjectionBeanConverter(clazz, paramConstructors.get(0));
             }
 
-            BEAN_CONVERTER.putIfAbsent(clazz, beanConverter);
+            beanConverters.putIfAbsent(clazz, beanConverter);
         }
 
         return beanConverter;

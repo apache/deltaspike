@@ -21,8 +21,9 @@ package org.apache.deltaspike.test.core.api.config;
 import java.util.function.BiFunction;
 
 import org.apache.deltaspike.core.api.config.Config;
-import org.apache.deltaspike.core.api.config.ConfigProperty;
 import org.apache.deltaspike.core.api.config.ConfigResolver;
+import org.apache.deltaspike.test.core.api.config.beans.ServerEndpointPojoWithCt;
+import org.apache.deltaspike.test.core.api.config.beans.ServerEndpointPojoWithFields;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -70,38 +71,4 @@ public class BeanConfigResolverTest
     }
 
 
-    public static class ServerEndpointPojoWithCt extends ServerEndpointPojoWithFields
-    {
-        public ServerEndpointPojoWithCt(@ConfigProperty(name = "host") String host,
-                                        @ConfigProperty(name = "port") Integer port,
-                                        @ConfigProperty(name = "path") String path)
-        {
-            this.host = host;
-            this.port = port;
-            this.path = path;
-        }
-
-    }
-
-    public static class ServerEndpointPojoWithFields
-    {
-        protected String host;
-        protected Integer port;
-        protected String path;
-
-        @Override
-        public String toString()
-        {
-            StringBuilder sb = new StringBuilder();
-            if (host == null)
-            {
-                return "unknown";
-            }
-            sb.append((port != null && port.equals(443)) ? "https://" : "http://");
-            sb.append(host);
-            sb.append(port == null ? ":80" : ":" + port);
-            sb.append(path != null ? path : "");
-            return sb.toString();
-        }
-    }
 }

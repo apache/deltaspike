@@ -18,12 +18,17 @@
  */
 package org.apache.deltaspike.test.core.api.config.injectable;
 
+import javax.inject.Inject;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
+import org.apache.deltaspike.core.api.config.ConfigProperty;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.test.category.SeCategory;
+import org.apache.deltaspike.test.core.api.config.beans.ServerEndpointPojoWithCt;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.apache.deltaspike.test.util.FileUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -32,6 +37,7 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -41,6 +47,7 @@ import org.apache.deltaspike.test.core.api.config.injectable.numberconfig.Number
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 
@@ -59,6 +66,7 @@ public class InjectableConfigPropertyTest
 
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "injectableConfigPropertyTest.jar")
                 .addPackage(SettingsBean.class.getPackage())
+                .addPackage(ServerEndpointPojoWithCt.class.getPackage())
                 .addPackage(NumberConfiguredBean.class.getPackage())
                 .addAsManifestResource(FileUtils.getFileForURL(fileUrl.toString()))
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
@@ -67,6 +75,30 @@ public class InjectableConfigPropertyTest
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
                 .addAsLibraries(testJar)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+    }
+
+    @ConfigProperty(name = "myapp.some.server", cacheFor = 2, cacheUnit = TimeUnit.SECONDS)
+    private @Inject Supplier<ServerEndpointPojoWithCt> someServer;
+
+    @ConfigProperty(name = "myapp.other.server")
+    private @Inject Supplier<ServerEndpointPojoWithCt> otherServer;
+
+
+    @Test
+    public void injectBeanViaProvider() {
+        assertNotNull(someServer);
+        final ServerEndpointPojoWithCt server1 = someServer.get();
+        assertNotNull(server1);
+        Assert.assertEquals("http://myserver:80/myapp/endpoint1", server1.toString());
+
+        // once again
+        final ServerEndpointPojoWithCt server2 = someServer.get();
+        assertNotNull(server2);
+        Assert.assertEquals("http://myserver:80/myapp/endpoint1", server2.toString());
+        Assert.assertTrue(server1 == server2);
+
+        assertNotNull(otherServer.get());
+        Assert.assertEquals("https://otherserver:443/otherapp/endpoint2", otherServer.get().toString());
     }
 
     @Test
@@ -80,8 +112,12 @@ public class InjectableConfigPropertyTest
 
         // also check the ones with defaultValue
         assertEquals("14", settingsBean.getProperty3Filled());
+
         assertEquals("myDefaultValue", settingsBean.getProperty3Defaulted());
+        assertEquals("myDefaultValue", settingsBean.getSupplierStringProperty3Defaulted().get());
+
         assertEquals(42, settingsBean.getProperty4Defaulted());
+        assertEquals(Integer.valueOf(42), settingsBean.getSupplierIntProperty4Defaulted().get());
 
         assertEquals("some setting for prodDB", settingsBean.getDbConfig());
     }
@@ -103,7 +139,7 @@ public class InjectableConfigPropertyTest
     }
 
     @Test
-    public void testNmberConfigInjection()
+    public void testNumberConfigInjection()
     {
         NumberConfiguredBean numberBean = BeanProvider.getContextualReference(NumberConfiguredBean.class, false);
         assertNull(numberBean.getPropertyNonexisting());

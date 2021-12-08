@@ -23,10 +23,13 @@ import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
 
+import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.spi.config.BaseConfigPropertyProducer;
 import org.apache.deltaspike.core.api.config.ConfigProperty;
 
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.function.Supplier;
 
 /**
  * This class contains producer methods for injecting
@@ -92,7 +95,44 @@ public class DefaultConfigPropertyProducer extends BaseConfigPropertyProducer
     public Double produceDoubleConfiguration(InjectionPoint injectionPoint)
     {
         return getPropertyWithException(injectionPoint, Double.class);
+    }
 
+    @Produces
+    @Dependent
+    @ConfigProperty(name = "ignore")
+    public <C> Supplier<C> produceConfigSupplier(InjectionPoint injectionPoint)
+    {
+        ConfigProperty configProperty = getAnnotation(injectionPoint, ConfigProperty.class);
+
+        if (configProperty == null)
+        {
+            throw new IllegalStateException("producer method called without @ConfigProperty being present!");
+        }
+        final Type injectionPointType = injectionPoint.getType();
+        Type ipClass = null;
+        if (injectionPointType instanceof ParameterizedType && ((ParameterizedType) injectionPointType).getActualTypeArguments().length == 1)
+        {
+            ipClass = ((ParameterizedType) injectionPointType).getActualTypeArguments()[0];
+        }
+        else
+        {
+            throw new IllegalStateException("Supplier for Configuration must be a Parameterized Type");
+        }
+
+        ConfigResolver.TypedResolver<C> resolver = asResolver(configProperty.name(),
+            configProperty.defaultValue(),
+            ipClass,
+            configProperty.converter(),
+            configProperty.parameterizedBy(),
+            configProperty.projectStageAware(),
+            configProperty.evaluateVariables());
+
+        if (configProperty.cacheFor() > 0)
+        {
+            resolver.cacheFor(configProperty.cacheUnit(), configProperty.cacheFor());
+        }
+
+        return () -> resolver.getValue();
     }
 
     private <T> T getPropertyWithException(InjectionPoint ip, Type ipCls)

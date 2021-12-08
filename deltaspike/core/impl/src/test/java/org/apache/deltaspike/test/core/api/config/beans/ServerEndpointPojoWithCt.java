@@ -16,18 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.impl.config;
+package org.apache.deltaspike.test.core.api.config.beans;
 
-import javax.management.openmbean.TabularData;
+import org.apache.deltaspike.core.api.config.ConfigProperty;
 
-public interface DeltaSpikeConfigInfoMBean
+/**
+ * @author <a href="mailto:struberg@apache.org">Mark Struberg</a>
+ */
+public class ServerEndpointPojoWithCt extends ServerEndpointPojoWithFields
 {
-    String[] getConfigSourcesAsString();
-
-    TabularData getConfigSources();
-
-    String[] getConfigEntriesAsString();
-
-    TabularData getConfigEntries();
+    public ServerEndpointPojoWithCt(@ConfigProperty(name = "host") String host,
+                                    @ConfigProperty(name = "port") Integer port,
+                                    @ConfigProperty(name = "path") String path)
+    {
+        this.host = host;
+        this.port = port;
+        this.path = path;
+    }
 
 }

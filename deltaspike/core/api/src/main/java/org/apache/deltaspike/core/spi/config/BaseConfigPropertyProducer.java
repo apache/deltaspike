@@ -23,6 +23,7 @@ import javax.enterprise.inject.spi.InjectionPoint;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
+import org.apache.deltaspike.core.api.config.Config;
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.config.ConfigProperty;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
@@ -176,12 +177,26 @@ public abstract class BaseConfigPropertyProducer
                                                           final String parameterizedBy,
                                                           final boolean projectStageAware, final boolean evaluate)
     {
-        final ConfigResolver.UntypedResolver<String> untypedResolver = ConfigResolver.resolve(key);
-        final ConfigResolver.TypedResolver<T> resolver =
-                (ConfigResolver.Converter.class == converterType ?
-                        untypedResolver.as(Class.class.cast(ipCls)) :
-                        untypedResolver.as(ipCls, BeanProvider.getContextualReference(converterType)))
-                        .withCurrentProjectStage(projectStageAware);
+        final Config config = ConfigResolver.getConfig();
+        final ConfigResolver.UntypedResolver<String> untypedResolver = config.resolve(key);
+
+        final ConfigResolver.TypedResolver<T> resolver;
+
+        if (ConfigResolver.Converter.class != converterType)
+        {
+            resolver = untypedResolver.as(ipCls, BeanProvider.getContextualReference(converterType));
+        }
+        else if (converterExists(config, ipCls))
+        {
+            resolver = untypedResolver.as(Class.class.cast(ipCls));
+        }
+        else
+        {
+            resolver = untypedResolver.asBean(Class.class.cast(ipCls));
+        }
+
+        resolver.withCurrentProjectStage(projectStageAware);
+
         if (!ConfigProperty.NULL.equals(stringDefault))
         {
             resolver.withStringDefault(stringDefault);
@@ -191,5 +206,21 @@ public abstract class BaseConfigPropertyProducer
             resolver.parameterizedBy(parameterizedBy);
         }
         return resolver.evaluateVariables(evaluate);
+    }
+
+    /**
+     * TODO we should make Converters for single attributes configurable.
+     * Until then the list is fixed.
+     * See TypedResolverImpl#convert
+     */
+    private boolean converterExists(Config config, Type ipCls)
+    {
+        return (String.class == ipCls ||
+                Integer.class == ipCls ||
+                Boolean.class == ipCls ||
+                Long.class == ipCls ||
+                Float.class == ipCls ||
+                Double.class == ipCls
+                );
     }
 }

@@ -27,6 +27,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 @ApplicationScoped
 public class SettingsBean
@@ -50,6 +52,14 @@ public class SettingsBean
     @Inject
     @ConfigProperty(name = "nonexistingProperty", defaultValue = "42")
     private Integer intProperty4Defaulted;
+
+    @Inject
+    @ConfigProperty(name = "nonexistingProperty", defaultValue = "myDefaultValue", cacheFor = 10, cacheUnit = TimeUnit.MINUTES)
+    private Supplier<String> supplierStringProperty3Defaulted;
+
+    @Inject
+    @ConfigProperty(name = "nonexistingProperty", defaultValue = "42")
+    private Supplier<Integer> supplierIntProperty4Defaulted;
 
     private Long inverseProperty2;
 
@@ -159,6 +169,15 @@ public class SettingsBean
         return intProperty4Defaulted;
     }
 
+    public Supplier<String> getSupplierStringProperty3Defaulted()
+    {
+        return supplierStringProperty3Defaulted;
+    }
+
+    public Supplier<Integer> getSupplierIntProperty4Defaulted()
+    {
+        return supplierIntProperty4Defaulted;
+    }
 
     public Boolean getBooleanPropertyNull()
     {
