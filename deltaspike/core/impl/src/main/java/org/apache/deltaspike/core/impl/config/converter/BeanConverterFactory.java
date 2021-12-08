@@ -29,22 +29,17 @@ import java.util.stream.Collectors;
 import org.apache.deltaspike.core.api.config.Config;
 
 /**
- * @author <a href="mailto:struberg@apache.org">Mark Struberg</a>
+ * A factory for bean converters.
  */
-public final class BeanConverter
+public final class BeanConverterFactory
 {
-    private static final ConcurrentMap<Class<?>, BiFunction<Config, String, ?>> BEAN_CONVERTER = new ConcurrentHashMap<>();
-
-    private BeanConverter()
-    {
-        // private utility class ct
-    }
+    private final ConcurrentMap<Class<?>, BiFunction<Config, String, ?>> BEAN_CONVERTER = new ConcurrentHashMap<>();
 
     /**
      * Determine the bean converter function to be used according to the rules defined in
      * {@link org.apache.deltaspike.core.api.config.ConfigResolver.UntypedResolver#asBean(Class)}
      */
-    public static <N> BiFunction<Config, String, N> detectConverter(Class<N> clazz)
+    public <N> BiFunction<Config, String, N> detectConverter(Class<N> clazz)
     {
         BiFunction<Config, String, N> beanConverter = (BiFunction<Config, String, N>) BEAN_CONVERTER.get(clazz);
         if (beanConverter == null)

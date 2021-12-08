@@ -21,6 +21,7 @@ package org.apache.deltaspike.core.impl.config;
 import org.apache.deltaspike.core.api.config.Config;
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.config.ConfigSnapshot;
+import org.apache.deltaspike.core.impl.config.converter.BeanConverterFactory;
 import org.apache.deltaspike.core.spi.config.ConfigFilter;
 import org.apache.deltaspike.core.spi.config.ConfigSource;
 import org.apache.deltaspike.core.spi.config.ConfigSourceProvider;
@@ -58,9 +59,12 @@ public class ConfigImpl implements Config
     // volatile to a.) make the read/write behave atomic and b.) guarantee multi-thread safety
     private volatile long lastChanged = 0;
 
+    private BeanConverterFactory beanConverter;
+
     public ConfigImpl(ClassLoader classLoader)
     {
         this.classLoader = classLoader;
+        this.beanConverter = new BeanConverterFactory();
     }
 
     /**
@@ -133,6 +137,11 @@ public class ConfigImpl implements Config
     public ConfigSource[] getConfigSources()
     {
         return configSources;
+    }
+
+    public BeanConverterFactory getBeanConverter()
+    {
+        return beanConverter;
     }
 
     @Override

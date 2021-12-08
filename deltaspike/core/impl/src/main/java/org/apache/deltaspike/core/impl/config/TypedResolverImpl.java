@@ -22,7 +22,6 @@ import org.apache.deltaspike.core.api.config.Config;
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.config.ConfigSnapshot;
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
-import org.apache.deltaspike.core.impl.config.converter.BeanConverter;
 import org.apache.deltaspike.core.spi.config.ConfigSource;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.ExceptionUtils;
@@ -132,7 +131,7 @@ public class TypedResolverImpl<T> implements ConfigResolver.UntypedResolver<T>
     @Override
     public <N> ConfigResolver.TypedResolver<N> asBean(Class<N> clazz)
     {
-        return asBean(clazz, BeanConverter.detectConverter(clazz));
+        return asBean(clazz, config.getBeanConverter().detectConverter(clazz));
     }
 
     @Override
