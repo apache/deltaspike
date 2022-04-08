@@ -936,14 +936,14 @@
                             <goal>run</goal>
                         </goals>
                         <configuration>
-                            <tasks>
+                            <target>
                                 <copy todir="${project.build.directory}/apidocs/META-INF">
                                     <fileset dir="${basedir}">
                                         <include name="LICENSE.txt" />
                                         <include name="NOTICE.txt" />
                                     </fileset>
                                 </copy>
-                            </tasks>
+                            </target>
                         </configuration>
                     </execution>
                     <execution>
@@ -953,12 +953,12 @@
                             <goal>run</goal>
                         </goals>
                         <configuration>
-                            <tasks>
+                            <target>
                                 <!-- Copy javadoc to another directory, to keep javadoc of previous versions on site -->
                                 <copy todir="${project.build.directory}/site/apidocs-${project.version}" failonerror="false">
                                     <fileset dir="${project.build.directory}/site/apidocs" />
                                 </copy>
-                            </tasks>
+                            </target>
                         </configuration>
                     </execution>
                 </executions>
