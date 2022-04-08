@@ -18,6 +18,8 @@
  */
 package org.apache.deltaspike.core.impl.monitoring;
 
+import org.apache.deltaspike.core.api.config.base.CoreBaseConfig;
+import org.apache.deltaspike.core.api.exclude.Exclude;
 import org.apache.deltaspike.core.api.monitoring.MonitorResultEvent;
 
 import javax.annotation.PostConstruct;
@@ -36,8 +38,12 @@ import java.util.logging.Logger;
  * and log them accordingly
  */
 @ApplicationScoped
+@Exclude(onExpression = InvocationResultLogger.DISABLED_EXPRESSION)
 public class InvocationResultLogger
 {
+
+    static final String DISABLED_EXPRESSION = CoreBaseConfig.InterDynCustomization.CONFIG_INVOCATIONRESULTLOGGER_ENABLED + "==false";
+
     private static final Logger logger = Logger.getLogger(InvocationResultLogger.class.getName());
 
     private static final int DEFAULT_MAX_LOG_LINES = 8;

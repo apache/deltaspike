@@ -145,5 +145,9 @@ public interface CoreBaseConfig extends DeltaSpikeBaseConfig
                         .withCurrentProjectStage(true)
                         .withDefault(Boolean.FALSE);
 
+        /**
+         * Set this configuration to 'false' (case sensitive string) to disable the built-in InvocationResultLogger
+         */
+        String CONFIG_INVOCATIONRESULTLOGGER_ENABLED = "deltaspike.invocationresultlogger.enabled";
     }
 }

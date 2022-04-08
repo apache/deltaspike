@@ -75,8 +75,9 @@ public class ExcludeWarFileTest extends ExcludeTest
     {
         byte[] configContent = Files.readAllBytes(FileUtils.getFileForURL(ExcludeWarFileTest.class.getClassLoader()
                 .getResource("META-INF/apache-deltaspike.properties").toString()).toPath());
-        return new String(configContent, StandardCharsets.UTF_8) +
-            "\norg.apache.deltaspike.ProjectStage = Production";
+        return (new String(configContent, StandardCharsets.UTF_8) +
+            "\norg.apache.deltaspike.ProjectStage = Production")
+                .replace("deltaspike.interdyn.enabled=true", "deltaspike.interdyn.enabled=false");
     }
 
     @AfterClass

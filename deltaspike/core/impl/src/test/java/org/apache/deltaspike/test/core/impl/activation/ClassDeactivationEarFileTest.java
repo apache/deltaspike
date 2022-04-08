@@ -22,6 +22,7 @@ import org.apache.deltaspike.test.category.EnterpriseArchiveProfileCategory;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -30,6 +31,12 @@ import org.junit.runner.RunWith;
 @Category(EnterpriseArchiveProfileCategory.class)
 public class ClassDeactivationEarFileTest extends ClassDeactivationTest
 {
+    // fixes Wildfly9 CNFE
+    private final static String CONFIG =
+            "# InterDynTest\n" +
+            "deltaspike_ordinal=110\n" +
+            "deltaspike.interdyn.enabled=false\n";
+
     @Deployment
     public static EnterpriseArchive deployEar()
     {
@@ -38,6 +45,7 @@ public class ClassDeactivationEarFileTest extends ClassDeactivationTest
         String archiveName = simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1);
 
         return ShrinkWrap.create(EnterpriseArchive.class, archiveName + ".ear")
-                .addAsModule(ClassDeactivationWarFileTest.deploy());
+                .addAsModule(ClassDeactivationWarFileTest.deploy()
+                                .addAsManifestResource(new StringAsset(CONFIG), "apache-deltaspike.properties"));
     }
 }

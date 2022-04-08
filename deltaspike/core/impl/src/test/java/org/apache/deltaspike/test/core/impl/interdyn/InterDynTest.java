@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.test.core.impl.interdyn;
 
+import org.apache.deltaspike.core.impl.monitoring.InvocationMonitorInterceptor;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -33,18 +34,27 @@ import javax.inject.Inject;
 
 @RunWith(Arquillian.class)
 public class InterDynTest {
+    /**
+     * We need to configure this in META-INF/apache-deltaspike.properties in the test classpath
+     * for in-process Arquillian containers like OWB and Weld,
+     * and additionally via @Deployment for container based Arquillians
+     */
     private final static String CONFIG =
             "# InterDynTest\n" +
             "deltaspike.interdyn.enabled=true\n" +
             "deltaspike.interdyn.rule.1.match=org\\\\.apache\\\\.deltaspike\\\\.test\\\\.core\\\\.impl\\\\.interdyn\\\\.Some.*Service\n" +
             "deltaspike.interdyn.rule.1.annotation=org.apache.deltaspike.core.api.monitoring.InvocationMonitored\n";
 
+    private final static String BEANS_XML =
+            "<beans><interceptors><class>" +
+            InvocationMonitorInterceptor.class.getName() +
+            "</class></interceptors></beans>";
     @Deployment
     public static WebArchive deploy()
     {
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "InterDynTest.jar")
                 .addPackage(SomeTestService.class.getPackage().getName())
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
+                .addAsManifestResource(new StringAsset(BEANS_XML), "beans.xml")
                 .addAsManifestResource(new StringAsset(CONFIG), "apache-deltaspike.properties");
 
         return ShrinkWrap.create(WebArchive.class, "InterDynTest.war")
