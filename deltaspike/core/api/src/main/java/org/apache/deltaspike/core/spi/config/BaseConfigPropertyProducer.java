@@ -220,7 +220,8 @@ public abstract class BaseConfigPropertyProducer
                 Boolean.class == ipCls ||
                 Long.class == ipCls ||
                 Float.class == ipCls ||
-                Double.class == ipCls
+                Double.class == ipCls ||
+                Class.class == ipCls
                 );
     }
 }
