@@ -841,8 +841,8 @@
                 </dependency>
                 <dependency>
                     <groupId>org.jboss.arquillian.container</groupId>
-                    <artifactId>arquillian-weld-ee-embedded-1.1</artifactId>
-                    <version>${arquillian-weld.version}</version>
+                    <artifactId>arquillian-weld-embedded</artifactId>
+                    <version>${arquillian-weld3.version}</version>
                     <scope>test</scope>
                 </dependency>
             </dependencies>
