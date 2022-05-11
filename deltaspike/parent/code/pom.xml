@@ -164,10 +164,36 @@
                             <shadedArtifactAttached>true</shadedArtifactAttached>
                             <shadedClassifierName>jakarta</shadedClassifierName>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+                            </transformers>
                             <relocations>
                                 <relocation>
-                                    <pattern>javax</pattern>
-                                    <shadedPattern>jakarta</shadedPattern>
+                                    <pattern>javax.inject</pattern>
+                                    <shadedPattern>jakarta.inject</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>javax.interceptor</pattern>
+                                    <shadedPattern>jakarta.interceptor</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>javax.enterprise</pattern>
+                                    <shadedPattern>jakarta.enterprise</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>javax.resource</pattern>
+                                    <shadedPattern>jakarta.resource</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>javax.transaction</pattern>
+                                    <shadedPattern>jakarta.transaction</shadedPattern>
+                                    <excludes>
+                                        <exclude>javax.transaction.xa.**</exclude>
+                                    </excludes>
+                                </relocation>
+                                <relocation>
+                                    <pattern>javax.validation</pattern>
+                                    <shadedPattern>jakarta.validation</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>
