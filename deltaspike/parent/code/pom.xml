@@ -195,6 +195,10 @@
                                     <pattern>javax.validation</pattern>
                                     <shadedPattern>jakarta.validation</shadedPattern>
                                 </relocation>
+                                <relocation>
+                                    <pattern>javax.persistence</pattern>
+                                    <shadedPattern>jakarta.persistence</shadedPattern>
+                                </relocation>
                             </relocations>
                         </configuration>
                     </execution>
