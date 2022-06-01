@@ -199,6 +199,10 @@
                                     <pattern>javax.persistence</pattern>
                                     <shadedPattern>jakarta.persistence</shadedPattern>
                                 </relocation>
+                                <relocation>
+                                    <pattern>javax.faces</pattern>
+                                    <shadedPattern>jakarta.faces</shadedPattern>
+                                </relocation>
                             </relocations>
                         </configuration>
                     </execution>
