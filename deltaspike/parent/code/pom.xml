@@ -203,6 +203,10 @@
                                     <pattern>javax.faces</pattern>
                                     <shadedPattern>jakarta.faces</shadedPattern>
                                 </relocation>
+                                <relocation>
+                                    <pattern>javax.decorator</pattern>
+                                    <shadedPattern>jakarta.decorator</shadedPattern>
+                                </relocation>
                             </relocations>
                         </configuration>
                     </execution>
