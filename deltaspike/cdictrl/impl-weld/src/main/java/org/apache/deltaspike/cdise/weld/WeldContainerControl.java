@@ -32,6 +32,7 @@ import javax.enterprise.inject.spi.BeanManager;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.enterprise.context.ConversationScoped;
 import javax.enterprise.context.RequestScoped;
@@ -75,9 +76,9 @@ public class WeldContainerControl implements CdiContainer
     @Override
     public void boot(Map<?, ?> properties)
     {
-        // no configuration yet. Perform default boot
-
-        boot();
+        weld = new Weld();
+        weld.setProperties(convertProperties(properties));
+        weldContainer = weld.initialize();
     }
 
     @Override
@@ -146,4 +147,13 @@ public class WeldContainerControl implements CdiContainer
     {
         return "WeldContainerControl [Weld " + Formats.version(Container.class.getPackage()) + ']';
     }
+    
+    private static Map<String, Object> convertProperties(final Map<?, ?> map) {
+        return map.entrySet().stream()
+                .collect(Collectors.toMap(
+                        entry -> String.valueOf(entry.getKey()),
+                        entry -> String.valueOf(entry.getValue())
+                ));
+    }
+
 }
