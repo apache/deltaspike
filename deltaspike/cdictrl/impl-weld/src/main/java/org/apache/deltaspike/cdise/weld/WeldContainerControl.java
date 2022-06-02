@@ -152,7 +152,7 @@ public class WeldContainerControl implements CdiContainer
         return map.entrySet().stream()
                 .collect(Collectors.toMap(
                         entry -> String.valueOf(entry.getKey()),
-                        entry -> String.valueOf(entry.getValue())
+                        Map.Entry::getValue
                 ));
     }
 
