@@ -237,7 +237,7 @@
             <properties>
                 <!-- Need newer implementations to be able to run on Java9+ -->
                 <bval.artifactId>bval-jsr</bval.artifactId>
-                <validation.artifactId>geronimo-validation_1.1_spec</validation.artifactId>
+                <validation.artifactId>geronimo-validation_2.0_spec</validation.artifactId>
                 <hibernate.validator.version>6.0.17.Final</hibernate.validator.version>
             </properties>
         </profile>
