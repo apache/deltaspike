@@ -1045,7 +1045,6 @@
             </plugin>
 
             <plugin>
-                <!-- Set compile source at 1.5, since the target JSF impl is 1.2 -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven.compiler.plugin.version}</version>
