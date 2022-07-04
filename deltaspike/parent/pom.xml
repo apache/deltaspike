@@ -90,6 +90,7 @@
         <geronimo-el-2.2-spec.version>1.0.3</geronimo-el-2.2-spec.version>
         <geronimo-validation-1.0-spec.version>1.1</geronimo-validation-1.0-spec.version>
         <geronimo-validation-1.1-spec.version>1.0</geronimo-validation-1.1-spec.version>
+        <geronimo-validation-2.0-spec.version>1.1</geronimo-validation-2.0-spec.version>
         <geronimo-jpa-2.0-spec.version>1.1</geronimo-jpa-2.0-spec.version>
         <geronimo-jta-1.1-spec.version>1.1.1</geronimo-jta-1.1-spec.version>
 
@@ -528,6 +529,13 @@
                 <groupId>org.apache.geronimo.specs</groupId>
                 <artifactId>geronimo-validation_1.1_spec</artifactId>
                 <version>${geronimo-validation-1.1-spec.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.geronimo.specs</groupId>
+                <artifactId>geronimo-validation_2.0_spec</artifactId>
+                <version>${geronimo-validation-2.0-spec.version}</version>
                 <scope>provided</scope>
             </dependency>
 
