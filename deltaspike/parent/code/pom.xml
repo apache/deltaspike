@@ -260,6 +260,13 @@
                 <validation.artifactId>geronimo-validation_2.0_spec</validation.artifactId>
                 <hibernate.validator.version>6.0.17.Final</hibernate.validator.version>
             </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.glassfish</groupId>
+                    <artifactId>jakarta.el</artifactId>
+                    <version>3.0.4</version>
+                </dependency>
+            </dependencies>
         </profile>
         
         <profile>
