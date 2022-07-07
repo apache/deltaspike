@@ -32,7 +32,7 @@
     <name>Apache DeltaSpike CDI Servlet-ContainerControl</name>
 
     <properties>
-        <jetty.version>8.1.9.v20130131</jetty.version>
+        <jetty.version>10.0.10</jetty.version>
         <version.org.apache.tomcat>7.0.54</version.org.apache.tomcat>
         <tomcat.home>${project.build.directory}/apache-tomcat-${version.org.apache.tomcat}</tomcat.home>
         <httpclient.components.version>4.3.6</httpclient.components.version>
