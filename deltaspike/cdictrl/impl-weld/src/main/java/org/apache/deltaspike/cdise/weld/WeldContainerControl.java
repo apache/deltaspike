@@ -112,7 +112,7 @@ public class WeldContainerControl implements CdiContainer
         }
         else
         {
-            throw new IllegalStateException("No setProperties method available on this version of Weld!");
+            LOG.warning("No setProperties method available on this version of Weld - ignoring passed in properties!");
         }
     }
 
