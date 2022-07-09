@@ -31,9 +31,10 @@ import java.util.jar.Attributes;
 import java.net.URL;
 
 /**
- * Util methods for classes, {@link ClassLoader} and {@link Manifest} handling
+ * Util methods for classes, {@link ClassLoader} and {@link Manifest} handling.
+ *
+ * Abstract to not get picked up as CDI bean on old containers.
  */
-//X TODO quite a few of this methods needs merging with Seam Solder and a few can get dropped at all.
 @Typed()
 public abstract class ClassUtils
 {
@@ -398,7 +399,7 @@ public abstract class ClassUtils
         String classLocation = targetClass.getResource(targetClass.getSimpleName() + ".class").toString();
         return classLocation.substring(0, classLocation.indexOf(classFilePath) - 1) + manifestFilePath;
     }
-    
+
     /**
      * Checks if the given class contains a method with the same signature.
      * 
@@ -424,6 +425,27 @@ public abstract class ClassUtils
         {
             String name = sourceMethod.getName();
             return clazz != null ? clazz.getMethod(name, sourceMethod.getParameterTypes()) : null;
+        }
+        catch (NoSuchMethodException e)
+        {
+            return null;
+        }
+    }
+
+    /**
+     * Extract a method with the given name and parameterTypes.
+     * Return {@code null} if no such visible method exists on the given class.
+     *
+     * @param clazz
+     * @param methodName
+     * @param parameterTypes
+     * @return
+     */
+    public static Method extractMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes)
+    {
+        try
+        {
+            return clazz != null ? clazz.getMethod(methodName, parameterTypes) : null;
         }
         catch (NoSuchMethodException e)
         {

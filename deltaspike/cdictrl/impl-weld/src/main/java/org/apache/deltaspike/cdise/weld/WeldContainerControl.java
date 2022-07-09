@@ -29,6 +29,8 @@ import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -77,9 +79,64 @@ public class WeldContainerControl implements CdiContainer
     public void boot(Map<?, ?> properties)
     {
         weld = new Weld();
-        weld.setProperties(convertProperties(properties));
+
+        // setProperties only exists from Weld-2.x onwards
+        setProperties(weld, convertProperties(properties));
+
         weldContainer = weld.initialize();
     }
+
+    private void setProperties(Weld weld, Map<String, Object> properties)
+    {
+        if (properties == null || properties.isEmpty())
+        {
+            return;
+        }
+
+        Method setPropertiesMethod = extractMethod(Weld.class, "setProperties", Map.class);
+        if (setPropertiesMethod != null)
+        {
+            if (!setPropertiesMethod.isAccessible())
+            {
+                setPropertiesMethod.setAccessible(true);
+            }
+
+            try
+            {
+                setPropertiesMethod.invoke(weld, properties);
+            }
+            catch (IllegalAccessException | InvocationTargetException e)
+            {
+                throw new RuntimeException(e);
+            }
+        }
+        else
+        {
+            throw new IllegalStateException("No setProperties method available on this version of Weld!");
+        }
+    }
+
+    /**
+     * Extract a method with the given name and parameterTypes.
+     * Return {@code null} if no such visible method exists on the given class.
+     *
+     * @param clazz
+     * @param methodName
+     * @param parameterTypes
+     * @return
+     */
+    private static Method extractMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes)
+    {
+        try
+        {
+            return clazz != null ? clazz.getMethod(methodName, parameterTypes) : null;
+        }
+        catch (NoSuchMethodException e)
+        {
+            return null;
+        }
+    }
+
 
     @Override
     public synchronized  void shutdown()
@@ -148,7 +205,8 @@ public class WeldContainerControl implements CdiContainer
         return "WeldContainerControl [Weld " + Formats.version(Container.class.getPackage()) + ']';
     }
     
-    private static Map<String, Object> convertProperties(final Map<?, ?> map) {
+    private static Map<String, Object> convertProperties(final Map<?, ?> map)
+    {
         return map.entrySet().stream()
                 .collect(Collectors.toMap(
                         entry -> String.valueOf(entry.getKey()),
