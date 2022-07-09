@@ -1513,6 +1513,7 @@
                             there are currently issues with arquillian. if a test isn't restricted to an environment,
                             no category is used for the test-class. -->
                             <excludedGroups>
+                                org.apache.deltaspike.test.category.EnterpriseArchiveProfileCategory,
                                 org.apache.deltaspike.test.category.FullProfileCategory,
                                 org.apache.deltaspike.test.category.SeCategory
                             </excludedGroups>
