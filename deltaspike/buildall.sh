@@ -43,6 +43,7 @@ mvn clean install -Ptomee7-build-managed -Dtomee.version=7.1.4 -Dopenejb.version
 
 mvn clean install -POWB2 | tee mvn-owb2_0_5.log
 mvn clean install -POWB2 | tee mvn-owb2_0_5.log
+mvn clean install -PWeld3 -Dweld.version=3.1.9.Final | tee mvn-weld3_1_9.log
 
 
 # and now for the result check
