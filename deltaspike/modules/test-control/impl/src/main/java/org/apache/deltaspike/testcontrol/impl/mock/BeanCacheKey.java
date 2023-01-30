@@ -149,7 +149,7 @@ public class BeanCacheKey
     }
 
     /**
-     * Calculate the hashCode() of a qualifier, which ignores {@link javax.enterprise.util.Nonbinding} members.
+     * Calculate the hashCode() of a qualifier, which ignores {@link jakarta.enterprise.util.Nonbinding} members.
      */
     private int getQualifierHashCode(Annotation a)
     {
@@ -157,7 +157,7 @@ public class BeanCacheKey
     }
 
     /**
-     * Implements the equals() method for qualifiers, which ignores {@link javax.enterprise.util.Nonbinding} members.
+     * Implements the equals() method for qualifiers, which ignores {@link jakarta.enterprise.util.Nonbinding} members.
      */
     private boolean qualifierEquals(Annotation qualifier1, Annotation qualifier2)
     {

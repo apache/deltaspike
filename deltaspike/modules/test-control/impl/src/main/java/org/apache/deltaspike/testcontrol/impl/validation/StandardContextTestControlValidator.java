@@ -72,7 +72,7 @@ public class StandardContextTestControlValidator implements TestAware, TestContr
 
         for (Class<? extends Annotation> scopeClass : scopeClasses)
         {
-            if (!scopeClass.getName().startsWith("javax.enterprise.context."))
+            if (!scopeClass.getName().startsWith("jakarta.enterprise.context."))
             {
                 throw new IllegalStateException("Please remove " + scopeClass.getName() + " at " + declaringClass +
                         (testMethod != null ? "#" + testMethod.getName() : "") +

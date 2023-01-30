@@ -6,7 +6,7 @@ DeltaSpike provides an Service Provider Interface (SPI) to enable you to extend 
 
 == Deactivatable
 
-This mechanism is only used for artifacts *like* implementations of (`javax.enterprise.inject.spi.Extension`) which
+This mechanism is only used for artifacts *like* implementations of (`jakarta.enterprise.inject.spi.Extension`) which
 *can not* be deactivated with standard CDI mechanisms.
 
 This interface is just a marker interface which is implemented by all pre-configured DeltaSpike artifacts which can be deactivated manually (e.g. to improve the performance if a part isis not needed, to provide a custom implementation if the default implementation isis not pluggable by default or to bypass an implementation which causes an issue (in this case please also *contact us* and we will fix it)).

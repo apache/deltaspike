@@ -40,17 +40,15 @@ public class TestConfigSourceProvider implements ConfigSourceProvider
     private static class TestConfigSource1 implements ConfigSource
     {
         @Override
-        public int getOrdinal()
-        {
-            return 1;
-        }
-
-        @Override
         public String getPropertyValue(String key)
         {
             if ("test".equals(key))
             {
                 return "test1";
+            }
+            if (ConfigSource.DELTASPIKE_ORDINAL.equals(key))
+            {
+                return "1";
             }
             return null;
         }
@@ -69,10 +67,6 @@ public class TestConfigSourceProvider implements ConfigSourceProvider
             return TestConfigSourceProvider.class.getName();
         }
 
-		@Override
-		public boolean isScannable() {
-			return true;
-		}
     }
 
     private static class TestConfigSource2 implements ConfigSource

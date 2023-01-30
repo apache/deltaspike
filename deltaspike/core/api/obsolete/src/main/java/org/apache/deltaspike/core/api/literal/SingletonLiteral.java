@@ -23,7 +23,7 @@ import jakarta.enterprise.util.AnnotationLiteral;
 import jakarta.inject.Singleton;
 
 /**
- * Literal for {@link javax.inject.Singleton}
+ * Literal for {@link jakarta.inject.Singleton}
  */
 public class SingletonLiteral extends AnnotationLiteral<Singleton> implements Singleton
 {

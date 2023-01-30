@@ -28,7 +28,7 @@ package org.apache.deltaspike.core.api.config;
  * <p>
  * DeltaSpike will automatically pick up all the implementations which are
  * inside a Bean Archive (a JAR or ClassPath entry with a META-INF/beans.xml file) during the
- * {@link javax.enterprise.inject.spi.ProcessAnnotatedType} phase and create a new instance via reflection. Thus the
+ * {@link jakarta.enterprise.inject.spi.ProcessAnnotatedType} phase and create a new instance via reflection. Thus the
  * implementations will need a non-private default constructor. There is <b>no</b> CDI injection being performed in
  * those instances! The scope of the implementations will also be ignored as they will not get picked up as CDI
  * beans.</p>

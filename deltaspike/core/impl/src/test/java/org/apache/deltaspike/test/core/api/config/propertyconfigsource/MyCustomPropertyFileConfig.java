@@ -22,7 +22,7 @@ import org.apache.deltaspike.core.api.config.PropertyFileConfig;
 
 /**
  * Custom PropertyFileConfig which gets picked up during
- * {@link javax.enterprise.inject.spi.ProcessAnnotatedType}.
+ * {@link jakarta.enterprise.inject.spi.ProcessAnnotatedType}.
  * The values will be available <em>after</em> the container got booted!
  */
 public class MyCustomPropertyFileConfig implements PropertyFileConfig

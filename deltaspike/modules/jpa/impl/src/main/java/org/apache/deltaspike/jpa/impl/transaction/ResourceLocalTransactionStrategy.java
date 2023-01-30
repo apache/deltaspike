@@ -48,7 +48,7 @@ import org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy;
  * It supports nested Transactions with the MANDATORY behaviour.</p>
  *
  * <p>The outermost &#064;Transactional interceptor for the given
- * {@link javax.inject.Qualifier} will open an {@link javax.persistence.EntityTransaction}
+ * {@link jakarta.inject.Qualifier} will open an {@link javax.persistence.EntityTransaction}
  * and the outermost &#064;Transactional interceptor for <b>all</b>
  * EntityManagers will flush and subsequently close all open transactions.</p>
  *

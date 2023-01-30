@@ -45,7 +45,7 @@ import org.apache.deltaspike.core.api.config.base.CoreBaseConfig;
  * You can do that by settting {@code "deltaspike.parent.extension.enabled"} to &quote;true&quote;
  *
  * All your Extension has to do is to register itself in
- * {@link javax.enterprise.inject.spi.BeforeBeanDiscovery}.
+ * {@link jakarta.enterprise.inject.spi.BeforeBeanDiscovery}.
  * Later at boot time the Extension can lookup it's parent Extension instance and
  * e.g. check which classes got scanned in the parent ClassLoader.
  *

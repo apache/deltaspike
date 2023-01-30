@@ -49,7 +49,7 @@ public @interface Transactional
      * for the injected {@link javax.persistence.EntityManager}s.
      * Default-value is {@link Any} which means any injected {@link javax.persistence.EntityManager}s
      * should be detected automatically and transactions for all injected {@link javax.persistence.EntityManager}s
-     * will be started. Or the {@link javax.enterprise.inject.Default} {@link javax.persistence.EntityManager}
+     * will be started. Or the {@link jakarta.enterprise.inject.Default} {@link javax.persistence.EntityManager}
      * will be used, if no qualifier and no {@link javax.persistence.EntityManager} was found (in the annotated class)
      * (see DELTASPIKE-320).
      *

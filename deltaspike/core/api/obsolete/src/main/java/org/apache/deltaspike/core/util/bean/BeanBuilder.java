@@ -48,7 +48,7 @@ import java.util.Set;
 /**
  * <p>
  * A builder class for creating immutable beans. The builder can create
- * {@link javax.enterprise.inject.spi.PassivationCapable} beans.
+ * {@link jakarta.enterprise.inject.spi.PassivationCapable} beans.
  * </p>
  * <p/>
  * <p>

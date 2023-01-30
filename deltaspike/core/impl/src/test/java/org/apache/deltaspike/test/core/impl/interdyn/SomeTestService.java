@@ -21,6 +21,7 @@ package org.apache.deltaspike.test.core.impl.interdyn;
 import org.apache.deltaspike.core.api.monitoring.MonitorResultEvent;
 import org.junit.Assert;
 
+import jakarta.annotation.PreDestroy;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
 
@@ -29,6 +30,7 @@ public class SomeTestService
 {
 
     private boolean check = false;
+    private MonitorResultEvent mre;
 
     public String pingA()
     {
@@ -52,12 +54,24 @@ public class SomeTestService
         this.check = true;
     }
 
+    public MonitorResultEvent getMonitorResultEvent()
+    {
+        return mre;
+    }
+
     public void observer(@Observes MonitorResultEvent mre)
     {
+        this.mre = mre;
         if (check)
         {
             Assert.assertTrue(mre.getClassInvocations().keySet().contains(SomeTestService.class.getName()));
             check = false;
         }
+    }
+
+    @PreDestroy
+    public void verifyMonitorResultEvent()
+    {
+        Assert.assertNotNull(mre);
     }
 }

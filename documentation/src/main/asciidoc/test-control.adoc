@@ -419,7 +419,7 @@ public class MockedQualifiedBeanTest
 }
 -------------------------------------------------------------
 
-In some cases it is necessary to use `@javax.enterprise.inject.Typed`.
+In some cases it is necessary to use `@jakarta.enterprise.inject.Typed`.
 Mocking such typed beans can result in an
 `AmbiguousResolutionException`. Therefore it is necessary to exclude the
 mocked implementation via `@Exclude` or `@Typed()` (or a parametrized

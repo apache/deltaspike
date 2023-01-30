@@ -23,7 +23,7 @@ import jakarta.enterprise.inject.Alternative;
 import jakarta.enterprise.util.AnnotationLiteral;
 
 /**
- * Literal for {@link javax.enterprise.inject.Alternative}.
+ * Literal for {@link jakarta.enterprise.inject.Alternative}.
  */
 public class AlternativeLiteral extends AnnotationLiteral<Alternative> implements Alternative
 {

@@ -37,12 +37,12 @@ import org.apache.deltaspike.jsf.impl.util.JsfUtils;
  * <p>2 steps are necessary:</p>
  * <ol>
  * <li>We have to manually add the &#064;ViewScoped annotation
- * as a passivating {@link javax.enterprise.context.NormalScope},
+ * as a passivating {@link jakarta.enterprise.context.NormalScope},
  * since this annotation is neither a JSR-330 annotation
  * nor a JSR-299 annotation and therefor doesn't get picked up automatically. This has to be
  * before the bean scanning starts.</li>
  * <li>After the bean scanning succeeded, we register the
- *  {@link javax.enterprise.context.spi.Context} for the
+ *  {@link jakarta.enterprise.context.spi.Context} for the
  * ViewScoped. The {@link ViewScopedContext} is responsible for actually storing all our
  * &#064;ViewScoped contextual instances in the JSF ViewMap.</li>
  * </ol>

@@ -31,7 +31,7 @@ import java.util.Set;
 
 /**
  * Utility class for working with JDK Reflection and also CDI's
- * {@link javax.enterprise.inject.spi.Annotated} metadata.
+ * {@link jakarta.enterprise.inject.spi.Annotated} metadata.
  */
 public class Reflections
 {

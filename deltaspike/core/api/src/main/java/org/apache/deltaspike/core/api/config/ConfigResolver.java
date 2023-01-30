@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BiFunction;
 
 import jakarta.enterprise.inject.Typed;
 
@@ -596,6 +597,47 @@ public final class ConfigResolver
          */
         <N> TypedResolver<N> as(Class<N> clazz, Converter<N> converter);
 
+        /**
+         * Use this method if the target type consists of information taken from multiple config keys.
+         * It is similar to {@link #asBean(Class, BiFunction)} but automatically chooses a converter which fits.
+         * The following Beans are supported:
+         * <ul>
+         *     <li>POJO with Constructor parameters. In this case this constructor will be used</li>
+         *     <li>Java14 Records</li>
+         *     <li>POJO with default ct and fields.
+         *          Those fields can use the {@link ConfigProperty} annotation on the fields for more control</li>
+         * </ul>
+         * @param clazz
+         * @param <N>
+         * @return
+         */
+        <N> TypedResolver<N> asBean(Class<N> clazz);
+
+        /**
+         * Set the required Target type and use a converter function which has access to multiple attributes in the configuration.
+         * Use this method if the target type consists of information taken from multiple config keys.
+         * If you consider the following type:
+         * <pre>
+         *  public record ServerEndpoint(String host, Integer port, String path)
+         *
+         *  config.properties:
+         *  myapp.some.server.host=myserver
+         *  myapp.some.server.port=80
+         *  myapp.some.server.path=/myapp/endpoint1
+         *  myapp.other.server.host=otherserver
+         *  myapp.other.server.port=443
+         *  myapp.other.server.path=/otherapp/endpoint2
+         * </pre>
+         *
+         * This function will have access to all the underlying properties by using the given Config.
+         * When resolving the target type the system makes sure that access to all requested properties is atomic.
+         *
+         * @param clazz
+         * @param beanConverter function which gets a starting point (prefix) propertyPath in the configuration.
+         *                      In the examples above it is e.g. "myapp.some.server." and "myapp.other.server."
+         * @return This builder as a TypedResolver
+         */
+        <N> TypedResolver<N> asBean(Class<N> clazz, BiFunction<Config /*this config*/, String /* propertyPath */, N> beanConverter);
     }
 
     /**

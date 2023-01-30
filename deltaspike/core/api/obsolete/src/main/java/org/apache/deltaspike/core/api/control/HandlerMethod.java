@@ -28,8 +28,8 @@ import java.util.Set;
 
 /**
  * Metadata interface for an exception handler method. It is the responsibility of the
- * implementation to support {@link javax.enterprise.inject.spi.InjectionPoint}s and to
- * validate those {@link javax.enterprise.inject.spi.InjectionPoint}s.
+ * implementation to support {@link jakarta.enterprise.inject.spi.InjectionPoint}s and to
+ * validate those {@link jakarta.enterprise.inject.spi.InjectionPoint}s.
  *
  * @param <T> Exception for which this handler is responsible
  */

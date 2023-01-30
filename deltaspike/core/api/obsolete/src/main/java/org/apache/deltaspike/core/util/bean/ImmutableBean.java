@@ -41,9 +41,9 @@ public class ImmutableBean<T> extends BaseImmutableBean<T>
      * @param beanClass           The Bean class, may not be null
      * @param name                The bean name
      * @param qualifiers          The bean's qualifiers, if null, a singleton set of
-     *                            {@link javax.enterprise.inject.Default} is used
+     *                            {@link jakarta.enterprise.inject.Default} is used
      * @param scope               The bean's scope, if null, the default scope of
-     *                            {@link javax.enterprise.context.Dependent} is used
+     *                            {@link jakarta.enterprise.context.Dependent} is used
      * @param stereotypes         The bean's stereotypes, if null, an empty set is used
      * @param types               The bean's types, if null, the beanClass and {@link Object}
      *                            will be used
@@ -51,8 +51,8 @@ public class ImmutableBean<T> extends BaseImmutableBean<T>
      * @param nullable            True if the bean is nullable
      * @param injectionPoints     the bean's injection points, if null an empty set is used
      * @param toString            the string which should be returned by #{@link #toString()}
-     * @param contextualLifecycle Handler for {@link #create(javax.enterprise.context.spi.CreationalContext)} and
-     *                            {@link #destroy(Object, javax.enterprise.context.spi.CreationalContext)}
+     * @param contextualLifecycle Handler for {@link #create(jakarta.enterprise.context.spi.CreationalContext)} and
+     *                            {@link #destroy(Object, jakarta.enterprise.context.spi.CreationalContext)}
      * @throws IllegalArgumentException if the beanClass is null
      */
     // CHECKSTYLE:OFF

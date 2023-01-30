@@ -19,6 +19,7 @@
 package org.apache.deltaspike.jpa.impl.entitymanager;
 
 import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.inject.Disposes;
 import jakarta.enterprise.inject.Produces;
 import jakarta.enterprise.inject.spi.InjectionPoint;
 import jakarta.inject.Inject;
@@ -89,5 +90,14 @@ public class EntityManagerFactoryProducer
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(unitName, properties);
 
         return emf;
+    }
+
+
+    public void disposeEntityManagerFactory(@Disposes @PersistenceUnitName("any") EntityManagerFactory emf)
+    {
+        if (emf.isOpen())
+        {
+            emf.close();
+        }
     }
 }

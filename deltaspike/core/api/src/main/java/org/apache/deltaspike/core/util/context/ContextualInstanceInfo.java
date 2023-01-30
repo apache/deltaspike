@@ -38,7 +38,7 @@ public class ContextualInstanceInfo<T> implements Serializable
     /**
      * We need to store the CreationalContext as we need it for
      * properly destroying the contextual instance via
-     * {@link javax.enterprise.context.spi.Contextual#destroy(Object, javax.enterprise.context.spi.CreationalContext)}
+     * {@link jakarta.enterprise.context.spi.Contextual#destroy(Object, jakarta.enterprise.context.spi.CreationalContext)}
      */
     private CreationalContext<T> creationalContext;
 

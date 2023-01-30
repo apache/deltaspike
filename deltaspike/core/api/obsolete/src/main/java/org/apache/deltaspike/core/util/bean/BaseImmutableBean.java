@@ -68,7 +68,7 @@ public abstract class BaseImmutableBean<T> implements Bean<T>
      * @param beanClass       The Bean class, may not be null
      * @param name            The bean name
      * @param qualifiers      The bean's qualifiers, if null, a singleton set of
-     *                        {@link javax.enterprise.inject.Default} is used
+     *                        {@link jakarta.enterprise.inject.Default} is used
      * @param scope           The bean's scope, if null, the default scope of
      *                        {@link Dependent} is used
      * @param stereotypes     The bean's stereotypes, if null, an empty set is used

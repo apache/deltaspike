@@ -23,7 +23,7 @@ import jakarta.enterprise.util.AnnotationLiteral;
 import jakarta.inject.Named;
 
 /**
- * Literal for {@link javax.inject.Named} qualifier.
+ * Literal for {@link jakarta.inject.Named} qualifier.
  */
 public class NamedLiteral extends AnnotationLiteral<Named> implements Named
 {

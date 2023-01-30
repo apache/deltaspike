@@ -18,6 +18,8 @@
  */
 package org.apache.deltaspike.test.core.api.config;
 
+import org.apache.deltaspike.core.api.config.Config;
+import org.apache.deltaspike.core.api.config.ConfigProperty;
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.spi.config.ConfigFilter;
@@ -31,6 +33,7 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BiFunction;
 
 @SuppressWarnings("Duplicates")
 public class ConfigResolverTest

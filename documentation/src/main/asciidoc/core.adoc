@@ -83,7 +83,7 @@ implement a corresponding literal for providing an instance.
 .Literal Implementation for '@MyQualifier'
 [source,java]
 ---------------------------------------------------------------------------------------------
-import javax.enterprise.util.AnnotationLiteral;
+import jakarta.enterprise.util.AnnotationLiteral;
 //...
 
 public class MyQualifierLiteral extends AnnotationLiteral<MyQualifier> implements MyQualifier
@@ -384,7 +384,7 @@ TODO (Overview)
 == Literals
 
 Literals allow the instantiation of annotations by extending the
-abstract class `javax.enterprise.util.AnnotationLiteral`
+abstract class `jakarta.enterprise.util.AnnotationLiteral`
 
 .Example
 [source,java]
@@ -1012,7 +1012,7 @@ all scopes are only implemented in the <<jsf.adoc#_scopes,JSF module>>.
 
 To create a custom CDI scope to match your needs, complete the following steps:
 
-1. Create an Annotation with annotated with @javax.inject.Scope;
+1. Create an Annotation with annotated with @jakarta.inject.Scope;
 +
 .Example
 [source,java]
@@ -1040,8 +1040,8 @@ public class ACustomScopeExtension implements Extension, Serializable {
 }
 ---------------------------------------------------------------------------------------
 +
-3. Implement a javax.enterprise.context.spi.Context interface to hold the
-javax.enterprise.inject.spi.Bean instances according to your needs.
+3. Implement a jakarta.enterprise.context.spi.Context interface to hold the
+jakarta.enterprise.inject.spi.Bean instances according to your needs.
 +
 .Example
 [source,java]
@@ -1054,7 +1054,7 @@ public class ACustomScopeContext implements Context, Serializable {
     }
 
     // Return an existing instance of certain contextual type or create a new instance by calling
-    // javax.enterprise.context.spi.Contextual.create(CreationalContext) and return the new instance.
+    // jakarta.enterprise.context.spi.Contextual.create(CreationalContext) and return the new instance.
     public <T> T get(Contextual<T> contextual, CreationalContext<T> creationalContext) {
         Bean bean = (Bean) contextual;
         // you can store the bean somewhere

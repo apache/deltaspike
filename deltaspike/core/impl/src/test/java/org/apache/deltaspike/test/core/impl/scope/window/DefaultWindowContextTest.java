@@ -59,7 +59,7 @@ public class DefaultWindowContextTest
     private SomeWindowScopedBean someWindowScopedBean;
 
     /**
-     * Tests {@link org.apache.deltaspike.core.impl.util.JndiUtils#lookup(String, Class)} by looking up the {@link javax.enterprise.inject.spi.BeanManager}
+     * Tests {@link org.apache.deltaspike.core.impl.util.JndiUtils#lookup(String, Class)} by looking up the {@link jakarta.enterprise.inject.spi.BeanManager}
      */
     @Test
     public void testWindowScoedBean()

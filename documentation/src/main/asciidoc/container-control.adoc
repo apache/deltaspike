@@ -60,7 +60,7 @@ Starting the container does not automatically start all CDI Contexts. Contexts m
 import org.apache.deltaspike.cdise.api.CdiContainer;
 import org.apache.deltaspike.cdise.api.CdiContainerLoader;
 import org.apache.deltaspike.cdise.api.ContextControl;
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 public class MainApp {
     public static void main(String[] args) {
@@ -99,7 +99,7 @@ The `ContextControl` interface provides life-cycle control of the CDI container 
 == Procedure for building an uber jar
 Uber jar or executable jar can created by using the maven shade plugin. Some things you needs to be aware of when you use it.
 
-* Multiple `beans.xml` and `javax.enterprise.inject.spi.Extension` files needs to be merged into the final jar using a transformer.
+* Multiple `beans.xml` and `jakarta.enterprise.inject.spi.Extension` files needs to be merged into the final jar using a transformer.
 [source,xml]
 ----
 <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>

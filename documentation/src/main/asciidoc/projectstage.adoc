@@ -22,7 +22,7 @@ pre-defined ProjectStages:
 The core provides a pluggable and type-safe approach for using project
 stages in a project (it is also used within the framework). Furthermore,
 `@Exclude` allows use of, for example, implementations annotated with
-`javax.enterprise.inject.Alternative` for specific ProjectStages.
+`jakarta.enterprise.inject.Alternative` for specific ProjectStages.
 Besides the out-of-the-box ProjectStages it is possible to implement
 _custom but type-safe_ ProjectStages which will be exposed by
 DeltaSpike.

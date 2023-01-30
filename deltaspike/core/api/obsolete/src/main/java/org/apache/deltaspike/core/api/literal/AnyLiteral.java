@@ -22,7 +22,7 @@ import jakarta.enterprise.inject.Any;
 import jakarta.enterprise.util.AnnotationLiteral;
 
 /**
- * Literal for the {@link javax.enterprise.inject.Any} annotation.
+ * Literal for the {@link jakarta.enterprise.inject.Any} annotation.
  */
 public class AnyLiteral extends AnnotationLiteral<Any> implements Any
 {

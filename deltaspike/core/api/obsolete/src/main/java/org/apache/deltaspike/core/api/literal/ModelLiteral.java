@@ -23,7 +23,7 @@ import jakarta.enterprise.inject.Model;
 import jakarta.enterprise.util.AnnotationLiteral;
 
 /**
- * Literal for {@link javax.enterprise.inject.Model} annotation.
+ * Literal for {@link jakarta.enterprise.inject.Model} annotation.
  */
 public class ModelLiteral extends AnnotationLiteral<Model> implements Model
 {

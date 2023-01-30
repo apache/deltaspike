@@ -106,7 +106,7 @@
         <!-- Checks for imports                              -->
         <!-- See http://checkstyle.sf.net/config_import.html -->
         <module name="AvoidStarImport">
-            <property name="excludes" value="java.io,java.net,java.util,javax.enterprise.inject.spi,javax.enterprise.context"/>
+            <property name="excludes" value="java.io,java.net,java.util,jakarta.enterprise.inject.spi,jakarta.enterprise.context"/>
         </module>
         <module name="IllegalImport"/>
         <module name="RedundantImport"/>

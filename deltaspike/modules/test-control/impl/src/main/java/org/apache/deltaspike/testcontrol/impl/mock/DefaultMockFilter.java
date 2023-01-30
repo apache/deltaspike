@@ -61,7 +61,7 @@ public class DefaultMockFilter implements MockFilter
             annotations.addAll(annotated.getAnnotations());
 
             for (AnnotatedMethod annotatedMethod :
-                (Set<javax.enterprise.inject.spi.AnnotatedMethod>)((AnnotatedType) annotated).getMethods())
+                (Set<jakarta.enterprise.inject.spi.AnnotatedMethod>)((AnnotatedType) annotated).getMethods())
             {
                 annotations.addAll(annotatedMethod.getAnnotations());
             }

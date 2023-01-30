@@ -23,6 +23,7 @@ import jakarta.inject.Qualifier;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+import java.util.concurrent.TimeUnit;
 
 import static java.lang.annotation.ElementType.CONSTRUCTOR;
 import static java.lang.annotation.ElementType.FIELD;
@@ -30,6 +31,7 @@ import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 /**
  * This Qualifier allows simple injection of configuration properties through the DeltaSpike configuration 
@@ -151,4 +153,19 @@ public @interface ConfigProperty
      */
     @Nonbinding
     Class<? extends ConfigResolver.Converter> converter() default ConfigResolver.Converter.class;
+
+    /**
+     * This only applies when used with injecting a {@link java.util.function.Supplier} for the requested configuration.
+     * @return the duration while the value is not reloaded.
+     */
+    @Nonbinding
+    long cacheFor() default -1;
+
+    /**
+     * This only applies when used with injecting a {@link java.util.function.Supplier} for the requested configuration.
+     * @return the duration unit for {@see cacheFor()}.
+     */
+    @Nonbinding
+    TimeUnit cacheUnit() default SECONDS;
+
 }

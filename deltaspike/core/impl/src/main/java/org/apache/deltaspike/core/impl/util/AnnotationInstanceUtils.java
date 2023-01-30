@@ -48,7 +48,7 @@ public abstract class AnnotationInstanceUtils
 
         //check for @Priority and CDI v1.1+
         if (priorityAnnotationClass != null &&
-            ClassUtils.tryToLoadClassForName("javax.enterprise.inject.spi.AfterTypeDiscovery") != null)
+            ClassUtils.tryToLoadClassForName("jakarta.enterprise.inject.spi.AfterTypeDiscovery") != null)
         {
             Map<String, Object> defaultValueMap = new HashMap<String, Object>();
             defaultValueMap.put("value", priorityValue);

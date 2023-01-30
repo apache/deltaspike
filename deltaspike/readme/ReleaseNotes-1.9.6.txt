@@ -1,0 +1,20 @@
+Release Notes - DeltaSpike - Version 1.9.6
+
+Bug
+    [DELTASPIKE-1133] - Don't override the log level
+    [DELTASPIKE-1427] - JUL Logging with {} as param leeds to NumberFormatException
+    [DELTASPIKE-1433] - EntityManagerFactoryProducer should also provide a @Disposes method
+    [DELTASPIKE-1453] - injecting config of Class got broken
+
+New Feature
+    [DELTASPIKE-1431] - add easy way to disable InvocationResultLogger
+    [DELTASPIKE-1444] - Create POJO and Record based Config
+    [DELTASPIKE-1445] - Dynamic Config injection via a Supplier<T>
+
+Improvement
+    [DELTASPIKE-1426] - DeltaSpikeProxyFactory is slow on start
+    [DELTASPIKE-1432] - Proxy class definition does not work
+    [DELTASPIKE-1454] - Upgrade ASM to 9.3
+
+Task
+    [DELTASPIKE-1452] - upgrade to apache-parent 25

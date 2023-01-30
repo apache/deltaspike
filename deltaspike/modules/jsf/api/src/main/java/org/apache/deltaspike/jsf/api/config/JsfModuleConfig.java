@@ -123,11 +123,11 @@ public class JsfModuleConfig implements DeltaSpikeConfig
     }
 
     /**
-     * Defines the {@link javax.enterprise.Qualifier} which will be used to fire the
+     * Defines the {@link jakarta.enterprise.Qualifier} which will be used to fire the
      * {@link org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent}
      * for unhandled JSF exceptions.
      *
-     * @return the {@link javax.enterprise.Qualifier}.
+     * @return the {@link jakarta.enterprise.Qualifier}.
      */
     public Class<? extends Annotation> getExceptionQualifier()
     {

@@ -170,22 +170,12 @@ public class CdiTestSuiteRunner extends Suite
         @Override
         public void testStarted(Description description) throws Exception
         {
-            Level level = this.logger.getLevel();
-
-            this.logger.setLevel(Level.INFO);
             if (TRUE.equals(IS_CDI_TEST_RUNNER_EXECUTION.get()))
             {
                 this.logger.info("[run] " + description.getClassName() + "#" + description.getMethodName());
             }
 
-            try
-            {
-                super.testRunStarted(description);
-            }
-            finally
-            {
-                this.logger.setLevel(level);
-            }
+            super.testRunStarted(description);
         }
 
         @Override

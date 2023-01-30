@@ -503,12 +503,6 @@ public class ConfigurationExtension implements Extension, Deactivatable
         }
 
         @Override
-        public boolean isNullable()
-        {
-            return producer.isNullable();
-        }
-
-        @Override
         public Set<InjectionPoint> getInjectionPoints()
         {
             return producer.getInjectionPoints();

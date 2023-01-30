@@ -57,11 +57,11 @@ public class MappedJsf2ScopeExtension implements Extension, Deactivatable
         if (ClassUtils.tryToLoadClassForName("javax.faces.bean.ApplicationScoped") != null)
         {
             this.mappedJsfScopes.put(javax.faces.bean.ApplicationScoped.class,
-                    javax.enterprise.context.ApplicationScoped.class);
+                    jakarta.enterprise.context.ApplicationScoped.class);
             this.mappedJsfScopes.put(javax.faces.bean.SessionScoped.class,
-                    javax.enterprise.context.SessionScoped.class);
+                    jakarta.enterprise.context.SessionScoped.class);
             this.mappedJsfScopes.put(javax.faces.bean.RequestScoped.class,
-                    javax.enterprise.context.RequestScoped.class);
+                    jakarta.enterprise.context.RequestScoped.class);
 
             if (JsfUtils.isViewScopeDelegationEnabled())
             {

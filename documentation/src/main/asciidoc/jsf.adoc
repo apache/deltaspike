@@ -1588,7 +1588,7 @@ public class DemoBean1 implements Serializable
 DemoBean1.
 
 TIP: If you would like to use the bean within your JSF pages, you have
-to add `@Named` (javax.inject.Named ).
+to add `@Named` (jakarta.inject.Named ).
 
 (In case of CDI standard conversations there is just one big conversation
 which contains all conversation scoped beans.) The grouped conversations

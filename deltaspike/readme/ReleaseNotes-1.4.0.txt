@@ -43,7 +43,7 @@ Improvement
 New Feature
 
     [DELTASPIKE-420] - Transactional repositories
-    [DELTASPIKE-874] - observe @javax.faces.bean.RequestScoped via @javax.enterprise.context.Initialized and @javax.enterprise.context.Destroyed
+    [DELTASPIKE-874] - observe @javax.faces.bean.RequestScoped via @jakarta.enterprise.context.Initialized and @jakarta.enterprise.context.Destroyed
     [DELTASPIKE-877] - allow to inherit dynamically changed metadata
     [DELTASPIKE-888] - Add support for delete a job from the Scheduler
     [DELTASPIKE-892] - type-safe static config

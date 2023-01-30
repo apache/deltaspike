@@ -37,7 +37,7 @@
             org.apache.deltaspike.testcontrol.*
         </deltaspike.osgi.export.pkg>
         <deltaspike.osgi.import>
-            javax.enterprise.inject,
+            jakarta.enterprise.inject,
             !org.apache.deltaspike.testcontrol.*,
             *
         </deltaspike.osgi.import>

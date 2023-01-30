@@ -31,7 +31,7 @@ import java.util.logging.Logger;
 /**
  * <p>This class stores information about
  * &#064;{@link org.apache.deltaspike.jpa.api.transaction.TransactionScoped}
- * contextual instances, their {@link javax.enterprise.context.spi.CreationalContext} etc.</p>
+ * contextual instances, their {@link jakarta.enterprise.context.spi.CreationalContext} etc.</p>
  *
  * <p>We use a RequestScoped bean because this way we don't need to take
  * care about cleaning up any ThreadLocals ourselves. This also makes sure that

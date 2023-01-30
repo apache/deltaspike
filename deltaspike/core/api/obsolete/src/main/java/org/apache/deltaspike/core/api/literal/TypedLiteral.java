@@ -23,7 +23,7 @@ import jakarta.enterprise.inject.Typed;
 import jakarta.enterprise.util.AnnotationLiteral;
 
 /**
- * Literal for {@link javax.enterprise.inject.Typed}
+ * Literal for {@link jakarta.enterprise.inject.Typed}
  */
 public class TypedLiteral extends AnnotationLiteral<Typed> implements Typed
 {

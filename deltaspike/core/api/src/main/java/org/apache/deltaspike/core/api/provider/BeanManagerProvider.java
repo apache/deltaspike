@@ -70,7 +70,7 @@ public class BeanManagerProvider implements Extension
 
     static
     {
-        Class cdiClass = ClassUtils.tryToLoadClassForName("javax.enterprise.inject.spi.CDI");
+        Class cdiClass = ClassUtils.tryToLoadClassForName("jakarta.enterprise.inject.spi.CDI");
 
         Method resolvedCdiCurrentMethod = null;
         Method resolvedCdiBeanManagerMethod = null;

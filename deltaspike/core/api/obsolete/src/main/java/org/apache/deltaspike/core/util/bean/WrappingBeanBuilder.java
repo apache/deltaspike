@@ -27,8 +27,8 @@ import jakarta.enterprise.inject.spi.BeanManager;
  * just wrap another existing Bean. The Types, Qualifiers
  * and other attributes of the resulting Bean can be modified.</p>
  * <p/>
- * <p>The {@link Bean#create(javax.enterprise.context.spi.CreationalContext)}
- * and {@link Bean#destroy(Object, javax.enterprise.context.spi.CreationalContext)}
+ * <p>The {@link Bean#create(jakarta.enterprise.context.spi.CreationalContext)}
+ * and {@link Bean#destroy(Object, jakarta.enterprise.context.spi.CreationalContext)}
  * methods will get delegated to the underlying wrapped Bean.</p>
  *
  * @param <T> the type of the Bean

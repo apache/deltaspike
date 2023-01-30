@@ -155,7 +155,7 @@ public class ContextualStorage implements Serializable
 
     /**
      * Restores the Bean from its beanKey.
-     * @see #getBeanKey(javax.enterprise.context.spi.Contextual)
+     * @see #getBeanKey(jakarta.enterprise.context.spi.Contextual)
      */
     public Contextual<?> getBean(Object beanKey)
     {

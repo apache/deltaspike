@@ -82,7 +82,7 @@ public final class BeanProvider
      * injected into). But if we manually resolve a &#064;Dependent bean, then it does <b>not</b> belong to such well
      * defined lifecycle (because &#064;Dependent is not &#064;NormalScoped) and thus will not be automatically
      * destroyed at the end of the lifecycle. You need to manually destroy this contextual instance via
-     * {@link javax.enterprise.context.spi.Contextual#destroy(Object, javax.enterprise.context.spi.CreationalContext)}.
+     * {@link jakarta.enterprise.context.spi.Contextual#destroy(Object, jakarta.enterprise.context.spi.CreationalContext)}.
      * Thus you also need to manually store the CreationalContext and the Bean you used to create the contextual
      * instance.</p>
      *
@@ -469,7 +469,8 @@ public final class BeanProvider
         CreationalContext<T> creationalContext = beanManager.createCreationalContext(null);
 
         AnnotatedType<T> annotatedType = beanManager.createAnnotatedType((Class<T>) instance.getClass());
-        InjectionTarget<T> injectionTarget = beanManager.createInjectionTarget(annotatedType);
+        InjectionTarget<T> injectionTarget = beanManager.getInjectionTargetFactory(annotatedType)
+            .createInjectionTarget(null);
         injectionTarget.inject(instance, creationalContext);
         return instance;
     }

@@ -23,7 +23,7 @@ import org.apache.deltaspike.core.api.exclude.Exclude;
 
 /**
  * Custom PropertyFileConfig which gets picked up during
- * {@link javax.enterprise.inject.spi.ProcessAnnotatedType}.
+ * {@link jakarta.enterprise.inject.spi.ProcessAnnotatedType}.
  * We need to do this hack to avoid
  */
 @Exclude

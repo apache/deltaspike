@@ -46,6 +46,11 @@ public interface ConfigSource
      * in {@link #getOrdinal()}.
      */
     String DELTASPIKE_ORDINAL = "deltaspike_ordinal";
+
+    /**
+     * The default value if no special ordinal is defined for this ConfigSource.
+     */
+    int DELTASPIKE_DEFAULT_ORDINAL = 100;
     
     /**
      * Lookup order:
@@ -78,9 +83,19 @@ public interface ConfigSource
      * /META-INF/apache-deltaspike.properties . Hint: In case of property files every file is handled as independent
      * config-source, but all of them have ordinal 400 by default (and can be reordered in a fine-grained manner.</p>
      *
+     * <p>This method will only get evaluated once at startup and whenever a new ConfigSource is added.</p>
+     *
      * @return the 'importance' aka ordinal of the configured values. The higher, the more important.
      */
-    int getOrdinal();
+    default int getOrdinal()
+    {
+        String ordinal = getPropertyValue(DELTASPIKE_ORDINAL);
+        if (ordinal != null && ordinal.length() > 0)
+        {
+            return Integer.valueOf(ordinal);
+        }
+        return DELTASPIKE_DEFAULT_ORDINAL;
+    }
 
     /**
      * Return properties contained in this config source.
@@ -107,7 +122,10 @@ public interface ConfigSource
      * @return true if this ConfigSource should be scanned for its list of properties, 
      * false if it should not be scanned.
      */
-    boolean isScannable();
+    default boolean isScannable()
+    {
+        return true;
+    }
 
     /**
      * This callback should get invoked if an attribute change got detected inside the ConfigSource.
