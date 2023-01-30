@@ -122,6 +122,13 @@
         <deltaspike.osgi.require.capability />
         <cdi.osgi.beans-managed />
 
+
+        <jakarta.atinject-api.version>2.0.0</jakarta.atinject-api.version>
+        <jakarta.cdi-api.version>4.0.0</jakarta.cdi-api.version>
+        <jakarta.interceptor-api.version>2.0.0</jakarta.interceptor-api.version>
+        <jakarta.annotation-api.version>2.0.0</jakarta.annotation-api.version>
+        <jakarta.el-api.version>4.0.0</jakarta.el-api.version>
+        <jakarta.transaction-api.version>2.0.0</jakarta.transaction-api.version>
     </properties>
 
     <profiles>
@@ -386,61 +393,60 @@
                 <type>pom</type>
             </dependency>
 
-            <!-- OWB specific dependencies-->
             <dependency>
-                <groupId>org.apache.geronimo.specs</groupId>
-                <artifactId>geronimo-atinject_1.0_spec</artifactId>
-                <version>1.2</version>
-                <classifier>jakarta</classifier>
+                <groupId>jakarta.annotation</groupId>
+                <artifactId>jakarta.annotation-api</artifactId>
+                <version>${jakarta.annotation-api.version}</version>
                 <scope>provided</scope>
             </dependency>
+
             <dependency>
-                <groupId>org.apache.geronimo.specs</groupId>
-                <artifactId>geronimo-jcdi_2.0_spec</artifactId>
-                <version>1.3</version>
-                <classifier>jakarta</classifier>
+                <groupId>jakarta.inject</groupId>
+                <artifactId>jakarta.inject-api</artifactId>
+                <version>${jakarta.atinject-api.version}</version>
                 <scope>provided</scope>
             </dependency>
+
             <dependency>
-                <groupId>org.apache.geronimo.specs</groupId>
-                <artifactId>geronimo-interceptor_1.2_spec</artifactId>
-                <version>1.2</version>
-                <classifier>jakarta</classifier>
+                <groupId>jakarta.enterprise</groupId>
+                <artifactId>jakarta.enterprise.cdi-api</artifactId>
+                <version>${jakarta.cdi-api.version}</version>
                 <scope>provided</scope>
             </dependency>
+
             <dependency>
-                <groupId>org.apache.openwebbeans</groupId>
-                <artifactId>openwebbeans-impl</artifactId>
-                <version>${owb.version}</version>
-                <classifier>jakarta</classifier>
-                <scope>test</scope>
+                <groupId>jakarta.interceptor</groupId>
+                <artifactId>jakarta.interceptor-api</artifactId>
+                <version>${jakarta.interceptor-api.version}</version>
+                <scope>provided</scope>
             </dependency>
+
             <dependency>
-                <groupId>org.apache.openwebbeans</groupId>
-                <artifactId>openwebbeans-spi</artifactId>
-                <version>${owb.version}</version>
-                <classifier>jakarta</classifier>
-                <scope>test</scope>
+                <groupId>jakarta.el</groupId>
+                <artifactId>jakarta.el-api</artifactId>
+                <version>${jakarta.el-api.version}</version>
+                <scope>provided</scope>
             </dependency>
+
             <dependency>
-                <groupId>org.apache.openwebbeans</groupId>
-                <artifactId>openwebbeans-web</artifactId>
-                <version>${owb.version}</version>
-                <classifier>jakarta</classifier>
-                <scope>test</scope>
+                <groupId>jakarta.transaction</groupId>
+                <artifactId>jakarta.transaction-api</artifactId>
+                <version>${jakarta.transaction-api.version}</version>
+                <scope>provided</scope>
             </dependency>
+
             <dependency>
-                <groupId>org.apache.openwebbeans</groupId>
-                <artifactId>openwebbeans-jsf</artifactId>
-                <version>${owb.version}</version>
-                <classifier>jakarta</classifier>
-                <scope>test</scope>
+                <groupId>org.apache.tomcat</groupId>
+                <artifactId>tomcat-servlet-api</artifactId>
+                <version>${tomcat.version}</version>
+                <scope>provided</scope>
             </dependency>
 
             <!--
                 We currently need this for the CDI test container to emulate the @SessionScoped.
                 TODO: Finally this should not be necessary anymore.
             -->
+<!--
             <dependency>
                 <groupId>org.apache.tomcat</groupId>
                 <artifactId>tomcat-servlet-api</artifactId>
@@ -455,6 +461,7 @@
                 <scope>provided</scope>
             </dependency>
 
+-->
 
             <dependency>
                 <groupId>org.hamcrest</groupId>
@@ -470,7 +477,8 @@
                 <version>1.2.2</version>
             </dependency>
 
-            <!-- TomEE dependencies -->
+<!--
+            &lt;!&ndash; TomEE dependencies &ndash;&gt;
             <dependency>
                 <groupId>org.apache.openejb</groupId>
                 <artifactId>arquillian-tomee-remote</artifactId>
@@ -478,7 +486,7 @@
                 <scope>test</scope>
             </dependency>
 
-            <!-- TomEE 7.x dependencies -->
+            &lt;!&ndash; TomEE 7.x dependencies &ndash;&gt;
             <dependency>
                 <groupId>org.apache.tomee</groupId>
                 <artifactId>arquillian-tomee-remote</artifactId>
@@ -486,7 +494,7 @@
                 <scope>test</scope>
             </dependency>
 
-            <!-- dependency for DELTASPIKE-113 -->
+            &lt;!&ndash; dependency for DELTASPIKE-113 &ndash;&gt;
             <dependency>
                 <groupId>javassist</groupId>
                 <artifactId>javassist</artifactId>
@@ -528,6 +536,7 @@
                 <scope>provided</scope>
             </dependency>
 
+-->
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-all</artifactId>

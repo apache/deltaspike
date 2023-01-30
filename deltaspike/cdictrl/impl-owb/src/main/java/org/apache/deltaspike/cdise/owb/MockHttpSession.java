@@ -25,7 +25,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import jakarta.enterprise.inject.Typed;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.http.HttpSessionContext;
 
 /**
  * A simple mock HttpSession
@@ -69,11 +68,6 @@ public class MockHttpSession implements HttpSession
     public int getMaxInactiveInterval()
     {
         return 0;
-    }
-
-    public HttpSessionContext getSessionContext()
-    {
-        return null;
     }
 
     public Object getAttribute(String name)

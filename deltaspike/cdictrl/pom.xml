@@ -40,51 +40,6 @@
             <modules>
                 <module>api</module>
                 <module>impl-owb</module>
-                <module>servlet</module>
-                <module>tck</module>
-            </modules>
-        </profile>
-
-        <profile>
-            <id>OWB15</id>
-
-            <modules>
-                <module>api</module>
-                <module>impl-owb</module>
-                <module>servlet</module>
-                <module>tck</module>
-            </modules>
-        </profile>
-
-        <profile>
-            <id>OWB2</id>
-
-            <modules>
-                <module>api</module>
-                <module>impl-owb</module>
-                <module>servlet</module>
-                <module>tck</module>
-            </modules>
-        </profile>
-
-        <profile>
-            <id>Weld1</id>
-
-            <modules>
-                <module>api</module>
-                <module>impl-weld</module>
-                <module>servlet</module>
-                <module>tck</module>
-            </modules>
-        </profile>
-
-        <profile>
-            <id>Weld2</id>
-
-            <modules>
-                <module>api</module>
-                <module>impl-weld</module>
-                <module>servlet</module>
                 <module>tck</module>
             </modules>
         </profile>
@@ -95,7 +50,6 @@
             <modules>
                 <module>api</module>
                 <module>impl-weld</module>
-                <module>servlet</module>
                 <module>tck</module>
             </modules>
         </profile>
@@ -109,9 +63,10 @@
             <modules>
                 <module>api</module>
                 <module>impl-owb</module>
+<!--
                 <module>impl-weld</module>
                 <module>impl-openejb</module>
-                <module>servlet</module>
+-->
                 <module>tck</module>
             </modules>
         </profile>
@@ -124,7 +79,6 @@
                 <module>impl-owb</module>
                 <module>impl-weld</module>
                 <module>impl-openejb</module>
-                <module>servlet</module>
                 <module>tck</module>
             </modules>
         </profile>
@@ -146,43 +100,6 @@
                 <module>api</module>
                 <module>impl-openejb</module>
                 <module>tck</module>
-            </modules>
-        </profile>
-
-        <profile>
-            <id>tomee7-build-managed</id>
-
-            <modules>
-                <module>api</module>
-                <module>impl-openejb</module>
-                <module>tck</module>
-            </modules>
-        </profile>
-
-        <profile>
-            <id>jbossas-managed-7</id>
-
-            <modules>
-                <module>api</module>
-                <module>impl-weld</module>
-            </modules>
-        </profile>
-
-        <profile>
-            <id>jbossas-build-managed-7</id>
-
-            <modules>
-                <module>api</module>
-                <module>impl-weld</module>
-            </modules>
-        </profile>
-
-        <profile>
-            <id>jbossas-remote-7</id>
-
-            <modules>
-                <module>api</module>
-                <module>impl-weld</module>
             </modules>
         </profile>
 
@@ -220,42 +137,6 @@
                 <module>api</module>
                 <module>impl-weld</module>
             </modules>
-        </profile>
-
-        <profile>
-            <id>wls-remote-12c</id>
-
-            <modules>
-                <module>api</module>
-                <module>impl-weld</module>
-            </modules>
-
-            <dependencies>
-                <dependency>
-                    <groupId>javax</groupId>
-                    <artifactId>javaee-api</artifactId>
-                    <version>7.0</version>
-                    <scope>provided</scope>
-                </dependency>
-            </dependencies>
-        </profile>
-
-        <profile>
-            <id>wls-managed-12c</id>
-
-            <modules>
-                <module>api</module>
-                <module>impl-weld</module>
-            </modules>
-
-            <dependencies>
-                <dependency>
-                    <groupId>javax</groupId>
-                    <artifactId>javaee-api</artifactId>
-                    <version>7.0</version>
-                    <scope>provided</scope>
-                </dependency>
-            </dependencies>
         </profile>
 
         <profile>

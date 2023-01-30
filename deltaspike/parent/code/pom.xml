@@ -190,12 +190,6 @@
             <properties>
                 <cdicontainer.version>owb-${owb.version}</cdicontainer.version>
 
-                <jakarta.atinject-api.version>2.0.0</jakarta.atinject-api.version>
-                <jakarta.cdi-api.version>4.0.0</jakarta.cdi-api.version>
-                <jakarta.interceptor-api.version>2.0.0</jakarta.interceptor-api.version>
-                <jakarta.annotation-api.version>2.0.0</jakarta.annotation-api.version>
-                <jakarta.el-api.version>4.0.0</jakarta.el-api.version>
-                <jakarta.transaction-api.version>2.0.0</jakarta.transaction-api.version>
             </properties>
 
             <repositories>
@@ -254,12 +248,6 @@
                     <artifactId>jakarta.enterprise.cdi-api</artifactId>
                     <version>${jakarta.cdi-api.version}</version>
                     <scope>provided</scope>
-                    <exclusions>
-                        <exclusion>
-                            <groupId>jakarta.inject</groupId>
-                            <artifactId>jakarta.inject-api</artifactId>
-                        </exclusion>
-                    </exclusions>
                 </dependency>
 
                 <dependency>
@@ -280,6 +268,13 @@
                     <groupId>jakarta.transaction</groupId>
                     <artifactId>jakarta.transaction-api</artifactId>
                     <version>${jakarta.transaction-api.version}</version>
+                    <scope>provided</scope>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-servlet-api</artifactId>
+                    <version>${tomcat.version}</version>
                     <scope>provided</scope>
                 </dependency>
 
