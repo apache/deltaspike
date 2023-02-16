@@ -69,34 +69,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.apache.myfaces.test</groupId>
-            <artifactId>myfaces-test20</artifactId>
-            <version>${myfaces.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.myfaces.core</groupId>
-            <artifactId>myfaces-impl-test</artifactId>
-            <version>${myfaces.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.myfaces.core</groupId>
-            <artifactId>myfaces-api</artifactId>
-            <version>${myfaces.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.myfaces.core</groupId>
-            <artifactId>myfaces-impl</artifactId>
-            <version>${myfaces.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
             <groupId>jakarta.el</groupId>
             <artifactId>jakarta.el-api</artifactId>
             <scope>provided</scope>
