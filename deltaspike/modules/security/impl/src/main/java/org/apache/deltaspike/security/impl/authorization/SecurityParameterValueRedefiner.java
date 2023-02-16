@@ -27,10 +27,10 @@ import java.util.Set;
 
 import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.enterprise.inject.spi.Annotated;
+import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.InjectionPoint;
 import jakarta.interceptor.InvocationContext;
 
-import org.apache.deltaspike.core.util.AnnotationUtils;
 import org.apache.deltaspike.core.util.metadata.builder.ParameterValueRedefiner;
 import org.apache.deltaspike.security.api.authorization.SecuredReturn;
 import org.apache.deltaspike.security.api.authorization.SecurityParameterBinding;
@@ -40,14 +40,17 @@ import org.apache.deltaspike.security.api.authorization.SecurityParameterBinding
  */
 public class SecurityParameterValueRedefiner implements ParameterValueRedefiner
 {
+    private final BeanManager beanManager;
     private CreationalContext<?> creationalContext;
     private InvocationContext invocation;
     private Object result;
 
-    public SecurityParameterValueRedefiner(CreationalContext<?> creationalContext,
+    public SecurityParameterValueRedefiner(BeanManager beanManager,
+                                           CreationalContext<?> creationalContext,
                                            InvocationContext invocation,
                                            Object result)
     {
+        this.beanManager = beanManager;
         this.creationalContext = creationalContext;
         this.invocation = invocation;
         this.result = result;
@@ -103,14 +106,12 @@ public class SecurityParameterValueRedefiner implements ParameterValueRedefiner
 
                         for (Annotation annotation : businessParameterAnnotations)
                         {
-                            hashCodesOfBusinessParameterAnnotations.add(
-                                AnnotationUtils.getQualifierHashCode(annotation));
+                            hashCodesOfBusinessParameterAnnotations.add(beanManager.getQualifierHashCode(annotation));
                         }
                         //2nd try (detailed check)
                         for (Annotation annotation : requiredBindingAnnotations)
                         {
-                            if (hashCodesOfBusinessParameterAnnotations.contains(
-                                AnnotationUtils.getQualifierHashCode(annotation)))
+                            if (hashCodesOfBusinessParameterAnnotations.contains(beanManager.getQualifierHashCode(annotation)))
                             {
                                 return invocation.getParameters()[i];
                             }

@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.security.impl.authorization;
 
-import org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent;
+//X TODO import org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent;
 import org.apache.deltaspike.security.api.authorization.AccessDeniedException;
 
 import jakarta.enterprise.context.Dependent;
@@ -36,6 +36,7 @@ public class AccessDeniedExceptionBroadcaster
 
     public void broadcastAccessDeniedException(AccessDeniedException accessDeniedException)
     {
+/* TODO: gpetracek please
         ExceptionToCatchEvent exceptionToCatchEvent = new ExceptionToCatchEvent(accessDeniedException);
 
         try
@@ -46,6 +47,8 @@ public class AccessDeniedExceptionBroadcaster
         {
             throw new SkipInternalProcessingException(accessDeniedException);
         }
+*/
+
         //we have to throw it in any case to support "observers" for AccessDeniedException (see DELTASPIKE-636)
         //however, currently we can't do it based on the exception-control api (see DELTASPIKE-638)
         throw new SkipInternalProcessingException(accessDeniedException);

@@ -180,7 +180,7 @@ class Authorizer
             boundAuthorizerMethod.getJavaMember().getDeclaringClass(), creationalContext);
 
         Object result = boundAuthorizerMethodProxy.invoke(reference, creationalContext,
-                new SecurityParameterValueRedefiner(creationalContext, ic, returnValue));
+                new SecurityParameterValueRedefiner(beanManager, creationalContext, ic, returnValue));
 
         if (Boolean.FALSE.equals(result))
         {

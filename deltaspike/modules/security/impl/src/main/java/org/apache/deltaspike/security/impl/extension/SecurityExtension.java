@@ -21,7 +21,6 @@ package org.apache.deltaspike.security.impl.extension;
 
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
-import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
 import org.apache.deltaspike.security.api.authorization.Secures;
 import org.apache.deltaspike.security.api.authorization.SecurityDefinitionException;
 import org.apache.deltaspike.security.impl.util.SecurityUtils;
@@ -74,7 +73,6 @@ public class SecurityExtension implements Extension, Deactivatable
             return;
         }
 
-        AnnotatedTypeBuilder<X> builder = null;
         AnnotatedType<X> type = event.getAnnotatedType();
         
         boolean isSecured = false;
@@ -85,8 +83,8 @@ public class SecurityExtension implements Extension, Deactivatable
         {
             if (SecurityUtils.isMetaAnnotatedWithSecurityBindingType(annotation))
             {
-                builder = new AnnotatedTypeBuilder<X>().readFromType(type);
-                builder.addToClass(INTERCEPTOR_BINDING);
+                event.configureAnnotatedType()
+                    .add(INTERCEPTOR_BINDING);
                 getMetaDataStorage().addSecuredType(type);
                 isSecured = true;
                 break;
@@ -110,21 +108,16 @@ public class SecurityExtension implements Extension, Deactivatable
                 {
                     if (SecurityUtils.isMetaAnnotatedWithSecurityBindingType(annotation))
                     {
-                        if (builder == null) 
-                        {
-                            builder = new AnnotatedTypeBuilder<X>().readFromType(type);
-                        }
-                        builder.addToMethod(m, INTERCEPTOR_BINDING);
+                        event.configureAnnotatedType()
+                                .filterMethods(cm -> cm.equals(m))
+                                .findFirst()
+                                .get()
+                                .add(INTERCEPTOR_BINDING);
                         getMetaDataStorage().addSecuredMethod(m);
                         break;
                     }
                 }
             }
-        }
-
-        if (builder != null) 
-        {
-            event.setAnnotatedType(builder.create());
         }
     }
 

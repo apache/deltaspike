@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.security.impl.extension;
 
-import org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent;
 import org.apache.deltaspike.core.util.ProxyUtils;
 import org.apache.deltaspike.security.api.authorization.AccessDeniedException;
 import org.apache.deltaspike.security.impl.authorization.SkipInternalProcessingException;
@@ -119,8 +118,6 @@ public class DefaultSecurityStrategy implements SecurityStrategy
     }
 
     /**
-     * <p>Fires a {@link org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent} for the given
-     * {@link org.apache.deltaspike.security.api.authorization.AccessDeniedException}.</p>
      * It also allows to change the default handling.
      *
      * @param originalException exception thrown by an authorizer
@@ -128,8 +125,6 @@ public class DefaultSecurityStrategy implements SecurityStrategy
      */
     protected RuntimeException handleAccessDeniedException(AccessDeniedException originalException)
     {
-        ExceptionToCatchEvent exceptionToCatchEvent = new ExceptionToCatchEvent(originalException);
-        this.beanManager.fireEvent(exceptionToCatchEvent);
         return originalException;
     }
 }

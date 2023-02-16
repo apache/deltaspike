@@ -30,7 +30,6 @@ import jakarta.enterprise.inject.spi.InjectionTarget;
 import jakarta.enterprise.inject.spi.PassivationCapable;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.ExceptionUtils;
-import org.apache.deltaspike.core.util.metadata.builder.ContextualLifecycle;
 import org.apache.deltaspike.proxy.spi.DeltaSpikeProxy;
 import org.apache.deltaspike.proxy.spi.invocation.DeltaSpikeProxyInvocationHandler;
 
@@ -44,7 +43,7 @@ import org.apache.deltaspike.proxy.spi.invocation.DeltaSpikeProxyInvocationHandl
  * @param <T> The class of the original class.
  * @param <H> The class of the delegate {@link InvocationHandler}.
  */
-public class DeltaSpikeProxyContextualLifecycle<T, H extends InvocationHandler> implements ContextualLifecycle<T>
+public class DeltaSpikeProxyContextualLifecycle<T, H extends InvocationHandler>
 {
     private final Class<T> proxyClass;
     private final Class<H> delegateInvocationHandlerClass;
@@ -72,11 +71,10 @@ public class DeltaSpikeProxyContextualLifecycle<T, H extends InvocationHandler> 
         if (!targetClass.isInterface())
         {
             AnnotatedType<T> annotatedType = beanManager.createAnnotatedType(this.targetClass);
-            this.injectionTarget = beanManager.createInjectionTarget(annotatedType);
+            this.injectionTarget = beanManager.getInjectionTargetFactory(annotatedType).createInjectionTarget(null);
         }
     }
 
-    @Override
     public T create(Bean bean, CreationalContext creationalContext)
     {        
         try
@@ -113,7 +111,6 @@ public class DeltaSpikeProxyContextualLifecycle<T, H extends InvocationHandler> 
         return null;
     }
 
-    @Override
     public void destroy(Bean<T> bean, T instance, CreationalContext<T> creationalContext)
     {
         if (this.injectionTarget != null)

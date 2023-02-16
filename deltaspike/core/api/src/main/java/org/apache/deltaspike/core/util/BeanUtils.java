@@ -21,9 +21,17 @@ package org.apache.deltaspike.core.util;
 
 import jakarta.enterprise.inject.Typed;
 import jakarta.enterprise.inject.spi.Annotated;
+import jakarta.enterprise.inject.spi.AnnotatedMethod;
+import jakarta.enterprise.inject.spi.AnnotatedParameter;
+import jakarta.enterprise.inject.spi.Bean;
 import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.InjectionPoint;
+import org.apache.deltaspike.core.util.metadata.builder.ImmutableInjectionPoint;
+
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -110,6 +118,31 @@ public abstract class BeanUtils
         }
 
         return result;
+    }
+
+
+    /**
+     * Given a method, and the bean on which the method is declared, create a
+     * collection of injection points representing the parameters of the method.
+     *
+     * @param <X>           the type declaring the method
+     * @param method        the method
+     * @param declaringBean the bean on which the method is declared
+     * @param beanManager   the bean manager to use to create the injection points
+     * @return the injection points
+     */
+    public static <X> List<InjectionPoint> createInjectionPoints(AnnotatedMethod<X> method, Bean<?> declaringBean,
+                                                                 BeanManager beanManager)
+    {
+        List<InjectionPoint> injectionPoints = new ArrayList<InjectionPoint>();
+        for (AnnotatedParameter<X> parameter : method.getParameters())
+        {
+            InjectionPoint injectionPoint =
+                new ImmutableInjectionPoint(parameter, beanManager, declaringBean, false, false);
+
+            injectionPoints.add(injectionPoint);
+        }
+        return injectionPoints;
     }
 
 }
