@@ -77,34 +77,6 @@ public class JsfModuleConfig implements DeltaSpikeConfig
     }
 
     /**
-     * Per default converters get wrapped to restore them properly during a postback (significant without overhead).
-     * @return true if converters should be handled as std. CDI beans, false otherwise
-     */
-    public boolean isContainerManagedConvertersEnabled()
-    {
-        return true;
-    }
-
-    /**
-     * Per default validators get wrapped to restore them properly during a postback (significant without overhead).
-     * @return true if validators should be handled as std. CDI beans, false otherwise
-     */
-    public boolean isContainerManagedValidatorsEnabled()
-    {
-        return true;
-    }
-
-    /**
-     * If #initialStateMarked (of the component) returns false, a fallback to full state-saving is possible.
-     * Therefore it's required to save additional meta-data even with partial state-saving.
-     * @return false to restrict additional meta-data required for a possible fallback, true otherwise
-     */
-    public boolean isFullStateSavingFallbackEnabled()
-    {
-        return true;
-    }
-
-    /**
      * If the window-handling of JSF 2.2+ is enabled,
      * {@link org.apache.deltaspike.jsf.spi.scope.window.ClientWindowConfig.ClientWindowRenderMode#DELEGATED}
      * will be returned. In all other cases <code>null</code> gets returned as application wide default value.

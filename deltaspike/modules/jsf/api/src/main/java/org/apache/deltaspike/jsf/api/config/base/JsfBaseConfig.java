@@ -66,14 +66,5 @@ public interface JsfBaseConfig extends DeltaSpikeBaseConfig
                     .withDefault(ID_MAX_LENGTH_DEFAULT)
                     .getValue();
         }
-
-        interface ViewDelegation
-        {
-            Boolean DELEGATE_TO_JSF = ConfigResolver.resolve("deltaspike.scope.view.delegate")
-                    .as(Boolean.class)
-                    .withCurrentProjectStage(true)
-                    .withDefault(Boolean.TRUE)
-                    .getValue();
-        }
     }
 }
