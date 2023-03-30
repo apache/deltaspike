@@ -18,8 +18,6 @@
  */
 package org.apache.deltaspike.data.impl.graph;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,95 +25,20 @@ import java.util.List;
 
 import jakarta.persistence.EntityManager;
 
-import org.apache.deltaspike.core.util.ClassUtils;
-import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.data.api.EntityGraph;
 
 /**
- * Helper for invoking methods related to entity graphs by reflection.
- * <p>
- * Reflection is required to stay compatible with JPA 2.0.
+ * Helper for entity graphs.
  */
 public final class EntityGraphHelper
 {
-
-    private static final Class<?> ENTITY_GRAPH_CLASS;
-    private static final Class<?> SUBGRAPH_CLASS;
-    private static final Method EG_ADD_ATTRIBUTE_NODES;
-    private static final Method EG_ADD_SUBGRAPH;
-    private static final Method SUBGRAPH_ADD_ATTRIBUTE_NODES;
-    private static final Method SUBGRAPH_ADD_SUBGRAPH;
-    private static final Method EM_GET_ENTITY_GRAPH;
-    private static final Method EM_CREATE_ENTITY_GRAPH;
-
-    static
-    {
-        ENTITY_GRAPH_CLASS = ClassUtils.tryToLoadClassForName("jakarta.persistence.EntityGraph");
-        SUBGRAPH_CLASS = ClassUtils.tryToLoadClassForName("jakarta.persistence.Subgraph");
-        if (ENTITY_GRAPH_CLASS == null)
-        {
-            EG_ADD_ATTRIBUTE_NODES = null;
-            EG_ADD_SUBGRAPH = null;
-            SUBGRAPH_ADD_ATTRIBUTE_NODES = null;
-            SUBGRAPH_ADD_SUBGRAPH = null;
-            EM_GET_ENTITY_GRAPH = null;
-            EM_CREATE_ENTITY_GRAPH = null;
-        }
-        else
-        {
-            try
-            {
-                EG_ADD_ATTRIBUTE_NODES = ENTITY_GRAPH_CLASS.getMethod("addAttributeNodes",
-                    String[].class);
-                EG_ADD_SUBGRAPH = ENTITY_GRAPH_CLASS.getMethod("addSubgraph", String.class);
-                SUBGRAPH_ADD_ATTRIBUTE_NODES = SUBGRAPH_CLASS.getMethod("addAttributeNodes",
-                    String[].class);
-                SUBGRAPH_ADD_SUBGRAPH = SUBGRAPH_CLASS.getMethod("addSubgraph", String.class);
-                EM_GET_ENTITY_GRAPH = EntityManager.class.getMethod("getEntityGraph", String.class);
-                EM_CREATE_ENTITY_GRAPH = EntityManager.class.getMethod("createEntityGraph",
-                    Class.class);
-            }
-            catch (NoSuchMethodException e)
-            {
-                throw ExceptionUtils.throwAsRuntimeException(e);
-            }
-        }
-    }
-
     private EntityGraphHelper()
     {
-        // hidden constructor
-    }
 
-    public static boolean isAvailable()
-    {
-        return ENTITY_GRAPH_CLASS != null;
     }
-
-    /*
-     * TODO Check if this can be replaced by org.apache.deltaspike.core.util.ReflectionUtils.invokeMethod.
-     * This does not work at the moment due to an issue with exception handling in that method
-     * which needs further analysis. 
-     */
-    private static Object uncheckedInvoke(Method method, Object target, Object... args)
-    {
-        try
-        {
-            return method.invoke(target, args);
-        }
-        catch (IllegalAccessException e)
-        {
-            throw ExceptionUtils.throwAsRuntimeException(e);
-        }
-        catch (InvocationTargetException e)
-        {
-            throw ExceptionUtils.throwAsRuntimeException(e.getCause());
-        }
-    }
-
+    
     public static Object getEntityGraph(EntityManager em, Class<?> entityClass, EntityGraph entityGraphAnn)
     {
-        ensureAvailable();
         String graphName = entityGraphAnn.value();
         if (graphName.isEmpty())
         {
@@ -123,48 +46,40 @@ public final class EntityGraphHelper
         }
         else
         {
-            return uncheckedInvoke(EM_GET_ENTITY_GRAPH, em, graphName);
+            return em.getEntityGraph(graphName);
         }
     }
 
     private static Object createEntityGraph(EntityManager em, Class<?> entityClass)
     {
-        return uncheckedInvoke(EM_CREATE_ENTITY_GRAPH, em, entityClass);
-    }
-
-    private static void ensureAvailable()
-    {
-        if (!isAvailable())
-        {
-            throw new EntityGraphException("Class java.persistence.EntityGraph is not available. "
-                + "Does your PersistenceProvider support JPA 2.1?");
-        }
+        return em.createEntityGraph(entityClass);
     }
 
     private static Object addSubgraph(Object graph, String attributeName)
     {
-        if (ENTITY_GRAPH_CLASS.isInstance(graph))
+        if (graph instanceof jakarta.persistence.EntityGraph)
         {
-            return uncheckedInvoke(EG_ADD_SUBGRAPH, graph, attributeName);
+            return ((jakarta.persistence.EntityGraph) graph).addSubgraph(attributeName);
         }
-        else if (SUBGRAPH_CLASS.isInstance(graph))
+        else if (graph instanceof jakarta.persistence.Subgraph)
         {
-            return uncheckedInvoke(SUBGRAPH_ADD_SUBGRAPH, graph, attributeName);
+            return ((jakarta.persistence.Subgraph) graph).addSubgraph(attributeName);
         }
+
         return null;
     }
 
     private static void addAttributeNodes(Object graph, String attributeName)
     {
-        if (ENTITY_GRAPH_CLASS.isInstance(graph))
+        if (graph instanceof jakarta.persistence.EntityGraph)
         {
-            uncheckedInvoke(EG_ADD_ATTRIBUTE_NODES, graph,
-                new Object[] { new String[] { attributeName } });
+            ((jakarta.persistence.EntityGraph) graph).addAttributeNodes(
+                    new String[] { attributeName });
         }
-        else if (SUBGRAPH_CLASS.isInstance(graph))
+        else if (graph instanceof jakarta.persistence.Subgraph)
         {
-            uncheckedInvoke(SUBGRAPH_ADD_ATTRIBUTE_NODES, graph,
-                new Object[] { new String[] { attributeName } });
+            ((jakarta.persistence.Subgraph) graph).addAttributeNodes(
+                    new String[] { attributeName });
         }
     }
 
@@ -172,7 +87,7 @@ public final class EntityGraphHelper
         String[] attributePaths)
     {
         Object graph = createEntityGraph(em, entityClass);
-        List<String> paths = new ArrayList<String>(Arrays.asList(attributePaths));
+        List<String> paths = new ArrayList<>(Arrays.asList(attributePaths));
 
         // handle longest paths first
         Collections.sort(paths);
