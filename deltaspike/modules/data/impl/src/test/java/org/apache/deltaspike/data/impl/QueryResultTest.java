@@ -170,7 +170,7 @@ public class QueryResultTest extends TransactionalTestCase
 
         // when
         List<Simple> result = repo.findByName(name)
-                .hint("javax.persistence.query.timeout", 10000)
+                .hint("jakarta.persistence.query.timeout", 10000)
                 .lockMode(LockModeType.NONE)
                 .flushMode(FlushModeType.COMMIT)
                 .orderDesc(Simple_.counter)

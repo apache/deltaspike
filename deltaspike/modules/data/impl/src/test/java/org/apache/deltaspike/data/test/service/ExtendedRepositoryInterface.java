@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.data.test.service;
 
-import static javax.persistence.LockModeType.PESSIMISTIC_READ;
+import static jakarta.persistence.LockModeType.PESSIMISTIC_READ;
 
 import org.apache.deltaspike.data.api.EntityManagerDelegate;
 import org.apache.deltaspike.data.api.EntityRepository;

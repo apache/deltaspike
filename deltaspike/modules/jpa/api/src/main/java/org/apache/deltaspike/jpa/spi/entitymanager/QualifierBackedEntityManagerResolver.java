@@ -19,7 +19,7 @@
 
 package org.apache.deltaspike.jpa.spi.entitymanager;
 
-import org.apache.deltaspike.core.api.literal.AnyLiteral;
+import jakarta.enterprise.inject.Any;
 import org.apache.deltaspike.jpa.api.entitymanager.EntityManagerResolver;
 
 import jakarta.enterprise.inject.spi.Bean;
@@ -61,10 +61,10 @@ public class QualifierBackedEntityManagerResolver implements EntityManagerResolv
     }
     private Bean<EntityManager> resolveEntityManagerBeans()
     {
-        Set<Bean<?>> entityManagerBeans = beanManager.getBeans(EntityManager.class, new AnyLiteral());
+        Set<Bean<?>> entityManagerBeans = beanManager.getBeans(EntityManager.class, Any.Literal.INSTANCE);
         if (entityManagerBeans == null)
         {
-            entityManagerBeans = new HashSet<Bean<?>>();
+            entityManagerBeans = new HashSet<>();
         }
         for (Class<? extends Annotation> qualifierClass : qualifiers)
         {

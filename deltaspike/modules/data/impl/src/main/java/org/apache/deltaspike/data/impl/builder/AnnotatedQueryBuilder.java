@@ -47,15 +47,15 @@ public class AnnotatedQueryBuilder extends QueryBuilder
     {
         Method method = context.getMethod();
         Query query = method.getAnnotation(Query.class);
-        javax.persistence.Query jpaQuery = createJpaQuery(query, context);
+        jakarta.persistence.Query jpaQuery = createJpaQuery(query, context);
         return context.executeQuery(jpaQuery);
     }
 
-    private javax.persistence.Query createJpaQuery(Query query, CdiQueryInvocationContext context)
+    private jakarta.persistence.Query createJpaQuery(Query query, CdiQueryInvocationContext context)
     {
         EntityManager entityManager = context.getEntityManager();
         Parameters params = context.getParams();
-        javax.persistence.Query result = null;
+        jakarta.persistence.Query result = null;
         if (isNotEmpty(query.named()))
         {
             if (!context.hasQueryStringPostProcessors())
@@ -64,7 +64,7 @@ public class AnnotatedQueryBuilder extends QueryBuilder
             }
             else
             {
-                javax.persistence.Query namedQuery = entityManager.createNamedQuery(query.named());
+                jakarta.persistence.Query namedQuery = entityManager.createNamedQuery(query.named());
                 String named = factory.extract(namedQuery);
                 String jpqlQuery = context.applyQueryStringPostProcessors(named);
                 result = params.applyTo(entityManager.createQuery(jpqlQuery));

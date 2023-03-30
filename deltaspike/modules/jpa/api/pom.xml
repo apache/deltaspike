@@ -51,6 +51,7 @@
         <dependency>
             <groupId>org.apache.deltaspike.core</groupId>
             <artifactId>deltaspike-core-api</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

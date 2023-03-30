@@ -28,10 +28,10 @@ import jakarta.persistence.Entity;
 public class Parent extends NamedEntity
 {
 
-    @javax.persistence.OneToOne(cascade = CascadeType.ALL)
+    @jakarta.persistence.OneToOne(cascade = CascadeType.ALL)
     private OneToOne one;
 
-    @javax.persistence.OneToMany(cascade = CascadeType.ALL, targetEntity = OneToMany.class)
+    @jakarta.persistence.OneToMany(cascade = CascadeType.ALL, targetEntity = OneToMany.class)
     private List<OneToMany> many = new LinkedList<OneToMany>();
 
     private Long value = Long.valueOf(0);

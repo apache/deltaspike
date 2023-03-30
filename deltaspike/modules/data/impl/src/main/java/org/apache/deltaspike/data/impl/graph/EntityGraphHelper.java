@@ -50,8 +50,8 @@ public final class EntityGraphHelper
 
     static
     {
-        ENTITY_GRAPH_CLASS = ClassUtils.tryToLoadClassForName("javax.persistence.EntityGraph");
-        SUBGRAPH_CLASS = ClassUtils.tryToLoadClassForName("javax.persistence.Subgraph");
+        ENTITY_GRAPH_CLASS = ClassUtils.tryToLoadClassForName("jakarta.persistence.EntityGraph");
+        SUBGRAPH_CLASS = ClassUtils.tryToLoadClassForName("jakarta.persistence.Subgraph");
         if (ENTITY_GRAPH_CLASS == null)
         {
             EG_ADD_ATTRIBUTE_NODES = null;

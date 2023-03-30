@@ -33,7 +33,6 @@
     <modules>
         <module>api</module>
         <module>impl</module>
-        <module>test-ee7</module>
     </modules>
 
     <properties>

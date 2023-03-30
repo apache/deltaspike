@@ -21,16 +21,21 @@ package org.apache.deltaspike.data.impl.handler;
 import java.util.Map;
 
 import jakarta.enterprise.inject.Produces;
+import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.FlushModeType;
 import jakarta.persistence.LockModeType;
 import jakarta.persistence.Query;
+import jakarta.persistence.StoredProcedureQuery;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaDelete;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.CriteriaUpdate;
 import jakarta.persistence.metamodel.Metamodel;
+import java.util.List;
 
 import org.apache.deltaspike.data.test.service.Simplistic;
 
@@ -279,6 +284,72 @@ public class QualifiedEntityManagerTestProducer
 
         @Override
         public void clear()
+        {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Query createQuery(CriteriaUpdate arg0)
+        {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Query createQuery(CriteriaDelete arg0)
+        {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public StoredProcedureQuery createNamedStoredProcedureQuery(String arg0)
+        {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public StoredProcedureQuery createStoredProcedureQuery(String arg0)
+        {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public StoredProcedureQuery createStoredProcedureQuery(String arg0, Class... arg1)
+        {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public StoredProcedureQuery createStoredProcedureQuery(String arg0, String... arg1)
+        {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean isJoinedToTransaction()
+        {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public <T> EntityGraph<T> createEntityGraph(Class<T> arg0)
+            {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public EntityGraph<?> createEntityGraph(String arg0)
+        {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public EntityGraph<?> getEntityGraph(String arg0)
+        {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public <T> List<EntityGraph<? super T>> getEntityGraphs(Class<T> arg0)
         {
             throw new UnsupportedOperationException();
         }

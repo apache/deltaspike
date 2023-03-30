@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.data.test.service;
 
-import static javax.persistence.LockModeType.PESSIMISTIC_WRITE;
+import static jakarta.persistence.LockModeType.PESSIMISTIC_WRITE;
 import static org.apache.deltaspike.data.api.SingleResultType.ANY;
 import static org.apache.deltaspike.data.api.SingleResultType.OPTIONAL;
 
