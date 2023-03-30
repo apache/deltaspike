@@ -53,6 +53,6 @@ public class JsfSystemEventBroadcaster implements SystemEventListener, Deactivat
         }
 
         BeanManager beanManager = BeanManagerProvider.getInstance().getBeanManager();
-        beanManager.fireEvent(e);
+        beanManager.getEvent().fire(e);
     }
 }

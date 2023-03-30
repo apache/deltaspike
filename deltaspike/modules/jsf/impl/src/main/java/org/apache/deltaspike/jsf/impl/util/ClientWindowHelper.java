@@ -42,7 +42,7 @@ public abstract class ClientWindowHelper
     public abstract class RequestParameters
     {
         public static final String POST_WINDOW_ID = "dspwid";
-        public static final String JSF_POST_WINDOW_ID = "javax.faces.ClientWindow";
+        public static final String JSF_POST_WINDOW_ID = "jakarta.faces.ClientWindow";
         public static final String GET_WINDOW_ID = "dswid";
         public static final String REQUEST_TOKEN = "dsrid";
     }
@@ -111,7 +111,7 @@ public abstract class ClientWindowHelper
 
     /**
      * Appends the current windowId to the given url, if enabled via
-     * {@link ClientWindow#isClientWindowRenderModeEnabled(javax.faces.context.FacesContext)}
+     * {@link ClientWindow#isClientWindowRenderModeEnabled(jakarta.faces.context.FacesContext)}
      *
      * @param facesContext the {@link FacesContext}
      * @param url the url

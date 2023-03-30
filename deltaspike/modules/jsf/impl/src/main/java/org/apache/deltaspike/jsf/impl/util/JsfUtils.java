@@ -21,8 +21,6 @@ package org.apache.deltaspike.jsf.impl.util;
 import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.api.config.view.navigation.NavigationParameterContext;
-import org.apache.deltaspike.core.util.ClassUtils;
-import org.apache.deltaspike.jsf.api.config.base.JsfBaseConfig;
 import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;
 import org.apache.deltaspike.jsf.impl.listener.phase.WindowMetaData;
 import org.apache.deltaspike.jsf.impl.message.FacesMessageEntry;
@@ -355,15 +353,6 @@ public abstract class JsfUtils
             }
         }
         return true;
-    }
-
-    /**
-     * @return true if JSF 2.2+ is available and the delegation mode isn't deactivated via config, false otherwise
-     */
-    public static boolean isViewScopeDelegationEnabled()
-    {
-        return ClassUtils.tryToLoadClassForName("javax.faces.view.ViewScoped") != null &&
-            JsfBaseConfig.ScopeCustomization.ViewDelegation.DELEGATE_TO_JSF;
     }
 
     public static void logWrongModuleUsage(String name)

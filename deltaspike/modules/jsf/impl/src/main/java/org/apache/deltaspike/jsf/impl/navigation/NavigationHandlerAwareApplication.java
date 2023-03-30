@@ -77,7 +77,7 @@ public class NavigationHandlerAwareApplication extends ApplicationWrapper implem
         }
 
         Class wrapperClass = ClassUtils
-            .tryToLoadClassForName("javax.faces.application.ConfigurableNavigationHandlerWrapper");
+            .tryToLoadClassForName("jakarta.faces.application.ConfigurableNavigationHandlerWrapper");
 
         if (wrapperClass != null)
         {

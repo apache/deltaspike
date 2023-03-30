@@ -18,66 +18,28 @@
  */
 package org.apache.deltaspike.jsf.impl.listener.request;
 
-import org.apache.deltaspike.core.api.literal.DestroyedLiteral;
-import org.apache.deltaspike.core.api.literal.InitializedLiteral;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
-import org.apache.deltaspike.core.util.ClassUtils;
-import org.apache.deltaspike.core.util.metadata.AnnotationInstanceProvider;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.Initialized;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.enterprise.event.Event;
-import jakarta.faces.bean.RequestScoped;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
-import java.lang.annotation.Annotation;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Broadcaster for
- * {@link org.apache.deltaspike.core.api.lifecycle.Initialized}
- * {@link org.apache.deltaspike.core.api.lifecycle.Destroyed}
- * with
- * {@link FacesContext} as event-payload
- * and/or in case of CDI 1.1+
  * {@link jakarta.enterprise.context.Initialized}
  * {@link jakarta.enterprise.context.Destroyed}
  * with
- * {@link javax.faces.bean.RequestScoped} as annotation-parameter and
+ * {@link jakarta.faces.bean.RequestScoped} as annotation-parameter and
  * {@link FacesContext} as event-payload
  */
 @ApplicationScoped
 public class JsfRequestBroadcaster implements Deactivatable
 {
-    @Inject
-    private Event<FacesContext> jsfRequestEvent;
-
-    /*
-     * annotation-instances for the optional cdi 1.1+ support
-     */
-    private Annotation initializedAnnotationInstance;
-    private Annotation destroyedAnnotationInstance;
-
-    @PostConstruct
-    protected void init()
-    {
-        Map<String, Class> values = new HashMap<String, Class>();
-        values.put("value", RequestScoped.class);
-        Class<? extends Annotation> initializedAnnotationClass =
-            ClassUtils.tryToLoadClassForName("jakarta.enterprise.context.Initialized");
-        if (initializedAnnotationClass != null)
-        {
-            this.initializedAnnotationInstance = AnnotationInstanceProvider.of(initializedAnnotationClass, values);
-        }
-
-        Class<? extends Annotation> destroyedAnnotationClass =
-            ClassUtils.tryToLoadClassForName("jakarta.enterprise.context.Destroyed");
-        if (destroyedAnnotationClass != null)
-        {
-            this.destroyedAnnotationInstance = AnnotationInstanceProvider.of(destroyedAnnotationClass, values);
-        }
-    }
+    @Inject @Initialized(RequestScoped.class) private Event<FacesContext> initEvent;
+    @Inject @Initialized(RequestScoped.class) private Event<FacesContext> destroyedEvent;
 
     /**
      * Broadcasts @Initialized-event(s)
@@ -86,12 +48,7 @@ public class JsfRequestBroadcaster implements Deactivatable
      */
     public void broadcastInitializedJsfRequestEvent(FacesContext facesContext)
     {
-        this.jsfRequestEvent.select(new InitializedLiteral()).fire(facesContext);
-
-        if (this.initializedAnnotationInstance != null)
-        {
-            this.jsfRequestEvent.select(this.initializedAnnotationInstance).fire(facesContext);
-        }
+        this.initEvent.fire(facesContext);
     }
 
     /**
@@ -101,11 +58,6 @@ public class JsfRequestBroadcaster implements Deactivatable
      */
     public void broadcastDestroyedJsfRequestEvent(FacesContext facesContext)
     {
-        this.jsfRequestEvent.select(new DestroyedLiteral()).fire(facesContext);
-
-        if (this.destroyedAnnotationInstance != null)
-        {
-            this.jsfRequestEvent.select(this.destroyedAnnotationInstance).fire(facesContext);
-        }
+        this.destroyedEvent.fire(facesContext);
     }
 }

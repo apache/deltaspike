@@ -143,7 +143,7 @@ public class JsfRequestLifecycleBroadcaster
         }
     }
 
-    protected Annotation createAnnotationLiteral(javax.faces.event.PhaseId phaseId, boolean isBeforeEvent)
+    protected Annotation createAnnotationLiteral(jakarta.faces.event.PhaseId phaseId, boolean isBeforeEvent)
     {
         if (isBeforeEvent)
         {
@@ -152,7 +152,7 @@ public class JsfRequestLifecycleBroadcaster
         return createAfterLiteral(phaseId);
     }
 
-    protected Annotation createBeforeLiteral(final javax.faces.event.PhaseId phaseId)
+    protected Annotation createBeforeLiteral(final jakarta.faces.event.PhaseId phaseId)
     {
         return new BeforePhaseBinding()
         {
@@ -166,7 +166,7 @@ public class JsfRequestLifecycleBroadcaster
         };
     }
 
-    protected Annotation createAfterLiteral(final javax.faces.event.PhaseId phaseId)
+    protected Annotation createAfterLiteral(final jakarta.faces.event.PhaseId phaseId)
     {
         return new AfterPhaseBinding()
         {

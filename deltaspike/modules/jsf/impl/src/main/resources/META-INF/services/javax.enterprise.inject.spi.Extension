@@ -17,8 +17,4 @@
 # under the License.
 #
 
-org.apache.deltaspike.jsf.impl.scope.view.ViewScopedExtension
-
-org.apache.deltaspike.jsf.impl.scope.mapped.MappedJsf2ScopeExtension
 org.apache.deltaspike.jsf.impl.config.view.ViewConfigExtension
-org.apache.deltaspike.jsf.impl.injection.proxy.ConverterAndValidatorProxyExtension

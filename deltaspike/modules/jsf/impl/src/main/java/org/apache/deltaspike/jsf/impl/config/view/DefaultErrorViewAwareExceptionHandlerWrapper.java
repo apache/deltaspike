@@ -116,7 +116,7 @@ public class DefaultErrorViewAwareExceptionHandlerWrapper extends ExceptionHandl
                     continue;
                 }
 
-                if (facesContext.isProjectStage(javax.faces.application.ProjectStage.Development) ||
+                if (facesContext.isProjectStage(jakarta.faces.application.ProjectStage.Development) ||
                         ProjectStageProducer.getInstance().getProjectStage() == ProjectStage.Development ||
                         ProjectStageProducer.getInstance().getProjectStage() instanceof TestStage)
                 {

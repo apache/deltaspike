@@ -49,7 +49,7 @@ public class DeltaSpikeFacesContextFactory extends FacesContextFactory implement
     }
 
     /**
-     * Wrapps the created {@link javax.faces.context.FacesContext} with {@link DeltaSpikeFacesContextWrapper}
+     * Wrapps the created {@link jakarta.faces.context.FacesContext} with {@link DeltaSpikeFacesContextWrapper}
      * <p/>
      * {@inheritDoc}
      */

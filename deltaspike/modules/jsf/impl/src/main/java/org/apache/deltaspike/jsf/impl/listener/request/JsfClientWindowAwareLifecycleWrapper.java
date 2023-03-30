@@ -135,7 +135,7 @@ public class JsfClientWindowAwareLifecycleWrapper extends LifecycleWrapper
     private static void delegateAttachWindow(FacesContext facesContext, Lifecycle lifecycle) throws Exception
     {
         //if there is an external wrapper (e.g. in case of other libs), we have to check
-        //the version of javax.faces.lifecycle.Lifecycle (>= or < v2.2)
+        //the version of jakarta.faces.lifecycle.Lifecycle (>= or < v2.2)
         //without the check and an old lib (in the classpath) #attachWindow would get ignored without exception
         if (lifecycle instanceof LifecycleWrapper /*autom. provides #attachWindow*/ ||
                 lifecycle.getClass().getDeclaredMethod("attachWindow", FacesContext.class) != null)

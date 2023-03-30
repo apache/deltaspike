@@ -18,28 +18,20 @@
  */
 package org.apache.deltaspike.jsf.impl.injection;
 
-import org.apache.deltaspike.core.util.ProxyUtils;
 import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;
 import org.apache.deltaspike.jsf.impl.security.SecurityAwareViewHandler;
-import org.apache.deltaspike.proxy.spi.DeltaSpikeProxy;
 
-import jakarta.faces.FacesException;
 import jakarta.faces.application.Application;
 import jakarta.faces.application.ApplicationWrapper;
 import jakarta.faces.application.ProjectStage;
 import jakarta.faces.context.FacesContext;
-import jakarta.faces.convert.Converter;
 import jakarta.faces.event.PreDestroyViewMapEvent;
 import jakarta.faces.event.SystemEvent;
-import jakarta.faces.validator.Validator;
 
 public class InjectionAwareApplicationWrapper extends ApplicationWrapper
 {
     private final Application wrapped;
-    private final boolean containerManagedConvertersEnabled;
-    private final boolean containerManagedValidatorsEnabled;
     private final boolean preDestroyViewMapEventFilterMode;
-    private final boolean fullStateSavingFallbackEnabled;
     private final ProjectStage projectStage;
 
     public InjectionAwareApplicationWrapper(
@@ -47,59 +39,9 @@ public class InjectionAwareApplicationWrapper extends ApplicationWrapper
             ProjectStage projectStage)
     {
         this.wrapped = wrapped;
-        this.containerManagedConvertersEnabled = jsfModuleConfig.isContainerManagedConvertersEnabled();
-        this.containerManagedValidatorsEnabled = jsfModuleConfig.isContainerManagedValidatorsEnabled();
-        this.fullStateSavingFallbackEnabled = jsfModuleConfig.isFullStateSavingFallbackEnabled();
         this.preDestroyViewMapEventFilterMode = preDestroyViewMapEventFilterMode;
         this.projectStage = projectStage;
     }
-
-    @Override
-    public Converter createConverter(Class<?> targetClass)
-    {
-        return managedOrDefaultConverter(this.wrapped.createConverter(targetClass));
-    }
-
-    @Override
-    public Converter createConverter(String converterId)
-    {
-        return managedOrDefaultConverter(this.wrapped.createConverter(converterId));
-    }
-
-    private Converter managedOrDefaultConverter(Converter defaultResult)
-    {
-        if (!this.containerManagedConvertersEnabled)
-        {
-            return defaultResult;
-        }
-        if (defaultResult == null)
-        {
-            return null;
-        }
-
-        Converter result = ManagedArtifactResolver.resolveManagedConverter(defaultResult.getClass());
-
-        if (result == null)
-        {
-            return defaultResult;
-        }
-
-        if (result instanceof DeltaSpikeProxy || ProxyUtils.isProxiedClass(result.getClass()))
-        {
-            return result;
-        }
-        else
-        {
-            return new ConverterWrapper(result, this.fullStateSavingFallbackEnabled);
-        }
-    }
-
-    @Override
-    public Validator createValidator(String validatorId) throws FacesException
-    {
-        return managedOrDefaultValidator(this.wrapped.createValidator(validatorId));
-    }
-
 
     @Override
     public ProjectStage getProjectStage()
@@ -109,34 +51,6 @@ public class InjectionAwareApplicationWrapper extends ApplicationWrapper
             return getWrapped().getProjectStage();
         }
         return this.projectStage;
-    }
-
-    private Validator managedOrDefaultValidator(Validator defaultResult)
-    {
-        if (!this.containerManagedValidatorsEnabled)
-        {
-            return defaultResult;
-        }
-        if (defaultResult == null)
-        {
-            return null;
-        }
-
-        Validator result = ManagedArtifactResolver.resolveManagedValidator(defaultResult.getClass());
-
-        if (result == null)
-        {
-            return defaultResult;
-        }
-
-        if (result instanceof DeltaSpikeProxy || ProxyUtils.isProxiedClass(result.getClass()))
-        {
-            return result;
-        }
-        else
-        {
-            return new ValidatorWrapper(result, this.fullStateSavingFallbackEnabled);
-        }
     }
 
     @Override
