@@ -1,5 +1,8 @@
 # Apache DeltaSpike
 
+[![Build Status](https://github.com/apache/deltaspike/workflows/DS%20CI/badge.svg)](https://github.com/apache/deltaspike/actions/workflows/ds-ci.yml)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
 * [Documentation](https://deltaspike.apache.org)
 * [Mailing Lists](http://deltaspike.apache.org/community.html#Mailinglists)
 * [Contribution Guide](http://deltaspike.apache.org/source.html)
