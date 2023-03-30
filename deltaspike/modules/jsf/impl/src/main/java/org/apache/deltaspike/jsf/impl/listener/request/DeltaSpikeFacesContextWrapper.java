@@ -46,7 +46,6 @@ import org.apache.deltaspike.jsf.impl.exception.control.BridgeExceptionHandlerWr
 
 import org.apache.deltaspike.jsf.impl.navigation.NavigationHandlerAwareApplication;
 import org.apache.deltaspike.jsf.impl.security.SecurityAwareViewHandler;
-import org.apache.deltaspike.jsf.spi.scope.window.ClientWindow;
 
 class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
 {
@@ -71,14 +70,14 @@ class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
     private boolean preDestroyViewMapEventFilterMode;
     private ProjectStage projectStage;
 
-    DeltaSpikeFacesContextWrapper(FacesContext wrappedFacesContext, ClientWindow clientWindow)
+    DeltaSpikeFacesContextWrapper(FacesContext wrappedFacesContext)
     {
         this.wrappedFacesContext = wrappedFacesContext;
 
         if (ClassDeactivationUtils.isActivated(DeltaSpikeExternalContextWrapper.class))
         {
             this.wrappedExternalContext =
-                    new DeltaSpikeExternalContextWrapper(wrappedFacesContext.getExternalContext(), clientWindow);
+                    new DeltaSpikeExternalContextWrapper(wrappedFacesContext.getExternalContext());
         }
         else
         {

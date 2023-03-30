@@ -19,20 +19,14 @@
 package org.apache.deltaspike.jsf.impl.navigation;
 
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
-import org.apache.deltaspike.core.util.ClassUtils;
-import org.apache.deltaspike.core.util.ExceptionUtils;
-import org.apache.deltaspike.jsf.impl.util.JsfUtils;
 
 import jakarta.faces.application.Application;
 import jakarta.faces.application.ApplicationWrapper;
-import jakarta.faces.application.ConfigurableNavigationHandler;
+import jakarta.faces.application.ConfigurableNavigationHandlerWrapper;
 import jakarta.faces.application.NavigationHandler;
-import java.lang.reflect.Constructor;
 
 public class NavigationHandlerAwareApplication extends ApplicationWrapper implements Deactivatable
 {
-    private static volatile Boolean manualNavigationHandlerWrapperMode;
-    private static Class navigationHandlerWrapperClass;
     private final Application wrapped;
 
     public NavigationHandlerAwareApplication(Application wrapped)
@@ -43,84 +37,8 @@ public class NavigationHandlerAwareApplication extends ApplicationWrapper implem
     @Override
     public NavigationHandler getNavigationHandler()
     {
-        return wrapNavigationHandler(this.wrapped.getNavigationHandler());
-    }
-
-    private NavigationHandler wrapNavigationHandler(NavigationHandler handler)
-    {
-        NavigationHandler result = null;
-
-        if (manualNavigationHandlerWrapperMode == null)
-        {
-            lazyInit();
-        }
-
-        //jsf 2.2+
-        if (!manualNavigationHandlerWrapperMode)
-        {
-            result = wrapNavigationHandlerWithNewWrapper(handler);
-        }
-        if (result != null)
-        {
-            return result;
-        }
-
-        //jsf 2.0 and 2.1
-        return new DeltaSpikeNavigationHandler(handler);
-    }
-
-    private static synchronized void lazyInit()
-    {
-        if (manualNavigationHandlerWrapperMode != null)
-        {
-            return;
-        }
-
-        Class wrapperClass = ClassUtils
-            .tryToLoadClassForName("jakarta.faces.application.ConfigurableNavigationHandlerWrapper");
-
-        if (wrapperClass != null)
-        {
-            navigationHandlerWrapperClass =
-                ClassUtils.tryToLoadClassForName(
-                    "org.apache.deltaspike.jsf.impl.navigation.DeltaSpikeNavigationHandlerWrapper");
-
-            if (navigationHandlerWrapperClass != null)
-            {
-                manualNavigationHandlerWrapperMode = false;
-            }
-            else
-            {
-                JsfUtils.logWrongModuleUsage(NavigationHandlerAwareApplication.class.getName());
-                manualNavigationHandlerWrapperMode = true;
-            }
-        }
-        else
-        {
-            manualNavigationHandlerWrapperMode = true;
-        }
-    }
-
-    private NavigationHandler wrapNavigationHandlerWithNewWrapper(NavigationHandler handler)
-    {
-        if (ConfigurableNavigationHandler.class.isAssignableFrom(handler.getClass()))
-        {
-            try
-            {
-                Constructor deltaSpikeNavigationHandlerWrapperConstructor =
-                    navigationHandlerWrapperClass.getConstructor(ConfigurableNavigationHandler.class);
-
-                NavigationHandler navigationHandlerWrapper =
-                    (NavigationHandler)deltaSpikeNavigationHandlerWrapperConstructor.newInstance(handler);
-                return  navigationHandlerWrapper;
-            }
-            catch (Exception e)
-            {
-                throw ExceptionUtils.throwAsRuntimeException(e);
-            }
-        }
-
-        return null;
+        NavigationHandler wrappedNavigationHandler = this.wrapped.getNavigationHandler();
+        return new DeltaSpikeNavigationHandlerWrapper((ConfigurableNavigationHandlerWrapper) wrappedNavigationHandler);
     }
 
     @Override

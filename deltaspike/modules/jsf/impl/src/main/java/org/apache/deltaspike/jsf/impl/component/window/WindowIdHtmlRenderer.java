@@ -23,6 +23,7 @@ import jakarta.faces.application.ResourceDependency;
 import jakarta.faces.component.UIComponent;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.context.ResponseWriter;
+import jakarta.faces.lifecycle.ClientWindow;
 import jakarta.faces.render.FacesRenderer;
 import jakarta.faces.render.Renderer;
 import java.io.IOException;
@@ -30,8 +31,8 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.jsf.impl.clientwindow.DeltaSpikeClientWindow;
 import org.apache.deltaspike.jsf.impl.util.ClientWindowHelper;
-import org.apache.deltaspike.jsf.spi.scope.window.ClientWindow;
 import org.apache.deltaspike.jsf.spi.scope.window.ClientWindowConfig;
 
 @FacesRenderer(componentFamily = WindowIdComponent.COMPONENT_FAMILY, rendererType = WindowIdComponent.COMPONENT_TYPE)
@@ -40,7 +41,6 @@ import org.apache.deltaspike.jsf.spi.scope.window.ClientWindowConfig;
         @ResourceDependency(library = "jakarta.faces", name = "jsf.js", target = "head") } )
 public class WindowIdHtmlRenderer extends Renderer
 {
-    private volatile ClientWindow clientWindow;
     private volatile ClientWindowConfig clientWindowConfig;
     private int maxWindowIdLength = 10;
 
@@ -70,7 +70,13 @@ public class WindowIdHtmlRenderer extends Renderer
             return;
         }
 
-        String windowId = clientWindow.getWindowId(context);
+        ClientWindow clientWindow = context.getExternalContext().getClientWindow();
+        if (clientWindow == null && !(clientWindow instanceof DeltaSpikeClientWindow))
+        {
+            return;
+        }
+        
+        String windowId = clientWindow.getId();
         // just to get sure if a user provides a own client window
         windowId = secureWindowId(windowId);
 
@@ -90,7 +96,7 @@ public class WindowIdHtmlRenderer extends Renderer
                 + clientWindowConfig.isClientWindowStoreWindowTreeEnabledOnButtonClick());
 
         // see #729
-        if (clientWindow.isInitialRedirectSupported(context))
+        if (((DeltaSpikeClientWindow) clientWindow).isInitialRedirectSupported(context))
         {
             Object cookie = ClientWindowHelper.getRequestWindowIdCookie(context, windowId);
             if (cookie != null && cookie instanceof Cookie)
@@ -120,16 +126,14 @@ public class WindowIdHtmlRenderer extends Renderer
 
     private void lazyInit()
     {
-        if (clientWindow == null)
+        if (clientWindowConfig == null)
         {
             synchronized (this)
             {
-                if (clientWindow == null)
+                if (clientWindowConfig == null)
                 {
                     clientWindowConfig = BeanProvider.getContextualReference(ClientWindowConfig.class);
                     maxWindowIdLength = ClientWindowHelper.getMaxWindowIdLength();
-
-                    clientWindow = BeanProvider.getContextualReference(ClientWindow.class);
                 }
             }
         }

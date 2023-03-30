@@ -16,20 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.jsf.impl.scope.window.strategy;
+package org.apache.deltaspike.jsf.impl.clientwindow;
 
 import org.apache.deltaspike.jsf.impl.util.ClientWindowHelper;
 
 import jakarta.faces.context.FacesContext;
 import java.util.HashMap;
 import java.util.Map;
-import jakarta.enterprise.context.Dependent;
-import jakarta.enterprise.inject.Typed;
+import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.StringUtils;
+import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;
 
-@Dependent
-@Typed(LazyWindowStrategy.class)
-public class LazyWindowStrategy extends AbstractClientWindowStrategy
+public class LazyClientWindow extends DeltaSpikeClientWindow
 {
     @Override
     protected String getOrCreateWindowId(FacesContext facesContext)
@@ -50,6 +48,7 @@ public class LazyWindowStrategy extends AbstractClientWindowStrategy
 
         if (StringUtils.isEmpty(windowId))
         {
+            JsfModuleConfig jsfModuleConfig = BeanProvider.getContextualReference(JsfModuleConfig.class);
             if (jsfModuleConfig.isInitialRedirectEnabled() && !post)
             {
                 ClientWindowHelper.handleInitialRedirect(facesContext, generateNewWindowId());
@@ -66,29 +65,28 @@ public class LazyWindowStrategy extends AbstractClientWindowStrategy
     }
 
     @Override
-    protected Map<String, String> createQueryURLParameters(FacesContext facesContext)
+    public Map<String, String> getQueryURLParameters(FacesContext facesContext)
     {
-        String windowId = getWindowId(facesContext);
-
+        String windowId = getId();
         if (windowId == null)
         {
             return null;
         }
 
-        Map<String, String> parameters = new HashMap<String, String>();
+        Map<String, String> parameters = new HashMap<>();
         parameters.put(ClientWindowHelper.RequestParameters.GET_WINDOW_ID, windowId);
         return parameters;
-    }
-    
-    @Override
-    protected boolean isSupportClientWindowRenderingMode()
-    {
-        return true;
     }
 
     @Override
     public boolean isInitialRedirectSupported(FacesContext facesContext)
     {
         return true;
+    }
+
+    @Override
+    public String interceptRedirect(FacesContext facesContext, String url)
+    {
+        return url;
     }
 }

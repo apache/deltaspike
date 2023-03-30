@@ -26,9 +26,8 @@ import jakarta.faces.application.ViewHandler;
 import jakarta.faces.application.ViewHandlerWrapper;
 import jakarta.faces.component.UIViewRoot;
 import jakarta.faces.context.FacesContext;
-import org.apache.deltaspike.core.api.provider.BeanProvider;
+import jakarta.faces.lifecycle.ClientWindow;
 import org.apache.deltaspike.jsf.impl.util.ClientWindowHelper;
-import org.apache.deltaspike.jsf.spi.scope.window.ClientWindow;
 
 /**
  * Aggregates all {@link ViewHandler} implementations provided by DeltaSpike
@@ -40,7 +39,6 @@ public class DeltaSpikeViewHandler extends ViewHandlerWrapper implements Deactiv
     private volatile Boolean initialized;
     
     private ViewHandler securityAwareViewHandler;
-    private ClientWindow clientWindow;
 
     /**
      * Constructor for wrapping the given {@link ViewHandler}
@@ -76,7 +74,13 @@ public class DeltaSpikeViewHandler extends ViewHandlerWrapper implements Deactiv
         lazyInit();
         
         String actionURL = this.wrapped.getActionURL(context, viewId);
-        return ClientWindowHelper.appendWindowId(context, actionURL, clientWindow);
+        
+        ClientWindow clientWindow = context.getExternalContext().getClientWindow();
+        if (clientWindow != null)
+        {
+            return ClientWindowHelper.appendWindowId(context, actionURL, clientWindow);
+        }
+        return actionURL;
     }
 
     @Override
@@ -107,8 +111,6 @@ public class DeltaSpikeViewHandler extends ViewHandlerWrapper implements Deactiv
                 this.securityAwareViewHandler = null;
             }
 
-            this.clientWindow = BeanProvider.getContextualReference(ClientWindow.class, true);
-            
             this.initialized = true;
         }
     }

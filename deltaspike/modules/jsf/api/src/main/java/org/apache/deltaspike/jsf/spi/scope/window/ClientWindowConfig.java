@@ -50,15 +50,9 @@ public interface ClientWindowConfig extends Serializable
         LAZY,
 
         /**
-         * Delegates to the default window-handling of JSF 2.2+ (if configured)
+         * Delegates to the default window-handling
          */
         DELEGATED,
-
-        /**
-         * If you set this mode, you also need to provide an own {@link ClientWindow} implementation.
-         */
-        CUSTOM
-
     }
 
     /**

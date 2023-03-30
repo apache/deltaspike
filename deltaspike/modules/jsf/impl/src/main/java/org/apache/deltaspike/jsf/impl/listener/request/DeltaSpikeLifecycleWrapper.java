@@ -21,21 +21,24 @@ package org.apache.deltaspike.jsf.impl.listener.request;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.spi.scope.window.WindowContext;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
-import org.apache.deltaspike.jsf.spi.scope.window.ClientWindow;
 
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.event.PhaseListener;
+import jakarta.faces.lifecycle.ClientWindow;
 import jakarta.faces.lifecycle.Lifecycle;
 import org.apache.deltaspike.core.impl.scope.DeltaSpikeContextExtension;
 import org.apache.deltaspike.core.impl.scope.viewaccess.ViewAccessContext;
+import org.apache.deltaspike.jsf.impl.clientwindow.ClientSideClientWindow;
+import org.apache.deltaspike.jsf.impl.clientwindow.LazyClientWindow;
+import org.apache.deltaspike.jsf.spi.scope.window.ClientWindowConfig;
 
 class DeltaSpikeLifecycleWrapper extends Lifecycle
 {
     private final Lifecycle wrapped;
 
     private JsfRequestBroadcaster jsfRequestBroadcaster;
+    private ClientWindowConfig clientWindowConfig;
 
-    private ClientWindow clientWindow;
     private WindowContext windowContext;
     private DeltaSpikeContextExtension contextExtension;
 
@@ -78,10 +81,14 @@ class DeltaSpikeLifecycleWrapper extends Lifecycle
         broadcastInitializedJsfRequestEvent(facesContext);
 
         // ClientWindow handling
-        String windowId = clientWindow.getWindowId(facesContext);
-        if (windowId != null)
+        ClientWindow clientWindow = facesContext.getExternalContext().getClientWindow();
+        if (clientWindow != null)
         {
-            windowContext.activateWindow(windowId);
+            String windowId = clientWindow.getId();
+            if (windowId != null)
+            {
+                windowContext.activateWindow(windowId);
+            }
         }
 
         if (!FacesContext.getCurrentInstance().getResponseComplete())
@@ -108,6 +115,14 @@ class DeltaSpikeLifecycleWrapper extends Lifecycle
     @Override
     public void render(FacesContext facesContext)
     {
+        // prevent jfwid rendering
+        boolean delegateWindowHandling = ClientWindowConfig.ClientWindowRenderMode.DELEGATED.equals(
+                clientWindowConfig.getClientWindowRenderMode(facesContext));
+        if (!delegateWindowHandling && facesContext.getExternalContext().getClientWindow() != null)
+        {
+            facesContext.getExternalContext().getClientWindow().disableClientWindowRenderMode(facesContext);
+        }
+        
         this.wrapped.render(facesContext);
         
         if (facesContext.getViewRoot() != null && facesContext.getViewRoot().getViewId() != null)
@@ -116,6 +131,34 @@ class DeltaSpikeLifecycleWrapper extends Lifecycle
             if (viewAccessContext != null)
             {
                 viewAccessContext.onProcessingViewFinished(facesContext.getViewRoot().getViewId());
+            }
+        }
+    }
+
+    @Override
+    public void attachWindow(FacesContext facesContext)
+    {
+        lazyInit();
+
+        ClientWindowConfig.ClientWindowRenderMode clientWindowRenderMode =
+                clientWindowConfig.getClientWindowRenderMode(facesContext);
+
+        if (clientWindowRenderMode == ClientWindowConfig.ClientWindowRenderMode.DELEGATED)
+        {
+            this.wrapped.attachWindow(facesContext);
+        }
+        else
+        {
+            if (!facesContext.getResponseComplete())
+            {
+                if (clientWindowRenderMode == ClientWindowConfig.ClientWindowRenderMode.LAZY)
+                {
+                    facesContext.getExternalContext().setClientWindow(new LazyClientWindow());
+                }
+                else
+                {
+                    facesContext.getExternalContext().setClientWindow(new ClientSideClientWindow());
+                }
             }
         }
     }
@@ -147,9 +190,9 @@ class DeltaSpikeLifecycleWrapper extends Lifecycle
                         BeanProvider.getContextualReference(JsfRequestBroadcaster.class, true);
             }
 
-            clientWindow = BeanProvider.getContextualReference(ClientWindow.class, true);
-            windowContext = BeanProvider.getContextualReference(WindowContext.class, true);
-            contextExtension = BeanProvider.getContextualReference(DeltaSpikeContextExtension.class, true);
+            this.windowContext = BeanProvider.getContextualReference(WindowContext.class, true);
+            this.contextExtension = BeanProvider.getContextualReference(DeltaSpikeContextExtension.class, true);
+            this.clientWindowConfig = BeanProvider.getContextualReference(ClientWindowConfig.class);
             
             this.initialized = true;
         }

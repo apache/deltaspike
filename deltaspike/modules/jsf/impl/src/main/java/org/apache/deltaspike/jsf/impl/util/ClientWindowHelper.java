@@ -27,9 +27,9 @@ import jakarta.enterprise.inject.Typed;
 import jakarta.faces.FacesException;
 import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.lifecycle.ClientWindow;
 
 import org.apache.deltaspike.jsf.api.config.base.JsfBaseConfig;
-import org.apache.deltaspike.jsf.spi.scope.window.ClientWindow;
 
 @Typed()
 public abstract class ClientWindowHelper

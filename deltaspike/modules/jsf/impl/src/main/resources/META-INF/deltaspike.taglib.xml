@@ -31,13 +31,6 @@
         </component>
     </tag>
     <tag>
-        <tag-name>disableClientWindow</tag-name>
-        <component>
-            <component-type>org.apache.deltaspike.DisableClientWindow</component-type>
-            <renderer-type>org.apache.deltaspike.DisableClientWindow</renderer-type>
-        </component>
-    </tag>
-    <tag>
         <tag-name>preventDoubleSubmit</tag-name>
         <component>
             <component-type>org.apache.deltaspike.PostRequestTokenHolder</component-type>

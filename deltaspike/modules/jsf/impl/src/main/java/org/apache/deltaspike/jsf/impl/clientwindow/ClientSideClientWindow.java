@@ -16,23 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.jsf.impl.scope.window.strategy;
+package org.apache.deltaspike.jsf.impl.clientwindow;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import jakarta.enterprise.context.Dependent;
-import jakarta.enterprise.inject.Typed;
 import jakarta.faces.FacesException;
 import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.Map;
 import org.apache.deltaspike.jsf.impl.util.ClientWindowHelper;
 import org.apache.deltaspike.jsf.impl.util.JsfUtils;
 
-@Dependent
-@Typed(ClientSideWindowStrategy.class)
-public class ClientSideWindowStrategy extends AbstractClientWindowStrategy
+public class ClientSideClientWindow extends DeltaSpikeClientWindow
 {
     /**
      * Value which can be used as "window-id" by external clients which aren't aware of windows.
@@ -66,7 +63,7 @@ public class ClientSideWindowStrategy extends AbstractClientWindowStrategy
         else if (isNoscriptRequest(facesContext.getExternalContext()))
         {
             // the client has JavaScript disabled
-            clientWindowConfig.setJavaScriptEnabled(false);
+            getClientWindowConfig().setJavaScriptEnabled(false);
 
             windowId = DEFAULT_WINDOW_ID;
         }
@@ -109,8 +106,7 @@ public class ClientSideWindowStrategy extends AbstractClientWindowStrategy
             httpResponse.setStatus(HttpServletResponse.SC_OK);
             httpResponse.setContentType("text/html");
 
-            String windowHandlerHtml = clientWindowConfig.getClientWindowHtml();
-
+            String windowHandlerHtml = getClientWindowConfig().getClientWindowHtml();
             if (windowId == null)
             {
                 windowId = UNINITIALIZED_WINDOW_ID_VALUE;
@@ -231,7 +227,7 @@ public class ClientSideWindowStrategy extends AbstractClientWindowStrategy
         if ((!ajax && get) || (ajax && post))
         {
             String requestToken = generateNewRequestToken();
-            String windowId = getWindowId(facesContext);
+            String windowId = getId();
             
             ClientWindowHelper.addRequestWindowIdCookie(facesContext,
                     requestToken,
@@ -252,5 +248,23 @@ public class ClientSideWindowStrategy extends AbstractClientWindowStrategy
         }
         
         return url;
+    }
+
+    @Override
+    public boolean isInitialRedirectSupported(FacesContext facesContext)
+    {
+        return false;
+    }
+
+    @Override
+    public Map<String, String> getQueryURLParameters(FacesContext facesContext)
+    {
+        return null;
+    }
+
+    @Override
+    public boolean isClientWindowRenderModeEnabled(FacesContext facesContext)
+    {
+        return false;
     }
 }

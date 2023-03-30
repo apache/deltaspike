@@ -24,18 +24,12 @@ import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.context.FacesContextFactory;
 import jakarta.faces.lifecycle.Lifecycle;
-import org.apache.deltaspike.core.api.provider.BeanProvider;
-import org.apache.deltaspike.jsf.spi.scope.window.ClientWindow;
 
 public class DeltaSpikeFacesContextFactory extends FacesContextFactory implements Deactivatable
 {
     private final FacesContextFactory wrappedFacesContextFactory;
 
     private final boolean deactivated;
-    
-    private volatile Boolean initialized;
-    
-    private ClientWindow clientWindow;
 
     /**
      * Constructor for wrapping the given {@link FacesContextFactory}
@@ -66,10 +60,8 @@ public class DeltaSpikeFacesContextFactory extends FacesContextFactory implement
         {
             return facesContext;
         }
-
-        lazyInit();
         
-        return new DeltaSpikeFacesContextWrapper(facesContext, clientWindow);
+        return new DeltaSpikeFacesContextWrapper(facesContext);
     }
 
     /**
@@ -79,24 +71,5 @@ public class DeltaSpikeFacesContextFactory extends FacesContextFactory implement
     public FacesContextFactory getWrapped()
     {
         return wrappedFacesContextFactory;
-    }
-    
-    private void lazyInit()
-    {
-        if (this.initialized == null)
-        {
-            init();
-        }
-    }
-
-    private synchronized void init()
-    {
-        // switch into paranoia mode
-        if (this.initialized == null)
-        {
-            this.clientWindow = BeanProvider.getContextualReference(ClientWindow.class, true);
-            
-            this.initialized = true;
-        }
     }
 }

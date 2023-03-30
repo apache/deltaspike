@@ -25,18 +25,17 @@ import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.ExternalContextWrapper;
 import java.io.IOException;
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.lifecycle.ClientWindow;
+import org.apache.deltaspike.jsf.impl.clientwindow.DeltaSpikeClientWindow;
 import org.apache.deltaspike.jsf.impl.util.ClientWindowHelper;
-import org.apache.deltaspike.jsf.spi.scope.window.ClientWindow;
 
 public class DeltaSpikeExternalContextWrapper extends ExternalContextWrapper implements Deactivatable
 {
     private final ExternalContext wrapped;
-    private final ClientWindow clientWindow;
 
-    DeltaSpikeExternalContextWrapper(ExternalContext wrapped, ClientWindow clientWindow)
+    DeltaSpikeExternalContextWrapper(ExternalContext wrapped)
     {
         this.wrapped = wrapped;
-        this.clientWindow = clientWindow;
     }
 
     @Override
@@ -51,9 +50,10 @@ public class DeltaSpikeExternalContextWrapper extends ExternalContextWrapper imp
             JsfUtils.saveFacesMessages(this.wrapped);
         }
 
-        if (clientWindow != null)
+        ClientWindow clientWindow = getClientWindow();
+        if (clientWindow != null && clientWindow instanceof DeltaSpikeClientWindow)
         {
-            url = clientWindow.interceptRedirect(facesContext, url);
+            url = ((DeltaSpikeClientWindow) clientWindow).interceptRedirect(facesContext, url);
         }
 
         this.wrapped.redirect(url);
