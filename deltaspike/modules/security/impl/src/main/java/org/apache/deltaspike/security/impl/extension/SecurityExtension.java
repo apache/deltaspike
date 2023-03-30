@@ -109,7 +109,7 @@ public class SecurityExtension implements Extension, Deactivatable
                     if (SecurityUtils.isMetaAnnotatedWithSecurityBindingType(annotation))
                     {
                         event.configureAnnotatedType()
-                                .filterMethods(cm -> cm.equals(m))
+                                .filterMethods(cm -> cm.getJavaMember().equals(m.getJavaMember()))
                                 .findFirst()
                                 .get()
                                 .add(INTERCEPTOR_BINDING);

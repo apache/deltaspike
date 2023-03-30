@@ -66,12 +66,5 @@
             <artifactId>deltaspike-security-module-api</artifactId>
             <version>${project.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.apache.geronimo.specs</groupId>
-            <artifactId>geronimo-jpa_2.2_spec</artifactId>
-            <version>1.1</version>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
 </project>
