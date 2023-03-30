@@ -40,7 +40,9 @@
         <module>security</module>
         <module>jpa</module>
         <module>jsf</module>
+        -->
         <module>partial-bean</module>
+<!--
         <module>data</module>
         <module>scheduler</module>
 -->

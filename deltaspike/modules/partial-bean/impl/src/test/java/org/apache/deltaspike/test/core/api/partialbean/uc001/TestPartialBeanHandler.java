@@ -51,11 +51,13 @@ public class TestPartialBeanHandler implements InvocationHandler, /*just needed 
         //TODO check in a test
     }
 
+    @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
     {
         return this.value + "-" + this.testBean.getValue() + "-" + this.intercepted;
     }
 
+    @Override
     public void setIntercepted(boolean intercepted)
     {
         this.intercepted = intercepted;

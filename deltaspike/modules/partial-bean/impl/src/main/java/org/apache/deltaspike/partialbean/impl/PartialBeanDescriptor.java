@@ -32,7 +32,7 @@ public class PartialBeanDescriptor
     public PartialBeanDescriptor(Class<? extends Annotation> binding)
     {
         this.binding = binding;
-        this.classes = new HashSet<Class<?>>();
+        this.classes = new HashSet<>();
     }
 
     public PartialBeanDescriptor(Class<? extends Annotation> binding,

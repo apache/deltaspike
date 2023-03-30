@@ -23,32 +23,30 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import jakarta.enterprise.context.Dependent;
 import jakarta.enterprise.event.Observes;
+import jakarta.enterprise.inject.Default;
 import jakarta.enterprise.inject.Produces;
 import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
 import jakarta.enterprise.inject.spi.AnnotatedType;
-import jakarta.enterprise.inject.spi.Bean;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.BeforeBeanDiscovery;
 import jakarta.enterprise.inject.spi.Extension;
 import jakarta.enterprise.inject.spi.ProcessAnnotatedType;
+import jakarta.enterprise.inject.spi.configurator.BeanConfigurator;
+import org.apache.deltaspike.core.api.provider.BeanProvider;
 
-import org.apache.deltaspike.core.api.literal.DefaultLiteral;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.AnnotationUtils;
 import org.apache.deltaspike.core.util.BeanUtils;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
-import org.apache.deltaspike.core.util.bean.BeanBuilder;
-import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
+import org.apache.deltaspike.core.util.ReflectionUtils;
 import org.apache.deltaspike.partialbean.api.PartialBeanBinding;
-import org.apache.deltaspike.proxy.api.DeltaSpikeProxyContextualLifecycle;
+import org.apache.deltaspike.proxy.api.DeltaSpikeProxyBeanConfigurator;
 
 public class PartialBeanBindingExtension implements Extension, Deactivatable
 {
@@ -147,18 +145,10 @@ public class PartialBeanBindingExtension implements Extension, Deactivatable
             {
                 for (Class partialBeanClass : descriptor.getClasses())
                 {
-                    Bean partialBean = createPartialBean(partialBeanClass, descriptor, afterBeanDiscovery, beanManager);
-                    if (partialBean != null)
+                    boolean added = createPartialBean(partialBeanClass, descriptor, afterBeanDiscovery, beanManager);
+                    if (added)
                     {
-                        afterBeanDiscovery.addBean(partialBean);
-
-                        List<Bean> partialProducerBeans =
-                            createPartialProducersDefinedIn(partialBean, afterBeanDiscovery, beanManager);
-
-                        for (Bean partialProducerBean : partialProducerBeans)
-                        {
-                            afterBeanDiscovery.addBean(partialProducerBean);
-                        }
+                        createPartialProducersDefinedIn(afterBeanDiscovery, beanManager, partialBeanClass);
                     }
                 }
             }
@@ -167,7 +157,7 @@ public class PartialBeanBindingExtension implements Extension, Deactivatable
         this.descriptors.clear();
     }
 
-    protected <T> Bean<T> createPartialBean(Class<T> beanClass, PartialBeanDescriptor descriptor,
+    protected <T> boolean createPartialBean(Class<T> beanClass, PartialBeanDescriptor descriptor,
             AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager)
     {
         if (descriptor.getHandler() == null)
@@ -178,22 +168,25 @@ public class PartialBeanBindingExtension implements Extension, Deactivatable
                     + " is needed as a handler for " + beanClass.getName()
                     + ". See the documentation about @" + PartialBeanBinding.class.getName() + "."));
 
-            return null;
+            return false;
         }
 
-        AnnotatedType<T> annotatedType = new AnnotatedTypeBuilder<T>().readFromType(beanClass).create();
+        AnnotatedType<T> annotatedType = beanManager.createAnnotatedType(beanClass);
 
-        DeltaSpikeProxyContextualLifecycle lifecycle = new DeltaSpikeProxyContextualLifecycle(beanClass,
+        BeanConfigurator<T> beanConfigurator = afterBeanDiscovery.addBean()    
+            .read(annotatedType)
+            .beanClass(beanClass);
+        //  .passivationCapable(true)
+
+        new DeltaSpikeProxyBeanConfigurator(beanClass,
                 descriptor.getHandler(),
                 PartialBeanProxyFactory.getInstance(),
-                beanManager);
+                beanManager,
+                beanConfigurator)
+            .delegateCreateWith()
+            .delegateDestroyWith();
 
-        BeanBuilder<T> beanBuilder = new BeanBuilder<T>(beanManager)
-                .readFromType(annotatedType)
-                .passivationCapable(true)
-                .beanLifecycle(lifecycle);
-
-        return beanBuilder.create();
+        return true;
     }
 
     protected <X> Class<? extends Annotation> extractBindingClass(ProcessAnnotatedType<X> pat)
@@ -213,18 +206,9 @@ public class PartialBeanBindingExtension implements Extension, Deactivatable
      * logic for partial-producers
      */
 
-    protected List<Bean> createPartialProducersDefinedIn(
-        Bean partialBean, AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager)
+    private void createPartialProducersDefinedIn(
+            AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager, Class currentClass)
     {
-        Class currentClass = partialBean.getBeanClass();
-        return createPartialProducersDefinedIn(partialBean, afterBeanDiscovery, beanManager, currentClass);
-    }
-
-    private List<Bean> createPartialProducersDefinedIn(
-        Bean partialBean, AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager, Class currentClass)
-    {
-        List<Bean> result = new ArrayList<Bean>();
-
         while (currentClass != null && !Object.class.getName().equals(currentClass.getName()))
         {
             for (Class interfaceClass : currentClass.getInterfaces())
@@ -233,8 +217,8 @@ public class PartialBeanBindingExtension implements Extension, Deactivatable
                 {
                     continue;
                 }
-                result.addAll(
-                    createPartialProducersDefinedIn(partialBean, afterBeanDiscovery, beanManager, interfaceClass));
+
+                createPartialProducersDefinedIn(afterBeanDiscovery, beanManager, interfaceClass);
             }
 
             for (Method currentMethod : currentClass.getDeclaredMethods())
@@ -250,9 +234,6 @@ public class PartialBeanBindingExtension implements Extension, Deactivatable
                                 currentMethod.toString() + " in " + currentClass.getName()));
                     }
 
-                    DeltaSpikePartialProducerLifecycle lifecycle =
-                        new DeltaSpikePartialProducerLifecycle(partialBean.getBeanClass(), currentMethod);
-
                     Class<? extends Annotation> scopeClass =
                         extractScope(currentMethod.getDeclaredAnnotations(), beanManager);
 
@@ -263,23 +244,25 @@ public class PartialBeanBindingExtension implements Extension, Deactivatable
 
                     Set<Annotation> qualifiers = extractQualifiers(currentMethod.getDeclaredAnnotations(), beanManager);
 
-                    BeanBuilder<?> beanBuilder = new BeanBuilder(beanManager)
+                    final Class partialBeanClass = currentClass;
+
+                    afterBeanDiscovery.addBean()
                             .beanClass(producerResultType)
                             .types(Object.class, producerResultType)
                             .qualifiers(qualifiers)
-                            .passivationCapable(passivationCapable)
+                            // .passivationCapable(passivationCapable)
                             .scope(scopeClass)
                             .id(createPartialProducerId(currentClass, currentMethod, qualifiers))
-                            .beanLifecycle(lifecycle);
-
-                    result.add(beanBuilder.create());
+                            .produceWith(e ->
+                                {
+                                    Object instance = BeanProvider.getContextualReference(partialBeanClass);
+                                    return ReflectionUtils.invokeMethod(instance, currentMethod, Object.class, false); 
+                                });
                 }
             }
 
             currentClass = currentClass.getSuperclass();
         }
-
-        return result;
     }
 
     private Set<Annotation> extractQualifiers(Annotation[] annotations, BeanManager beanManager)
@@ -288,7 +271,7 @@ public class PartialBeanBindingExtension implements Extension, Deactivatable
 
         if (result.isEmpty())
         {
-            result.add(new DefaultLiteral());
+            result.add(Default.Literal.INSTANCE);
         }
         return result;
     }
