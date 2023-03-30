@@ -43,10 +43,10 @@ import org.apache.deltaspike.jsf.impl.scope.viewaccess.ViewAccessScopedAwareNavi
 
 public class DeltaSpikeNavigationHandler extends ConfigurableNavigationHandler implements Deactivatable
 {
-    private Set<String> otherOutcomes = new CopyOnWriteArraySet<String>();
+    private Set<String> otherOutcomes = new CopyOnWriteArraySet<>();
 
     private Map<String, NavigationCase> viewConfigBasedNavigationCaseCache
-        = new ConcurrentHashMap<String, NavigationCase>();
+        = new ConcurrentHashMap<>();
 
     private final NavigationHandler wrapped;
     private final boolean activated;
@@ -176,7 +176,7 @@ public class DeltaSpikeNavigationHandler extends ConfigurableNavigationHandler i
 
         if (result == null)
         {
-            result = new HashMap<String, Set<NavigationCase>>();
+            result = new HashMap<>();
         }
 
         if (!this.activated)

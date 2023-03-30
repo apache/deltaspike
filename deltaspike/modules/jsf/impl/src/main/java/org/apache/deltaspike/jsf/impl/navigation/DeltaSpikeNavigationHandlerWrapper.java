@@ -59,6 +59,7 @@ public class DeltaSpikeNavigationHandlerWrapper extends ConfigurableNavigationHa
         return this.deltaSpikeNavigationHandler.getNavigationCase(context, fromAction, outcome);
     }
 
+    @Override
     public ConfigurableNavigationHandler getWrapped()
     {
         return wrapped;

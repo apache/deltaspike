@@ -33,7 +33,7 @@ public class JsfMessageResolver extends DefaultMessageResolver
     @Override
     protected List<String> getMessageSources(MessageContext messageContext)
     {
-        List<String> result = new ArrayList<String>(super.getMessageSources(messageContext) /*unmodifiable-list*/);
+        List<String> result = new ArrayList<>(super.getMessageSources(messageContext) /*unmodifiable-list*/);
 
         FacesContext facesContext = FacesContext.getCurrentInstance();
 

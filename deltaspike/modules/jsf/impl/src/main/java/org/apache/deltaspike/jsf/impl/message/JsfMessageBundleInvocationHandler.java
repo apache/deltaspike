@@ -47,6 +47,7 @@ public class JsfMessageBundleInvocationHandler implements InvocationHandler
         this.invocationHandler = invocationHandler;
     }
 
+    @Override
     public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable
     {
         Object message = invocationHandler.invoke(proxy, method, args);

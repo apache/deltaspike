@@ -66,6 +66,6 @@ public class JsfMessageProducer
                                                   MessageBundleInvocationHandler invocationHandler)
     {
         // X TODO check if the JsfMessage should get injected into a UIComponent and use #getClientId()
-        return new DefaultJsfMessage<M>(rawType, null, invocationHandler);
+        return new DefaultJsfMessage<>(rawType, null, invocationHandler);
     }
 }

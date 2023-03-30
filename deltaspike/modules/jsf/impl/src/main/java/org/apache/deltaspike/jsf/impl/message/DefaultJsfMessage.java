@@ -63,7 +63,7 @@ public class DefaultJsfMessage<T> implements JsfMessage<T>
     @Override
     public JsfMessage<T> forClientId(String clientId)
     {
-        return new DefaultJsfMessage<T>(type, clientId, invocationHandler);
+        return new DefaultJsfMessage<>(type, clientId, invocationHandler);
     }
 
     @Override
