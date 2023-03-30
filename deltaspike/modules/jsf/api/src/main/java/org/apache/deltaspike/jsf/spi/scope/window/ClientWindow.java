@@ -29,7 +29,7 @@ import jakarta.faces.context.FacesContext;
  * easier to provide this feature for JSF-2.0, JSF-2.1 and also
  * JSF-2.2 JSF implementations.</p>
  *
- * <p>Please not that in JSF-2.2 a <code>javax.faces.lifecycle.ClientWindow</code>
+ * <p>Please not that in JSF-2.2 a <code>jakarta.faces.lifecycle.ClientWindow</code>
  * instance gets created for each and every request, but in DeltaSpike our
  * ClientWindow instances are most likely &#064;ApplicationScoped.
  * </p>
@@ -51,7 +51,7 @@ public interface ClientWindow
 
     /**
      * Can be called to disable the window-id for an URL.
-     * Don't forget to call {@link #enableClientWindowRenderMode(javax.faces.context.FacesContext)}
+     * Don't forget to call {@link #enableClientWindowRenderMode(jakarta.faces.context.FacesContext)}
      * after rendering the markup for the current component, if {@link #isClientWindowRenderModeEnabled}
      * returned <code>true</code> before calling this method.
      */

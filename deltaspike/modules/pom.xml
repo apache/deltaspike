@@ -37,15 +37,11 @@
     <modules>
         <module>proxy</module>
         <module>security</module>
-<!--
-        <module>security</module>
         <module>jsf</module>
-        -->
         <module>partial-bean</module>
         <module>jpa</module>
         <module>data</module>
 <!--
-        
         <module>scheduler</module>
 -->
         <module>test-control</module>

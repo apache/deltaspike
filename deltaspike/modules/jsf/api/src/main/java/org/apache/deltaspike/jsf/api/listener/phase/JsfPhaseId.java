@@ -23,17 +23,17 @@ package org.apache.deltaspike.jsf.api.listener.phase;
  */
 public enum JsfPhaseId
 {
-    RESTORE_VIEW(javax.faces.event.PhaseId.RESTORE_VIEW),
-    APPLY_REQUEST_VALUES(javax.faces.event.PhaseId.APPLY_REQUEST_VALUES),
-    PROCESS_VALIDATIONS(javax.faces.event.PhaseId.PROCESS_VALIDATIONS),
-    UPDATE_MODEL_VALUES(javax.faces.event.PhaseId.UPDATE_MODEL_VALUES),
-    INVOKE_APPLICATION(javax.faces.event.PhaseId.INVOKE_APPLICATION),
-    RENDER_RESPONSE(javax.faces.event.PhaseId.RENDER_RESPONSE),
-    ANY_PHASE(javax.faces.event.PhaseId.ANY_PHASE);
+    RESTORE_VIEW(jakarta.faces.event.PhaseId.RESTORE_VIEW),
+    APPLY_REQUEST_VALUES(jakarta.faces.event.PhaseId.APPLY_REQUEST_VALUES),
+    PROCESS_VALIDATIONS(jakarta.faces.event.PhaseId.PROCESS_VALIDATIONS),
+    UPDATE_MODEL_VALUES(jakarta.faces.event.PhaseId.UPDATE_MODEL_VALUES),
+    INVOKE_APPLICATION(jakarta.faces.event.PhaseId.INVOKE_APPLICATION),
+    RENDER_RESPONSE(jakarta.faces.event.PhaseId.RENDER_RESPONSE),
+    ANY_PHASE(jakarta.faces.event.PhaseId.ANY_PHASE);
 
-    private javax.faces.event.PhaseId phaseId;
+    private jakarta.faces.event.PhaseId phaseId;
 
-    JsfPhaseId(javax.faces.event.PhaseId phaseId)
+    JsfPhaseId(jakarta.faces.event.PhaseId phaseId)
     {
         this.phaseId = phaseId;
     }
@@ -44,7 +44,7 @@ public enum JsfPhaseId
      * @param phaseId current request-id which has to be converted
      * @return ds implementation for the given request-id
      */
-    public static JsfPhaseId convertFromFacesClass(javax.faces.event.PhaseId phaseId)
+    public static JsfPhaseId convertFromFacesClass(jakarta.faces.event.PhaseId phaseId)
     {
         if (RESTORE_VIEW.getPhaseId().equals(phaseId))
         {
@@ -79,7 +79,7 @@ public enum JsfPhaseId
         return null;
     }
 
-    javax.faces.event.PhaseId getPhaseId()
+    jakarta.faces.event.PhaseId getPhaseId()
     {
         return phaseId;
     }

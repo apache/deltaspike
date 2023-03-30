@@ -54,7 +54,7 @@ public class DefaultClientWindowConfig implements ClientWindowConfig
     private volatile Boolean javaScriptEnabled = null;
 
     /**
-     * lazily initiated via {@link #getUserAgent(javax.faces.context.FacesContext)}
+     * lazily initiated via {@link #getUserAgent(jakarta.faces.context.FacesContext)}
      */
     private volatile String userAgent = null;
 

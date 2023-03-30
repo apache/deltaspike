@@ -18,12 +18,12 @@
  */
 package org.apache.deltaspike.jsf.util;
 
-import org.apache.myfaces.test.base.junit4.AbstractJsfTestCase;
 import org.junit.Assert;
 import org.junit.Test;
 
 import jakarta.faces.context.FacesContext;
 import java.io.ByteArrayInputStream;
+import org.apache.myfaces.test.base.junit.AbstractJsfTestCase;
 
 /**
  * Tests for {@link ValueExpressionEvaluationInputStream}.

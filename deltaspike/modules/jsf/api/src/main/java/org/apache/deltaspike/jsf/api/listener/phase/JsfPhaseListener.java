@@ -28,7 +28,7 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * Annotation for implementations of {@link javax.faces.event.PhaseListener}.
+ * Annotation for implementations of {@link jakarta.faces.event.PhaseListener}.
  */
 
 @Target(TYPE)

@@ -33,8 +33,8 @@ import jakarta.faces.context.FacesContext;
 @ApplicationScoped
 public class JsfModuleConfig implements DeltaSpikeConfig
 {
-    public static final String CLIENT_WINDOW_CONFIG_KEY = "javax.faces.CLIENT_WINDOW_MODE";
-    public static final String CLIENT_WINDOW_CLASS_NAME = "javax.faces.lifecycle.ClientWindow";
+    public static final String CLIENT_WINDOW_CONFIG_KEY = "jakarta.faces.CLIENT_WINDOW_MODE";
+    public static final String CLIENT_WINDOW_CLASS_NAME = "jakarta.faces.lifecycle.ClientWindow";
 
     private static final long serialVersionUID = -487295181899986237L;
 

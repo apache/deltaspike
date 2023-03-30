@@ -123,7 +123,7 @@ public @interface View
     }
 
     /**
-     * Type of the navigation which should be used by the {@link javax.faces.application.NavigationHandler}
+     * Type of the navigation which should be used by the {@link jakarta.faces.application.NavigationHandler}
      */
     enum NavigationMode
     {

@@ -42,12 +42,12 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * - for request-observer-methods
  * //TODO - for lifecycle callbacks in view-definitions
  *
- * Parameter-type of the observer: {@link javax.faces.event.PhaseEvent}
+ * Parameter-type of the observer: {@link jakarta.faces.event.PhaseEvent}
  */
 public @interface AfterPhase
 {
     /**
-     * {@link JsfPhaseId} which is the equivalent for the {@link javax.faces.event.PhaseId} value.
+     * {@link JsfPhaseId} which is the equivalent for the {@link jakarta.faces.event.PhaseId} value.
      * For more details see {@link JsfPhaseId}
      *
      * @return request-id which defines the jsf-lifecycle-request to completely define this qualifier
