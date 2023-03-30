@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.jsf.impl.scope.view.beans;
 
-import jakarta.faces.bean.ViewScoped;
+import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import java.io.Serializable;
 

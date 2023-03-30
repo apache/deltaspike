@@ -243,7 +243,7 @@ public class ViewConfigAwareNavigationHandler extends NavigationHandler
                     ViewRef.Manual.class, newViewConfigDescriptor.getConfigClass());
         }
 
-        this.beanManager.fireEvent(navigateEvent);
+        this.beanManager.getEvent().fire(navigateEvent);
         return navigateEvent;
     }
 
