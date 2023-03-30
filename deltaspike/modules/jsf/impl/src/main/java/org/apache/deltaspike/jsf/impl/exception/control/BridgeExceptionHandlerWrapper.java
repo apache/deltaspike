@@ -31,7 +31,6 @@ import jakarta.faces.event.PhaseId;
 import jakarta.faces.event.SystemEvent;
 
 import org.apache.deltaspike.core.api.config.view.DefaultErrorView;
-import org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.jsf.impl.util.JsfUtils;
 import org.apache.deltaspike.jsf.impl.util.SecurityUtils;
@@ -85,18 +84,6 @@ public class BridgeExceptionHandlerWrapper extends ExceptionHandlerWrapper imple
                     iterator.remove();
                     continue;
                 }
-                else
-                {
-                    ExceptionToCatchEvent event = new ExceptionToCatchEvent(rootCause, exceptionQualifier);
-                    event.setOptional(true);
-
-                    beanManager.fireEvent(event);
-
-                    if (event.isHandled())
-                    {
-                        iterator.remove();
-                    }
-                }
 
                 // a handle method might redirect and set responseComplete
                 if (context.getResponseComplete())
@@ -133,18 +120,6 @@ public class BridgeExceptionHandlerWrapper extends ExceptionHandlerWrapper imple
                 if (exception instanceof AccessDeniedException)
                 {
                     processAccessDeniedException(exception);
-                }
-                else
-                {
-                    ExceptionToCatchEvent exceptionToCatchEvent = new ExceptionToCatchEvent(exception);
-                    exceptionToCatchEvent.setOptional(true);
-
-                    this.beanManager.fireEvent(exceptionToCatchEvent);
-
-                    if (exceptionToCatchEvent.isHandled())
-                    {
-                        return;
-                    }
                 }
             }
         }
