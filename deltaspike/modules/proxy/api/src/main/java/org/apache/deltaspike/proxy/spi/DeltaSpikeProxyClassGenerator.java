@@ -33,7 +33,7 @@ public interface DeltaSpikeProxyClassGenerator
      *                                  We generate them with the same name as the original method
      *                                  and append the suffix.
      * @param additionalInterfaces Additional interfaces which should be implemented.
-     *                             Please note that you must also pass new methods via <c>delegateMethods</c>.
+     *                             Please note that you must also pass new methods via <code>delegateMethods</code>.
      * @param delegateMethods Methods which should be delegated to the
      *                        {@link DeltaSpikeProxy#getDelegateInvocationHandler()}
      *                        instead of invoking the original method.

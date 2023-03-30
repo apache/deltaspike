@@ -190,7 +190,7 @@ public abstract class DeltaSpikeProxyFactory
     
     protected ArrayList<Method> collectAllMethods(Class<?> clazz)
     {
-        ArrayList<Method> methods = new ArrayList<Method>();
+        ArrayList<Method> methods = new ArrayList<>();
         Set<Method> abstractMethodLeaves = new HashSet<>();
         for (Method method : clazz.getMethods())
         {
@@ -269,7 +269,7 @@ public abstract class DeltaSpikeProxyFactory
     
     protected ArrayList<Method> filterInterceptMethods(Class<?> targetClass, ArrayList<Method> allMethods)
     {
-        ArrayList<Method> methods = new ArrayList<Method>();
+        ArrayList<Method> methods = new ArrayList<>();
         
         Iterator<Method> it = allMethods.iterator();
         while (it.hasNext())

@@ -72,7 +72,7 @@
         <tomcat.version>10.1.5</tomcat.version>
 
         <!-- used for some bytecode proxy stuff. Shaded in -->
-        <asm.version>9.4</asm.version>
+        <asm.version>9.5</asm.version>
 
 
         <maven.surefire.plugin.version>3.0.0-M4</maven.surefire.plugin.version>
