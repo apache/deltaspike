@@ -20,12 +20,12 @@ package org.apache.deltaspike.jsf.api.config;
 
 import java.lang.annotation.Annotation;
 import org.apache.deltaspike.core.api.config.DeltaSpikeConfig;
-import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.jsf.spi.scope.window.ClientWindowConfig;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Default;
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.lifecycle.ClientWindow;
 
 /**
  * Config for all JSF specific configurations.
@@ -33,14 +33,10 @@ import jakarta.faces.context.FacesContext;
 @ApplicationScoped
 public class JsfModuleConfig implements DeltaSpikeConfig
 {
-    public static final String CLIENT_WINDOW_CONFIG_KEY = "jakarta.faces.CLIENT_WINDOW_MODE";
-    public static final String CLIENT_WINDOW_CLASS_NAME = "jakarta.faces.lifecycle.ClientWindow";
-
     private static final long serialVersionUID = -487295181899986237L;
 
     private volatile Boolean initialized;
     private boolean delegatedWindowHandlingEnabled;
-    private boolean jsf22Available;
 
     protected JsfModuleConfig()
     {
@@ -77,7 +73,7 @@ public class JsfModuleConfig implements DeltaSpikeConfig
     }
 
     /**
-     * If the window-handling of JSF 2.2+ is enabled,
+     * If the window-handling of Faces is enabled,
      * {@link org.apache.deltaspike.jsf.spi.scope.window.ClientWindowConfig.ClientWindowRenderMode#DELEGATED}
      * will be returned. In all other cases <code>null</code> gets returned as application wide default value.
      * That leads to a default-handling per session (which includes logic for handling bots,...)
@@ -111,13 +107,6 @@ public class JsfModuleConfig implements DeltaSpikeConfig
         return true;
     }
 
-    public boolean isJsf22Available()
-    {
-        lazyInit();
-
-        return this.jsf22Available;
-    }
-
     private void lazyInit()
     {
         if (this.initialized == null)
@@ -130,28 +119,19 @@ public class JsfModuleConfig implements DeltaSpikeConfig
     {
         if (this.initialized == null)
         {
-            this.jsf22Available = ClassUtils.tryToLoadClassForName(CLIENT_WINDOW_CLASS_NAME) != null;
+            FacesContext facesContext = FacesContext.getCurrentInstance();
 
-            if (!this.jsf22Available)
+            // can happen in case of a very simple test-setup without a mocked jsf container
+            if (facesContext == null)
             {
                 this.delegatedWindowHandlingEnabled = false;
             }
             else
             {
-                FacesContext facesContext = FacesContext.getCurrentInstance();
-
-                // can happen in case of a very simple test-setup without a mocked jsf container
-                if (facesContext == null)
-                {
-                    this.delegatedWindowHandlingEnabled = false;
-                }
-                else
-                {
-
-                    String initParam = facesContext.getExternalContext().getInitParameter(CLIENT_WINDOW_CONFIG_KEY);
-                    this.delegatedWindowHandlingEnabled =
-                            !(initParam == null || "none".equalsIgnoreCase(initParam.trim()));
-                }
+                String initParam = facesContext.getExternalContext()
+                        .getInitParameter(ClientWindow.CLIENT_WINDOW_MODE_PARAM_NAME);
+                this.delegatedWindowHandlingEnabled =
+                        !(initParam == null || "none".equalsIgnoreCase(initParam.trim()));
             }
 
             this.initialized = true;
