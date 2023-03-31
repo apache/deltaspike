@@ -20,14 +20,12 @@ package org.apache.deltaspike.jsf.impl.util;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jakarta.enterprise.inject.Typed;
 import jakarta.faces.FacesException;
 import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
-import jakarta.faces.lifecycle.ClientWindow;
 
 import org.apache.deltaspike.jsf.api.config.base.JsfBaseConfig;
 
