@@ -175,7 +175,7 @@
                 var redirectUrl = '$$requestUrl$$';
                 redirectUrl = dswh.utils.setUrlParam(redirectUrl, "dsrid", requestToken);
                 // we still add the windowId page param to support lazy windowId dropping for some clients
-                redirectUrl = dswh.utils.setUrlParam(redirectUrl, "dswid", windowId);
+                redirectUrl = dswh.utils.setUrlParam(redirectUrl, "jfwid", windowId);
 
                 dswh.utils.storeCookie('dsrwid-' + requestToken, windowId, 3);
 

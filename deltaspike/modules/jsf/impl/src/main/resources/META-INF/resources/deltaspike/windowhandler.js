@@ -329,10 +329,10 @@ window.dswh = window.dswh || {
             },
 
             assertWindowId : function() {
-                var dswid = dswh.utils.getUrlParameter(window.location.href, 'dswid');
+                var jfwid = dswh.utils.getUrlParameter(window.location.href, 'jfwid');
 
                 dswh.utils.log('--- #assertWindowId');
-                dswh.utils.log('dswid: ' + dswid);
+                dswh.utils.log('jfwid: ' + jfwid);
 
                 // window name is defined -> existing tab
                 if (dswh.utils.isWindowNameDefined()) {
@@ -346,10 +346,10 @@ window.dswh = window.dswh || {
                         if (windowId === dswh.TEMP_WINDOW_NAME) {
                             // enabled initial redirect
                             // -> use the new windowId from the url
-                            if (dswid) {
+                            if (jfwid) {
                                 dswh.utils.log('assign window name from request parameter');
 
-                                dswh.utils.setWindowIdAsWindowName(dswid);
+                                dswh.utils.setWindowIdAsWindowName(jfwid);
                             }
                             // disabled initial redirect
                             // -> use the new windowId from the rendered config as no url param is available
@@ -367,10 +367,10 @@ window.dswh = window.dswh || {
                         }
                         // window name doesn't match requested windowId
                         // -> redirect to the same view with current windowId from the window name
-                        else if (windowId !== dswid) {
+                        else if (windowId !== jfwid) {
                             dswh.utils.log('reload url with window name');
 
-                            window.location = dswh.utils.setUrlParam(window.location.href, 'dswid', windowId);
+                            window.location = dswh.utils.setUrlParam(window.location.href, 'jfwid', windowId);
                         }
                     }
                     else {
@@ -382,10 +382,10 @@ window.dswh = window.dswh || {
                 // window name is undefined -> "open in new tab/window" was used
                 else {
                     // url param available?
-                    if (dswid) {
+                    if (jfwid) {
                         // initial redirect
                         // -> the windowId is valid - we don't need to a second request
-                        if (dswh.cfg.initialRedirectWindowId && dswid === dswh.cfg.initialRedirectWindowId) {
+                        if (dswh.cfg.initialRedirectWindowId && jfwid === dswh.cfg.initialRedirectWindowId) {
                             dswh.utils.log('assign window name from initialRedirectWindowId');
 
                             dswh.utils.setWindowIdAsWindowName(dswh.cfg.initialRedirectWindowId);
@@ -411,9 +411,9 @@ window.dswh = window.dswh || {
             cleanupCookies : function() {
                 dswh.utils.log('--- #cleanupCookies');
 
-                var dswid = dswh.utils.getUrlParameter(window.location.href, 'dswid');
-                if (dswid) {
-                    dswh.utils.expireCookie('dsrwid-' + dswid);
+                var jfwid = dswh.utils.getUrlParameter(window.location.href, 'jfwid');
+                if (jfwid) {
+                    dswh.utils.expireCookie('dsrwid-' + jfwid);
                 }
             }
         }
@@ -460,8 +460,8 @@ window.dswh = window.dswh || {
             // set temp window name to remember the current state
             dswh.utils.setWindowIdAsWindowName(dswh.TEMP_WINDOW_NAME);
 
-            // we remove the dswid if available and redirect to the same url again to create a new windowId
-            window.location = dswh.utils.setUrlParam(window.location.href, 'dswid', null);
+            // we remove the jfwid if available and redirect to the same url again to create a new windowId
+            window.location = dswh.utils.setUrlParam(window.location.href, 'jfwid', null);
 
             // set temp window name to remember the current state (again - sometimes required for IE!?)
             dswh.utils.setWindowIdAsWindowName(dswh.TEMP_WINDOW_NAME);
