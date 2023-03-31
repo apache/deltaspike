@@ -104,8 +104,6 @@ window.dswh = window.dswh || {
             init : function(ajax) {
                 this.overwriteLinkOnClickEvents();
                 this.overwriteButtonOnClickEvents();
-
-                dswh.utils.appendHiddenWindowIdToForms();
             },
 
             assertWindowId : function() {
@@ -327,7 +325,7 @@ window.dswh = window.dswh || {
             },
 
             init : function(ajax) {
-                dswh.utils.appendHiddenWindowIdToForms();
+
             },
 
             assertWindowId : function() {
@@ -577,22 +575,6 @@ window.dswh = window.dswh || {
             a.search = '?' + newParameters.join('&');
 
             return a.href;
-        },
-
-        appendHiddenWindowIdToForms : function() {
-            var forms = document.getElementsByTagName("form");
-            for (var i = 0; i < forms.length; i++) {
-                var form = forms[i];
-                var dspwid = form.elements["dspwid"];
-                if (!dspwid) {
-                    dspwid = document.createElement("INPUT");
-                    dspwid.setAttribute("name", "dspwid");
-                    dspwid.setAttribute("type", "hidden");
-                    form.appendChild(dspwid);
-                }
-
-                dspwid.setAttribute("value", dswh.windowId);
-            }
         },
 
         expireCookie : function(cookieName) {

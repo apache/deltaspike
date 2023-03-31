@@ -21,6 +21,7 @@ package org.apache.deltaspike.jsf.impl.clientwindow;
 import org.apache.deltaspike.jsf.impl.util.ClientWindowHelper;
 
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.render.ResponseStateManager;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
@@ -74,7 +75,7 @@ public class LazyClientWindow extends DeltaSpikeClientWindow
         }
 
         Map<String, String> parameters = new HashMap<>();
-        parameters.put(ClientWindowHelper.RequestParameters.GET_WINDOW_ID, windowId);
+        parameters.put(ResponseStateManager.CLIENT_WINDOW_URL_PARAM, windowId);
         return parameters;
     }
 

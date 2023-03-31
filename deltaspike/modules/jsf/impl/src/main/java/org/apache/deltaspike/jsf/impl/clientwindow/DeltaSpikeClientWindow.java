@@ -20,6 +20,7 @@ package org.apache.deltaspike.jsf.impl.clientwindow;
 
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.lifecycle.ClientWindow;
+import jakarta.faces.render.ResponseStateManager;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Map;
 import java.util.Random;
@@ -103,24 +104,17 @@ public abstract class DeltaSpikeClientWindow extends ClientWindow
 
         return false;
     }
-    
+
     protected String getWindowIdPostParameter(FacesContext facesContext)
     {
         Map<String, String> requestParams = facesContext.getExternalContext().getRequestParameterMap();
-        String windowId = requestParams.get(ClientWindowHelper.RequestParameters.POST_WINDOW_ID);
-
-        if (windowId == null)
-        {
-            windowId = requestParams.get(ClientWindowHelper.RequestParameters.JSF_POST_WINDOW_ID);
-        }
-
-        return windowId;
+        return requestParams.get(ResponseStateManager.CLIENT_WINDOW_PARAM);
     }
 
     protected String getWindowIdParameter(FacesContext facesContext)
     {
         Map<String, String> requestParameters = facesContext.getExternalContext().getRequestParameterMap();
-        return requestParameters.get(ClientWindowHelper.RequestParameters.GET_WINDOW_ID);
+        return requestParameters.get(ResponseStateManager.CLIENT_WINDOW_URL_PARAM);
     }
     
     protected ClientWindowConfig getClientWindowConfig()

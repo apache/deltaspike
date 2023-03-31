@@ -41,9 +41,6 @@ public abstract class ClientWindowHelper
 
     public abstract class RequestParameters
     {
-        public static final String POST_WINDOW_ID = "dspwid";
-        public static final String JSF_POST_WINDOW_ID = "jakarta.faces.ClientWindow";
-        public static final String GET_WINDOW_ID = "dswid";
         public static final String REQUEST_TOKEN = "dsrid";
     }
 
@@ -107,47 +104,6 @@ public abstract class ClientWindowHelper
     public static String getInitialRedirectWindowId(FacesContext facesContext)
     {
         return (String) facesContext.getAttributes().get(INITIAL_REDIRECT_WINDOW_ID);
-    }
-
-    /**
-     * Appends the current windowId to the given url, if enabled via
-     * {@link ClientWindow#isClientWindowRenderModeEnabled(jakarta.faces.context.FacesContext)}
-     *
-     * @param facesContext the {@link FacesContext}
-     * @param url the url
-     * @param clientWindow the {@link ClientWindow} to use
-     * @return if enabled, the url with windowId, otherwise the umodified url
-     */
-    public static String appendWindowId(FacesContext facesContext, String url, ClientWindow clientWindow)
-    {
-        if (clientWindow != null && clientWindow.isClientWindowRenderModeEnabled(facesContext))
-        {
-            Map<String, String> parameters = clientWindow.getQueryURLParameters(facesContext);
-
-            if (parameters != null && !parameters.isEmpty())
-            {
-                String targetUrl = url;
-
-                for (Entry<String, String> entry : parameters.entrySet())
-                {
-                    targetUrl = JsfUtils.addParameter(facesContext.getExternalContext(),
-                            targetUrl,
-                            true,
-                            entry.getKey(),
-                            entry.getValue());
-
-                    //remove empty parameter (e.g. dswid)
-                    String emptyParameter = entry.getKey() + "=&";
-                    if (targetUrl.contains(emptyParameter))
-                    {
-                        targetUrl = targetUrl.replace(emptyParameter, "");
-                    }
-                }
-                return targetUrl;
-            }
-        }
-
-        return url;
     }
 
     public static void addRequestWindowIdCookie(FacesContext context, String requestToken, String windowId)

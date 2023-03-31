@@ -23,6 +23,7 @@ import java.io.OutputStream;
 import jakarta.faces.FacesException;
 import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.render.ResponseStateManager;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Map;
@@ -236,7 +237,7 @@ public class ClientSideClientWindow extends DeltaSpikeClientWindow
             url = JsfUtils.addParameter(facesContext.getExternalContext(),
                     url,
                     true,
-                    ClientWindowHelper.RequestParameters.GET_WINDOW_ID,
+                    ResponseStateManager.CLIENT_WINDOW_URL_PARAM,
                     windowId);
             url = JsfUtils.addParameter(facesContext.getExternalContext(),
                     url,
