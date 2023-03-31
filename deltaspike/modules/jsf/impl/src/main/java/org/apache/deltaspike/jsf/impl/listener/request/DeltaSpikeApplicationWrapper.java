@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.jsf.impl.injection;
+package org.apache.deltaspike.jsf.impl.listener.request;
 
 import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;
 import org.apache.deltaspike.jsf.impl.security.SecurityAwareViewHandler;
@@ -28,13 +28,13 @@ import jakarta.faces.context.FacesContext;
 import jakarta.faces.event.PreDestroyViewMapEvent;
 import jakarta.faces.event.SystemEvent;
 
-public class InjectionAwareApplicationWrapper extends ApplicationWrapper
+public class DeltaSpikeApplicationWrapper extends ApplicationWrapper
 {
     private final Application wrapped;
     private final boolean preDestroyViewMapEventFilterMode;
     private final ProjectStage projectStage;
 
-    public InjectionAwareApplicationWrapper(
+    public DeltaSpikeApplicationWrapper(
             Application wrapped, JsfModuleConfig jsfModuleConfig, boolean preDestroyViewMapEventFilterMode,
             ProjectStage projectStage)
     {

@@ -27,7 +27,6 @@ import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
 import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;
 import org.apache.deltaspike.jsf.impl.config.view.DefaultErrorViewAwareExceptionHandlerWrapper;
-import org.apache.deltaspike.jsf.impl.injection.InjectionAwareApplicationWrapper;
 import org.apache.deltaspike.jsf.impl.message.FacesMessageEntry;
 
 import jakarta.enterprise.inject.spi.BeanManager;
@@ -245,7 +244,7 @@ class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
         {
             wrappedApplication = new NavigationHandlerAwareApplication(wrappedApplication);
         }
-        return new InjectionAwareApplicationWrapper(
+        return new DeltaSpikeApplicationWrapper(
             wrappedApplication, this.jsfModuleConfig, this.preDestroyViewMapEventFilterMode, this.projectStage);
     }
 
