@@ -35,26 +35,6 @@
 
     <profiles>
         <profile>
-            <id>OWB</id>
-
-            <modules>
-                <module>api</module>
-                <module>impl-owb</module>
-                <module>tck</module>
-            </modules>
-        </profile>
-
-        <profile>
-            <id>Weld3</id>
-
-            <modules>
-                <module>api</module>
-                <module>impl-weld</module>
-                <module>tck</module>
-            </modules>
-        </profile>
-
-        <profile>
             <id>distribution</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
@@ -64,14 +44,33 @@
                 <module>api</module>
                 <module>impl-owb</module>
                 <module>impl-weld</module>
+                <!--
                 <module>impl-openejb</module>
+                -->
+                <module>tck</module>
+            </modules>
+        </profile>
+        
+        <profile>
+            <id>OWB</id>
+            <modules>
+                <module>api</module>
+                <module>impl-owb</module>
+                <module>tck</module>
+            </modules>
+        </profile>
+
+        <profile>
+            <id>Weld3</id>
+            <modules>
+                <module>api</module>
+                <module>impl-weld</module>
                 <module>tck</module>
             </modules>
         </profile>
 
         <profile>
             <id>rat</id>
-
             <modules>
                 <module>api</module>
                 <module>impl-owb</module>
@@ -93,7 +92,6 @@
 
         <profile>
             <id>tomee8-build-managed</id>
-
             <modules>
                 <module>api</module>
                 <module>impl-openejb</module>
@@ -103,7 +101,6 @@
 
         <profile>
             <id>wildfly-managed</id>
-
             <modules>
                 <module>api</module>
                 <module>impl-weld</module>
@@ -112,7 +109,6 @@
 
         <profile>
             <id>wildfly-build-managed</id>
-
             <modules>
                 <module>api</module>
                 <module>impl-weld</module>
@@ -121,7 +117,6 @@
 
         <profile>
             <id>wildfly-remote</id>
-
             <modules>
                 <module>api</module>
                 <module>impl-weld</module>
@@ -130,7 +125,6 @@
 
         <profile>
             <id>glassfish-remote-3.1</id>
-
             <modules>
                 <module>api</module>
                 <module>impl-weld</module>
@@ -139,7 +133,6 @@
 
         <profile>
             <id>glassfish-build-managed-3</id>
-
             <modules>
                 <module>api</module>
                 <module>impl-weld</module>
@@ -148,7 +141,6 @@
 
         <profile>
             <id>glassfish-build-managed-4</id>
-
             <modules>
                 <module>api</module>
                 <module>impl-weld</module>
@@ -157,7 +149,6 @@
 
         <profile>
             <id>payara-build-managed-4</id>
-
             <modules>
                 <module>api</module>
                 <module>impl-weld</module>
