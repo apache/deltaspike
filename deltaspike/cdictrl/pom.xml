@@ -63,10 +63,8 @@
             <modules>
                 <module>api</module>
                 <module>impl-owb</module>
-<!--
                 <module>impl-weld</module>
                 <module>impl-openejb</module>
--->
                 <module>tck</module>
             </modules>
         </profile>

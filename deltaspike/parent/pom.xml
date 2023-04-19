@@ -54,6 +54,7 @@
         <weld.version>4.0.3.Final</weld.version>
 
         <!-- for cdictrl-openejb -->
+        <openejb.version>4.7.5</openejb.version>
         <tomee.version>9.0.0.RC1</tomee.version>
         <openejb.owb.version>${owb.version}</openejb.owb.version>
 
@@ -65,15 +66,12 @@
         <!-- JSF-2.0 implementations-->
         <myfaces.version>4.0.0-RC4</myfaces.version>
         <myfaces2.version.current>4.0.0-RC4</myfaces2.version.current>
-<!--
-        <mojarra2.version>2.0.3-b03</mojarra2.version>
--->
+
 
         <tomcat.version>10.1.5</tomcat.version>
 
         <!-- used for some bytecode proxy stuff. Shaded in -->
         <asm.version>9.5</asm.version>
-
 
         <maven.surefire.plugin.version>3.0.0-M4</maven.surefire.plugin.version>
         <maven.bundle.plugin.version>3.5.0</maven.bundle.plugin.version>

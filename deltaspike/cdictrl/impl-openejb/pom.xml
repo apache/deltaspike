@@ -94,14 +94,14 @@
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
-        <dependencies>
-            <dependency>
-                <groupId>org.apache.openejb</groupId>
-                <artifactId>openejb-core</artifactId>
-                <version>${openejb.version}</version>
-                <scope>provided</scope>
-            </dependency>
-        </dependencies>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.openejb</groupId>
+                    <artifactId>openejb-core</artifactId>
+                    <version>${openejb.version}</version>
+                    <scope>provided</scope>
+                </dependency>
+            </dependencies>
         </profile>
 
         <profile>

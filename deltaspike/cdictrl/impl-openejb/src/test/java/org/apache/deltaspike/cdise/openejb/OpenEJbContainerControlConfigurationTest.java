@@ -27,7 +27,7 @@ import org.junit.Test;
 
 import jakarta.enterprise.inject.spi.BeanManager;
 import javax.naming.NamingException;
-import jakarta.sql.DataSource;
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
