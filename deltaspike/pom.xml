@@ -108,7 +108,7 @@
                     <configuration>
                         <charset>UTF-8</charset>
                         <detectLinks>true</detectLinks>
-                        <source>1.8</source>
+                        <source>11</source>
                         <excludePackageNames>org.apache.deltaspike.example.*:org.apache.deltaspike.playground*:org.apache.deltaspike.test.*:org.apache.deltaspike.cdise.tck*:org.apache.deltaspike.cdise.servlet*:*impl*</excludePackageNames>
                         <groups>
                             <group>
