@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.test.core.api.config.propertyconfigsource;
 
+import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -33,6 +34,9 @@ import org.junit.runner.RunWith;
 @Category(WebProfileCategory.class)
 public class ConfigPropertyWARTest extends BaseTestConfigProperty
 {
+    private final static String PROPERTIES =
+        "org.apache.deltaspike.ProjectStage = UnitTest\n" +
+        ConfigResolver.DELTASPIKE_LOG_CONFIG + " = true";
 
     @Deployment
     public static WebArchive deployEar()
@@ -42,7 +46,7 @@ public class ConfigPropertyWARTest extends BaseTestConfigProperty
                 .addPackage(ConfigPropertyWARTest.class.getPackage())
                 .addAsResource(CONFIG_FILE_NAME)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
-                .addAsWebInfResource(new StringAsset("org.apache.deltaspike.ProjectStage = UnitTest"),
+                .addAsWebInfResource(new StringAsset(PROPERTIES),
                         "classes/META-INF/apache-deltaspike.properties");
 
     }

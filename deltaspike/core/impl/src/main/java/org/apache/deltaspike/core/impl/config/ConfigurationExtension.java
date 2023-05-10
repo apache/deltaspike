@@ -70,6 +70,7 @@ import org.apache.deltaspike.core.spi.config.ConfigValidator;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.ServiceUtils;
+import org.apache.deltaspike.core.util.StringUtils;
 
 /**
  * This extension handles {@link org.apache.deltaspike.core.api.config.PropertyFileConfig}s
@@ -340,9 +341,11 @@ public class ConfigurationExtension implements Extension, Deactivatable
             // first log out the config sources in descendent ordinal order
             sb.append("ConfigSources: ");
             ConfigSource[] configSources = ConfigResolver.getConfigSources();
-            for (ConfigSource configSource : configSources)
+            for (int i = 0; i < configSources.length; i++)
             {
-                sb.append("\n\t").append(configSource.getOrdinal()).append(" - ").append(configSource.getConfigName());
+                ConfigSource configSource = configSources[i];
+                sb.append("\n\t").append(configSource.getOrdinal()).append(" - ").append(configSource.getConfigName())
+                    .append(" (CS_").append(i + 1).append(")");
             }
 
             // and all the entries in no guaranteed order
@@ -350,14 +353,38 @@ public class ConfigurationExtension implements Extension, Deactivatable
             sb.append("\n\nConfigured Values:");
             for (Map.Entry<String, String> entry : allProperties.entrySet())
             {
+                int fromConfigSource;
+
                 sb.append("\n\t")
                     .append(entry.getKey())
                     .append(" = ")
-                    .append(ConfigResolver.filterConfigValueForLog(entry.getKey(), entry.getValue()));
+                    .append(ConfigResolver.filterConfigValueForLog(entry.getKey(), entry.getValue()))
+                    .append(" (")
+                    .append(configuredIn(configSources, entry.getKey()))
+                    .append(")");
             }
 
             LOG.info(sb.toString());
         }
+    }
+
+    private static String configuredIn(ConfigSource[] configSources, String key)
+    {
+        int foundInOrdinal = -1;
+        int foundInConfigSource = -1;
+
+        for (int i = 0; i < configSources.length; i++)
+        {
+            ConfigSource configSource = configSources[i];
+            if ((configSource.isScannable() && configSource.getProperties().containsKey(key) ||
+                 !configSource.isScannable() && StringUtils.isNotEmpty(configSource.getPropertyValue(key)))
+                && configSource.getOrdinal() > foundInOrdinal)
+            {
+                foundInConfigSource = i;
+                foundInOrdinal = configSource.getOrdinal();
+            }
+        }
+        return "CS_" + (foundInConfigSource + 1);
     }
 
     /**
