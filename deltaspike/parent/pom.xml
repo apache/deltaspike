@@ -48,7 +48,7 @@
 
     <properties>
         <java.version>11</java.version>
-        <owb.version>4.0.0-SNAPSHOT</owb.version>
+        <owb.version>4.0.0</owb.version>
 
         <!-- Weld profiles (in parent/code/pom.xml) override this version -->
         <weld.version>4.0.3.Final</weld.version>
@@ -64,8 +64,8 @@
         <arquillian.version>1.7.0.Alpha13</arquillian.version>
 
         <!-- JSF-2.0 implementations-->
-        <myfaces.version>4.0.0-RC4</myfaces.version>
-        <myfaces2.version.current>4.0.0-RC4</myfaces2.version.current>
+        <myfaces.version>4.0.1</myfaces.version>
+        <myfaces2.version.current>4.0.1</myfaces2.version.current>
 
 
         <tomcat.version>10.1.5</tomcat.version>
