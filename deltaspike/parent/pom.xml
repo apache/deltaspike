@@ -65,13 +65,11 @@
 
         <!-- JSF-2.0 implementations-->
         <myfaces.version>4.0.1</myfaces.version>
-        <myfaces2.version.current>4.0.1</myfaces2.version.current>
 
-
-        <tomcat.version>10.1.5</tomcat.version>
+        <tomcat.version>10.1.13</tomcat.version>
 
         <!-- used for some bytecode proxy stuff. Shaded in -->
-        <asm.version>9.5</asm.version>
+        <asm.version>9.6</asm.version>
 
         <maven.surefire.plugin.version>3.0.0-M4</maven.surefire.plugin.version>
         <maven.bundle.plugin.version>3.5.0</maven.bundle.plugin.version>
