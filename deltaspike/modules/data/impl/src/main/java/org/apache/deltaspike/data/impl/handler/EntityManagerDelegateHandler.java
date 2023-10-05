@@ -20,6 +20,7 @@ package org.apache.deltaspike.data.impl.handler;
 
 import java.util.Map;
 
+import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -34,6 +35,7 @@ import org.apache.deltaspike.data.spi.DelegateQueryHandler;
 import org.apache.deltaspike.data.spi.QueryInvocationContext;
 
 @SuppressWarnings("unchecked")
+@Dependent
 public class EntityManagerDelegateHandler<E> implements EntityManagerDelegate<E>, DelegateQueryHandler
 {
 
