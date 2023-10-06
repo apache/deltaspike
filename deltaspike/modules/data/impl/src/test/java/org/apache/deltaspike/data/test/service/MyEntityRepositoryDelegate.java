@@ -18,12 +18,14 @@
  */
 package org.apache.deltaspike.data.test.service;
 
+import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 
 import org.apache.deltaspike.data.spi.DelegateQueryHandler;
 import org.apache.deltaspike.data.spi.QueryInvocationContext;
 
+@Dependent
 public class MyEntityRepositoryDelegate<E> implements DelegateQueryHandler, MyEntityRepository<E>
 {
 

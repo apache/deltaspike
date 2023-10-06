@@ -29,6 +29,7 @@ import org.apache.deltaspike.data.impl.util.EntityUtils;
 import org.apache.deltaspike.data.impl.util.jpa.PersistenceUnitUtilDelegateFactory;
 import org.apache.deltaspike.data.spi.DelegateQueryHandler;
 
+import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceUnitUtil;
@@ -56,6 +57,7 @@ import static org.apache.deltaspike.data.impl.util.QueryUtils.isString;
  * @param <E>  Entity type.
  * @param <PK> Primary key type, must be a serializable.
  */
+@Dependent
 public class EntityRepositoryHandler<E, PK extends Serializable>
         implements EntityRepository<E, PK>, DelegateQueryHandler
 {
