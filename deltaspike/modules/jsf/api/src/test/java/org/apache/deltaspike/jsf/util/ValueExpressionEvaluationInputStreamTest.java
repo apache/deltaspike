@@ -19,7 +19,7 @@
 package org.apache.deltaspike.jsf.util;
 
 import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import jakarta.faces.context.FacesContext;
 import java.io.ByteArrayInputStream;
