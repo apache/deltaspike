@@ -18,12 +18,12 @@
  */
 package org.apache.deltaspike.jsf.util;
 
-import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
 import jakarta.faces.context.FacesContext;
 import java.io.ByteArrayInputStream;
 import org.apache.myfaces.test.base.junit.AbstractJsfTestCase;
+import org.junit.jupiter.api.Assertions;
 
 /**
  * Tests for {@link ValueExpressionEvaluationInputStream}.
@@ -44,8 +44,8 @@ public class ValueExpressionEvaluationInputStreamTest extends AbstractJsfTestCas
         inputStream.read(inputStreamDataArray);
 
         // checks
-        Assert.assertArrayEquals(dataArray, inputStreamDataArray);  // data arrays must match
-        Assert.assertEquals(-1, inputStream.read()); // stream must be at eof
+        Assertions.assertArrayEquals(dataArray, inputStreamDataArray);  // data arrays must match
+        Assertions.assertEquals(-1, inputStream.read()); // stream must be at eof
     }
 
     @Test
@@ -66,8 +66,8 @@ public class ValueExpressionEvaluationInputStreamTest extends AbstractJsfTestCas
         inputStream.read(inputStreamDataArray);
 
         // checks
-        Assert.assertArrayEquals(evaluatedDataArray, inputStreamDataArray);  // evaluated data arrays must match
-        Assert.assertEquals(-1, inputStream.read()); // stream must be at eof
+        Assertions.assertArrayEquals(evaluatedDataArray, inputStreamDataArray);  // evaluated data arrays must match
+        Assertions.assertEquals(-1, inputStream.read()); // stream must be at eof
     }
 
     @Test
@@ -86,8 +86,8 @@ public class ValueExpressionEvaluationInputStreamTest extends AbstractJsfTestCas
         inputStream.read(inputStreamDataArray);
 
         // checks
-        Assert.assertArrayEquals(dataArray, inputStreamDataArray);  // data arrays must match
-        Assert.assertEquals(-1, inputStream.read()); // stream must be at eof
+        Assertions.assertArrayEquals(dataArray, inputStreamDataArray);  // data arrays must match
+        Assertions.assertEquals(-1, inputStream.read()); // stream must be at eof
     }
 
     @Test
@@ -106,8 +106,8 @@ public class ValueExpressionEvaluationInputStreamTest extends AbstractJsfTestCas
         inputStream.read(inputStreamDataArray);
 
         // checks
-        Assert.assertArrayEquals(dataArray, inputStreamDataArray);  // data arrays must match
-        Assert.assertEquals(-1, inputStream.read()); // stream must be at eof
+        Assertions.assertArrayEquals(dataArray, inputStreamDataArray);  // data arrays must match
+        Assertions.assertEquals(-1, inputStream.read()); // stream must be at eof
     }
 
     @Test
@@ -129,8 +129,8 @@ public class ValueExpressionEvaluationInputStreamTest extends AbstractJsfTestCas
         inputStream.read(inputStreamDataArray);
 
         // checks
-        Assert.assertArrayEquals(evaluatedDataArray, inputStreamDataArray);  // evaluated data arrays must match
-        Assert.assertEquals(-1, inputStream.read()); // stream must be at eof
+        Assertions.assertArrayEquals(evaluatedDataArray, inputStreamDataArray);  // evaluated data arrays must match
+        Assertions.assertEquals(-1, inputStream.read()); // stream must be at eof
     }
 
     @Test
@@ -151,8 +151,8 @@ public class ValueExpressionEvaluationInputStreamTest extends AbstractJsfTestCas
         inputStream.read(inputStreamDataArray);
 
         // checks
-        Assert.assertArrayEquals(evaluatedDataArray, inputStreamDataArray);  // evaluated data arrays must match
-        Assert.assertEquals(-1, inputStream.read()); // stream must be at eof
+        Assertions.assertArrayEquals(evaluatedDataArray, inputStreamDataArray);  // evaluated data arrays must match
+        Assertions.assertEquals(-1, inputStream.read()); // stream must be at eof
     }
 
     @Test
@@ -173,8 +173,8 @@ public class ValueExpressionEvaluationInputStreamTest extends AbstractJsfTestCas
         inputStream.read(inputStreamDataArray);
 
         // checks
-        Assert.assertArrayEquals(evaluatedDataArray, inputStreamDataArray);  // evaluated data arrays must match
-        Assert.assertEquals(-1, inputStream.read()); // stream must be at eof
+        Assertions.assertArrayEquals(evaluatedDataArray, inputStreamDataArray);  // evaluated data arrays must match
+        Assertions.assertEquals(-1, inputStream.read()); // stream must be at eof
     }
 
 }
