@@ -36,6 +36,7 @@ import org.junit.runner.RunWith;
 
 import jakarta.enterprise.inject.spi.Extension;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
@@ -73,11 +74,16 @@ public class ExcludeWarFileTest extends ExcludeTest
 
     public static String getConfigContent() throws IOException
     {
-        byte[] configContent = Files.readAllBytes(FileUtils.getFileForURL(ExcludeWarFileTest.class.getClassLoader()
-                .getResource("META-INF/apache-deltaspike.properties").toString()).toPath());
-        return (new String(configContent, StandardCharsets.UTF_8) +
-            "\norg.apache.deltaspike.ProjectStage = Production")
-                .replace("deltaspike.interdyn.enabled=true", "deltaspike.interdyn.enabled=false");
+        URL deltaspikeProps = ExcludeWarFileTest.class.getClassLoader().getResource("META-INF/apache-deltaspike.properties");
+        if (deltaspikeProps != null) {
+			byte[] configContent = Files.readAllBytes(FileUtils.getFileForURL(deltaspikeProps.toString()).toPath());
+	        return (new String(configContent, StandardCharsets.UTF_8) +
+	            "\norg.apache.deltaspike.ProjectStage = Production")
+	                .replace("deltaspike.interdyn.enabled=true", "deltaspike.interdyn.enabled=false");
+        } else {
+	        return ("\norg.apache.deltaspike.ProjectStage = Production"+
+		                "\ndeltaspike.interdyn.enabled=false");
+        }
     }
 
     @AfterClass
