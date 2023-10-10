@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.scheduler.impl;
 
-import org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.ProxyUtils;
@@ -29,6 +28,7 @@ import org.quartz.JobExecutionException;
 
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.inject.Inject;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public abstract class AbstractJobAdapter<T> implements Job
@@ -60,10 +60,7 @@ public abstract class AbstractJobAdapter<T> implements Job
         }
         catch (Throwable t)
         {
-            //just in this case to reduce the implementation(s) of runnable (annotated with @Scheduled)
-            //to an absolute minimum.
-            //(custom implementations of org.quartz.Job need to do it on their own)
-            this.beanManager.fireEvent(new ExceptionToCatchEvent(t));
+            LOG.log(Level.SEVERE, "Error while executing job " + jobClass, t);
         }
     }
 

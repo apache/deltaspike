@@ -41,9 +41,7 @@
         <module>partial-bean</module>
         <module>jpa</module>
         <module>data</module>
-<!--
         <module>scheduler</module>
--->
         <module>test-control</module>
     </modules>
 </project>
