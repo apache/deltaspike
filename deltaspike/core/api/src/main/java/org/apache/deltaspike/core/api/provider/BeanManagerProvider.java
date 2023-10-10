@@ -23,10 +23,10 @@ import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
 import jakarta.enterprise.inject.spi.AfterDeploymentValidation;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.BeforeShutdown;
+import jakarta.enterprise.inject.spi.CDI;
 import jakarta.enterprise.inject.spi.Extension;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -62,37 +62,7 @@ public class BeanManagerProvider implements Extension
 {
     private static final Logger  LOG = Logger.getLogger(BeanManagerProvider.class.getName());
 
-    //for CDI 1.1+ delegation
-    private static final Method CDI_CURRENT_METHOD;
-    private static final Method CDI_CURRENT_BEAN_MANAGER_METHOD;
-
     private static BeanManagerProvider bmpSingleton;
-
-    static
-    {
-        Class cdiClass = ClassUtils.tryToLoadClassForName("jakarta.enterprise.inject.spi.CDI");
-
-        Method resolvedCdiCurrentMethod = null;
-        Method resolvedCdiBeanManagerMethod = null;
-        //only init methods if a cdi 1.1+ container is available and the delegation-mode isn't deactivated.
-        //deactivation is e.g. useful if owb is used in "parallel mode" in a weld-based server.
-        if (cdiClass != null && CoreBaseConfig.BeanManagerIntegration.DELEGATE_LOOKUP)
-        {
-            try
-            {
-                resolvedCdiCurrentMethod = cdiClass.getDeclaredMethod("current");
-                resolvedCdiBeanManagerMethod = cdiClass.getDeclaredMethod("getBeanManager");
-            }
-            catch (Exception e)
-            {
-                LOG.log(Level.SEVERE, "Couldn't get method from " + cdiClass.getName(), e);
-            }
-        }
-
-        //null if no init happened e.g. due to CDI 1.0 or deactivated delegation-mode
-        CDI_CURRENT_METHOD = resolvedCdiCurrentMethod;
-        CDI_CURRENT_BEAN_MANAGER_METHOD = resolvedCdiBeanManagerMethod;
-    }
 
     /**
      * This data container is used for storing the BeanManager for each web application. This is needed in EAR or other
@@ -135,7 +105,7 @@ public class BeanManagerProvider implements Extension
     public static boolean isActive()
     {
         // CDI#current delegation enabled, skip everything
-        if (CDI_CURRENT_METHOD != null && CDI_CURRENT_BEAN_MANAGER_METHOD != null)
+        if (CoreBaseConfig.BeanManagerIntegration.DELEGATE_LOOKUP)
         {
             return bmpSingleton != null;
         }
@@ -175,7 +145,7 @@ public class BeanManagerProvider implements Extension
         setBeanManagerProvider(this);
 
         // CDI#current delegation enabled, skip everything
-        if (CDI_CURRENT_METHOD != null && CDI_CURRENT_BEAN_MANAGER_METHOD != null &&
+        if (CoreBaseConfig.BeanManagerIntegration.DELEGATE_LOOKUP &&
             resolveBeanManagerViaStaticHelper() != null)
         {
             return;
@@ -196,7 +166,7 @@ public class BeanManagerProvider implements Extension
     public BeanManager getBeanManager()
     {
         // CDI#current delegation enabled, skip everything
-        if (CDI_CURRENT_METHOD != null && CDI_CURRENT_BEAN_MANAGER_METHOD != null)
+        if (CoreBaseConfig.BeanManagerIntegration.DELEGATE_LOOKUP)
         {
             BeanManager bm = resolveBeanManagerViaStaticHelper();
             if (bm != null)
@@ -268,7 +238,7 @@ public class BeanManagerProvider implements Extension
     public void cleanupFinalBeanManagers(@Observes AfterDeploymentValidation adv)
     {
         // CDI#current delegation enabled, skip everything
-        if (CDI_CURRENT_METHOD != null && CDI_CURRENT_BEAN_MANAGER_METHOD != null &&
+        if (CoreBaseConfig.BeanManagerIntegration.DELEGATE_LOOKUP &&
             resolveBeanManagerViaStaticHelper() != null)
         {
             return;
@@ -294,7 +264,7 @@ public class BeanManagerProvider implements Extension
     public void cleanupStoredBeanManagerOnShutdown(@Observes BeforeShutdown beforeShutdown)
     {
         // CDI#current delegation enabled, skip everything
-        if (CDI_CURRENT_METHOD != null && CDI_CURRENT_BEAN_MANAGER_METHOD != null)
+        if (CoreBaseConfig.BeanManagerIntegration.DELEGATE_LOOKUP)
         {
             return;
         }
@@ -330,19 +300,15 @@ public class BeanManagerProvider implements Extension
 
     private BeanManager resolveBeanManagerViaStaticHelper()
     {
-        if (CDI_CURRENT_METHOD != null && CDI_CURRENT_BEAN_MANAGER_METHOD != null)
+        try
         {
-            try
-            {
-                Object cdiCurrentObject = CDI_CURRENT_METHOD.invoke(null);
-                return (BeanManager) CDI_CURRENT_BEAN_MANAGER_METHOD.invoke(cdiCurrentObject);
-            }
-            catch (Throwable t)
-            {
-                LOG.log(Level.FINEST, "failed to delegate bean-manager lookup -> fallback to default.", t);
-            }
+            return CDI.current().getBeanManager();
         }
-        return null;
+        catch (Throwable t)
+        {
+            LOG.log(Level.FINEST, "failed to delegate bean-manager lookup -> fallback to default.", t);
+            return null;
+        }
     }
 
     /**
