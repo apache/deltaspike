@@ -36,7 +36,7 @@
     </modules>
 
     <properties>
-        <shrinkwrap.version>2.0.0</shrinkwrap.version>
+        <shrinkwrap.version>3.2.1</shrinkwrap.version>
     </properties>
 
     <dependencyManagement>

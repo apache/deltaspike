@@ -40,7 +40,7 @@
             !org.apache.deltaspike.scheduler.impl.*,
             *
         </deltaspike.osgi.import>
-        <shrinkwrap.version>2.0.0</shrinkwrap.version>
+        <shrinkwrap.version>3.2.1</shrinkwrap.version>
     </properties>
 
     <dependencyManagement>
@@ -102,7 +102,6 @@
         <dependency>
             <groupId>org.jboss.shrinkwrap.resolver</groupId>
             <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
-            <version>${shrinkwrap.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
