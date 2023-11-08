@@ -48,7 +48,7 @@
 
     <properties>
         <java.version>11</java.version>
-        <owb.version>4.0.0</owb.version>
+        <owb.version>4.0.1-SNAPSHOT</owb.version>
 
         <!-- Weld profiles (in parent/code/pom.xml) override this version -->
         <weld.version>4.0.3.Final</weld.version>
@@ -57,7 +57,6 @@
         <openejb.version>4.7.5</openejb.version>
         <tomee.version>9.0.0.RC1</tomee.version>
         <openejb.owb.version>${owb.version}</openejb.owb.version>
-
 
         <!-- testing stuff -->
         <junit.version>4.13.2</junit.version>
