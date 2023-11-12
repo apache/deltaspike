@@ -511,6 +511,14 @@ public class ConfigurationExtension implements Extension, Deactivatable
             return types;
         }
 
+        /**
+         * this method got dumped in EE10, but still exists in EE9
+         */
+        public boolean isNullable()
+        {
+            return true;
+        }
+
         @Override
         public Set<Annotation> getQualifiers()
         {
