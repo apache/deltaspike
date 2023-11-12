@@ -22,6 +22,6 @@ package org.apache.deltaspike.test.category;
 /**
  * Category marker interface. Tests which are Web profile minimum.
  */
-public interface WebEE7ProfileCategory
+public interface WebEEProfileCategory
 {
 }
