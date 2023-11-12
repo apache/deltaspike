@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.core.impl.monitoring;
 
+import jakarta.annotation.Priority;
 import org.apache.deltaspike.core.api.monitoring.InvocationMonitored;
 
 import jakarta.enterprise.context.ContextNotActiveException;
@@ -31,6 +32,7 @@ import java.util.logging.Logger;
 
 @Interceptor
 @InvocationMonitored
+@Priority(1000)
 public class InvocationMonitorInterceptor implements Serializable
 {
     private static final Logger logger = Logger.getLogger(InvocationMonitorInterceptor.class.getName());

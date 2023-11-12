@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.core.impl.throttling;
 
+import jakarta.annotation.Priority;
 import org.apache.deltaspike.core.api.throttling.Throttled;
 import org.apache.deltaspike.core.spi.throttling.ThrottledStrategy;
 
@@ -29,6 +30,7 @@ import java.io.Serializable;
 
 @Throttled
 @Interceptor
+@Priority(1000)
 public class ThrottledInterceptor implements Serializable
 {
     @Inject

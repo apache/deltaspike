@@ -20,7 +20,7 @@ package org.apache.deltaspike.test.jsf.impl.scope.viewaccess;
 
 import java.net.URL;
 
-import org.apache.deltaspike.test.category.WebEE7ProfileCategory;
+import org.apache.deltaspike.test.category.WebEEProfileCategory;
 import org.apache.deltaspike.test.jsf.impl.scope.viewaccess.beans.ViewAccessScopedBeanX;
 import org.apache.deltaspike.test.jsf.impl.scope.viewaccess.beans.ViewAccessScopedBeanY;
 import org.apache.deltaspike.test.jsf.impl.util.ArchiveUtils;
@@ -42,7 +42,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 @RunWith(Arquillian.class)
-@Category(WebEE7ProfileCategory.class)
+@Category(WebEEProfileCategory.class)
 public class ViewAccessScopedWithFViewActionWebAppTest
 {
     @Drone

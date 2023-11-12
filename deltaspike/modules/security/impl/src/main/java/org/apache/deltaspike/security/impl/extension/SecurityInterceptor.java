@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.security.impl.extension;
 
+import jakarta.annotation.Priority;
 import org.apache.deltaspike.security.spi.authorization.SecurityStrategy;
 
 import jakarta.inject.Inject;
@@ -31,6 +32,7 @@ import java.io.Serializable;
  */
 @SecurityInterceptorBinding
 @Interceptor
+@Priority(1000)
 public class SecurityInterceptor implements Serializable
 {
     private static final long serialVersionUID = -7094673146532371976L;

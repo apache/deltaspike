@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.jpa.impl.transaction;
 
+import jakarta.annotation.Priority;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
 import org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy;
 
@@ -35,6 +36,7 @@ import java.io.Serializable;
  */
 @Interceptor
 @Transactional
+@Priority(1000)
 public class TransactionalInterceptor implements Serializable
 {
     private static final long serialVersionUID = 8787285444722371172L;

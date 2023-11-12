@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.core.impl.lock;
 
+import jakarta.annotation.Priority;
 import org.apache.deltaspike.core.api.lock.Locked;
 import org.apache.deltaspike.core.spi.lock.LockedStrategy;
 
@@ -29,6 +30,7 @@ import java.io.Serializable;
 
 @Locked
 @Interceptor
+@Priority(1000)
 public class LockedInterceptor implements Serializable
 {
     @Inject

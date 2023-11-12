@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.jsf.impl.config.view.navigation;
 
+import jakarta.annotation.Priority;
 import org.apache.deltaspike.core.api.config.view.navigation.NavigationParameter;
 import org.apache.deltaspike.jsf.spi.config.view.navigation.NavigationParameterStrategy;
 
@@ -29,6 +30,7 @@ import java.io.Serializable;
 
 @NavigationParameter.List( { } )
 @Interceptor
+@Priority(1000)
 public class NavigationParameterListInterceptor implements Serializable
 {
     private static final long serialVersionUID = 2762625956958428994L;

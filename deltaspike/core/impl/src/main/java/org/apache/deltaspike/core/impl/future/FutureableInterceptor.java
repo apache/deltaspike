@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.core.impl.future;
 
+import jakarta.annotation.Priority;
 import org.apache.deltaspike.core.api.future.Futureable;
 import org.apache.deltaspike.core.spi.future.FutureableStrategy;
 
@@ -29,6 +30,7 @@ import java.io.Serializable;
 
 @Interceptor
 @Futureable
+@Priority(1000)
 public class FutureableInterceptor implements Serializable
 {
     @Inject

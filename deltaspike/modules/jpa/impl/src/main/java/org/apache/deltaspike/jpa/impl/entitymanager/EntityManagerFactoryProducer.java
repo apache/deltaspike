@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.jpa.impl.entitymanager;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.Dependent;
 import jakarta.enterprise.inject.Disposes;
 import jakarta.enterprise.inject.Produces;
@@ -60,6 +61,7 @@ import org.apache.deltaspike.jpa.api.entitymanager.PersistenceUnitName;
  * }
  *  </pre>
  */
+@ApplicationScoped
 public class EntityManagerFactoryProducer
 {
     private static final Logger LOG = Logger.getLogger(EntityManagerFactoryProducer.class.getName());
