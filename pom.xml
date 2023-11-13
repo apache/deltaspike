@@ -52,6 +52,9 @@
         <version.deltaspike.latest.stable>1.9.6</version.deltaspike.latest.stable>
         <version.deltaspike.latest.snapshot>1.9.7-SNAPSHOT</version.deltaspike.latest.snapshot>
         <svn.scmPubCheckoutDirectory>${project.build.directory}/co-site</svn.scmPubCheckoutDirectory>
+
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
     </properties>
 
     <scm>
