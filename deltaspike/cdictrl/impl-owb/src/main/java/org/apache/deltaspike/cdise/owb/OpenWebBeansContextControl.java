@@ -113,7 +113,7 @@ public class OpenWebBeansContextControl implements ContextControl
     {
         try
         {
-            Class servletClass = Class.forName("javax.servlet.http.HttpSession");
+            Class servletClass = Class.forName("jakarta.servlet.http.HttpSession");
             return servletClass != null;
         }
         catch (ClassNotFoundException e)

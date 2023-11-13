@@ -176,7 +176,7 @@
 
     <profiles>
         <profile>
-            <id>tomee8-build-managed</id>
+            <id>tomee10-build-managed</id>
             <build>
                 <plugins>
                     <!--
@@ -197,6 +197,16 @@
                     </plugin>
                 </plugins>
             </build>
+
+            <dependencies>
+                <!-- for debugging -->
+                <dependency>
+                    <groupId>org.apache.myfaces.core</groupId>
+                    <artifactId>myfaces-impl</artifactId>
+                    <version>${myfaces.version}</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
 
         </profile>
     </profiles>

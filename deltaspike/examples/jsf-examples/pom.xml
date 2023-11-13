@@ -70,7 +70,7 @@
                 <plugins>
 
                     <plugin>
-                        <groupId>org.apache.openejb.maven</groupId>
+                        <groupId>org.apache.tomee.maven</groupId>
                         <artifactId>tomee-maven-plugin</artifactId>
                         <version>1.0.1</version>
                         <configuration>
@@ -86,12 +86,12 @@
 
     <dependencies>
 
-		<dependency>
-			<groupId>org.apache.openejb</groupId>
-			<artifactId>javaee-api</artifactId>
-			<version>6.0-5</version>
-			<scope>provided</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.apache.tomee</groupId>
+            <artifactId>javaee-api</artifactId>
+            <version>6.0-5</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>org.apache.myfaces.core</groupId>
             <artifactId>myfaces-api</artifactId>

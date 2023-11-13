@@ -54,13 +54,15 @@
         <weld.version>4.0.3.Final</weld.version>
 
         <!-- for cdictrl-openejb -->
-        <openejb.version>4.7.5</openejb.version>
-        <tomee.version>9.0.0.RC1</tomee.version>
+        <openejb.version>9.1.1</openejb.version>
+        <tomee10.version>10.0.0-M1-SNAPSHOT</tomee10.version>
+        <tomee.version>${tomee10.version}</tomee.version>
+
         <openejb.owb.version>${owb.version}</openejb.owb.version>
 
         <!-- testing stuff -->
         <junit.version>4.13.2</junit.version>
-        <arquillian.version>1.7.0.Alpha13</arquillian.version>
+        <arquillian.version>1.7.1.Final</arquillian.version>
 
         <!-- JSF-2.0 implementations-->
         <myfaces.version>4.0.1</myfaces.version>
@@ -481,66 +483,6 @@
                 <version>1.2.2</version>
             </dependency>
 
-<!--
-            &lt;!&ndash; TomEE dependencies &ndash;&gt;
-            <dependency>
-                <groupId>org.apache.openejb</groupId>
-                <artifactId>arquillian-tomee-remote</artifactId>
-                <version>${tomee.version}</version>
-                <scope>test</scope>
-            </dependency>
-
-            &lt;!&ndash; TomEE 7.x dependencies &ndash;&gt;
-            <dependency>
-                <groupId>org.apache.tomee</groupId>
-                <artifactId>arquillian-tomee-remote</artifactId>
-                <version>${tomee.version}</version>
-                <scope>test</scope>
-            </dependency>
-
-            &lt;!&ndash; dependency for DELTASPIKE-113 &ndash;&gt;
-            <dependency>
-                <groupId>javassist</groupId>
-                <artifactId>javassist</artifactId>
-                <version>3.12.1.GA</version>
-                <scope>provided</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.myfaces.core</groupId>
-                <artifactId>myfaces-api</artifactId>
-                <version>${myfaces.version}</version>
-                <scope>provided</scope>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.apache.geronimo.specs</groupId>
-                        <artifactId>geronimo-jcdi_1.0_spec</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.myfaces.core</groupId>
-                <artifactId>myfaces-impl</artifactId>
-                <version>${myfaces.version}</version>
-                <scope>provided</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.myfaces.core</groupId>
-                <artifactId>myfaces-impl-test</artifactId>
-                <version>${myfaces.version}</version>
-                <scope>provided</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.myfaces.test</groupId>
-                <artifactId>myfaces-test20</artifactId>
-                <version>1.0.6</version>
-                <scope>provided</scope>
-            </dependency>
-
--->
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-all</artifactId>

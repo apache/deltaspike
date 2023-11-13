@@ -22,9 +22,9 @@
 
     <parent>
         <groupId>org.apache.deltaspike</groupId>
-        <artifactId>parent-code</artifactId>
+        <artifactId>parent</artifactId>
         <version>2.0.0-SNAPSHOT</version>
-        <relativePath>../parent/code/pom.xml</relativePath>
+        <relativePath>../parent/pom.xml</relativePath>
     </parent>
 
     <groupId>org.apache.deltaspike.cdictrl</groupId>
@@ -44,9 +44,7 @@
                 <module>api</module>
                 <module>impl-owb</module>
                 <module>impl-weld</module>
-<!--
                 <module>impl-openejb</module>
--->
                 <module>tck</module>
             </modules>
         </profile>

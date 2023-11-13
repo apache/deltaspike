@@ -526,8 +526,8 @@
             <id>tomee10-build-managed</id>
 
             <properties>
-                <tomee.version>10.0.0-M1-SNAPSHOT</tomee.version>
-                <openejb.version>${tomee.version}</openejb.version>
+                <tomee.version>${tomee10.version}</tomee.version>
+                <openejb.version>${tomee10.version}</openejb.version>
                 <jakartaeeapi.version>10.0-SNAPSHOT</jakartaeeapi.version>
                 <owb.version>4.0.1-SNAPSHOT</owb.version>
                 <cdicontainer.version>tomee-${tomee.version}</cdicontainer.version>
@@ -594,6 +594,7 @@
                 </plugins>
             </build>
         </profile>
+
         <profile>
             <!--
              * WildFly has to be locally installed

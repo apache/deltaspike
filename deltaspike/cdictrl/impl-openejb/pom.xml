@@ -90,41 +90,77 @@
 
     <profiles>
         <profile>
-            <id>OpenEJB-Legacy</id>
+            <id>default</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
             <dependencies>
                 <dependency>
-                    <groupId>org.apache.openejb</groupId>
+                    <groupId>org.apache.tomee</groupId>
                     <artifactId>openejb-core</artifactId>
                     <version>${openejb.version}</version>
                     <scope>provided</scope>
                 </dependency>
+
+                <dependency>
+                    <groupId>jakarta.xml.bind</groupId>
+                    <artifactId>jakarta.xml.bind-api</artifactId>
+                    <version>3.0.1</version>
+                    <exclusions>
+                        <exclusion> <!-- Is already included in java-ee-api -->
+                            <artifactId>jakarta.activation</artifactId>
+                            <groupId>jakarta.activation-api</groupId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+                <dependency>
+                    <groupId>org.glassfish.jaxb</groupId>
+                    <artifactId>jaxb-runtime</artifactId>
+                    <version>3.0.2</version>
+                    <scope>runtime</scope>
+                    <exclusions>
+                        <exclusion> <!-- Is already included in java-ee-api -->
+                            <artifactId>jakarta.activation</artifactId>
+                            <groupId>jakarta.activation-api</groupId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+
             </dependencies>
         </profile>
 
         <profile>
-            <!-- from TomEE-7.0.0 on openejb resides under the tomee group and not openejb anymore -->
-            <id>tomee7-build-managed</id>
+            <id>tomee10-build-managed</id>
             <dependencies>
                 <dependency>
                     <groupId>org.apache.tomee</groupId>
                     <artifactId>openejb-core</artifactId>
-                    <version>${openejb.version}</version>
+                    <version>${tomee10.version}</version>
                     <scope>provided</scope>
                 </dependency>
-            </dependencies>
-        </profile>
-        <profile>
-            <!-- from TomEE-7.0.0 on openejb resides under the tomee group and not openejb anymore -->
-            <id>tomee8-build-managed</id>
-            <dependencies>
+
                 <dependency>
-                    <groupId>org.apache.tomee</groupId>
-                    <artifactId>openejb-core</artifactId>
-                    <version>${openejb.version}</version>
-                    <scope>provided</scope>
+                    <groupId>jakarta.xml.bind</groupId>
+                    <artifactId>jakarta.xml.bind-api</artifactId>
+                    <version>3.0.1</version>
+                    <exclusions>
+                        <exclusion> <!-- Is already included in java-ee-api -->
+                            <artifactId>jakarta.activation</artifactId>
+                            <groupId>jakarta.activation-api</groupId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+                <dependency>
+                    <groupId>org.glassfish.jaxb</groupId>
+                    <artifactId>jaxb-runtime</artifactId>
+                    <version>3.0.2</version>
+                    <scope>runtime</scope>
+                    <exclusions>
+                        <exclusion> <!-- Is already included in java-ee-api -->
+                            <artifactId>jakarta.activation</artifactId>
+                            <groupId>jakarta.activation-api</groupId>
+                        </exclusion>
+                    </exclusions>
                 </dependency>
             </dependencies>
         </profile>
