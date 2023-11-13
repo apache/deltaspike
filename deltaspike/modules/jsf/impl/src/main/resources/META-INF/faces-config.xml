@@ -35,15 +35,15 @@
 
         <system-event-listener>
             <system-event-listener-class>org.apache.deltaspike.jsf.impl.listener.system.JsfSystemEventBroadcaster</system-event-listener-class>
-            <system-event-class>javax.faces.event.ExceptionQueuedEvent</system-event-class>
+            <system-event-class>jakarta.faces.event.ExceptionQueuedEvent</system-event-class>
         </system-event-listener>
         <system-event-listener>
             <system-event-listener-class>org.apache.deltaspike.jsf.impl.listener.system.JsfSystemEventBroadcaster</system-event-listener-class>
-            <system-event-class>javax.faces.event.PostConstructApplicationEvent</system-event-class>
+            <system-event-class>jakarta.faces.event.PostConstructApplicationEvent</system-event-class>
         </system-event-listener>
         <system-event-listener>
             <system-event-listener-class>org.apache.deltaspike.jsf.impl.listener.system.JsfSystemEventBroadcaster</system-event-listener-class>
-            <system-event-class>javax.faces.event.PreDestroyApplicationEvent</system-event-class>
+            <system-event-class>jakarta.faces.event.PreDestroyApplicationEvent</system-event-class>
         </system-event-listener>
     </application>
 
