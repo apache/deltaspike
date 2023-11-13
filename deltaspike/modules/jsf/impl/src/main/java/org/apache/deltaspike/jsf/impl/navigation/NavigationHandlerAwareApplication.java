@@ -18,11 +18,11 @@
  */
 package org.apache.deltaspike.jsf.impl.navigation;
 
+import jakarta.faces.application.ConfigurableNavigationHandler;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 
 import jakarta.faces.application.Application;
 import jakarta.faces.application.ApplicationWrapper;
-import jakarta.faces.application.ConfigurableNavigationHandlerWrapper;
 import jakarta.faces.application.NavigationHandler;
 
 public class NavigationHandlerAwareApplication extends ApplicationWrapper implements Deactivatable
@@ -38,7 +38,7 @@ public class NavigationHandlerAwareApplication extends ApplicationWrapper implem
     public NavigationHandler getNavigationHandler()
     {
         NavigationHandler wrappedNavigationHandler = this.wrapped.getNavigationHandler();
-        return new DeltaSpikeNavigationHandlerWrapper((ConfigurableNavigationHandlerWrapper) wrappedNavigationHandler);
+        return new DeltaSpikeNavigationHandlerWrapper((ConfigurableNavigationHandler) wrappedNavigationHandler);
     }
 
     @Override
