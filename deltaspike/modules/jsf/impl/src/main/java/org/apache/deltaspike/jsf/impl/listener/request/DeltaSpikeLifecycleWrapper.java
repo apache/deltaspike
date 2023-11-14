@@ -115,14 +115,6 @@ class DeltaSpikeLifecycleWrapper extends Lifecycle
     @Override
     public void render(FacesContext facesContext)
     {
-        // prevent jfwid rendering
-        boolean delegateWindowHandling = ClientWindowConfig.ClientWindowRenderMode.DELEGATED.equals(
-                clientWindowConfig.getClientWindowRenderMode(facesContext));
-        if (!delegateWindowHandling && facesContext.getExternalContext().getClientWindow() != null)
-        {
-            facesContext.getExternalContext().getClientWindow().disableClientWindowRenderMode(facesContext);
-        }
-        
         this.wrapped.render(facesContext);
         
         if (facesContext.getViewRoot() != null && facesContext.getViewRoot().getViewId() != null)
