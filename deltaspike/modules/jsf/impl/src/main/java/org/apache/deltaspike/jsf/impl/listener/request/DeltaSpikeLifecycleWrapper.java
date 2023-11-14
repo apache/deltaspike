@@ -159,6 +159,7 @@ class DeltaSpikeLifecycleWrapper extends Lifecycle
                 {
                     facesContext.getExternalContext().setClientWindow(new ClientSideClientWindow());
                 }
+                facesContext.getExternalContext().getClientWindow().decode(facesContext);
             }
         }
     }

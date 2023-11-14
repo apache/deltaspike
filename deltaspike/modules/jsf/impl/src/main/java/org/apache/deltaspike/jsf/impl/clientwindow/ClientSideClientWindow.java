@@ -23,9 +23,9 @@ import java.io.OutputStream;
 import jakarta.faces.FacesException;
 import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
-import jakarta.faces.render.ResponseStateManager;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.Collections;
 import java.util.Map;
 import org.apache.deltaspike.jsf.impl.util.ClientWindowHelper;
 import org.apache.deltaspike.jsf.impl.util.JsfUtils;
@@ -51,44 +51,42 @@ public class ClientSideClientWindow extends DeltaSpikeClientWindow
 
 
     @Override
-    protected String getOrCreateWindowId(FacesContext facesContext)
+    public void decode(FacesContext facesContext)
     {
-        String windowId = null;
-
         boolean post = isPost(facesContext);
 
         if (post)
         {
-            windowId = getWindowIdPostParameter(facesContext);
+            id = getWindowIdPostParameter(facesContext);
         }
         else if (isNoscriptRequest(facesContext.getExternalContext()))
         {
             // the client has JavaScript disabled
             getClientWindowConfig().setJavaScriptEnabled(false);
 
-            windowId = DEFAULT_WINDOW_ID;
+            id = DEFAULT_WINDOW_ID;
         }
         else
         {
-            windowId = getVerifiedWindowIdFromCookie(facesContext.getExternalContext());
+            id = getVerifiedWindowIdFromCookie(facesContext.getExternalContext());
 
             boolean newWindowIdRequested = false;
-            if (AUTOMATED_ENTRY_POINT_PARAMETER_KEY.equals(windowId))
+            if (AUTOMATED_ENTRY_POINT_PARAMETER_KEY.equals(id))
             {
                 // this is a marker for generating a new windowId
-                windowId = generateNewWindowId();
+                id = generateNewWindowId();
                 newWindowIdRequested = true;
             }
 
-            if (windowId == null || newWindowIdRequested)
+            if (id == null || newWindowIdRequested)
             {
                 // GET request without windowId - send windowhandlerfilter.html to get the windowId
-                sendWindowHandlerHtml(facesContext.getExternalContext(), windowId);
+                sendWindowHandlerHtml(facesContext.getExternalContext(), id);
                 facesContext.responseComplete();
             }
         }
 
-        return windowId;
+        id = sanitiseWindowId(id);
     }
 
     protected boolean isNoscriptRequest(ExternalContext externalContext)
@@ -237,11 +235,6 @@ public class ClientSideClientWindow extends DeltaSpikeClientWindow
             url = JsfUtils.addParameter(facesContext.getExternalContext(),
                     url,
                     true,
-                    ResponseStateManager.CLIENT_WINDOW_URL_PARAM,
-                    windowId);
-            url = JsfUtils.addParameter(facesContext.getExternalContext(),
-                    url,
-                    true,
                     ClientWindowHelper.RequestParameters.REQUEST_TOKEN,
                     requestToken);
 
@@ -260,7 +253,7 @@ public class ClientSideClientWindow extends DeltaSpikeClientWindow
     @Override
     public Map<String, String> getQueryURLParameters(FacesContext facesContext)
     {
-        return null;
+        return Collections.emptyMap();
     }
 
     @Override

@@ -21,8 +21,7 @@ package org.apache.deltaspike.jsf.impl.clientwindow;
 import org.apache.deltaspike.jsf.impl.util.ClientWindowHelper;
 
 import jakarta.faces.context.FacesContext;
-import jakarta.faces.render.ResponseStateManager;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.Map;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.StringUtils;
@@ -31,52 +30,42 @@ import org.apache.deltaspike.jsf.api.config.JsfModuleConfig;
 public class LazyClientWindow extends DeltaSpikeClientWindow
 {
     @Override
-    protected String getOrCreateWindowId(FacesContext facesContext)
+    public void decode(FacesContext facesContext)
     {
-        String windowId = ClientWindowHelper.getInitialRedirectWindowId(facesContext);
+        id = ClientWindowHelper.getInitialRedirectWindowId(facesContext);
 
-        if (StringUtils.isEmpty(windowId))
+        if (StringUtils.isEmpty(id))
         {
-            windowId = getWindowIdParameter(facesContext);
+            id = getWindowIdParameter(facesContext);
         }
 
         boolean post = isPost(facesContext);
 
-        if (StringUtils.isEmpty(windowId) && post)
+        if (StringUtils.isEmpty(id) && post)
         {
-            windowId = getWindowIdPostParameter(facesContext);
+            id = getWindowIdPostParameter(facesContext);
         }
 
-        if (StringUtils.isEmpty(windowId))
+        if (StringUtils.isEmpty(id))
         {
+            id = generateNewWindowId();
+
             JsfModuleConfig jsfModuleConfig = BeanProvider.getContextualReference(JsfModuleConfig.class);
             if (jsfModuleConfig.isInitialRedirectEnabled() && !post)
             {
-                ClientWindowHelper.handleInitialRedirect(facesContext, generateNewWindowId());
+                id = sanitiseWindowId(id); // handleInitialRedirect already takes the id, just be sure and sanitise now
+                ClientWindowHelper.handleInitialRedirect(facesContext, id);
                 facesContext.responseComplete();
-                windowId = null;
-            }
-            else
-            {
-                windowId = generateNewWindowId();
             }
         }
 
-        return windowId;
+        id = sanitiseWindowId(id);
     }
 
     @Override
     public Map<String, String> getQueryURLParameters(FacesContext facesContext)
     {
-        String windowId = getId();
-        if (windowId == null)
-        {
-            return null;
-        }
-
-        Map<String, String> parameters = new HashMap<>();
-        parameters.put(ResponseStateManager.CLIENT_WINDOW_URL_PARAM, windowId);
-        return parameters;
+        return Collections.emptyMap();
     }
 
     @Override

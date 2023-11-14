@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.jsf.impl.listener.request;
 
-
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 

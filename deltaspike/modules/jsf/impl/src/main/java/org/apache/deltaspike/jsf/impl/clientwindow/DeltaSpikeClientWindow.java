@@ -36,27 +36,12 @@ public abstract class DeltaSpikeClientWindow extends ClientWindow
      */
     public static final String DEFAULT_WINDOW_ID = "default";
     
-    private String id;
-    private int maxWindowIdCount = 10;
+    protected String id;
+    protected int maxWindowIdCount = 10;
 
     public DeltaSpikeClientWindow()
     {
         this.maxWindowIdCount = ClientWindowHelper.getMaxWindowIdLength();
-    }
-    
-    @Override
-    public void decode(FacesContext facesContext)
-    {
-        id = getOrCreateWindowId(facesContext);
-
-        if (id != null)
-        {
-            id = sanitiseWindowId(id);
-            if (id.length() > this.maxWindowIdCount)
-            {
-                id = id.substring(0, this.maxWindowIdCount);
-            }
-        }
     }
 
     @Override
@@ -65,16 +50,26 @@ public abstract class DeltaSpikeClientWindow extends ClientWindow
         return id;
     }
 
-        /**
+    /**
      * We have to escape some characters to make sure we do not open
      * any XSS vectors. E.g. replace (,<, & etc to
      * prevent attackers from injecting JavaScript function calls or html.
      */
     protected String sanitiseWindowId(String windowId)
     {
-        return StringUtils.removeSpecialChars(windowId);
+        if (windowId == null)
+        {
+            return null;
+        }
+
+        windowId = StringUtils.removeSpecialChars(windowId);
+        if (windowId.length() > this.maxWindowIdCount)
+        {
+            windowId = windowId.substring(0, this.maxWindowIdCount);
+        }
+        return windowId;
     }
-    
+
     protected String generateNewWindowId()
     {
         //X TODO proper mechanism
@@ -121,9 +116,7 @@ public abstract class DeltaSpikeClientWindow extends ClientWindow
     {
         return BeanProvider.getContextualReference(ClientWindowConfig.class);
     }
-    
-    protected abstract String getOrCreateWindowId(FacesContext facesContext);
-    
+
     /**
      * @return true if the implementation possible sends an initial redirect.
      */

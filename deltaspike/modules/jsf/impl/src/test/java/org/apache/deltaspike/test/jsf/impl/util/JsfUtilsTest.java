@@ -136,4 +136,14 @@ public class JsfUtilsTest
         Assert.assertEquals(Boolean.TRUE,
             JsfUtils.isNewMessage(existingFacesMessage, messageToCheck));
     }
+
+    @Test
+    public void testRemoveUrlParameter()
+    {
+        Assert.assertEquals("http://localhost:58481/windowScopedContextTest/page.xhtml",
+                JsfUtils.removeUrlParameter("http://localhost:58481/windowScopedContextTest/page.xhtml?jfwid=-1281", "jfwid"));
+
+        Assert.assertEquals("http://localhost:58481/windowScopedContextTest/page.xhtml",
+                JsfUtils.removeUrlParameter("http://localhost:58481/windowScopedContextTest/page.xhtml?jfwid=", "jfwid"));
+    }
 }

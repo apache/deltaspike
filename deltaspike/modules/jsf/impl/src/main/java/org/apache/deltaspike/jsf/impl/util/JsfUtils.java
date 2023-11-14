@@ -35,6 +35,7 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +43,7 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import org.apache.deltaspike.core.util.StringUtils;
 
 public abstract class JsfUtils
@@ -65,7 +67,7 @@ public abstract class JsfUtils
     {
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 
-        Set<RequestParameter> result = new HashSet<RequestParameter>();
+        Set<RequestParameter> result = new HashSet<>();
 
         if (externalContext == null || //detection of early config for different mojarra versions
                 externalContext.getRequestParameterValuesMap() == null || externalContext.getRequest() == null)
@@ -105,7 +107,7 @@ public abstract class JsfUtils
             for (String parameterValue : requestParam.getValues())
             {
                 if (!url.contains(key + "=" + parameterValue) &&
-                        !url.contains(key + "=" + encodeURLParameterValue(parameterValue, externalContext)))
+                        !url.contains(key + "=" + encodeUrlParameterValue(parameterValue, externalContext)))
                 {
                     if (!existingParameters)
                     {
@@ -139,7 +141,7 @@ public abstract class JsfUtils
     {
         // don't append if already available
         if (url.contains(name + "=" + value)
-                || url.contains(name + "=" + encodeURLParameterValue(value, externalContext)))
+                || url.contains(name + "=" + encodeUrlParameterValue(value, externalContext)))
         {
             return url;
         }
@@ -184,7 +186,7 @@ public abstract class JsfUtils
             for (String value : entry.getValue())
             {
                 if (!url.contains(entry.getKey() + "=" + value) &&
-                        !url.contains(entry.getKey() + "=" + encodeURLParameterValue(value, externalContext)))
+                        !url.contains(entry.getKey() + "=" + encodeUrlParameterValue(value, externalContext)))
                 {
                     if (StringUtils.isEmpty(entry.getKey()) && StringUtils.isEmpty(value))
                     {
@@ -214,7 +216,7 @@ public abstract class JsfUtils
     {
         if (encode)
         {
-            url.append(encodeURLParameterValue(name, externalContext));
+            url.append(encodeUrlParameterValue(name, externalContext));
         }
         else
         {
@@ -225,12 +227,31 @@ public abstract class JsfUtils
 
         if (encode)
         {
-            url.append(encodeURLParameterValue(value, externalContext));
+            url.append(encodeUrlParameterValue(value, externalContext));
         }
         else
         {
             url.append(value);
         }
+    }
+
+    public static String removeUrlParameter(String url, String name)
+    {
+        if (url == null || !url.contains(name) || (!url.contains("?") && !url.contains("&")))
+        {
+            return url;
+        }
+
+        String[] array = url.split("\\?");
+        String params = Arrays.asList(array[1].split("&"))
+                .stream()
+                .filter(item -> !item.split("=")[0].equalsIgnoreCase(name) && !"".equals(item.split("=")[1]))
+                .collect(Collectors.joining("&"));
+        if (params == null || params.isBlank())
+        {
+            return array[0];
+        }
+        return String.join("?", array[0], params);
     }
 
     /**
@@ -242,7 +263,7 @@ public abstract class JsfUtils
      * @param externalContext current external-context
      * @return encoded value
      */
-    public static String encodeURLParameterValue(String value, ExternalContext externalContext)
+    public static String encodeUrlParameterValue(String value, ExternalContext externalContext)
     {
         // copied from MyFaces ServletExternalContextImpl.encodeURL()
         try
@@ -309,7 +330,7 @@ public abstract class JsfUtils
 
             @SuppressWarnings({ "unchecked" })
             List<FacesMessageEntry> facesMessageEntryList = windowMetaData.getFacesMessageEntryList();
-            List<FacesMessage> originalMessageList = new ArrayList<FacesMessage>(facesContext.getMessageList());
+            List<FacesMessage> originalMessageList = new ArrayList<>(facesContext.getMessageList());
 
             if (facesMessageEntryList != null)
             {

@@ -26,6 +26,7 @@ import jakarta.enterprise.inject.Typed;
 import jakarta.faces.FacesException;
 import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.render.ResponseStateManager;
 
 import org.apache.deltaspike.jsf.api.config.base.JsfBaseConfig;
 
@@ -56,12 +57,12 @@ public abstract class ClientWindowHelper
         {
             url += externalContext.getRequestPathInfo();
         }
-        
+
         url = JsfUtils.addRequestParameters(externalContext, url, true);
-        //TODO check if it isn't better to fix addRequestParameters itself
-        //only #encodeResourceURL is portable currently
-        url = externalContext.encodeResourceURL(url);
-        
+        // always remove jfwid to force adding new jfwid as JSF impl otherwise just ignores it
+        url = JsfUtils.removeUrlParameter(url, ResponseStateManager.CLIENT_WINDOW_URL_PARAM);
+        url = externalContext.encodeRedirectURL(url, null);
+
         return url;
     }
     
