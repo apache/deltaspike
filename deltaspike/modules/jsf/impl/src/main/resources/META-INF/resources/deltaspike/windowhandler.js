@@ -63,7 +63,7 @@ window.dswh = window.dswh || {
             targetStrategy.init(false);
 
             // JSF ajax callback
-            jsf.ajax.addOnEvent(function(event) {
+            faces.ajax.addOnEvent(function(event) {
                 if (event.status === "success") {
                     dswh.utils.log('--- #init(true)');
                     targetStrategy.init(true);
