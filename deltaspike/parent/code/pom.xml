@@ -529,7 +529,7 @@
                 <tomee.version>${tomee10.version}</tomee.version>
                 <openejb.version>${tomee10.version}</openejb.version>
                 <jakartaeeapi.version>10.0-SNAPSHOT</jakartaeeapi.version>
-                <owb.version>4.0.1-SNAPSHOT</owb.version>
+                <owb.version>4.0.1</owb.version>
                 <cdicontainer.version>tomee-${tomee.version}</cdicontainer.version>
             </properties>
 
