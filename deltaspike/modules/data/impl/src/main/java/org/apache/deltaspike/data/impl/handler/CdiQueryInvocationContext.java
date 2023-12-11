@@ -346,8 +346,8 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
 
     private boolean countCheck(Object entity, Property<Serializable> primaryKeyProperty)
     {
-        StringBuilder jpql = new StringBuilder("SELECT COUNT(e) FROM " + getEntityClass()
-                .getSimpleName() + " e ");
+        StringBuilder jpql = new StringBuilder("SELECT COUNT(e) FROM " + getEntityMetadata()
+                .getEntityName() + " e ");
         jpql.append("WHERE e.");
         jpql.append(primaryKeyProperty.getName());
         jpql.append(" = :id");
