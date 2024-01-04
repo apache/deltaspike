@@ -21,6 +21,7 @@ package org.apache.deltaspike.data.impl.audit;
 import java.util.Set;
 import java.util.logging.Level;
 
+import jakarta.enterprise.context.Dependent;
 import jakarta.enterprise.inject.spi.Bean;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.inject.Inject;
@@ -31,6 +32,7 @@ import org.apache.deltaspike.data.api.audit.CurrentUser;
 import org.apache.deltaspike.data.api.audit.ModifiedBy;
 import org.apache.deltaspike.data.impl.property.Property;
 
+@Dependent
 class PrincipalProvider extends AuditProvider
 {
 

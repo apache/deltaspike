@@ -22,6 +22,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Level;
 
+import jakarta.enterprise.context.Dependent;
 import org.apache.deltaspike.data.api.audit.CreatedOn;
 import org.apache.deltaspike.data.api.audit.ModifiedOn;
 import org.apache.deltaspike.data.impl.property.Property;
@@ -29,6 +30,7 @@ import org.apache.deltaspike.data.impl.property.Property;
 /**
  * Set timestamps on marked properties.
  */
+@Dependent
 class TimestampsProvider extends AuditProvider
 {
 
