@@ -19,9 +19,6 @@
 package org.apache.deltaspike.test.jsf.impl.scope.window;
 
 
-import java.net.URL;
-import java.util.logging.Logger;
-
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.apache.deltaspike.test.jsf.impl.config.TestJsfModuleConfig;
 import org.apache.deltaspike.test.jsf.impl.scope.window.beans.WindowScopedBackingBean;
@@ -42,6 +39,9 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import java.net.URL;
+import java.util.logging.Logger;
 
 
 /**
@@ -79,7 +79,6 @@ public class WindowScopedContextTest
 
     @Test
     @RunAsClient
-    @org.junit.Ignore //X TODO re-enable again after windowId handling got fixed!
     public void testWindowId() throws Exception
     {
         System.out.println("contextpath= " + contextPath);
