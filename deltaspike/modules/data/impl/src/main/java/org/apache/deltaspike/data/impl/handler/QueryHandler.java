@@ -109,7 +109,7 @@ public class QueryHandler implements Serializable, InvocationHandler
             }
 
             return transactionStrategy.execute(
-                new AbstractInvocationContext<Object>(proxy, method, args, null)
+                new AbstractInvocationContext<>(proxy, method, args, null)
                 {
                     @Override
                     public Object proceed() throws Exception

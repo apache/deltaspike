@@ -34,7 +34,7 @@ public class QueryBuilderContext
     public QueryBuilderContext()
     {
         this.builder = new StringBuilder();
-        this.paramUpdates = new LinkedList<ParameterUpdate>();
+        this.paramUpdates = new LinkedList<>();
     }
 
     public int increment()
