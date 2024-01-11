@@ -142,14 +142,15 @@ public class MessageBundleExtension implements Extension, Deactivatable
         for (AnnotatedType<?> mbType : messageBundleTypes)
         {
             BeanConfigurator<?> beanConfigurator = abd.addBean()
-                    .createWith(cc -> {
-                        final Bean<?> invocationHandlerBean = beanManager.resolve(
-                                beanManager.getBeans(MessageBundleInvocationHandler.class));
+                    .createWith(cc ->
+                        {
+                            final Bean<?> invocationHandlerBean = beanManager.resolve(
+                                    beanManager.getBeans(MessageBundleInvocationHandler.class));
 
-                        return createMessageBundleProxy(mbType.getJavaClass(),
-                                (MessageBundleInvocationHandler)
-                                        beanManager.getReference(invocationHandlerBean, MessageBundleInvocationHandler.class, cc));
-                    })
+                            return createMessageBundleProxy(mbType.getJavaClass(),
+                                    (MessageBundleInvocationHandler)
+                                            beanManager.getReference(invocationHandlerBean, MessageBundleInvocationHandler.class, cc));
+                        })
                     .types(mbType.getJavaClass(), Object.class, Serializable.class)
                     .addQualifier(Default.Literal.INSTANCE)
                     .scope(ApplicationScoped.class) // needs to be a normalscope due to a bug in older Weld versions
