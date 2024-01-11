@@ -166,10 +166,10 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${maven.surefire.plugin.version}</version>
                     <configuration>
-                        <systemProperties>
+                        <systemPropertyVariables>
                             <org.apache.deltaspike.ProjectStage>UnitTest</org.apache.deltaspike.ProjectStage>
                             <cdicontainer.version>${cdicontainer.version}</cdicontainer.version>
-                        </systemProperties>
+                        </systemPropertyVariables>
                     </configuration>
                 </plugin>
             </plugins>
@@ -263,9 +263,9 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
-                            <systemProperties>
+                            <systemPropertyVariables>
                                 <cdicontainer.version>${cdicontainer.version}</cdicontainer.version>
-                            </systemProperties>
+                            </systemPropertyVariables>
 
                             <!-- Ignore these groups because they don't work with embedded OWB -->
                             <excludedGroups>
@@ -486,9 +486,9 @@
                     <plugin>
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
-                            <systemProperties>
+                            <systemPropertyVariables>
                                 <cdicontainer.version>${cdicontainer.version}</cdicontainer.version>
-                            </systemProperties>
+                            </systemPropertyVariables>
                             <!-- Ignore these groups because they don't work with embedded Weld -->
                             <excludedGroups>
                                 org.apache.deltaspike.test.category.WebProfileCategory,
@@ -562,11 +562,11 @@
                             <systemPropertyVariables>
                                 <tomee.version>${tomee.version}</tomee.version>
                             </systemPropertyVariables>
-                            <systemProperties>
+                            <systemPropertyVariables>
                                 <arquillian.launch>tomee</arquillian.launch>
                                 <org.apache.deltaspike.ProjectStage>UnitTest</org.apache.deltaspike.ProjectStage>
                                 <cdicontainer.version>${cdicontainer.version}</cdicontainer.version>
-                            </systemProperties>
+                            </systemPropertyVariables>
 
                             <!-- we just use groups to mark that a test should be executed only
                             with specific environments. even though a java-ee6 application server has to be able to run
@@ -635,13 +635,13 @@
                         <artifactId>maven-surefire-plugin</artifactId>
                         <version>${maven.surefire.plugin.version}</version>
                         <configuration>
-                            <systemProperties>
+                            <systemPropertyVariables>
                                 <arquillian.launch>wildfly-managed</arquillian.launch>
                                 <arquillian.xml>arquillian-jboss.xml</arquillian.xml>
                                 <org.apache.deltaspike.ProjectStage>UnitTest</org.apache.deltaspike.ProjectStage>
                                 <cdicontainer.version>${cdicontainer.version}</cdicontainer.version>
                                 <jacoco.agent>${jacoco.agent}</jacoco.agent>
-                            </systemProperties>
+                            </systemPropertyVariables>
                             <!-- we just use groups to mark that a test should be executed only
                             with specific environments. even though a java-ee6 application server has to be able to run
                             all tests in theory, we have to exclude some tests because there are e.g. packaging issues or
@@ -710,7 +710,7 @@
                         <artifactId>maven-surefire-plugin</artifactId>
                         <version>${maven.surefire.plugin.version}</version>
                         <configuration>
-                            <systemProperties>
+                            <systemPropertyVariables>
                                 <arquillian.launch>wildfly-build-managed</arquillian.launch>
                                 <arquillian.xml>arquillian-jboss.xml</arquillian.xml>
                                 <arquillian.jboss_home>
@@ -718,7 +718,7 @@
                                 </arquillian.jboss_home>
                                 <org.apache.deltaspike.ProjectStage>UnitTest</org.apache.deltaspike.ProjectStage>
                                 <cdicontainer.version>${cdicontainer.version}</cdicontainer.version>
-                            </systemProperties>
+                            </systemPropertyVariables>
                             <!-- we just use groups to mark that a test should be executed only
                             with specific environments. even though a java-ee6 application server has to be able to run
                             all tests in theory, we have to exclude some tests because there are e.g. packaging issues or
@@ -803,12 +803,12 @@
                         <artifactId>maven-surefire-plugin</artifactId>
                         <version>${maven.surefire.plugin.version}</version>
                         <configuration>
-                            <systemProperties>
+                            <systemPropertyVariables>
                                 <arquillian.launch>wildfly-remote</arquillian.launch>
                                 <arquillian.xml>arquillian-jboss.xml</arquillian.xml>
                                 <org.apache.deltaspike.ProjectStage>UnitTest</org.apache.deltaspike.ProjectStage>
                                 <cdicontainer.version>${cdicontainer.version}</cdicontainer.version>
-                            </systemProperties>
+                            </systemPropertyVariables>
                             <!-- we just use groups to mark that a test should be executed only
                             with specific environments. even though a java-ee6 application server has to be able to run
                             all tests in theory, we have to exclude some tests because there are e.g. packaging issues or
@@ -865,11 +865,11 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
-                            <systemProperties>
+                            <systemPropertyVariables>
                                 <arquillian.launch>glassfish-build-managed-4</arquillian.launch>
                                 <org.apache.deltaspike.ProjectStage>UnitTest</org.apache.deltaspike.ProjectStage>
                                 <cdicontainer.version>${cdicontainer.version}</cdicontainer.version>
-                            </systemProperties>
+                            </systemPropertyVariables>
                             <!-- we just use groups to mark that a test should be executed only
                             with specific environments. even though a java-ee6 application server has to be able to run
                             all tests in theory, we have to exclude some tests because there are e.g. packaging issues or
@@ -925,12 +925,12 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
-                            <systemProperties>
+                            <systemPropertyVariables>
                                 <arquillian.launch>glassfish-build-managed-4</arquillian.launch>
                                 <arquillian.glassfish4_home>${container.unpack.directory}/payara41</arquillian.glassfish4_home>
                                 <org.apache.deltaspike.ProjectStage>UnitTest</org.apache.deltaspike.ProjectStage>
                                 <cdicontainer.version>${cdicontainer.version}</cdicontainer.version>
-                            </systemProperties>
+                            </systemPropertyVariables>
                             <!-- we just use groups to mark that a test should be executed only
                             with specific environments. even though a java-ee6 application server has to be able to run
                             all tests in theory, we have to exclude some tests because there are e.g. packaging issues or
