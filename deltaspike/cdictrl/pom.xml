@@ -80,7 +80,6 @@
 
         <profile>
             <id>tomee-build-managed</id>
-
             <modules>
                 <module>api</module>
                 <module>impl-openejb</module>
@@ -88,14 +87,6 @@
             </modules>
         </profile>
 
-        <profile>
-            <id>tomee8-build-managed</id>
-            <modules>
-                <module>api</module>
-                <module>impl-openejb</module>
-                <module>tck</module>
-            </modules>
-        </profile>
 
         <profile>
             <id>wildfly-managed</id>
