@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.core.impl.message;
 
+import java.beans.Introspector;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -39,6 +40,8 @@ import jakarta.enterprise.inject.spi.BeforeBeanDiscovery;
 import jakarta.enterprise.inject.spi.Extension;
 import jakarta.enterprise.inject.spi.ProcessAnnotatedType;
 
+import jakarta.enterprise.inject.spi.configurator.BeanConfigurator;
+import jakarta.inject.Named;
 import org.apache.deltaspike.core.api.message.Message;
 import org.apache.deltaspike.core.api.message.MessageBundle;
 import org.apache.deltaspike.core.api.message.MessageTemplate;
@@ -138,19 +141,30 @@ public class MessageBundleExtension implements Extension, Deactivatable
 
         for (AnnotatedType<?> mbType : messageBundleTypes)
         {
-            abd.addBean()
-                .createWith(cc -> {
+            BeanConfigurator<?> beanConfigurator = abd.addBean()
+                    .createWith(cc -> {
                         final Bean<?> invocationHandlerBean = beanManager.resolve(
-                            beanManager.getBeans(MessageBundleInvocationHandler.class));
+                                beanManager.getBeans(MessageBundleInvocationHandler.class));
 
                         return createMessageBundleProxy(mbType.getJavaClass(),
-                            (MessageBundleInvocationHandler)
-                                beanManager.getReference(invocationHandlerBean, MessageBundleInvocationHandler.class, cc));
+                                (MessageBundleInvocationHandler)
+                                        beanManager.getReference(invocationHandlerBean, MessageBundleInvocationHandler.class, cc));
                     })
-                .types(mbType.getJavaClass(), Object.class, Serializable.class)
-                .addQualifier(Default.Literal.INSTANCE)
-                .scope(ApplicationScoped.class) // needs to be a normalscope due to a bug in older Weld versions
-                .id("MessageBundleBean#" + mbType.getJavaClass().getName());
+                    .types(mbType.getJavaClass(), Object.class, Serializable.class)
+                    .addQualifier(Default.Literal.INSTANCE)
+                    .scope(ApplicationScoped.class) // needs to be a normalscope due to a bug in older Weld versions
+                    .id("MessageBundleBean#" + mbType.getJavaClass().getName());
+
+            Named named = mbType.getJavaClass().getAnnotation(Named.class);
+            if (named != null)
+            {
+                String name = named.value();
+                if (name == null || name.isBlank())
+                {
+                    name = Introspector.decapitalize(mbType.getJavaClass().getSimpleName());
+                }
+                beanConfigurator.name(name);
+            }
         }
     }
 
