@@ -41,10 +41,7 @@ import jakarta.enterprise.inject.spi.configurator.BeanConfigurator;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
-import org.apache.deltaspike.core.util.AnnotationUtils;
-import org.apache.deltaspike.core.util.BeanUtils;
-import org.apache.deltaspike.core.util.ClassDeactivationUtils;
-import org.apache.deltaspike.core.util.ReflectionUtils;
+import org.apache.deltaspike.core.util.*;
 import org.apache.deltaspike.partialbean.api.PartialBeanBinding;
 import org.apache.deltaspike.proxy.api.DeltaSpikeProxyBeanConfigurator;
 
@@ -173,10 +170,9 @@ public class PartialBeanBindingExtension implements Extension, Deactivatable
 
         AnnotatedType<T> annotatedType = beanManager.createAnnotatedType(beanClass);
 
-        BeanConfigurator<T> beanConfigurator = afterBeanDiscovery.addBean()    
-            .read(annotatedType)
+        BeanConfigurator<T> beanConfigurator = afterBeanDiscovery.addBean();
+        BeanConfiguratorUtils.read(beanManager, beanConfigurator, annotatedType)
             .beanClass(beanClass);
-        //  .passivationCapable(true)
 
         new DeltaSpikeProxyBeanConfigurator(beanClass,
                 descriptor.getHandler(),
@@ -241,9 +237,6 @@ public class PartialBeanBindingExtension implements Extension, Deactivatable
 
                     Class<?> producerResultType = currentMethod.getReturnType();
 
-                    boolean passivationCapable =
-                        Serializable.class.isAssignableFrom(producerResultType) || producerResultType.isPrimitive();
-
                     Set<Annotation> qualifiers = extractQualifiers(currentMethod.getDeclaredAnnotations(), beanManager);
 
                     final Class partialBeanClass = currentClass;
@@ -252,7 +245,6 @@ public class PartialBeanBindingExtension implements Extension, Deactivatable
                             .beanClass(producerResultType)
                             .types(Object.class, producerResultType)
                             .qualifiers(qualifiers)
-                            // .passivationCapable(passivationCapable)
                             .scope(scopeClass)
                             .id(createPartialProducerId(currentClass, currentMethod, qualifiers))
                             .produceWith(e ->

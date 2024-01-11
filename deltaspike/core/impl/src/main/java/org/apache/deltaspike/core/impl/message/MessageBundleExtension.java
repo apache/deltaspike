@@ -18,36 +18,23 @@
  */
 package org.apache.deltaspike.core.impl.message;
 
-import java.beans.Introspector;
-import java.io.Serializable;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
 import jakarta.enterprise.inject.Default;
-import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
-import jakarta.enterprise.inject.spi.AfterDeploymentValidation;
-import jakarta.enterprise.inject.spi.AnnotatedType;
-import jakarta.enterprise.inject.spi.Bean;
-import jakarta.enterprise.inject.spi.BeanManager;
-import jakarta.enterprise.inject.spi.BeforeBeanDiscovery;
-import jakarta.enterprise.inject.spi.Extension;
-import jakarta.enterprise.inject.spi.ProcessAnnotatedType;
-
+import jakarta.enterprise.inject.spi.*;
 import jakarta.enterprise.inject.spi.configurator.BeanConfigurator;
-import jakarta.inject.Named;
 import org.apache.deltaspike.core.api.message.Message;
 import org.apache.deltaspike.core.api.message.MessageBundle;
 import org.apache.deltaspike.core.api.message.MessageTemplate;
-import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
+import org.apache.deltaspike.core.util.BeanConfiguratorUtils;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
+import org.apache.deltaspike.core.util.ClassUtils;
+
+import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.*;
 
 /**
  * Extension for handling {@link MessageBundle}s.
@@ -139,36 +126,30 @@ public class MessageBundleExtension implements Extension, Deactivatable
             return;
         }
 
-        for (AnnotatedType<?> mbType : messageBundleTypes)
+        for (AnnotatedType<?> type : messageBundleTypes)
         {
-            BeanConfigurator<?> beanConfigurator = abd.addBean()
-                    .createWith(cc ->
-                        {
-                            final Bean<?> invocationHandlerBean = beanManager.resolve(
-                                    beanManager.getBeans(MessageBundleInvocationHandler.class));
-
-                            return createMessageBundleProxy(mbType.getJavaClass(),
-                                    (MessageBundleInvocationHandler)
-                                            beanManager.getReference(invocationHandlerBean, MessageBundleInvocationHandler.class, cc));
-                        })
-                    .types(mbType.getJavaClass(), Object.class, Serializable.class)
-                    .addQualifier(Default.Literal.INSTANCE)
-                    .scope(ApplicationScoped.class) // needs to be a normalscope due to a bug in older Weld versions
-                    .id("MessageBundleBean#" + mbType.getJavaClass().getName());
-
-            Named named = mbType.getJavaClass().getAnnotation(Named.class);
-            if (named != null)
-            {
-                String name = named.value();
-                if (name == null || name.isBlank())
-                {
-                    name = Introspector.decapitalize(mbType.getJavaClass().getSimpleName());
-                }
-                beanConfigurator.name(name);
-            }
+            addAsBean(abd, beanManager, type);
         }
     }
 
+    protected <T> void addAsBean(AfterBeanDiscovery abd, BeanManager beanManager, AnnotatedType<T> type)
+    {
+        BeanConfigurator<T> beanConfigurator = abd.addBean()
+                .createWith(cc ->
+                    {
+                        final Bean<?> invocationHandlerBean = beanManager.resolve(
+                                beanManager.getBeans(MessageBundleInvocationHandler.class));
+
+                        return createMessageBundleProxy(type.getJavaClass(),
+                                (MessageBundleInvocationHandler)
+                                        beanManager.getReference(invocationHandlerBean, MessageBundleInvocationHandler.class, cc));
+                    });
+        BeanConfiguratorUtils.read(beanManager, beanConfigurator, type)
+                .types(type.getJavaClass(), Object.class, Serializable.class)
+                .addQualifier(Default.Literal.INSTANCE)
+                .scope(ApplicationScoped.class) // needs to be a normalscope due to a bug in older Weld versions
+                .id("MessageBundleBean#" + type.getJavaClass().getName());
+    }
 
     @SuppressWarnings("UnusedDeclaration")
     protected void cleanup(@Observes AfterDeploymentValidation afterDeploymentValidation)
