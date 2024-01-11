@@ -145,7 +145,7 @@
         </profile>     
 
         <profile>
-            <id>Weld3</id>
+            <id>Weld</id>
             <build>
                 <plugins>
                     <plugin>

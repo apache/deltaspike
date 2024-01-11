@@ -84,14 +84,6 @@
             <artifactId>tomcat-servlet-api</artifactId>
         </dependency>
 
-<!--
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <scope>test</scope>
-        </dependency>
--->
-
         <dependency>
             <groupId>org.apache.deltaspike.core</groupId>
             <artifactId>deltaspike-core-impl</artifactId>
@@ -155,7 +147,7 @@
             </dependencies>
         </profile>
         <profile>
-            <id>Weld3</id>
+            <id>Weld</id>
             <dependencies>
                 <dependency>
                     <groupId>org.apache.deltaspike.cdictrl</groupId>

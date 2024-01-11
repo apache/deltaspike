@@ -147,12 +147,13 @@
             </dependencies>
         </profile>
         <profile>
-            <id>Weld3</id>
+            <id>Weld</id>
             <dependencies>
-                <!-- Adding a test dependency needed for Weld 1.x -->
+                <!-- Adding a test dependency needed for Weld -->
                 <dependency>
                     <groupId>org.apache.deltaspike.cdictrl</groupId>
                     <artifactId>deltaspike-cdictrl-weld</artifactId>
+                    <version>${project.version}</version>
                     <scope>test</scope>
                 </dependency>
 

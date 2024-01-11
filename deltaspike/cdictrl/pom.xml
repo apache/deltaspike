@@ -59,7 +59,7 @@
         </profile>
 
         <profile>
-            <id>Weld3</id>
+            <id>Weld</id>
             <modules>
                 <module>api</module>
                 <module>impl-weld</module>
