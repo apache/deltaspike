@@ -86,7 +86,6 @@
         <jacoco.version>0.7.4.201502262128</jacoco.version>
 
         <arquillian-weld.version>4.0.0.Final</arquillian-weld.version>
-        <arquillian-weld3.version>2.1.0.Final</arquillian-weld3.version>
 
         <!-- OSGi bundles properties -->
         <deltaspike.osgi.import.deltaspike.version>version="[$(version;==;${deltaspike.osgi.version.clean}),$(version;=+;${deltaspike.osgi.version.clean}))"</deltaspike.osgi.import.deltaspike.version>
