@@ -18,7 +18,9 @@
  */
 package org.apache.deltaspike.core.util;
 
+import jakarta.enterprise.inject.Any;
 import jakarta.enterprise.inject.Default;
+import jakarta.enterprise.inject.Typed;
 import jakarta.enterprise.inject.spi.AnnotatedType;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.configurator.BeanConfigurator;
@@ -72,10 +74,26 @@ public class BeanConfiguratorUtils
             }
         }
 
+        if (type.isAnnotationPresent(Typed.class))
+        {
+            Typed typed = type.getAnnotation(Typed.class);
+            beanConfigurator.types(typed.value());
+        }
+        else
+        {
+            for (Class<?> c = type.getJavaClass(); c != Object.class && c != null; c = c.getSuperclass())
+            {
+                beanConfigurator.addTypes(c);
+            }
+            beanConfigurator.addTypes(type.getJavaClass().getInterfaces());
+            beanConfigurator.addTypes(Object.class);
+        }
+
         if (!qualifierAdded)
         {
             beanConfigurator.addQualifier(Default.Literal.INSTANCE);
         }
+        beanConfigurator.addQualifier(Any.Literal.INSTANCE);
 
         return beanConfigurator;
     }

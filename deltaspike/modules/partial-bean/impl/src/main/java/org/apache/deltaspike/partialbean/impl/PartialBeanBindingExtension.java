@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.partialbean.impl;
 
-import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -41,7 +40,11 @@ import jakarta.enterprise.inject.spi.configurator.BeanConfigurator;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
-import org.apache.deltaspike.core.util.*;
+import org.apache.deltaspike.core.util.AnnotationUtils;
+import org.apache.deltaspike.core.util.BeanConfiguratorUtils;
+import org.apache.deltaspike.core.util.BeanUtils;
+import org.apache.deltaspike.core.util.ClassDeactivationUtils;
+import org.apache.deltaspike.core.util.ReflectionUtils;
 import org.apache.deltaspike.partialbean.api.PartialBeanBinding;
 import org.apache.deltaspike.proxy.api.DeltaSpikeProxyBeanConfigurator;
 
