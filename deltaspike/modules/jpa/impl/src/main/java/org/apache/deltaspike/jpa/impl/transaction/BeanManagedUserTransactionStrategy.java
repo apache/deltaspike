@@ -157,7 +157,7 @@ public class BeanManagedUserTransactionStrategy extends ResourceLocalTransaction
      * and {@link BeanManagedUserTransactionStrategy.UserTransactionAdapter#isActive()}
      * can only use the status information of the {@link UserTransaction} and therefore
      * {@link BeanManagedUserTransactionStrategy.UserTransactionAdapter#begin()}
-     * will only executed once, but {@link javax.persistence.EntityManager#joinTransaction()}
+     * will only executed once, but {@link jakarta.persistence.EntityManager#joinTransaction()}
      * needs to be called for every {@link EntityManager}.
      * @param invocationContext current invocation-context
      * @param entityManagerEntry entry of the current entity-manager

@@ -25,8 +25,8 @@ public enum SingleResultType
 {
 
     /**
-     * Expects a single result, throws a {@link javax.persistence.NoResultException} or
-     * {@link javax.persistence.NonUniqueResultException} otherwise. This is the JPA
+     * Expects a single result, throws a {@link jakarta.persistence.NoResultException} or
+     * {@link jakarta.persistence.NonUniqueResultException} otherwise. This is the JPA
      * default behavior.
      */
     JPA,

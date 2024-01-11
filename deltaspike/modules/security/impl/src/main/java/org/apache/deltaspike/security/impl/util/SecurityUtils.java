@@ -129,7 +129,9 @@ public abstract class SecurityUtils
         for (Annotation annotation : annotations)
         {
             annotationName = annotation.annotationType().getName();
-            if (annotationName.startsWith("java.") || annotationName.startsWith("javax."))
+            if (annotationName.startsWith("java.")
+                    || annotationName.startsWith("javax.")
+                    || annotationName.startsWith("jakarta."))
             {
                 continue;
             }

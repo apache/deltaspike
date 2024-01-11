@@ -68,9 +68,9 @@ public class PersistenceConfigurationProviderTest
     {
         Properties myUnitConfig = persistenceConfigurationProvider.getEntityManagerFactoryConfiguration("MyUnit");
         Assert.assertEquals(4, myUnitConfig.size());
-        Assert.assertEquals(BeanManagerProvider.getInstance().getBeanManager(), myUnitConfig.get("javax.persistence.bean.manager"));
-        Assert.assertEquals("blub", myUnitConfig.get("javax.persistence.jdbc.password"));
-        Assert.assertEquals("sa", myUnitConfig.get("javax.persistence.jdbc.user"));
-        Assert.assertEquals("some.jdbc.Driver", myUnitConfig.get("javax.persistence.jdbc.driver"));
+        Assert.assertEquals(BeanManagerProvider.getInstance().getBeanManager(), myUnitConfig.get("jakarta.persistence.bean.manager"));
+        Assert.assertEquals("blub", myUnitConfig.get("jakarta.persistence.jdbc.password"));
+        Assert.assertEquals("sa", myUnitConfig.get("jakarta.persistence.jdbc.user"));
+        Assert.assertEquals("some.jdbc.Driver", myUnitConfig.get("jakarta.persistence.jdbc.driver"));
     }
 }

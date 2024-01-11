@@ -41,6 +41,7 @@ public class DefaultMockFilter implements MockFilter
     private static final String DS_BASE_PACKAGE = "org.apache.deltaspike.";
     private static final String JAVA_BASE_PACKAGE = "java.";
     private static final String JAVAX_BASE_PACKAGE = "javax.";
+    private static final String JAKARTA_BASE_PACKAGE = "jakarta.";
     private static final String EJB_BASE_PACKAGE = "javax.ejb.";
     private static final String OWB_BASE_PACKAGE = "org.apache.webbeans.";
     private static final String WELD_BASE_PACKAGE = "org.jboss.weld.";
@@ -154,7 +155,8 @@ public class DefaultMockFilter implements MockFilter
     protected boolean isStandardAnnotation(Annotation annotation)
     {
         return annotation.annotationType().getName().startsWith(JAVA_BASE_PACKAGE) ||
-            annotation.annotationType().getName().startsWith(JAVAX_BASE_PACKAGE);
+            annotation.annotationType().getName().startsWith(JAVAX_BASE_PACKAGE) ||
+            annotation.annotationType().getName().startsWith(JAKARTA_BASE_PACKAGE);
     }
 
     protected boolean isInternalPackage(String packageName)

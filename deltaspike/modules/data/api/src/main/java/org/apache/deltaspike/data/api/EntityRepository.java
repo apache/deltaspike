@@ -36,7 +36,7 @@ public interface EntityRepository<E, PK extends Serializable> extends EntityPers
 
     /**
      * Entity lookup by primary key. Convenicence method around
-     * {@link javax.persistence.EntityManager#find(Class, Object)}.
+     * {@link jakarta.persistence.EntityManager#find(Class, Object)}.
      * @param primaryKey        DB primary key.
      * @return                  Entity identified by primary or null if it does not exist.
      */
@@ -44,7 +44,7 @@ public interface EntityRepository<E, PK extends Serializable> extends EntityPers
     
     /**
      * Entity lookup by primary key. Convenicence method around
-     * {@link javax.persistence.EntityManager#find(Class, Object)}.
+     * {@link jakarta.persistence.EntityManager#find(Class, Object)}.
      * @param primaryKey        DB primary key.
      * @return                  Entity identified by primary or null if it does not exist, wrapped by Optional.
      */

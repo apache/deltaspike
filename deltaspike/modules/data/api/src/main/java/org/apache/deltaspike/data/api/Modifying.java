@@ -25,8 +25,8 @@ import java.lang.annotation.Target;
 
 /**
  * Marks a query method to be modifying. This will execute the
- * {@link javax.persistence.Query#executeUpdate()} method instead of
- * {@link javax.persistence.Query#getResultList()} (or the corresponding single result method).
+ * {@link jakarta.persistence.Query#executeUpdate()} method instead of
+ * {@link jakarta.persistence.Query#getResultList()} (or the corresponding single result method).
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

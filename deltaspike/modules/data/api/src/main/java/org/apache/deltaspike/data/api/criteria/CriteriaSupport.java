@@ -69,7 +69,7 @@ public interface CriteriaSupport<E>
 
     /**
      * Create a query selection for the
-     * {@link javax.persistence.criteria.CriteriaBuilder#abs(javax.persistence.criteria.Expression)}
+     * {@link jakarta.persistence.criteria.CriteriaBuilder#abs(jakarta.persistence.criteria.Expression)}
      * over an attribute.
      *
      * @param attribute Attribute to use in the aggregate.
@@ -79,7 +79,7 @@ public interface CriteriaSupport<E>
 
     /**
      * Create a query selection for the
-     * {@link javax.persistence.criteria.CriteriaBuilder#avg(javax.persistence.criteria.Expression)}
+     * {@link jakarta.persistence.criteria.CriteriaBuilder#avg(jakarta.persistence.criteria.Expression)}
      * over an attribute.
      *
      * @param attribute Attribute to use in the aggregate.
@@ -89,7 +89,7 @@ public interface CriteriaSupport<E>
 
     /**
      * Create a query selection for the
-     * {@link javax.persistence.criteria.CriteriaBuilder#count(javax.persistence.criteria.Expression)}
+     * {@link jakarta.persistence.criteria.CriteriaBuilder#count(jakarta.persistence.criteria.Expression)}
      * over an attribute.
      *
      * @param attribute Attribute to use in the aggregate.
@@ -99,7 +99,7 @@ public interface CriteriaSupport<E>
 
     /**
      * Create a query selection for the
-     * {@link javax.persistence.criteria.CriteriaBuilder#countDistinct(javax.persistence.criteria.Expression)}
+     * {@link jakarta.persistence.criteria.CriteriaBuilder#countDistinct(jakarta.persistence.criteria.Expression)}
      * over an attribute.
      *
      * @param attribute Attribute to use in the aggregate.
@@ -109,7 +109,7 @@ public interface CriteriaSupport<E>
 
     /**
      * Create a query selection for the
-     * {@link javax.persistence.criteria.CriteriaBuilder#max(javax.persistence.criteria.Expression)}
+     * {@link jakarta.persistence.criteria.CriteriaBuilder#max(jakarta.persistence.criteria.Expression)}
      * over an attribute.
      *
      * @param attribute Attribute to use in the aggregate.
@@ -119,7 +119,7 @@ public interface CriteriaSupport<E>
 
     /**
      * Create a query selection for the
-     * {@link javax.persistence.criteria.CriteriaBuilder#min(javax.persistence.criteria.Expression)}
+     * {@link jakarta.persistence.criteria.CriteriaBuilder#min(jakarta.persistence.criteria.Expression)}
      * over an attribute.
      *
      * @param attribute Attribute to use in the aggregate.
@@ -129,7 +129,7 @@ public interface CriteriaSupport<E>
 
     /**
      * Create a query selection for the
-     * {@link javax.persistence.criteria.CriteriaBuilder#neg(javax.persistence.criteria.Expression)}
+     * {@link jakarta.persistence.criteria.CriteriaBuilder#neg(jakarta.persistence.criteria.Expression)}
      * over an attribute.
      *
      * @param attribute Attribute to use in the aggregate.
@@ -139,7 +139,7 @@ public interface CriteriaSupport<E>
 
     /**
      * Create a query selection for the
-     * {@link javax.persistence.criteria.CriteriaBuilder#sum(javax.persistence.criteria.Expression)}
+     * {@link jakarta.persistence.criteria.CriteriaBuilder#sum(jakarta.persistence.criteria.Expression)}
      * over an attribute.
      *
      * @param attribute Attribute to use in the aggregate.
@@ -149,7 +149,7 @@ public interface CriteriaSupport<E>
 
     /**
      * Create a query selection for the
-     * {@link javax.persistence.criteria.CriteriaBuilder#mod(javax.persistence.criteria.Expression, Integer)}
+     * {@link jakarta.persistence.criteria.CriteriaBuilder#mod(jakarta.persistence.criteria.Expression, Integer)}
      * for an attribute.
      *
      * @param attribute Attribute to use in the aggregate.
@@ -160,7 +160,7 @@ public interface CriteriaSupport<E>
 
     /**
      * Create a query selection for the
-     * {@link javax.persistence.criteria.CriteriaBuilder#upper(javax.persistence.criteria.Expression)}
+     * {@link jakarta.persistence.criteria.CriteriaBuilder#upper(jakarta.persistence.criteria.Expression)}
      * over a String attribute.
      *
      * @param attribute Attribute to uppercase.
@@ -170,7 +170,7 @@ public interface CriteriaSupport<E>
 
     /**
      * Create a query selection for the
-     * {@link javax.persistence.criteria.CriteriaBuilder#lower(javax.persistence.criteria.Expression)}
+     * {@link jakarta.persistence.criteria.CriteriaBuilder#lower(jakarta.persistence.criteria.Expression)}
      * over a String attribute.
      *
      * @param attribute Attribute to lowercase.
@@ -180,7 +180,7 @@ public interface CriteriaSupport<E>
 
     /**
      * Create a query selection for the
-     * {@link javax.persistence.criteria.CriteriaBuilder#substring(javax.persistence.criteria.Expression, int)}
+     * {@link jakarta.persistence.criteria.CriteriaBuilder#substring(jakarta.persistence.criteria.Expression, int)}
      * over a String attribute.
      *
      * @param attribute Attribute to create a substring from.
@@ -191,7 +191,7 @@ public interface CriteriaSupport<E>
 
     /**
      * Create a query selection for the
-     * {@link javax.persistence.criteria.CriteriaBuilder#substring(javax.persistence.criteria.Expression, int, int)}
+     * {@link jakarta.persistence.criteria.CriteriaBuilder#substring(jakarta.persistence.criteria.Expression, int, int)}
      * over a String attribute.
      *
      * @param attribute Attribute to create a substring from.
@@ -203,7 +203,7 @@ public interface CriteriaSupport<E>
 
     /**
      * Create a query selection for the
-     * {@link javax.persistence.criteria.CriteriaBuilder#trim(javax.persistence.criteria.Expression)}
+     * {@link jakarta.persistence.criteria.CriteriaBuilder#trim(jakarta.persistence.criteria.Expression)}
      * over a String attribute.
      *
      * @param attribute Attribute to apply trim.
@@ -213,8 +213,8 @@ public interface CriteriaSupport<E>
 
     /**
      * Create a query selection for the
-     * {@link javax.persistence.criteria.CriteriaBuilder#trim(javax.persistence.criteria.CriteriaBuilder.Trimspec,
-     * javax.persistence.criteria.Expression)}
+     * {@link jakarta.persistence.criteria.CriteriaBuilder#trim(jakarta.persistence.criteria.CriteriaBuilder.Trimspec,
+     * jakarta.persistence.criteria.Expression)}
      * over a String attribute.
      *
      * @param trimspec  Used to specify how strings are trimmed.
@@ -225,21 +225,21 @@ public interface CriteriaSupport<E>
 
 
     /**
-     * Create a query selection for the {@link javax.persistence.criteria.CriteriaBuilder#currentDate()}.
+     * Create a query selection for the {@link jakarta.persistence.criteria.CriteriaBuilder#currentDate()}.
      *
      * @return {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
      */
     QuerySelection<E, Date> currDate();
 
     /**
-     * Create a query selection for the {@link javax.persistence.criteria.CriteriaBuilder#currentTime()}.
+     * Create a query selection for the {@link jakarta.persistence.criteria.CriteriaBuilder#currentTime()}.
      *
      * @return {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
      */
     QuerySelection<E, Time> currTime();
 
     /**
-     * Create a query selection for the {@link javax.persistence.criteria.CriteriaBuilder#currentTimestamp()}.
+     * Create a query selection for the {@link jakarta.persistence.criteria.CriteriaBuilder#currentTimestamp()}.
      *
      * @return {@link QuerySelection} part of a {@link Criteria#select(Class, QuerySelection...)} call.
      */

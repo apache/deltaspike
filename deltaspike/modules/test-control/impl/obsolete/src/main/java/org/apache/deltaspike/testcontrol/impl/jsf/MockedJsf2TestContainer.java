@@ -87,7 +87,7 @@ public class MockedJsf2TestContainer implements ExternalContainer
         containerConfig = new HashMap<String, String>();
         for (Map.Entry<String, String> entry : ConfigResolver.getAllProperties().entrySet())
         {
-            if (entry.getKey().startsWith("org.apache.myfaces.") || entry.getKey().startsWith("javax.faces.") ||
+            if (entry.getKey().startsWith("org.apache.myfaces.") || entry.getKey().startsWith("jakarta.faces.") ||
                     entry.getKey().startsWith("facelets."))
             {
                 containerConfig.put(entry.getKey(), entry.getValue());

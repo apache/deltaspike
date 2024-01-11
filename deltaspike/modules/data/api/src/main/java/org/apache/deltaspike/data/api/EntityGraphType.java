@@ -25,10 +25,10 @@ package org.apache.deltaspike.data.api;
 public enum EntityGraphType
 {
     /** Fetch graph. */
-    FETCH("javax.persistence.fetchgraph"),
+    FETCH("jakarta.persistence.fetchgraph"),
 
     /** Load graph. */
-    LOAD("javax.persistence.loadgraph");
+    LOAD("jakarta.persistence.loadgraph");
     
     private String hintName;
     

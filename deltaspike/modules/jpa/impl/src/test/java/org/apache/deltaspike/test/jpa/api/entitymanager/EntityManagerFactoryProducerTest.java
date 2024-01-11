@@ -55,7 +55,7 @@ public class EntityManagerFactoryProducerTest
                 .addPackage(EntityManagerFactoryProducerTest.class.getPackage().getName())
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsResource(new StringAsset(TestPersistenceProviderResolver.class.getName()),
-                        "META-INF/services/javax.persistence.spi.PersistenceProviderResolver");
+                        "META-INF/services/jakarta.persistence.spi.PersistenceProviderResolver");
 
         return ShrinkWrap.create(WebArchive.class)
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndJpaArchive())

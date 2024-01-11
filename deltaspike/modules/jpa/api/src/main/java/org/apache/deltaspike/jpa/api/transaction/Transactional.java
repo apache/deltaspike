@@ -46,16 +46,16 @@ public @interface Transactional
 {
     /**
      * Optional qualifier/s which allow/s to start only specific transactions instead of one
-     * for the injected {@link javax.persistence.EntityManager}s.
-     * Default-value is {@link Any} which means any injected {@link javax.persistence.EntityManager}s
-     * should be detected automatically and transactions for all injected {@link javax.persistence.EntityManager}s
-     * will be started. Or the {@link jakarta.enterprise.inject.Default} {@link javax.persistence.EntityManager}
-     * will be used, if no qualifier and no {@link javax.persistence.EntityManager} was found (in the annotated class)
+     * for the injected {@link jakarta.persistence.EntityManager}s.
+     * Default-value is {@link Any} which means any injected {@link jakarta.persistence.EntityManager}s
+     * should be detected automatically and transactions for all injected {@link jakarta.persistence.EntityManager}s
+     * will be started. Or the {@link jakarta.enterprise.inject.Default} {@link jakarta.persistence.EntityManager}
+     * will be used, if no qualifier and no {@link jakarta.persistence.EntityManager} was found (in the annotated class)
      * (see DELTASPIKE-320).
      *
      * This qualifier can also be used for integrating other frameworks,
      * which follow a different style (see DELTASPIKE-319) as well as the usage of
-     * {@link javax.persistence.EntityManager}s with qualifiers in a called method (of a different bean)
+     * {@link jakarta.persistence.EntityManager}s with qualifiers in a called method (of a different bean)
      * which isn't {@link Transactional} itself.
      *
      * @return target persistence-unit identifier

@@ -29,7 +29,7 @@ import jakarta.enterprise.inject.spi.Interceptor;
 import org.apache.deltaspike.core.util.interceptor.AbstractInvocationContext;
 
 /**
- * {@link javax.interceptor.InvocationContext} implementation to support interceptor invocation
+ * {@link jakarta.interceptor.InvocationContext} implementation to support interceptor invocation
  * before proceed with the original method or delegation.
  */
 @Typed

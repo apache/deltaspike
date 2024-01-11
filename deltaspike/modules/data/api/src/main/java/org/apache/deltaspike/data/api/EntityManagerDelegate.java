@@ -29,7 +29,7 @@ import jakarta.persistence.metamodel.Metamodel;
 
 
 /**
- * Expose {@link javax.persistence.EntityManager} methods not present on repository base interfaces.
+ * Expose {@link jakarta.persistence.EntityManager} methods not present on repository base interfaces.
  * Calls the corresponding method on the repository EntityManager.
  *
  * @param <E> The Entity type.
@@ -37,142 +37,142 @@ import jakarta.persistence.metamodel.Metamodel;
 public interface EntityManagerDelegate<E>
 {
     /**
-     * See {@link javax.persistence.EntityManager#persist(Object)}.
+     * See {@link jakarta.persistence.EntityManager#persist(Object)}.
      */
     void persist(E entity);
 
     /**
-     * See {@link javax.persistence.EntityManager#merge(Object)}.
+     * See {@link jakarta.persistence.EntityManager#merge(Object)}.
      */
     E merge(E entity);
 
     /**
-     * See {@link javax.persistence.EntityManager#find(Class, Object, java.util.Map)}.
+     * See {@link jakarta.persistence.EntityManager#find(Class, Object, java.util.Map)}.
      */
     E find(Object primaryKey, Map<String, Object> properties);
 
     /**
-     * See {@link javax.persistence.EntityManager#find(Class, Object, LockModeType)}.
+     * See {@link jakarta.persistence.EntityManager#find(Class, Object, LockModeType)}.
      */
     E find(Object primaryKey, LockModeType lockMode);
 
     /**
-     * See {@link javax.persistence.EntityManager#find(Class, Object, LockModeType, Map)}.
+     * See {@link jakarta.persistence.EntityManager#find(Class, Object, LockModeType, Map)}.
      */
     E find(Object primaryKey, LockModeType lockMode, Map<String, Object> properties);
 
     /**
-     * See {@link javax.persistence.EntityManager#getReference(Class, Object)}.
+     * See {@link jakarta.persistence.EntityManager#getReference(Class, Object)}.
      */
     E getReference(Object primaryKey);
 
     /**
-     * See {@link javax.persistence.EntityManager#setFlushMode(FlushModeType)}.
+     * See {@link jakarta.persistence.EntityManager#setFlushMode(FlushModeType)}.
      */
     void setFlushMode(FlushModeType flushMode);
 
     /**
-     * See {@link javax.persistence.EntityManager#getFlushMode()}.
+     * See {@link jakarta.persistence.EntityManager#getFlushMode()}.
      */
     FlushModeType getFlushMode();
 
     /**
-     * See {@link javax.persistence.EntityManager#lock(Object, LockModeType)}.
+     * See {@link jakarta.persistence.EntityManager#lock(Object, LockModeType)}.
      */
     void lock(Object entity, LockModeType lockMode);
 
     /**
-     * See {@link javax.persistence.EntityManager#lock(Object, LockModeType, Map)}.
+     * See {@link jakarta.persistence.EntityManager#lock(Object, LockModeType, Map)}.
      */
     void lock(Object entity, LockModeType lockMode, Map<String, Object> properties);
 
     /**
-     * See {@link javax.persistence.EntityManager#refresh(Object, Map)}.
+     * See {@link jakarta.persistence.EntityManager#refresh(Object, Map)}.
      */
     void refresh(E entity, Map<String, Object> properties);
 
     /**
-     * See {@link javax.persistence.EntityManager#refresh(Object, LockModeType)}.
+     * See {@link jakarta.persistence.EntityManager#refresh(Object, LockModeType)}.
      */
     void refresh(E entity, LockModeType lockMode);
 
     /**
-     * See {@link javax.persistence.EntityManager#refresh(Object, LockModeType, Map)}.
+     * See {@link jakarta.persistence.EntityManager#refresh(Object, LockModeType, Map)}.
      */
     void refresh(E entity, LockModeType lockMode, Map<String, Object> properties);
 
     /**
-     * See {@link javax.persistence.EntityManager#clear()}.
+     * See {@link jakarta.persistence.EntityManager#clear()}.
      */
     void clear();
 
     /**
-     * See {@link javax.persistence.EntityManager#detach(Object)}.
+     * See {@link jakarta.persistence.EntityManager#detach(Object)}.
      */
     void detach(E entity);
 
     /**
-     * See {@link javax.persistence.EntityManager#contains(Object)}.
+     * See {@link jakarta.persistence.EntityManager#contains(Object)}.
      */
     boolean contains(E entity);
 
     /**
-     * See {@link javax.persistence.EntityManager#getLockMode(Object)}.
+     * See {@link jakarta.persistence.EntityManager#getLockMode(Object)}.
      */
     LockModeType getLockMode(E entity);
 
     /**
-     * See {@link javax.persistence.EntityManager#setProperty(String, Object)}.
+     * See {@link jakarta.persistence.EntityManager#setProperty(String, Object)}.
      */
     void setProperty(String propertyName, Object value);
 
     /**
-     * See {@link javax.persistence.EntityManager#getProperties()}.
+     * See {@link jakarta.persistence.EntityManager#getProperties()}.
      */
     Map<String, Object> getProperties();
 
     /**
-     * See {@link javax.persistence.EntityManager#joinTransaction()}.
+     * See {@link jakarta.persistence.EntityManager#joinTransaction()}.
      */
     void joinTransaction();
 
     /**
-     * See {@link javax.persistence.EntityManager#unwrap(Class)}.
+     * See {@link jakarta.persistence.EntityManager#unwrap(Class)}.
      */
     <T> T unwrap(Class<T> cls);
 
     /**
-     * See {@link javax.persistence.EntityManager#getDelegate()}.
+     * See {@link jakarta.persistence.EntityManager#getDelegate()}.
      */
     Object getDelegate();
 
     /**
-     * See {@link javax.persistence.EntityManager#close()}.
+     * See {@link jakarta.persistence.EntityManager#close()}.
      */
     void close();
 
     /**
-     * See {@link javax.persistence.EntityManager#isOpen()}.
+     * See {@link jakarta.persistence.EntityManager#isOpen()}.
      */
     boolean isOpen();
 
     /**
-     * See {@link javax.persistence.EntityManager#getTransaction()}.
+     * See {@link jakarta.persistence.EntityManager#getTransaction()}.
      */
     EntityTransaction getTransaction();
 
     /**
-     * See {@link javax.persistence.EntityManager#getEntityManagerFactory()}.
+     * See {@link jakarta.persistence.EntityManager#getEntityManagerFactory()}.
      */
     EntityManagerFactory getEntityManagerFactory();
 
     /**
-     * See {@link javax.persistence.EntityManager#getCriteriaBuilder()}.
+     * See {@link jakarta.persistence.EntityManager#getCriteriaBuilder()}.
      */
     CriteriaBuilder getCriteriaBuilder();
 
     /**
-     * See {@link javax.persistence.EntityManager#getMetamodel()}.
+     * See {@link jakarta.persistence.EntityManager#getMetamodel()}.
      */
     Metamodel getMetamodel();
 

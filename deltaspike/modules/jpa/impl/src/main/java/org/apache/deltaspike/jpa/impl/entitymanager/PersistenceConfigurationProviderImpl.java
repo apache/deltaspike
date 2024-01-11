@@ -67,7 +67,7 @@ public class PersistenceConfigurationProviderImpl implements PersistenceConfigur
         unitProperties = addConfigProperties(unitProperties, persistenceUnitName);
 
         // add spec expected attributes
-        unitProperties.put("javax.persistence.bean.manager", BeanManagerProvider.getInstance().getBeanManager());
+        unitProperties.put("jakarta.persistence.bean.manager", BeanManagerProvider.getInstance().getBeanManager());
 
         return unitProperties;
     }

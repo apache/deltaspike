@@ -213,7 +213,9 @@ public class PartialBeanBindingExtension implements Extension, Deactivatable
         {
             for (Class interfaceClass : currentClass.getInterfaces())
             {
-                if (interfaceClass.getName().startsWith("java.") || interfaceClass.getName().startsWith("javax."))
+                if (interfaceClass.getName().startsWith("java.")
+                        || interfaceClass.getName().startsWith("javax.")
+                        || interfaceClass.getName().startsWith("jakarta."))
                 {
                     continue;
                 }

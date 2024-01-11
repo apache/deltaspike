@@ -93,7 +93,8 @@ public abstract class SimpleQueryInOutMapperBase<Entity, Dto> implements QueryIn
             return false;
         }
         final String name = parameter.getClass().getName();
-        return Object.class.isInstance(parameter) && !(name.startsWith("java.") || name.startsWith("javax."));
+        return Object.class.isInstance(parameter)
+                && !(name.startsWith("java.") || name.startsWith("javax.") || name.startsWith("jakarta."));
     }
 
     @Override

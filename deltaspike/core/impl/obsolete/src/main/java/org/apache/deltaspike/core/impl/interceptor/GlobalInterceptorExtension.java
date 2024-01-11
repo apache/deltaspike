@@ -19,7 +19,6 @@
 package org.apache.deltaspike.core.impl.interceptor;
 
 import org.apache.deltaspike.core.api.config.base.CoreBaseConfig;
-import org.apache.deltaspike.core.impl.util.AnnotationInstanceUtils;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 

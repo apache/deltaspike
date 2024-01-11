@@ -37,7 +37,7 @@ import java.util.Set;
 public interface AccessDecisionVoter extends Serializable
 {
     /**
-     * Checks the permission for the given {@link javax.interceptor.InvocationContext}.
+     * Checks the permission for the given {@link jakarta.interceptor.InvocationContext}.
      * If a violation is detected, it should be added to a set which gets returned by the method.
      *
      * @param accessDecisionVoterContext current access-decision-voter-context

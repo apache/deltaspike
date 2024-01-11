@@ -20,7 +20,7 @@ package org.apache.deltaspike.proxy.spi.invocation;
 
 /**
  * Wrapper exception to wrap and pass trough the original {@link Throwable} because
- * the {@link javax.interceptor.InvocationContext#proceed()} method only declares "throws Exception".
+ * the {@link jakarta.interceptor.InvocationContext#proceed()} method only declares "throws Exception".
  */
 public class DeltaSpikeProxyInvocationWrapperException extends Exception
 {

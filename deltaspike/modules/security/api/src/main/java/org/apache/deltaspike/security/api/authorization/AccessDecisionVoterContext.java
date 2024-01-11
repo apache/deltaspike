@@ -41,7 +41,7 @@ public interface AccessDecisionVoterContext
 
     /**
      * TODO review it (this method is new)
-     * Exposes the source e.g. {@link javax.interceptor.InvocationContext}
+     * Exposes the source e.g. {@link jakarta.interceptor.InvocationContext}
      * @return the source which triggered the
      */
     <T> T getSource();

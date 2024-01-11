@@ -28,7 +28,7 @@ import java.io.Serializable;
 public interface InterceptorStrategy extends Serializable
 {
     /**
-     * Method which will be invoked by the interceptor method annotated with {@link javax.interceptor.AroundInvoke}
+     * Method which will be invoked by the interceptor method annotated with {@link jakarta.interceptor.AroundInvoke}
      * @param invocationContext current invocation-context
      * @return result of the intercepted method
      * @throws Exception exception which might be thrown by the intercepted method
