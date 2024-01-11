@@ -29,7 +29,7 @@ import org.junit.Test;
 public class ProjectStageProducerTest
 {
     /**
-     * Test a ProjectStage which got set by the <i>javax.faces.ProjectStage</i>
+     * Test a ProjectStage which got set by the <i>jakarta.faces.ProjectStage</i>
      */
     @Test
     public void testProjectStageSetByEnvironment()

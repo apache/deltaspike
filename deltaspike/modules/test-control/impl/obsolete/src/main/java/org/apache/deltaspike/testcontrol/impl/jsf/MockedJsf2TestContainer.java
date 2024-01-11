@@ -105,9 +105,9 @@ public class MockedJsf2TestContainer implements ExternalContainer
     protected void applyContainerConfig()
     {
         //add the default values
-        servletContext.addInitParameter("javax.faces.PROJECT_STAGE", "UnitTest");
-        servletContext.addInitParameter("javax.faces.PARTIAL_STATE_SAVING", "true");
-        servletContext.addInitParameter("javax.faces.FACELETS_REFRESH_PERIOD", "-1");
+        servletContext.addInitParameter("jakarta.faces.PROJECT_STAGE", "UnitTest");
+        servletContext.addInitParameter("jakarta.faces.PARTIAL_STATE_SAVING", "true");
+        servletContext.addInitParameter("jakarta.faces.FACELETS_REFRESH_PERIOD", "-1");
 
         servletContext.addInitParameter("org.apache.myfaces.INITIALIZE_ALWAYS_STANDALONE", "true");
         servletContext.addInitParameter("org.apache.myfaces.spi.InjectionProvider",

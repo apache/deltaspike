@@ -60,7 +60,7 @@ public class ProjectStageProducer implements Serializable
     {
         //TODO discuss it
         "org.apache.deltaspike.ProjectStage",
-        "javax.faces.PROJECT_STAGE",
+        "jakarta.faces.PROJECT_STAGE",
         "faces.PROJECT_STAGE"
     };
 
