@@ -147,7 +147,7 @@ public class MessageBundleExtension implements Extension, Deactivatable
                             (MessageBundleInvocationHandler)
                                 beanManager.getReference(invocationHandlerBean, MessageBundleInvocationHandler.class, cc));
                     })
-                .read(mbType)
+                .read((AnnotatedType)mbType)
                 .types(mbType.getJavaClass(), Object.class, Serializable.class)
                 .addQualifier(Default.Literal.INSTANCE)
                 .scope(ApplicationScoped.class) // needs to be a normalscope due to a bug in older Weld versions
