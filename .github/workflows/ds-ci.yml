@@ -18,7 +18,7 @@
 
 # NOTE https://infra.apache.org/github-actions-secrets.html
 
-name: DeltaSpike CI
+name: CI
 
 on:
   push:
@@ -62,6 +62,8 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-      - name: Build with Maven
-        run: mvn clean install
+      - name: Build with Maven (OpenWebBeans)
+        run: mvn clean install -POWB
+      - name: Build with Maven (Weld)
+        run: mvn clean install -PWeld
         
