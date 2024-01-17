@@ -74,9 +74,7 @@
         <module>core</module>
         <module>cdictrl</module>
         <module>modules</module>
-<!--
         <module>examples</module>
--->
         <module>dist</module>
     </modules>
 

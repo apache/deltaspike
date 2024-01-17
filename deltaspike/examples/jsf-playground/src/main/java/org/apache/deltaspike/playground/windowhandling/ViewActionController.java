@@ -18,13 +18,14 @@
  */
 package org.apache.deltaspike.playground.windowhandling;
 
-import java.util.Date;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.lifecycle.ClientWindow;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import org.apache.deltaspike.jsf.spi.scope.window.ClientWindow;
+
+import java.util.Date;
 
 @Named
 @RequestScoped
@@ -44,7 +45,7 @@ public class ViewActionController
     public void action()
     {
         FacesContext context = FacesContext.getCurrentInstance();
-        System.out.println("ViewActionController#action with windowId: " + clientWindow.getWindowId(context));
+        System.out.println("ViewActionController#action with windowId: " + clientWindow.getId());
     }
 
     public Date getLastTimeLinkAction()
@@ -55,7 +56,7 @@ public class ViewActionController
     public void linkAction()
     {
         FacesContext context = FacesContext.getCurrentInstance();
-        System.out.println("ViewActionController#linkAction with windowId: " + clientWindow.getWindowId(context));
+        System.out.println("ViewActionController#linkAction with windowId: " + clientWindow.getId());
         lastTimeLinkAction = new Date();
     }
 }

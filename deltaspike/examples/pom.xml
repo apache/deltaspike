@@ -53,14 +53,18 @@
     <name>Apache DeltaSpike Examples</name>
 
     <modules>
+        <!--
         <module>jse-examples</module>
         <module>jsf-examples</module>
+        -->
         <module>jsf-playground</module>
+        <!--
         <module>security-requested-page-after-login-cdi</module>
         <module>security-requested-page-after-login-picketlink</module>
         <module>scheduler-playground</module>
         <module>jpa-examples</module>
         <module>data-examples</module>
+        -->
     </modules>
 
     <properties>
@@ -69,21 +73,16 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.geronimo.specs</groupId>
-            <artifactId>geronimo-jcdi_1.0_spec</artifactId>
-            <scope>compile</scope>
+            <groupId>org.apache.tomee</groupId>
+            <artifactId>jakartaee-api</artifactId>
+            <version>10.0-M2</version>
+            <scope>provided</scope>
         </dependency>
-
         <dependency>
-            <groupId>org.apache.geronimo.specs</groupId>
-            <artifactId>geronimo-atinject_1.0_spec</artifactId>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.geronimo.specs</groupId>
-            <artifactId>geronimo-interceptor_1.1_spec</artifactId>
-            <scope>compile</scope>
+            <groupId>org.apache.myfaces.core</groupId>
+            <artifactId>myfaces-api</artifactId>
+            <version>4.0.1</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -95,12 +94,6 @@
                 <configuration>
                     <skip>${deploy.skip}</skip> <!-- we don't deploy our samples upstream -->
                 </configuration>
-            </plugin>
-            <!-- run mvn wildfly:deploy to deploy the sample to wildfly -->
-            <plugin>
-                <groupId>org.wildfly.plugins</groupId>
-                <artifactId>wildfly-maven-plugin</artifactId>
-                <version>1.1.0.Alpha8</version>
             </plugin>
         </plugins>
     </build>
