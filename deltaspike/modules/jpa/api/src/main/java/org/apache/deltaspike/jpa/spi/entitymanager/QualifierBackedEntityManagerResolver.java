@@ -19,18 +19,22 @@
 
 package org.apache.deltaspike.jpa.spi.entitymanager;
 
-import jakarta.enterprise.inject.Any;
-import org.apache.deltaspike.jpa.api.entitymanager.EntityManagerResolver;
-
-import jakarta.enterprise.inject.spi.Bean;
-import jakarta.enterprise.inject.spi.BeanManager;
-import jakarta.persistence.EntityManager;
 import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Logger;
+
+import org.apache.deltaspike.jpa.api.entitymanager.EntityManagerResolver;
+
+import jakarta.enterprise.inject.Any;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.persistence.EntityManager;
 
 public class QualifierBackedEntityManagerResolver implements EntityManagerResolver
 {
+    private static final Logger logger = Logger.getLogger(QualifierBackedEntityManagerResolver.class.getName());
+    
     private final Class<? extends Annotation>[] qualifiers;
     private final BeanManager beanManager;
 
@@ -66,6 +70,7 @@ public class QualifierBackedEntityManagerResolver implements EntityManagerResolv
         {
             entityManagerBeans = new HashSet<>();
         }
+        Set<Bean<?>> detectedEntityManagerBeans = new HashSet<>();
         for (Class<? extends Annotation> qualifierClass : qualifiers)
         {
             for (Bean<?> currentEntityManagerBean : entityManagerBeans)
@@ -76,10 +81,20 @@ public class QualifierBackedEntityManagerResolver implements EntityManagerResolv
                 {
                     if (currentQualifierAnnotation.annotationType().equals(qualifierClass))
                     {
-                        return (Bean<EntityManager>) currentEntityManagerBean;
+                        detectedEntityManagerBeans.add(currentEntityManagerBean);
                     }
                 }
             }
+        }
+        if (detectedEntityManagerBeans.size() > 1) 
+        {
+            logger.warning("detected multiple entityManager provider: " + detectedEntityManagerBeans);
+        }
+        if (!detectedEntityManagerBeans.isEmpty()) 
+        {
+            Bean<?> entityManagerBean = detectedEntityManagerBeans.iterator().next();
+            logger.fine("detected entityManager provider: " + entityManagerBean);
+            return (Bean<EntityManager>) entityManagerBean;
         }
         return null;
     }
