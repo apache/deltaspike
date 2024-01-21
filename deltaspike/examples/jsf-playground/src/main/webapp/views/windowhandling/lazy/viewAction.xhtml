@@ -42,9 +42,7 @@
         <h:link value="GET Link" outcome="viewAction.xhtml" />
         <br />
         <br />
-        <ds:disableClientWindow>
-            <h:link value="GET Link - surrounded by ds:disableClientWindow" outcome="viewAction.xhtml" />
-        </ds:disableClientWindow>
+        <h:link value="GET Link - surrounded by ds:disableClientWindow" outcome="viewAction.xhtml" disableClientWindow="true" />
         <br />
         <br />
         <h:commandLink value="Postback">

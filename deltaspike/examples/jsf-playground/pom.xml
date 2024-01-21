@@ -63,7 +63,6 @@
             <scope>compile</scope>
             <version>${project.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.deltaspike.core</groupId>
             <artifactId>deltaspike-core-impl</artifactId>
@@ -77,144 +76,25 @@
             <scope>compile</scope>
             <version>${project.version}</version>
         </dependency>
-
         <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-api</artifactId>
-            <version>7.0</version>
-            <scope>provided</scope>
+            <groupId>org.apache.deltaspike.modules</groupId>
+            <artifactId>deltaspike-jsf-module-impl</artifactId>
+            <scope>compile</scope>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 
-    <profiles>
-        <profile>
-            <id>run-tomee-1.7.2</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.tomee.maven</groupId>
-                        <artifactId>tomee-maven-plugin</artifactId>
-                        <version>1.0.1</version>
-                        <configuration>
-                            <tomeeVersion>1.7.2</tomeeVersion>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-            <dependencies>
-                <dependency>
-                    <groupId>org.apache.deltaspike.modules</groupId>
-                    <artifactId>deltaspike-jsf-module-impl-ee6</artifactId>
-                    <scope>compile</scope>
-                    <version>${project.version}</version>
-                </dependency>
-            </dependencies>
-        </profile>
-        <profile>
-            <id>run-wildfly-8.0.0</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.wildfly.plugins</groupId>
-                        <artifactId>wildfly-maven-plugin</artifactId>
-                        <version>1.0.1.Final</version>
-                        <configuration>
-                            <version>8.0.0.Final</version>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-            <dependencies>
-                <dependency>
-                    <groupId>org.apache.deltaspike.modules</groupId>
-                    <artifactId>deltaspike-jsf-module-impl</artifactId>
-                    <scope>compile</scope>
-                    <version>${project.version}</version>
-                </dependency>
-            </dependencies>
-        </profile>
-        <profile>
-            <id>run-jboss-7.1.1</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.jboss.as.plugins</groupId>
-                        <artifactId>jboss-as-maven-plugin</artifactId>
-                        <version>7.7.Final</version>
-                        <configuration>
-                            <version>7.1.1.Final</version>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-            <dependencies>
-                <dependency>
-                    <groupId>org.apache.deltaspike.modules</groupId>
-                    <artifactId>deltaspike-jsf-module-impl-ee6</artifactId>
-                    <scope>compile</scope>
-                    <version>${project.version}</version>
-                </dependency>
-            </dependencies>
-        </profile>
-        <profile>
-            <id>run-glassfish-3.1.2.2</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.glassfish.embedded</groupId>
-                        <artifactId>maven-embedded-glassfish-plugin</artifactId>
-                        <version>3.1.2.2</version>
-                        <configuration>
-                            <port>8080</port>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-            <dependencies>
-                <dependency>
-                    <groupId>org.apache.deltaspike.modules</groupId>
-                    <artifactId>deltaspike-jsf-module-impl-ee6</artifactId>
-                    <scope>compile</scope>
-                    <version>${project.version}</version>
-                </dependency>
-            </dependencies>
-        </profile>
-    </profiles>
-
     <build>
-        <finalName>ds</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.tomee.maven</groupId>
+                <artifactId>tomee-embedded-maven-plugin</artifactId>
+                <version>10.0.0-M1-SNAPSHOT</version>
+                <configuration>
+                    <context>/</context>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 </project>
 
