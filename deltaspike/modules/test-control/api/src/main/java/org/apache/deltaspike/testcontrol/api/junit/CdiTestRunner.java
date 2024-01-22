@@ -478,7 +478,9 @@ public class CdiTestRunner extends BlockJUnit4ClassRunner
                     // enabled globally
                     // Beginning with Weld 2.x you could use Weld.property(), but here we depend on Weld 1.x API
                     // Note that Weld 1 was "flat" anyway, so this property only affects newer versions of Weld
-                    System.setProperty("org.jboss.weld.se.archive.isolation", "false");
+                    // System.setProperty("org.jboss.weld.se.archive.isolation", "false");
+                    // Weld 5.0: https://docs.jboss.org/weld/reference/5.0.0.Final/en-US/html_single/#_bean_archive_isolation
+                    System.setProperty("org.jboss.weld.environment.servlet.archive.isolation", "false");
 
                     CdiTestSuiteRunner.applyTestSpecificMetaData(testClass);
 
