@@ -56,7 +56,8 @@
         <!-- for cdictrl-openejb -->
         <openejb.version>9.1.1</openejb.version>
         <tomee10.version>10.0.0-M1-SNAPSHOT</tomee10.version>
-        <tomee.version>${tomee10.version}</tomee.version>
+        <tomee.version>9.1.2</tomee.version>
+        <tomee-api.version>9.1.1</tomee-api.version>
 
         <openejb.owb.version>${owb.version}</openejb.owb.version>
 

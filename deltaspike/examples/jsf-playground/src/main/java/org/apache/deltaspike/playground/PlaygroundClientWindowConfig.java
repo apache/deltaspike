@@ -18,9 +18,10 @@
  */
 package org.apache.deltaspike.playground;
 
+import org.apache.deltaspike.jsf.spi.scope.window.DefaultClientWindowConfig;
+
 import jakarta.enterprise.inject.Specializes;
 import jakarta.faces.context.FacesContext;
-import org.apache.deltaspike.jsf.spi.scope.window.DefaultClientWindowConfig;
 
 @Specializes
 public class PlaygroundClientWindowConfig extends DefaultClientWindowConfig

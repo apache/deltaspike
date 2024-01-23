@@ -60,27 +60,32 @@
         <dependency>
             <groupId>org.apache.deltaspike.core</groupId>
             <artifactId>deltaspike-core-api</artifactId>
-            <scope>compile</scope>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.deltaspike.core</groupId>
             <artifactId>deltaspike-core-impl</artifactId>
             <scope>compile</scope>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.deltaspike.modules</groupId>
             <artifactId>deltaspike-jsf-module-api</artifactId>
-            <scope>compile</scope>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.deltaspike.modules</groupId>
             <artifactId>deltaspike-jsf-module-impl</artifactId>
             <scope>compile</scope>
-            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.tomee</groupId>
+            <artifactId>jakartaee-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.myfaces.core</groupId>
+            <artifactId>myfaces-api</artifactId>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

@@ -59,7 +59,7 @@
         <dependency>
             <groupId>org.apache.myfaces.core</groupId>
             <artifactId>myfaces-api</artifactId>
-            <version>${myfaces2.version}</version>
+            <version>${myfaces.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -98,6 +98,11 @@
             <groupId>org.apache.deltaspike.modules</groupId>
             <artifactId>deltaspike-security-module-impl</artifactId>
             <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.tomee</groupId>
+            <artifactId>jakartaee-api</artifactId>
         </dependency>
 
     </dependencies>

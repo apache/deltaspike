@@ -18,13 +18,9 @@
  */
 package org.apache.deltaspike.example.metadata;
 
-import org.apache.deltaspike.core.api.literal.NamedLiteral;
-import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
-
 import jakarta.enterprise.event.Observes;
 import jakarta.enterprise.inject.spi.Extension;
 import jakarta.enterprise.inject.spi.ProcessAnnotatedType;
-import jakarta.inject.Named;
 
 /**
  * Just a test filter to show the basic functionality provided by {@link AnnotatedTypeBuilder}
@@ -35,21 +31,21 @@ public class NamingConventionAwareMetadataFilter implements Extension
     {
         Class<?> beanClass = processAnnotatedType.getAnnotatedType().getJavaClass();
 
-        Named namedAnnotation = beanClass.getAnnotation(Named.class);
-        if (namedAnnotation != null &&
-                namedAnnotation.value().length() > 0 &&
-                Character.isUpperCase(namedAnnotation.value().charAt(0)))
-        {
-            AnnotatedTypeBuilder builder = new AnnotatedTypeBuilder();
-            builder.readFromType(beanClass);
-
-            String beanName = namedAnnotation.value();
-            String newBeanName = beanName.substring(0, 1).toLowerCase() + beanName.substring(1);
-
-            builder.removeFromClass(Named.class)
-                    .addToClass(new NamedLiteral(newBeanName));
-
-            processAnnotatedType.setAnnotatedType(builder.create());
-        }
+//        Named namedAnnotation = beanClass.getAnnotation(Named.class);
+//        if (namedAnnotation != null &&
+//                namedAnnotation.value().length() > 0 &&
+//                Character.isUpperCase(namedAnnotation.value().charAt(0)))
+//        {
+//            AnnotatedTypeBuilder builder = new AnnotatedTypeBuilder();
+//            builder.readFromType(beanClass);
+//
+//            String beanName = namedAnnotation.value();
+//            String newBeanName = beanName.substring(0, 1).toLowerCase() + beanName.substring(1);
+//
+//            builder.removeFromClass(Named.class)
+//                    .addToClass(new NamedLiteral(newBeanName));
+//
+//            processAnnotatedType.setAnnotatedType(builder.create());
+//        }
     }
 }
