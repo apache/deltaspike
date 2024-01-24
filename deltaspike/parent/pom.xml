@@ -57,7 +57,7 @@
         <openejb.version>9.1.1</openejb.version>
         <tomee10.version>10.0.0-M1-SNAPSHOT</tomee10.version>
         <tomee.version>${tomee10.version}</tomee.version>
-        <tomee-api.version>10.0-SNAPSHOT</tomee-api.version>
+        <tomee-api.version>10.0-M2</tomee-api.version>
 
         <openejb.owb.version>${owb.version}</openejb.owb.version>
 
