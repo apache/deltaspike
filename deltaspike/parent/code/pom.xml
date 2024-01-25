@@ -596,7 +596,7 @@
             <id>wildfly-managed</id>
             <properties>
                 <!-- Actual default Weld version used with this profile -->
-                <weld.version>2.3.5.Final</weld.version>
+                <weld.version>5.0.1.Final</weld.version>
                 <cdicontainer.version>wildfly-${wildfly.version}</cdicontainer.version>
             </properties>
 
@@ -607,12 +607,6 @@
                     <groupId>org.jboss.weld</groupId>
                     <artifactId>weld-core-impl</artifactId>
                     <version>${weld.version}</version>
-                    <scope>provided</scope>
-                </dependency>
-                <dependency>
-                    <groupId>jakarta.inject</groupId>
-                    <artifactId>jakarta.inject</artifactId>
-                    <version>1</version>
                     <scope>provided</scope>
                 </dependency>
                 <dependency>

@@ -19,7 +19,7 @@
 package org.apache.deltaspike.example.scope;
 
 import jakarta.annotation.PostConstruct;
-import jakarta.faces.bean.ViewScoped;
+import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import java.io.Serializable;
 
