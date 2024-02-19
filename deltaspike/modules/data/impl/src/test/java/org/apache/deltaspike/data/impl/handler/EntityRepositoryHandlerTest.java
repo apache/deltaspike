@@ -26,6 +26,7 @@ import org.apache.deltaspike.data.test.domain.Simple_;
 import org.apache.deltaspike.data.test.service.ExtendedRepositoryAbstract;
 import org.apache.deltaspike.data.test.service.ExtendedRepositoryAbstract2;
 import org.apache.deltaspike.data.test.service.ExtendedRepositoryAbstract4;
+import org.apache.deltaspike.data.test.service.ExtendedRepositoryAbstractSomeInterface;
 import org.apache.deltaspike.data.test.service.ExtendedRepositoryInterface;
 import org.apache.deltaspike.data.test.service.SimpleIntermediateRepository;
 import org.apache.deltaspike.data.test.service.SimpleStringIdRepository;
@@ -58,6 +59,7 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
                 .addClasses(ExtendedRepositoryAbstract.class)
                 .addClasses(ExtendedRepositoryAbstract2.class)
                 .addClasses(ExtendedRepositoryAbstract4.class)
+                .addClasses(ExtendedRepositoryAbstractSomeInterface.class)
                 .addClasses(SimpleStringIdRepository.class, SimpleIntermediateRepository.class)
                 .addPackage(Simple.class.getPackage());
     }
@@ -73,6 +75,9 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
 
     @Inject
     private ExtendedRepositoryAbstract4 repoAbstract4;
+    
+    @Inject
+    private ExtendedRepositoryAbstractSomeInterface repoAbstractRepo;
 
     @Inject
     private SimpleStringIdRepository stringIdRepo;
@@ -431,6 +436,14 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
 
         assertEquals("Simple", entityName);
         assertEquals("EntitySimple4", entityName2);
+    }
+
+    @Test
+    public void abstract_should_return_entity_name()
+    {
+        final String entityName = repoAbstractRepo.getEntityName();
+
+        assertEquals("Simple", entityName);
     }
 
     @Test

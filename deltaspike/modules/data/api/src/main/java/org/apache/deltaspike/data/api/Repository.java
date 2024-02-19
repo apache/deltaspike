@@ -26,6 +26,7 @@ import java.lang.annotation.Target;
 
 import org.apache.deltaspike.partialbean.api.PartialBeanBinding;
 
+import jakarta.enterprise.context.Dependent;
 import jakarta.enterprise.inject.Stereotype;
 
 /**
@@ -36,6 +37,7 @@ import jakarta.enterprise.inject.Stereotype;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Inherited
+@Dependent
 @PartialBeanBinding
 public @interface Repository
 {
