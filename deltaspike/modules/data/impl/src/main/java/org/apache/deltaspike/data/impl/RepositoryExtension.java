@@ -90,11 +90,6 @@ public class RepositoryExtension implements Extension, Deactivatable
                 LOG.log(Level.FINER, "Class {0} is Deactivated", repositoryClass);
                 return;
             }
-            if (repositoryClass.getDeclaredAnnotation(Repository.class) == null)
-            {
-                LOG.log(Level.FINER, "Class {0} not annotated Repository", repositoryClass);
-                return;
-            }
 
             repositoryClasses.add(repositoryClass);
             REPOSITORY_CLASSES.add(repositoryClass);
