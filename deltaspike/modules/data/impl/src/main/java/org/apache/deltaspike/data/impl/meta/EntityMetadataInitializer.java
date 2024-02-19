@@ -35,10 +35,6 @@ public class EntityMetadataInitializer
     public EntityMetadata init(RepositoryMetadata metadata)
     {
         EntityMetadata entityMetadata = extract(metadata.getRepositoryClass());
-        if (entityMetadata == null)
-        {
-            return null;
-        }
         
         entityMetadata.setPrimaryKeyProperty(EntityUtils.primaryKeyProperty(entityMetadata.getEntityClass()));
         entityMetadata.setVersionProperty(EntityUtils.getVersionProperty(entityMetadata.getEntityClass()));
@@ -49,10 +45,6 @@ public class EntityMetadataInitializer
     
     private EntityMetadata extract(Class<?> repositoryClass)
     {
-        if (!repositoryClass.isAnnotationPresent(Repository.class)) 
-        {
-            return null;
-        }
         // get from annotation
         Repository repository = repositoryClass.getAnnotation(Repository.class);
         Class<?> entityClass = repository.forEntity();
