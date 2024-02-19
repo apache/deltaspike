@@ -48,13 +48,13 @@
 
     <properties>
         <java.version>11</java.version>
-        <owb.version>4.0.2-SNAPSHOT</owb.version>
+        <owb.version>4.0.2</owb.version>
 
         <!-- Weld profiles (in parent/code/pom.xml) override this version -->
         <weld.version>5.0.1.Final</weld.version>
 
         <!-- for cdictrl-openejb -->
-        <openejb.version>9.1.1</openejb.version>
+        <openejb.version>9.1.2</openejb.version>
         <tomee10.version>10.0.0-M1-SNAPSHOT</tomee10.version>
         <tomee.version>${tomee10.version}</tomee.version>
         <tomee-api.version>10.0-M2</tomee-api.version>
