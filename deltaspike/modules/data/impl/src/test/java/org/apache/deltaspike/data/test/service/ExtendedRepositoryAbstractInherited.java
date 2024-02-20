@@ -16,19 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.data.impl.handler;
+package org.apache.deltaspike.data.test.service;
 
-import jakarta.enterprise.inject.Default;
-import jakarta.enterprise.inject.Produces;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import org.apache.deltaspike.data.api.Repository;
+import org.apache.deltaspike.data.test.domain.Simple5;
 
-@Default
-public class NonQualifiedEntityManagerTestProducer
+@Repository
+public abstract class ExtendedRepositoryAbstractInherited 
+    extends ExtendedRepositoryAbstractIntermediate<Simple5, Long>
 {
-
-    @Produces
-    @PersistenceContext
-    private EntityManager entityManager;
-
+    
 }
