@@ -30,15 +30,6 @@
     <!-- We need to specify this because the default protocol for AS7 and Wildfly doesn't work very well -->
     <defaultProtocol type="Servlet 6.0" />
 
-    <container qualifier="jbossas-managed-7">
-        <configuration>
-            <property name="javaVmArguments">-client -noverify -Xms64m -Xmx1024m -XX:MaxPermSize=512m -Dcdicontainer.version=${cdicontainer.version} ${jacoco.agent}</property>
-            <property name="outputToConsole">false</property>
-            <property name="allowConnectingToRunningServer">true</property>
-            <property name="cdicontainer.version">${cdicontainer.version}</property>
-        </configuration>
-    </container>
-    
     <container qualifier="wildfly-managed">
         <configuration>
             <!-- for debugging add: -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=y  -->
@@ -46,16 +37,6 @@
             <property name="outputToConsole">false</property>
             <property name="allowConnectingToRunningServer">true</property>
             <property name="cdicontainer.version">${cdicontainer.version}</property>
-        </configuration>
-    </container>
-
-    <container qualifier="jbossas-build-managed-7">
-        <configuration>
-            <property name="jbossHome">${arquillian.jboss_home}</property>
-            <property name="javaVmArguments">-client -noverify -Xms64m -Xmx1024m -XX:MaxPermSize=512m -Djboss.socket.binding.port-offset=40000 -Dcdicontainer.version=${cdicontainer.version}</property>
-            <property name="outputToConsole">false</property>
-            <property name="allowConnectingToRunningServer">true</property>
-            <property name="managementPort">49999</property>
         </configuration>
     </container>
 
@@ -71,19 +52,6 @@
         </configuration>
     </container>
 
-    <!--Remote profiles
-    
-        for remote debugging enable "remote socket debugging" - uncomment:
-            set "JAVA_OPTS=%JAVA_OPTS% -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n"
-        in
-            standalone.conf (standalone.conf.bat)
-        and connect to
-            port 8787
-        -->
-    <container qualifier="jbossas-remote-7">
-        
-    </container>
-    
     <container qualifier="wildfly-remote">
         
     </container>

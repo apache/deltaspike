@@ -80,16 +80,9 @@
         </configuration>
     </container>
 
-    <container qualifier="glassfish-build-managed-3">
+    <container qualifier="glassfish-build-managed">
         <configuration>
-            <property name="glassFishHome">${arquillian.glassfish3_home}</property>
-            <property name="adminPort">34848</property>
-        </configuration>
-    </container>
-
-    <container qualifier="glassfish-build-managed-4">
-        <configuration>
-            <property name="glassFishHome">${arquillian.glassfish4_home}</property>
+            <property name="glassFishHome">${arquillian.glassfish_home}</property>
             <property name="adminPort">24848</property>
         </configuration>
     </container>

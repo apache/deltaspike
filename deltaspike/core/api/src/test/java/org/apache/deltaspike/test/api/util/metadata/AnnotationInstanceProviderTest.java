@@ -64,7 +64,7 @@ public class AnnotationInstanceProviderTest
     @Test
     public void assertCorrectAnnotationType()
     {
-        assertThat(AnnotationInstanceProvider.of(RequestScoped.class), is(RequestScoped.class));
+        assertThat(AnnotationInstanceProvider.of(RequestScoped.class).annotationType(), is(RequestScoped.class));
     }
 
     @Test

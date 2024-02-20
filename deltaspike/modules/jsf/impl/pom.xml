@@ -176,7 +176,7 @@
 
     <profiles>
         <profile>
-            <id>tomee10-build-managed</id>
+            <id>tomee-build-managed</id>
             <build>
                 <plugins>
                     <!--

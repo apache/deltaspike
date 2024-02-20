@@ -36,20 +36,12 @@
 
     <properties>
         <container.unpack.directory>${java.io.tmpdir}/deltaspike-arquillian-containers</container.unpack.directory>
-        <version.activation>1.1.1</version.activation>
-        <version.annotation>1.3.2</version.annotation>
-        <bval.artifactId>bval-jsr303</bval.artifactId>
-        <validation.artifactId>geronimo-validation_1.0_spec</validation.artifactId>
-        <jboss.as.version>7.1.1.Final</jboss.as.version>
-        <wildfly.version>10.1.0.Final</wildfly.version>
-        <wildfly.jakarta.version>29.0.1.Final</wildfly.jakarta.version>
+        <wildfly.version>31.0.0.Final</wildfly.version>
         <weld.el.api>5.0.0</weld.el.api>
         <weld.sfl4j>2.0.11</weld.sfl4j>
         <wildfly.arquillian.version>5.0.1.Final</wildfly.arquillian.version>
-        <glassfish3.version>3.1.2.2</glassfish3.version>
-        <glassfish4.version>4.0</glassfish4.version>
-        <payara.version>4.1.2.181</payara.version>
-        <wls.version>12.1</wls.version>
+        <payara.version>6.2024.1</payara.version>
+        <tomee.version>10.0.0-M1-SNAPSHOT</tomee.version>
     </properties>
 
 
@@ -378,7 +370,7 @@
             
             <properties>
                 <!-- Actual Weld version used with this profile -->
-                <weld.version>5.0.1.Final</weld.version>
+                <weld.version>5.1.2.Final</weld.version>
                 <cdicontainer.version>weld-${weld.version}</cdicontainer.version>
             </properties>
             
@@ -511,13 +503,11 @@
              * then use remote debuggig at port 5005
              *
             -->
-            <id>tomee10-build-managed</id>
+            <id>tomee-build-managed</id>
 
             <properties>
-                <tomee.version>${tomee10.version}</tomee.version>
-                <openejb.version>${tomee10.version}</openejb.version>
-                <jakartaeeapi.version>10.0-SNAPSHOT</jakartaeeapi.version>
-                <owb.version>4.0.1</owb.version>
+                <jakartaeeapi.version>10.0-M2</jakartaeeapi.version>
+                <owb.version>4.0.2</owb.version>
                 <cdicontainer.version>tomee-${tomee.version}</cdicontainer.version>
             </properties>
 
@@ -596,7 +586,7 @@
             <id>wildfly-managed</id>
             <properties>
                 <!-- Actual default Weld version used with this profile -->
-                <weld.version>5.0.1.Final</weld.version>
+                <weld.version>5.1.2.Final</weld.version>
                 <cdicontainer.version>wildfly-${wildfly.version}</cdicontainer.version>
             </properties>
 
@@ -618,6 +608,7 @@
                 <dependency>
                     <groupId>org.jboss.arquillian.protocol</groupId>
                     <artifactId>arquillian-protocol-servlet-jakarta</artifactId>
+                    <version>${arquillian.version}</version>
                     <scope>test</scope>
                 </dependency>
 
@@ -665,7 +656,7 @@
 
             <properties>
                 <!-- Actual default Weld version used with this profile -->
-                <weld.version>2.3.5.Final</weld.version>
+                <weld.version>5.1.2.Final</weld.version>
                 <cdicontainer.version>wildfly-${wildfly.version}</cdicontainer.version>
             </properties>
 
@@ -686,7 +677,8 @@
                 </dependency>
                 <dependency>
                     <groupId>org.jboss.arquillian.protocol</groupId>
-                    <artifactId>arquillian-protocol-servlet</artifactId>
+                    <artifactId>arquillian-protocol-servlet-jakarta</artifactId>
+                    <version>${arquillian.version}</version>
                     <scope>test</scope>
                 </dependency>
             </dependencies>
@@ -779,7 +771,8 @@
                 </dependency>
                 <dependency>
                     <groupId>org.jboss.arquillian.protocol</groupId>
-                    <artifactId>arquillian-protocol-servlet</artifactId>
+                    <artifactId>arquillian-protocol-servlet-jakarta</artifactId>
+                    <version>${arquillian.version}</version>
                     <scope>test</scope>
                 </dependency>
 
@@ -854,7 +847,7 @@
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
                             <systemPropertyVariables>
-                                <arquillian.launch>glassfish-build-managed-4</arquillian.launch>
+                                <arquillian.launch>glassfish-build-managed</arquillian.launch>
                                 <org.apache.deltaspike.ProjectStage>UnitTest</org.apache.deltaspike.ProjectStage>
                                 <cdicontainer.version>${cdicontainer.version}</cdicontainer.version>
                             </systemPropertyVariables>
@@ -876,10 +869,10 @@
              * Payara will be downloaded as maven dependency
              *
              * Start the build with:
-             * $> mvn clean install -Ppayara-build-managed-4
+             * $> mvn clean install -Ppayara-build-managed
              *
              -->
-            <id>payara-build-managed-4</id>
+            <id>payara-build-managed</id>
 
             <properties>
                 <cdicontainer.version>payara-${payara.version}</cdicontainer.version>
@@ -914,7 +907,7 @@
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
                             <systemPropertyVariables>
-                                <arquillian.launch>glassfish-build-managed-4</arquillian.launch>
+                                <arquillian.launch>glassfish-build-managed</arquillian.launch>
                                 <arquillian.glassfish4_home>${container.unpack.directory}/payara41</arquillian.glassfish4_home>
                                 <org.apache.deltaspike.ProjectStage>UnitTest</org.apache.deltaspike.ProjectStage>
                                 <cdicontainer.version>${cdicontainer.version}</cdicontainer.version>

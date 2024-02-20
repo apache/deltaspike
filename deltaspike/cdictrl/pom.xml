@@ -121,7 +121,7 @@
         </profile>
 
         <profile>
-            <id>glassfish-build-managed-3</id>
+            <id>glassfish-build-managed</id>
             <modules>
                 <module>api</module>
                 <module>impl-weld</module>
@@ -129,15 +129,7 @@
         </profile>
 
         <profile>
-            <id>glassfish-build-managed-4</id>
-            <modules>
-                <module>api</module>
-                <module>impl-weld</module>
-            </modules>
-        </profile>
-
-        <profile>
-            <id>payara-build-managed-4</id>
+            <id>payara-build-managed</id>
             <modules>
                 <module>api</module>
                 <module>impl-weld</module>

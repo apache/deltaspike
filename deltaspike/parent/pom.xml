@@ -51,22 +51,21 @@
         <owb.version>4.0.2</owb.version>
 
         <!-- Weld profiles (in parent/code/pom.xml) override this version -->
-        <weld.version>5.0.1.Final</weld.version>
+        <weld.version>5.1.2.Final</weld.version>
 
         <!-- for cdictrl-openejb -->
-        <openejb.version>9.1.2</openejb.version>
-        <tomee10.version>10.0.0-M1-SNAPSHOT</tomee10.version>
-        <tomee.version>${tomee10.version}</tomee.version>
+        <tomee.version>10.0.0-M1-SNAPSHOT</tomee.version>
         <tomee-api.version>10.0-M2</tomee-api.version>
 
+        <openejb.owb.version>${owb.version}</openejb.owb.version>
         <openejb.owb.version>${owb.version}</openejb.owb.version>
 
         <!-- testing stuff -->
         <junit.version>4.13.2</junit.version>
-        <arquillian.version>1.7.1.Final</arquillian.version>
+        <arquillian.version>1.8.0.Final</arquillian.version>
 
-        <!-- JSF-2.0 implementations-->
-        <myfaces.version>4.0.1</myfaces.version>
+        <!-- Faces implementations -->
+        <myfaces.version>4.0.2</myfaces.version>
 
         <tomcat.version>10.1.13</tomcat.version>
 

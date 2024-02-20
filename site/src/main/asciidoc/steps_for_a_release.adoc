@@ -30,9 +30,9 @@ mvn clean install -POWB
 mvn clean install -PWeld1
 mvn clean install -Prat
 mvn clean install -Ptomee-build-managed
-mvn clean install -Pjbossas-build-managed-7
+mvn clean install -Pjbossas-build-managed
 mvn clean install -Pwildfly-build-managed
-mvn clean install -Pglassfish-build-managed-3
+mvn clean install -Pglassfish-build-managed
 -----------------------------------------------------------------------------------------------------------------------
 
 deploy a demo app especially with jsf-impl-ee6 to an ee6 server and check the logs (if there are no optional ee7+ classes)

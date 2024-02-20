@@ -98,7 +98,7 @@
                 <dependency>
                     <groupId>org.apache.tomee</groupId>
                     <artifactId>openejb-core</artifactId>
-                    <version>${openejb.version}</version>
+                    <version>${tomee.version}</version>
                     <scope>provided</scope>
                 </dependency>
 
@@ -130,7 +130,7 @@
         </profile>
 
         <profile>
-            <id>tomee10-build-managed</id>
+            <id>tomee-build-managed</id>
             <dependencies>
                 <dependency>
                     <groupId>org.apache.tomee</groupId>
