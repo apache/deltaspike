@@ -87,4 +87,12 @@
         </configuration>
     </container>
 
+    <container qualifier="payara-build-managed">
+        <configuration>
+            <property name="payaraHome">${arquillian.payara_home}</property>
+            <property name="adminPort">24848</property>
+        </configuration>
+    </container>
+
+
 </arquillian>

@@ -806,37 +806,30 @@
         </profile>
 
         <profile>
-            <id>payara-embedded-4</id>
+            <id>payara-embedded</id>
 
             <properties>
+                <weld.version>5.0.1.Final</weld.version>
                 <cdicontainer.version>payara-${payara.version}</cdicontainer.version>
             </properties>
 
             <dependencies>
                 <dependency>
-                    <groupId>jakarta.enterprise</groupId>
-                    <artifactId>cdi-api</artifactId>
-                    <version>1.2</version>
+                    <groupId>org.jboss.weld</groupId>
+                    <artifactId>weld-core-impl</artifactId>
+                    <version>${weld.version}</version>
                     <scope>provided</scope>
                 </dependency>
-                <dependency>
-                    <groupId>jakarta.inject</groupId>
-                    <artifactId>jakarta.inject</artifactId>
-                    <version>1</version>
-                    <scope>provided</scope>
-                </dependency>
-
                 <dependency>
                     <groupId>fish.payara.extras</groupId>
                     <artifactId>payara-embedded-all</artifactId>
                     <version>${payara.version}</version>
                     <scope>test</scope>
                 </dependency>
-
                 <dependency>
-                    <groupId>org.jboss.arquillian.container</groupId>
-                    <artifactId>arquillian-glassfish-embedded-3.1</artifactId>
-                    <version>1.0.0.CR4</version>
+                    <groupId>fish.payara.arquillian</groupId>
+                    <artifactId>arquillian-payara-server-embedded</artifactId>
+                    <version>3.0.alpha8</version>
                     <scope>test</scope>
                 </dependency>
             </dependencies>
@@ -875,27 +868,21 @@
             <id>payara-build-managed</id>
 
             <properties>
+                <weld.version>5.0.1.Final</weld.version>
                 <cdicontainer.version>payara-${payara.version}</cdicontainer.version>
             </properties>
 
             <dependencies>
                 <dependency>
-                    <groupId>jakarta.enterprise</groupId>
-                    <artifactId>cdi-api</artifactId>
-                    <version>1.2</version>
+                    <groupId>org.jboss.weld</groupId>
+                    <artifactId>weld-core-impl</artifactId>
+                    <version>${weld.version}</version>
                     <scope>provided</scope>
                 </dependency>
-                <dependency>
-                    <groupId>jakarta.inject</groupId>
-                    <artifactId>jakarta.inject</artifactId>
-                    <version>1</version>
-                    <scope>provided</scope>
-                </dependency>
-                <!-- Also works fine with Payara -->
                 <dependency>
                     <groupId>fish.payara.arquillian</groupId>
-                    <artifactId>arquillian-payara-server-4-managed</artifactId>
-                    <version>1.1</version>
+                    <artifactId>arquillian-payara-server-managed</artifactId>
+                    <version>3.0.alpha8</version>
                     <scope>test</scope>
                 </dependency>
             </dependencies>
@@ -907,8 +894,8 @@
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
                             <systemPropertyVariables>
-                                <arquillian.launch>glassfish-build-managed</arquillian.launch>
-                                <arquillian.glassfish4_home>${container.unpack.directory}/payara41</arquillian.glassfish4_home>
+                                <arquillian.launch>payara-build-managed</arquillian.launch>
+                                <arquillian.payara_home>${container.unpack.directory}/payara6</arquillian.payara_home>
                                 <org.apache.deltaspike.ProjectStage>UnitTest</org.apache.deltaspike.ProjectStage>
                                 <cdicontainer.version>${cdicontainer.version}</cdicontainer.version>
                             </systemPropertyVariables>
@@ -963,12 +950,12 @@
                                     <target>
 
                                         <!-- Change all TCP ports from "xxxx" to "2xxxx" -->
-                                        <replaceregexp file="${container.unpack.directory}/payara41/glassfish/domains/domain1/config/domain.xml" match="port=&quot;(\d{4})&quot;" replace="port=&quot;2\1&quot;" flags="g" />
-                                        <replace file="${container.unpack.directory}/payara41/glassfish/domains/domain1/config/domain.xml" token="value=&quot;7676&quot;" value="value=&quot;27676&quot;" />
+                                        <replaceregexp file="${container.unpack.directory}/payara6/glassfish/domains/domain1/config/domain.xml" match="port=&quot;(\d{4})&quot;" replace="port=&quot;2\1&quot;" flags="g" />
+                                        <replace file="${container.unpack.directory}/payara6/glassfish/domains/domain1/config/domain.xml" token="value=&quot;7676&quot;" value="value=&quot;27676&quot;" />
 
                                         <!-- Replace the default datasource with an in-memory one -->
-                                        <replace file="${container.unpack.directory}/payara41/glassfish/domains/domain1/config/domain.xml" token="datasource-classname=&quot;org.apache.derby.jdbc.ClientDataSource&quot;" value="datasource-classname=&quot;org.apache.derby.jdbc.EmbeddedDataSource&quot;" />
-                                        <replace file="${container.unpack.directory}/payara41/glassfish/domains/domain1/config/domain.xml" token="value=&quot;sun-appserv-samples&quot;" value="value=&quot;memory:deltaspike&quot;" />
+                                        <replace file="${container.unpack.directory}/payara6/glassfish/domains/domain1/config/domain.xml" token="datasource-classname=&quot;org.apache.derby.jdbc.ClientDataSource&quot;" value="datasource-classname=&quot;org.apache.derby.jdbc.EmbeddedDataSource&quot;" />
+                                        <replace file="${container.unpack.directory}/payara6/glassfish/domains/domain1/config/domain.xml" token="value=&quot;sun-appserv-samples&quot;" value="value=&quot;memory:deltaspike&quot;" />
 
                                     </target>
                                 </configuration>
