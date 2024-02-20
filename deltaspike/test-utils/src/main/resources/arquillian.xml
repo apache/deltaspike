@@ -28,7 +28,7 @@
     -->
 
     <!-- don't remove the qualifier - it's needed for the arquillian.launch property -->
-    <container qualifier="glassfish-remote-3.1">
+    <container qualifier="glassfish-remote">
     </container>
 
     <container qualifier="wls-remote-12c">
@@ -56,7 +56,7 @@
         </configuration>
     </container>
 
-    <container qualifier="tomee">
+    <container qualifier="tomee-build-managed">
         <configuration>
             <!-- tomee gets copied to this directory during the build -->
             <property name="dir">target/tomee</property>

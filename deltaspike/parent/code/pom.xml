@@ -532,7 +532,6 @@
                     <version>${tomee.version}</version>
                 </dependency>
 
-
                 <!-- needed by arquillian-tomee-remote -->
                 <dependency>
                     <groupId>commons-logging</groupId>
@@ -551,9 +550,7 @@
                         <configuration>
                             <systemPropertyVariables>
                                 <tomee.version>${tomee.version}</tomee.version>
-                            </systemPropertyVariables>
-                            <systemPropertyVariables>
-                                <arquillian.launch>tomee</arquillian.launch>
+                                <arquillian.launch>tomee-build-managed</arquillian.launch>
                                 <org.apache.deltaspike.ProjectStage>UnitTest</org.apache.deltaspike.ProjectStage>
                                 <cdicontainer.version>${cdicontainer.version}</cdicontainer.version>
                             </systemPropertyVariables>

@@ -113,7 +113,7 @@
         </profile>
 
         <profile>
-            <id>glassfish-remote-3.1</id>
+            <id>glassfish-remote</id>
             <modules>
                 <module>api</module>
                 <module>impl-weld</module>

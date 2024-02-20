@@ -258,7 +258,7 @@
             </build>
         </profile>
         <profile>
-            <id>glassfish-remote-3.1</id>
+            <id>glassfish-remote</id>
             <build>
                 <testResources>
                     <testResource>
