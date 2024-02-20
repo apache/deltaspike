@@ -48,7 +48,11 @@ public class RepositoryMetadataHandler
         for (Class<?> repositoryClass : extension.getRepositoryClasses())
         {
             RepositoryMetadata metadata = metadataInitializer.init(repositoryClass, beanManager);
-            repositoriesMetadata.put(repositoryClass, metadata);
+            // invalid
+            if (metadata != null)
+            {
+                repositoriesMetadata.put(repositoryClass, metadata);
+            }
         }
     }
 

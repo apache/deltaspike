@@ -18,14 +18,15 @@
  */
 package org.apache.deltaspike.data.impl.meta;
 
+import jakarta.enterprise.context.ApplicationScoped;
+import org.apache.deltaspike.data.api.Repository;
+import org.apache.deltaspike.data.impl.util.EntityUtils;
+
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jakarta.enterprise.context.ApplicationScoped;
-import org.apache.deltaspike.data.api.Repository;
-import org.apache.deltaspike.data.impl.util.EntityUtils;
 
 @ApplicationScoped
 public class EntityMetadataInitializer
@@ -34,19 +35,33 @@ public class EntityMetadataInitializer
     
     public EntityMetadata init(RepositoryMetadata metadata)
     {
-        EntityMetadata entityMetadata = extract(metadata.getRepositoryClass());
-        
-        entityMetadata.setPrimaryKeyProperty(EntityUtils.primaryKeyProperty(entityMetadata.getEntityClass()));
-        entityMetadata.setVersionProperty(EntityUtils.getVersionProperty(entityMetadata.getEntityClass()));
-        entityMetadata.setEntityName(EntityUtils.entityName(entityMetadata.getEntityClass()));
+        try
+        {
+            EntityMetadata entityMetadata = extract(metadata.getRepositoryClass());
+            if (entityMetadata == null)
+            {
+                return null;
+            }
+            entityMetadata.setPrimaryKeyProperty(EntityUtils.primaryKeyProperty(entityMetadata.getEntityClass()));
+            entityMetadata.setVersionProperty(EntityUtils.getVersionProperty(entityMetadata.getEntityClass()));
+            entityMetadata.setEntityName(EntityUtils.entityName(entityMetadata.getEntityClass()));
 
-        return entityMetadata;
+            return entityMetadata;
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException("Could not initialize repository metadata for: " + metadata.getRepositoryClass(), e);
+        }
     }
     
     private EntityMetadata extract(Class<?> repositoryClass)
     {
         // get from annotation
         Repository repository = repositoryClass.getAnnotation(Repository.class);
+        if (repository == null)
+        {
+            return null;
+        }
         Class<?> entityClass = repository.forEntity();
         boolean isEntityClass = !Object.class.equals(entityClass) && EntityUtils.isEntityClass(entityClass);
         if (isEntityClass)
@@ -69,18 +84,24 @@ public class EntityMetadataInitializer
         {
             return entityMetadata;
         }
+
         for (Type intf : repositoryClass.getGenericInterfaces())
         {
-            entityMetadata = extract( (Class< ? >)intf );
-            if (entityMetadata != null)
+            if (intf instanceof Class<?>)
             {
-                return entityMetadata;
+                entityMetadata = extract((Class<?>) intf);
+                if (entityMetadata != null)
+                {
+                    return entityMetadata;
+                }
             }
         }
+
         if (repositoryClass.getSuperclass() != null)
         {
             return extract(repositoryClass.getSuperclass());
         }
+
         return null;
     }
 

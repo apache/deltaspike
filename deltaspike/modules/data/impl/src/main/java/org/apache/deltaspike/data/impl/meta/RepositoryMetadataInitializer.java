@@ -80,9 +80,14 @@ public class RepositoryMetadataInitializer
                 repositoryMetadata.setEntityManagerResolverIsNormalScope(false);
             }
         }
-        repositoryMetadata.setEntityMetadata(entityMetadataInitializer.init(repositoryMetadata));
+        EntityMetadata entityMetadata = entityMetadataInitializer.init(repositoryMetadata);
+        if (entityMetadata == null)
+        {
+            return null;
+        }
+        repositoryMetadata.setEntityMetadata(entityMetadata);
         initializeMethodsMetadata(repositoryMetadata, beanManager);
-        
+
         return repositoryMetadata;
     }
 
