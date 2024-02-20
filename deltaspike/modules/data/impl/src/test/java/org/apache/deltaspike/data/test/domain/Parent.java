@@ -22,6 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 
 @Entity
@@ -34,6 +35,7 @@ public class Parent extends NamedEntity
     @jakarta.persistence.OneToMany(cascade = CascadeType.ALL, targetEntity = OneToMany.class)
     private List<OneToMany> many = new LinkedList<OneToMany>();
 
+    @Column(name = "p_value")
     private Long value = Long.valueOf(0);
 
     public Parent()

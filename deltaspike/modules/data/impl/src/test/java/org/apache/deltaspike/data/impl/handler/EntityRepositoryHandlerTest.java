@@ -18,6 +18,15 @@
  */
 package org.apache.deltaspike.data.impl.handler;
 
+import static org.apache.deltaspike.data.test.util.TestDeployments.initDeployment;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
+import java.util.List;
+import java.util.Optional;
+
 import org.apache.deltaspike.data.test.TransactionalTestCase;
 import org.apache.deltaspike.data.test.domain.Simple;
 import org.apache.deltaspike.data.test.domain.Simple2;
@@ -37,14 +46,6 @@ import org.junit.experimental.categories.Category;
 
 import jakarta.inject.Inject;
 import jakarta.persistence.metamodel.SingularAttribute;
-import java.util.List;
-import java.util.Optional;
-
-import static org.apache.deltaspike.data.test.util.TestDeployments.initDeployment;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 @Category(WebProfileCategory.class)
 public class EntityRepositoryHandlerTest extends TransactionalTestCase
@@ -73,7 +74,7 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
 
     @Inject
     private ExtendedRepositoryAbstract4 repoAbstract4;
-
+    
     @Inject
     private SimpleStringIdRepository stringIdRepo;
 

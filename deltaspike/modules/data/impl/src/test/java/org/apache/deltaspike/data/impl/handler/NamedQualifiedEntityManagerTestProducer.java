@@ -18,17 +18,19 @@
  */
 package org.apache.deltaspike.data.impl.handler;
 
-import jakarta.enterprise.inject.Default;
+import org.apache.deltaspike.data.test.util.EntityManagerProducer;
+
 import jakarta.enterprise.inject.Produces;
+import jakarta.enterprise.inject.Specializes;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
-@Default
-public class NonQualifiedEntityManagerTestProducer
+@Specializes
+public class NamedQualifiedEntityManagerTestProducer extends EntityManagerProducer
 {
 
     @Produces
-    @PersistenceContext
+    @PersistenceContext(unitName = "test")
     private EntityManager entityManager;
 
 }

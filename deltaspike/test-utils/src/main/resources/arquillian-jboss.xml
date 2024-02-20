@@ -28,7 +28,7 @@
     -->
 
     <!-- We need to specify this because the default protocol for AS7 and Wildfly doesn't work very well -->
-    <defaultProtocol type="Servlet 3.0" />
+    <defaultProtocol type="Servlet 6.0" />
 
     <container qualifier="jbossas-managed-7">
         <configuration>
@@ -41,6 +41,7 @@
     
     <container qualifier="wildfly-managed">
         <configuration>
+            <!-- for debugging add: -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=y  -->
             <property name="javaVmArguments">-client -noverify -Xms64m -Xmx1024m -XX:MaxPermSize=512m -Dcdicontainer.version=${cdicontainer.version} ${jacoco.agent}</property>
             <property name="outputToConsole">false</property>
             <property name="allowConnectingToRunningServer">true</property>

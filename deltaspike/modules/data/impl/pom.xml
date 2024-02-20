@@ -49,6 +49,38 @@
         </deltaspike.osgi.provide.capability>
     </properties>
 
+    <dependencyManagement>
+		<!-- needed for arquillian dependency resolution: (@see TestDeployments#getDeltaSpikeDataWithDependencies) -->
+		<dependencies>
+			<dependency>
+	            <groupId>org.apache.deltaspike.core</groupId>
+	            <artifactId>deltaspike-core-api</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.deltaspike.modules</groupId>
+				<artifactId>deltaspike-partial-bean-module-api</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.deltaspike.modules</groupId>
+				<artifactId>deltaspike-jpa-module-api</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.deltaspike.modules</groupId>
+				<artifactId>deltaspike-data-module-api</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.deltaspike.modules</groupId>
+				<artifactId>deltaspike-data-module-impl</artifactId>
+				<version>${project.version}</version>
+				<scope>runtime</scope>
+			</dependency>
+		</dependencies>				
+	</dependencyManagement>
+
     <build>
         <pluginManagement>
             <plugins>
@@ -93,7 +125,6 @@
     </build>
 
     <dependencies>
-
         <dependency>
             <groupId>jakarta.persistence</groupId>
             <artifactId>jakarta.persistence-api</artifactId>

@@ -25,6 +25,7 @@ import org.apache.deltaspike.data.test.TransactionalTestCase;
 import org.apache.deltaspike.data.test.domain.AuditedEntity;
 import org.jboss.arquillian.container.test.spi.TestDeployment;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
@@ -49,6 +50,11 @@ public abstract class TestDeployments {
 
     public static WebArchive initDeployment(boolean addDefaultEntityManagerProducer)
     {
+        return initDeployment(addDefaultEntityManagerProducer, EmptyAsset.INSTANCE);
+    }
+    
+    public static WebArchive initDeployment(boolean addDefaultEntityManagerProducer, Asset beansXmlAsset)
+    {
         Logging.reconfigure();
 
         WebArchive archive = ShrinkWrap
@@ -58,7 +64,7 @@ public abstract class TestDeployments {
                 .addPackages(true, AuditedEntity.class.getPackage())
                 .addAsLibraries(getDeltaSpikeDataWithDependencies())
                 .addAsWebInfResource("test-persistence.xml", "classes/META-INF/persistence.xml")
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+                .addAsWebInfResource(beansXmlAsset, "beans.xml")
                 .addAsWebInfResource(new StringAsset(DS_PROPERTIES_WITH_ENV_AWARE_TX_STRATEGY),
                         "classes/META-INF/apache-deltaspike.properties");
 

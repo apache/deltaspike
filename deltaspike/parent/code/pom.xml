@@ -617,7 +617,7 @@
                 </dependency>
                 <dependency>
                     <groupId>org.jboss.arquillian.protocol</groupId>
-                    <artifactId>arquillian-protocol-servlet</artifactId>
+                    <artifactId>arquillian-protocol-servlet-jakarta</artifactId>
                     <scope>test</scope>
                 </dependency>
 
@@ -676,12 +676,6 @@
                     <groupId>org.jboss.weld</groupId>
                     <artifactId>weld-core-impl</artifactId>
                     <version>${weld.version}</version>
-                    <scope>provided</scope>
-                </dependency>
-                <dependency>
-                    <groupId>jakarta.inject</groupId>
-                    <artifactId>jakarta.inject</artifactId>
-                    <version>1</version>
                     <scope>provided</scope>
                 </dependency>
                 <dependency>
