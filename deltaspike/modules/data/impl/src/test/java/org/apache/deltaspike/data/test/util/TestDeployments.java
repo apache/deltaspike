@@ -18,25 +18,21 @@
  */
 package org.apache.deltaspike.data.test.util;
 
-import java.io.File;
-import java.net.URL;
-
+import org.apache.deltaspike.data.test.TestTransactionStrategy;
 import org.apache.deltaspike.data.test.TransactionalTestCase;
 import org.apache.deltaspike.data.test.domain.AuditedEntity;
 import org.jboss.arquillian.container.test.spi.TestDeployment;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 
-public abstract class TestDeployments {
+import java.io.File;
+import java.net.URL;
 
-    public static String DS_PROPERTIES_WITH_ENV_AWARE_TX_STRATEGY
-            = "globalAlternatives.org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy="
-            + "org.apache.deltaspike.jpa.impl.transaction.EnvironmentAwareTransactionStrategy";
+public abstract class TestDeployments {
 
     /**
      * Create a basic deployment with dependencies, beans.xml and persistence descriptor.
@@ -60,13 +56,11 @@ public abstract class TestDeployments {
         WebArchive archive = ShrinkWrap
                 .create(WebArchive.class, "test.war")
                 // used by many tests, shouldn't interfere with others
-                .addClasses(TransactionalTestCase.class, TestData.class)
+                .addClasses(TransactionalTestCase.class, TestData.class, TestTransactionStrategy.class)
                 .addPackages(true, AuditedEntity.class.getPackage())
                 .addAsLibraries(getDeltaSpikeDataWithDependencies())
                 .addAsWebInfResource("test-persistence.xml", "classes/META-INF/persistence.xml")
-                .addAsWebInfResource(beansXmlAsset, "beans.xml")
-                .addAsWebInfResource(new StringAsset(DS_PROPERTIES_WITH_ENV_AWARE_TX_STRATEGY),
-                        "classes/META-INF/apache-deltaspike.properties");
+                .addAsWebInfResource(beansXmlAsset, "beans.xml");
 
         if (addDefaultEntityManagerProducer)
         {
