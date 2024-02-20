@@ -18,11 +18,12 @@
  */
 package org.apache.deltaspike.data.impl.util.jpa;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.Query;
 
+@ApplicationScoped
 public class QueryStringExtractorFactory
 {
-
     private final QueryStringExtractor[] extractors = new QueryStringExtractor[]
     {
         new HibernateQueryStringExtractor(),
