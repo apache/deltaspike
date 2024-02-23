@@ -25,7 +25,6 @@ import org.apache.deltaspike.core.spi.config.ConfigSource;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,6 +38,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 
+import static org.apache.deltaspike.test.utils.BeansXmlUtil.BEANS_XML_ALL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
@@ -52,7 +52,7 @@ public class ThreadPoolManagerTest
     {
         return ShrinkWrap.create(WebArchive.class, "ThreadPoolManagerTest.war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsWebInfResource(BEANS_XML_ALL, "beans.xml");
     }
 
     @Inject

@@ -30,7 +30,6 @@ import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
@@ -38,6 +37,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
+import static org.apache.deltaspike.test.utils.BeansXmlUtil.BEANS_XML_ALL;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -48,7 +48,7 @@ import static org.junit.Assert.assertEquals;
 public class ConfigurableLocaleMessageTest
 {
     private static final String BEANS_XML_CONTENT =
-            "<beans><alternatives><class>" +
+            "<beans bean-discovery-mode=\"all\"><alternatives><class>" +
             ConfigurableLocaleResolver.class.getName() +
             "</class></alternatives></beans>";
 
@@ -72,7 +72,7 @@ public class ConfigurableLocaleMessageTest
         JavaArchive testJar = ShrinkWrap
                 .create(JavaArchive.class, "localeMessageTest.jar")
                 .addPackage(ConfigurableLocaleMessageTest.class.getPackage())
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsManifestResource(BEANS_XML_ALL, "beans.xml");
 
         return ShrinkWrap
                 .create(WebArchive.class, "localeMessageTest.war")

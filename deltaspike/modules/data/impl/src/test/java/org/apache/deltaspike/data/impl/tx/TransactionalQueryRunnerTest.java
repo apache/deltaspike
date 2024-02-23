@@ -46,7 +46,7 @@ public class TransactionalQueryRunnerTest
     @Deployment
     public static Archive<?> deployment()
     {
-        return initDeployment()
+        return initDeployment(true, false)
                 .addClasses(ExtendedRepositoryInterface.class)
                 .addClass(TransactionalQueryRunnerWrapper.class)
                 .addPackage(Simple.class.getPackage());

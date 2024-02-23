@@ -28,13 +28,13 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.ShouldThrowException;
 //X import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.experimental.categories.Category;
 //X import org.junit.Test;
 //X import org.junit.runner.RunWith;
 
+import static org.apache.deltaspike.test.utils.BeansXmlUtil.BEANS_XML_ALL;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -64,13 +64,13 @@ public class BrokenMessageBundleOnClassTest
         JavaArchive testJar = ShrinkWrap
                 .create(JavaArchive.class, "invalidMessageBundleTest.jar")
                 .addPackage(BrokenMessageBundleClass.class.getPackage())
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsManifestResource(BEANS_XML_ALL, "beans.xml");
 
         return ShrinkWrap
                 .create(WebArchive.class, "invalidMessageBundleTest.war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
                 .addAsLibraries(testJar)
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+                .addAsWebInfResource(BEANS_XML_ALL, "beans.xml")
                 .addAsServiceProvider(Extension.class,
                         MessageBundleExtension.class);
     }

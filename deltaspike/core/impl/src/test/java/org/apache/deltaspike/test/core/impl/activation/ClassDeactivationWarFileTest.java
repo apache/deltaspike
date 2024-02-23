@@ -24,12 +24,13 @@ import org.apache.deltaspike.test.util.FileUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.runner.RunWith;
 
 import java.net.URL;
+
+import static org.apache.deltaspike.test.utils.BeansXmlUtil.BEANS_XML_ALL;
 
 @RunWith(Arquillian.class)
 public class ClassDeactivationWarFileTest extends ClassDeactivationTest
@@ -48,12 +49,12 @@ public class ClassDeactivationWarFileTest extends ClassDeactivationTest
 
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "testClassDeactivationTest.jar")
                 .addPackage(ClassDeactivationWarFileTest.class.getPackage())
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsManifestResource(BEANS_XML_ALL, "beans.xml");
 
         return ShrinkWrap.create(WebArchive.class, archiveName + ".war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
                 .addAsLibraries(testJar)
                 .addAsResource(FileUtils.getFileForURL(fileUrl.toString()), DeltaSpikeTest.DELTASPIKE_PROPERTIES)
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsWebInfResource(BEANS_XML_ALL, "beans.xml");
     }
 }

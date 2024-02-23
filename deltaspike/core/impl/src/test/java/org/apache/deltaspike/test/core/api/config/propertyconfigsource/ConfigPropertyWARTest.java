@@ -24,11 +24,12 @@ import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+
+import static org.apache.deltaspike.test.utils.BeansXmlUtil.BEANS_XML_ALL;
 
 @RunWith(Arquillian.class)
 @Category(WebProfileCategory.class)
@@ -45,7 +46,7 @@ public class ConfigPropertyWARTest extends BaseTestConfigProperty
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
                 .addPackage(ConfigPropertyWARTest.class.getPackage())
                 .addAsResource(CONFIG_FILE_NAME)
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+                .addAsWebInfResource(BEANS_XML_ALL, "beans.xml")
                 .addAsWebInfResource(new StringAsset(PROPERTIES),
                         "classes/META-INF/apache-deltaspike.properties");
 

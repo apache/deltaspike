@@ -19,20 +19,20 @@
 package org.apache.deltaspike.test.core.api.util.context;
 
 import jakarta.enterprise.inject.spi.Extension;
-
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.Assert;
+import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
-import org.junit.Test;
-import org.junit.Assert;
+
+import static org.apache.deltaspike.test.utils.BeansXmlUtil.BEANS_XML_ALL;
 
 /**
  * We test the AbstractContext by implementing a simple dummy context.
@@ -52,14 +52,14 @@ public class AbstractContextTest
                 .create(JavaArchive.class, "abstractContextTest.jar")
                 .addClass(AbstractContextTest.class)
                 .addClass(DummyBean.class)
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
+                .addAsManifestResource(BEANS_XML_ALL, "beans.xml")
                 .addAsServiceProvider(Extension.class, DummyScopeExtension.class);
 
         return ShrinkWrap
                 .create(WebArchive.class, "abstractContextTest.war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
                 .addAsLibraries(testJar)
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsWebInfResource(BEANS_XML_ALL, "beans.xml");
     }
 
 

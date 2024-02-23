@@ -37,7 +37,6 @@
     <properties>
         <container.unpack.directory>${java.io.tmpdir}/deltaspike-arquillian-containers</container.unpack.directory>
         <wildfly.version>31.0.0.Final</wildfly.version>
-        <weld.el.api>5.0.0</weld.el.api>
         <weld.sfl4j>2.0.11</weld.sfl4j>
         <wildfly.arquillian.version>5.0.1.Final</wildfly.arquillian.version>
         <payara.version>6.2024.1</payara.version>
@@ -437,19 +436,19 @@
                 <dependency>
                     <groupId>jakarta.el</groupId>
                     <artifactId>jakarta.el-api</artifactId>
-                    <version>${weld.el.api}</version>
+                    <version>${jakarta.el-api.version}</version>
                     <scope>test</scope>
                 </dependency>
                 <dependency>
                     <groupId>jakarta.transaction</groupId>
                     <artifactId>jakarta.transaction-api</artifactId>
-                    <version>2.0.1</version>
+                    <version>${jakarta.transaction-api.version}</version>
                     <scope>test</scope>
                 </dependency>
                 <dependency>
                     <groupId>jakarta.interceptor</groupId>
                     <artifactId>jakarta.interceptor-api</artifactId>
-                    <version>2.1.0</version>
+                    <version>${jakarta.interceptor-api.version}</version>
                 </dependency>
 
                 <!-- Test dependencies -->
@@ -677,6 +676,11 @@
                     <artifactId>arquillian-protocol-servlet-jakarta</artifactId>
                     <version>${arquillian.version}</version>
                     <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>jakarta.servlet</groupId>
+                    <artifactId>jakarta.servlet-api</artifactId>
+                    <version>${jakarta.servlet-api.version}</version>
                 </dependency>
             </dependencies>
 

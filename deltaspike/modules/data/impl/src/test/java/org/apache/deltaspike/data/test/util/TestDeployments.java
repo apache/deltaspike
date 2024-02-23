@@ -18,19 +18,21 @@
  */
 package org.apache.deltaspike.data.test.util;
 
-import org.apache.deltaspike.data.test.TestTransactionStrategy;
+import org.apache.deltaspike.data.test.BMTransactionStrategy;
+import org.apache.deltaspike.data.test.JpaTransactionStrategy;
 import org.apache.deltaspike.data.test.TransactionalTestCase;
 import org.apache.deltaspike.data.test.domain.AuditedEntity;
 import org.jboss.arquillian.container.test.spi.TestDeployment;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 
 import java.io.File;
 import java.net.URL;
+
+import static org.apache.deltaspike.test.utils.BeansXmlUtil.BEANS_XML_ALL;
 
 public abstract class TestDeployments {
 
@@ -41,22 +43,27 @@ public abstract class TestDeployments {
      */
     public static WebArchive initDeployment()
     {
-        return initDeployment(true);
+        return initDeployment(true, true);
     }
 
     public static WebArchive initDeployment(boolean addDefaultEntityManagerProducer)
     {
-        return initDeployment(addDefaultEntityManagerProducer, EmptyAsset.INSTANCE);
+        return initDeployment(addDefaultEntityManagerProducer, BEANS_XML_ALL, true);
     }
-    
-    public static WebArchive initDeployment(boolean addDefaultEntityManagerProducer, Asset beansXmlAsset)
+
+    public static WebArchive initDeployment(boolean addDefaultEntityManagerProducer, boolean jpa)
+    {
+        return initDeployment(addDefaultEntityManagerProducer, BEANS_XML_ALL, jpa);
+    }
+
+    public static WebArchive initDeployment(boolean addDefaultEntityManagerProducer, Asset beansXmlAsset, boolean jpa)
     {
         Logging.reconfigure();
 
         WebArchive archive = ShrinkWrap
                 .create(WebArchive.class, "test.war")
                 // used by many tests, shouldn't interfere with others
-                .addClasses(TransactionalTestCase.class, TestData.class, TestTransactionStrategy.class)
+                .addClasses(TransactionalTestCase.class, TestData.class)
                 .addPackages(true, AuditedEntity.class.getPackage())
                 .addAsLibraries(getDeltaSpikeDataWithDependencies())
                 .addAsWebInfResource("test-persistence.xml", "classes/META-INF/persistence.xml")
@@ -65,6 +72,14 @@ public abstract class TestDeployments {
         if (addDefaultEntityManagerProducer)
         {
             archive.addClass(EntityManagerProducer.class);
+        }
+        if (jpa)
+        {
+            archive.addClass(JpaTransactionStrategy.class);
+        }
+        else
+        {
+            archive.addClass(BMTransactionStrategy.class);
         }
         
         return archive;

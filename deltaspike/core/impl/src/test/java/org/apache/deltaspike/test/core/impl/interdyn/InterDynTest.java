@@ -23,7 +23,6 @@ import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
@@ -31,6 +30,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import jakarta.inject.Inject;
+
+import static org.apache.deltaspike.test.utils.BeansXmlUtil.BEANS_XML_ALL;
 
 @RunWith(Arquillian.class)
 public class InterDynTest {
@@ -60,7 +61,7 @@ public class InterDynTest {
         return ShrinkWrap.create(WebArchive.class, "InterDynTest.war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
                 .addAsLibraries(testJar)
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsWebInfResource(BEANS_XML_ALL, "beans.xml");
     }
 
     @Inject

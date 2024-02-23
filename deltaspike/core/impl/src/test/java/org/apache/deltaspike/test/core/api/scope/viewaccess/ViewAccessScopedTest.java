@@ -25,7 +25,6 @@ import org.apache.deltaspike.test.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
@@ -34,6 +33,8 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
 import jakarta.inject.Inject;
+
+import static org.apache.deltaspike.test.utils.BeansXmlUtil.BEANS_XML_ALL;
 
 @RunWith(Arquillian.class)
 @Category(SeCategory.class)
@@ -47,12 +48,12 @@ public class ViewAccessScopedTest
 
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, archiveName + ".jar")
                 .addPackage(ViewAccessScopedTest.class.getPackage().getName())
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsManifestResource(BEANS_XML_ALL, "beans.xml");
 
         return ShrinkWrap.create(WebArchive.class, archiveName + ".war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
                 .addAsLibraries(testJar)
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsWebInfResource(BEANS_XML_ALL, "beans.xml");
     }
 
     @Inject

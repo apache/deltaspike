@@ -19,28 +19,22 @@
 
 package org.apache.deltaspike.test.core.api.partialbean.uc012;
 
+import jakarta.inject.Inject;
 import org.apache.deltaspike.test.core.api.partialbean.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import jakarta.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.*;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.apache.deltaspike.test.utils.BeansXmlUtil.BEANS_XML_ALL;
 
 @RunWith(Arquillian.class)
 public class ConcurrencyBugTest
@@ -54,12 +48,12 @@ public class ConcurrencyBugTest
 
       final JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, archiveName + ".jar")
             .addPackage(ConcurrencyBugTest.class.getPackage())
-            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+            .addAsManifestResource(BEANS_XML_ALL, "beans.xml");
 
       final WebArchive webArchive =  ShrinkWrap.create(WebArchive.class, archiveName + ".war")
             .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndPartialBeanArchive())
             .addAsLibraries(testJar)
-            .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+            .addAsWebInfResource(BEANS_XML_ALL, "beans.xml");
 
       return webArchive;
    }

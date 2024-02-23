@@ -27,6 +27,7 @@ public class QueryStringExtractorFactory
     private final QueryStringExtractor[] extractors = new QueryStringExtractor[]
     {
         new HibernateQueryStringExtractor(),
+        new Hibernate6QueryStringExtractor(),
         new EclipseLinkEjbQueryStringExtractor(),
         new OpenJpaQueryStringExtractor()
     };

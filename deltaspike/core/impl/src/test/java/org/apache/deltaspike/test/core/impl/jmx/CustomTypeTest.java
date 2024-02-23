@@ -23,7 +23,6 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,6 +32,7 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import java.lang.management.ManagementFactory;
 
+import static org.apache.deltaspike.test.utils.BeansXmlUtil.BEANS_XML_ALL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -43,7 +43,7 @@ public class CustomTypeTest {
     {
         return ShrinkWrap.create(WebArchive.class, "CustomTypeTest.war")
             .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
-            .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+            .addAsWebInfResource(BEANS_XML_ALL, "beans.xml")
             .addClasses(CustomType.class);
     }
 
