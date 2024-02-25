@@ -25,8 +25,10 @@ import jakarta.faces.convert.Converter;
 import jakarta.faces.convert.ConverterException;
 import jakarta.faces.convert.FacesConverter;
 import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
-@FacesConverter("myValueConverter")
+@Named
+@FacesConverter(value = "myValueConverter", managed = true)
 public class AnotherBeanConverter extends AbstractStateHolder implements Converter
 {
 

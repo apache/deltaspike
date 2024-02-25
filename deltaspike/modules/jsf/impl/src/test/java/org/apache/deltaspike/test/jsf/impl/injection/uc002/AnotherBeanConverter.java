@@ -19,6 +19,7 @@
 package org.apache.deltaspike.test.jsf.impl.injection.uc002;
 
 import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.inject.Model;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.component.UIComponent;
 import jakarta.faces.context.FacesContext;
@@ -26,9 +27,11 @@ import jakarta.faces.convert.Converter;
 import jakarta.faces.convert.ConverterException;
 import jakarta.faces.convert.FacesConverter;
 import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
+@Named
 @RequestScoped
-@FacesConverter("myValueConverter")
+@FacesConverter(value = "myValueConverter", managed = true)
 public class AnotherBeanConverter implements Converter
 {
 

@@ -26,9 +26,11 @@ import jakarta.faces.validator.FacesValidator;
 import jakarta.faces.validator.Validator;
 import jakarta.faces.validator.ValidatorException;
 import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
+@Named
 @RequestScoped
-@FacesValidator("myBeanValidator")
+@FacesValidator(value = "myBeanValidator", managed = true)
 public class MyBeanValidator implements Validator
 {
 

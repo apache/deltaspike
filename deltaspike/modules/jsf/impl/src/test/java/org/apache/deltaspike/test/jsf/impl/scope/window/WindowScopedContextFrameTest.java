@@ -23,6 +23,7 @@ import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.apache.deltaspike.test.jsf.impl.config.TestJsfModuleConfig;
 import org.apache.deltaspike.test.jsf.impl.scope.window.beans.WindowScopedBackingBean;
 import org.apache.deltaspike.test.jsf.impl.util.ArchiveUtils;
+import org.apache.deltaspike.test.utils.BeansXmlUtil;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
@@ -41,6 +42,8 @@ import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
 import java.net.URL;
 import java.util.logging.Logger;
+
+import static org.apache.deltaspike.test.utils.BeansXmlUtil.BEANS_XML_ALL;
 
 
 /**
@@ -72,7 +75,7 @@ public class WindowScopedContextFrameTest
                                   "resources/deltaspike/windowhandler.js")
                 .addAsWebResource("windowScopedContextTest/framecontainer.xhtml", "framecontainer.xhtml")
                 .addAsWebResource("windowScopedContextTest/frame.xhtml", "frame.xhtml")
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsWebInfResource(BEANS_XML_ALL, "beans.xml");
     }
 
 
