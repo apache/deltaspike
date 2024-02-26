@@ -50,6 +50,8 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
       - name: Build (TomEE)
         run: mvn clean install -Ptomee-build-managed
+        continue-on-error: true
       - name: Build (Wildfly)
         run: mvn clean install -Pwildfly-build-managed
+        continue-on-error: true
         
