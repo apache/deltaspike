@@ -33,7 +33,7 @@
     <container qualifier="wildfly-managed">
         <configuration>
             <!-- for debugging add: -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=y  -->
-            <property name="javaVmArguments">-client -noverify -Xms64m -Xmx1024m -XX:MaxPermSize=512m -Dcdicontainer.version=${cdicontainer.version} ${jacoco.agent}</property>
+            <property name="javaVmArguments">-client -Xms64m -Xmx1024m -Dcdicontainer.version=${cdicontainer.version} ${jacoco.agent}</property>
             <property name="outputToConsole">false</property>
             <property name="allowConnectingToRunningServer">true</property>
             <property name="cdicontainer.version">${cdicontainer.version}</property>
@@ -43,7 +43,7 @@
     <container qualifier="wildfly-build-managed">
         <configuration>
             <property name="jbossHome">${arquillian.jboss_home}</property>
-            <property name="javaVmArguments">-client -noverify -Xms64m -Xmx1024m -XX:MaxPermSize=512m -Djboss.socket.binding.port-offset=50000 -Dcdicontainer.version=${cdicontainer.version}</property>
+            <property name="javaVmArguments">-client -Xms64m -Xmx1024m -Djboss.socket.binding.port-offset=50000 -Dcdicontainer.version=${cdicontainer.version}</property>
 <!-- debug options
             <property name="javaVmArguments">-client -noverify -Xms64m -Xmx1024m -XX:MaxPermSize=512m -Djboss.socket.binding.port-offset=50000 -Dcdicontainer.version=${cdicontainer.version} -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005</property>
 -->
