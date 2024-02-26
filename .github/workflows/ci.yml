@@ -44,7 +44,12 @@ permissions:
   
 jobs:
   build:
+    name: Build with ${{ matrix.profile }}
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        profile: [ 'OWB', 'Weld' ]
     steps:
       - uses: actions/checkout@v3
         with:
@@ -60,11 +65,7 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-      - name: Build (OpenWebBeans)
-        run: mvn clean install -POWB
-        continue-on-error: true
-      - name: Build (Weld)
-        run: mvn clean install -PWeld
-        continue-on-error: true
+      - name: Build
+        run: mvn clean install -P${{ matrix.profile }}
 
         

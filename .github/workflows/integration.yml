@@ -30,9 +30,12 @@ permissions:
   
 jobs:
   build:
-
+    name: Build with ${{ matrix.profile }}
     runs-on: ubuntu-latest
-
+    strategy:
+      fail-fast: false
+      matrix:
+        profile: [ 'tomee-build-managed', 'wildfly-build-managed' ]
     steps:
       - uses: actions/checkout@v3
         with:
@@ -48,10 +51,5 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-      - name: Build (TomEE)
-        run: mvn clean install -Ptomee-build-managed
-        continue-on-error: true
-      - name: Build (Wildfly)
-        run: mvn clean install -Pwildfly-build-managed
-        continue-on-error: true
-        
+      - name: Build
+        run: mvn clean install -P${{ matrix.profile }}
