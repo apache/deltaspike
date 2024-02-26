@@ -180,45 +180,6 @@
 
     <profiles>
         <profile>
-            <id>jbossas-build-managed-7</id>
-            <build>
-                <testResources>
-                    <testResource>
-                        <directory>src/test/resources</directory>
-                    </testResource>
-                    <testResource>
-                        <directory>src/test/resources-jbossas7</directory>
-                    </testResource>
-                </testResources>
-            </build>
-        </profile>
-        <profile>
-            <id>jbossas-remote-7</id>
-            <build>
-                <testResources>
-                    <testResource>
-                        <directory>src/test/resources</directory>
-                    </testResource>
-                    <testResource>
-                        <directory>src/test/resources-jbossas7</directory>
-                    </testResource>
-                </testResources>
-            </build>
-        </profile>
-        <profile>
-            <id>jbossas-managed-7</id>
-            <build>
-                <testResources>
-                    <testResource>
-                        <directory>src/test/resources</directory>
-                    </testResource>
-                    <testResource>
-                        <directory>src/test/resources-jbossas7</directory>
-                    </testResource>
-                </testResources>
-            </build>
-        </profile>
-        <profile>
             <id>wildfly-build-managed</id>
             <build>
                 <testResources>
@@ -226,7 +187,7 @@
                         <directory>src/test/resources</directory>
                     </testResource>
                     <testResource>
-                        <directory>src/test/resources-jbossas7</directory>
+                        <directory>src/test/resources-wildfly</directory>
                     </testResource>
                 </testResources>
             </build>
@@ -239,7 +200,7 @@
                         <directory>src/test/resources</directory>
                     </testResource>
                     <testResource>
-                        <directory>src/test/resources-jbossas7</directory>
+                        <directory>src/test/resources-wildfly</directory>
                     </testResource>
                 </testResources>
             </build>
@@ -252,7 +213,7 @@
                         <directory>src/test/resources</directory>
                     </testResource>
                     <testResource>
-                        <directory>src/test/resources-jbossas7</directory>
+                        <directory>src/test/resources-wildfly</directory>
                     </testResource>
                 </testResources>
             </build>
