@@ -25,8 +25,10 @@ import jakarta.faces.validator.FacesValidator;
 import jakarta.faces.validator.Validator;
 import jakarta.faces.validator.ValidatorException;
 import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
-@FacesValidator("myBeanValidator")
+@Named
+@FacesValidator(value = "myBeanValidator", managed = true)
 public class MyBeanValidator extends AbstractStateHolder implements Validator
 {
 

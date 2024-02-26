@@ -45,7 +45,7 @@ public class MethodLevelInterceptorTest
     public static WebArchive war()
     {
         Asset beansXml = new StringAsset(
-            "<beans><interceptors><class>" +
+            "<beans bean-discover-mode=\"all\"><interceptors><class>" +
                     SimpleCacheInterceptor.class.getName() +
             "</class></interceptors></beans>"
         );

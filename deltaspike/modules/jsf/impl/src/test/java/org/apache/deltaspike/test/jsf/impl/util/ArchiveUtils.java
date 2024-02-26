@@ -84,7 +84,7 @@ public class ArchiveUtils
     public static Asset getBeansXml()
     {
         Asset beansXml = new StringAsset(
-            "<beans>" +
+            "<beans bean-discovery-mode=\"all\">" +
                 "<interceptors>" +
                     "<class>org.apache.deltaspike.jsf.impl.config.view.navigation.NavigationParameterInterceptor</class>" +
                     "<class>org.apache.deltaspike.jsf.impl.config.view.navigation.NavigationParameterListInterceptor</class>" +

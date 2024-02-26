@@ -23,6 +23,7 @@ import java.net.URL;
 
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.apache.deltaspike.test.jsf.impl.util.ArchiveUtils;
+import org.apache.deltaspike.test.utils.BeansXmlUtil;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
@@ -39,6 +40,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import static org.apache.deltaspike.test.utils.BeansXmlUtil.BEANS_XML_ALL;
 
 @RunWith(Arquillian.class)
 @Category(WebProfileCategory.class)
@@ -66,7 +69,7 @@ public class PreViewConfigNavigateEventTest
                 .addAsWebResource("navigation/pages/overview.xhtml", "/pages/overview.xhtml")
                 .addAsWebResource("navigation/pages/customErrorPage.xhtml", "/pages/customErrorPage.xhtml")
                 .addAsWebInfResource("default/WEB-INF/web.xml", "web.xml")
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsWebInfResource(BEANS_XML_ALL, "beans.xml");
         return archive;
     }
 
@@ -77,6 +80,7 @@ public class PreViewConfigNavigateEventTest
         driver.get(new URL(contextPath, "origin.xhtml").toString());
 
         WebElement button = driver.findElement(By.id("event:pb002ActionWithError"));
+        Assert.assertNotNull(button);
         button.click();
         // Index Page is shown instead of DefaultErrorView because PreViewConfigNavigateEvent changed the navigation
         Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("indexPage"), "You arrived at index page")

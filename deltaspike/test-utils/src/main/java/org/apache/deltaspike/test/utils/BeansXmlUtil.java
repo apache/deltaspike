@@ -16,24 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.data.test.service;
+package org.apache.deltaspike.test.utils;
 
-import org.apache.deltaspike.data.api.*;
-import org.apache.deltaspike.data.test.domain.Simple;
+import org.jboss.shrinkwrap.api.asset.Asset;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 
-import static jakarta.persistence.LockModeType.PESSIMISTIC_READ;
-
-@Repository
-public interface ExtendedRepositoryInterface extends EntityRepository<Simple, Long>, EntityManagerDelegate<Simple>
+public class BeansXmlUtil
 {
+    /**
+     * A Beans.xml instance enabling Discovery-Mode ALL for unit tests
+     */
+    public static final Asset BEANS_XML_ALL = new StringAsset("<beans bean-discovery-mode=\"all\"/>");
 
-    @Query(lock = PESSIMISTIC_READ)
-    Simple findByName(String name);
-
-    @Query(named = Simple.BY_NAME_LIKE)
-    Simple findByNameNoLock(String name);
-
-    @Modifying @Query("delete from Simple")
-    int deleteAll();
+    private BeansXmlUtil()
+    {
+    }
 
 }

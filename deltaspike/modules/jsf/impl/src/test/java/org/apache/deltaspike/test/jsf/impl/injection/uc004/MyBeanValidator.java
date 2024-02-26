@@ -26,15 +26,17 @@ import jakarta.faces.validator.FacesValidator;
 import jakarta.faces.validator.Validator;
 import jakarta.faces.validator.ValidatorException;
 import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
-@FacesValidator("myBeanValidator")
+@Named
+@FacesValidator(value = "myBeanValidator", managed = true)
 public class MyBeanValidator implements Validator, StateHolder
 {
 
     @Inject
     private MyBean myBean;
 
-    private String validValue = "Apache";
+    private String validValue = "DeltaSpike";
     
     private boolean isTransient;
 

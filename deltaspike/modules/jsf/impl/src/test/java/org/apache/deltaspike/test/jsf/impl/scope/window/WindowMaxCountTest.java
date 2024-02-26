@@ -23,6 +23,7 @@ import java.net.URL;
 
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.apache.deltaspike.test.jsf.impl.util.ArchiveUtils;
+import org.apache.deltaspike.test.utils.BeansXmlUtil;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
@@ -38,6 +39,8 @@ import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+
+import static org.apache.deltaspike.test.utils.BeansXmlUtil.BEANS_XML_ALL;
 
 @RunWith(Arquillian.class)
 @Category(WebProfileCategory.class)
@@ -62,7 +65,7 @@ public class WindowMaxCountTest
                 .addAsWebInfResource("default/WEB-INF/web.xml", "web.xml")
                 .addAsWebInfResource("META-INF/apache-deltaspike.properties",
                         "classes/META-INF/apache-deltaspike.properties")
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsWebInfResource(BEANS_XML_ALL, "beans.xml");
         return archive;
     }
 

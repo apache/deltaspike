@@ -123,9 +123,10 @@
         <jakarta.cdi-api.version>4.0.0</jakarta.cdi-api.version>
         <jakarta.interceptor-api.version>2.0.0</jakarta.interceptor-api.version>
         <jakarta.annotation-api.version>2.0.0</jakarta.annotation-api.version>
-        <jakarta.el-api.version>4.0.0</jakarta.el-api.version>
+        <jakarta.el-api.version>5.0.0</jakarta.el-api.version>
         <jakarta.persistence-api.version>3.1.0</jakarta.persistence-api.version>
         <jakarta.transaction-api.version>2.0.0</jakarta.transaction-api.version>
+        <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
     </properties>
 
     <profiles>

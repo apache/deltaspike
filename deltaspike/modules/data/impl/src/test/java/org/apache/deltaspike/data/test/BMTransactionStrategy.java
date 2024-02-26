@@ -16,24 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.data.test.service;
+package org.apache.deltaspike.data.test;
 
-import org.apache.deltaspike.data.api.*;
-import org.apache.deltaspike.data.test.domain.Simple;
+import jakarta.annotation.Priority;
+import jakarta.enterprise.inject.Alternative;
+import jakarta.interceptor.Interceptor;
+import org.apache.deltaspike.jpa.impl.transaction.BeanManagedUserTransactionStrategy;
+import org.apache.deltaspike.jpa.impl.transaction.ContainerManagedTransactionStrategy;
 
-import static jakarta.persistence.LockModeType.PESSIMISTIC_READ;
-
-@Repository
-public interface ExtendedRepositoryInterface extends EntityRepository<Simple, Long>, EntityManagerDelegate<Simple>
+@Alternative
+@Priority(Interceptor.Priority.APPLICATION+1)
+public class BMTransactionStrategy extends BeanManagedUserTransactionStrategy
 {
-
-    @Query(lock = PESSIMISTIC_READ)
-    Simple findByName(String name);
-
-    @Query(named = Simple.BY_NAME_LIKE)
-    Simple findByNameNoLock(String name);
-
-    @Modifying @Query("delete from Simple")
-    int deleteAll();
-
 }

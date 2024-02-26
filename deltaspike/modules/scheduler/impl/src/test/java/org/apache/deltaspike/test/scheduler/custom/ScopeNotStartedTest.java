@@ -22,6 +22,7 @@ import junit.framework.Assert;
 import org.apache.deltaspike.core.spi.config.ConfigSource;
 import org.apache.deltaspike.scheduler.spi.Scheduler;
 import org.apache.deltaspike.test.util.ArchiveUtils;
+import org.apache.deltaspike.test.utils.BeansXmlUtil;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -35,6 +36,8 @@ import org.junit.runner.RunWith;
 
 import jakarta.inject.Inject;
 
+import static org.apache.deltaspike.test.utils.BeansXmlUtil.BEANS_XML_ALL;
+
 @RunWith(Arquillian.class)
 public class ScopeNotStartedTest
 {
@@ -47,7 +50,7 @@ public class ScopeNotStartedTest
 
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "scopeNotStartedTest.jar")
                 .addPackage(CustomSchedulerWarFileTest.class.getPackage().getName())
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
+                .addAsManifestResource(BEANS_XML_ALL, "beans.xml")
                 .addAsResource(new StringAsset(MockedScheduler.class.getName()),
                         "META-INF/services/" + Scheduler.class.getName())
                 .addAsResource(new StringAsset(CustomDeactivatedConfigSource.class.getName()),

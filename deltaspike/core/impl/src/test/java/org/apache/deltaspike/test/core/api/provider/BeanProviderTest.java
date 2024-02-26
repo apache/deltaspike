@@ -27,7 +27,6 @@ import org.apache.deltaspike.test.utils.Serializer;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
@@ -37,6 +36,8 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static org.apache.deltaspike.test.utils.BeansXmlUtil.BEANS_XML_ALL;
 
 @RunWith(Arquillian.class)
 public class BeanProviderTest
@@ -53,12 +54,12 @@ public class BeanProviderTest
     {
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, "beanProviderTest.jar")
                 .addPackage(BeanProviderTest.class.getPackage())
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsManifestResource(BEANS_XML_ALL, "beans.xml");
 
         return ShrinkWrap.create(WebArchive.class, "beanProvider.war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
                 .addAsLibraries(testJar)
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsWebInfResource(BEANS_XML_ALL, "beans.xml");
     }
 
     /**

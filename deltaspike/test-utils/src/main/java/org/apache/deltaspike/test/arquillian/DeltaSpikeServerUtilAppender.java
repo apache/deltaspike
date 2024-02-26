@@ -23,8 +23,9 @@ import org.apache.deltaspike.test.utils.Serializer;
 import org.jboss.arquillian.container.test.spi.client.deployment.CachedAuxilliaryArchiveAppender;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+
+import static org.apache.deltaspike.test.utils.BeansXmlUtil.BEANS_XML_ALL;
 
 public class DeltaSpikeServerUtilAppender extends CachedAuxilliaryArchiveAppender
 {
@@ -34,6 +35,6 @@ public class DeltaSpikeServerUtilAppender extends CachedAuxilliaryArchiveAppende
         return ShrinkWrap.create(JavaArchive.class, "test-utils.jar")
                 .addPackage(Serializer.class.getPackage())
                 .addPackage(DeltaSpikeTest.class.getPackage())
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsManifestResource(BEANS_XML_ALL, "beans.xml");
     }
 }

@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.test.core.api.exclude;
 
+import jakarta.enterprise.inject.spi.Extension;
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.impl.exclude.extension.ExcludeExtension;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
@@ -27,18 +28,18 @@ import org.apache.deltaspike.test.util.FileUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.AfterClass;
 import org.junit.runner.RunWith;
 
-import jakarta.enterprise.inject.spi.Extension;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+
+import static org.apache.deltaspike.test.utils.BeansXmlUtil.BEANS_XML_ALL;
 
 /**
  * Tests for {@link org.apache.deltaspike.core.api.exclude.Exclude}
@@ -63,12 +64,12 @@ public class ExcludeWarFileTest extends ExcludeTest
                 .addPackage(TestClassDeactivator.class.getPackage())
                 .addAsManifestResource(new StringAsset(getConfigContent()),
                     "apache-deltaspike.properties") // when deployed on some remote container;
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsManifestResource(BEANS_XML_ALL, "beans.xml");
 
         return ShrinkWrap.create(WebArchive.class, archiveName + ".war")
                 .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreArchive())
                 .addAsLibraries(testJar)
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+                .addAsWebInfResource(BEANS_XML_ALL, "beans.xml")
                 .addAsServiceProvider(Extension.class, ExcludeExtension.class);
     }
 

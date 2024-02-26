@@ -28,6 +28,7 @@ import org.apache.deltaspike.data.test.domain.Simple5;
 import org.apache.deltaspike.data.test.service.ExtendedRepositoryAbstractInherited;
 import org.apache.deltaspike.data.test.service.ExtendedRepositoryAbstractIntermediate;
 import org.apache.deltaspike.test.category.WebProfileCategory;
+import org.apache.deltaspike.test.utils.BeansXmlUtil;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.asset.Asset;
@@ -41,12 +42,10 @@ import jakarta.inject.Inject;
 public class EntityRepositoryHandlerInheritedTest extends TransactionalTestCase
 {
     
-    private static final Asset beansXml = new StringAsset("<beans bean-discovery-mode=\"all\"/>");
-
     @Deployment
     public static Archive<?> deployment()
     {
-        return initDeployment(true, beansXml)
+        return initDeployment(true)
                 .addClasses(ExtendedRepositoryAbstractIntermediate.class, 
                         ExtendedRepositoryAbstractInherited.class,
                         NamedQualifiedEntityManagerTestProducer.class)

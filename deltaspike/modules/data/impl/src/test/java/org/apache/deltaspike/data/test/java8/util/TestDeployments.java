@@ -20,11 +20,12 @@
 package org.apache.deltaspike.data.test.java8.util;
 
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 
 import java.io.File;
+
+import static org.apache.deltaspike.test.utils.BeansXmlUtil.BEANS_XML_ALL;
 
 public class TestDeployments
 {
@@ -40,7 +41,7 @@ public class TestDeployments
                 .addAsLibraries(getDeltaSpikeDataWithDependencies())
                 .addClasses(EntityManagerProducer.class)
                 .addAsWebInfResource("test-persistence.xml", "classes/META-INF/persistence.xml")
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsWebInfResource(BEANS_XML_ALL, "beans.xml");
 
         return archive;
     }

@@ -45,7 +45,7 @@ public class ClassLevelInterceptorTest
     public static WebArchive war()
     {
         Asset beansXml = new StringAsset(
-            "<beans><interceptors><class>" +
+            "<beans bean-discovery-mode=\"all\"><interceptors><class>" +
                     CustomInterceptorImpl.class.getName() +
             "</class></interceptors></beans>"
         );

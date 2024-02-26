@@ -25,7 +25,6 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Filters;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
@@ -34,6 +33,8 @@ import org.junit.runner.RunWith;
 
 import jakarta.enterprise.inject.spi.Extension;
 import jakarta.inject.Inject;
+
+import static org.apache.deltaspike.test.utils.BeansXmlUtil.BEANS_XML_ALL;
 
 /**
  * Tests for type-safe messages without {@link org.apache.deltaspike.core.api.message.MessageTemplate}
@@ -61,7 +62,7 @@ public class MinimalMessagesTest
                 .create(JavaArchive.class, "minimalMessageTest.jar")
                 .addPackages(false, Filters.exclude(MessageContextTest.class),
                         MinimalMessagesTest.class.getPackage())
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsManifestResource(BEANS_XML_ALL, "beans.xml");
 
         return ShrinkWrap
                 .create(WebArchive.class, "minimalMessageTest.war")
@@ -69,7 +70,7 @@ public class MinimalMessagesTest
                 .addAsLibraries(testJar)
                 .addAsResource("customMinimalMessage_en.properties")
                 .addAsResource("org/apache/deltaspike/test/core/api/message/MinimalMessages_en.properties")
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+                .addAsWebInfResource(BEANS_XML_ALL, "beans.xml")
                 .addAsServiceProvider(Extension.class,
                         MessageBundleExtension.class);
     }
