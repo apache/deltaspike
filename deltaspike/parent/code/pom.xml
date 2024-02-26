@@ -841,7 +841,7 @@
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
                             <systemPropertyVariables>
-                                <arquillian.launch>glassfish-build-managed</arquillian.launch>
+                                <arquillian.launch>payara-build-managed</arquillian.launch>
                                 <org.apache.deltaspike.ProjectStage>UnitTest</org.apache.deltaspike.ProjectStage>
                                 <cdicontainer.version>${cdicontainer.version}</cdicontainer.version>
                             </systemPropertyVariables>

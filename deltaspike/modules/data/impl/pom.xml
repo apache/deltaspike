@@ -226,20 +226,7 @@
                         <directory>src/test/resources</directory>
                     </testResource>
                     <testResource>
-                        <directory>src/test/resources-glassfish</directory>
-                    </testResource>
-                </testResources>
-            </build>
-        </profile>
-        <profile>
-            <id>glassfish-build-managed</id>
-            <build>
-                <testResources>
-                    <testResource>
-                        <directory>src/test/resources</directory>
-                    </testResource>
-                    <testResource>
-                        <directory>src/test/resources-glassfish</directory>
+                        <directory>src/test/resources-payara</directory>
                     </testResource>
                 </testResources>
             </build>
@@ -252,7 +239,7 @@
                         <directory>src/test/resources</directory>
                     </testResource>
                     <testResource>
-                        <directory>src/test/resources-glassfish</directory>
+                        <directory>src/test/resources-payara</directory>
                     </testResource>
                 </testResources>
             </build>
