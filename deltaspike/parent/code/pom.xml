@@ -507,7 +507,7 @@
             <properties>
                 <jakartaeeapi.version>10.0-M2</jakartaeeapi.version>
                 <owb.version>4.0.2</owb.version>
-                <cdicontainer.version>tomee-${tomee.version}</cdicontainer.version>
+                <cdicontainer.version>owb-${owb.version}</cdicontainer.version>
             </properties>
 
             <dependencies>
@@ -583,7 +583,7 @@
             <properties>
                 <!-- Actual default Weld version used with this profile -->
                 <weld.version>5.1.2.Final</weld.version>
-                <cdicontainer.version>wildfly-${wildfly.version}</cdicontainer.version>
+                <cdicontainer.version>weld-${weld.version}</cdicontainer.version>
             </properties>
 
             <dependencies>
@@ -653,7 +653,7 @@
             <properties>
                 <!-- Actual default Weld version used with this profile -->
                 <weld.version>5.1.2.Final</weld.version>
-                <cdicontainer.version>wildfly-${wildfly.version}</cdicontainer.version>
+                <cdicontainer.version>weld-${weld.version}</cdicontainer.version>
             </properties>
 
             <dependencies>
@@ -747,7 +747,7 @@
             <!-- Wildfly must be started manually for this work correctly - for debug hints see arquillian-jboss.xml -->
 
             <properties>
-                <cdicontainer.version>wildfly-${wildfly.version}</cdicontainer.version>
+                <cdicontainer.version>weld-${weld.version}</cdicontainer.version>
             </properties>
 
             <dependencies>
@@ -811,7 +811,7 @@
 
             <properties>
                 <weld.version>5.0.1.Final</weld.version>
-                <cdicontainer.version>payara-${payara.version}</cdicontainer.version>
+                <cdicontainer.version>weld-${weld.version}</cdicontainer.version>
             </properties>
 
             <dependencies>
@@ -870,7 +870,7 @@
 
             <properties>
                 <weld.version>5.0.1.Final</weld.version>
-                <cdicontainer.version>payara-${payara.version}</cdicontainer.version>
+                <cdicontainer.version>weld-${weld.version}</cdicontainer.version>
             </properties>
 
             <dependencies>

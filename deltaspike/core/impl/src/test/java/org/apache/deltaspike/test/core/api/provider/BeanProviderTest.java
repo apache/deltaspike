@@ -22,7 +22,6 @@ package org.apache.deltaspike.test.core.api.provider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.api.provider.DependentProvider;
 import org.apache.deltaspike.test.util.ArchiveUtils;
-import org.apache.deltaspike.test.utils.CdiContainerUnderTest;
 import org.apache.deltaspike.test.utils.Serializer;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -30,7 +29,6 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
-import org.junit.Assume;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -42,9 +40,6 @@ import static org.apache.deltaspike.test.utils.BeansXmlUtil.BEANS_XML_ALL;
 @RunWith(Arquillian.class)
 public class BeanProviderTest
 {
-    private static final String CONTAINER_OWB_1_1_x = "owb-1\\.1\\..*";
-    private static final String CONTAINER_TOMEE_1_5_x = "tomee-1\\.5\\..*";
-
 
     /**
      *X TODO creating a WebArchive is only a workaround because JavaArchive cannot contain other archives.
@@ -221,10 +216,6 @@ public class BeanProviderTest
     @Test
     public void testDependentBeanSerialization() throws Exception
     {
-        // this test is known to not work under owb-1.1.x as ManagedBean for Dependent scoped classes did not implement PassivationCapable.
-        Assume.assumeTrue(!CdiContainerUnderTest.is(CONTAINER_OWB_1_1_x));
-        Assume.assumeTrue(!CdiContainerUnderTest.is(CONTAINER_TOMEE_1_5_x));
-
         DependentProvider<DependentTestBean> dependentTestBeanProvider = BeanProvider.getDependent(DependentTestBean.class);
 
         Serializer<DependentProvider<DependentTestBean>> serializer = new Serializer<DependentProvider<DependentTestBean>>();
