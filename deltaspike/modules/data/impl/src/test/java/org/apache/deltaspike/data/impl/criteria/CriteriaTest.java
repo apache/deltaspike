@@ -18,19 +18,8 @@
  */
 package org.apache.deltaspike.data.impl.criteria;
 
-import static org.apache.deltaspike.data.test.util.TestDeployments.initDeployment;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
 import jakarta.inject.Inject;
 import jakarta.persistence.NonUniqueResultException;
-
 import org.apache.deltaspike.data.test.TransactionalTestCase;
 import org.apache.deltaspike.data.test.domain.OneToMany;
 import org.apache.deltaspike.data.test.domain.OneToOne;
@@ -44,6 +33,13 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import static org.apache.deltaspike.data.test.util.TestDeployments.initDeployment;
+import static org.junit.Assert.*;
 
 @Category(WebProfileCategory.class)
 public class CriteriaTest extends TransactionalTestCase
@@ -280,8 +276,8 @@ public class CriteriaTest extends TransactionalTestCase
         assertEquals(Integer.valueOf(10), result[0]);
         assertEquals(Integer.valueOf(99), result[1]);
         assertTrue(result[2] instanceof java.sql.Date);
-        assertTrue(result[3] instanceof java.sql.Time);
-        assertTrue(result[4] instanceof java.sql.Timestamp);
+        assertTrue(result[3] instanceof java.sql.Time || result[3] instanceof java.time.OffsetTime);
+        assertTrue(result[4] instanceof java.sql.Timestamp || result[4] instanceof java.time.OffsetDateTime);
     }
 
     @Test
