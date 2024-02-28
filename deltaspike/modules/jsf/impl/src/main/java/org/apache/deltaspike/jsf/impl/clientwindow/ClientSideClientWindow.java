@@ -18,17 +18,18 @@
  */
 package org.apache.deltaspike.jsf.impl.clientwindow;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import jakarta.faces.FacesException;
 import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.Collections;
-import java.util.Map;
 import org.apache.deltaspike.jsf.impl.util.ClientWindowHelper;
 import org.apache.deltaspike.jsf.impl.util.JsfUtils;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Collections;
+import java.util.Map;
 
 public class ClientSideClientWindow extends DeltaSpikeClientWindow
 {
@@ -81,7 +82,7 @@ public class ClientSideClientWindow extends DeltaSpikeClientWindow
             if (id == null || newWindowIdRequested)
             {
                 // GET request without windowId - send windowhandlerfilter.html to get the windowId
-                sendWindowHandlerHtml(facesContext.getExternalContext(), id);
+                sendWindowHandlerHtml(facesContext, facesContext.getExternalContext(), id);
                 facesContext.responseComplete();
             }
         }
@@ -96,7 +97,7 @@ public class ClientSideClientWindow extends DeltaSpikeClientWindow
         return (noscript != null && "true".equals(noscript));
     }
 
-    protected void sendWindowHandlerHtml(ExternalContext externalContext, String windowId)
+    protected void sendWindowHandlerHtml(FacesContext facesContext, ExternalContext externalContext, String windowId)
     {
         HttpServletResponse httpResponse = (HttpServletResponse) externalContext.getResponse();
 
@@ -119,7 +120,7 @@ public class ClientSideClientWindow extends DeltaSpikeClientWindow
             // could be a different when using forwards
             windowHandlerHtml = windowHandlerHtml.replace(REQUEST_URL_REPLACE_PATTERN,
                                                           org.owasp.encoder.Encode.forJavaScriptBlock(
-                                                              ClientWindowHelper.constructRequestUrl(externalContext)));
+                                                              ClientWindowHelper.constructRequestUrl(facesContext, externalContext)));
             // set the noscript-URL for users with no JavaScript
             windowHandlerHtml =
                 windowHandlerHtml.replace(NOSCRIPT_URL_REPLACE_PATTERN,
