@@ -77,7 +77,7 @@ public abstract class ClientWindowHelper
 
         // let's reuse the logic from MyFaces instead
         HttpServletResponse servletResponse = (HttpServletResponse) externalContext.getResponse();
-        servletResponse.encodeRedirectURL(encodeURL(url, facesContext, servletResponse.getCharacterEncoding()));
+        url = servletResponse.encodeRedirectURL(encodeURL(url, facesContext, servletResponse.getCharacterEncoding()));
 
         return url;
     }
