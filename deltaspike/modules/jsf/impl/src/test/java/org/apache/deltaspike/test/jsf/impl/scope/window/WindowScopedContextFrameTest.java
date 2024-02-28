@@ -23,14 +23,11 @@ import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.apache.deltaspike.test.jsf.impl.config.TestJsfModuleConfig;
 import org.apache.deltaspike.test.jsf.impl.scope.window.beans.WindowScopedBackingBean;
 import org.apache.deltaspike.test.jsf.impl.util.ArchiveUtils;
-import org.apache.deltaspike.test.utils.BeansXmlUtil;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
-import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
 import org.junit.Test;
@@ -54,9 +51,6 @@ import static org.apache.deltaspike.test.utils.BeansXmlUtil.BEANS_XML_ALL;
 public class WindowScopedContextFrameTest
 {
     private static final Logger log = Logger.getLogger(WindowScopedContextFrameTest.class.getName());
-
-    @Drone
-    private WebDriver driver;
 
     @ArquillianResource
     private URL contextPath;
@@ -83,6 +77,7 @@ public class WindowScopedContextFrameTest
     @RunAsClient
     public void testWindowId() throws Exception
     {
+        WebDriver driver = new HtmlUnitDriver(true);
         System.out.println("contextpath= " + contextPath);
 
         //X comment this in if you like to debug the server

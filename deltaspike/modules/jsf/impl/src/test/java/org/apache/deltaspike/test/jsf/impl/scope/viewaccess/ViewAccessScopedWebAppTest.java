@@ -18,20 +18,15 @@
  */
 package org.apache.deltaspike.test.jsf.impl.scope.viewaccess;
 
-import java.net.URL;
-
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.apache.deltaspike.test.jsf.impl.scope.viewaccess.beans.ViewAccessScopedBeanX;
 import org.apache.deltaspike.test.jsf.impl.scope.viewaccess.beans.ViewAccessScopedBeanY;
 import org.apache.deltaspike.test.jsf.impl.util.ArchiveUtils;
-import org.apache.deltaspike.test.utils.BeansXmlUtil;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
-import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
 import org.junit.Test;
@@ -40,7 +35,10 @@ import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import java.net.URL;
 
 import static org.apache.deltaspike.test.utils.BeansXmlUtil.BEANS_XML_ALL;
 
@@ -48,9 +46,6 @@ import static org.apache.deltaspike.test.utils.BeansXmlUtil.BEANS_XML_ALL;
 @Category(WebProfileCategory.class)
 public class ViewAccessScopedWebAppTest
 {
-    @Drone
-    private WebDriver driver;
-
     @ArquillianResource
     private URL contextPath;
 
@@ -76,6 +71,7 @@ public class ViewAccessScopedWebAppTest
     @RunAsClient
     public void testForward() throws Exception
     {
+        WebDriver driver = new HtmlUnitDriver(true);
         driver.get(new URL(contextPath, "page1.xhtml").toString());
 
         WebElement inputFieldX = driver.findElement(By.id("testForm1:valueInputX"));

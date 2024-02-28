@@ -18,14 +18,10 @@
  */
 package org.apache.deltaspike.test.jsf.impl.config.view.navigation.parameter.uc003;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.apache.deltaspike.test.jsf.impl.util.ArchiveUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
-import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -37,15 +33,17 @@ import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 
 @RunWith(Arquillian.class)
 @Category(WebProfileCategory.class)
 public class NavigationParameterTest
 {
-    @Drone
-    private WebDriver driver;
 
     @ArquillianResource
     private URL contextPath;
@@ -70,6 +68,7 @@ public class NavigationParameterTest
     @RunAsClient
     public void testNavigationActionWithParameter() throws MalformedURLException
     {
+        WebDriver driver = new HtmlUnitDriver(true);
         driver.get(new URL(contextPath, "origin.xhtml").toString());
         WebElement button = driver.findElement(By.id("parameter:pb003ActionMethod"));
         button.click();

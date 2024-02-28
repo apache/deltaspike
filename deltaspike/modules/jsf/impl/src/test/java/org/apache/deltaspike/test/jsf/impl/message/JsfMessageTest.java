@@ -19,20 +19,15 @@
 package org.apache.deltaspike.test.jsf.impl.message;
 
 
-import java.net.URL;
-
 import org.apache.deltaspike.test.category.WebProfileCategory;
 import org.apache.deltaspike.test.jsf.impl.config.TestJsfModuleConfig;
 import org.apache.deltaspike.test.jsf.impl.message.beans.JsfMessageBackingBean;
 import org.apache.deltaspike.test.jsf.impl.util.ArchiveUtils;
-import org.apache.deltaspike.test.utils.BeansXmlUtil;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
-import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
 import org.junit.Test;
@@ -40,7 +35,10 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import java.net.URL;
 
 import static org.apache.deltaspike.test.utils.BeansXmlUtil.BEANS_XML_ALL;
 
@@ -52,9 +50,6 @@ import static org.apache.deltaspike.test.utils.BeansXmlUtil.BEANS_XML_ALL;
 @Category(WebProfileCategory.class)
 public class JsfMessageTest
 {
-    @Drone
-    private WebDriver driver;
-
     @ArquillianResource
     private URL contextPath;
 
@@ -79,6 +74,7 @@ public class JsfMessageTest
     @RunAsClient
     public void testEnglishMessages() throws Exception
     {
+        WebDriver driver = new HtmlUnitDriver(true);
         driver.get(new URL(contextPath, "page.xhtml").toString());
 
         //X comment this in if you like to debug the server
@@ -116,6 +112,7 @@ public class JsfMessageTest
     @RunAsClient
     public void testGermanMessages() throws Exception
     {
+        WebDriver driver = new HtmlUnitDriver(true);
         driver.get(new URL(contextPath, "page.xhtml?lang=de").toString());
 
         // check the JSF FacesMessages
