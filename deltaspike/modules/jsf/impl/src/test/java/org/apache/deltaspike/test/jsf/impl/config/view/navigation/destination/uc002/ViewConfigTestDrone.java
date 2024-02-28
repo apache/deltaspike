@@ -80,7 +80,7 @@ public class ViewConfigTestDrone
 
         WebElement button = driver.findElement(By.id("destination:pb002ActionWithoutError"));
         button.click();
-        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("overviewPage"),
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(driver.findElement(By.id("overviewPage")),
                 "You arrived at overview page").apply(driver));
         // Was redirected ?
         Assert.assertTrue(driver.getCurrentUrl().contains("overview.xhtml"));
@@ -94,7 +94,7 @@ public class ViewConfigTestDrone
 
         WebElement button = driver.findElement(By.id("destination:pb002ActionWithError"));
         button.click();
-        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("customErrorPage"),
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(driver.findElement(By.id("customErrorPage")),
                 "This is a custom error page").apply(driver));
     }
 
@@ -107,7 +107,8 @@ public class ViewConfigTestDrone
 
         WebElement button = driver.findElement(By.id("destination:pb002RestrictedToPages"));
         button.click();
-        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("homePage"), "You arrived at home page")
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(
+                driver.findElement(By.id("homePage")), "You arrived at home page")
                 .apply(driver));
         // Was fowarded ?
         Assert.assertTrue(driver.getCurrentUrl().contains("origin.xhtml"));

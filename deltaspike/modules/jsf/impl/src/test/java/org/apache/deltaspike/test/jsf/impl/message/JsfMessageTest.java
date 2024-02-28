@@ -90,26 +90,26 @@ public class JsfMessageTest
         Assert.assertNotNull(ExpectedConditions.presenceOfElementLocated(By.xpath("id('messages')")).apply(driver));
 
         Assert.assertTrue(ExpectedConditions.textToBePresentInElement(
-                By.xpath("id('messages')/ul/li[1]"), "message with details warnInfo!").apply(driver));
+                driver.findElement(By.xpath("id('messages')/ul/li[1]")), "message with details warnInfo!").apply(driver));
 
         Assert.assertTrue(ExpectedConditions.textToBePresentInElement(
-                By.xpath("id('messages')/ul/li[2]"), "message without detail but parameter errorInfo.").apply(driver));
+                driver.findElement(By.xpath("id('messages')/ul/li[2]")), "message without detail but parameter errorInfo.").apply(driver));
 
         Assert.assertTrue(ExpectedConditions.textToBePresentInElement(
-                By.xpath("id('messages')/ul/li[3]"), "a simple message without a param.").apply(driver));
+                driver.findElement(By.xpath("id('messages')/ul/li[3]")), "a simple message without a param.").apply(driver));
 
         Assert.assertTrue(ExpectedConditions.textToBePresentInElement(
-                By.xpath("id('messages')/ul/li[4]"), "simple message with a string param fatalInfo.").apply(driver));
+                driver.findElement(By.xpath("id('messages')/ul/li[4]")), "simple message with a string param fatalInfo.").apply(driver));
 
         // check the free message usage
         Assert.assertTrue(ExpectedConditions.textToBePresentInElement(
-                By.id("test:valueOutput"), "a simple message without a param.").apply(driver));
+                driver.findElement(By.id("test:valueOutput")), "a simple message without a param.").apply(driver));
 
         // and also the usage via direct EL invocation
         Assert.assertTrue(ExpectedConditions.textToBePresentInElement(
-                By.id("test:elOutput"), "a simple message without a param.").apply(driver));
+                driver.findElement(By.id("test:elOutput")), "a simple message without a param.").apply(driver));
         Assert.assertTrue(ExpectedConditions.textToBePresentInElement(
-                By.id("test:elOutputWithParam"), "simple message with a string param hiho.").apply(driver));
+                driver.findElement(By.id("test:elOutputWithParam")), "simple message with a string param hiho.").apply(driver));
     }
 
     @Test
@@ -122,20 +122,20 @@ public class JsfMessageTest
         Assert.assertNotNull(ExpectedConditions.presenceOfElementLocated(By.xpath("id('messages')")).apply(driver));
 
         Assert.assertTrue(ExpectedConditions.textToBePresentInElement(
-                By.xpath("id('messages')/ul/li[1]"), "Nachricht mit Details warnInfo!").apply(driver));
+                driver.findElement(By.xpath("id('messages')/ul/li[1]")), "Nachricht mit Details warnInfo!").apply(driver));
 
         Assert.assertTrue(ExpectedConditions.textToBePresentInElement(
-                By.xpath("id('messages')/ul/li[2]"), "Nachricht ohne Details aber mit Parameter errorInfo.").apply(driver));
+                driver.findElement(By.xpath("id('messages')/ul/li[2]")), "Nachricht ohne Details aber mit Parameter errorInfo.").apply(driver));
 
         Assert.assertTrue(ExpectedConditions.textToBePresentInElement(
-                By.xpath("id('messages')/ul/li[3]"), "Einfache Nachricht ohne Parameter.").apply(driver));
+                driver.findElement(By.xpath("id('messages')/ul/li[3]")), "Einfache Nachricht ohne Parameter.").apply(driver));
 
         Assert.assertTrue(ExpectedConditions.textToBePresentInElement(
-                By.xpath("id('messages')/ul/li[4]"), "Einfache Nachricht mit String Parameter fatalInfo.").apply(driver));
+                driver.findElement(By.xpath("id('messages')/ul/li[4]")), "Einfache Nachricht mit String Parameter fatalInfo.").apply(driver));
 
         // check the free message usage
         Assert.assertTrue(ExpectedConditions.textToBePresentInElement(
-                By.id("test:valueOutput"), "Einfache Nachricht ohne Parameter.").apply(driver));
+                driver.findElement(By.id("test:valueOutput")), "Einfache Nachricht ohne Parameter.").apply(driver));
     }
 
 }

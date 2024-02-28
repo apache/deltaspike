@@ -72,6 +72,7 @@ public class ViewConfigTestDrone
     {
         driver.get(new URL(contextPath, "simplePageConfig.xhtml").toString());
 
-        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("pageBean003Called"), "true").apply(driver));
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(
+                driver.findElement(By.id("pageBean003Called")), "true").apply(driver));
     }
 }

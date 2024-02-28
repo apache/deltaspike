@@ -77,7 +77,7 @@ public class ViewConfigTestDrone
 
         WebElement button = driver.findElement(By.id("destination:pb004ActionMethod"));
         button.click();
-        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("indexPage"),
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(driver.findElement(By.id("indexPage")),
                 "You arrived at index page").apply(driver));
     }
     
@@ -89,7 +89,7 @@ public class ViewConfigTestDrone
 
         WebElement button = driver.findElement(By.id("destination:pb004ActionMethod2"));
         button.click();
-        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("overviewPage"),
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(driver.findElement(By.id("overviewPage")),
                 "You arrived at overview page").apply(driver));
     }
 

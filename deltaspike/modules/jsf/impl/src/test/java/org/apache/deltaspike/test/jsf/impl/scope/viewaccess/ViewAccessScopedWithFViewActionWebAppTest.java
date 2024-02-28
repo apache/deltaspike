@@ -86,8 +86,10 @@ public class ViewAccessScopedWithFViewActionWebAppTest
         WebElement button = driver.findElement(By.id("form:next"));
         button.click();
 
-        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("firstValue"), "abc").apply(driver));
-        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("secondValue"), "xyz").apply(driver));
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(
+                driver.findElement(By.id("firstValue")), "abc").apply(driver));
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(
+                driver.findElement(By.id("secondValue")), "xyz").apply(driver));
 
     }
 }

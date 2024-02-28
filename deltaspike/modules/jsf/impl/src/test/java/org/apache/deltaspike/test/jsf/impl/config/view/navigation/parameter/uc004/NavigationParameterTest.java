@@ -84,7 +84,7 @@ public class NavigationParameterTest
         button = driver.findElement(By.id("parameter:pb004ActionMethod"));
         button.click();
 
-        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("simplePageConfig"),
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(driver.findElement(By.id("simplePageConfig")),
                 "You arrived at simplePageConfig page")
                 .apply(driver));
         Assert.assertTrue(driver.getCurrentUrl().contains("cv="));

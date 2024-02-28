@@ -79,7 +79,7 @@ public class NavigationParameterTest
 
         WebElement button = driver.findElement(By.id("parameter:pb005Overview"));
         button.click();
-        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("overviewPage"),
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(driver.findElement(By.id("overviewPage")),
                 "You arrived at overview page")
                 .apply(driver));
         System.out.println(driver.getCurrentUrl());
@@ -95,7 +95,7 @@ public class NavigationParameterTest
 
         WebElement button = driver.findElement(By.id("parameter:pb005Index"));
         button.click();
-        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("indexPage"),
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(driver.findElement(By.id("indexPage")),
                 "You arrived at index page")
                 .apply(driver));
         System.out.println(driver.getCurrentUrl());

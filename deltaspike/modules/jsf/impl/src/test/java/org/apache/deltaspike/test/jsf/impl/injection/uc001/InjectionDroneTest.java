@@ -76,7 +76,8 @@ public class InjectionDroneTest
         convertedValue.sendKeys("123");
         WebElement testConverterButton = driver.findElement(By.id("converter:testConverterButton"));
         testConverterButton.click();
-        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("messages"), "Worked").apply(driver));
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(
+                driver.findElement(By.id("messages")), "Worked").apply(driver));
     }
 
     @Test
@@ -88,7 +89,8 @@ public class InjectionDroneTest
         convertedValue.sendKeys("String Value");
         WebElement testConverterButton = driver.findElement(By.id("converter:testConverterButton"));
         testConverterButton.click();
-        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("converter:errorMessage"), "Value is not an Integer").apply(driver));
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(
+                driver.findElement(By.id("converter:errorMessage")), "Value is not an Integer").apply(driver));
     }
 
     @Test
@@ -100,7 +102,8 @@ public class InjectionDroneTest
         convertedValue.sendKeys("DeltaSpike");
         WebElement testConverterButton = driver.findElement(By.id("validator:testValidatorButton"));
         testConverterButton.click();
-        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("messages"), "Worked").apply(driver));
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(
+                driver.findElement(By.id("messages")), "Worked").apply(driver));
     }
 
     @Test
@@ -112,6 +115,7 @@ public class InjectionDroneTest
         convertedValue.sendKeys("Wrong Value");
         WebElement testConverterButton = driver.findElement(By.id("validator:testValidatorButton"));
         testConverterButton.click();
-        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("validator:errorMessage"), "Not a valid value").apply(driver));
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(
+                driver.findElement(By.id("validator:errorMessage")), "Not a valid value").apply(driver));
     }
 }

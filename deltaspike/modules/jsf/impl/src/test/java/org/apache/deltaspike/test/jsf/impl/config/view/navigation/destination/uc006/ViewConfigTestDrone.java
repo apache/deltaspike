@@ -77,7 +77,7 @@ public class ViewConfigTestDrone
 
         WebElement button = driver.findElement(By.id("destination:pb006ActionMethod"));
         button.click();
-        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("step1"),
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(driver.findElement(By.id("step1")),
                 "You arrived at step1 page").apply(driver));
     }
 

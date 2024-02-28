@@ -83,7 +83,8 @@ public class PreViewConfigNavigateEventTest
         Assert.assertNotNull(button);
         button.click();
         // Index Page is shown instead of DefaultErrorView because PreViewConfigNavigateEvent changed the navigation
-        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("indexPage"), "You arrived at index page")
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(
+                driver.findElement(By.id("indexPage")), "You arrived at index page")
                 .apply(driver));
     }
 

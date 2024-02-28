@@ -86,12 +86,15 @@ public class ViewAccessScopedWebAppTest
         WebElement button = driver.findElement(By.id("testForm1:next"));
         button.click();
 
-        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("valueX"), "abc").apply(driver));
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(
+                driver.findElement(By.id("valueX")), "abc").apply(driver));
 
         button = driver.findElement(By.id("testForm2:back"));
         button.click();
 
-        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("valueOutputX"), "abc").apply(driver));
-        Assert.assertFalse(ExpectedConditions.textToBePresentInElement(By.id("valueOutputY"), "xyz").apply(driver));
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(
+                driver.findElement(By.id("valueOutputX")), "abc").apply(driver));
+        Assert.assertFalse(ExpectedConditions.textToBePresentInElement(
+                driver.findElement( By.id("valueOutputY")), "xyz").apply(driver));
     }
 }

@@ -77,7 +77,8 @@ public class InjectionDroneTest
         convertedValue.sendKeys("DeltaSpike");
         WebElement testConverterButton = driver.findElement(By.id("validator:testValidatorButton"));
         testConverterButton.click();
-        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("messages"), "Worked").apply(driver));
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(
+                driver.findElement(By.id("messages")), "Worked").apply(driver));
     }
 
     @Test
@@ -89,7 +90,7 @@ public class InjectionDroneTest
         convertedValue.sendKeys("Wrong Value");
         WebElement testConverterButton = driver.findElement(By.id("validator:testValidatorButton"));
         testConverterButton.click();
-        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("validator:errorMessage"),
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(driver.findElement(By.id("validator:errorMessage")),
                 "The valid value should be DeltaSpike").apply(driver));
     }
 }

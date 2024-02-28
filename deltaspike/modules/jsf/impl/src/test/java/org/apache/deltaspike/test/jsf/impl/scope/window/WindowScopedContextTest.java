@@ -98,7 +98,8 @@ public class WindowScopedContextTest
         WebElement button = driver.findElement(By.id("test:saveButton"));
         button.click();
 
-        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("valueOutput"), "23").apply(driver));
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(
+                driver.findElement(By.id("valueOutput")), "23").apply(driver));
 
     }
 

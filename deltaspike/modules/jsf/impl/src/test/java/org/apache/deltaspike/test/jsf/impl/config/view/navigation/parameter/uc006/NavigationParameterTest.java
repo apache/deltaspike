@@ -78,7 +78,7 @@ public class NavigationParameterTest
 
         WebElement button = driver.findElement(By.id("parameter:pb006AnyMethod"));
         button.click();
-        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(By.id("customErrorPage"),
+        Assert.assertTrue(ExpectedConditions.textToBePresentInElement(driver.findElement(By.id("customErrorPage")),
                 "This is a custom error page")
                 .apply(driver));
     }
