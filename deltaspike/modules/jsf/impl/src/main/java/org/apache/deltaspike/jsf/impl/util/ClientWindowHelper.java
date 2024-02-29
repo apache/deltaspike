@@ -26,17 +26,12 @@ import jakarta.faces.lifecycle.ClientWindow;
 import jakarta.faces.render.ResponseStateManager;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.deltaspike.jsf.api.config.base.JsfBaseConfig;
-import org.apache.myfaces.core.api.shared.lang.Assert;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -85,7 +80,10 @@ public abstract class ClientWindowHelper
     // copied from MyFaces
     private static String encodeURL(String baseUrl, FacesContext facesContext, String encoding)
     {
-        Assert.notNull(baseUrl, "url");
+        if (baseUrl == null)
+        {
+            throw new NullPointerException("baseUrl is null");
+        }
 
         String fragment = null;
         String queryString = null;
