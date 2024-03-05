@@ -19,6 +19,7 @@
 package org.apache.deltaspike.test.core.api.partialbean.uc007;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.test.core.api.partialbean.shared.CustomInterceptor;
 import org.apache.deltaspike.test.core.api.partialbean.shared.CustomInterceptorImpl;
 import org.apache.deltaspike.test.core.api.partialbean.shared.CustomInterceptorState;
 import org.apache.deltaspike.test.core.api.partialbean.shared.TestPartialBeanBinding;
@@ -39,8 +40,6 @@ import org.junit.runner.RunWith;
 @RunWith(Arquillian.class)
 public class MethodLevelInterceptorTest
 {
-    public static final String CONTAINER_WELD_2_0_0 = "weld-2\\.0\\.0\\..*";
-
     @Deployment
     public static WebArchive war()
     {
@@ -53,16 +52,9 @@ public class MethodLevelInterceptorTest
         String simpleName = MethodLevelInterceptorTest.class.getSimpleName();
         String archiveName = simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1);
 
-        //don't create a completely empty web-archive
-        if (CdiContainerUnderTest.is(CONTAINER_WELD_2_0_0))
-        {
-            return ShrinkWrap.create(WebArchive.class, archiveName + ".war")
-                    .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndPartialBeanArchive());
-        }
-
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, archiveName + ".jar")
-                .addPackage(MethodLevelInterceptorTest.class.getPackage())
-                .addPackage(TestPartialBeanBinding.class.getPackage())
+                .addPackage(PartialBean.class.getPackage())
+                .addPackage(CustomInterceptor.class.getPackage())
                 .addAsManifestResource(beansXml, "beans.xml");
 
         return ShrinkWrap.create(WebArchive.class, archiveName + ".war")
@@ -74,9 +66,6 @@ public class MethodLevelInterceptorTest
     @Test
     public void testMethodLevelInterceptor() throws Exception
     {
-        // this test is known to not work under weld-2.0.0.Final and weld-2.0.0.SP1
-        Assume.assumeTrue(!CdiContainerUnderTest.is(CONTAINER_WELD_2_0_0));
-
         PartialBean partialBean = BeanProvider.getContextualReference(PartialBean.class);
         CustomInterceptorState state = BeanProvider.getContextualReference(CustomInterceptorState.class);
 
@@ -88,9 +77,6 @@ public class MethodLevelInterceptorTest
     @Test
     public void testMethodLevelInterceptorStereotype() throws Exception
     {
-        // this test is known to not work under weld-2.0.0.Final and weld-2.0.0.SP1
-        Assume.assumeTrue(!CdiContainerUnderTest.is(CONTAINER_WELD_2_0_0));
-
         PartialBean partialBean = BeanProvider.getContextualReference(PartialBean.class);
         CustomInterceptorState state = BeanProvider.getContextualReference(CustomInterceptorState.class);
 
@@ -102,9 +88,6 @@ public class MethodLevelInterceptorTest
     @Test
     public void testMethodLevelInterceptorOnAbstractMethod() throws Exception
     {
-        // this test is known to not work under weld-2.0.0.Final and weld-2.0.0.SP1
-        Assume.assumeTrue(!CdiContainerUnderTest.is(CONTAINER_WELD_2_0_0));
-
         PartialBean partialBean = BeanProvider.getContextualReference(PartialBean.class);
         CustomInterceptorState state = BeanProvider.getContextualReference(CustomInterceptorState.class);
 

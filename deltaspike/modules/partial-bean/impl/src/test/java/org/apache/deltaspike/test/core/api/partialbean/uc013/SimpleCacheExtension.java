@@ -26,6 +26,6 @@ public class SimpleCacheExtension implements Extension
 {
     void discoverInterceptorBindings(@Observes BeforeBeanDiscovery beforeBeanDiscoveryEvent)
     {
-        beforeBeanDiscoveryEvent.addInterceptorBinding(SimpleCache.class);
+        //beforeBeanDiscoveryEvent.addInterceptorBinding(SimpleCache.class);
     }
 }

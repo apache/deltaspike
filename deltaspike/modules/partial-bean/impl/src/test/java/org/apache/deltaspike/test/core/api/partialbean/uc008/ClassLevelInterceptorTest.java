@@ -39,8 +39,6 @@ import org.junit.runner.RunWith;
 @RunWith(Arquillian.class)
 public class ClassLevelInterceptorTest
 {
-    public static final String CONTAINER_WELD_2_0_0 = "weld-2\\.0\\.0\\..*";
-
     @Deployment
     public static WebArchive war()
     {
@@ -52,13 +50,6 @@ public class ClassLevelInterceptorTest
 
         String simpleName = ClassLevelInterceptorTest.class.getSimpleName();
         String archiveName = simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1);
-
-        //don't create a completely empty web-archive
-        if (CdiContainerUnderTest.is(CONTAINER_WELD_2_0_0))
-        {
-            return ShrinkWrap.create(WebArchive.class, archiveName + ".war")
-                    .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndPartialBeanArchive());
-        }
 
         JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, archiveName + ".jar")
                 .addPackage(ClassLevelInterceptorTest.class.getPackage())
@@ -74,9 +65,6 @@ public class ClassLevelInterceptorTest
     @Test
     public void testClassLevelInterceptor() throws Exception
     {
-        // this test is known to not work under weld-2.0.0.Final and weld-2.0.0.SP1
-        Assume.assumeTrue(!CdiContainerUnderTest.is(CONTAINER_WELD_2_0_0));
-
         PartialBean partialBean = BeanProvider.getContextualReference(PartialBean.class);
         CustomInterceptorState state = BeanProvider.getContextualReference(CustomInterceptorState.class);
 
@@ -89,9 +77,6 @@ public class ClassLevelInterceptorTest
     @Test
     public void testClassLevelInterceptorOnAbstractMethod() throws Exception
     {
-        // this test is known to not work under weld-2.0.0.Final and weld-2.0.0.SP1
-        Assume.assumeTrue(!CdiContainerUnderTest.is(CONTAINER_WELD_2_0_0));
-
         PartialBean partialBean = BeanProvider.getContextualReference(PartialBean.class);
         CustomInterceptorState state = BeanProvider.getContextualReference(CustomInterceptorState.class);
 
