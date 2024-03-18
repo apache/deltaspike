@@ -39,7 +39,7 @@ import org.junit.runner.RunWith;
 @RunWith(Arquillian.class)
 public class MethodLevelInterceptorTest
 {
-    public static final String CONTAINER_WELD_2_0_0 = "weld-2\\.0\\.0\\..*";
+    public static final String CONTAINER_WELD_5_0 = "weld-5\\.0\\..*";
 
     @Deployment
     public static WebArchive war()
@@ -54,7 +54,7 @@ public class MethodLevelInterceptorTest
         String archiveName = simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1);
 
         //don't create a completely empty web-archive
-        if (CdiContainerUnderTest.is(CONTAINER_WELD_2_0_0))
+        if (CdiContainerUnderTest.is(CONTAINER_WELD_5_0))
         {
             return ShrinkWrap.create(WebArchive.class, archiveName + ".war")
                     .addAsLibraries(ArchiveUtils.getDeltaSpikeCoreAndPartialBeanArchive());
@@ -74,8 +74,8 @@ public class MethodLevelInterceptorTest
     @Test
     public void testMethodLevelInterceptor() throws Exception
     {
-        // this test is known to not work under weld-2.0.0.Final and weld-2.0.0.SP1
-        Assume.assumeTrue(!CdiContainerUnderTest.is(CONTAINER_WELD_2_0_0));
+        // this test is known to not work under weld-5.0.x
+        Assume.assumeTrue(!CdiContainerUnderTest.is(CONTAINER_WELD_5_0));
 
         PartialBean partialBean = BeanProvider.getContextualReference(PartialBean.class);
         CustomInterceptorState state = BeanProvider.getContextualReference(CustomInterceptorState.class);
@@ -88,8 +88,8 @@ public class MethodLevelInterceptorTest
     @Test
     public void testMethodLevelInterceptorStereotype() throws Exception
     {
-        // this test is known to not work under weld-2.0.0.Final and weld-2.0.0.SP1
-        Assume.assumeTrue(!CdiContainerUnderTest.is(CONTAINER_WELD_2_0_0));
+        // this test is known to not work under weld-5.0.x
+        Assume.assumeTrue(!CdiContainerUnderTest.is(CONTAINER_WELD_5_0));
 
         PartialBean partialBean = BeanProvider.getContextualReference(PartialBean.class);
         CustomInterceptorState state = BeanProvider.getContextualReference(CustomInterceptorState.class);
@@ -102,8 +102,8 @@ public class MethodLevelInterceptorTest
     @Test
     public void testMethodLevelInterceptorOnAbstractMethod() throws Exception
     {
-        // this test is known to not work under weld-2.0.0.Final and weld-2.0.0.SP1
-        Assume.assumeTrue(!CdiContainerUnderTest.is(CONTAINER_WELD_2_0_0));
+        // this test is known to not work under weld-5.0.x
+        Assume.assumeTrue(!CdiContainerUnderTest.is(CONTAINER_WELD_5_0));
 
         PartialBean partialBean = BeanProvider.getContextualReference(PartialBean.class);
         CustomInterceptorState state = BeanProvider.getContextualReference(CustomInterceptorState.class);
