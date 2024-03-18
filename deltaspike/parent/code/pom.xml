@@ -607,7 +607,6 @@
                     <version>${arquillian.version}</version>
                     <scope>test</scope>
                 </dependency>
-
             </dependencies>
             <build>
                 <plugins>
@@ -751,17 +750,10 @@
             </properties>
 
             <dependencies>
-
                 <dependency>
-                    <groupId>jakarta.enterprise</groupId>
-                    <artifactId>cdi-api</artifactId>
-                    <version>1.1</version>
-                    <scope>provided</scope>
-                </dependency>
-                <dependency>
-                    <groupId>jakarta.inject</groupId>
-                    <artifactId>jakarta.inject</artifactId>
-                    <version>1</version>
+                    <groupId>org.jboss.weld</groupId>
+                    <artifactId>weld-core-impl</artifactId>
+                    <version>${weld.version}</version>
                     <scope>provided</scope>
                 </dependency>
                 <dependency>
@@ -921,7 +913,7 @@
                         <artifactId>maven-dependency-plugin</artifactId>
                         <executions>
                             <execution>
-                                <id>unpack-glassfish4</id>
+                                <id>unpack-payara</id>
                                 <phase>generate-test-resources</phase>
                                 <goals>
                                     <goal>unpack</goal>
@@ -947,14 +939,13 @@
                         <artifactId>maven-antrun-plugin</artifactId>
                         <executions>
                             <execution>
-                                <id>prepare-glassfish4</id>
+                                <id>prepare-payara</id>
                                 <phase>process-test-resources</phase>
                                 <goals>
                                     <goal>run</goal>
                                 </goals>
                                 <configuration>
                                     <target>
-
                                         <!-- Change all TCP ports from "xxxx" to "2xxxx" -->
                                         <replaceregexp file="${container.unpack.directory}/payara6/glassfish/domains/domain1/config/domain.xml" match="port=&quot;(\d{4})&quot;" replace="port=&quot;2\1&quot;" flags="g" />
                                         <replace file="${container.unpack.directory}/payara6/glassfish/domains/domain1/config/domain.xml" token="value=&quot;7676&quot;" value="value=&quot;27676&quot;" />
@@ -962,7 +953,6 @@
                                         <!-- Replace the default datasource with an in-memory one -->
                                         <replace file="${container.unpack.directory}/payara6/glassfish/domains/domain1/config/domain.xml" token="datasource-classname=&quot;org.apache.derby.jdbc.ClientDataSource&quot;" value="datasource-classname=&quot;org.apache.derby.jdbc.EmbeddedDataSource&quot;" />
                                         <replace file="${container.unpack.directory}/payara6/glassfish/domains/domain1/config/domain.xml" token="value=&quot;sun-appserv-samples&quot;" value="value=&quot;memory:deltaspike&quot;" />
-
                                     </target>
                                 </configuration>
                             </execution>
@@ -972,6 +962,125 @@
             </build>
         </profile>
 
+        <profile>
+            <!--
+             * Glassfish will be downloaded as maven dependency
+             *
+             * Start the build with:
+             * $> mvn clean install -Pglassfish-build-managed
+             *
+             -->
+            <id>glassfish-build-managed</id>
+
+            <repositories>
+                <repository>
+                    <id>jitpack.io</id>
+                    <url>https://jitpack.io</url>
+                </repository>
+            </repositories>
+
+            <properties>
+                <weld.version>5.1.2.Final</weld.version>
+                <cdicontainer.version>weld-${weld.version}</cdicontainer.version>
+                <glassfish.version>7.0.13</glassfish.version>
+            </properties>
+
+            <dependencies>
+                <dependency>
+                    <groupId>org.jboss.weld</groupId>
+                    <artifactId>weld-core-impl</artifactId>
+                    <version>${weld.version}</version>
+                    <scope>provided</scope>
+                </dependency>
+                <dependency>
+                    <groupId>jakarta.servlet</groupId>
+                    <artifactId>jakarta.servlet-api</artifactId>
+                    <version>${jakarta.servlet-api.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>com.github.hantsy.arquillian-container-glassfish-jakarta</groupId>
+                    <artifactId>arquillian-glassfish-managed-jakarta</artifactId>
+                    <version>7.0.10</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <systemPropertyVariables>
+                                <arquillian.launch>glassfish-build-managed</arquillian.launch>
+                                <arquillian.glassfish_home>${container.unpack.directory}/glassfish7</arquillian.glassfish_home>
+                                <org.apache.deltaspike.ProjectStage>UnitTest</org.apache.deltaspike.ProjectStage>
+                                <cdicontainer.version>${cdicontainer.version}</cdicontainer.version>
+                            </systemPropertyVariables>
+                            <!-- we just use groups to mark that a test should be executed only
+                            with specific environments. even though a java-ee6 application server has to be able to run
+                            all tests in theory, we have to exclude some tests because there are e.g. packaging issues or
+                            there are currently issues with arquillian. if a test isn't restricted to an environment,
+                            no category is used for the test-class. -->
+                            <excludedGroups>
+                                org.apache.deltaspike.test.category.SeCategory
+                            </excludedGroups>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>unpack-glassfish</id>
+                                <phase>generate-test-resources</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.glassfish.main.distributions</groupId>
+                                            <artifactId>glassfish</artifactId>
+                                            <version>${glassfish.version}</version>
+                                            <outputDirectory>${container.unpack.directory}</outputDirectory>
+                                            <type>zip</type>
+                                            <overWrite>false</overWrite>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>prepare-glassfish</id>
+                                <phase>process-test-resources</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <!-- Change all TCP ports from "xxxx" to "2xxxx" -->
+                                        <replaceregexp file="${container.unpack.directory}/glassfish7/glassfish/domains/domain1/config/domain.xml" match="port=&quot;(\d{4})&quot;" replace="port=&quot;2\1&quot;" flags="g" />
+                                        <replace file="${container.unpack.directory}/glassfish7/glassfish/domains/domain1/config/domain.xml" token="value=&quot;7676&quot;" value="value=&quot;27676&quot;" />
+
+                                        <!-- Replace the default datasource with an in-memory one -->
+                                        <replace file="${container.unpack.directory}/glassfish7/glassfish/domains/domain1/config/domain.xml" token="datasource-classname=&quot;org.apache.derby.jdbc.ClientDataSource&quot;" value="datasource-classname=&quot;org.apache.derby.jdbc.EmbeddedDataSource&quot;" />
+                                        <replace file="${container.unpack.directory}/glassfish7/glassfish/domains/domain1/config/domain.xml" token="value=&quot;sun-appserv-samples&quot;" value="value=&quot;memory:deltaspike&quot;" />
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 
 </project>
