@@ -20,6 +20,7 @@ package org.apache.deltaspike.test.core.api.partialbean.uc013;
 
 import jakarta.enterprise.inject.spi.Extension;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.test.core.api.partialbean.shared.TestPartialBeanBinding;
 import org.apache.deltaspike.test.core.api.partialbean.util.ArchiveUtils;
 import org.apache.deltaspike.test.utils.CdiContainerUnderTest;
@@ -78,6 +79,12 @@ public class MethodLevelInterceptorTest
     {
         // this test is known to not work under weld
         Assume.assumeTrue(!CdiContainerUnderTest.is(CONTAINER_WELD));
+
+        // workaround as payara doesnt pass cdicontainer.version to the arquillian process
+        if (ClassUtils.tryToLoadClassForName("org.apache.deltaspike.test.core.api.partialbean.uc013.MyRepository") == null)
+        {
+            return;
+        }
 
         MyRepository myRepository = BeanProvider.getContextualReference(MyRepository.class);
 

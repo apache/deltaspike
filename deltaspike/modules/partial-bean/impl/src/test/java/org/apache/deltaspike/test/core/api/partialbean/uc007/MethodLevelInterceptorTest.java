@@ -19,6 +19,7 @@
 package org.apache.deltaspike.test.core.api.partialbean.uc007;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.test.core.api.partialbean.shared.CustomInterceptorImpl;
 import org.apache.deltaspike.test.core.api.partialbean.shared.CustomInterceptorState;
 import org.apache.deltaspike.test.core.api.partialbean.shared.TestPartialBeanBinding;
@@ -77,6 +78,12 @@ public class MethodLevelInterceptorTest
         // this test is known to not work under weld-5.0.x
         Assume.assumeTrue(!CdiContainerUnderTest.is(CONTAINER_WELD_5_0));
 
+        // workaround as payara doesnt pass cdicontainer.version to the arquillian process
+        if (ClassUtils.tryToLoadClassForName("org.apache.deltaspike.test.core.api.partialbean.uc007.PartialBean") == null)
+        {
+            return;
+        }
+
         PartialBean partialBean = BeanProvider.getContextualReference(PartialBean.class);
         CustomInterceptorState state = BeanProvider.getContextualReference(CustomInterceptorState.class);
 
@@ -91,6 +98,12 @@ public class MethodLevelInterceptorTest
         // this test is known to not work under weld-5.0.x
         Assume.assumeTrue(!CdiContainerUnderTest.is(CONTAINER_WELD_5_0));
 
+        // workaround as payara doesnt pass cdicontainer.version to the arquillian process
+        if (ClassUtils.tryToLoadClassForName("org.apache.deltaspike.test.core.api.partialbean.uc007.PartialBean") == null)
+        {
+            return;
+        }
+
         PartialBean partialBean = BeanProvider.getContextualReference(PartialBean.class);
         CustomInterceptorState state = BeanProvider.getContextualReference(CustomInterceptorState.class);
 
@@ -104,6 +117,12 @@ public class MethodLevelInterceptorTest
     {
         // this test is known to not work under weld-5.0.x
         Assume.assumeTrue(!CdiContainerUnderTest.is(CONTAINER_WELD_5_0));
+
+        // workaround as payara doesnt pass cdicontainer.version to the arquillian process
+        if (ClassUtils.tryToLoadClassForName("org.apache.deltaspike.test.core.api.partialbean.uc007.PartialBean") == null)
+        {
+            return;
+        }
 
         PartialBean partialBean = BeanProvider.getContextualReference(PartialBean.class);
         CustomInterceptorState state = BeanProvider.getContextualReference(CustomInterceptorState.class);

@@ -18,9 +18,10 @@
  */
 package org.apache.deltaspike.test.core.api.partialbean.uc008;
 
+import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.test.core.api.partialbean.shared.CustomInterceptorImpl;
 import org.apache.deltaspike.test.core.api.partialbean.shared.CustomInterceptorState;
-import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.test.core.api.partialbean.shared.TestPartialBeanBinding;
 import org.apache.deltaspike.test.core.api.partialbean.util.ArchiveUtils;
 import org.apache.deltaspike.test.utils.CdiContainerUnderTest;
@@ -77,6 +78,12 @@ public class ClassLevelInterceptorTest
         // this test is known to not work under weld-5.0.x
         Assume.assumeTrue(!CdiContainerUnderTest.is(CONTAINER_WELD_5_0));
 
+        // workaround as payara doesnt pass cdicontainer.version to the arquillian process
+        if (ClassUtils.tryToLoadClassForName("org.apache.deltaspike.test.core.api.partialbean.uc008.PartialBean") == null)
+        {
+            return;
+        }
+
         PartialBean partialBean = BeanProvider.getContextualReference(PartialBean.class);
         CustomInterceptorState state = BeanProvider.getContextualReference(CustomInterceptorState.class);
 
@@ -92,7 +99,13 @@ public class ClassLevelInterceptorTest
         // this test is known to not work under weld-5.0.x
         Assume.assumeTrue(!CdiContainerUnderTest.is(CONTAINER_WELD_5_0));
 
-        PartialBean partialBean = BeanProvider.getContextualReference(PartialBean.class);
+        // workaround as payara doesnt pass cdicontainer.version to the arquillian process
+        if (ClassUtils.tryToLoadClassForName("org.apache.deltaspike.test.core.api.partialbean.uc008.PartialBean") == null)
+        {
+            return;
+        }
+
+        PartialBean partialBean = BeanProvider.getContextualReference(PartialBean.class, true);
         CustomInterceptorState state = BeanProvider.getContextualReference(CustomInterceptorState.class);
 
         Assert.assertNotNull(partialBean);

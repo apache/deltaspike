@@ -66,7 +66,7 @@
             <property name="ajpPort">-1</property>
             <property name="stopPort">-1</property>
             <property name="appWorkingDir">target/arquillian-test-working-dir</property>
-            <property name="catalina_opts">-Dcdicontainer.version=tomee-${tomee.version}</property>
+            <property name="catalina_opts">-Dcdicontainer.version=${cdicontainer.version}</property>
             <property name="simpleLog">true</property>
             
             <!-- In-Memory database for the data module -->
@@ -93,6 +93,5 @@
             <property name="adminPort">24848</property>
         </configuration>
     </container>
-
 
 </arquillian>
