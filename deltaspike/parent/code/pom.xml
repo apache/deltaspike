@@ -972,13 +972,6 @@
              -->
             <id>glassfish-build-managed</id>
 
-            <repositories>
-                <repository>
-                    <id>jitpack.io</id>
-                    <url>https://jitpack.io</url>
-                </repository>
-            </repositories>
-
             <properties>
                 <weld.version>5.1.2.Final</weld.version>
                 <cdicontainer.version>weld-${weld.version}</cdicontainer.version>
@@ -998,9 +991,9 @@
                     <version>${jakarta.servlet-api.version}</version>
                 </dependency>
                 <dependency>
-                    <groupId>com.github.hantsy.arquillian-container-glassfish-jakarta</groupId>
-                    <artifactId>arquillian-glassfish-managed-jakarta</artifactId>
-                    <version>7.0.10</version>
+                    <groupId>org.omnifaces.arquillian</groupId>
+                    <artifactId>arquillian-glassfish-server-managed</artifactId>
+                    <version>1.4</version>
                     <scope>test</scope>
                 </dependency>
             </dependencies>
