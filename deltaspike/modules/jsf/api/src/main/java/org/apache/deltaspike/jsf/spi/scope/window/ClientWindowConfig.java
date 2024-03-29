@@ -82,18 +82,18 @@ public interface ClientWindowConfig extends Serializable
     String getClientWindowHtml();
 
     /**
-     * @return Whether the DOM tree should stored in the localStorage for the windowhandler.html
+     * @return Whether the DOM tree should store in the localStorage for the windowhandler.html
      *         when clicking on a link.
-     *         Currently it's only used by {@link ClientWindowRenderMode#CLIENTWINDOW}.
-     * @see windowhandler.html
+     *         Currently, it's only used by {@link ClientWindowRenderMode#CLIENTWINDOW}.
+     * See windowhandler.html
      */
     boolean isClientWindowStoreWindowTreeEnabledOnLinkClick();
 
     /**
-     * @return Whether the DOM tree should stored in the localStorage for the windowhandler.html
+     * @return Whether the DOM tree should store in the localStorage for the windowhandler.html
      *         when clicking on a button.
-     *         Currently it's only used by {@link ClientWindowRenderMode#CLIENTWINDOW}.
-     * @see windowhandler.html
+     *         Currently, it's only used by {@link ClientWindowRenderMode#CLIENTWINDOW}.
+     * See windowhandler.html
      */
     boolean isClientWindowStoreWindowTreeEnabledOnButtonClick();
 

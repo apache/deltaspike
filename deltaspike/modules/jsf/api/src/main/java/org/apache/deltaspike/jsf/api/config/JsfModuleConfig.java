@@ -91,11 +91,11 @@ public class JsfModuleConfig implements DeltaSpikeConfig
     }
 
     /**
-     * Defines the {@link jakarta.enterprise.Qualifier} which will be used to fire the
-     * {@link org.apache.deltaspike.core.api.exception.control.event.ExceptionToCatchEvent}
+     * Defines the {@link jakarta.inject.Qualifier} which will be used for the
+     * FacesContextWrapper ExceptionHandler
      * for unhandled JSF exceptions.
      *
-     * @return the {@link jakarta.enterprise.Qualifier}.
+     * @return the {@link jakarta.inject.Qualifier}.
      */
     public Class<? extends Annotation> getExceptionQualifier()
     {

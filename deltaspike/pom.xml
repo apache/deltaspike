@@ -102,11 +102,12 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.3.2</version>
+                    <version>3.6.3</version>
                     <configuration>
                         <charset>UTF-8</charset>
-                        <detectLinks>true</detectLinks>
+                        <detectLinks>false</detectLinks>
                         <source>11</source>
+                        <doclint>none</doclint>
                         <excludePackageNames>org.apache.deltaspike.example.*:org.apache.deltaspike.playground*:org.apache.deltaspike.test.*:org.apache.deltaspike.cdise.tck*:org.apache.deltaspike.cdise.servlet*:*impl*</excludePackageNames>
                         <groups>
                             <group>
@@ -191,27 +192,4 @@
         </plugins>
     </build>
 
-    <profiles>
-        <profile>
-            <!-- It disables javadoc doclint for JDK > 8 -->
-            <id>javadoc-xdoclint-disable-jdk8+</id>
-            <activation>
-                <jdk>[1.8,)</jdk>
-            </activation>
-            <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-javadoc-plugin</artifactId>
-                            <configuration>
-                                <additionalJOption>-Xdoclint:none</additionalJOption>
-                            </configuration>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
-            </build>
-        </profile>
-
-    </profiles>
 </project>
