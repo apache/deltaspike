@@ -1,0 +1,56 @@
+Release Notes - DeltaSpike - Version 2.0.0
+
+This is the first release targeting jakarta.* package names.
+The target specification is JakartaEE-9
+
+
+Sub-task
+
+    [DELTASPIKE-1438] - Remove EAR support
+    [DELTASPIKE-1439] - Remove Global Alternatives
+    [DELTASPIKE-1440] - Remove Metadata Builders
+    [DELTASPIKE-1460] - Move outdated APIs
+    [DELTASPIKE-1466] - move beans.xml to CDI-3.0 style
+
+Bug
+
+    [DELTASPIKE-1435] - dsrwid cookie should not be set to sameSite="None" - again
+    [DELTASPIKE-1458] - DefaultConfigSourceProvider cannot be instantiated
+    [DELTASPIKE-1467] - Saving existing entity throws an exception
+    [DELTASPIKE-1469] - WindowIdHtmlRenderer loads wrong Javascript file
+
+New Feature
+
+    [DELTASPIKE-1468] - AuditProvider (PrincipalProvider/TimestampsProvider) not working
+
+Improvement
+
+    [DELTASPIKE-1238] - Create a better default TransactionStrategy
+    [DELTASPIKE-1260] - Remove Servlet Module
+    [DELTASPIKE-1261] - Remove BeanVal Module
+    [DELTASPIKE-1262] - Remove CdiContainer control
+    [DELTASPIKE-1263] - Remove BeanBuilder
+    [DELTASPIKE-1265] - Align JSF module to features provided by JSF 2.3
+    [DELTASPIKE-1266] - Remove != JavaEE8 workarounds
+    [DELTASPIKE-1434] - Namespace change javax to jakarta
+    [DELTASPIKE-1455] - Allow to pass properties to Weld
+    [DELTASPIKE-1456] - Introduce default methods for some functions in ConfigSource
+    [DELTASPIKE-1461] - Cleanup Window/ViewAcessScoped
+    [DELTASPIKE-1463] - Reimplement DS ClientWindow as native Faces ClientWindow
+    [DELTASPIKE-1464] - Use jfwid over dswid
+    [DELTASPIKE-1465] - print ConfigSource of the values for deltaspike.config.log
+
+Test
+
+    [DELTASPIKE-1206] - support for CDI 2.0 <trim/> feature
+
+Wish
+
+    [DELTASPIKE-1235] - DS 2: check if we can remove our ContextControl
+    [DELTASPIKE-1376] - Warning on CDI 2.0
+
+Task
+
+    [DELTASPIKE-1437] - DeltaSpike-2.0 umbrella ticket
+    [DELTASPIKE-1471] - Remove @EnableInterceptors in favor of CDI InterceptionFactory
+
