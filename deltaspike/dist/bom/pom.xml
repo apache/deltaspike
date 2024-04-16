@@ -142,12 +142,6 @@
             </dependency>
 
             <dependency>
-                <groupId>org.apache.deltaspike.cdictrl</groupId>
-                <artifactId>deltaspike-cdictrl-servlet</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
                 <groupId>org.apache.deltaspike.modules</groupId>
                 <artifactId>deltaspike-partial-bean-module-api</artifactId>
                 <version>${project.version}</version>
