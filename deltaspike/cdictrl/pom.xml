@@ -33,107 +33,12 @@
 
     <name>Apache DeltaSpike ContainerControl parent</name>
 
-    <profiles>
-        <profile>
-            <id>distribution</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
+    <modules>
+        <module>api</module>
+        <module>impl-owb</module>
+        <module>impl-weld</module>
+        <module>impl-openejb</module>
+        <module>tck</module>
+    </modules>
 
-            <modules>
-                <module>api</module>
-                <module>impl-owb</module>
-                <module>impl-weld</module>
-                <module>impl-openejb</module>
-                <module>tck</module>
-            </modules>
-        </profile>
-        
-        <profile>
-            <id>OWB</id>
-            <modules>
-                <module>api</module>
-                <module>impl-owb</module>
-                <module>tck</module>
-            </modules>
-        </profile>
-
-        <profile>
-            <id>Weld</id>
-            <modules>
-                <module>api</module>
-                <module>impl-weld</module>
-                <module>tck</module>
-            </modules>
-        </profile>
-
-        <profile>
-            <id>rat</id>
-            <modules>
-                <module>api</module>
-                <module>impl-owb</module>
-                <module>impl-weld</module>
-                <module>impl-openejb</module>
-                <module>tck</module>
-            </modules>
-        </profile>
-
-        <profile>
-            <id>tomee-build-managed</id>
-            <modules>
-                <module>api</module>
-                <module>impl-openejb</module>
-                <module>tck</module>
-            </modules>
-        </profile>
-
-
-        <profile>
-            <id>wildfly-managed</id>
-            <modules>
-                <module>api</module>
-                <module>impl-weld</module>
-            </modules>
-        </profile>
-
-        <profile>
-            <id>wildfly-build-managed</id>
-            <modules>
-                <module>api</module>
-                <module>impl-weld</module>
-            </modules>
-        </profile>
-
-        <profile>
-            <id>wildfly-remote</id>
-            <modules>
-                <module>api</module>
-                <module>impl-weld</module>
-            </modules>
-        </profile>
-
-        <profile>
-            <id>glassfish-remote</id>
-            <modules>
-                <module>api</module>
-                <module>impl-weld</module>
-            </modules>
-        </profile>
-
-        <profile>
-            <id>glassfish-build-managed</id>
-            <modules>
-                <module>api</module>
-                <module>impl-weld</module>
-            </modules>
-        </profile>
-
-        <profile>
-            <id>payara-build-managed</id>
-            <modules>
-                <module>api</module>
-                <module>impl-weld</module>
-            </modules>
-        </profile>
-    </profiles>
 </project>
