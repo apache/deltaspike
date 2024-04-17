@@ -40,7 +40,6 @@
         <weld.sfl4j>2.0.11</weld.sfl4j>
         <wildfly.arquillian.version>5.0.1.Final</wildfly.arquillian.version>
         <payara.version>6.2024.2</payara.version>
-        <tomee.version>10.0.0-M1-SNAPSHOT</tomee.version>
     </properties>
 
 
