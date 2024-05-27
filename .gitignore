@@ -16,3 +16,4 @@ deltaspike/core/impl/data
 deltaspike/modules/jsf/impl/data
 deltaspike/modules/security/impl/data
 *.log
+bin/
