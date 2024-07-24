@@ -21,6 +21,7 @@ package org.apache.deltaspike.jsf.impl.listener.request;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.Destroyed;
 import jakarta.enterprise.context.Initialized;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.enterprise.event.Event;
@@ -39,7 +40,7 @@ import jakarta.inject.Inject;
 public class JsfRequestBroadcaster implements Deactivatable
 {
     @Inject @Initialized(RequestScoped.class) private Event<FacesContext> initEvent;
-    @Inject @Initialized(RequestScoped.class) private Event<FacesContext> destroyedEvent;
+    @Inject @Destroyed(RequestScoped.class) private Event<FacesContext> destroyedEvent;
 
     /**
      * Broadcasts @Initialized-event(s)
