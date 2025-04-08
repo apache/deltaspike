@@ -11,10 +11,14 @@ v{latestStable}
 
 == Prerequisits
 
+Apchache DeltaSpike-1.x supports JavaEE.
 The minimum JavaEE version is JavaEE 6.
-
 The minmium Java version until DeltaSpike-1.8.x is Java 6.
-The minimum Java version from DeltaSpike-1.9.0 upwards is Java8.
+The minimum Java version for DeltaSpike-1.9.x is Java8.
+
+Apache DeltaSpike 2.x targets JakartaEE.
+The minimum JavaEE version is JakartaEE version is 9.
+The minimum Java version for DeltaSpike-2.0.x is Java11.
 
 
 == Binary Distribution

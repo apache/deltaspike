@@ -47,5 +47,3 @@ To publish to [staging area](http://deltaspike.apache.org/staging/documentation)
 To publish to [production area](http://deltaspike.apache.org/documentation), run:
 
     mvn clean site-deploy
-
-After log in to <https://cms.apache.org/deltaspike/publish> and click on the `Submit` button.
