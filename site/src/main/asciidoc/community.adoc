@@ -43,16 +43,14 @@ publish it.
 
 Before you get a committer you have to contribute to our effort. E.g.
 you can help users, participate in discussions on the dev list, submit
-patches,... . Therefore, it's essential to file a/n
+patches,... .
+For bigger contributions, it's essential to file a/n
 http://www.apache.org/licenses/icla.pdf[ICLA] or
 http://www.apache.org/licenses/cla-corporate.txt[CCLA] and send it to
 secretary at apache dot org (or fax it) as early as possible.
 
 If you would like to submit a patch through Jira, you can have a look at
 the link:suggested-git-workflows.html[suggested approach].
-
-Here is the contributors/committers page:
-link:contributors.html[Contributors].
 
 
 === Committers
