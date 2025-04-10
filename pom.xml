@@ -48,7 +48,7 @@
     <url>http://deltaspike.apache.org</url>
 
     <properties>
-        <asciidoctor.version>1.5.2</asciidoctor.version>
+        <asciidoctor.version>1.5.8</asciidoctor.version>
         <version.deltaspike.latest.stable>2.0.0</version.deltaspike.latest.stable>
         <version.deltaspike.latest.snapshot>2.0.1-SNAPSHOT</version.deltaspike.latest.snapshot>
         <svn.scmPubCheckoutDirectory>${project.build.directory}/co-site</svn.scmPubCheckoutDirectory>
@@ -140,27 +140,5 @@
 
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <!-- Profile used to publish documentation and site under staging 
-                folder. -->
-            <id>staging</id>
-            <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-scm-publish-plugin</artifactId>
-                            <version>1.1</version>
-                            <configuration>
-                                <pubScmUrl>scm:svn:${svn.scmPubUrlStaging}</pubScmUrl>
-                            </configuration>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
-            </build>
-        </profile>
-    </profiles>
 
 </project>

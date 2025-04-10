@@ -10,8 +10,7 @@ useful features for Java application developers.
 We will also ensure true portability! We are testing DeltaSpike on
 different CDI implementations like Apache OpenWebBeans and JBoss Weld,
 and also on different Java EE servers like Apache Tomcat and TomEE,
-JBoss AS7, WildFly 8.x and 9.x, Oracle GlassFish 3.1+ and 4.x+, IBM
-WebSphere 8.x, Oracle WebLogic Server 12c, Jetty, and others.
+JBoss Enterprise, WildFly, GlassFish, Liberty, Oracle WebLogic and others.
 
 link:documentation/overview.html[View details »]
 |===
@@ -36,7 +35,7 @@ link:/documentation/modules.html[View details »]
 [options="header,footer"]
 |===
 |*News* | *Examples*
-| Apache DeltaSpike 1.9.3 is now out!
+| Apache DeltaSpike 2.0.0 supporting JakartaEE is now out!
 
 link:/news.html[View details »]
 

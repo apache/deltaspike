@@ -23,20 +23,17 @@ the most from this technology.
 
 *Transactional support for non-EJB beans:* The Transactional Interceptor in DeltaSpike paved the way for
 `@Transactional` in Java EE 7.
-
-*Injectable Servlet objects:* Enables CDI injection in Servlets in Java EE 6/CDI 1.0 environments
+Although we not only support JTA transactions but also resource local transactions and use a slightly different Exception handling.
 
 *Injectable resources:* Configuration, resource bundles,... are easy to inject when using CDI and Apache DeltaSpike.
 
 *@Exclude annotation:* Lets you prevent classes from being treated as CDI beans even if they are in a CDI-enabled
-archive in a Java EE 6/CDI 1.0 environment where `@Vetoed` is unavailable or when you need to veto based on
-ProjectStages or expressions.
+archive in a Jakarta EE project.
+You can even exclude classes based on ProjectStages or configuration expressions.
 
-*Scheduling tasks*: Async processes in a non-EE7 environment.
+*Scheduling tasks*: handle Async processes in a non-JakartaEE environment.
 
-*Bean Validation integration:* Injection of CDI beans and EJBs into Constraint Validators.
-
-*BeanProvider:* Access the BeanManager and CDI beans even in non-managed classes like JPA 2.0 EntityListeners or
+*BeanProvider:* Easy Access to the BeanManager and CDI beans even in non-managed classes like JPA 2.0 EntityListeners or
 Spring Beans.
 
 
@@ -50,8 +47,6 @@ provides a more solid navigation in case of JSF and helps a lot in the maintenan
 *View-Controller:* Based on type-safe view-configs, view-controller annotations provide a type-safe alternative to
 standard tags.
 
-*Injection in Converters and Validators:* Inject CDI beans and EJBs into JSF Converters and Validators.
-
 *JSF event broadcasting to CDI:* Allows CDI to be notified about JSF events
 
 === Productivity Improvements
@@ -64,8 +59,6 @@ standard tags.
 
 *Data Module:* An out of the box entity framework solution complete with support for container or application managed persistence contexts, as well as JDBC.
 
-*Decoupled Exception handling:* Event-based exception handling framework, similar to the CDI event observer mechanism.
-
 *JMX integration:* Any CDI bean can be exposed via JMX easily with a single annotation.
 
 *Type-safe i18n messages:* Localized messages are easy to use with an interface and a resource bundle, no more boilerplate and your messages now have context within the code.
@@ -77,7 +70,8 @@ approach which can be used in CDI-based applications.
 
 === CDI
 Java Contexts and Dependency Injection for the Java EE platform (link:https://jcp.org/en/jsr/detail?id=299[JSR 299]),
- abbreviated _CDI_ was introduced as part of Java EE 6. The core features of CDI are as follows:
+ abbreviated _CDI_ was introduced as part of Java EE 6 and is now part of Jakarta Enterprise.
+The core features of CDI are as follows:
 
 * improved stateful object lifecycles with an additional context named _Conversation_ that encompasses a series of requests within one session and lifecycle management by the container according to well-defined contexts
 * dependency injection conducted in a type-safe manner, with type checking conducted at compilation time so errors are exposed earlier and debugging is easier

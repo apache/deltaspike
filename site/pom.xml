@@ -38,8 +38,7 @@
     <url>http://deltaspike.apache.org</url>
 
     <properties>
-        <svn.scmPubUrl>https://svn.apache.org/repos/asf/deltaspike/site/trunk/content/</svn.scmPubUrl>
-        <svn.scmPubUrlStaging>https://svn.apache.org/repos/asf/deltaspike/site/trunk/content/staging/</svn.scmPubUrlStaging>
+        <svn.scmPubUrl>https://svn.apache.org/repos/infra/sites/deltaspike/</svn.scmPubUrl>
     </properties>
 
     <build>
