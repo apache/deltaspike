@@ -40,6 +40,7 @@ import jakarta.enterprise.inject.spi.configurator.BeanConfigurator;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
+import org.apache.deltaspike.core.util.Annotateds;
 import org.apache.deltaspike.core.util.AnnotationUtils;
 import org.apache.deltaspike.core.util.BeanConfiguratorUtils;
 import org.apache.deltaspike.core.util.BeanUtils;
@@ -176,6 +177,7 @@ public class PartialBeanBindingExtension implements Extension, Deactivatable
         BeanConfigurator<T> beanConfigurator = afterBeanDiscovery.addBean();
         BeanConfiguratorUtils.read(beanManager, beanConfigurator, annotatedType)
             .beanClass(beanClass);
+        beanConfigurator.id(PartialBeanBinding.class.getName() + ":" + Annotateds.createTypeId(annotatedType));
 
         new DeltaSpikeProxyBeanConfigurator(beanClass,
                 descriptor.getHandler(),

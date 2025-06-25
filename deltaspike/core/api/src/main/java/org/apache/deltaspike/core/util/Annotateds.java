@@ -19,7 +19,7 @@
 
 package org.apache.deltaspike.core.util;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import jakarta.enterprise.inject.spi.Annotated;
 import jakarta.enterprise.inject.spi.AnnotatedCallable;
 import jakarta.enterprise.inject.spi.AnnotatedConstructor;
@@ -67,7 +67,7 @@ public final class Annotateds
      * Does the first stage of comparing AnnoatedCallables, however it cannot
      * compare the method parameters
      */
-    @Typed()
+    @Vetoed
     private static class AnnotatedCallableComparator<T>
         implements Comparator<AnnotatedCallable<? super T>>, Serializable
     {
@@ -92,7 +92,7 @@ public final class Annotateds
 
     }
 
-    @Typed()
+    @Vetoed
     private static class AnnotatedMethodComparator<T>
         implements Comparator<AnnotatedMethod<? super T>>, Serializable
     {
@@ -126,7 +126,7 @@ public final class Annotateds
 
     }
 
-    @Typed()
+    @Vetoed
     private static class AnnotatedConstructorComparator<T>
         implements Comparator<AnnotatedConstructor<? super T>>, Serializable
     {
@@ -160,7 +160,7 @@ public final class Annotateds
 
     }
 
-    @Typed()
+    @Vetoed
     private static class AnnotatedFieldComparator<T>
         implements Comparator<AnnotatedField<? super T>>, Serializable
     {
@@ -182,7 +182,7 @@ public final class Annotateds
 
     }
 
-    @Typed()
+    @Vetoed
     private static class AnnotationComparator implements Comparator<Annotation>, Serializable
     {
 
@@ -194,7 +194,7 @@ public final class Annotateds
         }
     }
 
-    @Typed()
+    @Vetoed
     private static class MethodComparator implements Comparator<Method>
     {
 
