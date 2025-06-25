@@ -19,7 +19,7 @@
 package org.apache.deltaspike.test.testcontrol.mock.uc008;
 
 import jakarta.enterprise.context.RequestScoped;
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 
 @RequestScoped
 @Typed({T3.class})

@@ -18,11 +18,11 @@
  */
 package org.apache.deltaspike.testcontrol.impl.mock;
 
+import jakarta.enterprise.inject.Typed;
 import org.apache.deltaspike.testcontrol.api.junit.TestBaseConfig;
 import org.apache.deltaspike.testcontrol.api.mock.DynamicMockManager;
 import org.apache.deltaspike.testcontrol.api.mock.TypedMock;
 
-import jakarta.enterprise.inject.Typed;
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;

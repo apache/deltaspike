@@ -20,14 +20,14 @@ package org.apache.deltaspike.core.util;
 
 import java.lang.annotation.Annotation;
 import jakarta.enterprise.context.ContextNotActiveException;
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import jakarta.enterprise.inject.spi.BeanManager;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 
 /**
  * A set of utility methods for working with contexts.
  */
-@Typed()
+@Vetoed
 public abstract class ContextUtils
 {
     private ContextUtils()

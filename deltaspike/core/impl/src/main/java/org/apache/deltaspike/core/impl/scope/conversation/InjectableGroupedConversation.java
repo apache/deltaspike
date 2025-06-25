@@ -21,11 +21,11 @@ package org.apache.deltaspike.core.impl.scope.conversation;
 import org.apache.deltaspike.core.api.scope.GroupedConversation;
 import org.apache.deltaspike.core.spi.scope.conversation.GroupedConversationManager;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 
-@Typed()
+@Vetoed
 class InjectableGroupedConversation implements GroupedConversation
 {
     private static final long serialVersionUID = -3909049219127821425L;

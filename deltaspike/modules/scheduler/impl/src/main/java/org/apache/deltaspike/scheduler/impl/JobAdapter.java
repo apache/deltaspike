@@ -22,10 +22,10 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 
 //configured via SchedulerBaseConfig
-@Typed()
+@Vetoed
 public class JobAdapter extends AbstractJobAdapter<Job>
 {
     @Override

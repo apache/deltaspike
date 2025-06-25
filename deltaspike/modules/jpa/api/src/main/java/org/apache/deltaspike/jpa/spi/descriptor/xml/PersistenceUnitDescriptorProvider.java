@@ -21,10 +21,10 @@ package org.apache.deltaspike.jpa.spi.descriptor.xml;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import org.apache.deltaspike.core.util.StringUtils;
 
-@Typed
+@Vetoed
 public final class PersistenceUnitDescriptorProvider
 {
     private static final PersistenceUnitDescriptorProvider INSTANCE = new PersistenceUnitDescriptorProvider();

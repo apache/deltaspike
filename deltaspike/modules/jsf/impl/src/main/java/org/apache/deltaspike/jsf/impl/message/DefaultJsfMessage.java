@@ -19,7 +19,7 @@
 package org.apache.deltaspike.jsf.impl.message;
 
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.component.UIComponent;
 
@@ -35,7 +35,7 @@ import org.apache.deltaspike.jsf.api.message.JsfMessage;
  * The complexity of setting the FacesMessage is
  * done in the {@link JsfMessageBundleInvocationHandler}.
  */
-@Typed
+@Vetoed
 public class DefaultJsfMessage<T> implements JsfMessage<T>
 {
     private final String clientId;

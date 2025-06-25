@@ -23,7 +23,7 @@ import org.apache.deltaspike.security.api.authorization.SecurityBindingType;
 import org.apache.deltaspike.security.api.authorization.SecurityParameterBinding;
 
 import jakarta.enterprise.inject.Stereotype;
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Typed()
+@Vetoed
 public abstract class SecurityUtils
 {
     private SecurityUtils()

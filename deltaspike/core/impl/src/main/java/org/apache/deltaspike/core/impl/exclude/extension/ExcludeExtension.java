@@ -187,7 +187,7 @@ public class ExcludeExtension implements Extension, Deactivatable
     protected void vetoCustomProjectStageBeans(ProcessAnnotatedType processAnnotatedType)
     {
         //currently there is a veto for all project-stage implementations,
-        //but we still need @Typed() for the provided implementations in case of the deactivation of this behaviour
+        //but we still need for the provided implementations in case of the deactivation of this behaviour
         if (ProjectStage.class.isAssignableFrom(processAnnotatedType.getAnnotatedType().getJavaClass()))
         {
             processAnnotatedType.veto();

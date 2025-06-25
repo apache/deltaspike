@@ -18,10 +18,10 @@
  */
 package org.apache.deltaspike.testcontrol.impl.mock;
 
+import jakarta.enterprise.inject.Typed;
 import org.apache.deltaspike.testcontrol.api.mock.ApplicationMockManager;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.inject.Typed;
 
 @ApplicationScoped
 @Typed(ApplicationMockManager.class)

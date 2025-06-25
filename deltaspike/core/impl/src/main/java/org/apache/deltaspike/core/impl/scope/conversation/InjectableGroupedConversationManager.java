@@ -23,11 +23,11 @@ import org.apache.deltaspike.core.impl.scope.DeltaSpikeContextExtension;
 import org.apache.deltaspike.core.spi.scope.conversation.GroupedConversationManager;
 import org.apache.deltaspike.core.util.context.ContextualStorage;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 
-@Typed()
+@Vetoed
 class InjectableGroupedConversationManager implements GroupedConversationManager
 {
     private transient volatile GroupedConversationManager conversationManager;

@@ -19,12 +19,12 @@
 package org.apache.deltaspike.core.util;
 
 import java.util.Collection;
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 
 /**
  * A collection of utilities for working with Collections
  */
-@Typed()
+@Vetoed
 public abstract class CollectionUtils
 {
     private CollectionUtils()

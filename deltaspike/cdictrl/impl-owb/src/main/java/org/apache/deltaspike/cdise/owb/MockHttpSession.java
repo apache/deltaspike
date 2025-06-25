@@ -22,14 +22,14 @@ import java.util.Enumeration;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpSession;
 
 /**
  * A simple mock HttpSession
  */
-@Typed // ignore this as CDI bean
+@Vetoed // ignore this as CDI bean
 public class MockHttpSession implements HttpSession
 {
     private String sessionId;

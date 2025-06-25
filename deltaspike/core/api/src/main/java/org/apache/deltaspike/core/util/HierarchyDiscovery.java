@@ -19,7 +19,7 @@
 
 package org.apache.deltaspike.core.util;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
@@ -36,7 +36,7 @@ import java.util.logging.Logger;
 //X TODO: Look at merging this with ClassUtils perhaps
 //X TODO: JavaDoc
 //X TODO review
-@Typed()
+@Vetoed
 public class HierarchyDiscovery
 {
     private final Type type;

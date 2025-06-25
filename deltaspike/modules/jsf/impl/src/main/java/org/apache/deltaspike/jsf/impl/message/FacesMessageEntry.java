@@ -18,14 +18,14 @@
  */
 package org.apache.deltaspike.jsf.impl.message;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import jakarta.faces.application.FacesMessage;
 import java.io.Serializable;
 
 /**
  * Entry for {@link FacesMessage} which have to be stored longer than a request
  */
-@Typed()
+@Vetoed
 public class FacesMessageEntry implements Serializable
 {
     private static final long serialVersionUID = 6831499672107426470L;

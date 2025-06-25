@@ -18,10 +18,10 @@
  */
 package org.apache.deltaspike.test.core.api.provider;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import jakarta.inject.Inject;
 
-@Typed()
+@Vetoed
 class ManualBean
 {
     @Inject

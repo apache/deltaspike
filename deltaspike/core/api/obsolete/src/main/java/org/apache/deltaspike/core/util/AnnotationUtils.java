@@ -19,7 +19,7 @@
 
 package org.apache.deltaspike.core.util;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.util.Nonbinding;
 import java.lang.annotation.Annotation;
@@ -27,7 +27,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 
-@Typed()
+@Vetoed
 public abstract class AnnotationUtils
 {
     private AnnotationUtils()

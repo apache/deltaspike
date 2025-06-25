@@ -30,8 +30,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
 
-import jakarta.enterprise.inject.Typed;
-
+import jakarta.enterprise.inject.Vetoed;
 import org.apache.deltaspike.core.spi.config.ConfigFilter;
 import org.apache.deltaspike.core.spi.config.ConfigSource;
 import org.apache.deltaspike.core.util.ClassUtils;
@@ -52,7 +51,7 @@ import org.apache.deltaspike.core.util.ClassUtils;
  *
  * @see <a href="http://deltaspike.apache.org/documentation/configuration.html">DeltaSpike Configuration Mechanism</a>
  */
-@Typed()
+@Vetoed
 public final class ConfigResolver
 {
     /**

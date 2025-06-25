@@ -23,14 +23,14 @@ import org.apache.deltaspike.testcontrol.api.TestControl;
 import org.apache.deltaspike.testcontrol.spi.TestAware;
 import org.apache.deltaspike.testcontrol.spi.TestControlValidator;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@Typed()
+@Vetoed
 public class StandardContextTestControlValidator implements TestAware, TestControlValidator
 {
     private static Boolean customContextControlDetected;

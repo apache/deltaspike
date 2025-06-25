@@ -19,7 +19,7 @@
 package org.apache.deltaspike.core.util;
 
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import jakarta.enterprise.inject.spi.Annotated;
 import jakarta.enterprise.inject.spi.AnnotatedMethod;
 import jakarta.enterprise.inject.spi.AnnotatedParameter;
@@ -37,7 +37,7 @@ import java.util.Set;
 /**
  * A set of utility methods for working with beans.
  */
-@Typed()
+@Vetoed
 public abstract class BeanUtils
 {
 

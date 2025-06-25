@@ -18,11 +18,11 @@
  */
 package org.apache.deltaspike.testcontrol.impl.mock;
 
+import jakarta.enterprise.inject.Typed;
 import org.apache.deltaspike.testcontrol.api.mock.ApplicationMockManager;
 import org.apache.deltaspike.testcontrol.api.mock.DynamicMockManager;
 
 import jakarta.enterprise.context.RequestScoped;
-import jakarta.enterprise.inject.Typed;
 import jakarta.inject.Inject;
 import java.lang.annotation.Annotation;
 

@@ -26,7 +26,7 @@ import java.lang.reflect.UndeclaredThrowableException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 
 import org.apache.deltaspike.proxy.spi.invocation.DeltaSpikeProxyInvocationHandler;
 import org.objectweb.asm.AnnotationVisitor;
@@ -40,7 +40,7 @@ import org.objectweb.asm.commons.GeneratorAdapter;
 import org.objectweb.asm.commons.Method;
 import org.apache.deltaspike.proxy.spi.DeltaSpikeProxyClassGenerator;
 
-@Typed
+@Vetoed
 public class AsmDeltaSpikeProxyClassGenerator implements DeltaSpikeProxyClassGenerator
 {
     private static final String FIELDNAME_INVOCATION_HANDLER = "invocationHandler";

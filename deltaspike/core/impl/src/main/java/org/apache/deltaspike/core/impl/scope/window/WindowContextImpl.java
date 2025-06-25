@@ -20,7 +20,7 @@ package org.apache.deltaspike.core.impl.scope.window;
 
 import jakarta.enterprise.context.ContextNotActiveException;
 import jakarta.enterprise.context.spi.Contextual;
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import jakarta.enterprise.inject.spi.BeanManager;
 
 import java.lang.annotation.Annotation;
@@ -35,7 +35,7 @@ import org.apache.deltaspike.core.util.context.ContextualStorage;
  * This also implements the interface to control the id of
  * the currently active 'window' (e.g. a web browser tab).
  */
-@Typed()
+@Vetoed
 public class WindowContextImpl extends AbstractContext implements WindowContext
 {
     /**

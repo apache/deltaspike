@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.core.api.monitoring;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -29,7 +29,7 @@ import java.util.concurrent.atomic.AtomicLong;
  *
  * @see InvocationMonitored
  */
-@Typed()
+@Vetoed
 public class MonitorResultEvent
 {
     private Map<String, AtomicInteger> methodInvocations = new HashMap<String, AtomicInteger>();

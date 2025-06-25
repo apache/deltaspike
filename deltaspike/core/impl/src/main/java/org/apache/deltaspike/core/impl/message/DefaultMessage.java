@@ -23,7 +23,7 @@ import org.apache.deltaspike.core.api.message.MessageContext;
 import org.apache.deltaspike.core.api.message.MessageInterpolator;
 import org.apache.deltaspike.core.api.message.MessageResolver;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,7 +37,7 @@ import static org.apache.deltaspike.core.api.message.MessageResolver.MISSING_RES
 /**
  * {@inheritDoc}
  */
-@Typed()
+@Vetoed
 public class DefaultMessage implements Message
 {
     private String messageTemplate;

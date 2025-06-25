@@ -23,7 +23,7 @@ import org.apache.deltaspike.core.api.exception.control.HandlerMethod;
 import org.apache.deltaspike.core.api.literal.AnyLiteral;
 import org.apache.deltaspike.core.util.HierarchyDiscovery;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import jakarta.enterprise.inject.spi.BeanManager;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
@@ -39,7 +39,7 @@ import java.util.logging.Logger;
  * Basic implementation for {@link HandlerMethodStorage}.
  */
 @SuppressWarnings("CdiManagedBeanInconsistencyInspection")
-@Typed()
+@Vetoed
 class HandlerMethodStorageImpl implements HandlerMethodStorage
 {
     private final Map<Type, Collection<HandlerMethod<? extends Throwable>>> allHandlers;

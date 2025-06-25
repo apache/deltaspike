@@ -21,7 +21,7 @@ package org.apache.deltaspike.core.api.projectstage;
 
 import org.apache.deltaspike.core.util.ServiceUtils;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
@@ -103,7 +103,7 @@ import java.util.logging.Logger;
  * </p>
  *
  */
-@Typed()
+@Vetoed
 public abstract class ProjectStage implements Serializable
 {
     private static final long serialVersionUID = -1210639662598734888L;
@@ -220,7 +220,7 @@ public abstract class ProjectStage implements Serializable
     /**
      * Project-stage for unit-tests
      */
-    @Typed()
+    @Vetoed
     public static final class UnitTest extends ProjectStage implements TestStage
     {
         private static final long serialVersionUID = -7910349894182034559L;
@@ -234,7 +234,7 @@ public abstract class ProjectStage implements Serializable
     /**
      * Project-stage for development
      */
-    @Typed()
+    @Vetoed
     public static final class Development extends ProjectStage
     {
         private static final long serialVersionUID = 1977308277341527250L;
@@ -248,7 +248,7 @@ public abstract class ProjectStage implements Serializable
     /**
      * Project-stage for system-tests
      */
-    @Typed()
+    @Vetoed
     public static final class SystemTest extends ProjectStage implements TestStage
     {
         private static final long serialVersionUID = -7444003351466372539L;
@@ -262,7 +262,7 @@ public abstract class ProjectStage implements Serializable
     /**
      * Project-stage for integration-tests
      */
-    @Typed()
+    @Vetoed
     public static final class IntegrationTest extends ProjectStage implements TestStage
     {
         private static final long serialVersionUID = 2034474361615347127L;
@@ -276,7 +276,7 @@ public abstract class ProjectStage implements Serializable
     /**
      * Project-stage for staging
      */
-    @Typed()
+    @Vetoed
     public static final class Staging extends ProjectStage
     {
         private static final long serialVersionUID = -8426149532860809553L;
@@ -290,7 +290,7 @@ public abstract class ProjectStage implements Serializable
     /**
      * Default project-stage for production
      */
-    @Typed()
+    @Vetoed
     public static final class Production extends ProjectStage
     {
         private static final long serialVersionUID = -4030601958667812084L;

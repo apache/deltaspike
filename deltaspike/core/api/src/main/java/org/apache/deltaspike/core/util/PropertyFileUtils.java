@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.core.util;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,7 +31,7 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Vector;
 
-@Typed()
+@Vetoed
 public abstract class PropertyFileUtils
 {
     /**

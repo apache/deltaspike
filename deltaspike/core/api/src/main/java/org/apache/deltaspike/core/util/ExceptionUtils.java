@@ -19,10 +19,10 @@
 
 package org.apache.deltaspike.core.util;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import java.lang.reflect.Constructor;
 
-@Typed()
+@Vetoed
 public abstract class ExceptionUtils
 {
     private ExceptionUtils()

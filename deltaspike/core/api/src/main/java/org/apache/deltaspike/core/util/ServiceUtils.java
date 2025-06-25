@@ -20,7 +20,7 @@ package org.apache.deltaspike.core.util;
 
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -31,7 +31,7 @@ import java.util.logging.Logger;
  * Allows handling the lookup (with fallbacks) in a central place.
  * See DELTASPIKE-97
  */
-@Typed()
+@Vetoed
 public abstract class ServiceUtils
 {
     private static final Logger LOG = Logger.getLogger(ServiceUtils.class.getName());

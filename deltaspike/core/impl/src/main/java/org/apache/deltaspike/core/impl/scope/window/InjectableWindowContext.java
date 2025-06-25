@@ -22,11 +22,11 @@ import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.impl.scope.DeltaSpikeContextExtension;
 import org.apache.deltaspike.core.spi.scope.window.WindowContext;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 
 //keep it public for supporting #{dsWindowContext.getCurrentWindowId()} in addition to
 //#{dsWindowContext.currentWindowId}
-@Typed()
+@Vetoed
 public class InjectableWindowContext implements WindowContext
 {
     private static final long serialVersionUID = -3606786361833889628L;

@@ -22,11 +22,11 @@ import org.apache.deltaspike.core.api.message.MessageContext;
 import org.apache.deltaspike.core.api.message.MessageResolver;
 import org.apache.deltaspike.core.util.PropertyFileUtils;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-@Typed()
+@Vetoed
 public class TestMessageResolver implements MessageResolver
 {
     private static final long serialVersionUID = -7977480064291950923L;

@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.test.testcontrol.uc004;
 
+import jakarta.enterprise.inject.Typed;
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.test.category.SeCategory;
 import org.apache.deltaspike.test.testcontrol.uc001.RequestAndSessionScopePerTestMethodTest;
@@ -28,7 +29,6 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
-import jakarta.enterprise.inject.Typed;
 import jakarta.inject.Inject;
 
 //Usually NOT needed! Currently only needed due to our arquillian-setup

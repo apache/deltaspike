@@ -25,13 +25,13 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 
 /**
  * {@link DeltaSpikeProxyFactory} which delegates all abstract methods to the 
  * partial bean binding {@link java.lang.reflect.InvocationHandler}.
  */
-@Typed
+@Vetoed
 public class PartialBeanProxyFactory extends DeltaSpikeProxyFactory
 {
     private static final PartialBeanProxyFactory INSTANCE = new PartialBeanProxyFactory();

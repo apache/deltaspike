@@ -21,7 +21,7 @@ package org.apache.deltaspike.core.impl.config;
 import java.util.HashMap;
 import java.util.Map;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 
 import org.apache.deltaspike.core.impl.util.JndiUtils;
 
@@ -29,7 +29,7 @@ import org.apache.deltaspike.core.impl.util.JndiUtils;
  * {@link org.apache.deltaspike.core.spi.config.ConfigSource}
  * which uses JNDI for the lookup
  */
-@Typed()
+@Vetoed
 class LocalJndiConfigSource extends BaseConfigSource
 {
     private static final String BASE_NAME = "java:comp/env/deltaspike/";

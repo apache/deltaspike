@@ -22,9 +22,9 @@ import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.impl.scope.DeltaSpikeContextExtension;
 import org.apache.deltaspike.core.spi.scope.viewaccess.ViewAccessContextManager;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 
-@Typed()
+@Vetoed
 class InjectableViewAccessContextManager implements ViewAccessContextManager
 {
     private transient volatile ViewAccessContextManager viewAccessContextManager;

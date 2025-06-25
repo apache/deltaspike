@@ -19,7 +19,7 @@
 
 package org.apache.deltaspike.core.util.securitymanaged;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import java.lang.reflect.AccessibleObject;
 import java.security.PrivilegedAction;
 
@@ -27,7 +27,7 @@ import java.security.PrivilegedAction;
  * PrivilegedAction instance to enabling access to the specified {@link AccessibleObject}.
  * It's only useful if {@link System#getSecurityManager()} returns a {@link SecurityManager}.
  */
-@Typed()
+@Vetoed
 public class SetAccessiblePrivilegedAction implements PrivilegedAction<Void>
 {
     private final AccessibleObject member;

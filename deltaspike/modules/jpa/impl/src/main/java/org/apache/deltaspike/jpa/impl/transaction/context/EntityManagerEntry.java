@@ -18,14 +18,14 @@
  */
 package org.apache.deltaspike.jpa.impl.transaction.context;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import jakarta.persistence.EntityManager;
 import java.lang.annotation.Annotation;
 
 /**
  * Stores a {@link EntityManager} and the qualifier
  */
-@Typed()
+@Vetoed
 public class EntityManagerEntry
 {
     private final EntityManager entityManager;

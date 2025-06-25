@@ -21,10 +21,12 @@ package org.apache.deltaspike.test.scheduler.custom;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
 import jakarta.enterprise.inject.Typed;
+
 import java.util.ArrayList;
 import java.util.List;
 
-@Typed()
+
+@Typed() // This bean doesn't get vetoed because it contains producer methods. But we don't want it to be injected with this type
 public class TestJobManager
 {
     private static TestJobManager currentManager = new TestJobManager();

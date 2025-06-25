@@ -25,6 +25,7 @@ import jakarta.enterprise.inject.Any;
 import jakarta.enterprise.inject.Default;
 import jakarta.enterprise.inject.Produces;
 import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
 import jakarta.enterprise.inject.spi.AfterDeploymentValidation;
 import jakarta.enterprise.inject.spi.Bean;
@@ -493,7 +494,7 @@ public class ConfigurationExtension implements Extension, Deactivatable
         }
     }
 
-    @Typed
+    @Vetoed
     private static final class DynamicBean<T> implements Bean<T>
     {
         private final Bean<T> producer;

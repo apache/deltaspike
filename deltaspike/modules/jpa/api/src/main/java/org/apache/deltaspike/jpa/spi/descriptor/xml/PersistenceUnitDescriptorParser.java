@@ -28,9 +28,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 
-@Typed
+@Vetoed
 public class PersistenceUnitDescriptorParser extends DescriptorReader
 {
     public static final String RESOURCE_PATH = "META-INF/persistence.xml";

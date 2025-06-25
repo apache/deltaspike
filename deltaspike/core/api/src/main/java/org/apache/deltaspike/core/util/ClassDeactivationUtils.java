@@ -18,12 +18,12 @@
  */
 package org.apache.deltaspike.core.util;
 
+import jakarta.enterprise.inject.Vetoed;
 import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.spi.activation.ClassDeactivator;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 
-import jakarta.enterprise.inject.Typed;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +34,7 @@ import java.util.logging.Logger;
 /**
  * Helper methods for {@link ClassDeactivator}
  */
-@Typed()
+@Vetoed
 public abstract class ClassDeactivationUtils
 {
     private static final Logger LOG = Logger.getLogger(ClassDeactivationUtils.class.getName());

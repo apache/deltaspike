@@ -23,14 +23,14 @@ import org.apache.deltaspike.core.api.scope.ConversationSubGroup;
 import org.apache.deltaspike.core.impl.scope.conversation.ConversationKey;
 
 import jakarta.enterprise.context.spi.Contextual;
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import jakarta.enterprise.inject.spi.Bean;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.PassivationCapable;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 
-@Typed()
+@Vetoed
 public abstract class ConversationUtils
 {
     private ConversationUtils()

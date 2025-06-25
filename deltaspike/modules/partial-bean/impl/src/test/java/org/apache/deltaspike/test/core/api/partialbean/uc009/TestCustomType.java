@@ -18,10 +18,10 @@
  */
 package org.apache.deltaspike.test.core.api.partialbean.uc009;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import java.io.Serializable;
 
-@Typed()
+@Vetoed
 public class TestCustomType implements Serializable
 {
     private Integer testValue;

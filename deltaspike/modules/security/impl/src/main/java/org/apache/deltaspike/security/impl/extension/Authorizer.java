@@ -28,7 +28,7 @@ import java.util.Set;
 
 import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.enterprise.inject.Stereotype;
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import jakarta.enterprise.inject.spi.AnnotatedMethod;
 import jakarta.enterprise.inject.spi.AnnotatedParameter;
 import jakarta.enterprise.inject.spi.Bean;
@@ -48,7 +48,7 @@ import org.apache.deltaspike.security.impl.util.SecurityUtils;
 /**
  * Responsible for authorizing method invocations.
  */
-@Typed()
+@Vetoed
 class Authorizer
 {
     private Annotation bindingAnnotation;

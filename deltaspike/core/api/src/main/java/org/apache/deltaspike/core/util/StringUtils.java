@@ -18,9 +18,9 @@
  */
 package org.apache.deltaspike.core.util;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 
-@Typed()
+@Vetoed
 public abstract class StringUtils
 {
     /**

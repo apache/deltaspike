@@ -19,7 +19,7 @@
 
 package org.apache.deltaspike.core.util;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Arrays;
@@ -27,7 +27,7 @@ import java.util.Arrays;
 /**
  * A basic implementation of {@link ParameterizedType}.
  */
-@Typed()
+@Vetoed
 class ParameterizedTypeImpl implements ParameterizedType
 {
     private final Type[] actualTypeArguments;

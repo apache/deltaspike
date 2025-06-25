@@ -28,7 +28,7 @@ import org.apache.deltaspike.core.util.context.ContextualInstanceInfo;
 import org.apache.deltaspike.core.util.context.ContextualStorage;
 
 import jakarta.enterprise.context.spi.Contextual;
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import jakarta.enterprise.inject.spi.BeanManager;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@Typed()
+@Vetoed
 //TODO add RequestCache
 //TODO ConversationSubGroup
 public class GroupedConversationContext extends AbstractContext implements GroupedConversationManager

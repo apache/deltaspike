@@ -19,12 +19,12 @@
 package org.apache.deltaspike.core.impl.throttling;
 
 
+import jakarta.enterprise.inject.Typed;
 import org.apache.deltaspike.core.api.throttling.Throttled;
 import org.apache.deltaspike.core.api.throttling.Throttling;
 import org.apache.deltaspike.core.impl.util.AnnotatedMethods;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.inject.Typed;
 import jakarta.enterprise.inject.spi.AnnotatedMethod;
 import jakarta.enterprise.inject.spi.AnnotatedType;
 import jakarta.enterprise.inject.spi.BeanManager;

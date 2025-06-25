@@ -21,7 +21,7 @@ package org.apache.deltaspike.proxy.spi.invocation;
 import java.lang.reflect.Method;
 import java.util.List;
 import jakarta.enterprise.context.spi.CreationalContext;
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.InterceptionType;
 import jakarta.enterprise.inject.spi.Interceptor;
@@ -32,7 +32,7 @@ import org.apache.deltaspike.core.util.interceptor.AbstractInvocationContext;
  * {@link jakarta.interceptor.InvocationContext} implementation to support interceptor invocation
  * before proceed with the original method or delegation.
  */
-@Typed
+@Vetoed
 public class DeltaSpikeProxyInvocationContext<T, H> extends AbstractInvocationContext<T>
 {
     protected List<Interceptor<H>> interceptors;

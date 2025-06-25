@@ -93,7 +93,7 @@ public class BeanManagerProvider implements Extension
      * 
      * <p><b>Attention:</b> This instance must only be used through the {@link #bmpSingleton} singleton!</p>
      */
-    private volatile Map<ClassLoader, BeanManagerInfo> bmInfos = new ConcurrentHashMap<ClassLoader, BeanManagerInfo>();
+    private volatile Map<ClassLoader, BeanManagerInfo> bmInfos = new ConcurrentHashMap<>();
 
     /**
      * Indicates whether the {@link BeanManagerProvider} has been initialized. Usually it's not necessary to call this

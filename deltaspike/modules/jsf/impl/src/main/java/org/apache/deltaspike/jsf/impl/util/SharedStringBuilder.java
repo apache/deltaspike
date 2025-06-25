@@ -18,10 +18,10 @@
  */
 package org.apache.deltaspike.jsf.impl.util;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import jakarta.faces.context.FacesContext;
 
-@Typed()
+@Vetoed
 public abstract class SharedStringBuilder
 {
     /**

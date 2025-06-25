@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.core.util;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * Helper for proxies
  */
-@Typed()
+@Vetoed
 public abstract class ProxyUtils
 {
     private ProxyUtils()

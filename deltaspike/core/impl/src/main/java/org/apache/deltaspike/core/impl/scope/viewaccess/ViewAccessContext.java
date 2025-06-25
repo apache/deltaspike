@@ -27,13 +27,13 @@ import org.apache.deltaspike.core.util.context.ContextualStorage;
 
 import jakarta.enterprise.context.spi.Contextual;
 import jakarta.enterprise.context.spi.CreationalContext;
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.PassivationCapable;
 import java.lang.annotation.Annotation;
 import java.util.Map;
 
-@Typed()
+@Vetoed
 public class ViewAccessContext extends AbstractContext implements ViewAccessContextManager
 {
     private static final String KEY = "VAS"; //TODO re-visit key (e.g. view-id instead of using one big storage)

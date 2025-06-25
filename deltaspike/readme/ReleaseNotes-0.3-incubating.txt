@@ -63,7 +63,7 @@ Bug
 Improvement
 
     [DELTASPIKE-96] - Give names to tests and shrinkwrap archives
-    [DELTASPIKE-161] - veto internal beans annotated with @Typed()
+    [DELTASPIKE-161] - veto internal beans annotated with @Vetoed
     [DELTASPIKE-172] - Improve BeanProvider
     [DELTASPIKE-194] - enable examples build by default
     [DELTASPIKE-197] - pickup ConfigSources via ServiceLoader as well

@@ -23,14 +23,14 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-@Typed
+@Vetoed
 public class EntityMappingsDescriptorParser extends DescriptorReader
 {
     public static final String DEFAULT_ORM_PATH = "META-INF/orm.xml";

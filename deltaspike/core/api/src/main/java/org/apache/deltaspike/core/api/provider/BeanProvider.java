@@ -24,7 +24,7 @@ import org.apache.deltaspike.core.util.ProjectStageProducer;
 
 import jakarta.enterprise.context.Dependent;
 import jakarta.enterprise.context.spi.CreationalContext;
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import jakarta.enterprise.inject.spi.AnnotatedType;
 import jakarta.enterprise.inject.spi.Bean;
 import jakarta.enterprise.inject.spi.BeanManager;
@@ -53,7 +53,7 @@ import java.util.logging.Logger;
  * @see DependentProvider
  * @see BeanManagerProvider
  */
-@Typed()
+@Vetoed
 public final class BeanProvider
 {
     private static final Logger LOG = Logger.getLogger(BeanProvider.class.getName());

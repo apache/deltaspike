@@ -18,10 +18,10 @@
  */
 package org.apache.deltaspike.core.impl.message;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import jakarta.enterprise.inject.spi.Bean;
 
-@Typed()
+@Vetoed
 abstract class MessageBundleContext
 {
     private static final ThreadLocal<Bean> MESSAGE_BUNDLE_BEAN = new ThreadLocal<Bean>();

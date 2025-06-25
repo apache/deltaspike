@@ -19,7 +19,7 @@
 
 package org.apache.deltaspike.core.api.literal;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import jakarta.enterprise.util.AnnotationLiteral;
 
 /**

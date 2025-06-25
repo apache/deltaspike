@@ -506,7 +506,7 @@ public class ExtendedEntityManagerProducer
 .Implementation of a simple extended EntityManager
 [source,java]
 -------------------------------------------------------------------------
-@Typed()
+@Vetoed
 public class ExtendedEntityManager implements EntityManager, Serializable
 {
     private static final long serialVersionUID = 3770954229283539616L;

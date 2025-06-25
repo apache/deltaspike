@@ -30,7 +30,7 @@ import org.apache.deltaspike.core.util.metadata.builder.ImmutableInjectionPoint;
 import org.apache.deltaspike.core.util.metadata.builder.InjectableMethod;
 
 import jakarta.enterprise.context.spi.CreationalContext;
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import jakarta.enterprise.inject.spi.AnnotatedMethod;
 import jakarta.enterprise.inject.spi.AnnotatedParameter;
 import jakarta.enterprise.inject.spi.Bean;
@@ -49,7 +49,7 @@ import java.util.Set;
  *
  * @param <T> Type of the exception this handler handles.
  */
-@Typed()
+@Vetoed
 public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
 {
     private final Class declaringBeanClass;

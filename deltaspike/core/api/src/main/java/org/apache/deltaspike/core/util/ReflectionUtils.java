@@ -19,7 +19,7 @@
 
 package org.apache.deltaspike.core.util;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import jakarta.enterprise.util.Nonbinding;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
@@ -44,7 +44,7 @@ import org.apache.deltaspike.core.util.securitymanaged.SetAccessiblePrivilegedAc
  */
 //X TODO: Look at merging this with some of the other classes from CODI, or if they're really needed
 //X TODO: Also some methods need JavaDoc
-@Typed()
+@Vetoed
 public abstract class ReflectionUtils
 {
     private static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];

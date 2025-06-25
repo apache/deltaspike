@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.jpa.api.shared;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -36,7 +36,7 @@ import jakarta.persistence.metamodel.Metamodel;
 import java.util.List;
 import java.util.Map;
 
-@Typed()
+@Vetoed
 public class TestEntityManager implements EntityManager
 {
     private EntityTransaction entityTransaction = new TestEntityTransaction(this);

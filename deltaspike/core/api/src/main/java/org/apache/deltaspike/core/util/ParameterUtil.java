@@ -22,9 +22,9 @@ package org.apache.deltaspike.core.util;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 
-@Typed()
+@Vetoed
 public abstract class ParameterUtil
 {
     private static boolean parameterSupported = true;

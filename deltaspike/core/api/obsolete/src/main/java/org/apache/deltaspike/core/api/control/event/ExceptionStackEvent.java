@@ -21,7 +21,7 @@ package org.apache.deltaspike.core.api.exception.control.event;
 
 import org.apache.deltaspike.core.api.exception.control.ExceptionStackItem;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayDeque;
@@ -33,7 +33,7 @@ import java.util.Deque;
  * Information about the current exception and exception cause container.  This object is not immutable.
  */
 @SuppressWarnings("CdiManagedBeanInconsistencyInspection")
-@Typed()
+@Vetoed
 public class ExceptionStackEvent implements Serializable
 {
     private static final long serialVersionUID = -6069790756478700680L;

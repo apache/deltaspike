@@ -20,7 +20,7 @@ package org.apache.deltaspike.test.testcontrol.mock.uc004;
 
 import org.apache.deltaspike.test.testcontrol.mock.shared.ApplicationScopedBean;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 
 @Typed() //exclude it for the cdi type-check
 public class MockedApplicationScopedBean extends ApplicationScopedBean

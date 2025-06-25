@@ -20,7 +20,8 @@ package org.apache.deltaspike.core.util;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
+
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -35,7 +36,7 @@ import java.net.URL;
  *
  * Abstract to not get picked up as CDI bean on old containers.
  */
-@Typed()
+@Vetoed
 public abstract class ClassUtils
 {
     /**

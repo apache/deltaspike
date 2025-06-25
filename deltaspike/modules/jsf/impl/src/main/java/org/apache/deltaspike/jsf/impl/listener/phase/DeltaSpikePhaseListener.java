@@ -34,7 +34,7 @@ import org.apache.deltaspike.security.api.authorization.ErrorViewAwareAccessDeni
 import org.apache.deltaspike.security.spi.authorization.EditableAccessDecisionVoterContext;
 
 import jakarta.enterprise.context.ContextNotActiveException;
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import jakarta.faces.component.UIViewRoot;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.event.PhaseEvent;
@@ -42,7 +42,7 @@ import jakarta.faces.event.PhaseId;
 import jakarta.faces.event.PhaseListener;
 import java.util.logging.Logger;
 
-@Typed() //don't use PhaseListener as type - JsfRequestLifecyclePhaseListener would fire to this listener as well
+@Vetoed //don't use PhaseListener as type - JsfRequestLifecyclePhaseListener would fire to this listener as well
 public class DeltaSpikePhaseListener implements PhaseListener, Deactivatable
 {
     private static final long serialVersionUID = -4458288760053069922L;

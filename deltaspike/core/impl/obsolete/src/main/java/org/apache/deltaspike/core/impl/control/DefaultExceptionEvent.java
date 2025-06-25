@@ -23,7 +23,7 @@ import org.apache.deltaspike.core.api.exception.control.ExceptionHandlingFlow;
 import org.apache.deltaspike.core.api.exception.control.event.ExceptionStackEvent;
 import org.apache.deltaspike.core.spi.exception.control.event.IntrospectiveExceptionEvent;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 
 /**
  * Payload for an exception to be handled.  This object is not immutable as small pieces of the state may be set by the
@@ -31,7 +31,7 @@ import jakarta.enterprise.inject.Typed;
  *
  * @param <T> Exception type this event represents
  */
-@Typed()
+@Vetoed
 public class DefaultExceptionEvent<T extends Throwable> implements IntrospectiveExceptionEvent<T>
 {
     private final T exception;

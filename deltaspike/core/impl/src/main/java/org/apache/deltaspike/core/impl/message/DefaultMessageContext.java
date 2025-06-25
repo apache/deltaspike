@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.core.impl.message;
 
+import jakarta.enterprise.inject.Typed;
 import org.apache.deltaspike.core.api.message.LocaleResolver;
 import org.apache.deltaspike.core.api.message.Message;
 import org.apache.deltaspike.core.api.message.MessageContext;
@@ -25,7 +26,6 @@ import org.apache.deltaspike.core.api.message.MessageInterpolator;
 import org.apache.deltaspike.core.api.message.MessageResolver;
 
 import jakarta.enterprise.context.Dependent;
-import jakarta.enterprise.inject.Typed;
 import jakarta.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;

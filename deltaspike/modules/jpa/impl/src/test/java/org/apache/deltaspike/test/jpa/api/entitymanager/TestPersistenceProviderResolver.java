@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.test.jpa.api.entitymanager;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import jakarta.persistence.Cache;
 import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
@@ -41,7 +41,7 @@ import org.apache.deltaspike.test.jpa.api.shared.TestEntityManager;
 /**
  * PersistenceProviderResolver for dummy PersistenceProviders.
  */
-@Typed()
+@Vetoed
 public class TestPersistenceProviderResolver implements PersistenceProviderResolver
 {
     private List<PersistenceProvider> persistenceProviders;
@@ -64,7 +64,7 @@ public class TestPersistenceProviderResolver implements PersistenceProviderResol
     }
 
 
-    @Typed()
+    @Vetoed
     public static class DummyPersistenceProvider implements PersistenceProvider
     {
         @Override
@@ -98,7 +98,7 @@ public class TestPersistenceProviderResolver implements PersistenceProviderResol
         }
     }
 
-    @Typed()
+    @Vetoed
     public static class DummyEntityManagerFactory implements EntityManagerFactory
     {
         private final String emName;

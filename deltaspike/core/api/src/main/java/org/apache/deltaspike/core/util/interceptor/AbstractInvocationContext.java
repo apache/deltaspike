@@ -18,14 +18,14 @@
  */
 package org.apache.deltaspike.core.util.interceptor;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import jakarta.interceptor.InvocationContext;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-@Typed()
+@Vetoed
 public abstract class AbstractInvocationContext<T> implements InvocationContext
 {
     protected final T target;

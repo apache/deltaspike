@@ -20,10 +20,10 @@ package org.apache.deltaspike.scheduler.impl;
 
 import org.quartz.JobExecutionContext;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 
 //configured via SchedulerBaseConfig
-@Typed()
+@Vetoed
 public class JobRunnableAdapter extends AbstractJobAdapter<Runnable>
 {
     @Override

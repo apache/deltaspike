@@ -18,11 +18,11 @@
  */
 package org.apache.deltaspike.jsf.impl.listener.phase;
 
+import jakarta.enterprise.inject.Typed;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 
-import jakarta.enterprise.inject.Typed;
 import jakarta.faces.event.PhaseEvent;
 import jakarta.faces.event.PhaseId;
 import jakarta.faces.event.PhaseListener;

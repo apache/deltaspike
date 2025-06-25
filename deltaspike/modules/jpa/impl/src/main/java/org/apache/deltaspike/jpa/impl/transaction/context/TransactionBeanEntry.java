@@ -20,13 +20,13 @@ package org.apache.deltaspike.jpa.impl.transaction.context;
 
 import jakarta.enterprise.context.spi.Contextual;
 import jakarta.enterprise.context.spi.CreationalContext;
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 
 /**
  * Holds the information we need store to manage
  * the beans in the {@link TransactionContext}.
  */
-@Typed()
+@Vetoed
 public class TransactionBeanEntry<T>
 {
     private Contextual<T> bean;

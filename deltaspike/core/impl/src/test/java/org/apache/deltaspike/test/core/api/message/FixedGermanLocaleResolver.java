@@ -20,10 +20,10 @@ package org.apache.deltaspike.test.core.api.message;
 
 import org.apache.deltaspike.core.api.message.LocaleResolver;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import java.util.Locale;
 
-@Typed()
+@Vetoed
 class FixedGermanLocaleResolver implements LocaleResolver
 {
     private static final long serialVersionUID = 1927000487639667775L;

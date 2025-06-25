@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.jsf.impl.util;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import jakarta.faces.FacesException;
 import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
@@ -35,7 +35,7 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Typed()
+@Vetoed
 public abstract class ClientWindowHelper
 {
     private static final Logger LOG = Logger.getLogger(ClientWindowHelper.class.getName());

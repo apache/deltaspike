@@ -20,7 +20,7 @@ package org.apache.deltaspike.test.testcontrol.mock.uc014;
 
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.enterprise.inject.Produces;
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 
 @Typed() //exclude it for the cdi type-check
 public class TypedBeanProducer

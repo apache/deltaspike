@@ -18,7 +18,7 @@
  */
 package org.apache.deltaspike.jsf.impl.message;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import java.lang.reflect.InvocationHandler;
@@ -32,7 +32,7 @@ import org.apache.deltaspike.jsf.api.message.JsfMessage;
  * This Proxy InvocationHandler automatically registers the
  * returned messages in the FacesContext if a severity is set.
  */
-@Typed()
+@Vetoed
 public class JsfMessageBundleInvocationHandler implements InvocationHandler
 {
     private final FacesMessage.Severity severity;

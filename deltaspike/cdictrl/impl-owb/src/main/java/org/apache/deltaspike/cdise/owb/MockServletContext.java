@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterRegistration;
 import jakarta.servlet.RequestDispatcher;
@@ -45,7 +45,7 @@ import jakarta.servlet.descriptor.JspConfigDescriptor;
  * Mock ServletContext needed to startup the container.
  *
  */
-@Typed // ignore this as CDI bean
+@Vetoed // ignore this as CDI bean
 public class MockServletContext implements ServletContext
 {
     private static MockServletContext instance = new MockServletContext();

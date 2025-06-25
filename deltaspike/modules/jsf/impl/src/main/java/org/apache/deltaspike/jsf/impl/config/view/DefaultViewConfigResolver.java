@@ -33,7 +33,7 @@ import org.apache.deltaspike.jsf.api.literal.FolderLiteral;
 import org.apache.deltaspike.jsf.api.literal.ViewLiteral;
 import org.apache.deltaspike.jsf.impl.util.ViewConfigUtils;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,7 +43,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-@Typed()
+@Vetoed
 public class DefaultViewConfigResolver implements ViewConfigResolver
 {
     private Map<Class<? extends ViewConfig>, ViewConfigDescriptor> viewDefinitionToViewDefinitionEntryMapping;

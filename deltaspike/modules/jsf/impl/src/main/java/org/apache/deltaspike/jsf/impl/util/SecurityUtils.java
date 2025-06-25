@@ -33,7 +33,7 @@ import org.apache.deltaspike.security.api.authorization.SecurityViolation;
 import org.apache.deltaspike.security.spi.authorization.EditableAccessDecisionVoterContext;
 import org.apache.deltaspike.security.spi.authorization.SecurityViolationHandler;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import java.lang.annotation.Annotation;
@@ -42,7 +42,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Typed()
+@Vetoed
 public abstract class SecurityUtils
 {
     public static void invokeVoters(EditableAccessDecisionVoterContext accessDecisionVoterContext,

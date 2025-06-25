@@ -18,13 +18,13 @@
  */
 package org.apache.deltaspike.testcontrol.impl.mock;
 
+import jakarta.enterprise.inject.Typed;
 import org.apache.deltaspike.core.spi.activation.Deactivatable;
 import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.core.util.ServiceUtils;
 import org.apache.deltaspike.testcontrol.spi.mock.MockFilter;
 
 import jakarta.enterprise.event.Observes;
-import jakarta.enterprise.inject.Typed;
 import jakarta.enterprise.inject.spi.AnnotatedMember;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.BeforeBeanDiscovery;
@@ -77,7 +77,7 @@ public class MockExtension implements Extension, Deactivatable
 
         Typed typed = processInjectionTarget.getAnnotatedType().getAnnotation(Typed.class);
 
-        List<Type> foundTypes = new ArrayList<Type>();
+        List<Type> foundTypes = new ArrayList<>();
         if (typed != null)
         {
             Collections.addAll(foundTypes, typed.value());

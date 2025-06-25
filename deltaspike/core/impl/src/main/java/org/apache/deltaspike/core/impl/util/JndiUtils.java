@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import javax.naming.InitialContext;
 import javax.naming.Name;
 import javax.naming.NameClassPair;
@@ -37,7 +37,7 @@ import org.apache.deltaspike.core.util.ExceptionUtils;
 /**
  * This is the internal helper class for low level access to JNDI
  */
-@Typed()
+@Vetoed
 public abstract class JndiUtils
 {
     private static final Logger LOG = Logger.getLogger(JndiUtils.class.getName());

@@ -19,7 +19,7 @@
 
 package org.apache.deltaspike.core.api.exception.control.event;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.util.Collections;
@@ -31,7 +31,7 @@ import java.util.Set;
  * is the handled flag.
  */
 @SuppressWarnings("CdiManagedBeanInconsistencyInspection")
-@Typed()
+@Vetoed
 public class ExceptionToCatchEvent implements Serializable
 {
     private static final long serialVersionUID = 2646115104528108266L;

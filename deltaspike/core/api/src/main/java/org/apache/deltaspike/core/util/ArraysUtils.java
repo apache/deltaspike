@@ -18,7 +18,8 @@
  */
 package org.apache.deltaspike.core.util;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -26,7 +27,7 @@ import java.util.Set;
 /**
  * A collection of utilities for working with Arrays
  */
-@Typed()
+@Vetoed
 public abstract class ArraysUtils
 {
     private ArraysUtils()

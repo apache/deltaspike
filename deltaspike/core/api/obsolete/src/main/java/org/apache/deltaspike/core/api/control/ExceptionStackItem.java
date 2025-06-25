@@ -19,7 +19,7 @@
 
 package org.apache.deltaspike.core.api.exception.control;
 
-import jakarta.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Vetoed;
 import java.io.Serializable;
 import java.util.Arrays;
 
@@ -27,7 +27,7 @@ import java.util.Arrays;
  * Container for the exception and it's stack trace.
  */
 @SuppressWarnings("CdiManagedBeanInconsistencyInspection")
-@Typed()
+@Vetoed
 public final class ExceptionStackItem implements Serializable
 {
     private static final long serialVersionUID = 5162936095781886477L;
