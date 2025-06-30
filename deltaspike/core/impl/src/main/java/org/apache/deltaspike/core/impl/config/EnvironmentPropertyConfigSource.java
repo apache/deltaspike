@@ -18,8 +18,6 @@
  */
 package org.apache.deltaspike.core.impl.config;
 
-
-
 /**
  * {@link org.apache.deltaspike.core.spi.config.ConfigSource}
  * which uses {@link System#getenv()}
@@ -36,7 +34,6 @@ class EnvironmentPropertyConfigSource extends MapConfigSource
         initOrdinal(300);
     }
 
-    
     /**
      * {@inheritDoc}
      */

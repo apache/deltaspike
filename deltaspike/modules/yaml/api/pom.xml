@@ -17,32 +17,26 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.apache.deltaspike</groupId>
-        <artifactId>parent-code</artifactId>
+        <groupId>org.apache.deltaspike.modules</groupId>
+        <artifactId>yaml-module-project</artifactId>
         <version>2.0.1-SNAPSHOT</version>
-        <relativePath>../parent/code/pom.xml</relativePath>
     </parent>
 
-    <groupId>org.apache.deltaspike.modules</groupId>
-    <artifactId>modules-project</artifactId>
-    <version>2.0.1-SNAPSHOT</version>
-    <packaging>pom</packaging>
+    <artifactId>deltaspike-yaml-module-api</artifactId>
 
-    <name>Apache DeltaSpike Modules</name>
+    <name>Apache DeltaSpike YAML-Module API</name>
 
-    <modules>
-        <module>proxy</module>
-        <module>security</module>
-        <module>jsf</module>
-        <module>partial-bean</module>
-        <module>jpa</module>
-        <module>data</module>
-        <module>scheduler</module>
-        <module>test-control</module>
-        <module>yaml</module>
-    </modules>
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.deltaspike.core</groupId>
+            <artifactId>deltaspike-core-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
 </project>
