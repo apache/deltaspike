@@ -62,7 +62,7 @@ public class PartialBeanBindingExtension implements Extension, Deactivatable
         this.isActivated = ClassDeactivationUtils.isActivated(getClass());      
     }
 
-    public <X> void findInvocationHandlerBindings(@Observes ProcessAnnotatedType<X> pat, BeanManager beanManager)
+    public <X> void findInvocationHandlerBindings(@Observes ProcessAnnotatedType<X> pat)
     {
         if (!this.isActivated || this.definitionError != null)
         {

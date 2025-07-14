@@ -117,8 +117,7 @@ class DeltaSpikeFacesContextWrapper extends FacesContextWrapper
 
         if (this.bridgeExceptionHandlerActivated)
         {
-            exceptionHandler = new BridgeExceptionHandlerWrapper(
-                exceptionHandler, this.beanManager, this.bridgeExceptionQualifier);
+            exceptionHandler = new BridgeExceptionHandlerWrapper(exceptionHandler);
         }
         
         if (this.defaultErrorViewExceptionHandlerActivated)

@@ -18,9 +18,7 @@
  */
 package org.apache.deltaspike.jsf.impl.exception.control;
 
-import java.lang.annotation.Annotation;
 import java.util.Iterator;
-import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.faces.FacesException;
 import jakarta.faces.context.ExceptionHandler;
 import jakarta.faces.context.ExceptionHandlerWrapper;
@@ -40,16 +38,10 @@ import org.apache.deltaspike.security.api.authorization.ErrorViewAwareAccessDeni
 public class BridgeExceptionHandlerWrapper extends ExceptionHandlerWrapper implements Deactivatable
 {
     private final ExceptionHandler wrapped;
-    private final BeanManager beanManager;
-    private final Annotation exceptionQualifier;
 
-    public BridgeExceptionHandlerWrapper(ExceptionHandler wrapped,
-                                         BeanManager beanManager,
-                                         Annotation exceptionQualifier)
+    public BridgeExceptionHandlerWrapper(ExceptionHandler wrapped)
     {
         this.wrapped = wrapped;
-        this.beanManager = beanManager;
-        this.exceptionQualifier = exceptionQualifier;
     }
 
     @Override
