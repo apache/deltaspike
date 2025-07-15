@@ -48,7 +48,7 @@
     <url>http://deltaspike.apache.org</url>
 
     <properties>
-        <asciidoctor.version>1.5.8</asciidoctor.version>
+        <asciidoctor.version>2.2.6</asciidoctor.version>
         <version.deltaspike.latest.stable>2.0.0</version.deltaspike.latest.stable>
         <version.deltaspike.latest.snapshot>2.0.1-SNAPSHOT</version.deltaspike.latest.snapshot>
         <svn.scmPubCheckoutDirectory>${project.build.directory}/co-site</svn.scmPubCheckoutDirectory>
@@ -88,7 +88,6 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-scm-publish-plugin</artifactId>
-                    <version>1.1</version>
                     <configuration>
                         <content>${project.reporting.outputDirectory}</content>
                         <pubScmUrl>scm:svn:${svn.scmPubUrl}</pubScmUrl>
@@ -107,16 +106,20 @@
                     <configuration>
                         <sourceDirectory>src/main/asciidoc</sourceDirectory>
                         <outputDirectory>${project.reporting.outputDirectory}</outputDirectory>
-                        <sourceHighlighter>coderay</sourceHighlighter>
-                        <backend>html</backend>
-                        <templateDir>../template</templateDir>
+                        <backend>html5</backend>
                         <eruby>erb</eruby>
                         <preserveDirectories>true</preserveDirectories>
+                        <templateDirs>
+                            <templateDir>../template</templateDir>
+                        </templateDirs>
+                        <relativeBaseDir>true</relativeBaseDir>
                         <attributes>
                             <toc>true</toc>
                             <icons>font</icons>
                             <latestStable>${version.deltaspike.latest.stable}</latestStable>
                             <latestSnapshot>${version.deltaspike.latest.snapshot}</latestSnapshot>
+                            <sourceHighlighter>coderay</sourceHighlighter>
+                            <imagesdir>./images</imagesdir>
                         </attributes>
                     </configuration>
                 </plugin>
@@ -124,11 +127,9 @@
         </pluginManagement>
 
         <plugins>
-            <!-- we need to tweak the maven-release-plugin for GIT -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.1</version>
                 <configuration>
                     <pushChanges>false</pushChanges>
                     <localCheckout>true</localCheckout>

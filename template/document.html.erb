@@ -169,10 +169,10 @@
     <div class="row-fluid">
 
         <%
-           MODULEDEPS = 'moduledeps' unless defined? MODULEDEPS
-           MODULECONF = 'moduleconf' unless defined? MODULECONF
-           MODULEBASE = 'modulebase' unless defined? MODULEBASE
-           CONF_LINK = "https://github.com/apache/deltaspike/blob/master/deltaspike/%{base}/%{proj}/src/main/java/%{fqn}.java" unless defined? CONF_LINK
+           $moduleDeps = 'moduledeps' unless defined? $moduleDeps
+           $moduleConf = 'moduleconf' unless defined? $moduleConf
+           $moduleBase = 'modulebase' unless defined? $moduleBase
+           $conf_link = "https://github.com/apache/deltaspike/blob/master/deltaspike/%{base}/%{proj}/src/main/java/%{fqn}.java" unless defined? $conf_link
 
            # module dependencies
            def dep_name(short_name)
@@ -180,21 +180,21 @@
            end
 
            def has_deps?
-             if attributes.has_key?(MODULEDEPS) && !(attributes[MODULEDEPS].empty?)
-               attributes[MODULEDEPS].split(%r{\s*,\s*}).size > 0
+             if attributes.has_key?($moduleDeps) && !(attributes[$moduleDeps].empty?)
+               attributes[$moduleDeps].split(%r{\s*,\s*}).size > 0
              else
                false
              end
            end
 
            def deps_list()
-             attributes[MODULEDEPS].split(%r{\s*,\s*})
+             attributes[$moduleDeps].split(%r{\s*,\s*})
            end
 
            # module configuration
            def module_base()
-             if attributes.has_key?(MODULEBASE) && !(attributes[MODULEBASE].empty?)
-               attributes[MODULEBASE]
+             if attributes.has_key?($moduleBase) && !(attributes[$moduleBase].empty?)
+               attributes[$moduleBase]
              else
                'modules/' + attributes['docname']
              end
@@ -205,19 +205,19 @@
            end
 
            def conf_link(in_fqn)
-             CONF_LINK % { base: module_base(), proj: in_fqn.split(':')[0], fqn: in_fqn.split(':')[1].tr('.', '/') }
+             $conf_link % { base: module_base(), proj: in_fqn.split(':')[0], fqn: in_fqn.split(':')[1].tr('.', '/') }
            end
 
            def has_conf?
-             if attributes.has_key?(MODULECONF) && !(attributes[MODULECONF].empty?)
-               attributes[MODULECONF].split(%r{\s*,\s*}).size > 0
+             if attributes.has_key?($moduleConf) && !(attributes[$moduleConf].empty?)
+               attributes[$moduleConf].split(%r{\s*,\s*}).size > 0
              else
                false
              end
            end
 
            def conf_list()
-             attributes[MODULECONF].split(%r{\s*,\s*})
+             attributes[$moduleConf].split(%r{\s*,\s*})
            end
         %>
 
@@ -260,7 +260,7 @@
                 </div>
                 <% if is_toc? then %>
                     <div class="fallback-toc">
-                        <%= converter.convert_with_options @document, 'outline', :toclevels => 4 %>
+                        <%= converter.convert @document, 'outline', :toclevels => 4 %>
                     </div>
                 <% end %>
             </div>
