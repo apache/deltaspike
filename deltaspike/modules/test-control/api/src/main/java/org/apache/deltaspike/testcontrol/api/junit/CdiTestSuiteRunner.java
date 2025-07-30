@@ -181,47 +181,25 @@ public class CdiTestSuiteRunner extends Suite
         @Override
         public void testFinished(Description description) throws Exception
         {
-            Level level = this.logger.getLevel();
-
-            this.logger.setLevel(Level.INFO);
-
             if (TRUE.equals(IS_CDI_TEST_RUNNER_EXECUTION.get()))
             {
                 this.logger.info("[finished] " + description.getClassName() + "#" + description.getMethodName());
             }
 
-            try
-            {
-                super.testFinished(description);
-            }
-            finally
-            {
-                this.logger.setLevel(level);
-            }
+            super.testFinished(description);
         }
 
         @Override
         public void testFailure(Failure failure) throws Exception
         {
-            Level level = this.logger.getLevel();
-
-            this.logger.setLevel(Level.INFO);
-
             if (TRUE.equals(IS_CDI_TEST_RUNNER_EXECUTION.get()))
             {
                 Description description = failure.getDescription();
-                this.logger.info("[failed] " + description.getClassName() + "#" + description.getMethodName() +
+                this.logger.log(Level.SEVERE, "[failed] " + description.getClassName() + "#" + description.getMethodName() +
                     " message: " + failure.getMessage());
             }
 
-            try
-            {
-                super.testFailure(failure);
-            }
-            finally
-            {
-                this.logger.setLevel(level);
-            }
+            super.testFailure(failure);
         }
     }
 
