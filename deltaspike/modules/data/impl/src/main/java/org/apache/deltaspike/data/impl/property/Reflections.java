@@ -24,8 +24,6 @@ import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -153,25 +151,19 @@ public class Reflections
 
     /**
      * Set the accessibility flag on the {@link AccessibleObject} as described in
-     * {@link AccessibleObject#setAccessible(boolean)} within the context of a {@link PrivilegedAction}.
+     * {@link AccessibleObject#setAccessible(boolean)}.
      *
      * @param <A>
      *            member the accessible object type
      * @param member
      *            the accessible object
      * @return the accessible object after the accessible flag has been altered
+     * @deprecated call method directly as SecurityManager got deprecated and will soon be removed from Java
      */
+    @Deprecated
     public static <A extends AccessibleObject> A setAccessible(final A member)
     {
-        AccessController.doPrivileged(new PrivilegedAction<Void>()
-        {
-            @Override
-            public Void run()
-            {
-                member.setAccessible(true);
-                return null;
-            }
-        });
+        member.setAccessible(true);
         return member;
     }
 
@@ -202,7 +194,7 @@ public class Reflections
      * </p>
      * <p/>
      * <p>
-     * This method attempts to set the accessible flag of the method in a {@link PrivilegedAction} before invoking the
+     * This method attempts to set the accessible flag of the method before invoking the
      * method if the first argument is true.
      * </p>
      * <p/>
@@ -252,7 +244,7 @@ public class Reflections
      * </p>
      * <p/>
      * <p>
-     * If instructed, this method attempts to set the accessible flag of the method in a {@link PrivilegedAction} before
+     * If instructed, this method attempts to set the accessible flag of the method before
      * invoking the method.
      * </p>
      *
@@ -329,8 +321,7 @@ public class Reflections
      * <p/>
      * <p>
      * This method provides the same functionality and throws the same exceptions as
-     * {@link Reflections#setFieldValue(boolean, Method, Class, Object, Object...)}, honoring the accessibility of the
-     * field.
+     * {@link Reflections#setFieldValue(boolean, Field, Object, Object)} 
      * </p>
      */
     public static void setFieldValue(Field field, Object instance, Object value)
@@ -349,7 +340,7 @@ public class Reflections
      * </p>
      * <p/>
      * <p>
-     * If instructed, this method attempts to set the accessible flag of the method in a {@link PrivilegedAction} before
+     * If instructed, this method attempts to set the accessible flag of the method before
      * invoking the method.
      * </p>
      *

@@ -20,7 +20,6 @@
 package org.apache.deltaspike.core.util.metadata.builder;
 
 import org.apache.deltaspike.core.util.ReflectionUtils;
-import org.apache.deltaspike.core.util.securitymanaged.SetAccessiblePrivilegedAction;
 
 import jakarta.enterprise.inject.spi.Annotated;
 import jakarta.enterprise.inject.spi.AnnotatedConstructor;

@@ -19,8 +19,6 @@
 package org.apache.deltaspike.test.utils;
 
 import java.net.URL;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
@@ -121,14 +119,7 @@ public class CdiContainerUnderTest
 
     private static ClassLoader getClassLoader(Object o)
     {
-        if (System.getSecurityManager() != null)
-        {
-            return AccessController.doPrivileged(new GetClassLoaderAction(o));
-        }
-        else
-        {
-            return getClassLoaderInternal(o);
-        }
+        return getClassLoaderInternal(o);
     }
 
     private static ClassLoader getClassLoaderInternal(Object o)
@@ -203,26 +194,4 @@ public class CdiContainerUnderTest
         return classLocation.substring(0, classLocation.indexOf(classFilePath) - 1) + manifestFilePath;
     }
 
-    private static class GetClassLoaderAction implements PrivilegedAction<ClassLoader>
-    {
-        private Object object;
-
-        GetClassLoaderAction(Object object)
-        {
-            this.object = object;
-        }
-
-        @Override
-        public ClassLoader run()
-        {
-            try
-            {
-                return getClassLoaderInternal(object);
-            }
-            catch (Exception e)
-            {
-                return null;
-            }
-        }
-    }
 }

@@ -31,19 +31,15 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.WildcardType;
-import java.security.AccessController;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.deltaspike.core.util.securitymanaged.SetAccessiblePrivilegedAction;
 
 /**
  * Utilities for common reflection based actions. Some are basic Java Reflection based, others are CDI based.
  */
-//X TODO: Look at merging this with some of the other classes from CODI, or if they're really needed
-//X TODO: Also some methods need JavaDoc
 @Vetoed
 public abstract class ReflectionUtils
 {
@@ -179,14 +175,7 @@ public abstract class ReflectionUtils
     {
         if (setAccessible && !method.isAccessible())
         {
-            if (System.getSecurityManager() != null)
-            {
-                AccessController.doPrivileged(new SetAccessiblePrivilegedAction(method));
-            }
-            else
-            {
-                method.setAccessible(true);
-            }
+            method.setAccessible(true);
         }
 
         try

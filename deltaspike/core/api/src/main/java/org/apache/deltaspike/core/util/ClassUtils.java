@@ -25,8 +25,6 @@ import jakarta.enterprise.inject.Vetoed;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.jar.Manifest;
 import java.util.jar.Attributes;
 import java.net.URL;
@@ -61,37 +59,9 @@ public abstract class ClassUtils
      */
     public static ClassLoader getClassLoader(Object o)
     {
-        if (System.getSecurityManager() != null)
-        {
-            return AccessController.doPrivileged(new GetClassLoaderAction(o));
-        }
-        else
-        {
-            return getClassLoaderInternal(o);
-        }
+        return getClassLoaderInternal(o);
     }
 
-    static class GetClassLoaderAction implements PrivilegedAction<ClassLoader>
-    {
-        private Object object;
-        GetClassLoaderAction(Object object)
-        {
-            this.object = object;
-        }
-
-        @Override
-        public ClassLoader run()
-        {
-            try
-            {
-                return getClassLoaderInternal(object);
-            }
-            catch (Exception e)
-            {
-                return null;
-            }
-        }
-    }
 
     private static ClassLoader getClassLoaderInternal(Object o)
     {
