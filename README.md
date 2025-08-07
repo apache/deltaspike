@@ -15,9 +15,14 @@
 Contexts and Dependency Injection is a specification, published as: 
 * JSR-299 (CDI-1.0) http://docs.jboss.org/cdi/spec/1.0/html/ 
 * JSR-346 (CDI-1.2) http://docs.jboss.org/cdi/spec/1.2/cdi-spec.html 
-* JSR-365 (CDI-2.0) http://docs.jboss.org/cdi/spec/2.0/cdi-spec.html 
+* JSR-365 (CDI-2.0) http://docs.jboss.org/cdi/spec/2.0/cdi-spec.html
+* Jakarta CDI-3.0 and later https://jakarta.ee/specifications/cdi/
 
-Apache DeltaSpike is compatible with all those specification versions. 
+Apache DeltaSpike is compatible with all those specification versions.
+Until Apache DeltaSpike 1.9.x we did target the ``javax`` package.
+
+The current Apache DeltaSpike-2.0.x releases target the ``jakarta`` namespace.
+
 Note that Apache DeltaSpike is **not** a CDI container itself, but a set of portable Extensions for it!
 
 
