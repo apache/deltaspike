@@ -31,12 +31,11 @@ rm mvn-*log
 # works fine with Java11
 mvn clean install -POWB | tee mvn-owb4.0.3.log
 mvn clean install -Ptomee-build-managed -Dtomee.version=10.0.0-M1 | tee mvn-tomee10.0.0-M1.log
-
 mvn clean install -PWeld -Dweld.version=5.1.2.Final | tee mvn-weld5.1.2.log
 
 # requires Java 17
-mvn clean install -Ptomee-build-managed -Dtomee.version=10.1.0 | tee mvn-tomee10.0.1.log
-
+mvn clean install -Ptomee-build-managed -Dtomee.version=10.1.0 | tee mvn-tomee10.1.0.log
+mvn clean install -Pwildfly-build-managed -Pwildfly.version=31.0.0.Final | tee mvn-wildfly-31.0.0.log
 
 # and now for the result check
 tail mvn-*.log | less

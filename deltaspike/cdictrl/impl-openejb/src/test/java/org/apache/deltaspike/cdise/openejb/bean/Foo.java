@@ -18,6 +18,9 @@
  */
 package org.apache.deltaspike.cdise.openejb.bean;
 
+import jakarta.enterprise.context.ApplicationScoped;
+
+@ApplicationScoped
 public class Foo
 {
     public String name() {
