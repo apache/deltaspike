@@ -38,7 +38,7 @@
     -->
     <groupId>org.apache.deltaspike</groupId>
     <artifactId>deltaspike</artifactId>
-    <version>2.0.1</version>
+    <version>2.0.2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Apache DeltaSpike</name>
@@ -61,7 +61,7 @@
         <connection>scm:git:https://git-wip-us.apache.org/repos/asf/deltaspike.git</connection>
         <developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/deltaspike.git</developerConnection>
         <url>https://git-wip-us.apache.org/repos/asf/deltaspike.git</url>
-        <tag>deltaspike-2.0.1</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <modules>
