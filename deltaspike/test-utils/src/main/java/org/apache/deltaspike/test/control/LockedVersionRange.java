@@ -16,16 +16,29 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.cdise.tck.control;
+package org.apache.deltaspike.test.control;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.apache.deltaspike.test.utils.Implementation;
+
+/**
+ * It allows to specify the version range that the test is allowed to run for an specified {@link #implementation()}.
+ * 
+ * The {@link #versionRange()} attribute uses the Maven version range pattern
+ * @author rafaelbenevides
+ *
+ */
 @Target(value = { ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface LockedContainerVersions
+public @interface LockedVersionRange
 {
+
+    Implementation implementation();
+
+    String versionRange();
 
 }

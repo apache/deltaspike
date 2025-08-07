@@ -504,8 +504,8 @@
             <id>tomee-build-managed</id>
 
             <properties>
-                <jakartaeeapi.version>10.0-M2</jakartaeeapi.version>
-                <owb.version>4.0.2</owb.version>
+                <jakartaeeapi.version>10.0</jakartaeeapi.version>
+                <owb.version>4.0.3</owb.version>
                 <cdicontainer.version>owb-${owb.version}</cdicontainer.version>
             </properties>
 

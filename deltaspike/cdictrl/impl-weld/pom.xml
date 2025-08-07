@@ -82,68 +82,6 @@
     <!--This eliminated the tests when running on Wildfly container as it makes no sense there-->
     <profiles>
         <profile>
-            <id>Weld1</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-dependency-plugin</artifactId>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <executions>
-                            <execution>
-                                <id>unpack</id>
-                                <phase>process-test-classes</phase>
-                                <goals>
-                                    <goal>unpack</goal>
-                                </goals>
-                                <configuration>
-                                    <artifactItems>
-                                        <artifactItem>
-                                            <groupId>org.apache.deltaspike.test</groupId>
-                                            <artifactId>deltaspike-cdictrl-tck</artifactId>
-                                            <version>${project.version}</version>
-                                            <outputDirectory>${project.build.directory}/test-classes/</outputDirectory>
-                                        </artifactItem>
-                                    </artifactItems>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>     
-    
-        <profile>
-            <id>Weld2</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-dependency-plugin</artifactId>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <executions>
-                            <execution>
-                                <id>unpack</id>
-                                <phase>process-test-classes</phase>
-                                <goals>
-                                    <goal>unpack</goal>
-                                </goals>
-                                <configuration>
-                                    <artifactItems>
-                                        <artifactItem>
-                                            <groupId>org.apache.deltaspike.test</groupId>
-                                            <artifactId>deltaspike-cdictrl-tck</artifactId>
-                                            <version>${project.version}</version>
-                                            <outputDirectory>${project.build.directory}/test-classes/</outputDirectory>
-                                        </artifactItem>
-                                    </artifactItems>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>     
-
-        <profile>
             <id>Weld</id>
             <build>
                 <plugins>

@@ -63,26 +63,26 @@ public class CdiContainerUnderTest
     }
 
     /**
-     * Verify if the runtime is using the following CdiImplementation
+     * Verify if the runtime is using the following Implementation
      * 
-     * @param cdiImplementation
+     * @param implementation
      * @param versionRange
-     *            optional - If not defined it will used the range defined on {@link CdiImplementation}
+     *            optional - If not defined it will used the range defined on {@link Implementation}
      * @return
      * @throws InvalidVersionSpecificationException
      */
-    public static boolean isCdiVersion(CdiImplementation cdiImplementation, String versionRange)
+    public static boolean isImplementationVersion(Implementation implementation, String versionRange)
         throws InvalidVersionSpecificationException
     {
 
-        Class implementationClass = tryToLoadClassForName(cdiImplementation.getImplementationClassName());
+        Class implementationClass = tryToLoadClassForName(implementation.getImplementationClassName());
 
         if (implementationClass == null)
         {
             return false;
         }
 
-        VersionRange range = VersionRange.createFromVersionSpec(versionRange == null ? cdiImplementation
+        VersionRange range = VersionRange.createFromVersionSpec(versionRange == null ? implementation
                 .getVersionRange() : versionRange);
         String containerVersion = getJarSpecification(implementationClass);
         return containerVersion != null && range.containsVersion(new DefaultArtifactVersion(containerVersion));

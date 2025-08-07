@@ -20,9 +20,12 @@ package org.apache.deltaspike.test.jsf.impl.scope.window;
 
 
 import org.apache.deltaspike.test.category.WebProfileCategory;
+import org.apache.deltaspike.test.control.LockedImplementation;
+import org.apache.deltaspike.test.control.VersionControlRule;
 import org.apache.deltaspike.test.jsf.impl.config.TestJsfModuleConfig;
 import org.apache.deltaspike.test.jsf.impl.scope.window.beans.WindowScopedBackingBean;
 import org.apache.deltaspike.test.jsf.impl.util.ArchiveUtils;
+import org.apache.deltaspike.test.utils.Implementation;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
@@ -30,6 +33,7 @@ import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -55,6 +59,9 @@ public class WindowScopedContextFrameTest
     @ArquillianResource
     private URL contextPath;
 
+    @Rule
+    public VersionControlRule versionControlRule = new VersionControlRule();
+
     @Deployment
     public static WebArchive deploy()
     {
@@ -75,6 +82,9 @@ public class WindowScopedContextFrameTest
 
     @Test
     @RunAsClient
+    // Actually not a MyFaces bug but html-unit uses Rhino which cannot handle EcmaScript spread operator syntax yet
+    // See https://github.com/mozilla/rhino/issues/968
+    @LockedImplementation(excludedImplementations = {Implementation.MYFACES40})
     public void testWindowId() throws Exception
     {
         WebDriver driver = new HtmlUnitDriver(true);

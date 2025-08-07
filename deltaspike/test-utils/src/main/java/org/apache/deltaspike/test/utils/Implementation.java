@@ -18,19 +18,23 @@
  */
 package org.apache.deltaspike.test.utils;
 
-public enum CdiImplementation
+public enum Implementation
 {
     OWB11 ("org.apache.webbeans.container.BeanManagerImpl", "[1.1,1.2)"),
     OWB12 ("org.apache.webbeans.container.BeanManagerImpl", "[1.2,1.3)"),
 
     WELD11("org.jboss.weld.manager.BeanManagerImpl", "[1.1,1.2)"),
     WELD12("org.jboss.weld.manager.BeanManagerImpl", "[1.2,1.3)"),
-    WELD20("org.jboss.weld.manager.BeanManagerImpl", "[2.0,2.1)");
+    WELD20("org.jboss.weld.manager.BeanManagerImpl", "[2.0,2.1)"),
+
+    MYFACES40("jakarta.faces.annotation.FacesConfig", "[4.0,4.1)");
+
+    // not really a CDI implementation but the mechanism works as well.
 
     private final String implementationClassName;
     private final String versionRange;
 
-    CdiImplementation(String implementationClassName, String versionRange)
+    Implementation(String implementationClassName, String versionRange)
     {
         this.implementationClassName = implementationClassName;
         this.versionRange = versionRange;

@@ -53,6 +53,15 @@
             <artifactId>maven-artifact</artifactId>
             <version>${maven.artifact.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>compile</scope>
+            <optional>true</optional>
+        </dependency>
+
+
     </dependencies>
 
     <properties>

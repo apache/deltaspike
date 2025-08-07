@@ -16,32 +16,48 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.cdise.tck.control;
+package org.apache.deltaspike.test.control;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.apache.deltaspike.test.utils.CdiImplementation;
+import org.apache.deltaspike.test.utils.Implementation;
 
 /**
- * This annotation is used to define the {@link #cdiImplementations()} which the test is allowed to run. 
+ * This annotation is used to define the {@link #implementations()} which the test is allowed to run.
  * 
- * If {@link #cdiImplementations()} is not defined, It will be used all available implementations 
- * defined on {@link CdiImplementation}.
+ * If {@link #implementations()} is not defined, It will be used all available implementations
+ * defined on {@link Implementation}.
  * 
- * An specific implementation can have {@link #versions()} range locked throught the use of {@link LockedVersionRange}
+ * A specific implementation can have {@link #versions()} range locked through the use of {@link LockedVersionRange}
  * @author rafaelbenevides
+ * @author struberg
  *
  */
 @Target(value = { ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface LockedCDIImplementation
+public @interface LockedImplementation
 {
 
-    CdiImplementation[] cdiImplementations() default { CdiImplementation.OWB11, CdiImplementation.OWB12,
-            CdiImplementation.WELD11, CdiImplementation.WELD12, CdiImplementation.WELD20 };
+    /**
+     * If defined, the test will only run if one of those implementations get detected
+     */
+    Implementation[] implementations() default {};
 
+    /**
+     * Can be used to further restrict the implementation for {@link #implementations()}.
+     */
     LockedVersionRange[] versions() default { };
+
+    /**
+     * If defined, the test will <b>NOT</b> run if one of those implementations get detected
+     */
+    Implementation[] excludedImplementations() default {};
+
+    /**
+     * Can be used to further restrict the implementation for {@link #excludedImplementations()} ()}.
+     */
+    LockedVersionRange[] excludedVersions() default {};
 }

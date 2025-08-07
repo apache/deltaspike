@@ -105,6 +105,7 @@
 
     <dependencies>
 
+
         <!-- DeltaSpike modules -->
         <dependency>
             <groupId>org.apache.deltaspike.core</groupId>

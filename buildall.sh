@@ -25,25 +25,17 @@
 
 rm mvn-*log
 
-# CDI-1.0, EE6
-mvn clean install -POWB -Dowb.version=1.2.7 -Dopenejb.owb.version=1.2.7 | tee mvn-owb1_2_7.log
-mvn clean install -PWeld1 -Dweld.version=1.1.10.Final | tee mvn-weld1_1_10.log
-mvn clean install -Ptomee-build-managed -Dtomee.version=1.7.5 -Dopenejb.version=4.7.5 -Dopenejb.owb.version=1.2.8 | tee mvn-tomee_1_7_5.log
-
-# jbossas7 is broken on Java8, it strictly requires Java7
-# mvn clean install -Pjbossas-build-managed-7 | tee mvn-jbossas_7.log
-
-# CDI-1.2, EE7
-mvn clean install -POWB15 -Dowb.version=1.7.5 -Dopenejb.owb.version=1.7.5 -Dopenejb.version=7.0.5 | tee mvn-owb1.7.5.log
-mvn clean install -PWeld2 -Dweld.version=2.4.6.Final | tee mvn-weld2_4_6.log
-mvn clean install -Pwildfly-build-managed | tee mvn-wildfly9.log
-mvn clean install -Ptomee7-build-managed -Dtomee.version=7.1.4 -Dopenejb.version=7.1.4 -Dopenejb.owb.version=1.7.6 | tee mvn-tomee_7_1.4.log
 
 # CDI-2.0, EE8
 
-mvn clean install -POWB2 | tee mvn-owb2_0_5.log
-mvn clean install -POWB2 | tee mvn-owb2_0_5.log
-mvn clean install -PWeld3 -Dweld.version=3.1.9.Final | tee mvn-weld3_1_9.log
+# works fine with Java11
+mvn clean install -POWB | tee mvn-owb4.0.3.log
+mvn clean install -Ptomee-build-managed -Dtomee.version=10.0.0-M1 | tee mvn-tomee10.0.0-M1.log
+
+mvn clean install -PWeld -Dweld.version=5.1.2.Final | tee mvn-weld5.1.2.log
+
+# requires Java 17
+mvn clean install -Ptomee-build-managed -Dtomee.version=10.1.0 | tee mvn-tomee10.0.1.log
 
 
 # and now for the result check

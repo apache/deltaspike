@@ -36,10 +36,10 @@ import org.apache.deltaspike.cdise.api.ContextControl;
 import org.apache.deltaspike.cdise.tck.beans.Car;
 import org.apache.deltaspike.cdise.tck.beans.CarRepair;
 import org.apache.deltaspike.cdise.tck.beans.TestUser;
-import org.apache.deltaspike.cdise.tck.control.LockedCDIImplementation;
-import org.apache.deltaspike.cdise.tck.control.LockedVersionRange;
-import org.apache.deltaspike.cdise.tck.control.VersionControlRule;
-import org.apache.deltaspike.test.utils.CdiImplementation;
+import org.apache.deltaspike.test.control.LockedImplementation;
+import org.apache.deltaspike.test.control.LockedVersionRange;
+import org.apache.deltaspike.test.control.VersionControlRule;
+import org.apache.deltaspike.test.utils.Implementation;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -225,9 +225,9 @@ public class ContainerCtrlTckTest
         cdiContainer.shutdown();
     }
 
-    @LockedCDIImplementation(versions = {
-            @LockedVersionRange(implementation = CdiImplementation.WELD11, versionRange = "[1.1.14,1.2)"),
-            @LockedVersionRange(implementation = CdiImplementation.WELD20, versionRange = "[2.0.1.Final,2.1)")
+    @LockedImplementation(versions = {
+            @LockedVersionRange(implementation = Implementation.WELD11, versionRange = "[1.1.14,1.2)"),
+            @LockedVersionRange(implementation = Implementation.WELD20, versionRange = "[2.0.1.Final,2.1)")
         })
     @Test
     public void testShutdownWithInactiveContexts()
