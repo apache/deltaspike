@@ -39,8 +39,8 @@ import java.util.Properties;
 public class DefaultCipherService
 {
     private static final Charset UTF_8 = Charset.forName("UTF-8");
-    private static final String HASH_ALGORITHM = "SHA-256";
-    private static final String CIPHER_ALGORITHM = "AES";
+    private static final String HASH_ALGORITHM = "SHA-512";
+    private static final String CIPHER_ALGORITHM = "AES/CFB/PKCS5Padding";
 
     public String setMasterHash(String masterPassword, String masterSalt, boolean overwrite)
         throws IOException
