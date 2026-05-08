@@ -62,6 +62,7 @@
 
         <!-- testing stuff -->
         <junit.version>4.13.2</junit.version>
+        <junit5.version>5.14.4</junit5.version>
         <arquillian.version>1.8.0.Final</arquillian.version>
 
         <!-- Faces implementations -->
