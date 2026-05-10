@@ -18,14 +18,10 @@
  */
 package org.apache.deltaspike.testcontrol5.api.junit;
 
-import jakarta.enterprise.context.spi.CreationalContext;
-import jakarta.enterprise.inject.spi.Bean;
-import jakarta.enterprise.inject.spi.BeanManager;
 import org.apache.deltaspike.cdise.api.CdiContainer;
 import org.apache.deltaspike.cdise.api.CdiContainerLoader;
 import org.apache.deltaspike.cdise.api.ContextControl;
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
-import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
@@ -49,18 +45,14 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Singleton;
-import org.junit.jupiter.api.extension.TestInstanceFactory;
-import org.junit.jupiter.api.extension.TestInstanceFactoryContext;
-import org.junit.jupiter.api.extension.TestInstantiationException;
+import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 import java.util.Stack;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -72,7 +64,7 @@ import java.util.logging.Logger;
  */
 public class CdiTestExtension implements BeforeAllCallback, AfterAllCallback,
                                          BeforeEachCallback, AfterEachCallback, ParameterResolver,
-                                         TestInstanceFactory
+                                         TestInstancePostProcessor
 {
     private static final Logger LOGGER = Logger.getLogger(CdiTestExtension.class.getName());
 
@@ -86,9 +78,9 @@ public class CdiTestExtension implements BeforeAllCallback, AfterAllCallback,
         ALLOW_INJECTION_POINT_MANIPULATION = TestBaseConfig.MockIntegration.ALLOW_MANUAL_INJECTION_POINT_MANIPULATION;
     }
 
-    private static ThreadLocal<Boolean> automaticScopeHandlingActive = new ThreadLocal<Boolean>();
+    private static ThreadLocal<Boolean> automaticScopeHandlingActive = new ThreadLocal<>();
 
-    private static ThreadLocal<CdiTestExtension> currentTestExtension = new ThreadLocal<CdiTestExtension>();
+    private static ThreadLocal<CdiTestExtension> currentTestExtension = new ThreadLocal<>();
 
     private List<TestStatementDecoratorFactory> statementDecoratorFactories;
 
@@ -98,49 +90,20 @@ public class CdiTestExtension implements BeforeAllCallback, AfterAllCallback,
     {
     }
 
-    /**
-     * we need to deal with the creation itself as CDI tests are more like {@code @TestInstance(Lifecycle.PER_CLASS)}.
-     *
-     * @return the new test instance.
-     * @throws TestInstantiationException
-     */
+
     @Override
-    public Object createTestInstance(TestInstanceFactoryContext factoryContext, ExtensionContext extensionContext) throws TestInstantiationException
+    public void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception
     {
-        final Class<?> testClass = factoryContext.getTestClass();
-        BeanManager beanManager = BeanManagerProvider.getInstance().getBeanManager();
-        Set<Bean<?>> beans = beanManager.getBeans(testClass);
-        if (beans.isEmpty())
-        {
-            try
-            {
-                Object instance = testClass.getDeclaredConstructor().newInstance();
-                BeanProvider.injectFields(instance);
-                return instance;
-            }
-            catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e)
-            {
-                throw new RuntimeException(e);
-            }
-        }
-        else
-        {
-            Bean<Object> bean = (Bean<Object>) beanManager.resolve(beans);
-
-            CreationalContext<Object> creationalContext = beanManager.createCreationalContext(bean);
-
-            Object instance = beanManager.getReference(bean, testClass, creationalContext);
-
-            return instance;
-        }
+        BeanProvider.injectFields(testInstance);
     }
+
 
     @Override
     public void beforeEach(ExtensionContext extensionContext) throws Exception
     {
         currentTestExtension.set(this);
 
-        TestControl testControl = extensionContext.getTestClass()
+        TestControl testControl = extensionContext.getTestMethod()
                 .map(cls -> cls.getAnnotation(TestControl.class)).orElse(null);
 
         ContainerAwareTestContext currentTestContext =
@@ -459,7 +422,7 @@ public class CdiTestExtension implements BeforeAllCallback, AfterAllCallback,
 
                 ContextControl contextControl = container.getContextControl();
 
-                List<Class<? extends Annotation>> scopeClasses = new ArrayList<Class<? extends Annotation>>();
+                List<Class<? extends Annotation>> scopeClasses = new ArrayList<>();
 
                 Collections.addAll(scopeClasses, this.testControl.startScopes());
 
