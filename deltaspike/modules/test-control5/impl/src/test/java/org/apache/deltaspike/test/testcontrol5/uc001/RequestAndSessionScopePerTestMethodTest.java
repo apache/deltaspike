@@ -26,7 +26,6 @@ import org.apache.deltaspike.test.testcontrol5.shared.TestUtils;
 import org.apache.deltaspike.testcontrol5.api.junit.CdiTestExtension;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -35,7 +34,6 @@ import jakarta.inject.Inject;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 //Usually NOT needed! Currently only needed due to our arquillian-setup
-@Tag("SeCategory")
 
 @ExtendWith(CdiTestExtension.class) //starts container once and one session + request per test-method
 //implicitly annotated with @TestControl without the default-scope settings
