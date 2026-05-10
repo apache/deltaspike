@@ -73,7 +73,7 @@
         <!-- used for some bytecode proxy stuff. Shaded in -->
         <asm.version>9.9.1</asm.version>
 
-        <maven.surefire.plugin.version>3.0.0-M4</maven.surefire.plugin.version>
+        <maven.surefire.plugin.version>3.5.5</maven.surefire.plugin.version>
         <maven.bundle.plugin.version>3.5.0</maven.bundle.plugin.version>
         <maven.jar.plugin.version>3.1.2</maven.jar.plugin.version>
         <maven.dependency.plugin.version>2.4</maven.dependency.plugin.version>
