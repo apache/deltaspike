@@ -42,14 +42,14 @@ import java.util.concurrent.ConcurrentHashMap;
 public class CdiTestSuiteExtension implements BeforeAllCallback, AfterAllCallback
 {
     public static final String CUSTOM_TEST_CONTAINER_CONFIG_FILE_KEY =
-            "deltaspike.testcontrol5.test-container.config-file";
+            "deltaspike.testcontrol.test-container.config-file";
 
     public static final String DEFAULT_TEST_CONTAINER_CONFIG_FILE_NAME =
             "META-INF/apache-deltaspike_test-container";
 
     private static final boolean STOP_CONTAINER;
 
-    private static final ThreadLocal<Boolean> IS_CDI_TEST_RUNNER_EXECUTION = new ThreadLocal<Boolean>();
+    private static final ThreadLocal<Boolean> IS_CDI_TEST_RUNNER_EXECUTION = new ThreadLocal<>();
 
     private static volatile boolean containerStarted;
 
@@ -79,25 +79,19 @@ public class CdiTestSuiteExtension implements BeforeAllCallback, AfterAllCallbac
             container.boot(getTestContainerConfig());
             containerStarted = true;
         }
-
-        try
-        {
-            // Tests will be executed by JUnit 5
-        }
-        finally
-        {
-            if (STOP_CONTAINER)
-            {
-                container.shutdown();
-                containerStarted = false;
-            }
-        }
     }
 
     @Override
     public void afterAll(ExtensionContext extensionContext) throws Exception
     {
         // Cleanup if needed
+        if (STOP_CONTAINER)
+        {
+            CdiContainer container = CdiContainerLoader.getCdiContainer();
+
+            container.shutdown();
+            containerStarted = false;
+        }
     }
 
     public static boolean isContainerStarted()
