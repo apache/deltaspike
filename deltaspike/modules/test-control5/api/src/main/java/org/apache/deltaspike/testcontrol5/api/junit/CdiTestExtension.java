@@ -166,16 +166,9 @@ public class CdiTestExtension implements BeforeAllCallback, AfterAllCallback,
             }
 
             this.statementDecoratorFactories = ServiceUtils.loadServiceImplementations(TestStatementDecoratorFactory.class);
-            Collections.sort(this.statementDecoratorFactories, new Comparator<TestStatementDecoratorFactory>()
-            {
-                @Override
-                public int compare(TestStatementDecoratorFactory f1, TestStatementDecoratorFactory f2)
-                {
-                    return f1.getOrdinal() > f2.getOrdinal() ? 1 : -1;
-                }
-            });
+            Collections.sort(this.statementDecoratorFactories,
+                (f1, f2) -> f1.getOrdinal() > f2.getOrdinal() ? 1 : -1);
         }
-
 
         this.testContext.applyBeforeClassConfig(extensionContext.getTestClass().orElseThrow());
     }
@@ -265,6 +258,13 @@ public class CdiTestExtension implements BeforeAllCallback, AfterAllCallback,
 
             if (!isContainerStarted())
             {
+                // We are setting this system property to make the deployment for Weld "flat"
+                // This (amongst other things) means that alternatives enabled via beans.xml will be
+                // enabled globally
+                // Beginning with Weld 2.x you could use Weld.property(), but here we depend on Weld 1.x API
+                // Note that Weld 1 was "flat" anyway, so this property only affects newer versions of Weld
+                // System.setProperty("org.jboss.weld.se.archive.isolation", "false");
+                // Weld 5.0: https://docs.jboss.org/weld/reference/5.0.0.Final/en-US/html_single/#_bean_archive_isolation
                 System.setProperty("org.jboss.weld.environment.servlet.archive.isolation", "false");
 
                 container.boot(CdiTestSuiteExtension.getTestContainerConfig());
