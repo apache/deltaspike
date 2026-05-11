@@ -50,7 +50,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Singleton;
-import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -60,6 +59,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Stack;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -69,12 +70,12 @@ import java.util.logging.Logger;
  * A JUnit 5 extension to start up with a CDI or embedded JavaEE container.
  */
 public class CdiTestExtension implements BeforeAllCallback, AfterAllCallback,
-                                         BeforeEachCallback, AfterEachCallback, ParameterResolver,
-                                         TestInstancePostProcessor
+                                         BeforeEachCallback, AfterEachCallback, ParameterResolver
 {
     private static final Logger LOGGER = Logger.getLogger(CdiTestExtension.class.getName());
 
     private static final String STORE_KEY_TEST_CONTEXT = "testContext";
+    private static final String STORE_KEY_INJECTED_FLAG = "testInjected";
 
     private static final boolean USE_TEST_CLASS_AS_CDI_BEAN;
     private static final boolean ALLOW_INJECTION_POINT_MANIPULATION;
@@ -88,10 +89,15 @@ public class CdiTestExtension implements BeforeAllCallback, AfterAllCallback,
 
     private List<TestStatementDecoratorFactory> statementDecoratorFactories;
 
-    protected ContainerAwareTestContext getClassTestContext(ExtensionContext extensionContext)
+    protected static ExtensionContext.Store getStore(ExtensionContext extensionContext)
     {
         final ExtensionContext.Namespace namespace = ExtensionContext.Namespace.create(CdiTestExtension.class, extensionContext.getUniqueId());
-        final ExtensionContext.Store store = extensionContext.getStore(namespace);
+        return extensionContext.getStore(namespace);
+    }
+
+    protected ContainerAwareTestContext getClassTestContext(ExtensionContext extensionContext)
+    {
+        final ExtensionContext.Store store = getStore(extensionContext);
         return store.getOrComputeIfAbsent(STORE_KEY_TEST_CONTEXT, k ->
             {
                 TestControl testControl = extensionContext.getTestClass()
@@ -122,28 +128,25 @@ public class CdiTestExtension implements BeforeAllCallback, AfterAllCallback,
     }
 
 
+
     protected ContainerAwareTestContext getMethodTestContext(ExtensionContext methodExtensionContext)
     {
-        final ExtensionContext.Namespace namespace = ExtensionContext.Namespace.create(CdiTestExtension.class, methodExtensionContext.getUniqueId());
-        final ExtensionContext.Store store = methodExtensionContext.getStore(namespace);
+        final ExtensionContext.Store store = getStore(methodExtensionContext);
+
         return store.getOrComputeIfAbsent(STORE_KEY_TEST_CONTEXT, k ->
             {
                 TestControl testControl = methodExtensionContext.getTestMethod()
                     .map(cls -> cls.getAnnotation(TestControl.class)).orElse(null);
 
-                return new ContainerAwareTestContext(testControl, getClassTestContext(methodExtensionContext.getParent().orElse(null)));
+                ContainerAwareTestContext classTestContext = getClassTestContext(methodExtensionContext.getParent().orElse(null));
+                return new ContainerAwareTestContext(testControl, classTestContext);
             }, ContainerAwareTestContext.class);
-    }
-
-    @Override
-    public void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception
-    {
-        BeanProvider.injectFields(testInstance);
     }
 
     @Override
     public void beforeEach(ExtensionContext extensionContext) throws Exception
     {
+
         ContainerAwareTestContext currentTestContext = getMethodTestContext(extensionContext);
 
         extensionContext.getTestMethod().ifPresent(method ->
@@ -157,6 +160,17 @@ public class CdiTestExtension implements BeforeAllCallback, AfterAllCallback,
                     throw ExceptionUtils.throwAsRuntimeException(e);
                 }
             });
+
+        final ExtensionContext.Store store = getStore(extensionContext);
+        final ConcurrentMap<Integer, Boolean> isInjectedMap
+            = store.getOrComputeIfAbsent(STORE_KEY_INJECTED_FLAG, k -> new ConcurrentHashMap(), ConcurrentMap.class);
+
+        final int classId = System.identityHashCode(extensionContext.getTestInstance());
+        if (!isInjectedMap.containsKey(classId))
+        {
+            BeanProvider.injectFields(extensionContext.getTestInstance().get());
+            isInjectedMap.putIfAbsent(classId, Boolean.TRUE);
+        }
     }
 
     @Override
