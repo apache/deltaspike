@@ -18,11 +18,16 @@
  */
 package org.apache.deltaspike.testcontrol5.api.junit;
 
+import jakarta.inject.Named;
 import org.apache.deltaspike.cdise.api.CdiContainer;
 import org.apache.deltaspike.cdise.api.CdiContainerLoader;
 import org.apache.deltaspike.cdise.api.ContextControl;
+import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.core.spi.config.ConfigSource;
+import org.apache.deltaspike.core.spi.filter.ClassFilter;
+import org.apache.deltaspike.core.util.ClassDeactivationUtils;
 import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
 import org.apache.deltaspike.core.util.ServiceUtils;
@@ -50,6 +55,7 @@ import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -68,6 +74,8 @@ public class CdiTestExtension implements BeforeAllCallback, AfterAllCallback,
 {
     private static final Logger LOGGER = Logger.getLogger(CdiTestExtension.class.getName());
 
+    private static final String STORE_KEY_TEST_CONTEXT = "testContext";
+
     private static final boolean USE_TEST_CLASS_AS_CDI_BEAN;
     private static final boolean ALLOW_INJECTION_POINT_MANIPULATION;
 
@@ -78,18 +86,54 @@ public class CdiTestExtension implements BeforeAllCallback, AfterAllCallback,
         ALLOW_INJECTION_POINT_MANIPULATION = TestBaseConfig.MockIntegration.ALLOW_MANUAL_INJECTION_POINT_MANIPULATION;
     }
 
-    private static ThreadLocal<Boolean> automaticScopeHandlingActive = new ThreadLocal<>();
-
-    private static ThreadLocal<CdiTestExtension> currentTestExtension = new ThreadLocal<>();
-
     private List<TestStatementDecoratorFactory> statementDecoratorFactories;
 
-    private ContainerAwareTestContext testContext;
-
-    public CdiTestExtension()
+    protected ContainerAwareTestContext getClassTestContext(ExtensionContext extensionContext)
     {
+        final ExtensionContext.Namespace namespace = ExtensionContext.Namespace.create(CdiTestExtension.class, extensionContext.getUniqueId());
+        final ExtensionContext.Store store = extensionContext.getStore(namespace);
+        return store.getOrComputeIfAbsent(STORE_KEY_TEST_CONTEXT, k ->
+            {
+                TestControl testControl = extensionContext.getTestClass()
+                    .map(cls -> cls.getAnnotation(TestControl.class)).orElse(null);
+
+                ContainerAwareTestContext testContext = new ContainerAwareTestContext(testControl, null);
+
+                Class<? extends Handler> logHandlerClass = testContext.getLogHandlerClass();
+
+                if (!Handler.class.equals(logHandlerClass))
+                {
+                    try
+                    {
+                        LOGGER.addHandler(logHandlerClass.newInstance());
+                    }
+                    catch (Exception e)
+                    {
+                        throw ExceptionUtils.throwAsRuntimeException(e);
+                    }
+                }
+
+                this.statementDecoratorFactories = ServiceUtils.loadServiceImplementations(TestStatementDecoratorFactory.class);
+                Collections.sort(this.statementDecoratorFactories,
+                    (f1, f2) -> f1.getOrdinal() > f2.getOrdinal() ? 1 : -1);
+
+                return testContext;
+            }, ContainerAwareTestContext.class);
     }
 
+
+    protected ContainerAwareTestContext getMethodTestContext(ExtensionContext methodExtensionContext)
+    {
+        final ExtensionContext.Namespace namespace = ExtensionContext.Namespace.create(CdiTestExtension.class, methodExtensionContext.getUniqueId());
+        final ExtensionContext.Store store = methodExtensionContext.getStore(namespace);
+        return store.getOrComputeIfAbsent(STORE_KEY_TEST_CONTEXT, k ->
+            {
+                TestControl testControl = methodExtensionContext.getTestMethod()
+                    .map(cls -> cls.getAnnotation(TestControl.class)).orElse(null);
+
+                return new ContainerAwareTestContext(testControl, getClassTestContext(methodExtensionContext.getParent().orElse(null)));
+            }, ContainerAwareTestContext.class);
+    }
 
     @Override
     public void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception
@@ -97,17 +141,10 @@ public class CdiTestExtension implements BeforeAllCallback, AfterAllCallback,
         BeanProvider.injectFields(testInstance);
     }
 
-
     @Override
     public void beforeEach(ExtensionContext extensionContext) throws Exception
     {
-        currentTestExtension.set(this);
-
-        TestControl testControl = extensionContext.getTestMethod()
-                .map(cls -> cls.getAnnotation(TestControl.class)).orElse(null);
-
-        ContainerAwareTestContext currentTestContext =
-                new ContainerAwareTestContext(testControl, this.testContext);
+        ContainerAwareTestContext currentTestContext = getMethodTestContext(extensionContext);
 
         extensionContext.getTestMethod().ifPresent(method ->
             {
@@ -120,65 +157,32 @@ public class CdiTestExtension implements BeforeAllCallback, AfterAllCallback,
                     throw ExceptionUtils.throwAsRuntimeException(e);
                 }
             });
-
-        this.testContext = currentTestContext;
     }
 
     @Override
     public void afterEach(ExtensionContext extensionContext) throws Exception
     {
-        try
+        ContainerAwareTestContext currentTestContext = getMethodTestContext(extensionContext);
+
+        if (currentTestContext != null)
         {
-            if (this.testContext != null)
-            {
-                this.testContext.applyAfterMethodConfig();
-            }
-        }
-        finally
-        {
-            currentTestExtension.set(null);
-            currentTestExtension.remove();
+            currentTestContext.applyAfterMethodConfig();
         }
     }
 
     @Override
     public void beforeAll(ExtensionContext extensionContext) throws Exception
     {
-        if (this.testContext == null)
-        {
-            TestControl testControl = extensionContext.getTestClass()
-                    .map(cls -> cls.getAnnotation(TestControl.class)).orElse(null);
-
-            this.testContext = new ContainerAwareTestContext(testControl, null);
-
-            Class<? extends Handler> logHandlerClass = this.testContext.getLogHandlerClass();
-
-            if (!Handler.class.equals(logHandlerClass))
-            {
-                try
-                {
-                    LOGGER.addHandler(logHandlerClass.newInstance());
-                }
-                catch (Exception e)
-                {
-                    throw ExceptionUtils.throwAsRuntimeException(e);
-                }
-            }
-
-            this.statementDecoratorFactories = ServiceUtils.loadServiceImplementations(TestStatementDecoratorFactory.class);
-            Collections.sort(this.statementDecoratorFactories,
-                (f1, f2) -> f1.getOrdinal() > f2.getOrdinal() ? 1 : -1);
-        }
-
-        this.testContext.applyBeforeClassConfig(extensionContext.getTestClass().orElseThrow());
+        getClassTestContext(extensionContext).applyBeforeClassConfig(extensionContext.getTestClass().orElseThrow());
     }
 
     @Override
     public void afterAll(ExtensionContext extensionContext) throws Exception
     {
-        if (this.testContext != null)
+        final ContainerAwareTestContext testContext = getClassTestContext(extensionContext);
+        if (testContext != null)
         {
-            this.testContext.applyAfterClassConfig();
+            testContext.applyAfterClassConfig();
         }
 
         // TODO destroy all injected beans
@@ -211,7 +215,7 @@ public class CdiTestExtension implements BeforeAllCallback, AfterAllCallback,
 
         private boolean containerStarted = false;
 
-        private Stack<Class<? extends Annotation>> startedScopes = new Stack<Class<? extends Annotation>>();
+        private Stack<Class<? extends Annotation>> startedScopes = new Stack<>();
 
         private List<ExternalContainer> externalContainers;
 
@@ -266,6 +270,10 @@ public class CdiTestExtension implements BeforeAllCallback, AfterAllCallback,
                 // System.setProperty("org.jboss.weld.se.archive.isolation", "false");
                 // Weld 5.0: https://docs.jboss.org/weld/reference/5.0.0.Final/en-US/html_single/#_bean_archive_isolation
                 System.setProperty("org.jboss.weld.environment.servlet.archive.isolation", "false");
+
+                String activeAlternativeLabel = checkForLabeledAlternativeConfig(testControl);
+
+                initTestEnvConfig(testClass, activeAlternativeLabel, testControl);
 
                 container.boot(CdiTestSuiteExtension.getTestContainerConfig());
                 setContainerStarted();
@@ -405,6 +413,81 @@ public class CdiTestExtension implements BeforeAllCallback, AfterAllCallback,
             }
         }
 
+        private String checkForLabeledAlternativeConfig(TestControl testControl)
+        {
+            String activeAlternativeLabel = "";
+
+            if (testControl != null)
+            {
+                Class<? extends TestControl.Label> activeTypedAlternativeLabel =
+                    testControl.activeAlternativeLabel();
+
+                if (!TestControl.Label.class.equals(activeTypedAlternativeLabel))
+                {
+                    Named labelName = activeTypedAlternativeLabel.getAnnotation(Named.class);
+
+                    if (labelName != null)
+                    {
+                        activeAlternativeLabel = labelName.value();
+                    }
+                    else
+                    {
+                        String labelClassName = activeTypedAlternativeLabel.getSimpleName();
+                        activeAlternativeLabel = labelClassName.substring(0, 1).toLowerCase();
+
+                        if (labelClassName.length() > 1)
+                        {
+                            activeAlternativeLabel += labelClassName.substring(1);
+                        }
+                    }
+                }
+            }
+            return activeAlternativeLabel;
+        }
+
+        private void initTestEnvConfig(Class<?> testClass, String activeAlternativeLabel, TestControl testControl)
+        {
+            if (ClassDeactivationUtils.isActivated(TestConfigSource.class))
+            {
+                TestConfigSource testConfigSource = null;
+
+                for (ConfigSource configSource : ConfigResolver.getConfigSources())
+                {
+                    if (configSource instanceof TestConfigSource)
+                    {
+                        //if it happens: parallel test-execution can't be supported with labeled alternatives
+                        testConfigSource = (TestConfigSource) configSource;
+                    }
+                }
+
+                if (testConfigSource == null)
+                {
+                    testConfigSource = new TestConfigSource();
+                    ConfigResolver.addConfigSources(Arrays.asList(testConfigSource));
+                }
+
+                //always set it even if it is empty (it might overrule the value of the prev. test
+                testConfigSource.getProperties().put("activeAlternativeLabel", activeAlternativeLabel);
+
+                testConfigSource.getProperties().put("activeAlternativeLabelSource", testClass.getName());
+
+                if (testControl != null)
+                {
+                    testConfigSource.getProperties().put(TestControl.class.getName(), testClass.getName());
+                    testConfigSource.getProperties().put(ClassFilter.class.getName(), testControl.classFilter().getName());
+                }
+                else
+                {
+                    //reset it to avoid leaks between tests
+                    testConfigSource.getProperties().put(TestControl.class.getName(), TestControl.class.getName());
+                    testConfigSource.getProperties().put(ClassFilter.class.getName(), ClassFilter.class.getName());
+                }
+            }
+            else
+            {
+                throw new IllegalStateException("Alternative Environments require TestConfigSource to be active");
+            }
+        }
         void setContainerStarted()
         {
             this.containerStarted = true;
@@ -416,83 +499,73 @@ public class CdiTestExtension implements BeforeAllCallback, AfterAllCallback,
                                  Method testMethod,
                                  Class<? extends Annotation>... restrictedScopes)
         {
-            try
+            ContextControl contextControl = container.getContextControl();
+
+            List<Class<? extends Annotation>> scopeClasses = new ArrayList<>();
+
+            Collections.addAll(scopeClasses, this.testControl.startScopes());
+
+            if (scopeClasses.isEmpty())
             {
-                automaticScopeHandlingActive.set(true);
+                addScopesForDefaultBehavior(scopeClasses);
+            }
+            else
+            {
+                List<TestControlValidator> testControlValidatorList =
+                        ServiceUtils.loadServiceImplementations(TestControlValidator.class);
 
-                ContextControl contextControl = container.getContextControl();
-
-                List<Class<? extends Annotation>> scopeClasses = new ArrayList<>();
-
-                Collections.addAll(scopeClasses, this.testControl.startScopes());
-
-                if (scopeClasses.isEmpty())
+                for (TestControlValidator testControlValidator : testControlValidatorList)
                 {
-                    addScopesForDefaultBehavior(scopeClasses);
-                }
-                else
-                {
-                    List<TestControlValidator> testControlValidatorList =
-                            ServiceUtils.loadServiceImplementations(TestControlValidator.class);
-
-                    for (TestControlValidator testControlValidator : testControlValidatorList)
+                    if (testControlValidator instanceof TestAware)
+                    {
+                        if (testMethod != null)
+                        {
+                            ((TestAware) testControlValidator).setTestMethod(testMethod);
+                        }
+                        ((TestAware) testControlValidator).setTestClass(testClass);
+                    }
+                    try
+                    {
+                        testControlValidator.validate(this.testControl);
+                    }
+                    finally
                     {
                         if (testControlValidator instanceof TestAware)
                         {
-                            if (testMethod != null)
-                            {
-                                ((TestAware) testControlValidator).setTestMethod(testMethod);
-                            }
-                            ((TestAware) testControlValidator).setTestClass(testClass);
+                            ((TestAware) testControlValidator).setTestClass(null);
+                            ((TestAware) testControlValidator).setTestMethod(null);
                         }
-                        try
-                        {
-                            testControlValidator.validate(this.testControl);
-                        }
-                        finally
-                        {
-                            if (testControlValidator instanceof TestAware)
-                            {
-                                ((TestAware) testControlValidator).setTestClass(null);
-                                ((TestAware) testControlValidator).setTestMethod(null);
-                            }
-                        }
-                    }
-                }
-
-                for (Class<? extends Annotation> scopeAnnotation : scopeClasses)
-                {
-                    if (this.parent != null && this.parent.isScopeStarted(scopeAnnotation))
-                    {
-                        continue;
-                    }
-
-                    if (isRestrictedScope(scopeAnnotation, restrictedScopes))
-                    {
-                        continue;
-                    }
-
-                    try
-                    {
-                        contextControl.stopContext(scopeAnnotation);
-
-                        contextControl.startContext(scopeAnnotation);
-                        this.startedScopes.add(scopeAnnotation);
-
-                        onScopeStarted(scopeAnnotation);
-                    }
-                    catch (RuntimeException e)
-                    {
-                        Logger logger = Logger.getLogger(CdiTestExtension.class.getName());
-                        logger.setLevel(Level.SEVERE);
-                        logger.log(Level.SEVERE, "failed to start scope @" + scopeAnnotation.getName(), e);
                     }
                 }
             }
-            finally
+
+            for (Class<? extends Annotation> scopeAnnotation : scopeClasses)
             {
-                automaticScopeHandlingActive.set(null);
-                automaticScopeHandlingActive.remove();
+                if (this.parent != null && this.parent.isScopeStarted(scopeAnnotation))
+                {
+                    continue;
+                }
+
+                if (isRestrictedScope(scopeAnnotation, restrictedScopes))
+                {
+                    continue;
+                }
+
+                try
+                {
+                    contextControl.stopContext(scopeAnnotation);
+
+                    contextControl.startContext(scopeAnnotation);
+                    this.startedScopes.add(scopeAnnotation);
+
+                    onScopeStarted(scopeAnnotation);
+                }
+                catch (RuntimeException e)
+                {
+                    Logger logger = Logger.getLogger(CdiTestExtension.class.getName());
+                    logger.setLevel(Level.SEVERE);
+                    logger.log(Level.SEVERE, "failed to start scope @" + scopeAnnotation.getName(), e);
+                }
             }
         }
 
@@ -534,30 +607,20 @@ public class CdiTestExtension implements BeforeAllCallback, AfterAllCallback,
 
         private void stopStartedScopes(CdiContainer container)
         {
-            try
+            while (!this.startedScopes.empty())
             {
-                automaticScopeHandlingActive.set(true);
-
-                while (!this.startedScopes.empty())
+                Class<? extends Annotation> scopeAnnotation = this.startedScopes.pop();
+                try
                 {
-                    Class<? extends Annotation> scopeAnnotation = this.startedScopes.pop();
-                    try
-                    {
-                        container.getContextControl().stopContext(scopeAnnotation);
-                        onScopeStopped(scopeAnnotation);
-                    }
-                    catch (RuntimeException e)
-                    {
-                        Logger logger = Logger.getLogger(CdiTestExtension.class.getName());
-                        logger.setLevel(Level.SEVERE);
-                        logger.log(Level.SEVERE, "failed to stop scope @" + scopeAnnotation.getName(), e);
-                    }
+                    container.getContextControl().stopContext(scopeAnnotation);
+                    onScopeStopped(scopeAnnotation);
                 }
-            }
-            finally
-            {
-                automaticScopeHandlingActive.remove();
-                automaticScopeHandlingActive.set(null);
+                catch (RuntimeException e)
+                {
+                    Logger logger = Logger.getLogger(CdiTestExtension.class.getName());
+                    logger.setLevel(Level.SEVERE);
+                    logger.log(Level.SEVERE, "failed to stop scope @" + scopeAnnotation.getName(), e);
+                }
             }
         }
 
@@ -620,21 +683,24 @@ public class CdiTestExtension implements BeforeAllCallback, AfterAllCallback,
 
     public static Boolean isAutomaticScopeHandlingActive()
     {
-        return automaticScopeHandlingActive.get();
+        throw new UnsupportedOperationException("Not supported yet.");
+        //X TODO return automaticScopeHandlingActive.get();
     }
 
     public static List<ExternalContainer> getActiveExternalContainers()
     {
+        throw new UnsupportedOperationException("Not supported yet.");
+/*X TODO
         CdiTestExtension cdiTestExtension = currentTestExtension.get();
 
         if (cdiTestExtension == null ||
-                cdiTestExtension.testContext == null ||
-                cdiTestExtension.testContext.externalContainers == null)
+                cdiTestExtension.externalContainers == null)
         {
             return Collections.emptyList();
         }
 
-        return Collections.unmodifiableList(cdiTestExtension.testContext.externalContainers);
+        return Collections.unmodifiableList(cdiTestExtension.externalContainers);
+*/
     }
 
 }

@@ -38,8 +38,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
-
-public class CdiTestSuiteExtension implements BeforeAllCallback, AfterAllCallback
+//X TODO this is work in progress and not fully functional right now.
+public class CdiTestSuiteExtension extends CdiTestExtension implements BeforeAllCallback, AfterAllCallback
 {
     public static final String CUSTOM_TEST_CONTAINER_CONFIG_FILE_KEY =
             "deltaspike.testcontrol.test-container.config-file";
@@ -60,9 +60,7 @@ public class CdiTestSuiteExtension implements BeforeAllCallback, AfterAllCallbac
         STOP_CONTAINER = TestBaseConfig.ContainerIntegration.STOP_CONTAINER;
     }
 
-    public CdiTestSuiteExtension()
-    {
-    }
+
 
     @Override
     public void beforeAll(ExtensionContext extensionContext) throws Exception

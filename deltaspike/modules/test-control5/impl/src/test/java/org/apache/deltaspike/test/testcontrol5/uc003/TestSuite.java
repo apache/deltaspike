@@ -18,8 +18,15 @@
  */
 package org.apache.deltaspike.test.testcontrol5.uc003;
 
+import org.apache.deltaspike.test.testcontrol5.shared.ApplicationScopedBean;
+import org.apache.deltaspike.testcontrol5.api.junit.CdiTestSuiteExtension;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
 //Usually NOT needed! Currently only needed due to our arquillian-setup
 @Tag("SeCategory")
@@ -28,13 +35,28 @@ import org.junit.jupiter.api.Test;
  * JUnit 5 replacement for the JUnit 4 Suite.
  * Each test class with @ExtendWith(CdiTestExtension.class) shares the same CDI container.
  */
+@Suite
+@SelectClasses({
+    RequestAndSessionScopePerTestMethodTest.class,
+    SessionScopePerTestClassTest.class
+})
+@ExtendWith(CdiTestSuiteExtension.class) //starts container and session once and one request per test-method
+@Disabled //X TODO Disabled for now. We need to define how the test suites in Junit5 work with CDI
 public class TestSuite
 {
-    @Test
-    void suiteMarker()
+    @BeforeClass
+    public static void resetSharedState()
     {
-        // This class is a marker for the test suite.
-        // The actual tests are in RequestAndSessionScopePerTestMethodTest and SessionScopePerTestClassTest.
-        // They share the same container via CdiTestExtension.
+        ApplicationScopedBean.resetInstanceCount();
+    }
+
+    @AfterClass
+    public static void finalCheckAndCleanup()
+    {
+        if (ApplicationScopedBean.getInstanceCount() != 1)
+        {
+            throw new IllegalStateException("unexpected count");
+        }
+        ApplicationScopedBean.resetInstanceCount();
     }
 }
