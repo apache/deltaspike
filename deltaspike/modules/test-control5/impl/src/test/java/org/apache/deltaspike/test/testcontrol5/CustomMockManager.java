@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.test.testcontrol5;
 
+import jakarta.annotation.Priority;
 import jakarta.enterprise.inject.Typed;
 import org.apache.deltaspike.testcontrol5.api.mock.DynamicMockManager;
 import org.apache.deltaspike.testcontrol5.impl.mock.SimpleMockManager;
@@ -30,6 +31,7 @@ import java.lang.annotation.Annotation;
 
 @RequestScoped
 @Typed(DynamicMockManager.class)
+@Priority(1000)
 public class CustomMockManager extends SimpleMockManager
 {
     private static boolean isCalled;

@@ -18,6 +18,7 @@
  */
 package org.apache.deltaspike.test.testcontrol5.uc011;
 
+import jakarta.annotation.Priority;
 import jakarta.inject.Inject;
 import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.Interceptor;
@@ -26,6 +27,7 @@ import java.io.Serializable;
 
 @TestInterceptor
 @Interceptor
+@Priority(1000)
 public class TestInterceptorImplementation implements Serializable
 {
     @Inject
