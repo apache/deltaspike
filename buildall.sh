@@ -38,6 +38,7 @@ mvn clean install -Pwildfly-build-managed -Pwildfly.version=31.0.0.Final | tee m
 
 # CDI-4.1, Jakarta 11 requires Java 17
 mvn clean install -Dowb.version=4.1.1-SNAPSHOT -Djakarta.cdi-api.version=4.1.0 -Dtomee.version=11.0.0-M1 -Dtomee-api.version=11.0.0-M1
+mvn clean install -Ptomee-build-managed -Dowb.version=4.1.1-SNAPSHOT -Djakarta.cdi-api.version=4.1.0 -Dtomee.version=11.0.0-M1 -Dtomee-api.version=11.0.0-M1
 
 # and now for the result check
 tail mvn-*.log | less
